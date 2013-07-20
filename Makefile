@@ -4,10 +4,10 @@ COPTS    = `root-config --cflags` -I/usr/local/root/include -g
 #COPTS    = `root-config --cflags` -I/home/silarski/root/include -g
 LDOPTS    = `root-config --libs` -g
 #C++ Files
-SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp
+SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp JPetLogger.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 #Dictionary classes
-HEADERS = Event.h TDCHit.h ADCHit.h Sig.h linkdef.h 
+HEADERS = Event.h TDCHit.h ADCHit.h Sig.h JPetLogger.h JPetLoggerInclude.h linkdef.h 
 EXECUTABLE=main
 all: $(EXECUTABLE)
 $(EXECUTABLE): $(OBJECTS)

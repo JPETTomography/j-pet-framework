@@ -7,8 +7,8 @@
 
 #include <ctime>
 #include <cassert>
-#include "./EDLogger.h"
-#include "./EDLoggerInclude.h"
+#include "./JPetLogger.h"
+#include "./JPetLoggerInclude.h"
 
 #if ED_SCREEN_OUTPUT == 1
 bool EDLogger::fIsLogFile = false;
