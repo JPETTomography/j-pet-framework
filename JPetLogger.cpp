@@ -1,6 +1,6 @@
 /** 
  *   @copyright Copyright (c) 2012, Wojciech Krzemien
- *   @file EDLogger.cc
+ *   @file JPetLogger.cc
  *   @version 1.0
  *   @author Wojciech Krzemien
  */
@@ -10,15 +10,15 @@
 #include "./JPetLogger.h"
 #include "./JPetLoggerInclude.h"
 
-#if ED_SCREEN_OUTPUT == 1
-bool EDLogger::fIsLogFile = false;
+#if JPET_SCREEN_OUTPUT == 1
+bool JPetLogger::fIsLogFile = false;
 #else
-bool EDLogger::fIsLogFile = true;
+bool JPetLogger::fIsLogFile = true;
 #endif
-const char* EDLogger::fFileName = "Display.log";
+const char* JPetLogger::fFileName = "Display.log";
 
 
-void EDLogger::dateAndTime() {
+void JPetLogger::dateAndTime() {
   std::ofstream log(fFileName, std::ios_base::app);
   std::streambuf* originalCoutBuffer = 0; 
   // we redirect std::cout to a file 
@@ -45,7 +45,7 @@ void EDLogger::dateAndTime() {
 }
 
 
-void EDLogger::logMessage(const char* func, const char* msg, MessageType type) {
+void JPetLogger::logMessage(const char* func, const char* msg, MessageType type) {
   std::ofstream log(fFileName, std::ios_base::app);
   std::streambuf* originalCoutBuffer = 0; 
   // we redirect std::cout to a file 

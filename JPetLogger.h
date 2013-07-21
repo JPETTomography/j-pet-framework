@@ -1,21 +1,21 @@
 /** 
  *   @copyright Copyright (c) 2012, Wojciech Krzemien
- *   @file EDLogger.h
+ *   @file JPetLogger.h
  *   @version 1.0
  *   @author Wojciech Krzemien
- *   @brief Simple logger class. Don't use directly. Macros from EDLoggerInclude.h should be used instead. 
- *   EDLogger class implements a simple logging functionality.
+ *   @brief Simple logger class. Don't use directly. Macros from JPetLoggerInclude.h should be used instead. 
+ *   JPetLogger class implements a simple logging functionality.
  *   For every message the logfile stream is opened, the message is written and the stream is closed again. This assures that no messages are lost in case of errrors.
  */
 
-#ifndef EDLOGGER_H
-#define EDLOGGER_H
+#ifndef JPETLOGGER_H
+#define JPETLOGGER_H
 
 #include <fstream>
 #include <iostream>
 #include <string>
 
-class EDLogger {
+class JPetLogger {
  public:
   static void dateAndTime();
   inline static void warning(const char* func, const char* msg) {
@@ -40,9 +40,9 @@ class EDLogger {
  private:
   enum MessageType {kInfo, kWarning, kError};
 
-  EDLogger();
-  EDLogger(const EDLogger&);
-  EDLogger& operator=(const EDLogger&);
+  JPetLogger();
+  JPetLogger(const JPetLogger&);
+  JPetLogger& operator=(const JPetLogger&);
 
   static void logMessage(const char* func, const char* msg, MessageType type);
 
@@ -50,5 +50,5 @@ class EDLogger {
   static bool fIsLogFile;
 };
 
-#endif /*  !EDLOGGER_H */
+#endif /*  !JPETLOGGER_H */
 
