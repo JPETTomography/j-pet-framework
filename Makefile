@@ -5,9 +5,10 @@ COPTS    = `root-config --cflags` -I/usr/local/root/include -g
 LDOPTS    = `root-config --libs` -g
 #C++ Files
 SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp JPetLogger.cpp
+#framework/JPetAnalysisModule/JPetAnalysisModule.cc framework/JPetReader/JPetReader.cc
 OBJECTS = $(SOURCES:.cpp=.o)
 #Dictionary classes
-HEADERS = Event.h TDCHit.h ADCHit.h Sig.h JPetLogger.h JPetLoggerInclude.h linkdef.h 
+HEADERS = Event.h TDCHit.h ADCHit.h Sig.h JPetLogger.h JPetLoggerInclude.h framework/JPetAnalysisModule/JPetAnalysisModule.h framework/JPetReader/JPetReader.h linkdef.h
 EXECUTABLE=main
 all: $(EXECUTABLE)
 $(EXECUTABLE): $(OBJECTS)

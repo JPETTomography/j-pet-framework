@@ -10,7 +10,7 @@
 
 class JPetReader {
  public:
-  virtual int 
+ // virtual int 
   
 };
 #endif /*  !JPETREADER_H */
