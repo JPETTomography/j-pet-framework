@@ -4,7 +4,7 @@ COPTS    = `root-config --cflags` -I/usr/local/root/include -g
 #COPTS    = `root-config --cflags` -I/home/silarski/root/include -g
 LDOPTS    = `root-config --libs` -g
 #C++ Files
-SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp JPetLogger.cpp framework/JPetAnalysisModule/JPetAnalysisModule.cpp framework/JPetReader/JPetReader.cpp
+SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp JPetLogger.cpp framework/JPetAnalysisModule/JPetAnalysisModule.cpp framework/JPetReader/JPetReader.cpp framework/JPetReader/JPetTestReader.cpp framework/JPetAnalysisModule/JPetTestAnalysisModule.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 #Dictionary classes
 HEADERS = Event.h TDCHit.h ADCHit.h Sig.h JPetLogger.h JPetLoggerInclude.h framework/JPetAnalysisModule/JPetAnalysisModule.h framework/JPetReader/JPetReader.h linkdef.h
