@@ -1,0 +1,13 @@
+README for JPet analysis framework
+******
+date: 24.07 2013
+ver: 0.1
+authors: Wojciech Krzemien  wojciech.krzemien@if.uj.edu.pl
+******
+Requirements (tested with):
+  - ROOT 
+  - gcc
+  - automake, m4, autoconf
+  - Doxygen (optional for generation of documentation)
+  - BOOST unit framework (optional for unit tests) 
+
