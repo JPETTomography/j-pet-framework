@@ -1,0 +1,5 @@
+--style=linux --indent=spaces=2
+--pad-header
+--pad-oper
+--align-pointer=type 
+ 

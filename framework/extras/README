@@ -1,0 +1,21 @@
+
+Requirements:
+
+
+Style guidelines (loose notes):
+1. We use c++ old standard
+2. default compiler is gcc 
+3. Every class name starts with JPet
+4. Every class member starts with 
+5. In other cases we try to follow google C++ style guideline
+
+Tools:
+Doxygen - documentation
+Astyle with settings:  
+--style=linux --indent=spaces=2
+--pad-header
+--pad-oper
+--align-pointer=type 
+
+To check current style:
+
