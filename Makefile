@@ -1,22 +1,34 @@
 CC    = g++
 LD    = g++
-COPTS    = `root-config --cflags` -I/usr/local/root/include -g
-#COPTS    = `root-config --cflags` -I/home/silarski/root/include -g
-LDOPTS    = `root-config --libs` -g
+COPTS    = `root-config --cflags` 
+LDOPTS    = `root-config --glibs` -g
+################
+SRC_DIR = $(PWD)/framework
+MODULES = JPetLogger JPetManager JPetReader JPetAnalysisModule
+SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
+SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
+################
 #C++ Files
-SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp JPetLogger.cpp framework/JPetAnalysisModule/JPetAnalysisModule.cpp framework/JPetReader/JPetReader.cpp framework/JPetReader/JPetTestReader.cpp framework/JPetAnalysisModule/JPetTestAnalysisModule.cpp
+SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp
+SOURCES += $(SRC_MODULES)
+HEADERS = Event.h TDCHit.h ADCHit.h Sig.h JPetLoggerInclude.h 
+HEADERS += $(SRC_HEADERS)
+HEADERS += linkdef.h
 OBJECTS = $(SOURCES:.cpp=.o)
-#Dictionary classes
-HEADERS = Event.h TDCHit.h ADCHit.h Sig.h JPetLogger.h JPetLoggerInclude.h framework/JPetAnalysisModule/JPetAnalysisModule.h framework/JPetReader/JPetReader.h linkdef.h
-EXECUTABLE=main
-all: $(EXECUTABLE)
+EXECUTABLE = main
+all: modules $(EXECUTABLE)
 $(EXECUTABLE): $(OBJECTS)
 	$(LD) -o $@ $^ $(LDOPTS)
 #C++ files
 .cpp.o:
 	$(CC) -o $@ $^ -c $(COPTS)
 #Dictionary for ROOT classes
-Dict.cpp: $(HEADERS)
+Dict.cpp: 
 	@echo "Generating dictionary ..."
-	@rootcint -f  Dict.cpp -c -P -I$ROOTSYS  $(HEADERS)
-clean:;         @rm -f $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h
+	@rootcint -f  Dict.cpp -c -P -I$(ROOTSYS) $(HEADERS)
+modules:
+	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
+clean:         
+	@rm -f $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h
+	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE) clean;))
+	
