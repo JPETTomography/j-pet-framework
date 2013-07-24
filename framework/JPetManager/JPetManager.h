@@ -8,9 +8,23 @@
 #ifndef JPETMANAGER_H 
 #define JPETMANAGER_H 
 
-class JPetManager {
+#include <vector>
+#include <TNamed.h> 
+
+class JPetAnalysisModule;
+
+class JPetManager: public TNamed {
  public:
-  JPetManager();
+  static JPetManager& GetManager();
+  ~JPetManager();
+  void Init();
+  void Run();
+  void AddTask(JPetAnalysisModule* mod);
+  
  private:
+  JPetManager();
+  JPetManager(const JPetManager&);
+  void operator=(const JPetManager&); 
+  std::vector<JPetAnalysisModule*> fTasks;
 };
 #endif /*  !JPETMANAGER_H */

@@ -5,7 +5,6 @@ LDOPTS    = `root-config --glibs` -g
 #C++ Files
 SOURCES =  JPetAnalysisModule.cpp 
 OBJECTS = $(SOURCES:.cpp=.o)
-#Dictionary classes
 HEADERS = $(SOURCES:.cpp=.h) 
 
 %.o: %.cpp
