@@ -4,6 +4,8 @@
 #include <vector>
 #include <map>
 
+#include "../JPetPM/JPetPM.h"
+
 using namespace std;
 
 class JPetSigChannel {
@@ -14,6 +16,7 @@ public:
 	float getTime(EdgeType Type) { return fChannels[0][Type]; }
 	float getTime(int ChanNo, EdgeType Type) { return fChannels[ChanNo][Type]; }
 	void addChan(float EdgeTime, float FallEdgeTime);
+	void setPM(JPetPM* PM) { fPM = PM; }
 private:
 	typedef map < EdgeType, float > SingleChan;
 	typedef vector < SingleChan > ChanSet;
@@ -21,6 +24,7 @@ private:
 	 
 	ChanSet fChannels;
 	bool fIsSlow;
+	JPetPM* fPM;
 };
 
 #endif
