@@ -8,7 +8,7 @@ using namespace std;
 
 class JPetSigChannel {
 public:
-	JPetSigChannel(bool IsSlow);
+	JPetSigChannel(float EdgeTime, float FallEdgeTime = 0);
 	typedef enum EdgeType { kEdge, kFalling };
 	bool isSlow() { return fIsSlow; }
 	float getTime(EdgeType Type) { return fChannels[0][Type]; }
