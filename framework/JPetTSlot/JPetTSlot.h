@@ -3,20 +3,20 @@
 
 #include <vector>
 #include <map>
-#include "../JPetSigChannel/JPetSigChannel.h"
+#include "../JPetSigCh/JPetSigCh.h"
 
 using namespace std;
 
 class JPetTSlot {
 public:
 	JPetTSlot();
-	JPetTSlot(const vector<JPetSigChannel> new_vector): fSigChannels(new_vector) {}
+	JPetTSlot(const vector<JPetSigCh> new_vector): fSigChannels(new_vector) {}
 	virtual ~JPetTSlot();
 	int GetNumberOfSigCh(){ return fSigChannels.size(); }
-	const vector<JPetSigChannel>& GetSigChVect() const {return fSigChannels;}
-	const JPetSigChannel & GetSigCh(int index) const { return fSigChannels[index]; }
+	const vector<JPetSigCh>& GetSigChVect() const {return fSigChannels;}
+	const JPetSigCh & GetSigCh(int index) const { return fSigChannels[index]; }
 private:
-	vector<JPetSigChannel> fSigChannels;
+	vector<JPetSigCh> fSigChannels;
 };
 
 #endif
