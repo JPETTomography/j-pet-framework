@@ -9,7 +9,12 @@ using namespace std;
 
 class JPetTSlot {
 public:
-	int getChannelsNo(){ return fSigChannels.size(); }
+	JPetTSlot();
+	JPetTSlot(const vector<JPetSigChannel> new_vector): fSigChannels(new_vector) {}
+	virtual ~JPetTSlot();
+	int GetNumberOfSigCh(){ return fSigChannels.size(); }
+	const vector<JPetSigChannel>& GetSigChVect() const {return fSigChannels;}
+	const JPetSigChannel & GetSigCh(int index) const { return fSigChannels[index]; }
 private:
 	vector<JPetSigChannel> fSigChannels;
 };
