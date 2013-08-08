@@ -16,7 +16,7 @@ public:
 	JPetSigCh();
 	JPetSigCh(float EdgeTime, float FallEdgeTime = 0);
 	
-	typedef enum EdgeType { kRising, kFalling };
+	enum EdgeType { kRising, kFalling };
 	
 	float getTime(EdgeType Type)  { return fChannels[0][Type]; }
 	float getTime(int ChNo, EdgeType Type) { return fChannels[ChNo][Type]; }
