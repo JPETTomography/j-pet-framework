@@ -8,10 +8,12 @@
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
 #include "../JPetScin/JPetScin.h"
 #include "../JPetTRB/JPetTRB.h"
+#include "../../JPetLoggerInclude.h"
 
 using namespace std;
 
 class JPetSigCh {
+
 public:
 	JPetSigCh();
 	JPetSigCh(const JPetSigCh& obj);
@@ -21,8 +23,11 @@ public:
 	
 	float getTime(EdgeType type, int ch_no = 0) const { return fChannels[ch_no].find(type)->second; }
 	void addCh(float edge_time, float fall_edge_time);
-	void setPM(JPetPM* pm) { fPM = pm; }
-	//const JPetPM& getPM(){ return *fPM; }
+	void setPM(const JPetPM& pm);
+	const JPetPM& getPM() const { return *fPM; }
+	const JPetTRB& getTRB() const { return *fTRB; }
+	const JPetScin& getScin() const { return *fScin; }
+
 private:
 	typedef map < EdgeType, float > SingleCh;
 	typedef vector < SingleCh > ChSet;
