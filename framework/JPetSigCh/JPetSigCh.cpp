@@ -1,5 +1,9 @@
 #include "JPetSigCh.h"
 
+JPetSigCh::JPetSigCh(const JPetSigCh& obj){
+
+}
+
 JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time){
 	fPM = NULL;
 	fTRB = NULL;
