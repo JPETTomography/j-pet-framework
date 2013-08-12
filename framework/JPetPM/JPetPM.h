@@ -4,12 +4,14 @@
 class JPetPM {
 public:
 	typedef enum Side {kLeft, kRight};
+	int getID() const {return fID;}
+	void setID(int id) { fID = id; } 
 private:
 	Side fSide;
-	int fPM_id;
-	int fPM_HVset;
-	int fPM_HVopt;
-	float fPM_HVgain[2];
+	int fID;
+	int fHVset;
+	int fHVopt;
+	float fHVgain[2];
 };
 
 #endif
