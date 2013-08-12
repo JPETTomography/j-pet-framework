@@ -1,6 +1,8 @@
 #ifndef _JPETSIGCH_H_
 #define _JPETSIGCH_H_
 
+
+#include <cassert>
 #include <vector>
 #include <map>
 
@@ -23,10 +25,10 @@ public:
 	
 	float getAmpl() const { return fAmpl; }
 	float getTime(EdgeType type, int ch_no = 0) const { return fChannels[ch_no].find(type)->second; }
-	const JPetPM& getPM() const { return *fPM; }
-	const JPetTRB& getTRB() const { return *fTRB; }
-	const JPetScin& getScin() const { return *fScin; }
-	const JPetBarrelSlot& getBarrelSlot() const { return *fBarrelSlot; }
+	const JPetPM& getPM() const { assert(fPM != NULL); return *fPM; }
+	const JPetTRB& getTRB() const { assert(fTRB != NULL); return *fTRB; }
+	const JPetScin& getScin() const { assert(fScin != NULL); return *fScin; }
+	const JPetBarrelSlot& getBarrelSlot() const { assert(fBarrelSlot != NULL); return *fBarrelSlot; }
 	
 	void addCh(float edge_time, float fall_edge_time);
 	
