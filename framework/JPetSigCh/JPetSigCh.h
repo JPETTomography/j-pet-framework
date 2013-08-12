@@ -21,7 +21,7 @@ public:
 	
 	enum EdgeType { kRising, kFalling };
 	
-	float getAmpl() const { return fAmpl }
+	float getAmpl() const { return fAmpl; }
 	float getTime(EdgeType type, int ch_no = 0) const { return fChannels[ch_no].find(type)->second; }
 	const JPetPM& getPM() const { return *fPM; }
 	const JPetTRB& getTRB() const { return *fTRB; }
