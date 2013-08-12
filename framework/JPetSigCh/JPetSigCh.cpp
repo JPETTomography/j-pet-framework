@@ -21,8 +21,15 @@ JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time){
 
 template <class T>
 void JPetSigCh::set(T** dest, const T& source) throw(bad_alloc){
-	if ( &source == NULL || dest == NULL ) return;
-	if (*dest == NULL){
+	assert(dest != NULL);
+	
+	if ( &source == NULL && *dest != NULL ){
+		delete *dest;
+		*dest = NULL;
+		return;
+	}
+	
+	if (*dest == NULL) {
 		try { *dest = new T; }
 		catch(bad_alloc& b_a){
 			ERROR("Could not allocate memory.");
