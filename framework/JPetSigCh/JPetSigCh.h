@@ -18,10 +18,9 @@ public:
 	
 	enum EdgeType { kRising, kFalling };
 	
-	float getTime(EdgeType Type)  { return fChannels[0][Type]; }
-	float getTime(int ChNo, EdgeType Type) { return fChannels[ChNo][Type]; }
-	void addCh(float EdgeTime, float FallEdgeTime);
-	void setPM(JPetPM* PM) { fPM = PM; }
+	float getTime(EdgeType type, int ch_no = 0) const { return fChannels[ch_no][type]; }
+	void addCh(float edge_time, float fall_edge_time);
+	void setPM(JPetPM* pm) { fPM = pm; }
 private:
 	typedef map < EdgeType, float > SingleCh;
 	typedef vector < SingleCh > ChSet;
