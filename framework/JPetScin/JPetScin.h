@@ -7,7 +7,7 @@ using namespace std;
 
 class JPetScin {
 public:
-	typedef enum Dimension {kLen, kHei, kWid};
+	enum Dimension {kLen, kHei, kWid};
 private:
 	int fScinID;
 	float fAttenLen;

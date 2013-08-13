@@ -29,15 +29,16 @@ void JPetSigCh::set(T** dest, const T& source) throw(bad_alloc){
 		return;
 	}
 	
-	if (*dest == NULL) {
-		try { *dest = new T; }
-		catch(bad_alloc& b_a){
-			ERROR("Could not allocate memory.");
-			ERROR(b_a.what());
-			throw;
+	if (&source != NULL) {
+		if (*dest == NULL){
+			try { *dest = new T; }
+			catch(bad_alloc& b_a){
+				ERROR("Could not allocate memory.");
+				ERROR(b_a.what());
+			}
 		}
-	}
-	**dest = source;
+		**dest = source;
+	} 
 }
 	
 void JPetSigCh::addCh(float edge_time, float fall_edge_time){
@@ -49,10 +50,16 @@ void JPetSigCh::addCh(float edge_time, float fall_edge_time){
 
 JPetSigCh& JPetSigCh::operator=(const JPetSigCh& obj){
 	if (this != &obj){
+		fAmpl = obj.getAmpl();
+		fIsSlow = obj.isSlow();
 		setPM(obj.getPM());
 		setTRB(obj.getTRB());
 		setScin(obj.getScin());
 		setBarrelSlot(obj.getBarrelSlot());
+		fChannels.clear();
+		for (int i = 0; i < obj.getChSet().size(); i++) fChannels.push_back(obj.getChSet()[i]);
+		
+		//fChannels.obj.getChSet();
 	}
 	return *this;
 }
