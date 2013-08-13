@@ -6,6 +6,7 @@ void JPetSigCh::init(){
 	fScin = NULL;
 	fBarrelSlot = NULL;
 	fAmpl = 0;
+	fIsSlow = 0;
 }
 
 JPetSigCh::JPetSigCh(const JPetSigCh& obj){

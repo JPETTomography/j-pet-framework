@@ -3,11 +3,11 @@
 
 class JPetTRB {
 public:
-
+	int getID() const { return fID; }
 private:
-	int fTRBId;
-	int fTRBType;
-	int fTRBChan;
+	int fID;
+	int fType;
+	int fChan;
 	// do implementacji
 	//JPetKB* KBId;
 	//KBType;
