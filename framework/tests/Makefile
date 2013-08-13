@@ -10,7 +10,7 @@ LD_BOOST_FLAGS = -L${BOOST_LIB} -lboost_unit_test_framework -lboost_filesystem -
 LDFLAGS = -Wall `root-config --glibs` -I${BOOST_INC}
 LDFLAGS += ${LD_BOOST_FLAGS}
 ###################
-MODULES = DummyClass JPetManager JPetSignal
+MODULES = DummyClass JPetManager JPetSignal JPetHit
 TESTS = $(MODULES:=Test.exe) 
 ###################
 SRC_DIR = ..
