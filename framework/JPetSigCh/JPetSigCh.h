@@ -17,18 +17,23 @@ using namespace std;
 class JPetSigCh {
 
 public:
+	enum EdgeType { kRising, kFalling };
+	typedef map < EdgeType, float > SingleCh;
+	typedef vector < SingleCh > ChSet;
+
 	JPetSigCh() { init(); }
 	JPetSigCh(const JPetSigCh& obj);
 	JPetSigCh(float EdgeTime, float FallEdgeTime = 0);
 	
-	enum EdgeType { kRising, kFalling };
+	bool isSlow() const {return fIsSlow;}
 	
 	float getAmpl() const { return fAmpl; }
 	float getTime(EdgeType type, int ch_no = 0) const { return fChannels[ch_no].find(type)->second; }
-	const JPetPM& getPM() const { assert(fPM != NULL); return *fPM; }
-	const JPetTRB& getTRB() const { assert(fTRB != NULL); return *fTRB; }
-	const JPetScin& getScin() const { assert(fScin != NULL); return *fScin; }
-	const JPetBarrelSlot& getBarrelSlot() const { assert(fBarrelSlot != NULL); return *fBarrelSlot; }
+	const JPetPM& getPM() const { /*assert(fPM != NULL);*/ return *fPM; }
+	const JPetTRB& getTRB() const { /*assert(fTRB != NULL);*/ return *fTRB; }
+	const JPetScin& getScin() const { /*assert(fScin != NULL);*/ return *fScin; }
+	const JPetBarrelSlot& getBarrelSlot() const { /*assert(fBarrelSlot != NULL);*/ return *fBarrelSlot; }
+	const ChSet& getChSet() const {return fChannels;}
 	
 	void addCh(float edge_time, float fall_edge_time);
 	
@@ -40,8 +45,6 @@ public:
 	JPetSigCh& operator= (const JPetSigCh& obj);
 
 private:
-	typedef map < EdgeType, float > SingleCh;
-	typedef vector < SingleCh > ChSet;
 	
 	float fAmpl; 
 	ChSet fChannels;
