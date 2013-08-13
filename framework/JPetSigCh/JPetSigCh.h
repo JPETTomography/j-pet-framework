@@ -27,6 +27,7 @@ public:
 	
 	bool isSlow() const {return fIsSlow;}
 	
+	unsigned int size() const {return fChannels.size(); }
 	float getAmpl() const { return fAmpl; }
 	float getTime(EdgeType type, int ch_no = 0) const { return fChannels[ch_no].find(type)->second; }
 	const JPetPM& getPM() const { /*assert(fPM != NULL);*/ return *fPM; }
@@ -37,10 +38,10 @@ public:
 	
 	void addCh(float edge_time, float fall_edge_time);
 	
-	void setPM(const JPetPM& pm) throw(bad_alloc) { set(&fPM, pm); }
-	void setTRB(const JPetTRB& trb) throw(bad_alloc) { set(&fTRB, trb); }
-	void setScin(const JPetScin& scin) throw(bad_alloc) { set(&fScin, scin); }
-	void setBarrelSlot(const JPetBarrelSlot& barrel_slot) throw(bad_alloc) { set(&fBarrelSlot, barrel_slot); }	
+	void setPM(const JPetPM& pm) { set(&fPM, pm); }
+	void setTRB(const JPetTRB& trb) { set(&fTRB, trb); }
+	void setScin(const JPetScin& scin) { set(&fScin, scin); }
+	void setBarrelSlot(const JPetBarrelSlot& barrel_slot) { set(&fBarrelSlot, barrel_slot); }	
 	
 	JPetSigCh& operator= (const JPetSigCh& obj);
 
