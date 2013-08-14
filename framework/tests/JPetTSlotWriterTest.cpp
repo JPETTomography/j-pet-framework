@@ -16,9 +16,11 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE( first ) {
 	JPetTSlotWriter writer;
-	JPetTSlot tslot;
+	vector<JPetTSlot> tslot_vect;
 	
-	writer.write(tslot, "test.root");
+	for (int i = 0; i < 5; i++) tslot_vect.push_back(*(new JPetTSlot));
+	
+	writer.write(tslot_vect, "test.root");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -3,25 +3,15 @@
 
 //#include <TObject.h>
 #include <TFile.h>
+#include <TTree.h>
+#include <cstdlib>
 #include "../../JPetLoggerInclude.h"
 #include "../JPetTSlot/JPetTSlot.h"
 #include "../JPetSigCh/JPetSigCh.h"
 
 class JPetTSlotWriter {
 public:
-	bool write(const JPetTSlot& obj, const char* file_name) const {
-		TFile *file = new TFile(file_name, "RECREATE");
-		
-		if ( !file->IsOpen() ) {
-			ERROR("Could not write to file.");
-			return false;
-		}
-		
-		obj.Write();
-		
-		file->Close();
-	}
-		
+	bool write(const vector<JPetTSlot>& obj, const char* file_name) const;		
 };
 
 #endif
