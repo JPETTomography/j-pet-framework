@@ -3,11 +3,12 @@
 
 #include <vector>
 #include <map>
+#include <TObject.h>
 #include "../JPetSigCh/JPetSigCh.h"
 
 using namespace std;
 
-class JPetTSlot {
+class JPetTSlot: public TObject {
 public:
 	JPetTSlot(){}
 	JPetTSlot(const vector<JPetSigCh>& new_vector): fSigChannels(new_vector) {}
