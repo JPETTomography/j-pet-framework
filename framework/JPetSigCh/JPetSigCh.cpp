@@ -23,7 +23,6 @@ JPetSigCh::JPetSigCh(const JPetSigCh& obj){
 		
 		//fChannels.obj.getChSet();
 	}
-	return *this;
 }
 
 JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time){
@@ -62,7 +61,7 @@ void JPetSigCh::addCh(float edge_time, float fall_edge_time){
 }
 
 JPetSigCh& JPetSigCh::operator=(const JPetSigCh& obj){
-	A temp(obj);
-  swap(temp);
+	JPetSigCh temp(obj);
+  std::swap(temp, *this);
   return *this;
 }
