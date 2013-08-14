@@ -5,6 +5,7 @@
 #include <TFile.h>
 #include <TTree.h>
 #include <cstdlib>
+#include "../../Event.h"
 #include "../../JPetLoggerInclude.h"
 #include "../JPetTSlot/JPetTSlot.h"
 #include "../JPetSigCh/JPetSigCh.h"
