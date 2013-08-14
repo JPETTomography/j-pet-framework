@@ -62,6 +62,6 @@ void JPetSigCh::addCh(float edge_time, float fall_edge_time){
 
 JPetSigCh& JPetSigCh::operator=(const JPetSigCh& obj){
 	JPetSigCh temp(obj);
-  std::swap(temp, *this);
+  swap(temp, *this);
   return *this;
 }

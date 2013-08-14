@@ -11,7 +11,6 @@ LDFLAGS = -Wall `root-config --glibs` -I${BOOST_INC}
 LDFLAGS += ${LD_BOOST_FLAGS}
 ###################
 MODULES = DummyClass JPetManager JPetSignal JPetSigCh JPetTSlot
-# JPetHit
 TESTS = $(MODULES:=Test.exe) 
 ###################
 SRC_DIR = ..
