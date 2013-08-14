@@ -32,10 +32,10 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 BOOST_AUTO_TEST_CASE( some_init_constructor )
 {
   std::vector<JPetSigCh> falling;
-  falling.push_back(JPetSigCh());
-  falling.push_back(JPetSigCh());
+  falling.push_back(JPetSigCh() );
+  falling.push_back(JPetSigCh() );
   std::vector<JPetSigCh> rising;
-  rising.push_back(JPetSigCh());
+  rising.push_back(JPetSigCh() );
   JPetSignal signal(100, 2, false, falling, rising);
   BOOST_CHECK_EQUAL(signal.GetT(), 100); 
   BOOST_CHECK_EQUAL(signal.GetQual(), 2); 
