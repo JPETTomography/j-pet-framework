@@ -13,6 +13,23 @@
 #include <cassert> 
 #include <vector> 
 
+//struct History {
+//  History(int hld, int tslot, int channel, int daq):
+//    hldID(hld),
+//    tslot(t),    
+//    chSig(channel),
+//    DAQch(DAQ)    
+//  { 
+//    assert(hldID > 0);
+//    assert(hldID > 0);
+//    assert(hldID > 0);
+//    assert(hldID > 0);
+//  }
+//  int hldID;
+//  int tslot;
+//  int chSig;
+//  int DAQch;
+//};
 
 class JPetSignal: public TNamed {
  public:
