@@ -3,7 +3,7 @@
 
 class JPetPM {
 public:
-	typedef enum Side {kLeft, kRight};
+	enum Side {kLeft, kRight};
 	int getID() const {return fID;}
 	void setID(int id) { fID = id; } 
 private:
