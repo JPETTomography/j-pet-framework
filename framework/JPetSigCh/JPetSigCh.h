@@ -5,6 +5,7 @@
 #include <cassert>
 #include <vector>
 #include <map>
+#include <TClass.h>
 
 #include "../JPetPM/JPetPM.h"
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
@@ -14,7 +15,7 @@
 
 using namespace std;
 
-class JPetSigCh {
+class JPetSigCh: public TClass {
 
 public:
 	enum EdgeType { kRising, kFalling };
