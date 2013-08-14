@@ -11,7 +11,19 @@ void JPetSigCh::init(){
 
 JPetSigCh::JPetSigCh(const JPetSigCh& obj){
 	init();
-	*this = obj;
+	if (this != &obj){
+		fAmpl = obj.getAmpl();
+		fIsSlow = obj.isSlow();
+		setPM(obj.getPM());
+		setTRB(obj.getTRB());
+		setScin(obj.getScin());
+		setBarrelSlot(obj.getBarrelSlot());
+		fChannels.clear();
+		for (int i = 0; i < obj.getChSet().size(); i++) fChannels.push_back(obj.getChSet()[i]);
+		
+		//fChannels.obj.getChSet();
+	}
+	return *this;
 }
 
 JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time){
@@ -50,17 +62,7 @@ void JPetSigCh::addCh(float edge_time, float fall_edge_time){
 }
 
 JPetSigCh& JPetSigCh::operator=(const JPetSigCh& obj){
-	if (this != &obj){
-		fAmpl = obj.getAmpl();
-		fIsSlow = obj.isSlow();
-		setPM(obj.getPM());
-		setTRB(obj.getTRB());
-		setScin(obj.getScin());
-		setBarrelSlot(obj.getBarrelSlot());
-		fChannels.clear();
-		for (int i = 0; i < obj.getChSet().size(); i++) fChannels.push_back(obj.getChSet()[i]);
-		
-		//fChannels.obj.getChSet();
-	}
-	return *this;
+	A temp(obj);
+  swap(temp);
+  return *this;
 }
