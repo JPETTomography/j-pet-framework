@@ -11,16 +11,17 @@ bool JPetTSlotWriter::write(const vector<JPetTSlot>& obj, const char* file_name)
 		return false;
 	}
 	
-	//tree.SetAddress(&filler);
-	tree.Branch("JPetTSlot branch", "JPetTSlot", &filler);
-	
+	tree.Branch("JPetTSlot", "JPetTSlot", &filler);
 	
 	for (int i = 0; i < obj.size(); i++){
 		*filler = obj[i];
-		tree.Write();
+		tree.Fill();
 	}
-	tree.Print();
-	tree.Show();
+	
+	tree.Write();
+	
+	//tree.Print();
+	//tree.Show(2);
 	
 	file->Close();
 	return true;
