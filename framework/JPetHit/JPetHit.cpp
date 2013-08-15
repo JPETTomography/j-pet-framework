@@ -1,11 +1,15 @@
 #include "./JPetHit.h"
 
-Vector3::Vector3() : 
-    fCords{0.0f,0.0f,0.0f} {
+Vector3::Vector3() {
+  fCords[0]=0.0f;
+  fCords[1]=0.0f;
+  fCords[2]=0.0f;
 }
 
-Vector3::Vector3(float x, float y, float z) :
-    fCords{x,y,z} {
+Vector3::Vector3(float x, float y, float z) {
+  fCords[0]=x;
+  fCords[1]=y;
+  fCords[2]=z;
 }
 
 Vector3::~Vector3() {
