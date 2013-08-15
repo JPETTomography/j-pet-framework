@@ -4,8 +4,7 @@ COPTS    = `root-config --cflags`
 LDOPTS    = `root-config --glibs` -g
 ################
 SRC_DIR = $(PWD)/framework
-MODULES = DummyClass JPetLogger JPetManager JPetReader JPetAnalysisModule JPetSignal JPetSigCh JPetTSlot  JPetTSlotUnpReader JPetTSlotWriter
-#JPetHit
+MODULES = DummyClass JPetLogger JPetManager JPetReader JPetAnalysisModule JPetSignal JPetSigCh JPetTSlot  JPetTSlotUnpReader JPetTSlotWriter JPetHit
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
 SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 ################

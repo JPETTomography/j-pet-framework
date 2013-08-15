@@ -8,9 +8,17 @@
 #include "../JPetScin/JPetScin.h"
 #include "../JPetTSlot/JPetTSlot.h"
 #include "../JPetSigCh/JPetSigCh.h"
+#include "../JPetSignal/JPetSignal.h"
 #include "../JPetHit/JPetHit.h"
 
 #include <cstddef>
+
+class JPetBarrelSlot;
+class JPetScin;
+class JPetTSlot;
+class JPetSigCh;
+class JPetSignal;
+class JPetHit;
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
   
@@ -38,7 +46,7 @@ BOOST_AUTO_TEST_CASE(init_constructor )
   JPetSignals bothSignals(leftSignal,rightSignal);
   JPetBarrelSlot barrelSlot;
   JPetScin scintillator;
-  JPerTSlot tSlot;
+  JPetTSlot tSlot;
   
   JPetHit hit(0.10f,0.20f,0.30f,0.40f,position,bothSignals,barrelSlot,scintillator,tSlot);
   
@@ -47,12 +55,12 @@ BOOST_AUTO_TEST_CASE(init_constructor )
   BOOST_CHECK_EQUAL(hit.GetQualityOfEnergy(), 0.20f);
   BOOST_CHECK_EQUAL(hit.GetTime(), 0.30f);
   BOOST_CHECK_EQUAL(hit.GetQualityOfTime(), 0.40f);
-  BOOST_CHECK_EQUAL(hit.GetPosX(),1.0f)
-  BOOST_CHECK_EQUAL(hit.GetPosY(),2.0f)
-  BOOST_CHECK_EQUAL(hit.GetPosZ(),3.0f)
-  BOOST_CHECK_EQUAL(hit.GetPos(0),1.0f)
-  BOOST_CHECK_EQUAL(hit.GetPos(1),2.0f)
-  BOOST_CHECK_EQUAL(hit.GetPos(2),3.0f)
+  BOOST_CHECK_EQUAL(hit.GetPosX(),1.0f);
+  BOOST_CHECK_EQUAL(hit.GetPosY(),2.0f);
+  BOOST_CHECK_EQUAL(hit.GetPosZ(),3.0f);
+  BOOST_CHECK_EQUAL(hit.GetPos(0),1.0f);
+  BOOST_CHECK_EQUAL(hit.GetPos(1),2.0f);
+  BOOST_CHECK_EQUAL(hit.GetPos(2),3.0f);
   
   BOOST_CHECK(hit.fPos != NULL);
   BOOST_CHECK(hit.fSignals != NULL);
