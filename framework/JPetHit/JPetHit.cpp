@@ -19,6 +19,10 @@ JPetSignals::JPetSignals() :
     fLeft(NULL), fRight(NULL) {
 }
 
+JPetSignals::JPetSignals (JPetSignal* leftSignal, JPetSignal* rightSignal) :
+    fLeft(leftSignal), fRight(rightSignal) {
+}
+
 JPetSignals::JPetSignals (JPetSignal& leftSignal, JPetSignal& rightSignal) :
     fLeft(&leftSignal), fRight(&rightSignal) {
 }
@@ -28,7 +32,7 @@ JPetSignals::~JPetSignals() {
 
 JPetHit::JPetHit() :
     fEnergy(0.0f), fQualityOfEnergy(0.0f), fTime(0.0f), fQualityOfTime(0.0f),
-    fPos(NULL), fSignals(NULL), fBarrelSlot(NULL), fScintillator(NULL), fTSlot(NULL) {
+    fPos(new Vector3()), fSignals(NULL), fBarrelSlot(NULL), fScintillator(NULL), fTSlot(NULL) {
 }
 
 JPetHit::JPetHit(float e, float qe, float t, float qt, Vector3& pos, JPetSignals& sigs, 

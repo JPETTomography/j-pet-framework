@@ -27,6 +27,11 @@ class Vector3 {
   inline float X() const {return fCords[0];};
   inline float Y() const {return fCords[1];};
   inline float Z() const {return fCords[2];};
+  inline void SetX(float x) {fCords[0]=x;};
+  inline void SetY(float y) {fCords[1]=y;};
+  inline void SetZ(float z) {fCords[2]=z;};
+  inline void Set(float x, float y, float z) {
+    fCords[0]=x; fCords[1]=y; fCords[2]=z;};
   
   private:
   
@@ -40,6 +45,7 @@ class JPetSignals {
   enum SignalPosition {kLeft, kRight};
  
   JPetSignals ();
+  JPetSignals (JPetSignal* leftSignal, JPetSignal* rightSignal);
   JPetSignals (JPetSignal& leftSignal, JPetSignal& rightSignal);
   virtual ~JPetSignals();
   inline JPetSignal& Left() const {return *fLeft;};
@@ -72,12 +78,23 @@ class JPetHit {
   inline float GetPosZ() const  {return fPos->Z();};
   inline float GetPos (int index) const {return (*fPos)(index);};
   inline Vector3& GetPos() const {return *fPos;};
-  inline JPetSignal& GetSignal(JPetSignals::SignalPosition pos) const {return *&fSignals->GetSignal(pos);};
+  inline JPetSignal& GetSignal(JPetSignals::SignalPosition pos) const {return fSignals->GetSignal(pos);};
   inline JPetSignals& GetSignals() const {return *fSignals;};
   inline JPetScin& GetScintillator() const {return *fScintillator;};
   inline JPetBarrelSlot& GetBarrelSlot() const {return *fBarrelSlot;};
-  //data members:
-  //must contain 2 signals, and reference/pointer to JPetScinitllator and JPetSlot,
+  inline void SetEnergy(float energy) {fEnergy = energy;};
+  inline void SetQualityOfEnergy(float qualityOfEnergy) {fQualityOfEnergy = qualityOfEnergy;};
+  inline void SetTime(float time) {fTime = time;};
+  inline void SetQualityOfTime(float qualityOfTime) {fQualityOfTime = qualityOfTime;};
+  inline void SetPosX(float x) {fPos->SetX(x);};
+  inline void SetPosY(float y) {fPos->SetY(y);};
+  inline void SetPosZ(float z) {fPos->SetZ(z);};
+  inline void SetPos (float x,float y,float z) {
+              fPos->SetX(x);fPos->SetY(y);fPos->SetZ(z);};
+  inline void SetSignals (JPetSignals* signals) {fSignals = signals;};
+  inline void SetSignals (JPetSignals& signals) {fSignals = &signals;};
+  inline void SetSignals (JPetSignal* leftSignal, JPetSignal* rightSignal) {
+              fSignals = new JPetSignals(leftSignal, rightSignal);};
   
   private:
    
