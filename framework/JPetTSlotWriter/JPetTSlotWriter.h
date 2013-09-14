@@ -9,10 +9,11 @@
 #include "../../JPetLoggerInclude.h"
 #include "../JPetTSlot/JPetTSlot.h"
 #include "../JPetSigCh/JPetSigCh.h"
+#include "../JPetWriter/JPetWriter.h"
 
-class JPetTSlotWriter {
+class JPetTSlotWriter :public JPetWriter {
 public:
-	bool write(const vector<JPetTSlot>& obj, const char* file_name) const;		
+	bool Write(const vector<JPetTSlot>& obj, const char* file_name) const;		
 };
 
 #endif
