@@ -1,6 +1,6 @@
 #include "JPetTSlotWriter.h"
 
-bool JPetTSlotWriter::write(const vector<JPetTSlot>& obj, const char* file_name) const {
+bool JPetTSlotWriter::Write(const vector<JPetTSlot>& obj, const char* file_name) const {
 	TFile *file = new TFile(file_name, "RECREATE");
 	TTree tree;
 	
