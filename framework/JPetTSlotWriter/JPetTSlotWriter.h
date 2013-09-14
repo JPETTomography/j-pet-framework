@@ -13,6 +13,7 @@
 
 class JPetTSlotWriter :public JPetWriter {
 public:
+    bool Write(const TNamed& data){}
 	bool Write(const vector<JPetTSlot>& obj, const char* file_name) const;		
 };
 
