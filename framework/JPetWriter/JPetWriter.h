@@ -3,6 +3,7 @@
 #define JPETWRITER_H 
 
 #include <string>
+#include <TFile.h>
 #include <TNamed.h>
 
 class JPetWriter {
@@ -10,7 +11,9 @@ public:
     JPetWriter();
     virtual ~JPetWriter();
     virtual bool Write(const TNamed& data) = 0;
-    virtual void OpenFile(const char* filename) = 0;
-    virtual void CloseFile() = 0;
+    virtual bool OpenFile(const char* filename);
+    virtual void CloseFile();
+private:
+    static TFile *fFile;
 };
 #endif /*  !JPETWRITER_H */
