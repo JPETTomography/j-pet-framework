@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE( first ) {
 	
 	for (int i = 0; i < 5; i++) tslot_vect.push_back(*(new JPetTSlot));
 	
-	writer.write(tslot_vect, "test.root");
+	writer.Write(tslot_vect, "test.root");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
