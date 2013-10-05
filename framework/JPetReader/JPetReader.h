@@ -8,15 +8,25 @@
 #ifndef JPETREADER_H 
 #define JPETREADER_H 
 
+#include "TFile.h"
+#include "TNamed.h"
+
 #include <string>
 
 class JPetReader {
- public:
+
+  public:
+
   JPetReader();
   virtual ~JPetReader();
-  virtual void OpenFile(const char* filename) = 0;
-  virtual void CloseFile() = 0;
-  virtual long long GetEntries()const = 0; 
+  virtual bool OpenFile(const char* filename);
+  virtual void CloseFile();
+  virtual long long GetEntries()const = 0;
   virtual int GetEntry(int number) = 0;
+
+  protected:
+  
+  static TFile *fFile;
+
 };
 #endif /*  !JPETREADER_H */
