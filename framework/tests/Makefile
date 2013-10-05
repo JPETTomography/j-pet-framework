@@ -10,12 +10,12 @@ LD_BOOST_FLAGS = -L${BOOST_LIB} -lboost_unit_test_framework -lboost_filesystem -
 LDFLAGS = -Wall `root-config --glibs` -I${BOOST_INC}
 LDFLAGS += ${LD_BOOST_FLAGS}
 ###################
-MODULES = DummyClass JPetManager JPetSignal JPetSigCh JPetTSlotWriter JPetTSlot JPetHit JPetEvent JPetTSlotUnpReader 
+MODULES = DummyClass JPetManager JPetSignal JPetSigCh JPetTSlotWriter JPetTSlot JPetHit JPetEvent JPetPhysSigWriter JPetTSlotUnpReader 
 TESTS = $(MODULES:=Test.exe) 
 ###################
 SRC_DIR = ..
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
-SRC_OBJS = $(SRC_MODULES:.cpp=.o) ../JPetLogger/JPetLogger.o ../JPetTSlot/Dict.o ../JPetReader/JPetReader.o ../JPetWriter/JPetWriter.o
+SRC_OBJS = $(SRC_MODULES:.cpp=.o) ../JPetLogger/JPetLogger.o ../JPetSignal/Dict.o ../JPetTSlot/Dict.o ../JPetReader/JPetReader.o ../JPetWriter/JPetWriter.o
 ###################
 %.o: %.cpp
 	$(CO) -o $@ $(CFLAGS)  -c $<

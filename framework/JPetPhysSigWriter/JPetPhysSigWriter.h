@@ -15,6 +15,7 @@ class JPetPhysSigWriter: public JPetWriter{
   public:
  
   bool Write (const TNamed& data){}
+  bool Write (const JPetSignal& obj, const char* filename);
   bool Write (const vector<JPetSignal>& obj, const char* filename);
 
 };

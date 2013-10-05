@@ -13,7 +13,7 @@ public:
     virtual bool Write(const TNamed& data)=0;
     virtual bool OpenFile(const char* filename);
     virtual void CloseFile();
-private:
+protected:
     static TFile *fFile;
 };
 #endif /*  !JPETWRITER_H */

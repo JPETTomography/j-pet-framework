@@ -9,7 +9,7 @@
 #define JPETSIGNAL_H 
 
 #include "../JPetSigCh/JPetSigCh.h"
-#include <TNamed.h> 
+#include <TNamed.h>
 #include <cassert> 
 #include <vector> 
 

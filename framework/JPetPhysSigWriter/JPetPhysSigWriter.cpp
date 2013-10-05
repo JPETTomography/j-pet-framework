@@ -1,5 +1,27 @@
 #include "./JPetPhysSigWriter.h"
 
+bool JPetPhysSigWriter::Write (const JPetSignal& obj, const char* filename) {
+
+  if(!OpenFile(filename)) {
+    ERROR("Could not write to file.");
+    return false;
+  }
+
+  TTree tree("PhysSig","PhysSig");
+
+  JPetSignal* filler = new JPetSignal;
+
+  tree.Branch("JPetSignal", "JPetSignal", &filler);
+
+  *filler = obj;
+  tree.Fill();
+  tree.Write();
+  tree.Print();
+  CloseFile();
+  
+  return true;
+}
+
 bool JPetPhysSigWriter::Write (const vector<JPetSignal>& obj, const char* filename) {
   
   if(!OpenFile(filename)) {
