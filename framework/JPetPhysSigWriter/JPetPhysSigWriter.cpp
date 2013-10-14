@@ -1,5 +1,7 @@
 #include "./JPetPhysSigWriter.h"
 
+#include <iostream>
+
 bool JPetPhysSigWriter::Write (const JPetSignal& obj, const char* filename) {
 
   if(!OpenFile(filename)) {
@@ -9,14 +11,15 @@ bool JPetPhysSigWriter::Write (const JPetSignal& obj, const char* filename) {
 
   TTree tree("PhysSig","PhysSig");
 
-  JPetSignal* filler = new JPetSignal;
+  JPetSignal* filler = new JPetSignal; 
 
   tree.Branch("JPetSignal", "JPetSignal", &filler);
 
   *filler = obj;
+ 
   tree.Fill();
   tree.Write();
-  tree.Print();
+//  tree.Print();
   CloseFile();
   
   return true;
@@ -42,7 +45,7 @@ bool JPetPhysSigWriter::Write (const vector<JPetSignal>& obj, const char* filena
 
   tree.Write();
 
-  tree.Print();
+//  tree.Print();
   CloseFile();
 
   return true;

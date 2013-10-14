@@ -48,6 +48,8 @@ class JPetSignal: public TNamed {
   } 
   inline bool IsLeft() const { return fLeft; }
   int GetNTresholds(Edge edge) const;
+  
+  ClassDef(JPetSignal,1);
 
  private:
   double fTime;
