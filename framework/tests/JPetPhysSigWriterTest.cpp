@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE (test5)
 
 	//init Signal
 	
-	JPetSignal* signal = new JPetSignal (0.0, 0.0, true, falling, rising);
+	JPetSignal* signal = new JPetSignal (10.0, 10.0, true, falling, rising);
 	
 	//init and test writer
 	
