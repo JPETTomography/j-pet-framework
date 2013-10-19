@@ -3,7 +3,7 @@ LD    = g++
 COPTS    = `root-config --cflags`
 LDOPTS    = `root-config --glibs` -g
 #C++ Files
-SOURCES =  JPetTslotRawWriter.cpp
+SOURCES =  JPetTSlotRawWriter.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 OBJECTS += Dict.o
 HEADERS = $(SOURCES:.cpp=.h) 
