@@ -19,5 +19,6 @@
 
 class JPetTSlotRawWriter: public JPetWriter{
     //bool Write(const TNamed& data){}
+public:
 	static bool Write(const vector<JPetTSlot>& obj, const char* file_name);
 };

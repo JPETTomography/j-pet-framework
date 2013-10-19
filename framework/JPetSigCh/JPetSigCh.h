@@ -15,7 +15,7 @@
 
 using namespace std;
 
-class JPetSigCh: public TClass {
+class JPetSigCh: public TNamed {
 
 public:
 	enum EdgeType { kRising, kFalling };
