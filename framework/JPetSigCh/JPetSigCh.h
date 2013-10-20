@@ -30,7 +30,7 @@ public:
 	
 	unsigned int size() const {return fChannels.size(); }
 	float getAmpl() const { return fAmpl; }
-	float getTime(EdgeType type, int ch_no = 0) const { return fChannels[ch_no].find(type)->second; }
+	float getTime(EdgeType type = kRising, int ch_no = 0) const { return fChannels[ch_no].find(type)->second; }
 	const JPetPM& getPM() const { /*assert(fPM != NULL);*/ return *fPM; }
 	const JPetTRB& getTRB() const { /*assert(fTRB != NULL);*/ return *fTRB; }
 	const JPetScin& getScin() const { /*assert(fScin != NULL);*/ return *fScin; }
