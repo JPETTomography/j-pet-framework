@@ -31,7 +31,8 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_CHECK_EQUAL(hit.GetQualityOfTime(), 0.0f);
   
   BOOST_CHECK(hit.fPos != NULL);
-  BOOST_CHECK(hit.fSignals == NULL);
+  BOOST_CHECK(hit.fSignals->first == NULL);
+  BOOST_CHECK(hit.fSignals->second == NULL);
   BOOST_CHECK(hit.fBarrelSlot == NULL);
   BOOST_CHECK(hit.fScintillator == NULL);
   BOOST_CHECK(hit.fTSlot == NULL);
@@ -40,10 +41,10 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 BOOST_AUTO_TEST_CASE(init_constructor )
 {
   // Create requied data
-  Vector3 position(1.0f,2.0f,3.0f);
+  TVector3 position(1.0f,2.0f,3.0f);
   JPetSignal leftSignal;
   JPetSignal rightSignal;
-  JPetSignals bothSignals(leftSignal,rightSignal);
+  JPetSignals bothSignals = std::make_pair(&leftSignal,&rightSignal);
   JPetBarrelSlot barrelSlot;
   JPetScin scintillator;
   JPetTSlot tSlot;
@@ -63,7 +64,8 @@ BOOST_AUTO_TEST_CASE(init_constructor )
   BOOST_CHECK_EQUAL(hit.GetPos(2),3.0f);
   
   BOOST_CHECK(hit.fPos != NULL);
-  BOOST_CHECK(hit.fSignals != NULL);
+  BOOST_CHECK(hit.fSignals->first != NULL);
+  BOOST_CHECK(hit.fSignals->second != NULL);
   BOOST_CHECK(hit.fBarrelSlot != NULL);
   BOOST_CHECK(hit.fScintillator != NULL);
   BOOST_CHECK(hit.fTSlot != NULL);
@@ -74,10 +76,10 @@ BOOST_AUTO_TEST_CASE(set_get_test)
 
   // Create requied data
   
-  Vector3 position(1.0f,2.0f,3.0f);
+  TVector3 position(1.0f,2.0f,3.0f);
   JPetSignal leftSignal;
   JPetSignal rightSignal;
-  JPetSignals bothSignals(leftSignal,rightSignal);
+  JPetSignals bothSignals = std::make_pair(&leftSignal,&rightSignal);
   JPetBarrelSlot barrelSlot;
   JPetScin scintillator;
   JPetTSlot tSlot;

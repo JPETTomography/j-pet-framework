@@ -15,7 +15,9 @@ TESTS = $(MODULES:=Test.exe)
 ###################
 SRC_DIR = ..
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
-SRC_OBJS = $(SRC_MODULES:.cpp=.o) ../JPetLogger/JPetLogger.o ../JPetSignal/Dict.o ../JPetReader/JPetReader.o ../JPetWriter/JPetWriter.o
+SRC_OBJS = $(SRC_MODULES:.cpp=.o) ../JPetLogger/JPetLogger.o ../JPetReader/JPetReader.o ../JPetWriter/JPetWriter.o
+DICT_OBJS = ../JPetSigCh/JPetSigChDict.o ../JPetSignal/JPetSignalDict.o ../JPetHit/JPetHitDict.o ../JPetEvent/JPetEventDict.o
+SRC_OBJS += $(DICT_OBJS)
 ###################
 %.o: %.cpp
 	$(CO) -o $@ $(CFLAGS)  -c $<

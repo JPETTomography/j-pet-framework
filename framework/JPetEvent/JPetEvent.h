@@ -3,48 +3,35 @@
 
 #include "../JPetHit/JPetHit.h"
 
+#include <cstddef>
+#include <utility>
+
 class JPetHit;
 
-class JPetHits {
-  
-  public:
-  
-  enum HitsSequence {kFirst, kSecond};
- 
-  JPetHits ();
-  JPetHits (JPetHit& firstHit, JPetHit& secondHit);
-  virtual ~JPetHits();
-  inline JPetHit& First() const {return *fFirst;};
-  inline JPetHit& Second() const {return *fSecond;};
-  inline JPetHit& GetHit(HitsSequence seq) const {
-    if (seq==kFirst) return *fFirst;
-    return *fSecond;
-  };
-  JPetHit& operator() (int index) const {
-    if(index==0) return *fFirst;
-    return *fSecond;  
-  };
-   
-  private:
-  
-  JPetHit* fFirst;
-  JPetHit* fSecond;
-};
+typedef std::pair<JPetHit*,JPetHit*> JPetHits;
 
-class JPetEvent {
+class JPetEvent: public TNamed {
   
   public:
   
   JPetEvent();
+  JPetEvent(float Time, float QualityOfTime, JPetHits& Hits);
   virtual ~JPetEvent();
-  inline float GetTime() const {return fTime;};
-  inline float GetQualityOfTime() const {return fQualityOfTime;};
+  inline const float GetTime() const {return fTime;};
+  inline const float GetQualityOfTime() const {return fQualityOfTime;};
   inline void SetTime(float time) {fTime = time;};
   inline void SetQualityOfTime(float qualityOfTime) {fQualityOfTime = qualityOfTime;};
-  inline JPetHit& GetHit(JPetHits::HitsSequence seq) const {return fHits->GetHit(seq);};
-  inline JPetHit& GetHit(int index) const {return (*fHits)(index);};
-  inline JPetHits& GetHits() const {return *fHits;};
+  inline const JPetHit& GetHitFirst() const {return *fHits->first;};
+  inline const JPetHit& GetHitSecond() const {return *fHits->second;};
+  inline const JPetHits& GetHits() const {return *fHits;};
+  inline void SetHits(JPetHits* hits) {fHits = hits;};
+  inline void SetHits(JPetHits& hits) {fHits = &hits;};
+  inline void SetHits(JPetHit* firstHit, JPetHit* secondHit) {
+              fHits->first = firstHit;
+	      fHits->second = secondHit;};
   
+  ClassDef(JPetEvent,1);
+
   private:
   
   float fTime;

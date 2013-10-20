@@ -15,14 +15,14 @@
 
 using namespace std;
 
-class JPetSigCh: public TClass {
+class JPetSigCh: public TNamed {
 
 public:
 	enum EdgeType { kRising, kFalling };
 	typedef map < EdgeType, float > SingleCh;
 	typedef vector < SingleCh > ChSet;
 
-	JPetSigCh() { init(); }
+	JPetSigCh(): TNamed("JPetSigCh", "Signal Channel Structure")  { init(); }
 	JPetSigCh(const JPetSigCh& obj);
 	JPetSigCh(float EdgeTime, float FallEdgeTime = 0);
 	
@@ -46,7 +46,9 @@ public:
 	
 	JPetSigCh& operator= (const JPetSigCh& obj);
 
-private:
+	ClassDef(JPetSigCh,1);
+
+protected:
 	
 	float fAmpl; 
 	ChSet fChannels;

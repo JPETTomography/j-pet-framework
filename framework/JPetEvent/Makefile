@@ -1,18 +1,19 @@
-CC      = g++
-LD      = g++
-COPTS   = `root-config --cflags`
-LDOPTS  = `root-config --glibs` -g
+CC            =  g++
+LD            =  g++
+COPTS         =  `root-config --cflags`
+LDOPTS        =  `root-config --glibs` -g
 #C++ Files
-SOURCES =  JPetEvent.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
-OBJECTS += Dict.o
-HEADERS = $(SOURCES:.cpp=.h) 
+SOURCES       =  JPetEvent.cpp
+OBJECTS       =  $(SOURCES:.cpp=.o)
+DICT_OBJECTS  =  $(SOURCES:.cpp=Dict.cpp)
+OBJECTS      +=  $(SOURCES:.cpp=Dict.o)
+HEADERS       =  $(SOURCES:.cpp=.h) 
 
 %.o: %.cpp
 	$(CC) $^ -o $@  -c $(COPTS)
-all: $(OBJECTS)
-Dict.cpp:
+all: $(DICT_OBJECTS) $(OBJECTS)
+%Dict.cpp:
 	@echo "Genarating dictionary ..."
-	@rootcint -f Dict.cpp -c -P -I$(ROOTSYS) $(HEADERS)
+	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
 clean:
-	rm -f $(OBJECTS) Dict.cpp Dict.h
+	rm -f $(OBJECTS) *Dict*
