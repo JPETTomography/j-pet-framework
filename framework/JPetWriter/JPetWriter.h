@@ -10,7 +10,7 @@ class JPetWriter {
 public:
     JPetWriter(){}
     virtual ~JPetWriter(){}
-    virtual bool Write(const TNamed& data)=0;
+   // virtual bool Write(const TNamed& data)=0;
     virtual bool OpenFile(const char* filename);
     virtual void CloseFile();
 protected:
