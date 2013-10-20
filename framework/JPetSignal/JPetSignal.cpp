@@ -6,7 +6,10 @@
 
 #include "./JPetSignal.h"
 
+ClassImp(JPetSignal);
+
 JPetSignal::JPetSignal() :
+  TNamed("JPetSignal", "Signal Structure"),
   fTime(0), 
   fQualityOfTime(0), 
   fLeft(true) 

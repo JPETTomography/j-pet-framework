@@ -1,20 +1,16 @@
 #include "./JPetEvent.h"
 
-#include <cstddef>
-
-JPetHits::JPetHits() :
-    fFirst(NULL), fSecond(NULL) {
-}
-
-JPetHits::JPetHits (JPetHit& firstHit, JPetHit& secondHit) :
-    fFirst(&firstHit), fSecond(&secondHit) {
-}
-
-JPetHits::~JPetHits() {
-}
+ClassImp(JPetEvent);
 
 JPetEvent::JPetEvent() :
-  fTime(0.0f), fQualityOfTime(0.0f), fHits(NULL) {
+    TNamed("JPetEvent", "Event Structure"), fTime(0.0f), fQualityOfTime(0.0f),
+    fHits(new std::pair<JPetHit*,JPetHit*>) {
+  *fHits = make_pair((JPetHit*)NULL,(JPetHit*)NULL);
+}
+
+JPetEvent::JPetEvent(float Time, float QualityOfTime, JPetHits& Hits) :
+    TNamed("JPetEvent","Event Structure"), fTime(Time), fQualityOfTime(QualityOfTime),
+    fHits(&Hits) {
 }
 
 JPetEvent::~JPetEvent() {
