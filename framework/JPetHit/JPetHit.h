@@ -15,12 +15,11 @@ class JPetScin;
 class JPetSignal;
 class JPetTSlot;
 
-typedef std::pair<JPetSignal*,JPetSignal*> JPetSignals;
-
 class JPetHit : public TNamed {
 
   public:
-
+  
+  typedef std::pair<JPetSignal*,JPetSignal*> JPetSignals;
   enum Signal {kLeft,kRight};
   
   JPetHit();

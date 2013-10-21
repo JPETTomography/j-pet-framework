@@ -8,11 +8,11 @@
 
 class JPetHit;
 
-typedef std::pair<JPetHit*,JPetHit*> JPetHits;
-
 class JPetEvent: public TNamed {
   
   public:
+
+  typedef std::pair<JPetHit*,JPetHit*> JPetHits;
   
   JPetEvent();
   JPetEvent(float Time, float QualityOfTime, JPetHits& Hits);
