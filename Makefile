@@ -31,4 +31,5 @@ modules:
 clean:         
 	@rm -f $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE) clean;))
-	
+documentation:
+	doxygen Doxyfile
