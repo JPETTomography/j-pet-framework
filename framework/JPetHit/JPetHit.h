@@ -1,3 +1,10 @@
+/**
+ * @file JPetHit.h
+ * @author Damian Trybek, damian.trybek@uj.edu.pl
+ * @copyright Copyright (c) 2013, Damian Trybek
+ * @brief Hit Class
+ */
+
 #ifndef _JPETHIT_H_
 #define _JPETHIT_H_
 
@@ -5,6 +12,7 @@
 #include "../JPetScin/JPetScin.h"
 #include "../JPetTSlot/JPetTSlot.h"
 
+#include "TNamed.h"
 #include "TVector3.h"
 
 #include <cstddef>

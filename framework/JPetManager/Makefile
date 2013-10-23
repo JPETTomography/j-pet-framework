@@ -1,13 +1,19 @@
-CC    = g++
-LD    = g++
-COPTS    = `root-config --cflags`
+CC            =  g++
+LD            =  g++
+COPTS         =  `root-config --cflags`
+LDOPTS        =  `root-config --glibs` -g
 #C++ Files
-SOURCES =  JPetManager.cpp 
-OBJECTS = $(SOURCES:.cpp=.o)
-HEADERS = $(SOURCES:.cpp=.h) 
+SOURCES       =  JPetManager.cpp
+OBJECTS       =  $(SOURCES:.cpp=.o)
+DICT_OBJECTS  =  $(SOURCES:.cpp=Dict.cpp)
+OBJECTS      +=  $(SOURCES:.cpp=Dict.o)
+HEADERS       =  $(SOURCES:.cpp=.h) 
 
 %.o: %.cpp
 	$(CC) $^ -o $@  -c $(COPTS)
-all: $(OBJECTS) 
+all: $(DICT_OBJECTS) $(OBJECTS)
+%Dict.cpp:
+	@echo "Genarating dictionary ..."
+	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
 clean:
-	@rm -f $(OBJECTS)
+	rm -f $(OBJECTS) *Dict*

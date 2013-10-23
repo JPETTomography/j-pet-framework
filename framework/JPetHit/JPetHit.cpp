@@ -1,3 +1,9 @@
+/**
+ *  @file JPetHit.cpp
+ *  @author Damian Trybek, damian.trybek@uj.edu.pl
+ *  @copyright Copyright (c) 2013, Damian Trybek
+ */
+
 #include "./JPetHit.h"
 
 #include "TString.h"

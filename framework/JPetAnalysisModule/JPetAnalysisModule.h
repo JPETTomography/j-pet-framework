@@ -19,5 +19,7 @@ class JPetAnalysisModule: public TNamed {
   virtual void CreateOutputObjects()=0; //
   virtual void Exec()=0; // called for every event
   virtual void Terminate()=0; // called once when analysis terminates 
+
+  ClassDef(JPetAnalysisModule,1);
 };
 #endif /*  !JPETANALYSISMODULE_H */

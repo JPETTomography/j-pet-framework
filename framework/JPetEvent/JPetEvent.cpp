@@ -1,3 +1,10 @@
+/**
+ * @file JPetEvent.cpp
+ * @author Damian Trybek, damian.trybek@uj.edu.pl
+ * @copyright Copyright (c) 2013, Damian Trybek
+ */
+
+
 #include "./JPetEvent.h"
 
 ClassImp(JPetEvent);
