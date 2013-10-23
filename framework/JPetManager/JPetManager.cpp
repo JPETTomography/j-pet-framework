@@ -5,8 +5,10 @@
   */ 
 
 #include "./JPetManager.h"
-#include "../JPetAnalysisModule/JPetAnalysisModule.h"
+//#include "../JPetAnalysisModule/JPetAnalysisModule.h"
 #include <cassert>
+
+ClassImp(JPetManager);
 
 JPetManager& JPetManager::GetManager() {
     static JPetManager instance;

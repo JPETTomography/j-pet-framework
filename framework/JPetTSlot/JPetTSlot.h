@@ -21,6 +21,8 @@ public:
 	const JPetSigCh & operator[](int index) const { return fSigChannels[index]; }
 
 	virtual ~JPetTSlot(){}
+
+	ClassDef(JPetTSlot,1);
 private:
 	vector<JPetSigCh> fSigChannels;
 };

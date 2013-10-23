@@ -4,7 +4,11 @@ COPTS    = `root-config --cflags`
 LDOPTS    = `root-config --glibs` -g
 ################
 SRC_DIR = $(PWD)/framework
-MODULES = DummyClass JPetLogger JPetManager JPetReader JPetAnalysisModule JPetSignal JPetSigCh JPetTSlot  JPetTSlotUnpReader JPetHit JPetEvent JPetPhysSigReader JPetPhysSigWriter JPetTSlotRawReader
+DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetManager JPetScin JPetSigCh JPetSignal JPetTSlot
+DICTS   = $(DMODULES)
+READERS = JPetReader JPetPhysSigReader JPetTSlotRawReader JPetTSlotUnpReader
+WRITERS = JPetWriter JPetPhysSigWriter JPetTSlotRawWriter
+MODULES = $(DMODULES) DummyClass JPetLogger JPetPM JPetTRB $(READERS) $(WRITERS)
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
 SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 ################
@@ -15,10 +19,11 @@ HEADERS = Event.h TDCHit.h ADCHit.h Sig.h JPetLoggerInclude.h
 HEADERS += $(SRC_HEADERS)
 HEADERS += linkdef.h
 OBJECTS = $(SOURCES:.cpp=.o)
+DICT_OBJS = $(foreach DICT, $(DICTS), $(SRC_DIR)/$(DICT)/$(DICT)Dict.o)
 EXECUTABLE = main
 all: modules $(EXECUTABLE)
 $(EXECUTABLE): $(OBJECTS)
-	$(LD) -o $@ $^ $(LDOPTS)
+	$(LD) -o $@ $^ $(LDOPTS) $(DICT_OBJS)
 #C++ files
 .cpp.o:
 	$(CC) -o $@ $^ -c $(COPTS)

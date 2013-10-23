@@ -1,8 +1,11 @@
 #ifndef _JPETBARRELSLOT_H_
 #define	_JPETBARRELSLOT_H_
 
-class JPetBarrelSlot {
+#include "TNamed.h"
+
+class JPetBarrelSlot: public TNamed {
 public:
+	ClassDef(JPetBarrelSlot,1);
 
 private:
 	int fSlotId;

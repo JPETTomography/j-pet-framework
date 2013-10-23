@@ -8,6 +8,8 @@
 #ifndef JPETMANAGER_H 
 #define JPETMANAGER_H 
 
+#include "../JPetAnalysisModule/JPetAnalysisModule.h"
+
 #include <vector>
 #include <TNamed.h> 
 
@@ -17,10 +19,13 @@ class JPetManager: public TNamed {
  public:
   static JPetManager& GetManager();
   ~JPetManager();
-  void Init();
+  //dodalem klamry, bo kod nie chcial sie linkowac - Damian
+  void Init(){};
   void Run();
   void AddTask(JPetAnalysisModule* mod);
-  
+ 
+  ClassDef(JPetManager,1);
+
  private:
   JPetManager();
   JPetManager(const JPetManager&);

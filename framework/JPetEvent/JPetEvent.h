@@ -1,3 +1,10 @@
+/**
+ * @file JPetEvent.h
+ * @author Damian Trybek, damian.trybek@uj.edu.pl
+ * @copyright Copyright (c) 2013, Damian Trybek
+ * @brief Event Class
+ */
+
 #ifndef _JPETEVENT_H_
 #define _JPETEVENT_H_
 
