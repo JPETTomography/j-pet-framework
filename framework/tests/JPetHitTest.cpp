@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(init_constructor )
   TVector3 position(1.0f,2.0f,3.0f);
   JPetSignal leftSignal;
   JPetSignal rightSignal;
-  JPetSignals bothSignals = std::make_pair(&leftSignal,&rightSignal);
+  JPetHit::JPetSignals bothSignals = std::make_pair(&leftSignal,&rightSignal);
   JPetBarrelSlot barrelSlot;
   JPetScin scintillator;
   JPetTSlot tSlot;
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(set_get_test)
   TVector3 position(1.0f,2.0f,3.0f);
   JPetSignal leftSignal;
   JPetSignal rightSignal;
-  JPetSignals bothSignals = std::make_pair(&leftSignal,&rightSignal);
+  JPetHit::JPetSignals bothSignals = std::make_pair(&leftSignal,&rightSignal);
   JPetBarrelSlot barrelSlot;
   JPetScin scintillator;
   JPetTSlot tSlot;
