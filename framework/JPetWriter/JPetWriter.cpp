@@ -26,3 +26,34 @@ void JPetWriter::CloseFile(){
         fFile = NULL;
     }
 }
+
+bool JPetWriter::Write(const vector<TNamed>& obj, const char* file_name) {
+	TFile *file = new TFile(file_name, "RECREATE");
+	TTree tree;
+	
+	TNamed* filler = new TNamed;
+	
+	if ( !file->IsOpen() ) {
+		ERROR("Could not write to file.");
+		return false;
+	}
+	
+	tree.Branch(filler->GetName(), filler->GetName(), &filler);
+	
+	for (int i = 0; i < obj.size(); i++){
+		*filler = obj[i];
+		tree.Fill();
+	}
+	
+	tree.Write();
+	
+	//tree.Print();
+	//tree.Show(2);
+	
+	file->Close();
+    
+    delete filler;
+    delete file;
+    
+	return true;
+}
