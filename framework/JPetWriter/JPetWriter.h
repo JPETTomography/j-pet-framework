@@ -13,12 +13,18 @@ using namespace std;
 
 class JPetWriter {
 public:
-    JPetWriter(){}
-    virtual ~JPetWriter(){}
-    bool Write(const vector<TNamed>& obj);
-    virtual bool OpenFile(const char* filename);
-    virtual void CloseFile();
+    JPetWriter(const char* file_name);
+    virtual ~JPetWriter();
+    bool Write(const TNamed& obj);
+    /**
+     * @todo Argument prbably should be const, but root method TTree::Branch() used in it is not. How to solve it?
+     */
+    bool Write(vector<TNamed>& obj);
+    //bool OpenFile(const char* filename);
+    void CloseFile();
+    
 protected:
-    TFile *fFile;
+    string fFileName;
+    TFile fFile;
 };
 #endif /*  !JPETWRITER_H */
