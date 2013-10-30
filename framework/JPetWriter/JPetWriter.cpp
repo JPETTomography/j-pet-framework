@@ -9,7 +9,7 @@
 
 #include "JPetWriter.h"
 
-TFile* JPetWriter::fFile = NULL;
+//TFile* JPetWriter::fFile = NULL;
 
 bool JPetWriter::OpenFile(const char* filename){
     CloseFile();
@@ -28,13 +28,13 @@ void JPetWriter::CloseFile(){
 }
 
 bool JPetWriter::Write(const vector<TNamed>& obj, const char* file_name) {
-	TFile *file = new TFile(file_name, "RECREATE");
+	//TFile *file = new TFile(file_name, "RECREATE");
 	TTree tree;
 	
 	TNamed* filler = new TNamed;
 	
-	if ( !file->IsOpen() ) {
-		ERROR("Could not write to file.");
+	if ( !fFile->IsOpen() ) {
+		ERROR("Could not write to file. Have you forgotten to open it?");
 		return false;
 	}
 	
@@ -50,10 +50,10 @@ bool JPetWriter::Write(const vector<TNamed>& obj, const char* file_name) {
 	//tree.Print();
 	//tree.Show(2);
 	
-	file->Close();
+	//file->Close();
     
     delete filler;
-    delete file;
+    //delete file;
     
 	return true;
 }

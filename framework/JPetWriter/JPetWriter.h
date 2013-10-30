@@ -19,6 +19,6 @@ public:
     virtual bool OpenFile(const char* filename);
     virtual void CloseFile();
 protected:
-    static TFile *fFile;
+    TFile *fFile;
 };
 #endif /*  !JPETWRITER_H */
