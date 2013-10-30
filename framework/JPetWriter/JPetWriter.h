@@ -15,7 +15,7 @@ class JPetWriter {
 public:
     JPetWriter(){}
     virtual ~JPetWriter(){}
-    bool Write(const vector<TNamed>& obj, const char* file_name);
+    bool Write(const vector<TNamed>& obj);
     virtual bool OpenFile(const char* filename);
     virtual void CloseFile();
 protected:
