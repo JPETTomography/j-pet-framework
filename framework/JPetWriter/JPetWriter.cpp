@@ -27,7 +27,7 @@ void JPetWriter::CloseFile(){
     }
 }
 
-bool JPetWriter::Write(const vector<TNamed>& obj, const char* file_name) {
+bool JPetWriter::Write(const vector<TNamed>& obj) {
 	//TFile *file = new TFile(file_name, "RECREATE");
 	TTree tree;
 	
