@@ -11,49 +11,56 @@
 
 //TFile* JPetWriter::fFile = NULL;
 
-bool JPetWriter::OpenFile(const char* filename){
-    CloseFile();
-    fFile = new TFile(filename, "UPDATE");
-    
-    if ( fFile->IsZombie() ) return false;
-    else return true;
-}
-
-void JPetWriter::CloseFile(){
-    if (fFile != NULL) {
-        if (fFile->IsOpen() )fFile->Close();
-        delete fFile;
-        fFile = NULL;
+JPetWriter::JPetWriter(const char* file_name)
+   : fFileName(file_name, "UPDATE")  // string z nazwą pliku
+   , fFile(fFileName.c_str())        // plik
+{
+    if ( fFile.IsZombie() ){
+        ERROR("Could not open file to write.");
+        this->~JPetWriter();
     }
 }
 
-bool JPetWriter::Write(const vector<TNamed>& obj) {
-	//TFile *file = new TFile(file_name, "RECREATE");
-	TTree tree;
+bool JPetWriter::Write(const TNamed& obj){
+    vector<TNamed> wrapper;
+    wrapper.push_back(obj);
+    Write(wrapper);
+}
+
+void JPetWriter::CloseFile(){
+    if (fFile.IsOpen() ) fFile.Close();
+}
+
+bool JPetWriter::Write( vector<TNamed>& obj) {
 	
-	TNamed* filler = new TNamed;
-	
-	if ( !fFile->IsOpen() ) {
-		ERROR("Could not write to file. Have you forgotten to open it?");
+    if (obj.size() == 0) {
+        WARNING("Vector passed is empty");
+        return false;
+    }
+    
+    if ( !fFile.IsOpen() ) {
+		ERROR("Could not write to file. Have you forgotten to open or closed it already?");
 		return false;
 	}
+    
+    fFile.cd(fFileName.c_str()); // -> http://root.cern.ch/drupal/content/current-directory
+    
+    TTree tree;
 	
-	tree.Branch(filler->GetName(), filler->GetName(), &filler);
+	TNamed& filler = obj[0];
+    
+	tree.Branch(filler.GetName(), filler.GetName(), &filler);
 	
 	for (int i = 0; i < obj.size(); i++){
-		*filler = obj[i];
-		tree.Fill();
+        filler = obj[i]; 
+		tree.Fill();      
 	}
 	
 	tree.Write();
-	
-	//tree.Print();
-	//tree.Show(2);
-	
-	//file->Close();
-    
-    delete filler;
-    //delete file;
     
 	return true;
+}
+
+JPetWriter::~JPetWriter(){
+    CloseFile();
 }
