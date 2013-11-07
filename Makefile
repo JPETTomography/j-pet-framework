@@ -4,13 +4,15 @@ COPTS    = `root-config --cflags`
 LDOPTS    = `root-config --glibs` -g
 ################
 SRC_DIR = $(PWD)/framework
-DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot
+DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetManager JPetPM JPetScin JPetSigCh JPetSignal  JPetTSlot JPetTRB
 DICTS   = $(DMODULES)
-READERS = JPetReader JPetPhysSigReader JPetTSlotRawReader JPetTSlotUnpReader
-WRITERS = JPetWriter JPetPhysSigWriter JPetTSlotRawWriter
-MODULES = $(DMODULES) DummyClass JPetLogger $(READERS) $(WRITERS)
+READERS = JPetReader
+WRITERS = JPetWriter
+MODULES = $(DMODULES) DummyClass JPetLogger $(READERS) $(WRITERS) 
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
 SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
+################
+TEST_DIR = $(SRC_DIR)/tests
 ################
 #C++ Files
 SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp
@@ -36,5 +38,6 @@ modules:
 clean:         
 	@rm -f $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE) clean;))
+	@(cd $(TEST_DIR);$(MAKE) clean;)
 documentation:
 	doxygen Doxyfile
