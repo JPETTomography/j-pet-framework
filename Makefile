@@ -4,7 +4,7 @@ COPTS    = `root-config --cflags`
 LDOPTS    = `root-config --glibs` -g
 ################
 SRC_DIR = $(PWD)/framework
-DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetManager JPetPM JPetScin JPetSigCh JPetSignal  JPetTSlot JPetTRB
+DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetManager JPetPM JPetScin JPetSigCh JPetSignal  JPetTSlot JPetTRB 
 DICTS   = $(DMODULES)
 READERS = JPetReader
 WRITERS = JPetWriter
