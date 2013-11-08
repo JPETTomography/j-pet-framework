@@ -12,6 +12,8 @@ MODULES = $(DMODULES) DummyClass JPetLogger $(READERS) $(WRITERS)
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
 SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 ################
+TEST_DIR = $(SRC_DIR)/tests
+################
 #C++ Files
 SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp
 SOURCES += $(SRC_MODULES)
@@ -35,6 +37,7 @@ modules:
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
 clean:         
 	@rm -f $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h
-	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE) clean;))
+	@($(foreach MODULE, $(MODULES),$(MAKE) -C $(SRC_DIR)/$(MODULE) clean;))
+	$(MAKE) -C $(TEST_DIR) clean
 documentation:
 	doxygen Doxyfile
