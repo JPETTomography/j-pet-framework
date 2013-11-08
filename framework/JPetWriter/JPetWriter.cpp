@@ -17,7 +17,6 @@ JPetWriter::JPetWriter(const char* file_name)
 {
     if ( fFile.IsZombie() ){
         ERROR("Could not open file to write.");
-        this->~JPetWriter();
     }
 }
 
