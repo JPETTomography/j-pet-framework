@@ -6,8 +6,8 @@ LDOPTS    = `root-config --glibs` -g
 SRC_DIR = $(PWD)/framework
 DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot
 DICTS   = $(DMODULES)
-READERS = JPetReader JPetPhysSigReader JPetTSlotRawReader JPetTSlotUnpReader
-WRITERS = JPetWriter JPetPhysSigWriter JPetTSlotRawWriter
+READERS = JPetReader
+WRITERS = JPetWriter
 MODULES = $(DMODULES) DummyClass JPetLogger $(READERS) $(WRITERS)
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
 SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
