@@ -39,7 +39,7 @@ bool JPetWriter::Write( vector<TNamed>& obj) {
     }
     
     if ( !fFile.IsOpen() ) {
-		ERROR("Could not write to file. Have you forgotten to open or closed it already?");
+		ERROR("Could not write to file. Have you closed it already?");
 		return false;
 	}
     
