@@ -8,15 +8,33 @@
 #ifndef JPETREADER_H 
 #define JPETREADER_H 
 
-#include <string>
+#include <cstddef>
+
+#include <TBranch.h>
+#include <TFile.h>
+#include <TNamed.h>
+#include <TTree.h>
+
+#include "../../JPetLoggerInclude.h"
 
 class JPetReader {
  public:
   JPetReader();
   virtual ~JPetReader();
-  virtual void OpenFile(const char* filename) = 0;
-  virtual void CloseFile() = 0;
-  virtual long long GetEntries()const = 0; 
-  virtual int GetEntry(int number) = 0;
+  
+  virtual void CloseFile();
+  virtual long long GetEntries () const;
+  virtual int GetEntry (int entry);
+  virtual void OpenFile(const char* filename);
+  virtual void ReadData(const char* objname = "");
+  virtual TNamed& GetData () {return *fObject;}
+
+ protected:
+  
+  TBranch* fBranch;
+  TFile* fFile;
+  TNamed* fObject;
+  TTree* fTree;
+
 };
 #endif /*  !JPETREADER_H */
