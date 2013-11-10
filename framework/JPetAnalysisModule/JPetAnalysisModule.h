@@ -8,7 +8,7 @@
 #ifndef JPETANALYSISMODULE_H 
 #define JPETANALYSISMODULE_H
 
-#include <TNamed.h> 
+#include "TNamed.h" 
 
 class JPetAnalysisModule: public TNamed {
  public:
