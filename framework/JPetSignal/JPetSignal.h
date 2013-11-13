@@ -31,6 +31,12 @@
 //  int DAQch;
 //};
 
+/*
+ * Nie rozumiem jak tu się dostać do danych 
+ * w fFalling i fRisingPoints, chyba, że są tu one 
+ * tylko do podawania ich długości. - Karol
+ */
+
 class JPetSignal: public TNamed {
  public:
   enum Edge {kFalling, kRising};
