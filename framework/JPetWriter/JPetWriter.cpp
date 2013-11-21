@@ -12,8 +12,8 @@
 //TFile* JPetWriter::fFile = NULL;
 
 JPetWriter::JPetWriter(const char* file_name)
-   : fFileName(file_name, "UPDATE")  // string z nazwą pliku
-   , fFile(fFileName.c_str())        // plik
+   : fFileName(file_name)  // string z nazwą pliku
+   , fFile(fFileName.c_str(), "RECREATE")        // plik
 {
     if ( fFile.IsZombie() ){
         ERROR("Could not open file to write.");
