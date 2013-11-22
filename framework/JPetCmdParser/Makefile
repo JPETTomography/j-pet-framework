@@ -7,12 +7,14 @@ SOURCES       =  JPetCmdParser.cpp
 OBJECTS       =  $(SOURCES:.cpp=.o)
 #DICT_OBJECTS  =  $(SOURCES:.cpp=Dict.cpp)
 #OBJECTS      +=  $(SOURCES:.cpp=Dict.o)
-HEADERS       =  $(SOURCES:.cpp=.h) 
+HEADERS       =  $(SOURCES:.cpp=.h)
+#HEADERS      +=  /usr/local/include/boost/program_options.hpp
 
 %.o: %.cpp
 	$(CC) $^  -o $@  -c $(COPTS)
-all: $(OBJECTS) #$(DICT_OBJECTS)
+all: $(DICT_OBJECTS) $(OBJECTS)
 #%Dict.cpp:
+#	@echo $(HEADERS)
 #	@echo "Genarating dictionary ..."
 #	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
 clean:

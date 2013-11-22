@@ -9,6 +9,7 @@
 #define JPETMANAGER_H 
 
 #include "../JPetAnalysisModule/JPetAnalysisModule.h"
+#include "../JPetCmdParser/JPetCmdParser.h"
 
 #include <vector>
 #include <TNamed.h> 
@@ -27,6 +28,7 @@ class JPetManager: public TNamed {
   ClassDef(JPetManager,1);
 
  private:
+ 	JPetCmdParser fCmdParser;
   JPetManager();
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&); 
