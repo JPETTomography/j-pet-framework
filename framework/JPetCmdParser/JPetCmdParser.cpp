@@ -13,33 +13,45 @@
 JPetCmdParser::JPetCmdParser()
     : fOptDescriptions("Allowed options")
 {
+    vector<int> tmp;
+    tmp.push_back(-1);
+    tmp.push_back(-1);
+    
     fOptDescriptions.add_options()
     ("help,h", "produce help message")
-    ("file,f", po::value<string>(), "File to open")
-    ("range,r", po::value< vector<int> >(), "Range of events to process.")
+    ("file,f", po::value<string>()->required(), "File to open")
+    ("range,r", po::value< vector<int> >()->multitoken()->default_value(tmp,""), "Range of events to process.")
     ("param,p", po::value<string>(), "File with TRB numbers.")
-    ;
-        
+    ;        
 }
 
 void JPetCmdParser::parse(int argc, char** argv){
     try{	
         
         po::store(po::parse_command_line(argc, argv, fOptDescriptions), fVariablesMap);
-        po::notify(fVariablesMap);    
-		
+        /* print out help */
         if (fVariablesMap.count("help")) {
             cout << fOptDescriptions << "\n";
-            return;
+            exit(0);
         }
         
-        if (fVariablesMap.count("file")) {
-            cout << "File to open:  " 
-            << fVariablesMap["file"].as<string>() << ".\n";
+        po::notify(fVariablesMap);    
+        
+        /* parse range of events */
+        if (fVariablesMap.count("range")) {
+            if (fVariablesMap["range"].as< vector<int> >().size() != 2) {
+                cerr << "Wrong number of bounds in range: " << fVariablesMap["range"].as< vector<int> >().size() << endl;
+                exit(-1);
+            }
+            if (
+                fVariablesMap["range"].as< vector<int> >()[0] 
+                > fVariablesMap["range"].as< vector<int> >()[1]) 
+            {
+                cerr << "Wrong range of events." << endl;
+                exit(-1);
+            }
         }
-        else {
-            cout << "File to open was not specified.\n";
-        }
+        
     }
     catch(exception& e) {
         cerr << "error: " << e.what() << "\n";

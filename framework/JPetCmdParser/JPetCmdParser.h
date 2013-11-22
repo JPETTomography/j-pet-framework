@@ -15,8 +15,14 @@ public:
 	JPetCmdParser();
     void parse(int argc, char** argv);
     const string& getFileName() { return fVariablesMap["file"].as<string>();}
-	int getLowerEventBound() { return fVariablesMap["range"].as< vector<int> >()[0];}
-    int getHigherEventBound() { return fVariablesMap["range"].as< vector<int> >()[1];}
+	/**
+     * @brief Method returning lower bound of events to process or -1 if they were not specified.
+     */
+    int getLowerEventBound() {return fVariablesMap["range"].as< vector<int> >()[0];}
+    /**
+     * @brief Method returning higher bound of events to process or -1 if they were not specified.
+     */
+    int getHigherEventBound() {return fVariablesMap["range"].as< vector<int> >()[1];}
     
 private:
 	po::options_description fOptDescriptions;

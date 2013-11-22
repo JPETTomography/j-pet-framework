@@ -24,6 +24,7 @@ class JPetManager: public TNamed {
   void Init(){};
   void Run();
   void AddTask(JPetAnalysisModule* mod);
+  void ParseCmdLine(int argc, char** argv) {fCmdParser.parse(argc, argv);}
  
   ClassDef(JPetManager,1);
 
