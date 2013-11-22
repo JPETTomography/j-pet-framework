@@ -3,7 +3,8 @@
 ClassImp(JPetSigCh);
 
 void JPetSigCh::init(){
-	fPM = NULL;
+	SetNameTitle("JPetSigCh", "Signal Channel Structure");
+    fPM = NULL;
 	fTRB = NULL;
 	fScin = NULL;
 	fBarrelSlot = NULL;
@@ -11,7 +12,7 @@ void JPetSigCh::init(){
 	fIsSlow = 0;
 }
 
-JPetSigCh::JPetSigCh(const JPetSigCh& obj): TNamed("JPetSigCh", "Signal Channel Structure") {
+JPetSigCh::JPetSigCh(const JPetSigCh& obj){
 	init();
 	if (this != &obj){
 		fAmpl = obj.getAmpl();
@@ -27,7 +28,7 @@ JPetSigCh::JPetSigCh(const JPetSigCh& obj): TNamed("JPetSigCh", "Signal Channel 
 	}
 }
 
-JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time): TNamed("JPetSigCh","Signal Channel Structure") {
+JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time){
 	init();
 	if (fall_edge_time == 0) fIsSlow = 1;
 	addCh(edge_time, fall_edge_time);
