@@ -8,17 +8,22 @@
  */
 #include "JPetCmdParser.h"
 
-JPetCmdParser::JPetCmdParser(int argc, char** argv)
+//#ifndef __CINT__ // guard against being included into dictionary
+
+JPetCmdParser::JPetCmdParser()
     : fOptDescriptions("Allowed options")
 {
+    fOptDescriptions.add_options()
+    ("help,h", "produce help message")
+    ("file,f", po::value<string>(), "File to open")
+    ("range,r", po::value< vector<int> >(), "Range of events to process.")
+    ("param,p", po::value<string>(), "File with TRB numbers.")
+    ;
+        
+}
+
+void JPetCmdParser::parse(int argc, char** argv){
     try{	
-        fOptDescriptions.add_options()
-        ("help,h", "produce help message")
-        ("file,f", po::value<string>(), "File to open")
-        ("range,r", po::value< vector<int> >(), "Range of events to process.")
-        ("option1", "some option")
-        //("compression", po::value<int>(), "set compression level")
-        ;
         
         po::store(po::parse_command_line(argc, argv, fOptDescriptions), fVariablesMap);
         po::notify(fVariablesMap);    
@@ -42,5 +47,7 @@ JPetCmdParser::JPetCmdParser(int argc, char** argv)
     }
     catch(...) {
         cerr << "Exception of unknown type!\n";
-    }		
+    }
 }
+
+//#endif /* __CINT__ */
