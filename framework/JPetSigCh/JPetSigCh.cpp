@@ -34,6 +34,14 @@ JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time){
 	addCh(edge_time, fall_edge_time);
 }
 
+float JPetSigCh::getTime(JPetSigCh::EdgeType type, int ch_no) const{
+    if (fIsSlow && type == kFalling) {
+        ERROR("This instance of JPetSigCh is of slow type, hence has no falling edge data.");
+        return 0;
+    }
+    return fChannels[ch_no].find(type)->second;
+}
+
 template <class T>
 void JPetSigCh::set(T** dest, const T& source) throw(bad_alloc){
 	assert(dest != NULL);
