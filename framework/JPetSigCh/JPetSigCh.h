@@ -30,6 +30,9 @@ public:
 	
 	unsigned int size() const {return fChannels.size(); }
 	float getAmpl() const { return fAmpl; }
+    /**
+     * @warning This method may cause seg fault, when is called with kFalling as first argument and object is of type "slow".
+     */
 	float getTime(EdgeType type = kRising, int ch_no = 0) const;
 	const JPetPM& getPM() const { /*assert(fPM != NULL);*/ return *fPM; }
 	const JPetTRB& getTRB() const { /*assert(fTRB != NULL);*/ return *fTRB; }
