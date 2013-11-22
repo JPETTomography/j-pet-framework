@@ -22,7 +22,7 @@ public:
 	typedef map < EdgeType, float > SingleCh;
 	typedef vector < SingleCh > ChSet;
 
-	JPetSigCh(): TNamed("JPetSigCh", "Signal Channel Structure")  { init(); }
+	JPetSigCh() { init(); }
 	JPetSigCh(const JPetSigCh& obj);
 	JPetSigCh(float EdgeTime, float FallEdgeTime = 0);
 	
