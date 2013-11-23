@@ -25,11 +25,12 @@ class JPetManager: public TNamed {
   void Run();
   void AddTask(JPetAnalysisModule* mod);
   void ParseCmdLine(int argc, char** argv) {fCmdParser.parse(argc, argv);}
+  const char* getInputFileName() {return fCmdParser.getFileName().c_str(); }
  
   ClassDef(JPetManager,1);
 
  private:
- 	JPetCmdParser fCmdParser;
+  JPetCmdParser fCmdParser;
   JPetManager();
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&); 

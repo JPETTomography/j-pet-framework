@@ -23,6 +23,7 @@ public:
      * @brief Method returning higher bound of events to process or -1 if they were not specified.
      */
     int getHigherEventBound() {return fVariablesMap["range"].as< vector<int> >()[1];}
+    const string& getParam() {return fVariablesMap["param"].as< string >(); }
     
 private:
 	po::options_description fOptDescriptions;
