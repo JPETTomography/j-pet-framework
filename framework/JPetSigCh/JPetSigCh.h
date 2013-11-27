@@ -22,7 +22,7 @@ public:
 	typedef map < EdgeType, float > SingleCh;
 	typedef vector < SingleCh > ChSet;
 
-	JPetSigCh(): TNamed("JPetSigCh", "Signal Channel Structure")  { init(); }
+	JPetSigCh() { init(); }
 	JPetSigCh(const JPetSigCh& obj);
 	JPetSigCh(float EdgeTime, float FallEdgeTime = 0);
 	
@@ -30,7 +30,10 @@ public:
 	
 	unsigned int size() const {return fChannels.size(); }
 	float getAmpl() const { return fAmpl; }
-	float getTime(EdgeType type = kRising, int ch_no = 0) const { return fChannels[ch_no].find(type)->second; }
+    /**
+     * @warning This method may cause seg fault, when is called with kFalling as first argument and object is of type "slow".
+     */
+	float getTime(EdgeType type = kRising, int ch_no = 0) const;
 	const JPetPM& getPM() const { /*assert(fPM != NULL);*/ return *fPM; }
 	const JPetTRB& getTRB() const { /*assert(fTRB != NULL);*/ return *fTRB; }
 	const JPetScin& getScin() const { /*assert(fScin != NULL);*/ return *fScin; }
