@@ -13,11 +13,7 @@
 
 JPetWriter::JPetWriter(const char* file_name)
    : fFileName(file_name)  // string z nazwą pliku
-<<<<<<< HEAD
    , fFile(fFileName.c_str(),"RECREATE")        // plik
-=======
-   , fFile(fFileName.c_str(), "RECREATE")        // plik
->>>>>>> fb1a190cea1b16ada576a35d1727463b287372be
 {
     if ( fFile.IsZombie() ){
         ERROR("Could not open file to write.");
