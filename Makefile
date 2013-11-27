@@ -1,7 +1,12 @@
+###################
+BOOST_SYS =/home/${USER}/boost_1_49_0
+BOOST_LIB=${BOOST_SYS}/lib
+BOOST_INC=${BOOST_SYS}/include
+###################
 CC    = g++
 LD    = g++
-COPTS    = `root-config --cflags` 
-LDOPTS    = `root-config --glibs` -g
+COPTS    = `root-config --cflags` -I${BOOST_INC}
+LDOPTS    = `root-config --glibs` -g -L${BOOST_LIB} -lboost_program_options
 ################
 SRC_DIR = $(PWD)/framework
 DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot
@@ -15,7 +20,7 @@ SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 TEST_DIR = $(SRC_DIR)/tests
 ################
 #C++ Files
-SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp
+SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp framework/JPetCmdParser/JPetCmdParser.cpp
 SOURCES += $(SRC_MODULES)
 HEADERS = Event.h TDCHit.h ADCHit.h Sig.h JPetLoggerInclude.h
 HEADERS += $(SRC_HEADERS)
