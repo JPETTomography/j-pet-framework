@@ -12,8 +12,8 @@
 //TFile* JPetWriter::fFile = NULL;
 
 JPetWriter::JPetWriter(const char* file_name)
-   : fFileName(file_name, "UPDATE")  // string z nazwą pliku
-   , fFile(fFileName.c_str())        // plik
+   : fFileName(file_name)  // string z nazwą pliku
+   , fFile(fFileName.c_str(),"RECREATE")        // plik
 {
     if ( fFile.IsZombie() ){
         ERROR("Could not open file to write.");
@@ -46,12 +46,12 @@ bool JPetWriter::Write( vector<TNamed>& obj) {
     
     TTree tree;
 	
-	TNamed& filler = obj[0];
+	TNamed* filler = &obj[0];
     
-	tree.Branch(filler.GetName(), filler.GetName(), &filler);
+	tree.Branch(filler->GetName(), filler->GetName(), &filler);
 	
 	for (int i = 0; i < obj.size(); i++){
-        filler = obj[i]; 
+        filler = &obj[i]; 
 		tree.Fill();      
 	}
 	
