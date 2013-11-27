@@ -6,7 +6,7 @@ BOOST_INC=${BOOST_SYS}/include
 CO = g++
 CFLAGS = -Wall `root-config --cflags`
 CFLAGS += -I${BOOST_INC}
-LD_BOOST_FLAGS = -L${BOOST_LIB} -lboost_unit_test_framework -lboost_filesystem -lboost_system
+LD_BOOST_FLAGS = -L${BOOST_LIB} -lboost_unit_test_framework -lboost_filesystem -lboost_system -lboost_program_options
 LDFLAGS = -Wall `root-config --glibs` -I${BOOST_INC}
 LDFLAGS += ${LD_BOOST_FLAGS}
 ###################
@@ -17,7 +17,7 @@ TESTS = $(MODULES:=Test.exe)
 SRC_DIR = ..
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
 SRC_OBJS = $(SRC_MODULES:.cpp=.o) ../JPetAnalysisModule/JPetAnalysisModule.o ../JPetLogger/JPetLogger.o ../JPetPM/JPetPM.o ../JPetReader/JPetReader.o ../JPetTRB/JPetTRB.o ../JPetWriter/JPetWriter.o
-DICT_OBJS = ../JPetAnalysisModule/JPetAnalysisModuleDict.o ../JPetBarrelSlot/JPetBarrelSlotDict.o ../JPetEvent/JPetEventDict.o ../JPetHit/JPetHitDict.o ../JPetManager/JPetManagerDict.o ../JPetPM/JPetPMDict.o ../JPetScin/JPetScinDict.o ../JPetSigCh/JPetSigChDict.o ../JPetSignal/JPetSignalDict.o ../JPetTRB/JPetTRBDict.o ../JPetTSlot/JPetTSlotDict.o
+DICT_OBJS = ../JPetAnalysisModule/JPetAnalysisModuleDict.o ../JPetBarrelSlot/JPetBarrelSlotDict.o ../JPetEvent/JPetEventDict.o ../JPetHit/JPetHitDict.o ../JPetManager/JPetManagerDict.o ../JPetPM/JPetPMDict.o ../JPetScin/JPetScinDict.o ../JPetSigCh/JPetSigChDict.o ../JPetSignal/JPetSignalDict.o ../JPetTRB/JPetTRBDict.o ../JPetTSlot/JPetTSlotDict.o ../JPetCmdParser/JPetCmdParser.o
 SRC_OBJS += $(DICT_OBJS)
 ###################
 %.o: %.cpp
