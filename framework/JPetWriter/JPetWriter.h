@@ -60,7 +60,7 @@ bool JPetWriter::Write( vector<T>& obj) {
 		return false;
 	}
     
-    fFile.cd(fFileName.c_str()); // -> http://root.cern.ch/drupal/content/current-directory
+    fFile.cd(/*fFileName.c_str()*/); // -> http://root.cern.ch/drupal/content/current-directory
     
     TTree tree;
 	
