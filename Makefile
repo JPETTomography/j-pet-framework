@@ -40,9 +40,9 @@ Dict.cpp:
 	@rootcint -f  Dict.cpp -c -P -I$(ROOTSYS) $(HEADERS)
 modules:
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
-clean:         
-	@rm -f $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h
-	@($(foreach MODULE, $(MODULES),$(MAKE) -C $(SRC_DIR)/$(MODULE) clean;))
-	$(MAKE) -C $(TEST_DIR) clean
 documentation:
 	doxygen Doxyfile
+clean:         
+	@rm -rf $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h latex html
+	@($(foreach MODULE, $(MODULES),$(MAKE) -C $(SRC_DIR)/$(MODULE) clean;))
+	$(MAKE) -C $(TEST_DIR) clean
