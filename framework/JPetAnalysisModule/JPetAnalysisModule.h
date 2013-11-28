@@ -8,16 +8,17 @@
 #ifndef JPETANALYSISMODULE_H 
 #define JPETANALYSISMODULE_H
 
-#include <TNamed.h> 
+#include "TNamed.h" 
 
 class JPetAnalysisModule: public TNamed {
  public:
   JPetAnalysisModule();
   JPetAnalysisModule(const char* name, const char* title); 
   virtual ~JPetAnalysisModule(); 
-  virtual void CreateInputObjects()=0; //
-  virtual void CreateOutputObjects()=0; //
+  virtual void CreateInputObjects(const char* inputFilename=0)=0; //
+  virtual void CreateOutputObjects(const char* outputFilename=0)=0; //
   virtual void Exec()=0; // called for every event
+  virtual long long GetEventNb()=0;
   virtual void Terminate()=0; // called once when analysis terminates 
 
   ClassDef(JPetAnalysisModule,1);

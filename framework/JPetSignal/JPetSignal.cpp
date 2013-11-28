@@ -17,6 +17,7 @@ JPetSignal::JPetSignal() :
 
 
 JPetSignal::JPetSignal(double time, double qual, bool left, const std::vector<JPetSigCh>& falling, const std::vector<JPetSigCh>& rising) : 
+  TNamed("JPetSignal", "Signal Structure"),
   fTime(time), 
   fQualityOfTime(qual),
   fLeft(left),
