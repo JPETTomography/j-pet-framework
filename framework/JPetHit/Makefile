@@ -15,5 +15,6 @@ all: $(DICT_OBJECTS) $(OBJECTS)
 %Dict.cpp:
 	@echo "Genarating dictionary ..."
 	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
+#JPetHitLinkDef.h
 clean:
 	rm -f $(OBJECTS) *Dict*

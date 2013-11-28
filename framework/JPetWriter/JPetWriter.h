@@ -38,6 +38,8 @@ public:
 protected:
     string fFileName;
     TFile fFile;
+    bool fIsBranchCreated;
+    TTree fTree;
 };
 
 template <class T>
@@ -61,19 +63,20 @@ bool JPetWriter::Write( vector<T>& obj) {
 	}
     
     fFile.cd(/*fFileName.c_str()*/); // -> http://root.cern.ch/drupal/content/current-directory
-    
-    TTree tree;
 	
 	T* filler = &obj[0];
     
-	tree.Branch(filler->GetName(), filler->GetName(), &filler);
-	
-	for (int i = 0; i < obj.size(); i++){
-        filler = &obj[i]; 
-		tree.Fill();      
+	if(!fIsBranchCreated) {
+	  fTree.Branch(filler->GetName(), filler->GetName(), &filler);
+	  fIsBranchCreated = true;
 	}
 	
-	tree.Write();
+	for (int i = 0; i < obj.size(); i++){
+        	filler = &obj[i]; 
+		fTree.Fill();      
+	}
+	
+	fTree.FlushBaskets();
     
 	return true;
 }

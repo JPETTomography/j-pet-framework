@@ -1,7 +1,13 @@
 #include "JPetReader.h"
-#include <cassert> 
+#include <cassert>
+
+#include <TObjArray.h>
 
 JPetReader::JPetReader () : fBranch(NULL), fFile(NULL), fObject(NULL), fTree(NULL) {
+}
+
+JPetReader::JPetReader (const char* filename) : fBranch(NULL), fFile(NULL), fObject(NULL), fTree(NULL) {
+  if (OpenFile(filename) ) ReadData("");
 }
 
 JPetReader::~JPetReader () {
@@ -39,13 +45,15 @@ bool JPetReader::OpenFile (const char* filename) {
  */
 void JPetReader::ReadData (const char* objname) {
   assert(objname);
-  if (objname[0]== 0) { ///@warning nie rozumiem tego warunku
-    ERROR("No object name specified");
-    return;
-  }
+  //if (objname[0]== 0) { ///@warning nie rozumiem tego warunku
+  //  ERROR("No object name specified");
+  //  return;
+  //}
   fTree = static_cast<TTree*>(fFile->Get(objname));
   assert(fTree);
-  fBranch = fTree->GetBranch(objname);
+  TObjArray* arr = fTree->GetListOfBranches();
+  fBranch = (TBranch*)(arr->At(0));
+  //fBranch = fTree->GetBranch(objname);
   assert(fBranch);
   fBranch->SetAddress(&fObject);
 }

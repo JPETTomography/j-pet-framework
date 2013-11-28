@@ -20,6 +20,7 @@
 class JPetReader {
  public:
   JPetReader();
+  JPetReader(const char* filename);
   virtual ~JPetReader();
   
   virtual void CloseFile();
