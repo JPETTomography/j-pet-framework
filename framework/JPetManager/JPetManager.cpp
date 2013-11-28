@@ -32,8 +32,8 @@ void JPetManager::Run() {
   const int kNevent = 10;
   int input[kNevent] = {1};
   for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
-    (*taskIter)->CreateInputObjects();
-    (*taskIter)->CreateOutputObjects();
+    (*taskIter)->CreateInputObjects(); /// readers
+    (*taskIter)->CreateOutputObjects(); /// writers + histograms 
     // tutaj pobierz liczbe zdarzen/obiektow z kontenera wejsciowego
     // (*taskIter)->GetInputModule() czy cos w tym stylu
     for (int i = 0; i < kNevent; i++) {

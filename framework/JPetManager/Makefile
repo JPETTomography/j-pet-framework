@@ -1,7 +1,13 @@
+###################
+BOOST_SYS =/home/${USER}/boost_1_49_0
+BOOST_LIB=${BOOST_SYS}/lib
+BOOST_INC=${BOOST_SYS}/include
+###################
 CC            =  g++
 LD            =  g++
-COPTS         =  `root-config --cflags`
-LDOPTS        =  `root-config --glibs` -g
+COPTS         =  `root-config --cflags` -I${BOOST_INC}
+LDOPTS        =  `root-config --glibs` -g -lboost_program_options
+
 #C++ Files
 SOURCES       =  JPetManager.cpp
 OBJECTS       =  $(SOURCES:.cpp=.o)
