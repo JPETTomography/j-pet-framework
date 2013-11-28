@@ -35,14 +35,14 @@ void JPetManager::Run()
   JPetWriter* currentWriter = 0;
   std::vector<JPetAnalysisModule*>::iterator taskIter;
   // pseudo-input container
-  const int kNevent = 10;
-  int input[kNevent] = {1};
-  for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
+  long long  kNevent = 0;
+    for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
     (*taskIter)->CreateInputObjects(); /// readers
     (*taskIter)->CreateOutputObjects(); /// writers + histograms
     // tutaj pobierz liczbe zdarzen/obiektow z kontenera wejsciowego
     // (*taskIter)->GetInputModule() czy cos w tym stylu
-    for (int i = 0; i < kNevent; i++) {
+    kNevent = (*taskIter)->GetEventNb();
+    for (long long i = 0; i < kNevent; i++) {
       (*taskIter)->Exec();
     }
     (*taskIter)->Terminate();
