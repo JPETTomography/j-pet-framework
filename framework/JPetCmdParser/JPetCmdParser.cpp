@@ -28,12 +28,21 @@ JPetCmdParser::JPetCmdParser()
 void JPetCmdParser::parse(int argc, char** argv){
     try{	
         
+        if (argc == 1){
+            cout << "No options provided." << endl;
+            cout << fOptDescriptions << "\n";
+            exit(0);
+        }
+        
         po::store(po::parse_command_line(argc, argv, fOptDescriptions), fVariablesMap);
+        
         /* print out help */
         if (fVariablesMap.count("help")) {
             cout << fOptDescriptions << "\n";
             exit(0);
         }
+        
+        
         
         po::notify(fVariablesMap);    
         
