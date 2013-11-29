@@ -12,15 +12,17 @@
 #include "../JPetCmdParser/JPetCmdParser.h"
 
 #include <vector>
+#include <list>
 #include <TNamed.h> 
 
 class JPetAnalysisModule;
+class JPetReader;
+class JPetWriter;
 
 class JPetManager: public TNamed {
  public:
   static JPetManager& GetManager();
   ~JPetManager();
-  //dodalem klamry, bo kod nie chcial sie linkowac - Damian
   void Init(){};
   void Run();
   void AddTask(JPetAnalysisModule* mod);
@@ -30,10 +32,10 @@ class JPetManager: public TNamed {
   ClassDef(JPetManager,1);
 
  private:
-  JPetCmdParser fCmdParser;
   JPetManager();
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&); 
+  JPetCmdParser fCmdParser;
   std::vector<JPetAnalysisModule*> fTasks;
 };
 #endif /*  !JPETMANAGER_H */
