@@ -14,7 +14,8 @@
 #include <vector>
 
 /// @todo structure mimics the structure History described in the  PET UJ Report 19 ->table 39 (p.18)
-struct History {
+struct History: public TObject {
+ public:
   History(int hld = 0, int tslot = 0, int channel = 0, int daq = 0) :
   fHldID(hld),
   fTslot(tslot),
@@ -25,6 +26,7 @@ struct History {
   int fTslot;
   int fChSig;
   int fDAQch;
+  ClassDef(History,1);
 };
 
 
@@ -46,7 +48,9 @@ struct ExtendedThreshold {
   float fTime;
   float fQuality;
   JPetSigCh fSigCh;
+  ClassDef(ExtendedThreshold,1);
 };
+
 
 
 class JPetSignal: public TNamed
@@ -99,15 +103,12 @@ class JPetSignal: public TNamed
   inline const std::vector<ExtendedThreshold>& getRisingPoints() const {
     return fRisingPoints;
   }
-
-
-  ClassDef(JPetSignal, 1);
-
  private:
   double fTime;
   double fQualityOfTime;
   bool fLeft;
   std::vector<ExtendedThreshold> fFallingPoints;
   std::vector<ExtendedThreshold> fRisingPoints;
+  ClassDef(JPetSignal, 1);
 };
 #endif /*  !JPETSIGNAL_H */
