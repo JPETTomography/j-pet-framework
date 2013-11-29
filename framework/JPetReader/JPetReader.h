@@ -23,9 +23,9 @@ class JPetReader {
   virtual ~JPetReader();
   
   virtual void CloseFile();
-  virtual long long GetEntries () const;
-  virtual int GetEntry (int entry);
-  virtual void OpenFile(const char* filename);
+  virtual long long GetEntries () const { return fTree->GetEntries(); }
+  virtual int GetEntry (int entryNo) {return fTree->GetEntry(entryNo); } /// the name of the function is bad but it mimics ROOT function 
+  virtual bool OpenFile(const char* filename);
   virtual void ReadData(const char* objname = "");
   virtual TNamed& GetData () {return *fObject;}
 

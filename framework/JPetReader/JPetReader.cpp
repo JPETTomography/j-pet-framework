@@ -1,4 +1,5 @@
 #include "JPetReader.h"
+#include <cassert> 
 
 JPetReader::JPetReader () : fBranch(NULL), fFile(NULL), fObject(NULL), fTree(NULL) {
 }
@@ -17,18 +18,9 @@ void JPetReader::CloseFile () {
   fObject = NULL;
   fTree = NULL;
 }
-/* Tę bym zrobił jako inline, szybciej się będzie wykonywać - Karol */
-long long JPetReader::GetEntries () const {
-  return fTree->GetEntries();
-}
 
-/* Dziwna nazwa, ale rootowska - Karol */
-int JPetReader::GetEntry (int entryNo) {
-  return fTree->GetEntry(entryNo);
-}
 
-/* Tu bym zwrócił boola - Karol */
-void JPetReader::OpenFile (const char* filename) {
+bool JPetReader::OpenFile (const char* filename) {
   CloseFile();
   fFile = new TFile(filename);
 
@@ -36,21 +28,24 @@ void JPetReader::OpenFile (const char* filename) {
     ERROR("Cannot open file.");
     delete fFile;
     fFile = NULL;
-    return;
+    return false;
   }
 
-  return;
+  return true;
 }
 
 /* tu też bym zwrócił boola i wyszczególnił przypadek,
  * gdy nie ma obiektu o danej nazwie w pliku - Karol
  */
 void JPetReader::ReadData (const char* objname) {
-  if (objname[0]==NULL) {
+  assert(objname);
+  if (objname[0]== 0) { ///@warning nie rozumiem tego warunku
     ERROR("No object name specified");
     return;
   }
   fTree = static_cast<TTree*>(fFile->Get(objname));
+  assert(fTree);
   fBranch = fTree->GetBranch(objname);
+  assert(fBranch);
   fBranch->SetAddress(&fObject);
 }
