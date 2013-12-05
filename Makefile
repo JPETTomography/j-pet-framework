@@ -13,14 +13,14 @@ DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetManager JPetP
 DICTS   = $(DMODULES)
 READERS = JPetReader
 WRITERS = JPetWriter
-MODULES = $(DMODULES) DummyClass JPetLogger $(READERS) $(WRITERS)
+MODULES = $(DMODULES) DummyClass JPetLogger JPetCmdParser JPetParamManager $(READERS) $(WRITERS)
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
 SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 ################
 TEST_DIR = $(SRC_DIR)/tests
 ################
 #C++ Files
-SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp framework/JPetCmdParser/JPetCmdParser.cpp
+SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp 
 SOURCES += $(SRC_MODULES)
 HEADERS = Event.h TDCHit.h ADCHit.h Sig.h JPetLoggerInclude.h
 HEADERS += $(SRC_HEADERS)
