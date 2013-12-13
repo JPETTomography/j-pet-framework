@@ -49,6 +49,13 @@ void JPetManager::Run()
   }
 }
 
+void JPetManager::ParseCmdLine(int argc, char** argv){
+    fCmdParser.parse(argc, argv);
+    if (fCmdParser.paramIsSet()){
+        fParamManager.readFile(fCmdParser.getParam().c_str());
+    }
+}
+
 JPetManager::~JPetManager()
 {
   std::vector<JPetAnalysisModule*>::iterator taskIter;
