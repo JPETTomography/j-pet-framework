@@ -1,6 +1,6 @@
 CC            =  g++
 LD            =  g++
-COPTS         =  `root-config --cflags`
+COPTS         =  `root-config --cflags` -fPIC
 LDOPTS        =  `root-config --glibs` -g
 #C++ Files
 SOURCES       =  JPetScin.cpp
