@@ -5,7 +5,7 @@ BOOST_INC=${BOOST_SYS}/include
 ###################
 CC    = g++
 LD    = g++
-COPTS    = `root-config --cflags` -I${BOOST_INC}
+COPTS    = `root-config --cflags` -I${BOOST_INC} -fPIC
 LDOPTS    = `root-config --glibs` -g -L${BOOST_LIB} -lboost_program_options
 ################
 SRC_DIR = $(PWD)/framework
@@ -42,6 +42,8 @@ modules:
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
 documentation:
 	doxygen Doxyfile
+sharedlib: $(OBJECTS)
+	$(LD) -shared -o JPetFramework.so $^ $(DICT_OBJS)
 clean:         
 	@rm -rf $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h latex html
 	@($(foreach MODULE, $(MODULES),$(MAKE) -C $(SRC_DIR)/$(MODULE) clean;))

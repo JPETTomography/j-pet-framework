@@ -5,7 +5,7 @@ BOOST_INC=${BOOST_SYS}/include
 ###################
 CC            =  g++
 LD            =  g++
-COPTS         =  `root-config --cflags` -I${BOOST_INC}
+COPTS         =  `root-config --cflags` -I${BOOST_INC} -fPIC
 LDOPTS        =  `root-config --glibs` -g -lboost_program_options
 
 #C++ Files

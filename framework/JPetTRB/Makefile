@@ -1,6 +1,6 @@
 CC            =  g++
 LD            =  g++
-COPTS         =  -Wall `root-config --cflags`
+COPTS         =  -Wall `root-config --cflags` -fPIC
 LDOPTS        =  -Wall `root-config --glibs` -g
 #C++ Files
 SOURCES       =  JPetTRB.cpp

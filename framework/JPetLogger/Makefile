@@ -1,6 +1,6 @@
 CC    = g++
 LD    = g++
-COPTS    = `root-config --cflags`
+COPTS    = `root-config --cflags` -fPIC
 #C++ Files
 SOURCES =  JPetLogger.cpp 
 OBJECTS       =  $(SOURCES:.cpp=.o)
