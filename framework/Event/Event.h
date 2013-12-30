@@ -6,8 +6,8 @@
 #include <TTree.h>
 #include <TFile.h>
 #include <TClonesArray.h>
-#include "TDCHit.h"
-#include "ADCHit.h"
+#include "../TDCHit/TDCHit.h"
+#include "../ADCHit/ADCHit.h"
 #include <iostream>
 
 using namespace std;
