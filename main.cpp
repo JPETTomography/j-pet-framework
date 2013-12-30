@@ -26,13 +26,13 @@ and runNr_end. This is however not fully implemented yet)
 #include <fstream>
 #include <sstream>
 #include <map>
-#include "Event.h"
-#include "ADCHit.h"
-#include "TDCHit.h"
+#include "framework/Event/Event.h"
+#include "framework/ADCHit/ADCHit.h"
+#include "framework/TDCHit/TDCHit.h"
 #include "string"
 #include "map"
 #include "TSystem.h"
-#include "Sig.h"
+#include "framework/Sig/Sig.h"
 
 using namespace std;
 int pet_init(Event *&event,TClonesArray *&tdc, TClonesArray *&adc,TTree *&Tn,TFile *&f)
