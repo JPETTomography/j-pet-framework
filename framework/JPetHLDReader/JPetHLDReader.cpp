@@ -4,5 +4,6 @@
 bool JPetHLDReader::OpenFile (const char* filename){
 	JPetReader::OpenFile(filename);
 	ReadData("T");
-	fBranch->SetAddress(&fEvent);
+	//fTree->Print();
+	fTree->SetBranchAddress("event", &fEvent);
 }

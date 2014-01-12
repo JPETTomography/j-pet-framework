@@ -8,7 +8,10 @@
 class JPetHLDReader: protected JPetReader {
 public:
 	bool OpenFile(const char* filename);
-	Event& GetEvent() {return *fEvent;}
+	Event& GetEvent(int i) {
+		fBranch->GetEntry(i);
+		return *fEvent;
+	}
 private:
 	Event* fEvent;
 };
