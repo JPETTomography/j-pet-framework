@@ -2,7 +2,7 @@
 #define Event_h
 
 #include <fstream>
-#include <TNamed.h>
+#include <TObject.h>
 #include <TTree.h>
 #include <TFile.h>
 #include <TClonesArray.h>
@@ -15,7 +15,7 @@ using namespace std;
 class TDCHit;
 class ADCHit;
 
-class Event : public TNamed {
+class Event : public TObject {
   
 private:
   Int_t totalNTDCHits;
