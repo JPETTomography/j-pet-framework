@@ -1,5 +1,6 @@
 #include "JPetReader.h"
 #include <cassert>
+#include <iostream>
 
 #include <TObjArray.h>
 
@@ -52,7 +53,10 @@ void JPetReader::ReadData (const char* objname) {
   fTree = static_cast<TTree*>(fFile->Get(objname));
   assert(fTree);
   TObjArray* arr = fTree->GetListOfBranches();
+  //std::cout << fTree->GetEntries() << std::endl;
+  //std::cout << arr->GetSize() << std::endl;
   fBranch = (TBranch*)(arr->At(0));
+  //std::cout << fBranch->GetEntries() << std::endl;
   //fBranch = fTree->GetBranch(objname);
   assert(fBranch);
   fBranch->SetAddress(&fObject);
