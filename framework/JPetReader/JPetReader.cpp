@@ -50,6 +50,7 @@ void JPetReader::ReadData (const char* objname) {
   //  ERROR("No object name specified");
   //  return;
   //}
+  assert(fFile);
   fTree = static_cast<TTree*>(fFile->Get(objname));
   assert(fTree);
   TObjArray* arr = fTree->GetListOfBranches();
