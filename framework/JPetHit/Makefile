@@ -13,7 +13,7 @@ HEADERS       =  $(SOURCES:.cpp=.h)
 	$(CC) $^ -o $@  -c $(COPTS)
 all: $(DICT_OBJECTS) $(OBJECTS)
 %Dict.cpp:
-	@echo "Genarating dictionary ..."
+	@echo "Generating dictionary ..."
 	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
 #JPetHitLinkDef.h
 clean:
