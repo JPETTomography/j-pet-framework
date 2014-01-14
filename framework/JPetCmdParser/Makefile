@@ -19,7 +19,7 @@ HEADERS       =  $(SOURCES:.cpp=.h)
 all: $(OBJECTS) #$(DICT_OBJECTS)
 #%Dict.cpp:
 #	@echo $(HEADERS)
-#	@echo "Genarating dictionary ..."
+#	@echo "Generating dictionary ..."
 #	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
 clean:
 	rm -f $(OBJECTS) *Dict*
