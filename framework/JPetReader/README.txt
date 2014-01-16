@@ -21,8 +21,8 @@ How to use JPetReader:
 	b) use
 		GetData();
 	   method, which will return the object, on which you set pointer
-	   in point a). This method returns a reference to a TNamed object,
-	   which you most likely will want to cast to a specyfic data type,
+	   in point a). This method returns a reference to a TNamed object.
+	   Most likely you will want to cast it to a specyfic data type,
 	   that you know is there.
 
 5. Optionally the file might be divided into some sections.
