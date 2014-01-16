@@ -7,11 +7,15 @@ How to use JPetReader:
 	OpenFile(const char* file_name);
    method to do so.
 
-3. In order to get get number of objects stored in the file, use:
+3. File is internally divided into sections. Now you have to provide this section
+   name:
+	 ReadData(const char* objname);
+
+4. In order to get get number of objects stored in the file, use:
 	GetEntries();
    method, so you can determine the range for your loops.
 
-4. To access an object, you have to do two things:
+5. To access an object, you have to do two things:
 	a) use 
 		GetEntry(int entryNo);
 	   method to set reader's internal pointer to specyfic object.
@@ -24,12 +28,6 @@ How to use JPetReader:
 	   in point a). This method returns a reference to a TNamed object.
 	   Most likely you will want to cast it to a specyfic data type,
 	   that you know is there.
-
-5. Optionally the file might be divided into some sections.
-   In that case, to switch between them, you have to use:
-	ReadData(const char* objname);
-   where the argument is the name of particular section.
-   After that you can proceed through steps 3 and 4.
 
 6. When your work is done, use:
 	CloseFile();
