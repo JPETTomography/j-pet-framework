@@ -30,4 +30,6 @@ void JPetWriter::CloseFile() {
       fTree.Write();
       fFile.Close();
     }
+    fFileName.clear();
+    fIsBranchCreated = false;
 }

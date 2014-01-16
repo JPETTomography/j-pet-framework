@@ -1,0 +1,28 @@
+how to use JPetWriter:
+
+1. Create the instance of your JPetWriter. You will use it to write
+   data to a single file. As an rgument for constructor, pass
+   it's name.
+   
+   IMPORTANT:
+   If the file already exists, it will be overwritten.
+
+2. After the file had been opened. Use one of two methods to write
+   objects to it:
+
+	a) Write(const T& object);
+	   To write a single object to it.
+
+	b) Write(std::vector<T> & vect);
+	   To write a whole vector of objects to it.
+
+   IMPORTANT:
+   Both write methods shown above are templated methods, but that
+   DOESN'T mean, that you can write any object to the file.
+   It will be best if you stay with classes from the inside of our
+   framework, that inherit from TNamed.
+
+3. After the work is done, use:
+	CloseFile();
+   method to avoid any data corruption.
+   Unfortunately at the moment the writer is not reusable :(
