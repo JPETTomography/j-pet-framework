@@ -19,6 +19,7 @@ JPetCmdParser::JPetCmdParser()
     
     fOptDescriptions.add_options()
     ("help,h", "produce help message")
+    ("type,t", po::value<string>()->required(), "type of file: hld or root")
     ("file,f", po::value<string>()->required(), "File to open")
     ("range,r", po::value< vector<int> >()->multitoken()->default_value(tmp,""), "Range of events to process.")
     ("param,p", po::value<string>(), "File with TRB numbers.")
@@ -59,6 +60,18 @@ void JPetCmdParser::parse(int argc, char** argv){
                 cerr << "Wrong range of events." << endl;
                 exit(-1);
             }
+        }
+        
+        /* check if correct file type was provided */
+        
+        if ( 
+            fVariablesMap["type"].as <string>().compare("hld")
+            && fVariablesMap["type"].as <string>().compare("root")
+            ) 
+        {
+            cerr << "Wrong type of file: " << fVariablesMap["type"].as< string >() << endl;
+            cerr << "Possible options: hld or root" << endl;
+            
         }
         
     }
