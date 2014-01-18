@@ -71,7 +71,7 @@ void JPetCmdParser::parse(int argc, char** argv){
         {
             cerr << "Wrong type of file: " << fVariablesMap["type"].as< string >() << endl;
             cerr << "Possible options: hld or root" << endl;
-            
+            exit(-1);
         }
         
     }
