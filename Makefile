@@ -1,12 +1,7 @@
-###################
-BOOST_SYS =/home/${USER}/boost_1_49_0
-BOOST_LIB=${BOOST_SYS}/lib
-BOOST_INC=${BOOST_SYS}/include
-###################
 CC    = g++
 LD    = g++
-COPTS    = `root-config --cflags` -I${BOOST_INC} -fPIC
-LDOPTS    = `root-config --glibs` -g -L${BOOST_LIB} -lboost_program_options
+COPTS    = `root-config --cflags` -fPIC
+LDOPTS    = `root-config --glibs` -g -lboost_program_options
 ################
 SRC_DIR = $(PWD)/framework
 DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot Event Sig ADCHit TDCHit
