@@ -46,6 +46,6 @@ documentation:
 sharedlib: $(OBJECTS)
 	$(LD) -shared -o JPetFramework.so $^ $(DICT_OBJS) $(LDOPTS)
 clean:         
-	@rm -rf $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h latex html
+	@rm -rf $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h JPetFramework.so latex html
 	@($(foreach MODULE, $(MODULES),$(MAKE) -C $(SRC_DIR)/$(MODULE) clean;))
 	$(MAKE) -C $(TEST_DIR) clean
