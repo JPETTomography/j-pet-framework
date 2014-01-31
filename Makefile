@@ -15,7 +15,7 @@ SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 TEST_DIR = $(SRC_DIR)/tests
 ################
 #C++ Files
-SOURCES =  Dict.cpp main.cpp
+SOURCES =  Dict.cpp
 # Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp 
 SOURCES += $(SRC_MODULES)
 HEADERS = JPetLoggerInclude.h #Event.h TDCHit.h ADCHit.h Sig.h
@@ -36,10 +36,11 @@ Dict.cpp:
 	@rootcint -f  Dict.cpp -c -P -I$(ROOTSYS) $(HEADERS)
 modules:
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
+	@(cd $(SRC_DIR)/Unpacker2/; $(MAKE))
 documentation:
 	doxygen Doxyfile
 sharedlib: $(OBJECTS)
-	$(LD) -shared -o JPetFramework.so $^ $(DICT_OBJS) $(LDOPTS)
+	$(LD) -shared -o libJPetFramework.so $^ $(DICT_OBJS) $(LDOPTS)
 clean:         
 	@rm -rf $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h JPetFramework.so latex html
 	@($(foreach MODULE, $(MODULES),$(MAKE) -C $(SRC_DIR)/$(MODULE) clean;))
