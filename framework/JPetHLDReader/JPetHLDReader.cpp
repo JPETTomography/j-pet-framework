@@ -6,7 +6,7 @@ JPetHLDReader::JPetHLDReader () : fBranch(NULL), fFile(NULL), fObject(NULL), fTr
 }
 
 JPetHLDReader::JPetHLDReader (const char* filename) : fBranch(NULL), fFile(NULL), fObject(NULL), fTree(NULL) {
-  if (OpenFile(filename) ) ReadData("");
+  if (OpenFile(filename) ) ReadData();
 }
 
 JPetHLDReader::~JPetHLDReader () {
