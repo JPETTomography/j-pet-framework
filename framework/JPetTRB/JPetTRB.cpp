@@ -2,18 +2,14 @@
 
 ClassImp(JPetTRB);
 
-void JPetTRB::init(){
-    SetNameTitle("JPetTRB", "Trigger Readout Board");
-}
+JPetTRB::JPetTRB():
+  fID(0), 
+  fType(0),
+  fChannel(0)
+{ /* */ }
 
-JPetTRB::JPetTRB(){
-    init();
-}
-
-JPetTRB::JPetTRB(int id, int type, int channel)
-: fID(id)
-, fType(type)
-, fChan(channel)
-{
-    init();
-}
+JPetTRB::JPetTRB(int id, int type, int ch): 
+  fID(id), 
+  fType(type),
+  fChannel(ch)
+{ /* */ }
