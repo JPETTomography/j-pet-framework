@@ -5,14 +5,15 @@ ClassImp(JPetSigCh);
 void JPetSigCh::init()
 {
   SetNameTitle("JPetSigCh", "Signal Channel Structure");
-  fPM = NULL;
-  fTRB = NULL;
-  fScin = NULL;
-  fBarrelSlot = NULL;
+  fPM = 0;
+  fTRB = 0;
+  fScin = 0;
+  fBarrelSlot = 0;
   fAmpl = 0;
-  fIsSlow = 0;
+  fIsSlow = false;
 }
 
+/// @todo what to do with those pointers, that is a horrible leak now
 JPetSigCh::JPetSigCh(const JPetSigCh& obj)
 {
   init();
@@ -24,18 +25,28 @@ JPetSigCh::JPetSigCh(const JPetSigCh& obj)
     setScin(obj.getScin());
     setBarrelSlot(obj.getBarrelSlot());
     fChannels.clear();
-    for (int i = 0; i < obj.getChSet().size(); i++) fChannels.push_back(obj.getChSet()[i]);
-
-    //fChannels.obj.getChSet();
+    fChannels = obj.getChSet();
   }
+}
+
+JPetSigCh& JPetSigCh::operator=(JPetSigCh obj)
+{
+  my_swap(*this, obj);
+  return *this;
 }
 
 JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time)
 {
   init();
-  if (fall_edge_time == 0) fIsSlow = 1;
+  if (fall_edge_time == 0) fIsSlow = true;
   addCh(edge_time, fall_edge_time);
 }
+
+/// @todo add some destructor
+//JPetSigCh::~JPetSigCh() 
+//{
+//
+//}
 
 float JPetSigCh::getTime(JPetSigCh::EdgeType type, int ch_no) const
 {
@@ -49,16 +60,16 @@ float JPetSigCh::getTime(JPetSigCh::EdgeType type, int ch_no) const
 template <class T>
 void JPetSigCh::set(T** dest, const T& source) throw(bad_alloc)
 {
-  assert(dest != NULL);
+  assert(dest != 0);
 
-  if ( &source == NULL && *dest != NULL ) {
+  if ( &source == 0 && *dest != 0 ) {
     delete *dest;
-    *dest = NULL;
+    *dest = 0;
     return;
   }
 
-  if (&source != NULL) {
-    if (*dest == NULL) {
+  if (&source != 0) {
+    if (*dest == 0) {
       try {
         *dest = new T;
       } catch (bad_alloc& b_a) {
@@ -78,9 +89,3 @@ void JPetSigCh::addCh(float edge_time, float fall_edge_time)
   fChannels.push_back(tmp);
 }
 
-JPetSigCh& JPetSigCh::operator=(const JPetSigCh& obj)
-{
-  JPetSigCh temp(obj);
-  swap(temp, *this);
-  return *this;
-}
