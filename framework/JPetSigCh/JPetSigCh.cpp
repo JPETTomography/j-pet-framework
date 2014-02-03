@@ -58,7 +58,7 @@ float JPetSigCh::getTime(JPetSigCh::EdgeType type, int ch_no) const
 }
 
 template <class T>
-void JPetSigCh::set(T** dest, const T& source) throw(bad_alloc)
+void JPetSigCh::set(T** dest, const T& source) throw(std::bad_alloc)
 {
   assert(dest != 0);
 
@@ -72,7 +72,7 @@ void JPetSigCh::set(T** dest, const T& source) throw(bad_alloc)
     if (*dest == 0) {
       try {
         *dest = new T;
-      } catch (bad_alloc& b_a) {
+      } catch (std::bad_alloc& b_a) {
         ERROR("Could not allocate memory.");
         ERROR(b_a.what());
       }

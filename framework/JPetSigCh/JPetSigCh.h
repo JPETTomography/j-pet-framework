@@ -69,7 +69,7 @@ class JPetSigCh: public TNamed
   JPetScin* fScin;
   JPetBarrelSlot* fBarrelSlot;
 
-  template <class T> void set(T** dest, const T& source) throw(bad_alloc);
+  template <class T> void set(T** dest, const T& source) throw(std::bad_alloc);
   void init();
 };
 
