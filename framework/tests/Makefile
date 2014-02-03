@@ -4,7 +4,7 @@ LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system 
 LDFLAGS = -Wall `root-config --glibs` 
 LDFLAGS += ${LD_BOOST_FLAGS}
 ###################
-MODULES = DummyClass JPetManager JPetSigCh JPetTSlot JPetHit JPetEvent JPetParamManager JPetReader JPetPM JPetScin JPetTRB
+MODULES = DummyClass JPetManager JPetSigCh JPetTSlot JPetHit JPetEvent JPetParamManager JPetReader JPetPM JPetScin JPetTRB JPetBarrelSlot
 # JPetSignal JPetTSlotRawWriter
 TESTS = $(MODULES:=Test.exe) 
 ###################

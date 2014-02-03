@@ -24,6 +24,7 @@ class JPetScin;
 class JPetSignal;
 class JPetTSlot;
 
+
 class JPetHit : public TNamed {
 
   public:
@@ -35,42 +36,42 @@ class JPetHit : public TNamed {
   JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime, TVector3& Position, 
           JPetSignal& LeftSignal, JPetSignal& RightSignal, JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator, JPetTSlot& TSlot);
   virtual ~JPetHit();
-  inline const float GetEnergy() const {return fEnergy;};
-  inline const float GetQualityOfEnergy() const {return fQualityOfEnergy;};
-  inline const float GetTime() const {return fTime;};
-  inline const float GetQualityOfTime() const {return fQualityOfTime;};
-  inline const float GetPosX() const {return fPos->X();};
-  inline const float GetPosY() const  {return fPos->Y();};
-  inline const float GetPosZ() const  {return fPos->Z();};
-  inline const float GetPos (int index) const {return (*fPos)(index);};
-  inline const TVector3& GetPos() const {return *fPos;};
+  inline const float GetEnergy() const {return fEnergy;}
+  inline const float GetQualityOfEnergy() const {return fQualityOfEnergy;}
+  inline const float GetTime() const {return fTime;}
+  inline const float GetQualityOfTime() const {return fQualityOfTime;}
+  inline const float GetPosX() const {return fPos->X();}
+  inline const float GetPosY() const  {return fPos->Y();}
+  inline const float GetPosZ() const  {return fPos->Z();}
+  inline const float GetPos (int index) const {return (*fPos)(index);}
+  inline const TVector3& GetPos() const {return *fPos;}
   inline const JPetSignal& GetSignal(Signal pos) const {
                      if(pos==kLeft) return *fLeftSignal;
-		     else return *fRightSignal;};
-  inline const JPetSignal& GetLeftSignal() const {return *fLeftSignal;};
-  inline const JPetSignal& GetRightRight() const {return *fRightSignal;};
+		     else return *fRightSignal;}
+  inline const JPetSignal& GetLeftSignal() const {return *fLeftSignal;}
+  inline const JPetSignal& GetRightSignal() const {return *fRightSignal;}
   //inline const JPetSignals& GetSignals() const {return *fSignals;};
-  inline const JPetScin& GetScintillator() const {return *fScintillator;};
-  inline const JPetBarrelSlot& GetBarrelSlot() const {return *fBarrelSlot;};
-  inline const JPetTSlot& GetTSlot() const {return *fTSlot;};
-  inline void SetEnergy(float energy) {fEnergy = energy;};
-  inline void SetQualityOfEnergy(float qualityOfEnergy) {fQualityOfEnergy = qualityOfEnergy;};
-  inline void SetTime(float time) {fTime = time;};
-  inline void SetQualityOfTime(float qualityOfTime) {fQualityOfTime = qualityOfTime;};
-  inline void SetPosX(float x) {fPos->SetX(x);};
-  inline void SetPosY(float y) {fPos->SetY(y);};
-  inline void SetPosZ(float z) {fPos->SetZ(z);};
-  inline void SetPos (float x,float y,float z) {fPos->SetXYZ(x,y,z);};
+  inline const JPetScin& GetScintillator() const {return *fScintillator;}
+  inline const JPetBarrelSlot& GetBarrelSlot() const {return *fBarrelSlot;}
+  inline const JPetTSlot& GetTSlot() const {return *fTSlot;}
+  inline void SetEnergy(float energy) {fEnergy = energy;}
+  inline void SetQualityOfEnergy(float qualityOfEnergy) {fQualityOfEnergy = qualityOfEnergy;}
+  inline void SetTime(float time) {fTime = time;}
+  inline void SetQualityOfTime(float qualityOfTime) {fQualityOfTime = qualityOfTime;}
+  inline void SetPosX(float x) {fPos->SetX(x);}
+  inline void SetPosY(float y) {fPos->SetY(y);}
+  inline void SetPosZ(float z) {fPos->SetZ(z);}
+  inline void SetPos (float x,float y,float z) {fPos->SetXYZ(x,y,z);}
   //inline void SetSignals (JPetSignals* signals) {fSignals = signals;};
   //inline void SetSignals (JPetSignals& signals) {fSignals = &signals;};
   inline void SetSignals (JPetSignal* leftSignal, JPetSignal* rightSignal) {
               fLeftSignal = leftSignal;
-	      fRightSignal = rightSignal;};
-  inline void SetLeftSignal(JPetSignal* LeftSignal) {fLeftSignal=LeftSignal;};
-  inline void SetRightRight(JPetSignal* RightSignal) {fRightSignal=RightSignal;};
+	      fRightSignal = rightSignal;}
+  inline void SetLeftSignal(JPetSignal* LeftSignal) {fLeftSignal=LeftSignal;}
+  inline void SetRightRight(JPetSignal* RightSignal) {fRightSignal=RightSignal;}
   //inline const JPetSignals& GetSignals() const {return *fSignals;};
-  inline void SetScintillator(JPetScin* Scintillator) {fScintillator=Scintillator;};
-  inline void SetBarrelSlot(JPetBarrelSlot* BarrelSlot) {fBarrelSlot=BarrelSlot;};
+  inline void SetScintillator(JPetScin* Scintillator) {fScintillator=Scintillator;}
+  inline void SetBarrelSlot(JPetBarrelSlot* BarrelSlot) {fBarrelSlot=BarrelSlot;}
   inline void SetTSlot(JPetTSlot* TSlot) {fTSlot=TSlot;};
 
   ClassDef(JPetHit,1);
