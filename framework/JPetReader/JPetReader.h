@@ -20,7 +20,7 @@
 class JPetReader {
  public:
   JPetReader();
-  JPetReader(const char* filename);
+  explicit JPetReader(const char* filename);
   virtual ~JPetReader();
   
   virtual void CloseFile();
@@ -31,11 +31,14 @@ class JPetReader {
   virtual TNamed& GetData () {return *fObject;}
 
  protected:
-  
   TBranch* fBranch;
   TNamed* fObject;
   TTree* fTree;
   TFile fFile;
+
+ private:
+  JPetReader(const JPetReader&);
+  void operator=(const JPetReader);
 
 };
 #endif /*  !JPETREADER_H */
