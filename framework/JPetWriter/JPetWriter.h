@@ -19,7 +19,8 @@
  #include "../JPetTRB/JPetTRB.h"
  #include "../JPetTSlot/JPetTSlot.h"
 
-using namespace std;
+
+/// @todo what about the copy constructor and the asignment operator
 
 class JPetWriter {
 public:
@@ -31,12 +32,12 @@ public:
      * @todo Argument prbably should be const, but root method TTree::Branch() used in it is not. How to solve it?
      */
     template <class T>
-    bool Write(vector<T>& obj);
+    bool Write(std::vector<T>& obj);
     //bool OpenFile(const char* filename);
     void CloseFile();
     
 protected:
-    string fFileName;
+    std::string fFileName;
     TFile fFile;
     bool fIsBranchCreated;
     TTree fTree;
@@ -44,13 +45,13 @@ protected:
 
 template <class T>
 bool JPetWriter::Write(const T& obj){
-    vector<T> wrapper;
+    std::vector<T> wrapper;
     wrapper.push_back(obj);
     Write(wrapper);
 }
 
 template <class T>
-bool JPetWriter::Write( vector<T>& obj) {
+bool JPetWriter::Write( std::vector<T>& obj) {
 	
     if (obj.size() == 0) {
         WARNING("Vector passed is empty");
