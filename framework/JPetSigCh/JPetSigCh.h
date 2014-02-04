@@ -46,16 +46,16 @@ class JPetSigCh: public TNamed
    * @warning This method may cause seg fault, when is called with kFalling as first argument and object is of type "slow".
    */
   float getTime(EdgeType type = kRising, int ch_no = 0) const;
-  inline const JPetPM& getPM() const { /*assert(fPM != NULL);*/ return *fPM; }
-  inline const JPetTRB& getTRB() const { /*assert(fTRB != NULL);*/ return *fTRB; }
-  inline const JPetScin& getScin() const { /*assert(fScin != NULL);*/ return *fScin; }
-  inline const JPetBarrelSlot& getBarrelSlot() const { /*assert(fBarrelSlot != NULL);*/ return *fBarrelSlot; }
-  inline const ChSet& getChSet() const { return fChannels; }
+  inline JPetPM getPM() const { return fPM; }
+  inline JPetTRB getTRB() const {return fTRB; }
+  inline JPetScin getScin() const { return fScin; }
+  inline JPetBarrelSlot getBarrelSlot() const { return fBarrelSlot; }
+  inline ChSet getChSet() const { return fChannels; }
   void addCh(float edge_time, float fall_edge_time);
-  inline void setPM(const JPetPM& pm) { set(&fPM, pm); }
-  inline void setTRB(const JPetTRB& trb) { set(&fTRB, trb); }
-  inline void setScin(const JPetScin& scin) { set(&fScin, scin); }
-  inline void setBarrelSlot(const JPetBarrelSlot& barrel_slot) { set(&fBarrelSlot, barrel_slot); }
+  inline void setPM(const JPetPM& pm) { fPM = pm; }
+  inline void setTRB(const JPetTRB& trb) { fTRB = trb; }
+  inline void setScin(const JPetScin& scin) { fScin = scin; }
+  inline void setBarrelSlot(const JPetBarrelSlot& barrel_slot) { fBarrelSlot = barrel_slot; }
 
 
   ClassDef(JPetSigCh, 1);
@@ -64,10 +64,10 @@ class JPetSigCh: public TNamed
   float fAmpl;
   ChSet fChannels;
   bool fIsSlow;
-  JPetPM* fPM;
-  JPetTRB* fTRB;
-  JPetScin* fScin;
-  JPetBarrelSlot* fBarrelSlot;
+  JPetPM fPM;
+  JPetTRB fTRB;
+  JPetScin fScin;
+  JPetBarrelSlot fBarrelSlot;
 
   template <class T> void set(T** dest, const T& source) throw(std::bad_alloc);
   void init();

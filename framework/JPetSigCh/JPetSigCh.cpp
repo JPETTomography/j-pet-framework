@@ -5,10 +5,6 @@ ClassImp(JPetSigCh);
 void JPetSigCh::init()
 {
   SetNameTitle("JPetSigCh", "Signal Channel Structure");
-  fPM = 0;
-  fTRB = 0;
-  fScin = 0;
-  fBarrelSlot = 0;
   fAmpl = 0;
   fIsSlow = false;
 }
