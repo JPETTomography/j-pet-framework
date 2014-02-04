@@ -33,9 +33,9 @@ class JPetReader {
  protected:
   
   TBranch* fBranch;
-  TFile* fFile;
   TNamed* fObject;
   TTree* fTree;
+  TFile fFile;
 
 };
 #endif /*  !JPETREADER_H */
