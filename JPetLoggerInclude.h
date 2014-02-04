@@ -16,7 +16,7 @@
 #define JPET_LOGGER_LEVEL_INFO 1
 #define JPET_LOGGER_LEVEL_WARNING 1
 #define JPET_LOGGER_LEVEL_ERROR 1
-#define JPET_SCREEN_OUTPUT 1
+#define JPET_SCREEN_OUTPUT 0
 
 // don't touch this part
 #if JPETLOGGER_ON == 1
