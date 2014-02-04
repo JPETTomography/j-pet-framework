@@ -1,5 +1,7 @@
 #include "JPetParamManager.h"
 
+using namespace std;
+
 void JPetParamManager::readFile(const char * file_name){
 	assert(file_name != NULL);
 	
