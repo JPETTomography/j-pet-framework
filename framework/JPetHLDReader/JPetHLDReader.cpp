@@ -1,56 +1,62 @@
 #include "JPetHLDReader.h"
 #include <iostream>
 #include <cassert>
+#include "../JPetTSlot/JPetTSlot.h"
 
-JPetHLDReader::JPetHLDReader () : fBranch(NULL), fFile(NULL), fObject(NULL), fTree(NULL) {
-}
+JPetHLDReader::JPetHLDReader(): 
+  fBranch(0), 
+  fTSlot(0), 
+  fTree(0)
+{ /* */ }
 
-JPetHLDReader::JPetHLDReader (const char* filename) : fBranch(NULL), fFile(NULL), fObject(NULL), fTree(NULL) {
+JPetHLDReader::JPetHLDReader (const char* filename): 
+  fBranch(0),  
+  fTSlot(0), 
+  fTree(0)
+{
   if (OpenFile(filename) ) ReadData();
 }
 
-JPetHLDReader::~JPetHLDReader () {
+JPetHLDReader::~JPetHLDReader ()
+{
   CloseFile();
 }
 
-void JPetHLDReader::CloseFile () {
-  if (fFile != NULL) {
-    if (fFile->IsOpen()) fFile->Close();
-    delete fFile;
-  }
-  fBranch = NULL;
-  fFile = NULL;
-  fObject = NULL;
-  fTree = NULL;
+void JPetHLDReader::CloseFile ()
+{
+  if (fFile.IsOpen()) fFile.Close();
+  fBranch = 0;
+  fTSlot = 0;
+  fTree = 0;
 }
 
 
-bool JPetHLDReader::OpenFile (const char* filename) {
+bool JPetHLDReader::OpenFile (const char* filename)
+{
   CloseFile();
-  fFile = new TFile(filename);
+  fFile.Open(filename);
 
-  if ((!fFile->IsOpen())||fFile->IsZombie()) {
+  if ((!fFile.IsOpen()) || fFile.IsZombie()) {
     ERROR("Cannot open file.");
-    delete fFile;
-    fFile = NULL;
+    CloseFile();
     return false;
   }
   return true;
 }
 
 
-void JPetHLDReader::ReadData () {
-
-  fTree = static_cast<TTree*>(fFile->Get("T")); /// @todo add some comment
+void JPetHLDReader::ReadData ()
+{
+  fTree = static_cast<TTree*>(fFile.Get("T")); /// @todo add some comment
   assert(fTree);
   fBranch = fTree->GetBranch("event");
   assert(fBranch);
-  fBranch->SetAddress(&fObject);
+  fBranch->SetAddress(&fTSlot);
 }
 //
 //
 //       nbytes += Tn->GetEntry(i);
-//       //cout <<"Event nr: " <<i <<endl; 
+//       //cout <<"Event nr: " <<i <<endl;
 //       Tot_NADCHits = event->GetTotalNTDCHits();
 //       //cout <<"Total number of ADC hits=" <<Tot_NADCHits<<endl;
 //       Tot_NTDCHits = event->GetTotalNADCHits();

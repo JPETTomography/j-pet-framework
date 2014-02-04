@@ -12,9 +12,9 @@
 #include <TNamed.h>
 #include <TTree.h>
 
-#include "../Event/Event.h"
 #include "../../JPetLoggerInclude.h"
 
+class TSlot;
 
 class JPetHLDReader
 {
@@ -28,12 +28,14 @@ class JPetHLDReader
   int GetEntry (int entryNo) { return fTree->GetEntry(entryNo); }
   bool OpenFile(const char* filename);
   void ReadData();
-  Event& GetData() { return *fObject; }
+  TSlot& GetData() { return *fTSlot; }
+  
  protected:
   TBranch* fBranch;
-  TFile* fFile;
   TTree* fTree;
-  Event* fObject;
+  TSlot* fTSlot;
+  TFile fFile;
+
  private:
   JPetHLDReader(const JPetHLDReader&);
   void operator=(const JPetHLDReader);

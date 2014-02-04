@@ -6,20 +6,23 @@
 
 #include "../JPetHLDReader/JPetHLDReader.h"
 
-#include <cstddef>
+// public:
+//  JPetHLDReader();
+//  explicit JPetHLDReader(const char* filename);
+//  virtual ~JPetHLDReader();
+//
+//  void CloseFile();
+//  long long GetEntries () const { return fTree->GetEntries(); }
+//  int GetEntry (int entryNo) { return fTree->GetEntry(entryNo); }
+//  bool OpenFile(const char* filename);
+//  void ReadData();
+//  TSlot& GetData() { return *fTSlot; }
 
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
   
 BOOST_AUTO_TEST_CASE(tt )
 {
-//  JPetHit hit;
-//  BOOST_CHECK_EQUAL(hit.GetEnergy(), 0.0f);
-//  BOOST_CHECK_EQUAL(hit.GetQualityOfEnergy(), 0.0f);
-//  BOOST_CHECK_EQUAL(hit.GetTime(), 0.0f);
-//  BOOST_CHECK_EQUAL(hit.GetQualityOfTime(), 0.0f);
-//  
-//  BOOST_CHECK(hit.fPos != NULL);
 }
 
 
