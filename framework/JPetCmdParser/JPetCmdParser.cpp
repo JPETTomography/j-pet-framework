@@ -9,6 +9,7 @@
 #include "JPetCmdParser.h"
 
 //#ifndef __CINT__ // guard against being included into dictionary
+using namespace std;
 
 JPetCmdParser::JPetCmdParser()
     : fOptDescriptions("Allowed options")

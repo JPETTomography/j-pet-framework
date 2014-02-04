@@ -8,7 +8,6 @@
 #include <sstream>
 #include "../../JPetLoggerInclude.h"
 
-using namespace std;
 
 class JPetParamManager {
 public:
@@ -17,8 +16,8 @@ public:
 	int getScinNumber(int i) const { return fScinNumbers[i]; }
 	int getDataSize() const { assert(fTRBNumbers.size() == fScinNumbers.size()); return fTRBNumbers.size() ;}
 private:
-	vector<int> fTRBNumbers;
-	vector<int> fScinNumbers;
+        std::vector<int> fTRBNumbers;
+        std::vector<int> fScinNumbers;
 };
 
 #endif

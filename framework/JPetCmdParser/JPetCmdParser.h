@@ -8,23 +8,22 @@ class JPetCmdParser;
 #include <string>
 
 namespace po = boost::program_options;
-using namespace std;
 
 class JPetCmdParser {
 public:
-	JPetCmdParser();
+    JPetCmdParser();
     void parse(int argc, char** argv);
-    const string& getFileName() { return fVariablesMap["file"].as<string>();}
+    const std::string& getFileName() { return fVariablesMap["file"].as<std::string>();}
 	/**
      * @brief Method returning lower bound of events to process or -1 if they were not specified.
      */
-    int getLowerEventBound() {return fVariablesMap["range"].as< vector<int> >()[0];}
+    int getLowerEventBound() {return fVariablesMap["range"].as< std::vector<int> >()[0];}
     /**
      * @brief Method returning higher bound of events to process or -1 if they were not specified.
      */
-    int getHigherEventBound() {return fVariablesMap["range"].as< vector<int> >()[1];}
+    int getHigherEventBound() {return fVariablesMap["range"].as< std::vector<int> >()[1];}
     bool paramIsSet() { return (bool)fVariablesMap.count("param"); }
-    const string& getParam() {return fVariablesMap["param"].as< string >(); }
+    const std::string& getParam() {return fVariablesMap["param"].as< std::string >(); }
     
 private:
 	po::options_description fOptDescriptions;
