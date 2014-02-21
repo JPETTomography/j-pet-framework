@@ -4,7 +4,7 @@ COPTS    = `root-config --cflags` -fPIC
 LDOPTS    = `root-config --glibs` -g -lboost_program_options
 ################
 SRC_DIR = $(PWD)/framework
-DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot Event Sig ADCHit TDCHit
+DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot
 DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader
 WRITERS = JPetWriter
