@@ -17,7 +17,7 @@ SRC_OBJS += $(DICT_OBJS)
 %.o: %.cpp
 	$(CO) -o $@ $(CFLAGS)  -c $<
 %.exe: %.o
-	$(CO)  -o $@ $(LDFLAGS) $< $(SRC_OBJS)
+	$(CO)  -o $@ $< $(SRC_OBJS) $(LDFLAGS) 
 
 all: $(TESTS)
 clean:
