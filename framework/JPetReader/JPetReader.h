@@ -34,7 +34,7 @@ class JPetReader {
   TBranch* fBranch;
   TNamed* fObject;
   TTree* fTree;
-  TFile fFile;
+  TFile* fFile;
 
  private:
   JPetReader(const JPetReader&);
