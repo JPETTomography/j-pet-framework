@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE (default_constructor)
 {
   JPetReader reader;
   BOOST_CHECK(reader.fBranch == 0);
-  BOOST_CHECK(!reader.fFile.IsOpen());
+  BOOST_CHECK(reader.fFile == NULL);
   BOOST_CHECK(reader.fObject == 0);
   BOOST_CHECK(reader.fTree == 0);
 
@@ -34,13 +34,25 @@ BOOST_AUTO_TEST_CASE (bad_file)
   JPetReader reader;
   /// not a ROOT file
   BOOST_CHECK(!reader.OpenFile("bad_file.txt"));
-
   BOOST_CHECK(reader.fBranch == 0);
-  BOOST_CHECK(!reader.fFile.IsOpen());
+  BOOST_CHECK(reader.fFile == NULL);
   BOOST_CHECK(reader.fObject == 0);
   BOOST_CHECK(reader.fTree == 0);
 
   reader.CloseFile();
+}
+
+BOOST_AUTO_TEST_CASE (open_file)
+{
+    //std::cout << "test if open constructor works" << std::endl;
+    JPetReader constructor_open("test.root");
+    constructor_open.ReadData("");
+    
+    //std::cout << "test if OpenFile works" << std::endl;
+    JPetReader reader;
+    BOOST_CHECK( reader.OpenFile("test.root") );
+    reader.ReadData("");
+    
 }
 
 /// @todo add a proper file example !!

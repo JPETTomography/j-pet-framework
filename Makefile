@@ -15,7 +15,7 @@ SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 TEST_DIR = $(SRC_DIR)/tests
 ################
 #C++ Files
-SOURCES =  Dict.cpp #main.cpp
+SOURCES =  Dict.cpp main.cpp
 # Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp 
 SOURCES += $(SRC_MODULES)
 HEADERS = JPetLoggerInclude.h #Event.h TDCHit.h ADCHit.h Sig.h

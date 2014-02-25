@@ -4,10 +4,10 @@
 
 #include <TObjArray.h>
 
-JPetReader::JPetReader () : fBranch(0), fObject(0), fTree(0) {
+JPetReader::JPetReader () : fBranch(0), fObject(0), fTree(0), fFile(NULL) {
 }
 
-JPetReader::JPetReader (const char* filename) : fBranch(0), fObject(0), fTree(0) {
+JPetReader::JPetReader (const char* filename) : fBranch(0), fObject(0), fTree(0), fFile(NULL) {
   if (OpenFile(filename) ) ReadData("");
 }
 
@@ -16,7 +16,11 @@ JPetReader::~JPetReader () {
 }
 
 void JPetReader::CloseFile () {
-  if (fFile.IsOpen()) fFile.Close();
+  if (fFile != NULL) {
+    if (fFile->IsOpen()) fFile->Close();
+    delete fFile;
+    fFile = NULL;
+  }
   fBranch = 0;
   fObject = 0;
   fTree = 0;
@@ -25,9 +29,11 @@ void JPetReader::CloseFile () {
 
 bool JPetReader::OpenFile (const char* filename) {
   CloseFile();
-  fFile.Open(filename);
+  
+  fFile = new TFile(filename);
+  //fFile.OpenFile(filename);
 
-  if ((!fFile.IsOpen())||fFile.IsZombie()) {
+  if ((!fFile->IsOpen())||fFile->IsZombie()) {
     ERROR("Cannot open file.");
     CloseFile();
     return false;
@@ -44,7 +50,7 @@ void JPetReader::ReadData (const char* objname) {
   //  ERROR("No object name specified");
   //  return;
   //}
-  fTree = static_cast<TTree*>(fFile.Get(objname));
+  fTree = static_cast<TTree*>(fFile->Get(objname));
   assert(fTree);
   TObjArray* arr = fTree->GetListOfBranches();
   fBranch = (TBranch*)(arr->At(0));
