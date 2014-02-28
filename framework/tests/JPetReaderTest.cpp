@@ -47,12 +47,13 @@ BOOST_AUTO_TEST_CASE (open_file)
     //std::cout << "test if open constructor works" << std::endl;
     JPetReader constructor_open("test.root");
     constructor_open.ReadData("");
+    constructor_open.CloseFile();
     
     //std::cout << "test if OpenFile works" << std::endl;
     JPetReader reader;
     BOOST_CHECK( reader.OpenFile("test.root") );
     reader.ReadData("");
-    
+    reader.CloseFile();
 }
 
 /// @todo add a proper file example !!
