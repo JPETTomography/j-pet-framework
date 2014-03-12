@@ -29,6 +29,7 @@ class JPetReader {
   virtual bool OpenFile(const char* filename);
   virtual void ReadData(const char* objname = "");
   virtual TNamed& GetData () {return *fObject;}
+  TObject* GetHeader();
 
  protected:
   TBranch* fBranch;

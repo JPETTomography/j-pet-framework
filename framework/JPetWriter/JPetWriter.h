@@ -34,6 +34,7 @@ public:
     template <class T>
     bool Write(std::vector<T>& obj);
     //bool OpenFile(const char* filename);
+    void WriteHeader(TObject* header);
     void CloseFile();
     
 protected:

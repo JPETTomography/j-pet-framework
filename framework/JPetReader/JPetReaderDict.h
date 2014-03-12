@@ -39,6 +39,7 @@ using namespace std;
 #ifndef G__MEMFUNCBODY
 #endif
 
+extern G__linked_taginfo G__JPetReaderDictLN_TObject;
 extern G__linked_taginfo G__JPetReaderDictLN_TNamed;
 extern G__linked_taginfo G__JPetReaderDictLN_vectorlEROOTcLcLTSchemaHelpercOallocatorlEROOTcLcLTSchemaHelpergRsPgR;
 extern G__linked_taginfo G__JPetReaderDictLN_reverse_iteratorlEvectorlEROOTcLcLTSchemaHelpercOallocatorlEROOTcLcLTSchemaHelpergRsPgRcLcLiteratorgR;
