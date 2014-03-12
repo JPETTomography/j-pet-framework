@@ -58,3 +58,8 @@ void JPetReader::ReadData (const char* objname) {
   assert(fBranch);
   fBranch->SetAddress(&fObject);
 }
+
+TObject* JPetReader::GetHeader(){
+    // @todo The same as in writer. At() should take an enum that keeps positions of different things.
+    return fTree->GetUserInfo()->At(0);
+}

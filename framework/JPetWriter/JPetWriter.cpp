@@ -33,3 +33,8 @@ void JPetWriter::CloseFile() {
     fFileName.clear();
     fIsBranchCreated = false;
 }
+
+void JPetWriter::WriteHeader(TObject* header){
+     // @todo as the second argument should be passed some enum to indicate position of header
+    fTree.GetUserInfo()->AddAt(header, 0);
+}
