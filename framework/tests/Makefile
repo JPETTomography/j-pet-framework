@@ -1,10 +1,10 @@
 CO = g++
 CFLAGS = -Wall `root-config --cflags`
 LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system -lboost_program_options
-LDFLAGS = -Wall `root-config --glibs --ldflags` 
+LDFLAGS = -Wall `root-config --glibs --ldflags`
 LDFLAGS += ${LD_BOOST_FLAGS}
 ###################
-MODULES = DummyClass JPetManager JPetSigCh JPetTSlot JPetHit JPetEvent JPetParamManager JPetReader JPetPM JPetScin JPetTRB JPetBarrelSlot JPetHLDReader
+MODULES = DummyClass JPetManager JPetSigCh JPetTSlot JPetHit JPetEvent JPetReader JPetPM JPetScin JPetTRB JPetBarrelSlot JPetHLDReader JPetParamManager
 # JPetSignal JPetTSlotRawWriter
 TESTS = $(MODULES:=Test.exe) 
 ###################

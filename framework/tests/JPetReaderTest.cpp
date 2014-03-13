@@ -7,6 +7,7 @@
 
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetSignal/JPetSignal.h"
+#include "../JPetWriter/JPetWriter.h"
 #include "../JPetReader/JPetReader.h"
 
 #include <cstddef>
@@ -14,6 +15,7 @@
 #include <vector>
 
 #include <TError.h> /// gErrorIgnoreLevel
+#include <TObjString.h>
 
 
 BOOST_AUTO_TEST_SUITE (FirstSuite)
@@ -54,6 +56,20 @@ BOOST_AUTO_TEST_CASE (open_file)
     BOOST_CHECK( reader.OpenFile("test.root") );
     reader.ReadData("");
     reader.CloseFile();
+}
+
+BOOST_AUTO_TEST_CASE (read_and_write_header )
+{
+    TObjString input_string("Ala ma kota");
+    JPetWriter writer("test_file.root");
+    writer.WriteHeader(&input_string);
+    JPetSigCh signal;
+    writer.Write(signal);
+    writer.CloseFile();
+    
+    JPetReader reader("test_file.root");
+    TObjString* output_string = static_cast<TObjString *>(reader.GetHeader());
+    BOOST_CHECK(input_string.Compare(output_string) == 0);
 }
 
 /// @todo add a proper file example !!
