@@ -8,7 +8,7 @@ DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader J
 DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader
 WRITERS = JPetWriter
-MODULES = $(DMODULES) DummyClass JPetLogger JPetCmdParser JPetParamManager $(READERS) $(WRITERS)
+MODULES = $(DMODULES) DummyClass JPetLogger JPetCmdParser JPetParamManager $(READERS) $(WRITERS) 
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
 SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 ################
