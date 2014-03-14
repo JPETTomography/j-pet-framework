@@ -29,11 +29,7 @@ Requirements
   3. Doxygen (www.doxygen.org) only if you want to generate 
      the code documentation
 
-  4. BOOST packages
-  
-  5. libpqxx (connection between framework and database)
-  
-  6. libconfig++
+  4. BOOST packages:
 
 Tested Platforms
 ----------------
