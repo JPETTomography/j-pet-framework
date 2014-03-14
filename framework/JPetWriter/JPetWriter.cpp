@@ -8,6 +8,7 @@
  */
 
 #include "JPetWriter.h"
+#include "../JPetUserInfoStructure/JPetUserInfoStructure.h"
 
 //TFile* JPetWriter::fFile = NULL;
 
@@ -36,5 +37,5 @@ void JPetWriter::CloseFile() {
 
 void JPetWriter::WriteHeader(TObject* header){
      // @todo as the second argument should be passed some enum to indicate position of header
-    fTree.GetUserInfo()->AddAt(header, 0);
+    fTree.GetUserInfo()->AddAt(header, JPetUserInfoStructure::kHeader);
 }
