@@ -4,7 +4,7 @@
 
 #include <libconfig.h++>
 #include <string>
-#include "../HeaderFiles/Declarations.h"
+//#include "../HeaderFiles/Declarations.h"
 //#include "../HeaderFiles/DBHandler.h"
 //#include "../HeaderFiles/ParamServer.h"
 
@@ -23,12 +23,14 @@ struct DBConfigData
   std::string m_db_password;
   std::string m_db_hostname;
   std::string m_db_port;
+
+  friend std::ostream& operator<< (std::ostream &p_stream, DBConfigData const &p_dbConfigData);
 };
 
 class DBConfigControler
 {
 public:
-  static void readConfigFileAndFillDBConfigData(std::string p_configFileName, DBConfigData &p_dbConfigData);
+  static void readConfigFileAndFillDBConfigData(std::string p_configFileName, struct DBConfigData &p_dbConfigData);
 };
 
 /*void deleteSingletonInstances()

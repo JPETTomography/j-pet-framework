@@ -17,7 +17,6 @@ namespace TEST
 BOOST_AUTO_TEST_SUITE(FunctionsTS)
 
 // DBConfigControler class
-/*
 BOOST_AUTO_TEST_CASE(readConfigFileAndFillDBConfigDataTest)
 {
   std::string l_dbConfigDataFileName = "../../Config/configDB.cfg";
@@ -25,13 +24,13 @@ BOOST_AUTO_TEST_CASE(readConfigFileAndFillDBConfigDataTest)
   DB::FUNCTIONS::DBConfigControler::readConfigFileAndFillDBConfigData(l_dbConfigDataFileName, l_dbConfigData);
 
   BOOST_CHECK(l_dbConfigData.m_db_configFileName == "configDB.cfg");
-  BOOST_CHECK(l_dbConfigData.m_db_name == "");
-  BOOST_CHECK(l_dbConfigData.m_db_username == "");
-  BOOST_CHECK(l_dbConfigData.m_db_password == "07");
-  BOOST_CHECK(l_dbConfigData.m_db_hostname == "");
-  BOOST_CHECK(l_dbConfigData.m_db_port == "");
+  BOOST_CHECK(l_dbConfigData.m_db_name == "mydb");
+  BOOST_CHECK(l_dbConfigData.m_db_username == "andrzej");
+  BOOST_CHECK(l_dbConfigData.m_db_password == "max07");
+  BOOST_CHECK(l_dbConfigData.m_db_hostname == "127.0.0.1");
+  BOOST_CHECK(l_dbConfigData.m_db_port == "5432");
 }
-*/
+
 BOOST_AUTO_TEST_SUITE_END()
 
 } // namespace TEST

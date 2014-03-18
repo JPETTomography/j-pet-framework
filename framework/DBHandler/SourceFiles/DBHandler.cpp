@@ -46,6 +46,7 @@ DBHandler& DBHandler::getInstanceForTestsDemand()
 }
 
 DBHandler::DBHandler(DB::FUNCTIONS::DBConfigData p_dbconfig) :
+                                                              m_dbconfig(p_dbconfig),
                                                               m_db_name(p_dbconfig.m_db_name),
                                                               m_db_username(p_dbconfig.m_db_username),
                                                               m_db_password(p_dbconfig.m_db_password),
@@ -204,6 +205,11 @@ const char* DBHandler::port() const throw (std::string)
     return l_dbPort;
   }
   throw std::string("No database port");
+}
+
+void DBHandler::showDBConfigData() const
+{
+  std::cout << m_dbconfig;
 }
 
 }	// namespace SERVICES

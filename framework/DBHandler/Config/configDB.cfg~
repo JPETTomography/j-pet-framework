@@ -9,7 +9,7 @@ DBHandler =
   Configuration =  
   (
     {
-      db_name = "testDB";
+      db_name = "mydb";
       db_username = "andrzej";
       db_password = "max07";      
       db_hostname = "127.0.0.1";

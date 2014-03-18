@@ -1,4 +1,4 @@
-// Database Handler Helper - DBHandlerHelper.h
+// Database Handler Helper - DBHandlerHelper.cpp
 #ifndef DBHANDLERHELPER_H
 #define DBHANDLERHELPER_H
 

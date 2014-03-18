@@ -12,11 +12,33 @@ using namespace std;
 int main(int argc, char* argv[])
 {  
   cout << "We are in main function - working." << endl;
+  
+  /*
+  //DB::SERVICES::DBHandler *l_dBHandler = new DB::SERVICES::DBHandler("testDB", "andrzej", "max07", "127.0.0.1", "5432");
+  DB::SERVICES::DBHandler *l_dBHandler = new DB::SERVICES::DBHandler();
+  l_dBHandler->connect();
+  //
+  l_dBHandler->saveTableMyTabToFile();
+  //
+  l_dBHandler->insertIntoTableMyTab(3, "Adam" , 25);
+  //
+  l_dBHandler->disconnect();	// NOTICE:  there is no transaction in progress
+  
+  delete l_dBHandler;
+  */
+
+  // test zapytania
+  /*DB::SERVICES::DBHandler *l_dBHandler = new DB::SERVICES::DBHandler();
+
+  //l_dBHandler->querryTest();
+  //l_dBHandler->insertIntoTableMyTab(1, "ala", 20);
+
+  delete l_dBHandler;*/
 
   DB::SERVER::ParamServer *l_paramServer = new DB::SERVER::ParamServer();
 
   l_paramServer->fillPhotoMultiplierMap();
-  l_paramServer->showMap();
+  l_paramServer->showPhotoMultiplierMap();
 
   boost::optional<std::pair<int, int> > l_pairOfPhotoMultiplierBoostOptionalForSlotId_1 = l_paramServer->pairOfPhotoMultiplierForSlotId(1);
   if(l_pairOfPhotoMultiplierBoostOptionalForSlotId_1)
@@ -33,6 +55,14 @@ int main(int argc, char* argv[])
   }
 
   l_paramServer->savePhotoMultiplierMapToFile();
+
+  // test runDataMap
+  l_paramServer->fillRunDataMap();
+  std::cout << "l_paramServer->sizeOfRunDataMap() = " << l_paramServer->sizeOfRunDataMap() << std::endl;
+  l_paramServer->showRunDataMap();
+
+  DB::DATA::RunData ll = l_paramServer->dataFromRun(1).get();
+  std::cout << ll.runStart() << std::endl;
 
   delete l_paramServer;
 
