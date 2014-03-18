@@ -4,7 +4,7 @@
 
 #include <pqxx/pqxx>
 #include <string>
-#include "../HeaderFiles/Declarations.h"
+//#include "../HeaderFiles/Declarations.h"
 #include "../HeaderFiles/Functions.h"
 
 
@@ -24,6 +24,7 @@ public:
   static void deleteInstance(void);
 
 protected:
+  DB::FUNCTIONS::DBConfigData m_dbconfig;
   static DBHandler& getInstanceForTestsDemand(void);//uzywam tej metody w testach bo jest inna sciezka do pliku conf.
 
 private:
@@ -63,6 +64,8 @@ public:
   const char* username(void) const throw (std::string);
   const char* hostname(void) const throw (std::string);
   const char* port(void) const throw (std::string);
+
+  void showDBConfigData(void) const;
 };
 
 } // namespace SERVICES
