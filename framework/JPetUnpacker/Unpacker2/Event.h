@@ -34,8 +34,8 @@ public:
   void SetTDCReferenceTime(float t) { TDCReferenceTime = t; }
   void SetErrorBits(UInt_t err) { errorBits = err; }
   
-  Int_t GetTotalNADCHits() { return totalNTDCHits; }
-  Int_t GetTotalNTDCHits() { return totalNADCHits; }
+  Int_t GetTotalNADCHits() { return totalNADCHits; }
+  Int_t GetTotalNTDCHits() { return totalNTDCHits; }
   float GetTDCReferenceTime() { return TDCReferenceTime; }
   UInt_t GetErrorBits() { return errorBits; }
   
