@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <TObjArray.h>
+#include "../JPetUserInfoStructure/JPetUserInfoStructure.h"
 
 JPetReader::JPetReader () : fBranch(0), fObject(0), fTree(0), fFile(NULL) {
 }
@@ -57,4 +58,9 @@ void JPetReader::ReadData (const char* objname) {
   //fBranch = fTree->GetBranch(objname);
   assert(fBranch);
   fBranch->SetAddress(&fObject);
+}
+
+TObject* JPetReader::GetHeader(){
+    // @todo The same as in writer. At() should take an enum that keeps positions of different things.
+    return fTree->GetUserInfo()->At(JPetUserInfoStructure::kHeader);
 }

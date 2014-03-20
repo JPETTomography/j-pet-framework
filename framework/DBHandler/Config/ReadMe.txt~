@@ -1,0 +1,10 @@
+############ ReadMe ############
+
+Istnieja dwie mozliwosci ustawien parametrow do bazy danych.
+1) Zmiana pliku konfiguracyjnego "configDB.cfg"
+2) Dodanie nowego pliku konfiguracyjnego.
+Struktura oraz roszerzenie pliku MUSZA zostac takie same.
+Nastepnie odpalenie skryptu changeConfigFileName.py z katalogu
+"Scripts"
+
+################################
