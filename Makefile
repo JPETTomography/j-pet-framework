@@ -4,7 +4,7 @@ COPTS    = `root-config --cflags` -fPIC
 LDOPTS    = `root-config --glibs` -g -lboost_program_options
 ################
 SRC_DIR = $(PWD)/framework
-DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot
+DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot JPetUnpacker
 DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader
 WRITERS = JPetWriter
@@ -36,7 +36,7 @@ Dict.cpp:
 	@rootcint -f  Dict.cpp -c -P -I$(ROOTSYS) $(HEADERS)
 modules:
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
-	@(cd $(SRC_DIR)/Unpacker2/; $(MAKE))
+#	@(cd $(SRC_DIR)/JPetUnpacker/Unpacker2/; $(MAKE))
 documentation:
 	doxygen Doxyfile
 sharedlib: $(OBJECTS)

@@ -56,29 +56,27 @@ BOOST_AUTO_TEST_CASE (open_file)
     reader.CloseFile();
 }
 
-/// @todo add a proper file example !!
-//BOOST_AUTO_TEST_CASE (proper_file)
-//{
-//  JPetReader reader;
-//  bool openedPropery = reader.OpenFile("phys.sig.root");
-//  BOOST_CHECK(openedPropery );
-//  if (openedPropery) {
-//    reader.ReadData("");
-//    BOOST_CHECK(reader.fBranch != 0);
-//    BOOST_CHECK(reader.fFile.IsOpen());
-//    BOOST_CHECK(reader.fObject != 0);
-//    BOOST_CHECK(reader.fTree != 0);
-//
-//    BOOST_CHECK(reader.GetEntries() > 0);
-//    BOOST_CHECK(reader.GetEntry(1) > 0);
-//
-//    reader.CloseFile();
-//
-//    BOOST_CHECK(reader.fBranch == 0);
-//    BOOST_CHECK(reader.fFile.IsOpen());
-//    BOOST_CHECK(reader.fObject == 0);
-//    BOOST_CHECK(reader.fTree == 0);
-//  }
-//}
+BOOST_AUTO_TEST_CASE (proper_file)
+{
+  JPetReader reader;
+  bool openedPropery = reader.OpenFile("./phys.sig.root");
+  BOOST_CHECK(openedPropery );
+  if (openedPropery) {
+    reader.ReadData("");
+    BOOST_CHECK(reader.fBranch != 0);
+    BOOST_CHECK(reader.fFile->IsOpen());
+    BOOST_CHECK(reader.fObject != 0);
+    BOOST_CHECK(reader.fTree != 0);
+
+    BOOST_CHECK(reader.GetEntries() > 0);
+    BOOST_CHECK(reader.GetEntry(1) > 0);
+
+    reader.CloseFile();
+
+    BOOST_CHECK(reader.fBranch == 0);
+    BOOST_CHECK(reader.fObject == 0);
+    BOOST_CHECK(reader.fTree == 0);
+  }
+}
 
 BOOST_AUTO_TEST_SUITE_END()
