@@ -4,11 +4,14 @@ COPTS    = `root-config --cflags` -fPIC
 LDOPTS    = `root-config --glibs` -g -lboost_program_options
 ################
 SRC_DIR = $(PWD)/framework
-DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot JPetUnpacker
+#Modules that should have ROOT dictionnaries
+DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot 
 DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader
 WRITERS = JPetWriter
-MODULES = $(DMODULES) DummyClass JPetLogger JPetCmdParser JPetParamManager $(READERS) $(WRITERS) 
+#Modules that without ROOT dictionnaries
+NONDMODULES = DummyClass JPetLogger JPetCmdParser JPetParamManager JPetUnpacker $(READERS) $(WRITERS)
+MODULES = $(DMODULES) $(NONDMODULES)
 ################
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
 SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
