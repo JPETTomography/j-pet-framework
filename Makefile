@@ -1,5 +1,5 @@
 CC    = g++
-LD    = g++
+LD    = $(CC)
 COPTS    = `root-config --cflags` -fPIC
 LDOPTS    = `root-config --glibs` -g -lboost_program_options
 ################
@@ -9,6 +9,7 @@ DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader
 WRITERS = JPetWriter
 MODULES = $(DMODULES) DummyClass JPetLogger JPetCmdParser JPetParamManager $(READERS) $(WRITERS) 
+################
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
 SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 ################
@@ -23,13 +24,13 @@ HEADERS += $(SRC_HEADERS)
 HEADERS += linkdef.h
 OBJECTS = $(SOURCES:.cpp=.o)
 DICT_OBJS = $(foreach DICT, $(DICTS), $(SRC_DIR)/$(DICT)/$(DICT)Dict.o)
-EXECUTABLE = main
-all: modules# $(EXECUTABLE)
-#$(EXECUTABLE): $(OBJECTS)
-#	$(LD) -o $@ $^ $(LDOPTS) $(DICT_OBJS)
-#C++ files
+################
+LIBFRAMEWORK = libJPetFramework.so
+################
 .cpp.o:
 	$(CC) -o $@ $^ -c $(COPTS)
+################
+all: modules 
 #Dictionary for ROOT classes
 Dict.cpp: 
 	@echo "Generating dictionary ..."
@@ -40,8 +41,8 @@ modules:
 documentation:
 	doxygen Doxyfile
 sharedlib: $(OBJECTS)
-	$(LD) -shared -o libJPetFramework.so $^ $(DICT_OBJS) $(LDOPTS)
+	$(LD) -shared -o $(LIBFRAMEWORK) $^ $(DICT_OBJS) $(LDOPTS)
 clean:         
-	@rm -rf $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h JPetFramework.so latex html
+	@rm -rf $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h $(LIBFRAMEWORK) latex html
 	@($(foreach MODULE, $(MODULES),$(MAKE) -C $(SRC_DIR)/$(MODULE) clean;))
 	$(MAKE) -C $(TEST_DIR) clean
