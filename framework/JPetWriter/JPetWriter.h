@@ -48,7 +48,7 @@ template <class T>
 bool JPetWriter::Write(const T& obj){
     std::vector<T> wrapper;
     wrapper.push_back(obj);
-    Write(wrapper);
+    return Write(wrapper);
 }
 
 template <class T>
