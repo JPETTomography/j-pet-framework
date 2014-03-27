@@ -20,8 +20,7 @@ JPetSigCh::JPetSigCh(const JPetSigCh& obj)
     setTRB(obj.getTRB());
     setScin(obj.getScin());
     setBarrelSlot(obj.getBarrelSlot());
-    fChannels.clear();
-    fChannels = obj.getChSet();
+    fChannels = obj.getChannels();
   }
 }
 
@@ -44,13 +43,17 @@ JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time)
 //
 //}
 
-float JPetSigCh::getTime(JPetSigCh::EdgeType type, int ch_no) const
-{
-  if (fIsSlow && type == kFalling) {
-    ERROR("This instance of JPetSigCh is of slow type, hence has no falling edge data.");
-    return 0;
+float JPetSigCh::getTime(EdgeType type) const {
+  assert ((type == kRising) || (type == kFalling));
+  if (type == kRising) return fChannels.first;
+  if (type == kFalling) { 
+    if (isSlow()) {
+      ERROR("This instance of JPetSigCh is of slow type, hence has no falling edge data.");
+      return 0;
+    }
+    return fChannels.second;
   }
-  return fChannels[ch_no].find(type)->second;
+  return 0;
 }
 
 template <class T>
@@ -77,11 +80,9 @@ void JPetSigCh::set(T** dest, const T& source) throw(std::bad_alloc)
   }
 }
 
-void JPetSigCh::addCh(float edge_time, float fall_edge_time)
+void JPetSigCh::addCh(float rise_edge_time, float fall_edge_time)
 {
-  SingleCh tmp;
-  tmp[kRising] = edge_time;
-  tmp[kFalling] = fall_edge_time;
-  fChannels.push_back(tmp);
+  fChannels.first = rise_edge_time;
+  fChannels.second = fall_edge_time;
 }
 

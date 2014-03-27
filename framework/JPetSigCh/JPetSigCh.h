@@ -20,8 +20,7 @@ class JPetSigCh: public TNamed
 
  public:
   enum EdgeType { kRising, kFalling };
-  typedef std::map < EdgeType, float > SingleCh;
-  typedef std::vector < SingleCh > ChSet;
+  typedef std::pair < float, float > Channels;
 
   /// @warning here I dont know who should be the owner of JPetTRB etc elements
   friend void my_swap(JPetSigCh& first, JPetSigCh& second) {
@@ -40,29 +39,29 @@ class JPetSigCh: public TNamed
   JPetSigCh& operator= (const JPetSigCh obj);
   JPetSigCh(float EdgeTime, float FallEdgeTime = 0);
   inline bool isSlow() const { return fIsSlow; }
-  inline size_t size() const { return fChannels.size(); }
   inline float getAmpl() const { return fAmpl; }
   /**
    * @warning This method may cause seg fault, when is called with kFalling as first argument and object is of type "slow".
    */
-  float getTime(EdgeType type = kRising, int ch_no = 0) const;
   inline JPetPM getPM() const { return fPM; }
   inline JPetTRB getTRB() const {return fTRB; }
   inline JPetScin getScin() const { return fScin; }
   inline JPetBarrelSlot getBarrelSlot() const { return fBarrelSlot; }
-  inline ChSet getChSet() const { return fChannels; }
-  void addCh(float edge_time, float fall_edge_time);
+
+  float getTime(EdgeType type) const ;
+  
+  inline Channels getChannels() const { return fChannels; }
+  void addCh(float rise_edge_time, float fall_edge_time);
   inline void setPM(const JPetPM& pm) { fPM = pm; }
   inline void setTRB(const JPetTRB& trb) { fTRB = trb; }
   inline void setScin(const JPetScin& scin) { fScin = scin; }
   inline void setBarrelSlot(const JPetBarrelSlot& barrel_slot) { fBarrelSlot = barrel_slot; }
 
-
   ClassDef(JPetSigCh, 1);
 
  protected:
   float fAmpl;
-  ChSet fChannels;
+  Channels fChannels; /// fChannels.first is rising edge and fChannels.second is falling edge
   bool fIsSlow;
   JPetPM fPM;
   JPetTRB fTRB;
