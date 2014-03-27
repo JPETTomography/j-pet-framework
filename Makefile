@@ -36,7 +36,7 @@ LIBFRAMEWORK = libJPetFramework.so
 .cpp.o:
 	$(CC) -o $@ $^ -c $(COPTS)
 ################
-all: modules
+all: modules dbhandler
 #Dictionary for ROOT classes
 Dict.cpp: 
 	@echo "Generating dictionary ..."
@@ -45,6 +45,8 @@ modules:
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
 sharedlib: modules
 	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(UNPACKER_LIB) $(LDOPTS)
+dbhandler:
+	cd $(SRC_DIR)/DBHandler; $(MAKE);
 documentation:
 	doxygen Doxyfile
 clean:         
