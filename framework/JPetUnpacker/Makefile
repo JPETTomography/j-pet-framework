@@ -11,10 +11,11 @@ HEADERS       =  $(SOURCES:.cpp=.h)
 
 %.o: %.cpp
 	$(CC) $^ -o $@  -c $(COPTS)
+all: Unpacker $(DICT_OBJECTS) $(OBJECTS)
 Unpacker:
 	@(cd ./Unpacker2/tinyxml2-master/; g++ -c -fPIC tinyxml2.cpp; ar rvs tinyxml2.a tinyxml2.o)
 	@(cd ./Unpacker2/; $(MAKE))
-all: Unpacker $(DICT_OBJECTS) $(OBJECTS)
+	@(mv ./Unpacker2/libUnpacker2.so .)
 %Dict.cpp:
 	@echo "Generating dictionary ..."
 	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
