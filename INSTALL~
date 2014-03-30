@@ -32,10 +32,8 @@ Requirements
   4. BOOST packages
   
   5. libpqxx (connection between framework and database)
-  [1]
   
   6. libconfig++
-  [2]
 
 Tested Platforms
 ----------------
@@ -43,21 +41,3 @@ Tested Platforms
   1. Ubuntu x86_64 GNU/Linux
     gcc 4.6.3
     ROOT v5.32
-
-[1]
-Official website:
-  https://pqxx.org/development/libpqxx/
-Documentation:
-  http://pqxx.org/devprojects/libpqxx/doc/4.0/html/Reference/a00001.html
-Installation:
-  sudo apt-get install libpqxx
-Other Packages Related to libpqxx:
-  http://packages.ubuntu.com/lucid/libpqxx-dev
-
-[2]
-Official website:
-  http://www.hyperrealm.com/libconfig/
-Documentation:
-  http://www.hyperrealm.com/libconfig/libconfig_manual.html
-Installation:
-  sudo apt-get install libconfig++
