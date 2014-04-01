@@ -1,6 +1,6 @@
 CC            =  g++
 LD            =  g++
-COPTS         =  `root-config --cflags`
+COPTS         =  `root-config --cflags` -fPIC
 LDOPTS        =  `root-config --glibs` -g
 #C++ Files
 SOURCES       =  JPetHit.cpp
@@ -13,7 +13,8 @@ HEADERS       =  $(SOURCES:.cpp=.h)
 	$(CC) $^ -o $@  -c $(COPTS)
 all: $(DICT_OBJECTS) $(OBJECTS)
 %Dict.cpp:
-	@echo "Genarating dictionary ..."
+	@echo "Generating dictionary ..."
 	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
+#JPetHitLinkDef.h
 clean:
 	rm -f $(OBJECTS) *Dict*

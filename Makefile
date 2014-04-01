@@ -1,43 +1,59 @@
 CC    = g++
-LD    = g++
-COPTS    = `root-config --cflags` 
-LDOPTS    = `root-config --glibs` -g
+LD    = $(CC)
+COPTS    = `root-config --cflags` -fPIC
+LDOPTS    = `root-config --glibs`
+DEBUG = -g
+LD_BOOST_FLAGS = -lboost_program_options -lboost_filesystem -lboost_system  
+LDOPTS	+= $(LD_BOOST_FLAGS)
+LDOPTS	+= $(DEBUG)
+################
+UNPACKER_LIB = $(PWD)/framework/JPetUnpacker/libUnpacker2.so
 ################
 SRC_DIR = $(PWD)/framework
-DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot
+#Modules that should have ROOT dictionnaries
+DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot JPetUnpacker
 DICTS   = $(DMODULES)
-READERS = JPetReader
+READERS = JPetReader JPetHLDReader
 WRITERS = JPetWriter
-MODULES = $(DMODULES) DummyClass JPetLogger $(READERS) $(WRITERS)
+#Modules that without ROOT dictionnaries
+NONDMODULES = DummyClass JPetLogger JPetCmdParser JPetParamManager $(READERS) $(WRITERS)
+MODULES = $(DMODULES) $(NONDMODULES)
+################
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
 SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 ################
 TEST_DIR = $(SRC_DIR)/tests
 ################
 #C++ Files
-SOURCES =  main.cpp  Dict.cpp Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp
-SOURCES += $(SRC_MODULES)
-HEADERS = Event.h TDCHit.h ADCHit.h Sig.h JPetLoggerInclude.h
+#SOURCES =  Dict.cpp
+# Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp 
+#SOURCES += $(SRC_MODULES)
+SOURCES = $(SRC_MODULES)
+HEADERS = JPetLoggerInclude.h #Event.h TDCHit.h ADCHit.h Sig.h
 HEADERS += $(SRC_HEADERS)
 HEADERS += linkdef.h
 OBJECTS = $(SOURCES:.cpp=.o)
 DICT_OBJS = $(foreach DICT, $(DICTS), $(SRC_DIR)/$(DICT)/$(DICT)Dict.o)
-EXECUTABLE = main
-all: modules $(EXECUTABLE)
-$(EXECUTABLE): $(OBJECTS)
-	$(LD) -o $@ $^ $(LDOPTS) $(DICT_OBJS)
-#C++ files
+################
+LIBFRAMEWORK = libJPetFramework.so
+################
 .cpp.o:
 	$(CC) -o $@ $^ -c $(COPTS)
+################
+all: modules dbhandler
 #Dictionary for ROOT classes
 Dict.cpp: 
 	@echo "Generating dictionary ..."
 	@rootcint -f  Dict.cpp -c -P -I$(ROOTSYS) $(HEADERS)
 modules:
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
-clean:         
-	@rm -f $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h
-	@($(foreach MODULE, $(MODULES),$(MAKE) -C $(SRC_DIR)/$(MODULE) clean;))
-	$(MAKE) -C $(TEST_DIR) clean
+sharedlib: modules
+	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(UNPACKER_LIB) $(LDOPTS)
+dbhandler:
+	cd $(SRC_DIR)/DBHandler; $(MAKE);
 documentation:
 	doxygen Doxyfile
+clean:         
+	@rm -rf $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h $(LIBFRAMEWORK) latex html
+	@($(foreach MODULE, $(MODULES),$(MAKE) -C $(SRC_DIR)/$(MODULE) clean;))
+	$(MAKE) -C $(TEST_DIR) clean

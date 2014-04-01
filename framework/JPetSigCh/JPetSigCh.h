@@ -13,53 +13,63 @@
 #include "../JPetTRB/JPetTRB.h"
 #include "../../JPetLoggerInclude.h"
 
-using namespace std;
 
-class JPetSigCh: public TNamed {
 
-public:
-	enum EdgeType { kRising, kFalling };
-	typedef map < EdgeType, float > SingleCh;
-	typedef vector < SingleCh > ChSet;
+class JPetSigCh: public TNamed
+{
 
-	JPetSigCh(): TNamed("JPetSigCh", "Signal Channel Structure")  { init(); }
-	JPetSigCh(const JPetSigCh& obj);
-	JPetSigCh(float EdgeTime, float FallEdgeTime = 0);
-	
-	bool isSlow() const {return fIsSlow;}
-	
-	unsigned int size() const {return fChannels.size(); }
-	float getAmpl() const { return fAmpl; }
-	float getTime(EdgeType type = kRising, int ch_no = 0) const { return fChannels[ch_no].find(type)->second; }
-	const JPetPM& getPM() const { /*assert(fPM != NULL);*/ return *fPM; }
-	const JPetTRB& getTRB() const { /*assert(fTRB != NULL);*/ return *fTRB; }
-	const JPetScin& getScin() const { /*assert(fScin != NULL);*/ return *fScin; }
-	const JPetBarrelSlot& getBarrelSlot() const { /*assert(fBarrelSlot != NULL);*/ return *fBarrelSlot; }
-	const ChSet& getChSet() const {return fChannels;}
-	
-	void addCh(float edge_time, float fall_edge_time);
-	
-	void setPM(const JPetPM& pm) { set(&fPM, pm); }
-	void setTRB(const JPetTRB& trb) { set(&fTRB, trb); }
-	void setScin(const JPetScin& scin) { set(&fScin, scin); }
-	void setBarrelSlot(const JPetBarrelSlot& barrel_slot) { set(&fBarrelSlot, barrel_slot); }	
-	
-	JPetSigCh& operator= (const JPetSigCh& obj);
+ public:
+  enum EdgeType { kRising, kFalling };
+  typedef std::pair < float, float > Channels;
 
-	ClassDef(JPetSigCh,1);
+  /// @warning here I dont know who should be the owner of JPetTRB etc elements
+  friend void my_swap(JPetSigCh& first, JPetSigCh& second) {
+    using std::swap;
+    swap(first.fAmpl, second.fAmpl);
+    swap(first.fChannels, second.fChannels);
+    swap(first.fIsSlow, second.fIsSlow);
+    swap(first.fPM, second.fPM);
+    swap(first.fScin, second.fScin);
+    swap(first.fBarrelSlot, second.fBarrelSlot);
+  }
 
-protected:
-	
-	float fAmpl; 
-	ChSet fChannels;
-	bool fIsSlow;
-	JPetPM* fPM;
-	JPetTRB* fTRB;
-	JPetScin* fScin;
-	JPetBarrelSlot* fBarrelSlot;
-	
-	template <class T> void set(T** dest, const T& source) throw(bad_alloc);
-	void init();
+  JPetSigCh() { init(); }
+  JPetSigCh(const JPetSigCh& obj);
+  /// @todo must be added~JPetSigCh();
+  JPetSigCh& operator= (const JPetSigCh obj);
+  JPetSigCh(float EdgeTime, float FallEdgeTime = 0);
+  inline bool isSlow() const { return fIsSlow; }
+  inline float getAmpl() const { return fAmpl; }
+  /**
+   * @warning This method may cause seg fault, when is called with kFalling as first argument and object is of type "slow".
+   */
+  inline JPetPM getPM() const { return fPM; }
+  inline JPetTRB getTRB() const {return fTRB; }
+  inline JPetScin getScin() const { return fScin; }
+  inline JPetBarrelSlot getBarrelSlot() const { return fBarrelSlot; }
+
+  float getTime(EdgeType type) const ;
+  
+  inline Channels getChannels() const { return fChannels; }
+  void addCh(float rise_edge_time, float fall_edge_time);
+  inline void setPM(const JPetPM& pm) { fPM = pm; }
+  inline void setTRB(const JPetTRB& trb) { fTRB = trb; }
+  inline void setScin(const JPetScin& scin) { fScin = scin; }
+  inline void setBarrelSlot(const JPetBarrelSlot& barrel_slot) { fBarrelSlot = barrel_slot; }
+
+  ClassDef(JPetSigCh, 1);
+
+ protected:
+  float fAmpl;
+  Channels fChannels; /// fChannels.first is rising edge and fChannels.second is falling edge
+  bool fIsSlow;
+  JPetPM fPM;
+  JPetTRB fTRB;
+  JPetScin fScin;
+  JPetBarrelSlot fBarrelSlot;
+
+  template <class T> void set(T** dest, const T& source) throw(std::bad_alloc);
+  void init();
 };
 
 #endif

@@ -1,5 +1,5 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE JPetSignalTest 
+#define BOOST_TEST_MODULE JPetSignalTest
 #include <boost/test/unit_test.hpp>
 
 #define private public
@@ -12,23 +12,25 @@
 #include "../JPetSignal/JPetSignal.h"
 #include <vector>
 
-             
+//#include <TError.h> /// gErrorIgnoreLevel
+//  gErrorIgnoreLevel = 7000;
 BOOST_AUTO_TEST_SUITE(FirstSuite)
-  
+
+
 BOOST_AUTO_TEST_CASE( first )
 {
   JPetTSlot test;
-  JPetSigCh ch_test(1.3,1.2), ch_test2(1), ch_test3(123, 98);
+  JPetSigCh ch_test(1.3, 1.2), ch_test2(1), ch_test3(123, 98);
   test.addCh(ch_test);
   test.addCh(ch_test2);
   test.addCh(ch_test3);
-  
-  
+
+
   JPetTSlot test2(test.getSigChVect());
-  
-  for (unsigned int i = 0; i <test.size() || i< test2.size() ; i++){
+
+  for (size_t i = 0; i < test.size() || i < test2.size() ; i++) {
     BOOST_CHECK_EQUAL(test[i].getTime(JPetSigCh::kRising), test2[i].getTime(JPetSigCh::kRising));
-  	BOOST_CHECK_EQUAL(test[i].getTime(JPetSigCh::kFalling), test2[i].getTime(JPetSigCh::kFalling));
+    BOOST_CHECK_EQUAL(test[i].getTime(JPetSigCh::kFalling), test2[i].getTime(JPetSigCh::kFalling));
   }
 }
 
@@ -36,6 +38,6 @@ BOOST_AUTO_TEST_CASE( second )
 {
   JPetTSlot test;
   JPetTSlot test2(test.getSigChVect());
-} 
+}
 
 BOOST_AUTO_TEST_SUITE_END()

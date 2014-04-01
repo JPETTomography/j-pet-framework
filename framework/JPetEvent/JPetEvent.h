@@ -19,23 +19,26 @@ class JPetEvent: public TNamed {
   
   public:
 
-  typedef std::pair<JPetHit*,JPetHit*> JPetHits;
+  //typedef std::pair<JPetHit*,JPetHit*> JPetHits;
   
   JPetEvent();
-  JPetEvent(float Time, float QualityOfTime, JPetHits& Hits);
+  JPetEvent(float Time, float QualityOfTime, JPetHit& firstHit, JPetHit& secondHit);
   virtual ~JPetEvent();
   inline const float GetTime() const {return fTime;};
   inline const float GetQualityOfTime() const {return fQualityOfTime;};
   inline void SetTime(float time) {fTime = time;};
   inline void SetQualityOfTime(float qualityOfTime) {fQualityOfTime = qualityOfTime;};
-  inline const JPetHit& GetHitFirst() const {return *fHits->first;};
-  inline const JPetHit& GetHitSecond() const {return *fHits->second;};
-  inline const JPetHits& GetHits() const {return *fHits;};
-  inline void SetHits(JPetHits* hits) {fHits = hits;};
-  inline void SetHits(JPetHits& hits) {fHits = &hits;};
+  inline const JPetHit& GetfirstHit() const {return *fFirstHit;};
+  inline const JPetHit& GetsecondHit() const {return *fSecondHit;};
+ //inline const JPetHits& GetHits() const {return *fHits;};
+ // inline void SetHits(JPetHits* hits) {fHits = hits;};
+ // inline void SetHits(JPetHits& hits) {fHits = &hits;};
   inline void SetHits(JPetHit* firstHit, JPetHit* secondHit) {
-              fHits->first = firstHit;
-	      fHits->second = secondHit;};
+              fFirstHit = firstHit;
+	      fSecondHit = secondHit;};
+  inline void SetFirstHit(JPetHit* firstHit) {fFirstHit=firstHit;};
+  inline void SetSecondHit(JPetHit* secondHit) {fSecondHit=secondHit;};
+
   
   ClassDef(JPetEvent,1);
 
@@ -43,7 +46,8 @@ class JPetEvent: public TNamed {
   
   float fTime;
   float fQualityOfTime;
-  JPetHits* fHits;
+  JPetHit* fFirstHit;
+  JPetHit* fSecondHit;
   
 };
 

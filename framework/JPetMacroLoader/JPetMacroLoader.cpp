@@ -3,7 +3,6 @@
 #include "../../JPetLoggerInclude.h"
 
 #include <TROOT.h>
-#include <TString.h>
 #include <TSystem.h>
 
 #include <iostream>
@@ -23,6 +22,7 @@ JPetMacroLoader::~JPetMacroLoader() {
 }
 
 void JPetMacroLoader::CreateInputObjects(const char* inputFilename) {
+
   TString inFile;
   if (inputFilename == NULL) inFile.Form("CreateInputObjects(0)");
   else  inFile.Form("CreateInputObjects(\"%s\")", inputFilename);

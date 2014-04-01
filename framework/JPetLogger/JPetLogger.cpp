@@ -15,7 +15,7 @@ bool JPetLogger::fIsLogFile = false;
 #else
 bool JPetLogger::fIsLogFile = true;
 #endif
-const char* JPetLogger::fFileName = "Display.log";
+const char* JPetLogger::fFileName = "JPet.log";
 
 
 void JPetLogger::dateAndTime() {
