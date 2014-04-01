@@ -1,6 +1,15 @@
 #include "JPetReader.h"
+#include <cassert>
+#include <iostream>
 
-JPetReader::JPetReader () : fBranch(NULL), fFile(NULL), fObject(NULL), fTree(NULL) {
+#include <TObjArray.h>
+#include "../JPetUserInfoStructure/JPetUserInfoStructure.h"
+
+JPetReader::JPetReader () : fBranch(0), fObject(0), fTree(0), fFile(NULL) {
+}
+
+JPetReader::JPetReader (const char* filename) : fBranch(0), fObject(0), fTree(0), fFile(NULL) {
+  if (OpenFile(filename) ) ReadData("");
 }
 
 JPetReader::~JPetReader () {
@@ -11,41 +20,47 @@ void JPetReader::CloseFile () {
   if (fFile != NULL) {
     if (fFile->IsOpen()) fFile->Close();
     delete fFile;
+    fFile = NULL;
   }
-  fBranch = NULL;
-  fFile = NULL;
-  fObject = NULL;
-  fTree = NULL;
+  fBranch = 0;
+  fObject = 0;
+  fTree = 0;
 }
 
-long long JPetReader::GetEntries () const {
-  return fTree->GetEntries();
-}
 
-int JPetReader::GetEntry (int entryNo) {
-  return fTree->GetEntry(entryNo);
-}
-
-void JPetReader::OpenFile (const char* filename) {
+bool JPetReader::OpenFile (const char* filename) {
   CloseFile();
+  
   fFile = new TFile(filename);
+  //fFile.OpenFile(filename);
 
   if ((!fFile->IsOpen())||fFile->IsZombie()) {
     ERROR("Cannot open file.");
-    delete fFile;
-    fFile = NULL;
-    return;
+    CloseFile();
+    return false;
   }
-
-  return;
+  return true;
 }
 
+/* tu też bym zwrócił boola i wyszczególnił przypadek,
+ * gdy nie ma obiektu o danej nazwie w pliku - Karol
+ */
 void JPetReader::ReadData (const char* objname) {
-  if (objname[0]==NULL) {
-    ERROR("No object name specified");
-    return;
-  }
+  assert(objname);
+  //if (objname[0]== 0) { ///@warning nie rozumiem tego warunku
+  //  ERROR("No object name specified");
+  //  return;
+  //}
   fTree = static_cast<TTree*>(fFile->Get(objname));
-  fBranch = fTree->GetBranch(objname);
+  assert(fTree);
+  TObjArray* arr = fTree->GetListOfBranches();
+  fBranch = (TBranch*)(arr->At(0));
+  //fBranch = fTree->GetBranch(objname);
+  assert(fBranch);
   fBranch->SetAddress(&fObject);
+}
+
+TObject* JPetReader::GetHeader(){
+    // @todo The same as in writer. At() should take an enum that keeps positions of different things.
+    return fTree->GetUserInfo()->At(JPetUserInfoStructure::kHeader);
 }
