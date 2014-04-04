@@ -11,6 +11,7 @@
 #include "../JPetAnalysisModule/JPetAnalysisModule.h"
 #include "../JPetCmdParser/JPetCmdParser.h"
 #include "../JPetParamManager/JPetParamManager.h"
+#include "../JPetUnpacker/JPetUnpacker.h"
 
 #include <vector>
 #include <list>
@@ -28,8 +29,9 @@ class JPetManager: public TNamed {
   void Run();
   void AddTask(JPetAnalysisModule* mod);
   void ParseCmdLine(int argc, char** argv);
-  const char* getInputFileName() { return fCmdParser.getFileName().c_str(); }
+  const char* getInputFileName() const { return fCmdParser.getFileName().c_str(); }
   JPetParamManager & getParamManagerInstance() { return fParamManager; }
+  void UnpackFile() { if(fCmdParser.fileTypeIsSet()) fUnpacker.Exec();} /// @todo that should be used only if the correct parameters were assigned
  
   ClassDef(JPetManager,1);
 
@@ -37,8 +39,10 @@ class JPetManager: public TNamed {
   JPetManager();
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&); 
+
   JPetCmdParser fCmdParser;
   JPetParamManager fParamManager;
+  JPetUnpacker fUnpacker;
   std::vector<JPetAnalysisModule*> fTasks;
 };
 #endif /*  !JPETMANAGER_H */

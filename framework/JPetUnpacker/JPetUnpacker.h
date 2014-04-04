@@ -1,39 +1,39 @@
 /**
  * @file JPetUnpacker.h
- * @author Damian Trybek, damian.trybek@uj.edu.pl
- * @copyright Copyright (c) 2014, Damian Trybek
+ * @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
+ * @copyright Copyright (c) 2014, J-PET collaboration
+ * @brief facade for Unpacker program which unpacks raw data to root files
  */
 
 #ifndef _JPETUNPACKER_H_
 #define _JPETUNPACKER_H_
 
-#include <cstddef>
+//#include <cstddef>
+#include <string>
+#include <TObject.h>
+#include "./Unpacker2/Unpacker2.h"
 
-#include "../JPetAnalysisModule/JPetAnalysisModule.h"
+class Unpacker2;
 
-class JPetUnpacker: public JPetAnalysisModule {
-  
-  public:
+class JPetUnpacker: public TObject
+{
+ public:
 
   JPetUnpacker();
-  JPetUnpacker(const char* name, const char* title);
-  virtual ~JPetUnpacker();
-  virtual void CreateInputObjects(const char* inputFilename=0);
-  virtual void CreateOutputObjects(const char* outputFilename=0);
-  virtual void SetParams(const char* hldFile, const char* cfgFile, int numOfEvents);
-  virtual void Exec();
-  virtual long long GetEventNb() {return fEventNb;}
-  virtual void Terminate();
+  ~JPetUnpacker();
+  void Exec();
+  inline int getEventsToProcess() const { return fEventsToProcess; }
+  inline std::string getHldFile() const { return fHldFile; }
+  inline std::string getCfgFile() const { return fCfgFile; }
+  void setParams(const std::string& hldFile, int numOfEvents = 100000, const std::string& cfgFile = "conf.xml");
 
-  ClassDef(JPetUnpacker,1);
+  ClassDef(JPetUnpacker, 1);
 
-  private:
-  
-  int fEvent;
-  int fEventNb;
+ private:
+  Unpacker2* fUnpacker;  
   int fEventsToProcess;
-  const char* fHldFile;	//!
-  const char* fCfgFile;	//!
+  std::string fHldFile;
+  std::string fCfgFile;
 };
 
 #endif

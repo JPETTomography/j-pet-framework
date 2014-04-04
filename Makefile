@@ -1,7 +1,11 @@
 CC    = g++
 LD    = $(CC)
 COPTS    = `root-config --cflags` -fPIC
-LDOPTS    = `root-config --glibs` -g -lboost_program_options
+LDOPTS    = `root-config --glibs`
+DEBUG = -g
+LD_BOOST_FLAGS = -lboost_program_options -lboost_filesystem -lboost_system  
+LDOPTS	+= $(LD_BOOST_FLAGS)
+LDOPTS	+= $(DEBUG)
 ################
 UNPACKER_LIB = $(PWD)/framework/JPetUnpacker/libUnpacker2.so
 ################
