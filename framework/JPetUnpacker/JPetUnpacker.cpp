@@ -1,35 +1,55 @@
 #include "./JPetUnpacker.h"
-#include "./Unpacker2/Unpacker2.h"
+#include "../../JPetLoggerInclude.h"
+#include <boost/filesystem.hpp>
+#include <cassert>
 
 ClassImp(JPetUnpacker);
 
-JPetUnpacker::JPetUnpacker():JPetAnalysisModule(), fEventNb(1) {
-  
+JPetUnpacker::JPetUnpacker():
+fUnpacker(0),
+fEventsToProcess(0),
+fHldFile(""),
+fCfgFile("")
+{
+  /**/
 }
 
-JPetUnpacker::JPetUnpacker(const char* name, const char* title):JPetAnalysisModule(name, title), fEventNb(1) {
-  
+
+JPetUnpacker::~JPetUnpacker()
+{
+  if (fUnpacker) {
+    delete fUnpacker;
+    fUnpacker = 0;
+  }
 }
 
-JPetUnpacker::~JPetUnpacker() {
-}
 
-void JPetUnpacker::CreateInputObjects(const char* inputFilename) {
-
-}
-
-void JPetUnpacker::SetParams(const char* hldFile, const char* cfgFile, int numOfEvents) {
+void JPetUnpacker::setParams(const std::string& hldFile,  int numOfEvents, const std::string& cfgFile)
+{
   fHldFile = hldFile;
   fCfgFile = cfgFile;
   fEventsToProcess = numOfEvents;
 }
 
-void JPetUnpacker::CreateOutputObjects(const char* outputFilename) {
+void JPetUnpacker::Exec()
+{
+  assert(getEventsToProcess() > 0);
+  if ( !boost::filesystem::exists(getHldFile())) 
+  {
+    ERROR("The hld file doesnt exist");
+    return;
+  }
+  if (!boost::filesystem::exists(getCfgFile())) 
+  {
+    ERROR("The config file doesnt exist");
+    return;
+  }
+  if (fUnpacker) {
+    delete fUnpacker;
+    fUnpacker = 0;
+  }
+  fUnpacker = new Unpacker2(fHldFile.c_str(), fCfgFile.c_str(), fEventsToProcess);
 }
 
-void JPetUnpacker::Exec() {
-  Unpacker2* unpacker = new Unpacker2(fHldFile, fCfgFile, fEventsToProcess);
-}
 
-void JPetUnpacker::Terminate() {
-}
+
