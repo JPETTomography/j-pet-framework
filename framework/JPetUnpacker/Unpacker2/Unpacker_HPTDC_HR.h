@@ -6,14 +6,14 @@
 class Unpacker_HPTDC_HR : public UnpackingModule {
   
 private:  
-  float** leadTimes;
-  float** trailTimes;
-  UInt_t* leadMult;
-  UInt_t* trailMult;
-  
   int channelNumber;
+  float **leadTimes; //!
+  float **trailTimes; //!
+  UInt_t* leadMult; //[channelNumber]
+  UInt_t* trailMult; //[channelNumber]
   
-  bool* firstLeadCorrect;
+  
+  bool* firstLeadCorrect; //[channelNumber]
   
 public:
   
