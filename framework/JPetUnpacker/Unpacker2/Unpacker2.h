@@ -55,8 +55,8 @@ public:
     UInt_t trgNr;
   } subHdr;
   
-  UInt_t* pHdr;
-  UInt_t* subPHdr;
+  UInt_t* pHdr; //!
+  UInt_t* subPHdr; //!
   
   size_t getSubHdrSize()    const { return sizeof(SubEventHdr); }
   size_t getHdrSize()    const { return sizeof(EventHdr); }

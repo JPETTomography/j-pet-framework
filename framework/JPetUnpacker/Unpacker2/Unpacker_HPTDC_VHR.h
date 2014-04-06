@@ -8,12 +8,12 @@
 class Unpacker_HPTDC_VHR : public UnpackingModule {
   
 private:
-  float** leadTimes;
-  float** trailTimes;
-  UInt_t* leadMult;
-  UInt_t* trailMult;
-    
   int channelNumber;
+
+  float **leadTimes; //!
+  float **trailTimes; //!
+  UInt_t* leadMult; //!  
+  UInt_t* trailMult; //!
   
   bool useInlCorrections;
   InlCorrector* inlCorrector;

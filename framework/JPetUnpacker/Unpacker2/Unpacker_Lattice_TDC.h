@@ -10,17 +10,19 @@
 class Unpacker_Lattice_TDC : public UnpackingModule {
   
 private:  
-  float** leadTimes;
-  float** trailTimes;
-  UInt_t* leadMult;
-  UInt_t* trailMult;
-  float** fineTimes;
-  float** coarseTimes;
+  Int_t channelNumber;
+
+  float** leadTimes; //!
+  float** trailTimes; //!
+  UInt_t* leadMult; //[channelNumber]
+  UInt_t* trailMult; //[channelNumber]
+  float** fineTimes; //!
+  float** coarseTimes; //!
+
   
-  int channelNumber;
   int offset;
   
-  TH1F** corrections;
+  TH1F** corrections;  //! 
   bool useCorrections;
   
   UInt_t errorBits;
