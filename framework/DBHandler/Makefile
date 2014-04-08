@@ -6,8 +6,8 @@
 CC=g++
 CFLAGS=-I/usr/local/include/ -std=c++0x -lconfig++ -Wall -lpqxx -lpq
 LDFLAGS=
-HDR_DIR = ../HeaderFiles
-SRC_DIR = ../SourceFiles
+HDR_DIR = HeaderFiles
+SRC_DIR = SourceFiles
 HPP_FILES=SerializableMap
 CPP_FILES=Functions RunData DBHandler PhotoMultiplierMap RunDataMap TRBThresholdMap PhotoMultiplierIdMap TOMBInputMap PassedInformationMap ParamServer Main
 HPP_MODULES=$(foreach dir, $(HPP_FILES), $(HDR_DIR)/$(dir).hpp)
@@ -26,8 +26,3 @@ start:
 #	doxygen Doxyfile
 clean:
 	rm -f *~ *.o $(EXEC) $(PHOTOMULTIPLIER_MAP_FILE) 
-###################
-# Old makefile
-#all:
-#	g++ ../SourceFiles/RunData.cpp ../SourceFiles/DBHandler.cpp ../SourceFiles/ParamServer.cpp ../SourceFiles/Functions.cpp ../SourceFiles/Main.cpp -I/usr/local/include/ -std=c++0x -lconfig++ -Wall -lpqxx -lpq -o main && ./main
-###################
