@@ -24,7 +24,7 @@ JPetCmdParser::JPetCmdParser()
   ;
 }
 
-void JPetCmdParser::parse(int argc, char** argv)
+void JPetCmdParser::parse(int argc, const char** argv)
 {
   try {
 
