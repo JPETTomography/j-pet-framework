@@ -21,7 +21,8 @@ class JPetAnalysisModule: public TNamed {
   virtual void CreateOutputObjects(const char* outputFilename=0)=0; //
   virtual void Exec()=0; // called for every event
   virtual long long GetEventNb()=0;
-  virtual void Terminate()=0; // called once when analysis terminates 
+  virtual void RunSubmodules();
+  virtual void Terminate()=0; // called once when analysis terminates
 
   ClassDef(JPetAnalysisModule,1);
 private:
