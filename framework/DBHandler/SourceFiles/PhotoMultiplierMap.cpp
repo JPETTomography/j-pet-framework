@@ -11,12 +11,10 @@ namespace DATA
 
 PhotoMultiplierMap::PhotoMultiplierMap(SERVICES::DBHandler &l_dBHandler) : SerializableMap<PHOTOMULTIPLIER_MAP_KEY_TYPE, PHOTOMULTIPLIER_MAP_VALUE_TYPE >("PhotoMultiplierMap.txt", l_dBHandler)
 {
-
 }
 
 PhotoMultiplierMap::~PhotoMultiplierMap()
 {
-
 }
 
 void PhotoMultiplierMap::fillMap(int p_run_id)
