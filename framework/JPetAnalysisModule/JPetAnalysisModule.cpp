@@ -2,7 +2,7 @@
 
 ClassImp(JPetAnalysisModule);
 
-JPetAnalysisModule::JPetAnalysisModule(const char* name, const char* title, TTree * shared_tree = NULL)
+JPetAnalysisModule::JPetAnalysisModule(const char* name, const char* title, TTree * shared_tree)
   : TNamed(name, title)
   , fSuperSharedTree( shared_tree )
 { }
