@@ -67,7 +67,7 @@ Annotation
   Installation:
     sudo apt-get install libconfig++
 
-Commands
+Requirements installation
 ----------------
 
 sudo apt-get install libboost-all-dev
