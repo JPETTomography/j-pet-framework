@@ -20,7 +20,7 @@ Unpacker:
 	@(cd ./Unpacker2/tinyxml2-master/; g++ -c -fPIC tinyxml2.cpp; ar rvs tinyxml2.a tinyxml2.o)
 	@(cd ./Unpacker2/; $(MAKE))
 	@(mv ./Unpacker2/libUnpacker2.so .)
-	@(cp ./Unpacker2/conf.xml .)
+	@(cp ./Unpacker2/conf_trb3.xml .)
 %Dict.cpp:
 	@echo "Generating dictionary ..."
 	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
