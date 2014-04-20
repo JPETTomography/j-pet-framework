@@ -18,6 +18,11 @@ paramServerTest:
 paramServerTestLogs:
 	g++ ../../HeaderFiles/SerializableMap.hpp ../../SourceFiles/RunData.cpp ../../SourceFiles/PhotoMultiplierMap.cpp  ../../SourceFiles/RunDataMap.cpp ../../SourceFiles/TRBThresholdMap.cpp ../../SourceFiles/PhotoMultiplierIdMap.cpp ../../SourceFiles/TOMBInputMap.cpp ../../SourceFiles/PassedInformationMap.cpp ../../SourceFiles/Functions.cpp ../../SourceFiles/DBHandler.cpp ../../SourceFiles/ParamServer.cpp ../ParamServerTestSuite.cpp -std=c++0x -lconfig++ -Wall -lpqxx -lpq -o main && ./main --log_level=test_suite
 	
+paramDataTest:
+	g++ ../../HeaderFiles/SerializableMap.hpp ../../SourceFiles/RunData.cpp ../../SourceFiles/PhotoMultiplierMap.cpp ../../SourceFiles/RunDataMap.cpp ../../SourceFiles/TRBThresholdMap.cpp ../../SourceFiles/PhotoMultiplierIdMap.cpp ../../SourceFiles/TOMBInputMap.cpp ../../SourceFiles/PassedInformationMap.cpp ../../SourceFiles/Functions.cpp ../../SourceFiles/DBHandler.cpp ../../SourceFiles/ParamServer.cpp ../../SourceFiles/ParamData.cpp ../ParamDataTestSuite.cpp -std=c++0x -lconfig++ -Wall -lpqxx -lpq -o main && ./main
+paramDataTestLogs:
+	g++ ../../HeaderFiles/SerializableMap.hpp ../../SourceFiles/RunData.cpp ../../SourceFiles/PhotoMultiplierMap.cpp  ../../SourceFiles/RunDataMap.cpp ../../SourceFiles/TRBThresholdMap.cpp ../../SourceFiles/PhotoMultiplierIdMap.cpp ../../SourceFiles/TOMBInputMap.cpp ../../SourceFiles/PassedInformationMap.cpp ../../SourceFiles/Functions.cpp ../../SourceFiles/DBHandler.cpp ../../SourceFiles/ParamServer.cpp ../../SourceFiles/ParamData.cpp ../ParamDataTestSuite.cpp -std=c++0x -lconfig++ -Wall -lpqxx -lpq -o main && ./main --log_level=test_suite
+	
 functionsTest:
 	g++ ../../SourceFiles/Functions.cpp ../FunctionsTestSuite.cpp -std=c++0x -lconfig++ -Wall -lpqxx -lpq -o main && ./main
 functionsTestLogs:
@@ -49,7 +54,7 @@ passedInformationMapTest:
 
 ###################
 runAllTests:
-	make dbHandlerTest paramServerTest functionsTest runDataTest photoMultiplierMapTest runDataMapTest TRBThresholdMapTest photoMultiplierIdMapTest TOMBInputMapTest passedInformationMapTest
+	make dbHandlerTest paramServerTest paramDataTest functionsTest runDataTest photoMultiplierMapTest runDataMapTest TRBThresholdMapTest photoMultiplierIdMapTest TOMBInputMapTest passedInformationMapTest
 ###################
 clean:
 	rm -f *.cpp~ && rm -f *~ && rm -f main
