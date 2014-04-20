@@ -26,7 +26,7 @@ namespace SERVER
 class ParamServer
 {
 public:
-  ParamServer(void);
+  ParamServer(int p_run_id = -1);
   ParamServer(SERVICES::DBHandler &p_dbHandlerInstance);  // for the purposes of a test
   ParamServer(const ParamServer &p_paramServer) = delete;             // do przemyslenia!
   ParamServer& operator=(const ParamServer &p_paramServer) = delete;  // do przemyslenia!
