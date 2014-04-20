@@ -2,7 +2,7 @@
 #ifndef PARAM_DATA_TESTSUITE_H
 #define PARAM_DATA_TESTSUITE_H
 
-#define SHOW_DEBUG 0
+#define SHOW_DEBUG 1
 
 #define BOOST_TEST_MODULE ParamDataTestSuite
 #include <boost/test/included/unit_test.hpp>
