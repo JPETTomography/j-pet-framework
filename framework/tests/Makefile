@@ -1,3 +1,4 @@
+OS = $(shell uname)
 CO = g++
 CFLAGS = -Wall `root-config --cflags`
 LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system -lboost_program_options
@@ -18,7 +19,11 @@ ADD_OBJS = $(SRC_ADD:.cpp=.o)
 SRC_OBJS += $(ADD_OBJS)
 ###################
 DICT_OBJS = ../JPetAnalysisModule/JPetAnalysisModuleDict.o ../JPetBarrelSlot/JPetBarrelSlotDict.o ../JPetEvent/JPetEventDict.o ../JPetHit/JPetHitDict.o ../JPetManager/JPetManagerDict.o ../JPetPM/JPetPMDict.o ../JPetScin/JPetScinDict.o ../JPetSigCh/JPetSigChDict.o ../JPetSignal/JPetSignalDict.o ../JPetTRB/JPetTRBDict.o ../JPetTSlot/JPetTSlotDict.o  ../JPetUnpacker/JPetUnpackerDict.o 
-SRC_OBJS += $(DICT_OBJS) ../JPetUnpacker/libUnpacker2.so
+UNPACKER_DIR = ../JPetUnpacker
+SRC_OBJS += $(DICT_OBJS) $(UNPACKER_DIR)/libUnpacker2.so
+ifeq ($(OS),Darwin)
+	LDFLAGS += -rpath @loader_path/$(UNPACKER_DIR)
+endif
 ###################
 LOG = JPet.log
 ###################
