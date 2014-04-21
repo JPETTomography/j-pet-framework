@@ -1,3 +1,4 @@
+OS = $(shell uname)
 CC    = g++
 LD    = $(CC)
 COPTS    = `root-config --cflags` -fPIC
@@ -7,7 +8,8 @@ LD_BOOST_FLAGS = -lboost_program_options -lboost_filesystem -lboost_system
 LDOPTS	+= $(LD_BOOST_FLAGS)
 LDOPTS	+= $(DEBUG)
 ################
-UNPACKER_LIB = $(PWD)/framework/JPetUnpacker/libUnpacker2.so
+UNPACKER_PATH = $(PWD)/framework/JPetUnpacker/
+UNPACKER_LIB = Unpacker2
 ################
 SRC_DIR = $(PWD)/framework
 #Modules that should have ROOT dictionnaries
@@ -36,6 +38,14 @@ OBJECTS = $(SOURCES:.cpp=.o)
 DICT_OBJS = $(foreach DICT, $(DICTS), $(SRC_DIR)/$(DICT)/$(DICT)Dict.o)
 ################
 LIBFRAMEWORK = libJPetFramework.so
+LIB_LDOPTS = $(LDOPTS)
+OSX_LIB_COPTS += -install_name @rpath/$(LIBFRAMEWORK)
+#variable below should be used if UNPACKER_PATH was relative
+#OSX_LIB_LDOPTS = $(LIB_LDOPTS) -rpath @loader_path/$(UNPACKER_PATH)
+OSX_LIB_LDOPTS = -rpath $(UNPACKER_PATH)
+ifeq ($(OS), Darwin)
+	LIB_LDOPTS += $(OSX_LIB_LDOPTS)
+endif
 ################
 .cpp.o:
 	$(CC) -o $@ $^ -c $(COPTS)
@@ -47,8 +57,15 @@ Dict.cpp:
 	@rootcint -f  Dict.cpp -c -P -I$(ROOTSYS) $(HEADERS)
 modules:
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
+
 sharedlib: modules
-	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(UNPACKER_LIB) $(LDOPTS)
+
+	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(LIB_LDOPTS) -L$(UNPACKER_PATH) -l$(UNPACKER_LIB);
+ifeq ($(OS), Darwin)
+	install_name_tool -id @rpath/$(LIBFRAMEWORK) $(LIBFRAMEWORK)
+endif
+
+
 dbhandler:
 	cd $(SRC_DIR)/DBHandler; $(MAKE);
 documentation:
