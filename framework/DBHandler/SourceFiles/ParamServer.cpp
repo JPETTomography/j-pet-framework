@@ -11,7 +11,7 @@ namespace DB
 namespace SERVER
 {
 
-ParamServer::ParamServer() :
+ParamServer::ParamServer(int p_run_id) :
                             m_dbHandlerInstance(SERVICES::DBHandler::getInstance()),
                             m_photoMultiplierMap(SERVICES::DBHandler::getInstance()),
                             m_runDataMap(SERVICES::DBHandler::getInstance()),
@@ -20,6 +20,15 @@ ParamServer::ParamServer() :
                             m_TOMBInputMap(SERVICES::DBHandler::getInstance()),
                             m_passedInformationMap(SERVICES::DBHandler::getInstance())
 {
+  if(p_run_id != -1)
+  {
+    m_photoMultiplierMap.fillMap(p_run_id);
+    m_runDataMap.fillMap();
+    m_TRBThresholdMap.fillMap(p_run_id);
+    m_PhotoMultiplierIdMap.fillMap(p_run_id);
+    m_TOMBInputMap.fillMap(p_run_id);
+    m_passedInformationMap.fillMap(p_run_id);
+  }
 }
 
 ParamServer::ParamServer(SERVICES::DBHandler &p_dbHandlerInstance) :

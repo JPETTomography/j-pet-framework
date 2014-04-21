@@ -9,7 +9,7 @@ LDFLAGS=
 HDR_DIR = ../HeaderFiles
 SRC_DIR = ../SourceFiles
 HPP_FILES=SerializableMap
-CPP_FILES=Functions RunData DBHandler PhotoMultiplierMap RunDataMap TRBThresholdMap PhotoMultiplierIdMap TOMBInputMap PassedInformationMap ParamServer Main
+CPP_FILES=Functions RunData DBHandler PhotoMultiplierMap RunDataMap TRBThresholdMap PhotoMultiplierIdMap TOMBInputMap PassedInformationMap ParamServer ParamData Main
 HPP_MODULES=$(foreach dir, $(HPP_FILES), $(HDR_DIR)/$(dir).hpp)
 CPP_MODULES=$(foreach dir, $(CPP_FILES), $(SRC_DIR)/$(dir).cpp)
 EXEC=dbhandler
@@ -29,5 +29,5 @@ clean:
 ###################
 # Old makefile
 #all:
-#	g++ ../SourceFiles/RunData.cpp ../SourceFiles/DBHandler.cpp ../SourceFiles/ParamServer.cpp ../SourceFiles/Functions.cpp ../SourceFiles/Main.cpp -I/usr/local/include/ -std=c++0x -lconfig++ -Wall -lpqxx -lpq -o main && ./main
+#	g++ ../SourceFiles/RunData.cpp ../SourceFiles/DBHandler.cpp ../SourceFiles/ParamServer.cpp ../SourceFiles/ParamData.cpp ../SourceFiles/Functions.cpp ../SourceFiles/Main.cpp -I/usr/local/include/ -std=c++0x -lconfig++ -Wall -lpqxx -lpq -o main && ./main
 ###################

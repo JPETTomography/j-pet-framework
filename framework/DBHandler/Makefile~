@@ -8,7 +8,7 @@ CFLAGS= -I/usr/local/include/ -std=c++0x -Wall
 LDFLAGS= -std=c++0x -lconfig++ -Wall -lpqxx -lpq
 HDR_DIR = HeaderFiles
 SRC_DIR = SourceFiles
-CPP_FILES= Functions RunData DBHandler PhotoMultiplierMap RunDataMap TRBThresholdMap PhotoMultiplierIdMap TOMBInputMap PassedInformationMap ParamServer ParamData Main
+CPP_FILES= Functions RunData DBHandler PhotoMultiplierMap RunDataMap TRBThresholdMap PhotoMultiplierIdMap TOMBInputMap PassedInformationMap ParamServer Main
 CPP_MODULES=$(foreach dir, $(CPP_FILES), $(SRC_DIR)/$(dir).cpp)
 OBJECTS=$(foreach dir, $(CPP_FILES), $(SRC_DIR)/$(dir).o)
 EXEC=dbhandler
