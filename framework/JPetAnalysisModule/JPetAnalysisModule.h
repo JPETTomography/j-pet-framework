@@ -25,7 +25,9 @@ class JPetAnalysisModule: public TNamed {
   virtual void Terminate()=0; // called once when analysis terminates
 
   ClassDef(JPetAnalysisModule,1);
-private:
+
+protected:
+  virtual void AddSubmodule( JPetAnalysisModule* new_submodule );
   TTree fSubmoduleSharedTree;
   TTree* fSuperSharedTree;
   std::vector< JPetAnalysisModule* > fSubmodules;
