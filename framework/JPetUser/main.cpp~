@@ -1,0 +1,13 @@
+#include <iostream>
+#include "../JPetUser/JPetUser.h"
+
+using namespace std;
+
+
+int main()
+{
+JPetUser l_pet;
+return 0;
+}
+
+// g++ JPetUser.cpp main.cpp -o main
