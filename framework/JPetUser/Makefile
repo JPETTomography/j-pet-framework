@@ -16,4 +16,4 @@ all: $(DICT_OBJECTS) $(OBJECTS)
 	@echo "Generating dictionary ..."
 	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
 clean:
-	rm -f $(OBJECTS) *Dict*
+	rm -f *~ *.o $(OBJECTS) *Dict*
