@@ -14,6 +14,6 @@ HEADERS       =  $(SOURCES:.cpp=.h)
 all: $(DICT_OBJECTS) $(OBJECTS)
 %Dict.cpp:
 	@echo "Generating dictionary ..."
-	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
+	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS) JPetScinLinkDef.h
 clean:
 	rm -f $(OBJECTS) *Dict*
