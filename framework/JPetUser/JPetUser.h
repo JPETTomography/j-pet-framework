@@ -20,7 +20,7 @@ protected:
   static bool m_isUserLogged;
   inline void toggleUserLoggedStatus()
   {
-    m_isUserLogged = (m_isUserLogged == true) ? false : true;
+    m_isUserLogged = !m_isUserLogged;
   }
   virtual std::string password(void) const;
   
