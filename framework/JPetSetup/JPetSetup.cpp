@@ -1,6 +1,6 @@
 // JPet Setup - JPetSetup.cpp
 #include "JPetSetup.h"
-#include "../Functions/Functions.cpp"
+#include "../CommonTools/CommonTools.h"
 
 
 ClassImp(JPetSetup);
@@ -15,7 +15,7 @@ JPetSetup::JPetSetup(int p_id,
 					    m_description(p_description),
 					    m_JPetUser(p_JPetUser)
 {
-  std::string l_currentDateTime = currentDateTime();
+  std::string l_currentDateTime = CommonTools::currentDateTime();
   m_creationDate = l_currentDateTime;
   m_modifiedDate = l_currentDateTime;
 }
