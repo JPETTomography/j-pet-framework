@@ -26,10 +26,6 @@ SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 ################
 TEST_DIR = $(SRC_DIR)/tests
 ################
-#C++ Files
-#SOURCES =  Dict.cpp
-# Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp 
-#SOURCES += $(SRC_MODULES)
 SOURCES = $(SRC_MODULES)
 HEADERS = JPetLoggerInclude.h #Event.h TDCHit.h ADCHit.h Sig.h
 HEADERS += $(SRC_HEADERS)
@@ -40,11 +36,12 @@ DICT_OBJS = $(foreach DICT, $(DICTS), $(SRC_DIR)/$(DICT)/$(DICT)Dict.o)
 LIBFRAMEWORK = libJPetFramework.so
 LIB_LDOPTS = $(LDOPTS)
 OSX_LIB_COPTS += -install_name @rpath/$(LIBFRAMEWORK)
-#variable below should be used if UNPACKER_PATH was relative
-#OSX_LIB_LDOPTS = $(LIB_LDOPTS) -rpath @loader_path/$(UNPACKER_PATH)
 OSX_LIB_LDOPTS = -rpath $(UNPACKER_PATH)
+LINUX_LIB_LDOPTS = -Wl,-rpath=$(UNPACKER_PATH) -L$(UNPACKER_PATH) -l$(UNPACKER_LIB)
 ifeq ($(OS), Darwin)
 	LIB_LDOPTS += $(OSX_LIB_LDOPTS)
+else
+	LIB_LDOPTS += $(LINUX_LIB_LDOPTS)
 endif
 ################
 .cpp.o:
@@ -59,7 +56,7 @@ modules:
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
 
 sharedlib: modules
-	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(LIB_LDOPTS) -Wl,-rpath=$(UNPACKER_PATH) -L$(UNPACKER_PATH) -l$(UNPACKER_LIB);
+	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(LIB_LDOPTS) ;
 ifeq ($(OS), Darwin)
 	install_name_tool -id @rpath/$(LIBFRAMEWORK) $(LIBFRAMEWORK)
 endif
