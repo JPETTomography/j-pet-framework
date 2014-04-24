@@ -59,8 +59,7 @@ modules:
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
 
 sharedlib: modules
-
-	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(LIB_LDOPTS) -L$(UNPACKER_PATH) -l$(UNPACKER_LIB);
+	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(LIB_LDOPTS) -Wl,-rpath=$(UNPACKER_PATH) -L$(UNPACKER_PATH) -l$(UNPACKER_LIB);
 ifeq ($(OS), Darwin)
 	install_name_tool -id @rpath/$(LIBFRAMEWORK) $(LIBFRAMEWORK)
 endif
