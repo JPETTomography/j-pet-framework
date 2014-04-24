@@ -37,12 +37,13 @@ LIBFRAMEWORK = libJPetFramework.so
 LIB_LDOPTS = $(LDOPTS)
 OSX_LIB_COPTS += -install_name @rpath/$(LIBFRAMEWORK)
 OSX_LIB_LDOPTS = -rpath $(UNPACKER_PATH)
-LINUX_LIB_LDOPTS = -Wl,-rpath=$(UNPACKER_PATH) -L$(UNPACKER_PATH) -l$(UNPACKER_LIB)
+LINUX_LIB_LDOPTS = -Wl,-rpath=$(UNPACKER_PATH)
 ifeq ($(OS), Darwin)
 	LIB_LDOPTS += $(OSX_LIB_LDOPTS)
 else
 	LIB_LDOPTS += $(LINUX_LIB_LDOPTS)
 endif
+LIB_LDOPTS += -L$(UNPACKER_PATH) -l$(UNPACKER_LIB)
 ################
 .cpp.o:
 	$(CC) -o $@ $^ -c $(COPTS)
@@ -56,7 +57,7 @@ modules:
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
 
 sharedlib: modules
-	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(LIB_LDOPTS) ;
+	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(LIB_LDOPTS);
 ifeq ($(OS), Darwin)
 	install_name_tool -id @rpath/$(LIBFRAMEWORK) $(LIBFRAMEWORK)
 endif
