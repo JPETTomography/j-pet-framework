@@ -27,5 +27,4 @@ start:
 #documentation:
 #	doxygen Doxyfile
 clean:
-	rm -f *~ $(OBJECTS) $(EXEC) $(PHOTOMULTIPLIER_MAP_FILE)
-
+	rm -f *~ $(OBJECTS) $(EXEC) $(PHOTOMULTIPLIER_MAP_FILE) 
