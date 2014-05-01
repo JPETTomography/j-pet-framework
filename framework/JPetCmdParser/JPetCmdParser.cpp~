@@ -74,7 +74,7 @@ void JPetCmdParser::parse(int argc, const char** argv)
     
     if(fVariablesMap["runId"].as<int>() <= 0)
     {
-      cerr << "Wrong number of run id: " << fVariablesMap["runId"].as<int>() << endl;
+      cerr << "Wrong number of run number: " << fVariablesMap["runId"].as<int>() << endl;
       exit(-1);
     }
 

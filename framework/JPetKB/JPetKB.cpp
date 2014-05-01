@@ -29,13 +29,13 @@ JPetKB::JPetKB(int p_id,
 	       std::string p_status, 
 	       std::string p_description, 
 	       int p_version, 
-	       JPetUser &p_JPetUser) :
-				      m_id(p_id),
-				      m_isActive(p_isActive),
-				      m_status(p_status),
-				      m_description(p_description),
-				      m_version(p_version),
-				      m_JPetUser(p_JPetUser) 
+	       int p_userId) :
+			      m_id(p_id),
+			      m_isActive(p_isActive),
+			      m_status(p_status),
+			      m_description(p_description),
+			      m_version(p_version),
+			      m_userId(p_userId)
 {
 }
 
@@ -66,4 +66,9 @@ std::string JPetKB::description() const
 int JPetKB::version() const
 {
   return m_version;
+}
+
+int JPetKB::userId() const
+{
+  return m_userId;
 }

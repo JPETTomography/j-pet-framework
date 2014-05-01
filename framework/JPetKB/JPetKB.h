@@ -3,7 +3,7 @@
 #define JPET_KB_H
 
 #include "TNamed.h"
-#include "../JPetUser/JPetUser.h"
+//#include "../JPetUser/JPetUser.h"
 
 
 class JPetKB: public TNamed
@@ -41,10 +41,11 @@ protected:
   std::string m_status;
   std::string m_description;
   int m_version;
-  JPetUser &m_JPetUser;		//creatorId
+  //JPetUser &m_JPetUser;		// creatorId
+  int m_userId;		// creatorId
 
 public:
-  JPetKB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, JPetUser &p_JPetUser);
+  JPetKB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId);
   virtual ~JPetKB(void);
   
   virtual int id(void) const;
@@ -52,6 +53,7 @@ public:
   virtual std::string status(void) const;
   virtual std::string description(void) const;
   virtual int version(void) const;
+  virtual int userId(void) const;
   
 private:
   ClassDef(JPetKB, 1);

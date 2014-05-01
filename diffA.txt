@@ -1,0 +1,235 @@
+diff --git a/framework/JPetCmdParser/JPetCmdParser.cpp b/framework/JPetCmdParser/JPetCmdParser.cpp
+index 62cd03d..344451f 100644
+--- a/framework/JPetCmdParser/JPetCmdParser.cpp
++++ b/framework/JPetCmdParser/JPetCmdParser.cpp
+@@ -21,6 +21,7 @@ JPetCmdParser::JPetCmdParser()
+   ("file,f", po::value<string>()->required(), "File to open")
+   ("range,r", po::value< vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process.")
+   ("param,p", po::value<string>(), "File with TRB numbers.")
++  ("runNumber,rn", po::value<int>(), "Run number.")
+   ;
+ }
+ 
+@@ -70,6 +71,12 @@ void JPetCmdParser::parse(int argc, const char** argv)
+       cerr << "Possible options: hld or root" << endl;
+       exit(-1);
+     }
++    
++    if(fVariablesMap["runNumber"].as<int>() <= 0)
++    {
++      cerr << "Wrong number of run number: " << fVariablesMap["runNumber"].as<int>() << endl;
++      exit(-1);
++    }
+ 
+   } catch (exception& e) {
+     cerr << "error: " << e.what() << "\n";
+diff --git a/framework/JPetCmdParser/JPetCmdParser.h b/framework/JPetCmdParser/JPetCmdParser.h
+index 63fc2d9..ade9ce2 100644
+--- a/framework/JPetCmdParser/JPetCmdParser.h
++++ b/framework/JPetCmdParser/JPetCmdParser.h
+@@ -34,6 +34,9 @@ public:
+     inline bool paramIsSet() const { return (bool)fVariablesMap.count("param"); }
+     inline const std::string& getParam() const {return fVariablesMap["param"].as< std::string >(); }
+     
++    inline bool isRunNumberSet() const { return (bool)fVariablesMap.count("runNumber"); }
++    inline const int getRunNumber() const { return fVariablesMap["runNumber"].as<int>();}
++    
+ private:
+ 	po::options_description fOptDescriptions;
+ 	po::variables_map fVariablesMap;
+diff --git a/framework/JPetKB/JPetKB.cpp b/framework/JPetKB/JPetKB.cpp
+index 62535d6..b43bf31 100644
+--- a/framework/JPetKB/JPetKB.cpp
++++ b/framework/JPetKB/JPetKB.cpp
+@@ -29,13 +29,13 @@ JPetKB::JPetKB(int p_id,
+ 	       std::string p_status, 
+ 	       std::string p_description, 
+ 	       int p_version, 
+-	       JPetUser &p_JPetUser) :
+-				      m_id(p_id),
+-				      m_isActive(p_isActive),
+-				      m_status(p_status),
+-				      m_description(p_description),
+-				      m_version(p_version),
+-				      m_JPetUser(p_JPetUser) 
++	       int p_userId) :
++			      m_id(p_id),
++			      m_isActive(p_isActive),
++			      m_status(p_status),
++			      m_description(p_description),
++			      m_version(p_version),
++			      m_userId(p_userId)
+ {
+ }
+ 
+@@ -67,3 +67,8 @@ int JPetKB::version() const
+ {
+   return m_version;
+ }
++
++int JPetKB::userId() const
++{
++  return m_userId;
++}
+diff --git a/framework/JPetKB/JPetKB.h b/framework/JPetKB/JPetKB.h
+index 7de8912..f7980e9 100644
+--- a/framework/JPetKB/JPetKB.h
++++ b/framework/JPetKB/JPetKB.h
+@@ -3,7 +3,7 @@
+ #define JPET_KB_H
+ 
+ #include "TNamed.h"
+-#include "../JPetUser/JPetUser.h"
++//#include "../JPetUser/JPetUser.h"
+ 
+ 
+ class JPetKB: public TNamed
+@@ -41,10 +41,11 @@ protected:
+   std::string m_status;
+   std::string m_description;
+   int m_version;
+-  JPetUser &m_JPetUser;		//creatorId
++  //JPetUser &m_JPetUser;		// creatorId
++  int m_userId;		// creatorId
+ 
+ public:
+-  JPetKB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, JPetUser &p_JPetUser);
++  JPetKB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId);
+   virtual ~JPetKB(void);
+   
+   virtual int id(void) const;
+@@ -52,6 +53,7 @@ public:
+   virtual std::string status(void) const;
+   virtual std::string description(void) const;
+   virtual int version(void) const;
++  virtual int userId(void) const;
+   
+ private:
+   ClassDef(JPetKB, 1);
+diff --git a/framework/JPetManager/JPetManager.cpp b/framework/JPetManager/JPetManager.cpp
+index 6e46878..83b3191 100644
+--- a/framework/JPetManager/JPetManager.cpp
++++ b/framework/JPetManager/JPetManager.cpp
+@@ -50,6 +50,7 @@ void JPetManager::Run()
+ }
+ 
+ void JPetManager::ParseCmdLine(int argc, char** argv){
++
+     fCmdParser.parse(argc, (const char **)argv);
+     if (fCmdParser.paramIsSet()){
+         fParamManager.readFile(fCmdParser.getParam().c_str());
+@@ -61,6 +62,11 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
+         fUnpacker.setParams(fCmdParser.getFileName().c_str());
+       }
+     }
++    
++    if(fCmdParser.isRunNumberSet())
++    {
++      fParamManager.fillKBsData(fCmdParser.getRunNumber());
++    }
+ }
+ 
+ JPetManager::~JPetManager()
+diff --git a/framework/JPetParamManager/JPetParamManager.cpp b/framework/JPetParamManager/JPetParamManager.cpp
+index 8d27a1c..74f8ac4 100644
+--- a/framework/JPetParamManager/JPetParamManager.cpp
++++ b/framework/JPetParamManager/JPetParamManager.cpp
+@@ -1,4 +1,10 @@
+ #include "JPetParamManager.h"
++//#include "../DBHandler/HeaderFiles/ParamServer.h"
++#include "../DBHandler/HeaderFiles/DBHandler.h"
++#include <boost/shared_ptr.hpp>
++#include <boost/lexical_cast.hpp>
++#include "../JPetKB/JPetKB.h"
++
+ 
+ using namespace std;
+ 
+@@ -25,3 +31,38 @@ void JPetParamManager::readFile(const char * file_name){
+ 		fScinNumbers.push_back(scin);
+ 	}
+ }
++
++void JPetParamManager::fillKBsData(int p_run_id)
++{
++  DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
++  
++  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
++  std::string l_sqlQuerry = "SELECT * FROM getKonradBoardsData(" + l_run_id + ");";
++  pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
++
++  size_t l_sizeResultQuerry = l_runDbResults.size();
++
++  if(l_sizeResultQuerry)
++  {
++    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
++    {
++      int l_konradboard_id = row["konradboard_id"].as<int>();
++      bool l_konradboard_isactive = row["konradboard_isactive"].as<bool>();
++      std::string l_konradboard_status = row["konradboard_status"].as<std::string>();
++      std::string l_konradboard_description = row["konradboard_description"].as<std::string>();
++      int l_konradboard_version = row["konradboard_version"].as<int>();
++      int l_konradboard_creator_id = row["konradboard_creator_id"].as<int>();
++
++      JPetKB l_KB(
++		  l_konradboard_id, 
++		  l_konradboard_isactive, 
++		  l_konradboard_status, 
++		  l_konradboard_description, 
++		  l_konradboard_version, 
++		  l_konradboard_creator_id
++		 );
++      
++      m_KBsData.push_back(l_KB);
++    }
++  }
++}
+diff --git a/framework/JPetParamManager/JPetParamManager.h b/framework/JPetParamManager/JPetParamManager.h
+index c7db266..d46522d 100644
+--- a/framework/JPetParamManager/JPetParamManager.h
++++ b/framework/JPetParamManager/JPetParamManager.h
+@@ -7,17 +7,22 @@
+ #include <string>
+ #include <sstream>
+ #include "../../JPetLoggerInclude.h"
++#include "../JPetKB/JPetKB.h"
+ 
+ 
+-class JPetParamManager {
++class JPetParamManager
++{
+ public:
+ 	void readFile(const char* file_name);
+ 	int getTRBNumber(int i) const { return fTRBNumbers[i]; }
+ 	int getScinNumber(int i) const { return fScinNumbers[i]; }
+ 	int getDataSize() const { assert(fTRBNumbers.size() == fScinNumbers.size()); return fTRBNumbers.size() ;}
++	
++	void fillKBsData(int p_run_id);
+ private:
+         std::vector<int> fTRBNumbers;
+         std::vector<int> fScinNumbers;
++	std::vector<JPetKB> m_KBsData;
+ };
+ 
+ #endif
+diff --git a/framework/JPetParamManager/Makefile b/framework/JPetParamManager/Makefile
+index 1fb816b..5e2e1db 100644
+--- a/framework/JPetParamManager/Makefile
++++ b/framework/JPetParamManager/Makefile
+@@ -2,6 +2,7 @@ CC            =  g++
+ LD            =  g++
+ COPTS         =  `root-config --cflags` -fPIC
+ LDOPTS        =  `root-config --glibs` -g
++CFLAGS        =  -std=c++0x
+ #C++ Files
+ SOURCES       =  JPetParamManager.cpp
+ OBJECTS       =  $(SOURCES:.cpp=.o)
+@@ -10,7 +11,7 @@ OBJECTS      +=  $(SOURCES:.cpp=Dict.o)
+ HEADERS       =  $(SOURCES:.cpp=.h) 
+ 
+ %.o: %.cpp
+-	$(CC) $^ -o $@  -c $(COPTS)
++	$(CC) $^ -o $@  -c $(COPTS) $(CFLAGS)
+ all: $(DICT_OBJECTS) $(OBJECTS)
+ %Dict.cpp:
+ 	@echo "Generating dictionary ..."

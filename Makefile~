@@ -70,5 +70,5 @@ documentation:
 clean:         
 	@rm -rf $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h $(LIBFRAMEWORK) latex html
 	@($(foreach MODULE, $(MODULES),$(MAKE) -C $(SRC_DIR)/$(MODULE) clean;))
-	$(MAKE) -C $(TEST_DIR) clean
 	cd $(SRC_DIR)/DBHandler; $(MAKE) clean;
+	$(MAKE) -C $(TEST_DIR) clean

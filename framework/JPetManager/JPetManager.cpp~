@@ -66,6 +66,7 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
     if(fCmdParser.isRunNumberSet())
     {
       std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize() << std::endl;
+      
       std::cout << "fCmdParser.isRunNumberSet()" << std::endl;
       fParamManager.fillKBsData(fCmdParser.getRunNumber());
       std::cout << "fParamManager.getKBsDataSize() = " << fParamManager.getKBsDataSize() << std::endl;
