@@ -14,26 +14,35 @@
 #include <iostream>
 #include <ostream>
 
-class JPetTreeHeader: public TObject{
-  
- public:
-  JPetTreeHeader(){};
-  JPetTreeHeader( int run, TString producer = "", int version = -1 );
-  void Print(Option_t * opt = "") const { std::cout<<this->Stringify(); }
-  virtual TString Stringify() const;
-  
-  TString getProducerName() const { return fProducerName; }
-  int getProducerVersion()  const { return fProducerVersion; }
-  int getRunNumber()  const { return fRunNo; }
+class JPetTreeHeader: public TObject
+{
 
-  ClassDef(JPetTreeHeader,1);
-  
- protected:
+public:
+  JPetTreeHeader() {};
+  JPetTreeHeader( int run, TString producer = "", int version = -1 );
+  void Print(Option_t* opt = "") const {
+    std::cout << this->Stringify();
+  }
+  virtual TString Stringify() const;
+
+  TString getProducerName() const {
+    return fProducerName;
+  }
+  int getProducerVersion()  const {
+    return fProducerVersion;
+  }
+  int getRunNumber()  const {
+    return fRunNo;
+  }
+
+  ClassDef(JPetTreeHeader, 1);
+
+protected:
   TString fProducerName;
   int fProducerVersion;
   int fRunNo;
-  
-}; 
+
+};
 
 
 /* ostream& operator<<(ostream& os, const JPetTreeHeader& header){ */

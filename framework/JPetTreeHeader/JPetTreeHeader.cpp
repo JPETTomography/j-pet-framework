@@ -9,10 +9,12 @@
 ClassImp(JPetTreeHeader);
 
 JPetTreeHeader::JPetTreeHeader( int run, TString producer, int version ):
-  fRunNo(run), fProducerName(producer), fProducerVersion(version){  
+  fRunNo(run), fProducerName(producer), fProducerVersion(version)
+{
 }
 
-TString JPetTreeHeader::Stringify() const {
+TString JPetTreeHeader::Stringify() const
+{
   TString tmp;
   tmp.Append( "Data file info:" );
   tmp.Append( "\nrun number          :  " ).Append( TString::Itoa( fRunNo, 10.));

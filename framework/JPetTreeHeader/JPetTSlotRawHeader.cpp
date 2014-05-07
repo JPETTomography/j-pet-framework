@@ -2,18 +2,20 @@
  *  @copyright Copyright (c) 2014, Aleksander Gajos
  *  @file JPetTSlotRawHeader.cpp
  *  @author Aleksander Gajos, aleksander.gajos@uj.edu.pl
- */ 
+ */
 
 #include "JPetTSlotRawHeader.h"
 
 ClassImp(JPetTSlotRawHeader);
 
 JPetTSlotRawHeader::JPetTSlotRawHeader( int run, TString producer, int version ):
-  JPetTreeHeader(run, producer, version) {
+  JPetTreeHeader(run, producer, version)
+{
 }
 
-int JPetTSlotRawHeader::addHLDinfo(TString name, int id, 
-                               double startT, int firstEvt, int nEvts){
+int JPetTSlotRawHeader::addHLDinfo(TString name, int id,
+                                   double startT, int firstEvt, int nEvts)
+{
 
   fHLDnames.push_back( name );
   fHLDids.push_back( id );
@@ -24,33 +26,39 @@ int JPetTSlotRawHeader::addHLDinfo(TString name, int id,
   return fHLDnames.size();
 }
 
-TString JPetTSlotRawHeader::getHLDname(int no) const {
+TString JPetTSlotRawHeader::getHLDname(int no) const
+{
   return fHLDnames.at( no );
 }
 
-int JPetTSlotRawHeader::getHLDid(int no) const {
+int JPetTSlotRawHeader::getHLDid(int no) const
+{
   return fHLDids.at( no );
 }
 
-int JPetTSlotRawHeader::getHLDnEvts(int no) const {
+int JPetTSlotRawHeader::getHLDnEvts(int no) const
+{
   return fHLDnEvts.at( no );
 }
 
-int JPetTSlotRawHeader::getHLDfirstEvt(int no) const {
+int JPetTSlotRawHeader::getHLDfirstEvt(int no) const
+{
   return fHLDfirstEvt.at( no );
 }
 
-double JPetTSlotRawHeader::getHLDstartTime(int no) const {
+double JPetTSlotRawHeader::getHLDstartTime(int no) const
+{
   return fHLDstartTimes.at( no );
 }
 
 
-TString JPetTSlotRawHeader::Stringify() const{
+TString JPetTSlotRawHeader::Stringify() const
+{
   TString tmp = JPetTreeHeader::Stringify();
   tmp.Append( "number if HLD files :  " ).Append( TString::Itoa( fHLDnames.size(), 10.));
   tmp.Append( "\nList of HLD files:\n" );
   tmp.Append("-----------------------------------------------------------------\n");
-  for(int i=0; i<fHLDnames.size(); i++ ){
+  for (int i = 0; i < fHLDnames.size(); i++ ) {
     tmp.Append( "file : " ).Append( getHLDname(i) ).Append("   ");
     tmp.Append( "id : " ).Append( TString::Itoa( getHLDid(i), 10.) ).Append("\n");
     tmp.Append( "start time : " ).Append( Form("%lf", getHLDstartTime(i) ) ).Append("\n");
