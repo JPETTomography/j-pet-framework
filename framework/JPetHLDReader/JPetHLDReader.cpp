@@ -4,13 +4,13 @@
 
 JPetHLDReader::JPetHLDReader(): 
   fBranch(0), 
-  fTSlot(0), 
+  fEvent(0), 
   fTree(0)
 { /* */ }
 
 JPetHLDReader::JPetHLDReader (const char* filename): 
   fBranch(0),  
-  fTSlot(0), 
+  fEvent(0), 
   fTree(0)
 {
   if (OpenFile(filename) ) ReadData();
@@ -25,7 +25,7 @@ void JPetHLDReader::CloseFile ()
 {
   if (fFile.IsOpen()) fFile.Close();
   fBranch = 0;
-  fTSlot = 0;
+  fEvent = 0;
   fTree = 0;
 }
 
