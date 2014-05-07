@@ -1,7 +1,6 @@
 #include "JPetHLDReader.h"
 #include <iostream>
 #include <cassert>
-#include "../JPetTSlot/JPetTSlot.h"
 
 JPetHLDReader::JPetHLDReader(): 
   fBranch(0), 
@@ -51,7 +50,7 @@ void JPetHLDReader::ReadData ()
   assert(fTree);
   fBranch = fTree->GetBranch("event");
   assert(fBranch);
-  fBranch->SetAddress(&fTSlot);
+  fBranch->SetAddress(&fEvent);
 }
 //
 //

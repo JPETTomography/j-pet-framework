@@ -14,7 +14,9 @@
 
 #include "../../JPetLoggerInclude.h"
 
-class TSlot;
+#include "../JPetUnpacker/Unpacker2/Event.h"
+
+class Event;
 
 class JPetHLDReader
 {
@@ -28,12 +30,12 @@ class JPetHLDReader
   int GetEntry (int entryNo) { return fTree->GetEntry(entryNo); }
   bool OpenFile(const char* filename);
   void ReadData();
-  TSlot& GetData() { return *fTSlot; }
+  Event& GetData() { return *fEvent; }
   
  protected:
   TBranch* fBranch;
   TTree* fTree;
-  TSlot* fTSlot;
+  Event* fEvent;
   TFile fFile;
 
  private:
