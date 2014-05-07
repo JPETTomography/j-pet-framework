@@ -36,7 +36,7 @@ class JPetHLDReader
   TBranch* fBranch;
   TTree* fTree;
   Event* fEvent;
-  TFile fFile;
+  TFile* fFile;
 
  private:
   JPetHLDReader(const JPetHLDReader&);
