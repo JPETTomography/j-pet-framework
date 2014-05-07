@@ -2,16 +2,18 @@
 #include <iostream>
 #include <cassert>
 
-JPetHLDReader::JPetHLDReader(): 
-  fBranch(0), 
-  fEvent(0), 
+JPetHLDReader::JPetHLDReader():
+  fBranch(0),
+  fEvent(0),
   fTree(0),
   fFile(NULL)
-{ /* */ }
+{
+  /* */
+}
 
-JPetHLDReader::JPetHLDReader (const char* filename): 
-  fBranch(0),  
-  fEvent(0), 
+JPetHLDReader::JPetHLDReader (const char* filename):
+  fBranch(0),
+  fEvent(0),
   fTree(0),
   fFile(NULL)
 {
@@ -24,7 +26,8 @@ JPetHLDReader::~JPetHLDReader ()
 }
 
 void JPetHLDReader::CloseFile ()
-{ if(fFile != NULL){
+{
+  if (fFile != NULL) {
     if (fFile->IsOpen()) fFile->Close();
     delete fFile;
     fFile = NULL;
