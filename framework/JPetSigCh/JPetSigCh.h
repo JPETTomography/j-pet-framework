@@ -59,7 +59,10 @@ class JPetSigCh: public TNamed
   inline void setTRB(const JPetTRB& trb) { fTRB = trb; }
   inline void setScin(const JPetScin& scin) { fScin = scin; }
   inline void setBarrelSlot(const JPetBarrelSlot& barrel_slot) { fBarrelSlot = barrel_slot; }
-
+  inline void setSlow( bool isSlow ) { fIsSlow = isSlow; }
+  inline void setComplete( bool isComplete ) { fIsComplete = isComplete; }
+  inline void setAmplitude( float ampl ) { fAmpl = ampl; }
+	
   ClassDef(JPetSigCh, 1);
 
  protected:
