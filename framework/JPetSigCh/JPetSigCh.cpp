@@ -17,14 +17,14 @@ JPetSigCh::JPetSigCh(const JPetSigCh& obj)
 {
   init();
   if (this != &obj) {
-    fAmpl = obj.getAmpl();
-    fIsSlow = obj.isSlow();
-    fIsComplete = obj.isComplete();
-    setPM(obj.getPM());
-    setTRB(obj.getTRB());
-    setScin(obj.getScin());
-    setBarrelSlot(obj.getBarrelSlot());
-    fChannels = obj.getChannels();
+    fAmpl = obj.fAmpl;
+    fIsSlow = obj.fIsSlow;
+    fIsComplete = obj.fIsComplete;
+    fPM = obj.fPM;
+    fTRB = obj.fTRB;
+    fScin = obj.fScin;
+    fBarrelSlot = obj.fBarrelSlot;
+    fChannels = obj.fChannels;
   }
 }
 
