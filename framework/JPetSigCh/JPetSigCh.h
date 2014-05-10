@@ -37,9 +37,9 @@ class JPetSigCh: public TNamed
 
   JPetSigCh() { init(); }
   JPetSigCh(const JPetSigCh& obj);
-  /// @todo must be added~JPetSigCh();
   JPetSigCh& operator= (const JPetSigCh obj);
   JPetSigCh(float EdgeTime, float FallEdgeTime);
+  ~JPetSigCh() {}
   inline bool isSlow() const { return fIsSlow; }
   inline bool isComplete() const { return fIsComplete; }
   inline float getAmpl() const { return fAmpl; }
