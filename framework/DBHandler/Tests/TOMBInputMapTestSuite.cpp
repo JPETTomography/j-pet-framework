@@ -42,7 +42,6 @@ BOOST_FIXTURE_TEST_CASE(fillPhotoMultiplierMapCheckSizeTest, TOMBInputMapTestSui
     std::cout << "TEST = " << boost::unit_test::framework::current_test_case().p_name << std::endl;
   #endif
 
-  size_t l_sizeOfRunTable = getSizeOfRunTable();
   int l_runId = getFirstRunIdIfExist();
 
   if(l_runId != -1)
@@ -61,6 +60,7 @@ BOOST_FIXTURE_TEST_CASE(fillPhotoMultiplierMapCheckSizeTest, TOMBInputMapTestSui
     size_t l_sizeResultQuerry = l_runDbResults.size();
 
   #if SHOW_DEBUG
+      size_t l_sizeOfRunTable = getSizeOfRunTable();
       std::cout << "l_sizeOfRunTable = " << l_sizeOfRunTable << " l_sizeResultQuerry = " << l_sizeResultQuerry << " l_sizeOfTOMBInputMap = " << l_sizeOfTOMBInputMap << std::endl;
       m_map->showMap();
   #endif
@@ -78,7 +78,7 @@ BOOST_FIXTURE_TEST_CASE(TOMBInputMapTestSuiteForTRBidAndTRBOutputTest, TOMBInput
 
   if(l_runId != -1)
   {
-    std::string l_run_id = boost::lexical_cast<std::string>(l_run_id);
+    std::string l_run_id = boost::lexical_cast<std::string>(l_runId);
     std::string l_sqlQuerry = "SELECT * FROM tombinputIdBasedOnTRBIdAndTRBoutputIdFunction(" + l_run_id + ");";
     pqxx::result l_runDbResults = m_dbHandlerInstance.querry(l_sqlQuerry);
 

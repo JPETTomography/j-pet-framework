@@ -79,7 +79,7 @@ LD = $(CO)
 	$(CO) $(CFLAGS) -c $<
 ###################
 $(LIB_SHARED): $(OBJS1) $(OBJS2) $(OBJS3) $(OBJS5) $(OBJS6) $(OBJS8) $(OBJS9) $(OBJS10) $(OBJS11) $(OBJS12) $(OBJS13) $(OBJS14) $(OBJS15)  $(OBJS7)
-	$(LD) -shared $(LDFLAGS) $^ $(LIBS) $(GLIBS) -o $@
+	$(LD) -shared -o $@ $(LDFLAGS) $^ $(LIBS) $(GLIBS) 
 ###################
 run: $(EXEC1)
 	./$(EXEC1)

@@ -1,6 +1,10 @@
 /* 
   All functions functions which have been added to database.
-  Last update 29.03.2014
+  Last update 27.04.2014
+  
+  [Last bug]
+  "Setup".id = "Run".id
+  "Setup".id = "Run".setup_id
 */
 
 1)
@@ -180,7 +184,7 @@ BEGIN
       INNER JOIN "KBTRBConnection" ON "TRBInput".id = "KBTRBConnection".trbinput_id
       INNER JOIN "TRBConfigEntry" ON "KBTRBConnection".id = "TRBConfigEntry".id
       INNER JOIN "Setup" ON "TRBTOMBConnection".setup_id = "Setup".id
-      INNER JOIN "Run" ON "Setup".id = "Run".id
+      INNER JOIN "Run" ON "Setup".id = "Run".setup_id
     AND
       "Run".id = p_run_id
   LOOP
@@ -232,7 +236,7 @@ BEGIN
       INNER JOIN "PMKBConnection" ON "KonradBoardInput".id = "PMKBConnection".konradboardinput_id
       INNER JOIN "PhotoMultiplier" ON "PMKBConnection".photomultiplier_id = "PhotoMultiplier".id
       INNER JOIN "Setup" ON "TRBTOMBConnection".setup_id = "Setup".id
-      INNER JOIN "Run" ON "Setup".id = "Run".id
+      INNER JOIN "Run" ON "Setup".id = "Run".setup_id
     AND
       "Run".id = p_run_id
   LOOP
@@ -269,7 +273,7 @@ BEGIN
       INNER JOIN "TRBTOMBConnection" ON "TRBOutput".id = "TRBTOMBConnection".trboutput_id
       INNER JOIN "TOMBInput" ON "TRBTOMBConnection".tombinput_id = "TOMBInput".id
       INNER JOIN "Setup" ON "TRBTOMBConnection".setup_id = "Setup".id
-      INNER JOIN "Run" ON "Setup".id = "Run".id
+      INNER JOIN "Run" ON "Setup".id = "Run".setup_id
     AND
       "Run".id = p_run_id
   LOOP
@@ -314,7 +318,7 @@ BEGIN
       INNER JOIN "KBTRBConnection" ON "TRBInput".id = "KBTRBConnection".trbinput_id
       INNER JOIN "KonradBoardOutput" ON "KBTRBConnection".konradboardoutput_id = "KonradBoardOutput".id
       INNER JOIN "Setup" ON "TRBTOMBConnection".setup_id = "Setup".id
-      INNER JOIN "Run" ON "Setup".id = "Run".id
+      INNER JOIN "Run" ON "Setup".id = "Run".setup_id
     AND
       "Run".id = p_run_id      
   LOOP
@@ -324,3 +328,107 @@ END
 $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM passedInformationIsTimeBasedOnTOMBInputIdFunction(1);
+
+9)
+CREATE OR REPLACE FUNCTION getKonradBoardsData(IN p_run_id INTEGER)
+RETURNS TABLE
+(
+  konradboard_id INTEGER,
+  konradboard_isactive BOOLEAN,
+  konradboard_status CHARACTER VARYING(255),
+  konradboard_description CHARACTER VARYING(255),
+  konradboard_version INTEGER,
+  konradboard_creator_id INTEGER,
+
+  konradboardinput_id INTEGER,
+  konradboardinput_isactive BOOLEAN,
+  konradboardinput_status CHARACTER VARYING(255),
+  konradboardinput_portnumber INTEGER,
+  konradboardinput_description CHARACTER VARYING(255),
+  konradboardinput_konradboard_id INTEGER,
+    
+  konradboardoutput_id INTEGER,
+  konradboardoutput_isactive BOOLEAN,
+  konradboardoutput_status CHARACTER VARYING(255),
+  konradboardoutput_portnumber INTEGER,
+  konradboardoutput_description CHARACTER VARYING(255),
+  konradboardoutput_passedinformationistime BOOLEAN,
+  konradboardoutput_konradboard_id INTEGER,
+  konradboardoutput_input_id INTEGER,
+  konradboardoutput_konradboardinput_id INTEGER,
+
+  setup_id INTEGER,
+  run_id INTEGER  
+) AS
+$BODY$
+BEGIN
+  FOR 
+    konradboard_id,
+    konradboard_isactive,
+    konradboard_status,
+    konradboard_description,
+    konradboard_version,
+    konradboard_creator_id,
+
+    konradboardinput_id,
+    konradboardinput_isactive,
+    konradboardinput_status,
+    konradboardinput_portnumber,
+    konradboardinput_description,
+    konradboardinput_konradboard_id,
+      
+    konradboardoutput_id,
+    konradboardoutput_isactive,
+    konradboardoutput_status,
+    konradboardoutput_portnumber,
+    konradboardoutput_description,
+    konradboardoutput_passedinformationistime,
+    konradboardoutput_konradboard_id,
+    konradboardoutput_input_id,
+    konradboardoutput_konradboardinput_id,
+
+    setup_id,
+    run_id
+
+  IN
+
+      SELECT
+	"KonradBoard".id AS konradboard_id,
+	"KonradBoard".isactive AS konradboard_isactive,
+	"KonradBoard".status AS konradboard_status,
+	"KonradBoard".description AS konradboard_description,
+	"KonradBoard".version AS konradboard_version,
+	"KonradBoard".creator_id AS konradboard_creator_id,
+
+	"KonradBoardInput".id AS konradboardinput_id,
+	"KonradBoardInput".isactive AS konradboardinput_isactive,
+	"KonradBoardInput".status AS konradboardinput_status,
+	"KonradBoardInput".portnumber AS konradboardinput_portnumber,
+	"KonradBoardInput".description AS konradboardinput_description,
+	"KonradBoardInput".konradboard_id AS konradboardinput_konradboard_id,
+	
+	"KonradBoardOutput".id AS konradboardoutput_id,
+	"KonradBoardOutput".isactive AS konradboardoutput_isactive,
+	"KonradBoardOutput".status AS konradboardoutput_status,
+	"KonradBoardOutput".portnumber AS konradboardoutput_portnumber,
+	"KonradBoardOutput".description AS konradboardoutput_description,
+	"KonradBoardOutput".passedinformationistime AS konradboardoutput_passedinformationistime,
+	"KonradBoardOutput".konradboard_id AS konradboardoutput_konradboard_id,
+	"KonradBoardOutput".input_id AS konradboardoutput_input_id,
+	"KonradBoardOutput".input_id AS konradboardoutput_konradboardinput_id
+	
+      FROM "KonradBoard"
+	INNER JOIN "KonradBoardInput" ON "KonradBoard".id = "KonradBoardInput".konradboard_id
+	INNER JOIN "KonradBoardOutput" ON "KonradBoardInput".id = "KonradBoardOutput".konradboardinput_id
+	INNER JOIN "KBTRBConnection" ON "KonradBoardOutput".id = "KBTRBConnection".konradboardoutput_id
+	INNER JOIN "Setup" ON "KBTRBConnection".setup_id = "Setup".id
+	INNER JOIN "Run" ON "Setup".id = "Run".setup_id
+      AND
+	"Run".id = p_run_id      
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getKonradBoardsData(1);
