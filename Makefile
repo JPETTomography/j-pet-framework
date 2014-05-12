@@ -1,3 +1,4 @@
+OS = $(shell uname)
 CC    = g++
 LD    = $(CC)
 COPTS    = `root-config --cflags` -fPIC
@@ -7,11 +8,12 @@ LD_BOOST_FLAGS = -lboost_program_options -lboost_filesystem -lboost_system
 LDOPTS	+= $(LD_BOOST_FLAGS)
 LDOPTS	+= $(DEBUG)
 ################
-UNPACKER_LIB = $(PWD)/framework/JPetUnpacker/libUnpacker2.so
+UNPACKER_PATH = $(PWD)/framework/JPetUnpacker/
+UNPACKER_LIB = Unpacker2
 ################
 SRC_DIR = $(PWD)/framework
 #Modules that should have ROOT dictionnaries
-DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot JPetUnpacker
+DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader JPetManager JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot JPetUnpacker JPetFrame JPetKB JPetLayer JPetSetup JPetSlot JPetTOMB JPetUser
 DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader
 WRITERS = JPetWriter
@@ -24,10 +26,6 @@ SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 ################
 TEST_DIR = $(SRC_DIR)/tests
 ################
-#C++ Files
-#SOURCES =  Dict.cpp
-# Event.cpp TDCHit.cpp ADCHit.cpp Sig.cpp 
-#SOURCES += $(SRC_MODULES)
 SOURCES = $(SRC_MODULES)
 HEADERS = JPetLoggerInclude.h #Event.h TDCHit.h ADCHit.h Sig.h
 HEADERS += $(SRC_HEADERS)
@@ -36,6 +34,16 @@ OBJECTS = $(SOURCES:.cpp=.o)
 DICT_OBJS = $(foreach DICT, $(DICTS), $(SRC_DIR)/$(DICT)/$(DICT)Dict.o)
 ################
 LIBFRAMEWORK = libJPetFramework.so
+LIB_LDOPTS = $(LDOPTS)
+OSX_LIB_COPTS += -install_name @rpath/$(LIBFRAMEWORK)
+OSX_LIB_LDOPTS = -rpath $(UNPACKER_PATH)
+LINUX_LIB_LDOPTS = -Wl,-rpath=$(UNPACKER_PATH)
+ifeq ($(OS), Darwin)
+	LIB_LDOPTS += $(OSX_LIB_LDOPTS)
+else
+	LIB_LDOPTS += $(LINUX_LIB_LDOPTS)
+endif
+LIB_LDOPTS += -L$(UNPACKER_PATH) -l$(UNPACKER_LIB)
 ################
 .cpp.o:
 	$(CC) -o $@ $^ -c $(COPTS)
@@ -47,8 +55,14 @@ Dict.cpp:
 	@rootcint -f  Dict.cpp -c -P -I$(ROOTSYS) $(HEADERS)
 modules:
 	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
+
 sharedlib: modules
-	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(UNPACKER_LIB) $(LDOPTS)
+	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(LIB_LDOPTS);
+ifeq ($(OS), Darwin)
+	install_name_tool -id @rpath/$(LIBFRAMEWORK) $(LIBFRAMEWORK)
+endif
+
+
 dbhandler:
 	cd $(SRC_DIR)/DBHandler; $(MAKE);
 documentation:

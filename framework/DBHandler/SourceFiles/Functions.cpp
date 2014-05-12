@@ -36,8 +36,9 @@ void DBConfigControler::readConfigFileAndFillDBConfigData(std::string p_configFi
   }
   catch(const libconfig::ParseException &pex)
   {
-    std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
-              << " - " << pex.getError() << std::endl;
+    std::cerr << "Parse error" << std::endl;
+    //std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
+    //          << " - " << pex.getError() << std::endl;
   }
 
   try

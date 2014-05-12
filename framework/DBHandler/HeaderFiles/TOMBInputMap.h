@@ -25,6 +25,8 @@ public:
   virtual void showMap(void) const;
   virtual boost::optional<TOMB_INPUT_MAP_VALUE_TYPE > valueFromMap(TOMB_INPUT_MAP_KEY_TYPE p_key);
   virtual void saveMapToFile(std::string p_fileName);
+
+  friend class ParamData;
 };
 
 } // namespace DATA

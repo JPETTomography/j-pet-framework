@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( first )
 {
   JPetTSlot test;
-  JPetSigCh ch_test(1.3, 1.2), ch_test2(1), ch_test3(123, 98);
+  JPetSigCh ch_test(1.3, 1.2), ch_test2(1, 0), ch_test3(123, 98);
   test.addCh(ch_test);
   test.addCh(ch_test2);
   test.addCh(ch_test3);

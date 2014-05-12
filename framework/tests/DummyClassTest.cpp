@@ -2,6 +2,8 @@
 #define BOOST_TEST_MODULE DummyClassTest 
 #include <boost/test/unit_test.hpp>
 
+
+
 #define private public
 
 #include "../DummyClass/DummyClass.h"

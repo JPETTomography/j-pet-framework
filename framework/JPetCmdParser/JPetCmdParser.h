@@ -19,7 +19,7 @@ namespace po = boost::program_options;
 class JPetCmdParser {
 public:
     JPetCmdParser();
-    void parse(int argc, char** argv);
+    void parse(int argc, const char** argv);
     inline const std::string& getFileName() const { return fVariablesMap["file"].as<std::string>();}
     inline const std::string& getFileType() const { return fVariablesMap["type"].as<std::string>();}
     inline bool fileTypeIsSet() const { return (bool)fVariablesMap.count("type"); }

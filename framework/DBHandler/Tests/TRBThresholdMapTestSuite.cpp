@@ -43,7 +43,6 @@ BOOST_FIXTURE_TEST_CASE(fillPhotoMultiplierMapCheckSizeTest, TRBThresholdMapTest
     std::cout << "TEST = " << boost::unit_test::framework::current_test_case().p_name << std::endl;
   #endif
 
-  size_t l_sizeOfRunTable = getSizeOfRunTable();
   int l_runId = getFirstRunIdIfExist();
 
   if(l_runId != -1)
@@ -62,6 +61,7 @@ BOOST_FIXTURE_TEST_CASE(fillPhotoMultiplierMapCheckSizeTest, TRBThresholdMapTest
     size_t l_sizeResultQuerry = l_runDbResults.size();
 
   #if SHOW_DEBUG
+      size_t l_sizeOfRunTable = getSizeOfRunTable();
       std::cout << "l_sizeOfRunTable = " << l_sizeOfRunTable << " l_sizeResultQuerry = " << l_sizeResultQuerry << " l_sizeOfTRBThresholdMap = " << l_sizeOfTRBThresholdMap << std::endl;
       m_map->showMap();
   #endif

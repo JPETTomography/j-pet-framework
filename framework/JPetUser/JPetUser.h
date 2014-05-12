@@ -1,0 +1,49 @@
+// JPet User - JPetUser.h
+#ifndef JPET_USER_H
+#define JPET_USER_H
+
+#include "TNamed.h"
+
+
+class JPetUser: public TNamed
+{
+protected:
+  int m_id;
+  std::string m_name;
+  std::string m_lastName;
+  std::string m_login;
+  std::string m_password;
+  bool m_isRoot;
+  std::string m_creationDate;
+  std::string m_lastLoginDate;
+  
+  static bool m_isUserLogged;
+  inline void toggleUserLoggedStatus()
+  {
+    m_isUserLogged = !m_isUserLogged;
+  }
+  virtual std::string password(void) const;
+  
+public:
+  JPetUser(int p_id, std::string p_name, std::string p_lastName, std::string p_login, std::string p_password, bool p_isRoot);
+  virtual ~JPetUser(void);
+  
+  static bool isUserLogged(void);
+  virtual bool logIn(void);
+  virtual bool logOut(void);
+  virtual bool changeLogin(void);
+  virtual bool changePassword(void);
+  
+  virtual int id(void) const;
+  virtual std::string name(void) const;
+  virtual std::string lastName(void) const;
+  virtual std::string login(void) const;
+  virtual bool isRoot(void) const;
+  virtual std::string creationDate(void) const;
+  virtual std::string lastLoginDate(void) const;
+  
+private:
+  ClassDef(JPetUser, 1);
+};
+
+#endif // JPET_USER_H
