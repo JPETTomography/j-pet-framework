@@ -61,10 +61,14 @@ sharedlib: modules
 ifeq ($(OS), Darwin)
 	install_name_tool -id @rpath/$(LIBFRAMEWORK) $(LIBFRAMEWORK)
 endif
-
-
 dbhandler:
 	cd $(SRC_DIR)/DBHandler; $(MAKE);
+################
+tests: modules
+	cd $(SRC_DIR)/tests; $(MAKE)
+tests_run: tests
+	cd $(SRC_DIR)/tests; ./run_tests.pl 
+################
 documentation:
 	doxygen Doxyfile
 clean:         
