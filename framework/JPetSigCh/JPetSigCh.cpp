@@ -1,12 +1,15 @@
 #include "JPetSigCh.h"
+#include <limits>
 
 ClassImp(JPetSigCh);
-
+/// @todo init is not complete
+const float JPetSigCh::kTimeUnset = std::numeric_limits<float>::infinity();
 void JPetSigCh::init()
 {
   SetNameTitle("JPetSigCh", "Signal Channel Structure");
   fAmpl = 0;
   fIsSlow = false;
+  fIsComplete = false;
 }
 
 /// @todo what to do with those pointers, that is a horrible leak now
@@ -14,13 +17,14 @@ JPetSigCh::JPetSigCh(const JPetSigCh& obj)
 {
   init();
   if (this != &obj) {
-    fAmpl = obj.getAmpl();
-    fIsSlow = obj.isSlow();
-    setPM(obj.getPM());
-    setTRB(obj.getTRB());
-    setScin(obj.getScin());
-    setBarrelSlot(obj.getBarrelSlot());
-    fChannels = obj.getChannels();
+    fAmpl = obj.fAmpl;
+    fIsSlow = obj.fIsSlow;
+    fIsComplete = obj.fIsComplete;
+    fPM = obj.fPM;
+    fTRB = obj.fTRB;
+    fScin = obj.fScin;
+    fBarrelSlot = obj.fBarrelSlot;
+    fChannels = obj.fChannels;
   }
 }
 
