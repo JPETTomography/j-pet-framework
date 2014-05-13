@@ -21,6 +21,7 @@ class JPetSigCh: public TNamed
  public:
   enum EdgeType { kRising, kFalling };
   typedef std::pair < float, float > Channels;
+  const static float kTimeUnset;
 
   /// @warning here I dont know who should be the owner of JPetTRB etc elements
   friend void my_swap(JPetSigCh& first, JPetSigCh& second) {
@@ -28,6 +29,7 @@ class JPetSigCh: public TNamed
     swap(first.fAmpl, second.fAmpl);
     swap(first.fChannels, second.fChannels);
     swap(first.fIsSlow, second.fIsSlow);
+    swap(first.fIsComplete, second.fIsComplete);
     swap(first.fPM, second.fPM);
     swap(first.fScin, second.fScin);
     swap(first.fBarrelSlot, second.fBarrelSlot);
@@ -35,10 +37,11 @@ class JPetSigCh: public TNamed
 
   JPetSigCh() { init(); }
   JPetSigCh(const JPetSigCh& obj);
-  /// @todo must be added~JPetSigCh();
   JPetSigCh& operator= (const JPetSigCh obj);
-  JPetSigCh(float EdgeTime, float FallEdgeTime = 0);
+  JPetSigCh(float EdgeTime, float FallEdgeTime);
+  ~JPetSigCh() {}
   inline bool isSlow() const { return fIsSlow; }
+  inline bool isComplete() const { return fIsComplete; }
   inline float getAmpl() const { return fAmpl; }
   /**
    * @warning This method may cause seg fault, when is called with kFalling as first argument and object is of type "slow".
@@ -56,13 +59,17 @@ class JPetSigCh: public TNamed
   inline void setTRB(const JPetTRB& trb) { fTRB = trb; }
   inline void setScin(const JPetScin& scin) { fScin = scin; }
   inline void setBarrelSlot(const JPetBarrelSlot& barrel_slot) { fBarrelSlot = barrel_slot; }
-
+  inline void setSlow( bool isSlow ) { fIsSlow = isSlow; }
+  inline void setComplete( bool isComplete ) { fIsComplete = isComplete; }
+  inline void setAmplitude( float ampl ) { fAmpl = ampl; }
+	
   ClassDef(JPetSigCh, 1);
 
  protected:
   float fAmpl;
   Channels fChannels; /// fChannels.first is rising edge and fChannels.second is falling edge
   bool fIsSlow;
+  bool fIsComplete;
   JPetPM fPM;
   JPetTRB fTRB;
   JPetScin fScin;

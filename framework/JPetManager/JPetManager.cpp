@@ -67,7 +67,6 @@ JPetManager::~JPetManager()
 {
   std::vector<JPetAnalysisModule*>::iterator taskIter;
   for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
-    (*taskIter)->Terminate();
     delete (*taskIter);
     *taskIter = 0;
   }

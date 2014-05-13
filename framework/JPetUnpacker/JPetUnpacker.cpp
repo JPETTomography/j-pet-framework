@@ -31,24 +31,29 @@ void JPetUnpacker::setParams(const std::string& hldFile,  int numOfEvents, const
   fEventsToProcess = numOfEvents;
 }
 
-void JPetUnpacker::Exec()
+bool JPetUnpacker::Exec()
 {
-  assert(getEventsToProcess() > 0);
   if ( !boost::filesystem::exists(getHldFile())) 
   {
     ERROR("The hld file doesnt exist");
-    return;
+    return false;
   }
   if (!boost::filesystem::exists(getCfgFile())) 
   {
     ERROR("The config file doesnt exist");
-    return;
+    return false;
+  }
+  if(getEventsToProcess() <= 0)
+  {
+    ERROR("No events to process");
+    return false;
   }
   if (fUnpacker) {
     delete fUnpacker;
     fUnpacker = 0;
   }
   fUnpacker = new Unpacker2(fHldFile.c_str(), fCfgFile.c_str(), fEventsToProcess);
+  return true;
 }
 
 
