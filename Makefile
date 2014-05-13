@@ -26,6 +26,9 @@ SRC_HEADERS = $(SRC_MODULES:.cpp=.h)
 ################
 TEST_DIR = $(SRC_DIR)/tests
 ################
+WORK_DIR = workdir
+EXAMPLE_DIRS = $(sort $(dir $(wildcard $(WORK_DIR)/*/)))
+################
 SOURCES = $(SRC_MODULES)
 HEADERS = JPetLoggerInclude.h #Event.h TDCHit.h ADCHit.h Sig.h
 HEADERS += $(SRC_HEADERS)
@@ -65,13 +68,14 @@ dbhandler:
 	cd $(SRC_DIR)/DBHandler; $(MAKE);
 ################
 tests: modules
-	cd $(SRC_DIR)/tests; $(MAKE)
+	cd $(TEST_DIR); $(MAKE)
 tests_run: tests
-	cd $(SRC_DIR)/tests; ./run_tests.pl 
+	cd $(TEST_DIR); ./run_tests.pl 
 ################
 documentation:
 	doxygen Doxyfile
 clean:         
 	@rm -rf $(OBJECTS)  $(EXECUTABLE) *.o *.d Dict.cpp Dict.h $(LIBFRAMEWORK) latex html
 	@($(foreach MODULE, $(MODULES),$(MAKE) -C $(SRC_DIR)/$(MODULE) clean;))
+	@($(foreach EXAMPLE, $(EXAMPLE_DIRS), $(MAKE) -C $(EXAMPLE) clean;))
 	$(MAKE) -C $(TEST_DIR) clean
