@@ -24,6 +24,16 @@ JPetKB::JPetKBOutput::JPetKBOutput(bool p_passedInformationIsTime,
 }
 
 
+JPetKB::JPetKB() :
+		  m_id(0),
+		  m_isActive(false),
+		  m_status(""),
+		  m_description(""),
+		  m_version(0),
+		  m_userId(0)
+{
+}
+
 JPetKB::JPetKB(int p_id, 
 	       bool p_isActive, 
 	       std::string p_status, 

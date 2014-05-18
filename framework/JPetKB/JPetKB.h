@@ -3,6 +3,8 @@
 #define JPET_KB_H
 
 #include "TNamed.h"
+#include <TRef.h>
+#include <vector>
 //#include "../JPetUser/JPetUser.h"
 
 
@@ -44,7 +46,10 @@ protected:
   //JPetUser &m_JPetUser;		// creatorId
   int m_userId;		// creatorId
 
+  std::vector<TRef> m_TRBContainer;
+  
 public:
+  JPetKB(void);
   JPetKB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId);
   virtual ~JPetKB(void);
   

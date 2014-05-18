@@ -34,8 +34,6 @@ void JPetParamManager::readFile(const char * file_name){
 
 void JPetParamManager::fillKBsData(int p_run_id)
 {
-  //boost::shared_ptr<DB::SERVER::ParamServer> l_paramServer;
-  //DB::SERVER::ParamServer *l_paramServer = new DB::SERVER::ParamServer();
   DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
   
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
@@ -61,7 +59,9 @@ void JPetParamManager::fillKBsData(int p_run_id)
 		  l_konradboard_status, 
 		  l_konradboard_description, 
 		  l_konradboard_version, 
-		  l_konradboard_creator_id);
+		  l_konradboard_creator_id
+		 );
+      
       m_KBsData.push_back(l_KB);
     }
   }
