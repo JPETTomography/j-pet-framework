@@ -19,6 +19,7 @@ public:
 	int getDataSize() const { assert(fTRBNumbers.size() == fScinNumbers.size()); return fTRBNumbers.size() ;}
 	
 	void fillKBsData(int p_run_id);
+	int getKBsDataSize() const {m_KBsData.size();};
 private:
         std::vector<int> fTRBNumbers;
         std::vector<int> fScinNumbers;
