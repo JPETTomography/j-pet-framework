@@ -23,7 +23,6 @@ JPetWriter::JPetWriter(const char* file_name)
 }
 
 JPetWriter::~JPetWriter() {
-  closeFileUsingList();
 }
 
 void JPetWriter::CloseFile() {
@@ -34,16 +33,6 @@ void JPetWriter::CloseFile() {
     }
     fFileName.clear();
     fIsBranchCreated = false;
-}
-
-void JPetWriter::closeFileUsingList()
-{
-  if(fFile.IsOpen())
-  {
-    fFile.cd();
-    fFile.Close();
-  }
-  fFileName.clear();
 }
 
 void JPetWriter::WriteHeader(TObject* header){

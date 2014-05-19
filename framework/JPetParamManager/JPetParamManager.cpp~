@@ -4,9 +4,14 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/lexical_cast.hpp>
 #include "../JPetKB/JPetKB.h"
+#include "../CommonTools/CommonTools.h"
 
 
 using namespace std;
+
+JPetParamManager::JPetParamManager(const std::string &p_KBsDataObjectName) : m_KBsDataObjectName(p_KBsDataObjectName)
+{
+}
 
 void JPetParamManager::readFile(const char * file_name){
 	assert(file_name != NULL);
@@ -64,5 +69,56 @@ void JPetParamManager::fillKBsData(int p_run_id)
       
       m_KBsData.push_back(l_KB);
     }
+  }
+}
+
+void JPetParamManager::fillKBsData(const char *p_fileName)
+{
+  std::string l_fileToSave = p_fileName;
+  if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == string::npos)
+  {
+    l_fileToSave.append(".root");
+  }
+  
+  TFile* file1 = new TFile (l_fileToSave.c_str(), "READ", "", 0);
+  TList* dblist = (TList*)file1->Get(m_KBsDataObjectName.c_str());
+  
+  TObject *obj;
+  
+  TIter next(dblist);
+  while((obj = next()))
+  {
+    JPetKB *l_kb = static_cast<JPetKB*>(obj);
+    std::cout << "l_kb->isActive() = " << l_kb->isActive() << std::endl;
+    m_KBsData.push_back(*l_kb);
+  }
+
+  delete file1;
+}
+
+void JPetParamManager::generateRootFileWithKBsData(const char *p_fileName)
+{
+  if(!m_KBsData.empty())
+  {
+    std::string l_fileToSave = p_fileName;
+    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == string::npos)
+    {
+      l_fileToSave.append(".root");
+    }
+    
+    TFile* file1 = new TFile (l_fileToSave.c_str(), "RECREATE", "", 0);
+
+    TList* dblist = new TList();
+
+    for(std::vector<JPetKB>::iterator it = m_KBsData.begin(); it != m_KBsData.end(); ++it)
+    {
+      dblist->Add(&(*it));
+    }
+
+    file1->WriteObject(dblist, m_KBsDataObjectName.c_str());
+    file1->Close();
+
+    delete file1;
+    delete dblist;
   }
 }
