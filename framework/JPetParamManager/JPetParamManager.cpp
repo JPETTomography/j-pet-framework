@@ -5,6 +5,8 @@
 #include <boost/lexical_cast.hpp>
 #include "../JPetKB/JPetKB.h"
 #include "../CommonTools/CommonTools.h"
+#include "../JPetWriter/JPetWriter.h"
+#include "../JPetReader/JPetReader.h"
 
 
 using namespace std;
@@ -74,6 +76,18 @@ void JPetParamManager::fillKBsData(int p_run_id)
 
 void JPetParamManager::fillKBsData(const char *p_fileName)
 {
+  std::string l_fileToRead = p_fileName;
+  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == string::npos)
+  {
+    l_fileToRead.append(".root");
+  }
+  
+  JPetReader l_reader(l_fileToRead.c_str());
+  l_reader.fillDataUsingList(m_KBsData, m_KBsDataObjectName);
+  std::cout << "l_kb->isActive() = " << m_KBsData[0].isActive() << std::endl;
+  l_reader.closeFileUsingList();
+  
+/*
   std::string l_fileToSave = p_fileName;
   if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == string::npos)
   {
@@ -94,10 +108,25 @@ void JPetParamManager::fillKBsData(const char *p_fileName)
   }
 
   delete file1;
+*/
 }
 
 void JPetParamManager::generateRootFileWithKBsData(const char *p_fileName)
 {
+  if(!m_KBsData.empty())
+  {
+    std::string l_fileToSave = p_fileName;
+    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == string::npos)
+    {
+      l_fileToSave.append(".root");
+    }
+  
+    JPetWriter l_writer(l_fileToSave.c_str());
+    l_writer.writeUsingList(m_KBsData, m_KBsDataObjectName);
+    l_writer.closeFileUsingList();
+  }
+  
+/*
   if(!m_KBsData.empty())
   {
     std::string l_fileToSave = p_fileName;
@@ -121,4 +150,5 @@ void JPetParamManager::generateRootFileWithKBsData(const char *p_fileName)
     delete file1;
     delete dblist;
   }
+*/
 }

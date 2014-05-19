@@ -8,14 +8,12 @@
 JPetReader::JPetReader () : fBranch(0), fObject(0), fTree(0), fFile(NULL) {
 }
 
-JPetReader::JPetReader (const char* filename) : fBranch(0), fObject(0), fTree(0), fFile(NULL), m_TFile(filename, "READ")
-{
-  //if (OpenFile(filename) ) ReadData("");
+JPetReader::JPetReader (const char* filename) : fBranch(0), fObject(0), fTree(0), fFile(NULL) {
+  if (OpenFile(filename) ) ReadData("");
 }
 
 JPetReader::~JPetReader () {
   CloseFile();
-  closeFileUsingList();
 }
 
 void JPetReader::CloseFile () {
@@ -29,14 +27,6 @@ void JPetReader::CloseFile () {
   fTree = 0;
 }
 
-void JPetReader::closeFileUsingList()
-{
-  if(m_TFile.IsOpen())
-  {
-    m_TFile.cd();
-    m_TFile.Close();
-  }
-}
 
 bool JPetReader::OpenFile (const char* filename) {
   CloseFile();
