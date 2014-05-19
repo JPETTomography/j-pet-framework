@@ -15,6 +15,7 @@
 
 #include "TNamed.h"
 #include "TVector3.h"
+#include <TRef.h>
 
 #include <cstddef>
 #include <utility>
@@ -51,7 +52,7 @@ class JPetHit : public TNamed {
   inline const JPetSignal& GetLeftSignal() const {return *fLeftSignal;}
   inline const JPetSignal& GetRightSignal() const {return *fRightSignal;}
   //inline const JPetSignals& GetSignals() const {return *fSignals;};
-  inline const JPetScin& GetScintillator() const {return *fScintillator;}
+  inline const TRef GetScintillator() const {return fScintillator;}
   inline const JPetBarrelSlot& GetBarrelSlot() const {return *fBarrelSlot;}
   inline const JPetTSlot& GetTSlot() const {return *fTSlot;}
   inline void SetEnergy(float energy) {fEnergy = energy;}
@@ -70,7 +71,7 @@ class JPetHit : public TNamed {
   inline void SetLeftSignal(JPetSignal* LeftSignal) {fLeftSignal=LeftSignal;}
   inline void SetRightRight(JPetSignal* RightSignal) {fRightSignal=RightSignal;}
   //inline const JPetSignals& GetSignals() const {return *fSignals;};
-  inline void SetScintillator(JPetScin* Scintillator) {fScintillator=Scintillator;}
+  //inline void SetScintillator(TRef fScintillator) {fScintillator=Scintillator;}
   inline void SetBarrelSlot(JPetBarrelSlot* BarrelSlot) {fBarrelSlot=BarrelSlot;}
   inline void SetTSlot(JPetTSlot* TSlot) {fTSlot=TSlot;};
 
@@ -86,7 +87,8 @@ class JPetHit : public TNamed {
   JPetSignal* fLeftSignal;
   JPetSignal* fRightSignal;
   JPetBarrelSlot* fBarrelSlot;
-  JPetScin* fScintillator;
+ // JPetScin* fScintillator;
+  TRef fScintillator;
   JPetTSlot* fTSlot;
 
 };

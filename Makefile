@@ -65,7 +65,7 @@ ifeq ($(OS), Darwin)
 	install_name_tool -id @rpath/$(LIBFRAMEWORK) $(LIBFRAMEWORK)
 endif
 dbhandler:
-	cd $(SRC_DIR)/DBHandler; $(MAKE);
+	cd $(SRC_DIR)/DBHandler; $(MAKE) sharedlib;
 ################
 tests: modules
 	cd $(TEST_DIR); $(MAKE)
