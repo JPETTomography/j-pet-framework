@@ -47,7 +47,7 @@ bool JPetHLDReader::OpenFile (const char* filename)
 
 void JPetHLDReader::ReadData ()
 {
-  fTree = static_cast<TTree*>(fFile.Get("T")); /// @todo add some comment
+  fTree = static_cast<TTree*>(fFile.Get("T"));
   assert(fTree);
   fBranch = fTree->GetBranch("event");
   assert(fBranch);
