@@ -12,7 +12,6 @@ void JPetSigCh::init()
   fIsComplete = false;
 }
 
-/// @todo what to do with those pointers, that is a horrible leak now
 JPetSigCh::JPetSigCh(const JPetSigCh& obj)
 {
   init();
@@ -40,12 +39,6 @@ JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time)
   if (fall_edge_time == 0) fIsSlow = true;
   addCh(edge_time, fall_edge_time);
 }
-
-/// @todo add some destructor
-//JPetSigCh::~JPetSigCh() 
-//{
-//
-//}
 
 float JPetSigCh::getTime(EdgeType type) const {
   assert ((type == kRising) || (type == kFalling));

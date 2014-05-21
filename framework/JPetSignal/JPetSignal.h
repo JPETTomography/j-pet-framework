@@ -13,7 +13,7 @@
 #include <cassert>
 #include <vector>
 
-/// @todo structure mimics the structure History described in the  PET UJ Report 19 ->table 39 (p.18)
+/// structure mimics the structure History described in the  PET UJ Report 19 ->table 39 (p.18)
 struct History: public TObject {
  public:
   History(int hld = 0, int tslot = 0, int channel = 0, int daq = 0) :
@@ -30,7 +30,6 @@ struct History: public TObject {
 };
 
 
-/// @todo structure mimics the structure described in the  PET UJ Report 19 ->table 39 (p.18) which is then put into the array trh[2][nTrh]. Personally I dont like it :P
 struct ExtendedThreshold {
   ExtendedThreshold() :
   fThreshold(0),

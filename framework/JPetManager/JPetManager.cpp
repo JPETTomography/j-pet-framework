@@ -31,7 +31,7 @@ void JPetManager::AddTask(JPetAnalysisModule* mod)
 
 void JPetManager::Run()
 {
-  UnpackFile(); /// @todo some more clever way :P
+  UnpackFile();
   JPetWriter* currentWriter = 0;
   std::vector<JPetAnalysisModule*>::iterator taskIter;
   // pseudo-input container
