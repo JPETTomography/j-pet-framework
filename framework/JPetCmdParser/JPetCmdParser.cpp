@@ -5,6 +5,7 @@
  */
 
 #include "JPetCmdParser.h"
+#include "../CommonTools/CommonTools.h"
 
 using namespace std;
 
@@ -21,6 +22,8 @@ JPetCmdParser::JPetCmdParser()
   ("file,f", po::value<string>()->required(), "File to open")
   ("range,r", po::value< vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process.")
   ("param,p", po::value<string>(), "File with TRB numbers.")
+  ("numOfEvents,n", po::value<int>(), "Number of events.")
+  ("cfgFile,c", po::value<string>(), "Cfg file.")
   ;
 }
 
@@ -70,7 +73,42 @@ void JPetCmdParser::parse(int argc, const char** argv)
       cerr << "Possible options: hld or root" << endl;
       exit(-1);
     }
-
+    
+    if(fVariablesMap.count("file"))
+    {
+      string l_file = fVariablesMap["file"].as<string>();
+      
+      if(CommonTools::findSubstring(l_file, std::string(".hld")) == string::npos
+	 &&
+	 CommonTools::findSubstring(l_file, std::string(".root")) == string::npos)
+      {
+	cerr << "Wrong extension of the file: " << l_file << endl;
+	exit(-1);
+      }
+    }
+    
+    if(fVariablesMap.count("numOfEvents")) 
+    {
+      int l_numOfEvents = fVariablesMap["numOfEvents"].as<int>();
+      
+      if(l_numOfEvents <= 0)
+      {
+	cerr << "Wrong number of events: " << l_numOfEvents << endl;
+	exit(-1);
+      }
+    }
+    
+    if(fVariablesMap.count("cfgFile"))
+    {
+      string l_cfgFile = fVariablesMap["cfgFile"].as<string>();
+      
+      if(CommonTools::findSubstring(l_cfgFile, std::string(".xml")) == string::npos)
+      {
+	cerr << "Wrong extension of the file: " << l_cfgFile << endl;
+	exit(-1);
+      }
+    }
+    
   } catch (exception& e) {
     cerr << "error: " << e.what() << "\n";
     return;
