@@ -31,7 +31,7 @@ class JPetManager: public TNamed {
   void ParseCmdLine(int argc, char** argv);
   const char* getInputFileName() const { return fCmdParser.getFileName().c_str(); }
   JPetParamManager & getParamManagerInstance() { return fParamManager; }
-  void UnpackFile() { if(fCmdParser.fileTypeIsSet()) fUnpacker.Exec();} /// @todo that should be used only if the correct parameters were assigned
+  void UnpackFile() { if(fCmdParser.fileTypeIsSet()) fUnpacker.Exec();}
  
   ClassDef(JPetManager,1);
 
