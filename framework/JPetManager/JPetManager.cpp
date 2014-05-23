@@ -55,9 +55,7 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
         fParamManager.readFile(fCmdParser.getParam().c_str());
     }
     if(fCmdParser.fileTypeIsSet()) {
-      /// @todo fileType should be probably enum not string
       if (fCmdParser.getFileType()=="hld") {
-        /// @todo other two parameters must be also set somewhere
         fUnpacker.setParams(fCmdParser.getFileName().c_str());
       }
     }
