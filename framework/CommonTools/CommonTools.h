@@ -19,6 +19,11 @@ public:
 
     return buf;
   }
+  
+  static std::size_t findSubstring(const std::string &p_string, const std::string &p_substring)
+  {
+    return p_string.find(p_substring);
+  }
 };
 
 #endif // COMMON_TOOLS_H
