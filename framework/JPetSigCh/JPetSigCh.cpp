@@ -2,7 +2,7 @@
 #include <limits>
 
 ClassImp(JPetSigCh);
-/// @todo init is not complete
+
 const float JPetSigCh::kTimeUnset = std::numeric_limits<float>::infinity();
 void JPetSigCh::init()
 {
