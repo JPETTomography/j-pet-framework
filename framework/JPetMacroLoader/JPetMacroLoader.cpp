@@ -12,11 +12,6 @@ ClassImp(JPetMacroLoader);
 
 JPetMacroLoader::JPetMacroLoader(const char* name, const char* filename): fEvent(0), fEventNb(0) {
   
-  //if(gSystem->Load("../../libJPetFramework.so")>=0) {
-  //  INFO("Loaded shared lib.");
-  //} else {
-  //  INFO("Error loading shared lib.");
-  //}
 
   gROOT->LoadMacro(filename);
   fEventNb = gROOT->ProcessLine("GetEventNb()");
@@ -27,11 +22,20 @@ JPetMacroLoader::~JPetMacroLoader() {
 }
 
 void JPetMacroLoader::CreateInputObjects(const char* inputFilename) {
-  gROOT->ProcessLine(Form("CreateInputObjects(%s)",inputFilename));
+
+  TString inFile;
+  if (inputFilename == NULL) inFile.Form("CreateInputObjects(0)");
+  else  inFile.Form("CreateInputObjects(\"%s\")", inputFilename);
+  const char* c = inFile;
+  gROOT->ProcessLine(c);
 }
 
 void JPetMacroLoader::CreateOutputObjects(const char* outputFilename) {
-  gROOT->ProcessLine(Form("CreateOutputObjects(%s)",outputFilename));
+  TString outFile;
+  if (outputFilename == NULL) outFile.Form("CreateOutputObjects(0)");
+  else outFile.Form("CreateOutputObjects(\"%s\")", outputFilename);
+  const char* c = outFile;
+  gROOT->ProcessLine(c);
 }
 
 void JPetMacroLoader::Exec() {
