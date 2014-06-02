@@ -4,8 +4,6 @@
 
 #include "TNamed.h"
 #include <utility>
-#include <TRef.h>
-#include <vector>
 #include "../JPetUser/JPetUser.h"
 
 
@@ -89,8 +87,6 @@ public:
   PMCalibration getCalibration() const { return fPMCalibration; }
   JPetUser getUser(void) const { return fUser; }
   
-  std::vector<TRef> getTRefKBs() const { return fTRefKBs; }
-  
 protected:
   Side fSide;
   int fId;
@@ -106,8 +102,6 @@ protected:
   PMModel fPMModel;
   PMCalibration fPMCalibration;
   JPetUser fUser;
-  
-  std::vector<TRef> fTRefKBs;
 
   ClassDef(JPetPM, 1);
 };

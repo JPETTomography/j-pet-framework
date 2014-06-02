@@ -1,4 +1,3 @@
-// JPetTRB.cpp - TRB
 #include "JPetTRB.h"
 
 
@@ -20,16 +19,14 @@ JPetTRB::JPetTRB(int p_id,
 		 int p_maxch, 
 		 std::string p_name, 
 		 std::string p_description, 
-		 int p_version,
-		 const JPetUser &p_user) :
-					  fId(p_id),
-					  fIsActive(p_isActive),
-					  fStatus(p_status),
-					  fMaxch(p_maxch),
-					  fName(p_name),
-					  fDescription(p_description),
-					  fVersion(p_version),
-					  fUser(p_user)
+		 int p_version) :
+				  fId(p_id),
+				  fIsActive(p_isActive),
+				  fStatus(p_status),
+				  fMaxch(p_maxch),
+				  fName(p_name),
+				  fDescription(p_description),
+				  fVersion(p_version)
 {}
 
 JPetTRB::~JPetTRB()

@@ -3,7 +3,6 @@
 #define _JPETTRB_H_
 
 #include "TNamed.h"
-#include <TRef.h>
 #include "../JPetUser/JPetUser.h"
 
 
@@ -23,8 +22,6 @@ public:
   int getVersion() const { return fVersion; }
   JPetUser getUser() const { return fUser; }
   
-  TRef getTRefTOMB() const { return fTRefTOMB; }
-  
 protected:
   int fId;
   bool fIsActive;
@@ -34,8 +31,6 @@ protected:
   std::string fDescription;
   int fVersion;
   JPetUser fUser;
-  
-  TRef fTRefTOMB;
   
   ClassDef(JPetTRB, 1);
 };
