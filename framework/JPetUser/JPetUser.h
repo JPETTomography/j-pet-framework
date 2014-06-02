@@ -25,7 +25,15 @@ protected:
   virtual std::string password(void) const;
   
 public:
-  JPetUser(int p_id, std::string p_name, std::string p_lastName, std::string p_login, std::string p_password, bool p_isRoot);
+  JPetUser(void);
+  JPetUser(int p_id, 
+	   std::string p_name, 
+	   std::string p_lastName, 
+	   std::string p_login, 
+	   std::string p_password, 
+	   bool p_isRoot,
+	   std::string p_creationDate,
+	   std::string p_lastLoginDate);
   virtual ~JPetUser(void);
   
   static bool isUserLogged(void);

@@ -3,7 +3,7 @@
 #define _JPETSCIN_H_
 
 #include "TNamed.h"
-#include <TRef.h>
+//#include <TRef.h>
 #include "../JPetUser/JPetUser.h"
 
 

@@ -1,21 +1,33 @@
+// JPetReader.cpp - Reader
 #include "JPetReader.h"
 #include <cassert>
-#include <iostream>
-
-#include <TObjArray.h>
 #include "../JPetUserInfoStructure/JPetUserInfoStructure.h"
 
-JPetReader::JPetReader () : fBranch(0), fObject(0), fTree(0), fFile(NULL) {
-}
 
-JPetReader::JPetReader (const char* filename) : fBranch(0), fObject(0), fTree(0), fFile(NULL), m_TFile(filename, "READ")
+JPetReader::JPetReader() : 
+			  fBranch(0), 
+			  fObject(0), 
+			  fTree(0), 
+			  fFile(NULL)
+{}
+
+JPetReader::JPetReader(const char* p_filename) : 
+						fBranch(0), 
+						fObject(0), 
+						fTree(0), 
+						fFile(NULL),
+						fTFile(p_filename, "READ")
 {
-  //if (OpenFile(filename) ) ReadData("");
+  if(OpenFile(p_filename))
+  {
+    ReadData("");
+  }
 }
 
-JPetReader::~JPetReader () {
+JPetReader::~JPetReader()
+{
   CloseFile();
-  closeFileUsingList();
+  closeTFile();
 }
 
 void JPetReader::CloseFile () {
@@ -29,14 +41,6 @@ void JPetReader::CloseFile () {
   fTree = 0;
 }
 
-void JPetReader::closeFileUsingList()
-{
-  if(m_TFile.IsOpen())
-  {
-    m_TFile.cd();
-    m_TFile.Close();
-  }
-}
 
 bool JPetReader::OpenFile (const char* filename) {
   CloseFile();
@@ -73,4 +77,13 @@ void JPetReader::ReadData (const char* objname) {
 TObject* JPetReader::GetHeader(){
     // @todo The same as in writer. At() should take an enum that keeps positions of different things.
     return fTree->GetUserInfo()->At(JPetUserInfoStructure::kHeader);
+}
+
+void JPetReader::closeTFile()
+{
+  if(fTFile.IsOpen())
+  {
+    fTFile.cd();
+    fTFile.Close();
+  }
 }

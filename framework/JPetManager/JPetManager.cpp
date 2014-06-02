@@ -62,7 +62,7 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
         fUnpacker.setParams(fCmdParser.getFileName().c_str());
       }
     }
-    
+/*    
     if(fCmdParser.isRunNumberSet())
     {
       std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize() << std::endl;
@@ -70,6 +70,46 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
       fParamManager.fillKBsData(fCmdParser.getRunNumber());
       std::cout << "fParamManager.getKBsDataSize() = " << fParamManager.getKBsDataSize() << std::endl;
     }
+    */
+/*
+  fCmdParser.parse(argc, (const char **)argv);
+  
+std::cout << "JPetManager::ParseCmdLine()" << endl;
+    if(fCmdParser.isRunNumberSet())
+    {
+std::cout << "Scins" << std::endl;      
+std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kScintillator) << std::endl;
+      
+std::cout << "PMs" << std::endl;      
+std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kPM) << std::endl;
+      
+std::cout << "KBs" << std::endl;      
+std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kKB) << std::endl;
+      
+std::cout << "TRBs" << std::endl;      
+std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kTRB) << std::endl;
+      
+std::cout << "TOMBs" << std::endl;      
+std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kTOMB) << std::endl;
+
+	fParamManager.fillContainers(fCmdParser.getRunNumber());
+
+std::cout << "Scins" << std::endl;      
+std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kScintillator) << std::endl;
+      
+std::cout << "PMs" << std::endl;      
+std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kPM) << std::endl;
+      
+std::cout << "KBs" << std::endl;      
+std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kKB) << std::endl;
+      
+std::cout << "TRBs" << std::endl;      
+std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kTRB) << std::endl;
+      
+std::cout << "TOMBs" << std::endl;      
+std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kTOMB) << std::endl;
+    }
+    */
 }
 
 JPetManager::~JPetManager()

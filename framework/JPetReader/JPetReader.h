@@ -1,67 +1,65 @@
-/**
- *  @copyright Copyright (c) 2013, Wojciech Krzemien
- *  @file JPetReader.h 
- *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
- *  @brief
- */ 
-
+// JPetReader.h - Reader
 #ifndef JPETREADER_H 
 #define JPETREADER_H 
 
-#include <cstddef>
-
-#include <TBranch.h>
 #include <TFile.h>
-#include <TNamed.h>
 #include <TTree.h>
+#include <TBranch.h>
 #include <vector>
+#include <boost/noncopyable.hpp>
+
+#include "../JPetScin/JPetScin.h"
+#include "../JPetPM/JPetPM.h"
+#include "../JPetKB/JPetKB.h"
+#include "../JPetTRB/JPetTRB.h"
+#include "../JPetTOMB/JPetTOMB.h"
 
 #include "../../JPetLoggerInclude.h"
-#include "../JPetKB/JPetKB.h"
 
-class JPetReader {
- public:
-  JPetReader();
-  explicit JPetReader(const char* filename);
-  virtual ~JPetReader();
+// czesc kodu nie jest moja - trzeba poprawic
+class JPetReader : private boost::noncopyable
+{
+public:
+  JPetReader(void);
+  explicit JPetReader(const char* p_filename);
+  virtual ~JPetReader(void);
   
   virtual void CloseFile();
-  virtual void closeFileUsingList(void);
   virtual long long GetEntries () const { return fTree->GetEntries(); }
   virtual int GetEntry (int entryNo) {return fTree->GetEntry(entryNo); } /// the name of the function is bad but it mimics ROOT function 
   virtual bool OpenFile(const char* filename);
   virtual void ReadData(const char* objname = "");
   virtual TNamed& GetData () {return *fObject;}
-  template <class T>
-  void fillDataUsingList(std::vector<T> &p_container, const std::string &p_objectName);
   TObject* GetHeader();
-
- protected:
+  
+  template <class T>
+  void fillContainer(std::vector<T> &p_container, const std::string &p_objectName);
+  virtual void closeTFile(void);
+  //TFile& getTFile() { return fTFile; }
+  
+protected:
   TBranch* fBranch;
   TNamed* fObject;
   TTree* fTree;
   TFile* fFile;
-  TFile m_TFile;
-
- private:
-  JPetReader(const JPetReader&);
-  void operator=(const JPetReader);
-
+  
+  TFile fTFile;
 };
 
+
 template <class T>
-void JPetReader::fillDataUsingList(std::vector<T> &p_container, const std::string &p_objectName)
+void JPetReader::fillContainer(std::vector<T> &p_container, const std::string &p_objectName)
 {
-  TList *m_TList = (TList*)m_TFile.Get(p_objectName.c_str());
+  TList *l_TList = (TList*)fTFile.Get(p_objectName.c_str());
   
-  TObject *obj;
+  TObject *l_obj;
   
-  TIter next(m_TList);
-  while(obj = next())
+  TIter next(l_TList);
+  while(l_obj = next())
   {
-    T *l_item = static_cast<T*>(obj);
+    T *l_item = static_cast<T*>(l_obj);
     p_container.push_back(*l_item);
   }
 }
 
-#endif /*  !JPETREADER_H */
+#endif	// JPETREADER_H
