@@ -71,7 +71,7 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
       std::cout << "fParamManager.getKBsDataSize() = " << fParamManager.getKBsDataSize() << std::endl;
     }
     */
-/*
+
   fCmdParser.parse(argc, (const char **)argv);
   
 std::cout << "JPetManager::ParseCmdLine()" << endl;
@@ -109,7 +109,6 @@ std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetP
 std::cout << "TOMBs" << std::endl;      
 std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kTOMB) << std::endl;
     }
-    */
 }
 
 JPetManager::~JPetManager()

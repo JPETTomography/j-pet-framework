@@ -7,11 +7,13 @@
 #include <TRef.h>
 #include <vector>
 #include "../JPetUser/JPetUser.h"
+#include "../JPetKB/JPetKB.h"
+//#include "../JPetParamManager/JPetParamManager.h"
 
 
 class JPetPM: public TNamed
 {
-public:
+protected:
   enum Side {kLeft, kRight};
 
   struct PMModel
@@ -49,7 +51,8 @@ public:
 				     fGainBeta(p_gainBeta)
     {}
   };
-  
+
+public:
   JPetPM(void);
   JPetPM(JPetPM::Side p_side,
 	 int p_id,
@@ -90,6 +93,16 @@ public:
   JPetUser getUser(void) const { return fUser; }
   
   std::vector<TRef> getTRefKBs() const { return fTRefKBs; }
+  void setTRefKBs(std::vector<TRef> &p_TRefKBs)
+  {
+    fTRefKBs = p_TRefKBs;
+  }
+  void addTRefKB(JPetKB &p_KB)
+  {
+    fTRefKBs.push_back(&p_KB);
+  }
+  
+  friend class JPetParamManager;
   
 protected:
   Side fSide;
@@ -108,6 +121,11 @@ protected:
   JPetUser fUser;
   
   std::vector<TRef> fTRefKBs;
+  
+  void clearTRefKBs()
+  {
+    fTRefKBs.clear();
+  }
 
   ClassDef(JPetPM, 1);
 };

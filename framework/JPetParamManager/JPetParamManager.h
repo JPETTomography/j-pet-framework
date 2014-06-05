@@ -54,6 +54,14 @@ public:
   void fillContainers(const int p_run_id);
   void fillContainers(const JPetParamManager::ContainerType &p_containerType, const char *p_fileName);
   
+  void fillScintillatorsTRefs(void);
+  void fillPMsTRefs(void);
+  void fillKBsTRefs(void);
+  void fillTRBsTRefs(void);
+  
+  void fillContainersTRefs(void);
+  void fillContainersTRefs(const JPetParamManager::ContainerType &p_containerType);
+  
   void generateRootFile(const JPetParamManager::ContainerType &p_containerType, const char *p_fileName);
   
   template <typename T>
@@ -62,6 +70,11 @@ public:
   bool getData(const JPetParamManager::ContainerType &p_containerType, unsigned int p_index, T &p_data);
   
   int getDataSize(const JPetParamManager::ContainerType &p_containerType) const;
+  
+  // friend void JPetScin::clearTRefPMs();
+  // friend void JPetPM::clearTRefKBs();
+  // friend void JPetKB::clearTRefTRBs();
+  // friend void JPetTRB::clearTRefTOMB();
   
 protected:  
   void fillScintillators(const char *p_fileName);

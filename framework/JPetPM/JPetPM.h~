@@ -4,7 +4,11 @@
 
 #include "TNamed.h"
 #include <utility>
+#include <TRef.h>
+#include <vector>
 #include "../JPetUser/JPetUser.h"
+#include "../JPetKB/JPetKB.h"
+//#include "../JPetParamManager/JPetParamManager.h"
 
 
 class JPetPM: public TNamed
@@ -87,6 +91,18 @@ public:
   PMCalibration getCalibration() const { return fPMCalibration; }
   JPetUser getUser(void) const { return fUser; }
   
+  std::vector<TRef> getTRefKBs() const { return fTRefKBs; }
+  void setTRefKBs(std::vector<TRef> &p_TRefKBs)
+  {
+    fTRefKBs = p_TRefKBs;
+  }
+  void addTRefKB(JPetKB &p_KB)
+  {
+    fTRefKBs.push_back(&p_KB);
+  }
+  
+  friend class JPetParamManager;
+  
 protected:
   Side fSide;
   int fId;
@@ -102,6 +118,13 @@ protected:
   PMModel fPMModel;
   PMCalibration fPMCalibration;
   JPetUser fUser;
+  
+  std::vector<TRef> fTRefKBs;
+  
+  void clearTRefKBs()
+  {
+    fTRefKBs.clear();
+  }
 
   ClassDef(JPetPM, 1);
 };
