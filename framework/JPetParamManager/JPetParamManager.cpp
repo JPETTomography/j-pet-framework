@@ -695,3 +695,207 @@ int JPetParamManager::getDataSize(const JPetParamManager::ContainerType &p_conta
     assert(1 == 0);	//do przemyslenia
   }
 }
+
+void JPetParamManager::fillScintillatorsTRefs()
+{
+  if(!fScintillators.empty() && !fPMs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetScin>::iterator l_scintillator_it = fScintillators.begin(); l_scintillator_it != fScintillators.end(); ++l_scintillator_it)
+    {
+      l_scintillator_it->clearTRefPMs();
+      
+      std::string l_scitillator_id = boost::lexical_cast<std::string>(l_scintillator_it->getId());
+      
+      std::string l_sqlQuerry = "SELECT * FROM getPhotoMultipliersForScintillator(" + l_scitillator_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_SLSCConnection_id = row["SLSCConnection_id"].as<int>();
+	  int l_TOMB_id = row["Slot_id"].as<int>();
+	  int l_HVPMConnection_id = row["HVPMConnection_id"].as<int>();
+	  int l_PhotoMultiplier_id = row["PhotoMultiplier_id"].as<int>();
+	  
+	  for(std::vector<JPetPM>::iterator l_PM_it = fPMs.begin(); l_PM_it != fPMs.end(); ++l_PM_it)
+	  {
+	    int l_PM_id = l_PM_it->getId();
+	    
+	    if(l_PM_id == l_PhotoMultiplier_id)
+	    {
+	      JPetPM::Side l_PM_side = l_PM_it->getSide();
+	      
+	      if(l_PM_side == JPetPM::Side::kLeft)
+	      {
+		l_scintillator_it->setLeftTRefPM(*l_PM_it);
+	      }
+	      else if(l_PM_side == JPetPM::Side::kRight)
+	      {
+		l_scintillator_it->setRightTRefPM(*l_PM_it);
+	      }
+	    }
+	  }
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillPMsTRefs()
+{
+  if(!fPMs.empty() && !fKBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetPM>::iterator l_PM_it = fPMs.begin(); l_PM_it != fPMs.end(); ++l_PM_it)
+    {
+      l_PM_it->clearTRefKBs();
+      
+      std::string l_PM_id = boost::lexical_cast<std::string>(l_PM_it->getId());
+      
+      std::string l_sqlQuerry = "SELECT * FROM getKonradBoardsForPhotoMultiplier(" + l_PM_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_PMKBConnection_id = row["PMKBConnection_id"].as<int>();
+	  int l_KonradBoardInput_id = row["KonradBoardInput_id"].as<int>();
+	  int l_KonradBoard_id = row["KonradBoard_id"].as<int>();
+	  
+	  for(std::vector<JPetKB>::iterator l_KB_it = fKBs.begin(); l_KB_it != fKBs.end(); ++l_KB_it)
+	  {
+	    int l_KB_id = l_KB_it->getId();
+	    
+	    if(l_KB_id == l_KonradBoard_id)
+	    {
+	      l_PM_it->addTRefKB(*l_KB_it);
+	    }
+	  }
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillKBsTRefs()
+{
+  if(!fKBs.empty() && !fTRBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetKB>::iterator l_KB_it = fKBs.begin(); l_KB_it != fKBs.end(); ++l_KB_it)
+    {
+      l_KB_it->clearTRefTRBs();
+      
+      std::string l_KB_id = boost::lexical_cast<std::string>(l_KB_it->getId());
+      
+      std::string l_sqlQuerry = "SELECT * FROM getTRBsForKonradBoard(" + l_KB_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_KonradBoardOutput_id = row["KonradBoardOutput_id"].as<int>();
+	  int l_KBTRBConnection_id = row["KBTRBConnection_id"].as<int>();
+	  int l_TRBInput_id = row["TRBInput_id"].as<int>();
+	  int l_TRB_id = row["TRB_id"].as<int>();
+	  
+	  for(std::vector<JPetTRB>::iterator l_TRB_it = fTRBs.begin(); l_TRB_it != fTRBs.end(); ++l_TRB_it)
+	  {
+	    int l_TRBId = l_TRB_it->getId();
+	    
+	    if(l_TRBId == l_TRB_id)
+	    {
+	      l_KB_it->addTRefTRB(*l_TRB_it);
+	    }
+	  }
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillTRBsTRefs()
+{
+  if(!fTRBs.empty() && !fTOMBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetTRB>::iterator l_TRB_it = fTRBs.begin(); l_TRB_it != fTRBs.end(); ++l_TRB_it)
+    {
+      l_TRB_it->clearTRefTOMB();
+      
+      std::string l_TRB_id = boost::lexical_cast<std::string>(l_TRB_it->getId());
+      
+      std::string l_sqlQuerry = "SELECT * FROM getTOMBForTRB(" + l_TRB_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_TRBOutput_id = row["TRBOutput_id"].as<int>();
+	  int l_TRBTOMBConnection_id = row["TRBTOMBConnection_id"].as<int>();
+	  int l_TOMBInput_id = row["TOMBInput_id"].as<int>();
+	  int l_TOMB_id = row["TOMB_id"].as<int>();
+	  
+	  for(std::vector<JPetTOMB>::iterator l_TOMB_it = fTOMBs.begin(); l_TOMB_it != fTOMBs.end(); ++l_TOMB_it)
+	  {
+	    int l_TOMBId = l_TOMB_it->getId();
+	    
+	    if(l_TOMBId == l_TOMB_id)
+	    {
+	      l_TRB_it->setTRefTOMB(*l_TOMB_it);
+	    }
+	  }
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillContainersTRefs()
+{
+  fillScintillatorsTRefs();
+}
+
+void JPetParamManager::fillContainersTRefs(const JPetParamManager::ContainerType &p_containerType)
+{
+  switch(p_containerType) 
+  {
+    case kScintillator:
+    {
+      fillScintillatorsTRefs();
+      break;
+    }
+    case kPM:
+    {
+      fillPMsTRefs();
+      break;
+    }
+    case kKB:
+    {
+      fillKBsTRefs();
+      break;
+    }
+    case kTRB:
+    {
+      fillTRBsTRefs();
+      break;
+    }
+  }
+}

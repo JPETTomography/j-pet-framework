@@ -62,7 +62,7 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
         fUnpacker.setParams(fCmdParser.getFileName().c_str());
       }
     }
-    
+/*    
     if(fCmdParser.isRunNumberSet())
     {
       std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize() << std::endl;
@@ -70,6 +70,7 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
       fParamManager.fillKBsData(fCmdParser.getRunNumber());
       std::cout << "fParamManager.getKBsDataSize() = " << fParamManager.getKBsDataSize() << std::endl;
     }
+    */
 /*
   fCmdParser.parse(argc, (const char **)argv);
   

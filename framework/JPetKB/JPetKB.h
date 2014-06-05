@@ -6,6 +6,8 @@
 #include <TRef.h>
 #include <vector>
 #include "../JPetUser/JPetUser.h"
+#include "../JPetTRB/JPetTRB.h"
+//#include "../JPetParamManager/JPetParamManager.h"
 
 
 class JPetKB: public TNamed
@@ -68,14 +70,24 @@ public:
 	 const JPetUser &p_user);
   ~JPetKB(void);
   
-  int id() const { return fId; }
-  bool isActive() const { return fIsActive; }
-  std::string status() const { return fStatus; }
-  std::string description() const { return fDescription; }
-  int version() const { return fVersion; }
+  int getId() const { return fId; }
+  bool getIsActive() const { return fIsActive; }
+  std::string getStatus() const { return fStatus; }
+  std::string getDescription() const { return fDescription; }
+  int getVersion() const { return fVersion; }
   JPetUser getUser() const { return fUser; }
   
   std::vector<TRef> getTRefTRBs() const { return fTRefTRBs; }
+  void setTRefTRBs(std::vector<TRef> &p_TRefTRBs)
+  {
+    fTRefTRBs = p_TRefTRBs;
+  }
+  void addTRefTRB(JPetTRB &p_TRB)
+  {
+    fTRefTRBs.push_back(&p_TRB);
+  }
+  
+  friend class JPetParamManager;
   
 protected:
   int fId;
@@ -86,6 +98,11 @@ protected:
   JPetUser fUser;
 
   std::vector<TRef> fTRefTRBs;
+  
+  void clearTRefTRBs()
+  {
+    fTRefTRBs.clear();
+  }
   
   ClassDef(JPetKB, 1);
 };

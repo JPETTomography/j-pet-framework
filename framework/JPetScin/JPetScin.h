@@ -5,11 +5,13 @@
 #include "TNamed.h"
 #include <TRef.h>
 #include "../JPetUser/JPetUser.h"
+#include "../JPetPM/JPetPM.h"
+//#include "../JPetParamManager/JPetParamManager.h"
 
 
 class JPetScin: public TNamed
 {
-public:
+protected:
   enum Dimension {kLength, kHeight, kWidth};
   
   struct ScinDimensions
@@ -42,6 +44,7 @@ public:
     {}
   };
 
+public:
   JPetScin(void);
   JPetScin(int p_id,
 	   bool p_isActive,
@@ -71,7 +74,22 @@ public:
   JPetUser getUser() const { return fUser; }
   
   std::pair<TRef, TRef> getTRefPMs() const { return fTRefPMs; }
+  void setTRefPMs(JPetPM &p_leftPM, JPetPM &p_rightPM)
+  {
+    fTRefPMs.first = &p_leftPM;
+    fTRefPMs.second = &p_rightPM;
+  }
+  void setLeftTRefPM(JPetPM &p_PM)
+  {
+    fTRefPMs.first = &p_PM;
+  }
+  void setRightTRefPM(JPetPM &p_PM)
+  {
+    fTRefPMs.second = &p_PM;
+  }
 
+  friend class JPetParamManager;
+  
 protected:
   int fId;
   bool fIsActive;
@@ -83,6 +101,12 @@ protected:
   JPetUser fUser;
   
   std::pair<TRef, TRef> fTRefPMs;
+  
+  void clearTRefPMs()
+  {
+    fTRefPMs.first = NULL;
+    fTRefPMs.second = NULL;
+  }
   
   ClassDef(JPetScin, 1);
 };

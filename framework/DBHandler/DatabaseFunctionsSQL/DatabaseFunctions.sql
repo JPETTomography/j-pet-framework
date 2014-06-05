@@ -886,3 +886,182 @@ END
 $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getTOMBData(1);
+
+
+****************************************************************************************
+
+*********************************FUNCTION to fill TRefs*********************************
+
+************************************Scintillators***************************************
+
+
+CREATE OR REPLACE FUNCTION getPhotoMultipliersForScintillator(IN p_scintillator_id INTEGER)
+RETURNS TABLE
+(
+  SLSCConnection_id INTEGER,
+  Slot_id INTEGER,
+  HVPMConnection_id INTEGER,
+  PhotoMultiplier_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    SLSCConnection_id,
+    Slot_id,
+    HVPMConnection_id,
+    PhotoMultiplier_id
+
+  IN
+
+      SELECT
+	"SLSCConnection".id AS SLSCConnection_id,
+	"Slot".id AS Slot_id,
+	"HVPMConnection".id AS HVPMConnection_id,
+	"PhotoMultiplier".id AS PhotoMultiplier_id
+
+      FROM "SLSCConnection", "Slot", "HVPMConnection", "PhotoMultiplier"
+	WHERE
+	  "PhotoMultiplier".id = "HVPMConnection".photomultiplier_id
+	  AND
+	  "HVPMConnection".slot_id = "Slot".id
+	  AND
+	  "SLSCConnection".slot_id = "Slot".id
+	  AND
+	  "SLSCConnection".scintillator_id = p_scintillator_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getPhotoMultipliersForScintillator(1);
+
+
+****************************************************************************************
+
+************************************PhotoMultipliers***************************************
+
+// dobra funkcja
+CREATE OR REPLACE FUNCTION getKonradBoardsForPhotoMultiplier(IN p_photoMultiplier_id INTEGER)
+RETURNS TABLE
+(
+  PMKBConnection_id INTEGER,
+  KonradBoardInput_id INTEGER,
+  KonradBoard_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    PMKBConnection_id,
+	KonradBoardInput_id,
+	KonradBoard_id
+  IN
+	SELECT
+		"PMKBConnection".id AS PMKBConnection_id,
+		"KonradBoardInput".id AS KonradBoardInput_id,
+		"KonradBoard".id AS KonradBoard_id
+
+	FROM "PMKBConnection", "KonradBoardInput", "KonradBoard"
+		WHERE
+		  "KonradBoard".id = "KonradBoardInput".konradboard_id
+		  AND
+		  "KonradBoardInput".id = "PMKBConnection".konradboardinput_id
+		  AND
+		  "PMKBConnection".photomultiplier_id = p_photoMultiplier_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getKonradBoardsForPhotoMultiplier(57);
+
+
+*********************************************************************
+
+************************************KonradBoards***************************************
+
+// trzeba poprawic ta funckje
+CREATE OR REPLACE FUNCTION getTRBsForKonradBoard(IN p_konradBoard_id INTEGER)
+RETURNS TABLE
+(
+	KonradBoardOutput_id INTEGER,
+	KBTRBConnection_id INTEGER,
+	TRBInput_id INTEGER,
+	TRB_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+	KonradBoardOutput_id,
+	KBTRBConnection_id,
+	TRBInput_id,
+	TRB_id
+  IN
+      SELECT
+		"KonradBoardOutput".id AS KonradBoardOutput_id,
+		"KBTRBConnection".id AS KBTRBConnection_id,
+		"TRBInput".id AS TRBInput_id,
+		"TRB".id AS TRB_id
+
+      FROM "KonradBoardOutput", "KBTRBConnection", "TRBInput", "TRB"
+		WHERE
+		  "TRB".id = "TRBInput".trb_id
+		  AND
+		  "TRBInput".id = "KBTRBConnection".trbinput_id
+		  AND
+		  "KBTRBConnection".konradboardoutput_id = "KonradBoardOutput".id
+		  AND
+		  "KonradBoardOutput".konradboard_id = p_konradBoard_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getTRBsForKonradBoard(1);
+
+
+*********************************************************************
+
+************************************TRBs***************************************
+
+// trzeba poprawic ta funckje
+CREATE OR REPLACE FUNCTION getTOMBForTRB(IN p_TRBOutput INTEGER)
+RETURNS TABLE
+(
+	TRBOutput_id INTEGER,
+	TRBTOMBConnection_id INTEGER,
+	TOMBInput_id INTEGER,
+	TOMB_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+	TRBOutput_id,
+	TRBTOMBConnection_id,
+	TOMBInput_id,
+	TOMB_id
+  IN
+      SELECT
+		"TRBOutput".id AS TRBOutput_id,
+		"TRBTOMBConnection".id AS TRBTOMBConnection_id,
+		"TOMBInput".id AS TOMBInput_id,
+		"TRBOffsetMappingBoard".id AS TOMB_id
+
+      FROM "TRBOutput", "TRBTOMBConnection", "TOMBInput", "TRBOffsetMappingBoard"
+		WHERE
+		  "TRBOffsetMappingBoard".id = "TOMBInput".trboffsetmappingboard_id
+		  AND
+		  "TOMBInput".id = "TRBTOMBConnection".tombinput_id
+		  AND
+		  "TRBTOMBConnection".trboutput_id = "TRBOutput".id
+		  AND
+		  "TRBOutput".trb_id = p_TRBOutput
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getTOMBForTRB(1);
