@@ -1027,7 +1027,7 @@ SELECT * FROM getTRBsForKonradBoard(1);
 ************************************TRBs***************************************
 
 // trzeba poprawic ta funckje
-CREATE OR REPLACE FUNCTION getTOMBForTRB(IN p_TRBOutput INTEGER)
+CREATE OR REPLACE FUNCTION getTOMBForTRB(IN p_TRB_id INTEGER)
 RETURNS TABLE
 (
 	TRBOutput_id INTEGER,
@@ -1057,7 +1057,7 @@ BEGIN
 		  AND
 		  "TRBTOMBConnection".trboutput_id = "TRBOutput".id
 		  AND
-		  "TRBOutput".trb_id = p_TRBOutput
+		  "TRBOutput".trb_id = p_TRB_id
   LOOP
     RETURN NEXT;
   END LOOP;
@@ -1065,3 +1065,183 @@ END
 $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getTOMBForTRB(1);
+
+
+****************************************************************************************
+
+*********************************FUNCTION to Input/Output*********************************
+
+************************************KonradBoard***************************************
+
+CREATE OR REPLACE FUNCTION getKBInputData(IN p_KB_id INTEGER)
+RETURNS TABLE
+(
+  KBInput_id INTEGER,
+  KBInput_isActive BOOLEAN,
+  KBInput_status CHARACTER VARYING(255),
+  KBInput_portNumber INTEGER,
+  KBInput_description CHARACTER VARYING(255),
+  KBInput_konradboard_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    KBInput_id,
+    KBInput_isActive,
+    KBInput_status,
+    KBInput_portNumber,
+    KBInput_description,
+    KBInput_konradboard_id
+  IN
+    SELECT
+      "KonradBoardInput".id AS KBInput_id,
+      "KonradBoardInput".isactive AS KBInput_isActive,
+      "KonradBoardInput".status AS KBInput_status,
+      "KonradBoardInput".portnumber AS KBInput_portNumber,
+      "KonradBoardInput".description AS KBInput_description,
+      "KonradBoardInput".konradboard_id AS KBInput_konradboard_id
+    FROM "KonradBoardInput"
+      WHERE
+	"KonradBoardInput".konradboard_id = p_KB_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getKBInputData(1);
+
+******************************************************************************************
+
+CREATE OR REPLACE FUNCTION getKBOutputData(IN p_KB_id INTEGER)
+RETURNS TABLE
+(
+  KBOutput_id INTEGER,
+  KBOutput_isActive BOOLEAN,
+  KBOutput_status CHARACTER VARYING(255),
+  KBOutput_portNumber INTEGER,
+  KBOutput_description CHARACTER VARYING(255),
+  KBOutput_passedinformationistime BOOLEAN,
+  KBOutput_konradboard_id INTEGER,
+  KBOutput_input_id INTEGER,
+  KBOutput_konradboardinput_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    KBOutput_id,
+    KBOutput_isActive,
+    KBOutput_status,
+    KBOutput_portNumber,
+    KBOutput_description,
+    KBOutput_passedinformationistime,
+    KBOutput_konradboard_id,
+    KBOutput_input_id,
+    KBOutput_konradboardinput_id
+  IN
+    SELECT
+      "KonradBoardOutput".id AS KBOutput_id,
+      "KonradBoardOutput".isactive AS KBOutput_isActive,
+      "KonradBoardOutput".status AS KBOutput_status,
+      "KonradBoardOutput".portnumber AS KBOutput_portNumber,
+      "KonradBoardOutput".description AS KBOutput_description,
+      "KonradBoardOutput".passedinformationistime AS KBOutput_passedinformationistime,		
+      "KonradBoardOutput".konradboard_id AS KBOutput_konradboard_id,
+      "KonradBoardOutput".input_id AS KBOutput_input_id,
+      "KonradBoardOutput".konradboardinput_id AS konradboardinput_id
+    FROM "KonradBoardOutput"
+      WHERE
+	"KonradBoardOutput".konradboard_id = p_KB_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getKBOutputData(1);
+
+******************************************************************************************
+
+************************************TRB***************************************
+
+CREATE OR REPLACE FUNCTION getTRBInputData(IN p_TRB_id INTEGER)
+RETURNS TABLE
+(
+  TRBInput_id INTEGER,
+  TRBInput_isActive BOOLEAN,
+  TRBInput_status CHARACTER VARYING(255),
+  TRBInput_portNumber INTEGER,
+  TRBInput_description CHARACTER VARYING(255),
+  TRBInput_trb_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    TRBInput_id,
+    TRBInput_isActive,
+    TRBInput_status,
+    TRBInput_portNumber,
+    TRBInput_description,
+    TRBInput_trb_id
+  IN
+    SELECT
+      "TRBInput".id AS TRBInput_id,
+      "TRBInput".isactive AS TRBInput_isActive,
+      "TRBInput".status AS TRBInput_status,
+      "TRBInput".portnumber AS TRBInput_portNumber,
+      "TRBInput".description AS TRBInput_description,
+      "TRBInput".trb_id AS TRBInput_trb_id
+    FROM "TRBInput"
+      WHERE
+	"TRBInput".trb_id = p_TRB_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getTRBInputData(1);
+
+******************************************************************************************
+
+CREATE OR REPLACE FUNCTION getTRBOutputData(IN p_TRB_id INTEGER)
+RETURNS TABLE
+(
+  TRBOutput_id INTEGER,
+  TRBOutput_isActive BOOLEAN,
+  TRBOutput_status CHARACTER VARYING(255),
+  TRBOutput_portNumber INTEGER,
+  TRBOutput_description CHARACTER VARYING(255),
+  TRBOutput_trb_id INTEGER,
+  TRBOutput_trbinput_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    TRBOutput_id,
+    TRBOutput_isActive,
+    TRBOutput_status,
+    TRBOutput_portNumber,
+    TRBOutput_description,
+    TRBOutput_trb_id,
+    TRBOutput_trbinput_id
+  IN
+    SELECT
+      "TRBOutput".id AS KBOutput_id,
+      "TRBOutput".isactive AS KBOutput_isActive,
+      "TRBOutput".status AS KBOutput_status,
+      "TRBOutput".portnumber AS KBOutput_portNumber,
+      "TRBOutput".description AS KBOutput_description,
+      "TRBOutput".trb_id AS TRBOutput_trb_id,
+      "TRBOutput".trbinput_id AS TRBOutput_trbinput_id
+    FROM "TRBOutput"
+      WHERE
+	"TRBOutput".trb_id = p_TRB_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getTRBOutputData(1);
+

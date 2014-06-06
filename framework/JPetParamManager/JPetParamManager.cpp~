@@ -51,8 +51,8 @@ void JPetParamManager::readFile(const char * file_name){
 		
 		iss >> trb;
 		iss >> scin;
-		fTRBNumbers.push_back(trb);
-		fScinNumbers.push_back(scin);
+		//fTRBNumbers.push_back(trb);
+		//fScinNumbers.push_back(scin);
 	}
 }
 
@@ -381,6 +381,190 @@ void JPetParamManager::fillTOMBs(const int p_run_id)
   }
 }
 
+void JPetParamManager::fillKBInputOutputData()
+{
+  fillKBInputData();
+  fillKBOutputData();
+}
+
+void JPetParamManager::fillTRBInputOutputData()
+{
+  fillTRBInputData();
+  fillTRBOutputData();
+}
+
+void JPetParamManager::fillScintillatorsTRefs()
+{
+  if(!fScintillators.empty() && !fPMs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetScin>::iterator l_scintillator_it = fScintillators.begin(); l_scintillator_it != fScintillators.end(); ++l_scintillator_it)
+    {
+      l_scintillator_it->clearTRefPMs();
+      
+      std::string l_scitillator_id = boost::lexical_cast<std::string>(l_scintillator_it->getId());
+      
+      std::string l_sqlQuerry = "SELECT * FROM getPhotoMultipliersForScintillator(" + l_scitillator_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_SLSCConnection_id = row["SLSCConnection_id"].as<int>();
+	  int l_TOMB_id = row["Slot_id"].as<int>();
+	  int l_HVPMConnection_id = row["HVPMConnection_id"].as<int>();
+	  int l_PhotoMultiplier_id = row["PhotoMultiplier_id"].as<int>();
+	  
+	  for(std::vector<JPetPM>::iterator l_PM_it = fPMs.begin(); l_PM_it != fPMs.end(); ++l_PM_it)
+	  {
+	    int l_PM_id = l_PM_it->getId();
+	    
+	    if(l_PM_id == l_PhotoMultiplier_id)
+	    {
+	      JPetPM::Side l_PM_side = l_PM_it->getSide();
+	      
+	      if(l_PM_side == JPetPM::Side::kLeft)
+	      {
+		l_scintillator_it->setLeftTRefPM(*l_PM_it);
+	      }
+	      else if(l_PM_side == JPetPM::Side::kRight)
+	      {
+		l_scintillator_it->setRightTRefPM(*l_PM_it);
+	      }
+	    }
+	  }
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillPMsTRefs()
+{
+  if(!fPMs.empty() && !fKBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetPM>::iterator l_PM_it = fPMs.begin(); l_PM_it != fPMs.end(); ++l_PM_it)
+    {
+      l_PM_it->clearTRefKBs();
+      
+      std::string l_PM_id = boost::lexical_cast<std::string>(l_PM_it->getId());
+      
+      std::string l_sqlQuerry = "SELECT * FROM getKonradBoardsForPhotoMultiplier(" + l_PM_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_PMKBConnection_id = row["PMKBConnection_id"].as<int>();
+	  int l_KonradBoardInput_id = row["KonradBoardInput_id"].as<int>();
+	  int l_KonradBoard_id = row["KonradBoard_id"].as<int>();
+	  
+	  for(std::vector<JPetKB>::iterator l_KB_it = fKBs.begin(); l_KB_it != fKBs.end(); ++l_KB_it)
+	  {
+	    int l_KB_id = l_KB_it->getId();
+	    
+	    if(l_KB_id == l_KonradBoard_id)
+	    {
+	      l_PM_it->addTRefKB(*l_KB_it);
+	    }
+	  }
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillKBsTRefs()
+{
+  if(!fKBs.empty() && !fTRBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetKB>::iterator l_KB_it = fKBs.begin(); l_KB_it != fKBs.end(); ++l_KB_it)
+    {
+      l_KB_it->clearTRefTRBs();
+      
+      std::string l_KB_id = boost::lexical_cast<std::string>(l_KB_it->getId());
+      
+      std::string l_sqlQuerry = "SELECT * FROM getTRBsForKonradBoard(" + l_KB_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_KonradBoardOutput_id = row["KonradBoardOutput_id"].as<int>();
+	  int l_KBTRBConnection_id = row["KBTRBConnection_id"].as<int>();
+	  int l_TRBInput_id = row["TRBInput_id"].as<int>();
+	  int l_TRB_id = row["TRB_id"].as<int>();
+	  
+	  for(std::vector<JPetTRB>::iterator l_TRB_it = fTRBs.begin(); l_TRB_it != fTRBs.end(); ++l_TRB_it)
+	  {
+	    int l_TRBId = l_TRB_it->getId();
+	    
+	    if(l_TRBId == l_TRB_id)
+	    {
+	      l_KB_it->addTRefTRB(*l_TRB_it);
+	    }
+	  }
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillTRBsTRefs()
+{
+  if(!fTRBs.empty() && !fTOMBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetTRB>::iterator l_TRB_it = fTRBs.begin(); l_TRB_it != fTRBs.end(); ++l_TRB_it)
+    {
+      l_TRB_it->clearTRefTOMB();
+      
+      std::string l_TRB_id = boost::lexical_cast<std::string>(l_TRB_it->getId());
+      
+      std::string l_sqlQuerry = "SELECT * FROM getTOMBForTRB(" + l_TRB_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_TRBOutput_id = row["TRBOutput_id"].as<int>();
+	  int l_TRBTOMBConnection_id = row["TRBTOMBConnection_id"].as<int>();
+	  int l_TOMBInput_id = row["TOMBInput_id"].as<int>();
+	  int l_TOMB_id = row["TOMB_id"].as<int>();
+	  
+	  for(std::vector<JPetTOMB>::iterator l_TOMB_it = fTOMBs.begin(); l_TOMB_it != fTOMBs.end(); ++l_TOMB_it)
+	  {
+	    int l_TOMBId = l_TOMB_it->getId();
+	    
+	    if(l_TOMBId == l_TOMB_id)
+	    {
+	      l_TRB_it->setTRefTOMB(*l_TOMB_it);
+	    }
+	  }
+	}
+      }
+    }
+  }
+}
+
 void JPetParamManager::fillContainers(const int p_run_id)
 { 
   fillScintillators(p_run_id);
@@ -422,6 +606,38 @@ void JPetParamManager::fillContainers(const JPetParamManager::ContainerType &p_c
   }
 }
 
+void JPetParamManager::fillContainersTRefs()
+{
+  fillScintillatorsTRefs();
+}
+
+void JPetParamManager::fillContainersTRefs(const JPetParamManager::ContainerType &p_containerType)
+{
+  switch(p_containerType) 
+  {
+    case kScintillator:
+    {
+      fillScintillatorsTRefs();
+      break;
+    }
+    case kPM:
+    {
+      fillPMsTRefs();
+      break;
+    }
+    case kKB:
+    {
+      fillKBsTRefs();
+      break;
+    }
+    case kTRB:
+    {
+      fillTRBsTRefs();
+      break;
+    }
+  }
+}
+
 void JPetParamManager::generateRootFile(const JPetParamManager::ContainerType &p_containerType, const char *p_fileName)
 {
   switch(p_containerType) 
@@ -451,157 +667,6 @@ void JPetParamManager::generateRootFile(const JPetParamManager::ContainerType &p
       generateRootFileForTOMBs(p_fileName);
       break;
     }
-  }
-}
-
-void JPetParamManager::fillScintillators(const char *p_fileName)
-{
-  std::string l_fileToRead = p_fileName;
-  
-  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
-  {
-    l_fileToRead.append(".root");
-  }
-  
-  JPetReader l_reader(l_fileToRead.c_str());
-  l_reader.fillContainer(fScintillators, fScintilatorsObjectName);
-  l_reader.closeTFile();
-}
-
-void JPetParamManager::fillPMs(const char *p_fileName)
-{
-  std::string l_fileToRead = p_fileName;
-  
-  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
-  {
-    l_fileToRead.append(".root");
-  }
-  
-  JPetReader l_reader(l_fileToRead.c_str());
-  l_reader.fillContainer(fPMs, fPMsObjectName);
-  l_reader.closeTFile();
-}
-
-void JPetParamManager::fillKBs(const char *p_fileName)
-{
-  std::string l_fileToRead = p_fileName;
-  
-  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
-  {
-    l_fileToRead.append(".root");
-  }
-  
-  JPetReader l_reader(l_fileToRead.c_str());
-  l_reader.fillContainer(fKBs, fTRBsObjectName);
-  //std::cout << "l_kb->isActive() = " << fKBs[0].isActive() << std::endl;
-  l_reader.closeTFile();
-}
-
-void JPetParamManager::fillTRBs(const char *p_fileName)
-{
-  std::string l_fileToRead = p_fileName;
-  
-  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
-  {
-    l_fileToRead.append(".root");
-  }
-  
-  JPetReader l_reader(l_fileToRead.c_str());
-  l_reader.fillContainer(fTRBs, fTRBsObjectName);
-  l_reader.closeTFile();
-}
-
-void JPetParamManager::fillTOMBs(const char *p_fileName)
-{
-  std::string l_fileToRead = p_fileName;
-  
-  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
-  {
-    l_fileToRead.append(".root");
-  }
-  
-  JPetReader l_reader(l_fileToRead.c_str());
-  l_reader.fillContainer(fTOMBs, fTOMBsObjectName);
-  l_reader.closeTFile();
-}
-
-void JPetParamManager::generateRootFileForScintillators(const char *p_fileName)
-{
-  if(!fScintillators.empty())
-  {
-    std::string l_fileToSave = p_fileName;
-    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
-    {
-      l_fileToSave.append(".root");
-    }
-  
-    JPetWriter l_writer(l_fileToSave.c_str());
-    l_writer.write(fScintillators, fScintilatorsObjectName);
-    l_writer.closeTFile();
-  }
-}
-
-void JPetParamManager::generateRootFileForPMs(const char *p_fileName)
-{
-  if(!fPMs.empty())
-  {
-    std::string l_fileToSave = p_fileName;
-    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
-    {
-      l_fileToSave.append(".root");
-    }
-  
-    JPetWriter l_writer(l_fileToSave.c_str());
-    l_writer.write(fPMs, fPMsObjectName);
-    l_writer.closeTFile();
-  }
-}
-
-void JPetParamManager::generateRootFileForKBs(const char *p_fileName)
-{
-  if(!fKBs.empty())
-  {
-    std::string l_fileToSave = p_fileName;
-    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
-    {
-      l_fileToSave.append(".root");
-    }
-  
-    JPetWriter l_writer(l_fileToSave.c_str());
-    l_writer.write(fKBs, fKBsObjectName);
-    l_writer.closeTFile();
-  }
-}
-
-void JPetParamManager::generateRootFileForTRBs(const char *p_fileName)
-{
-  if(!fTRBs.empty())
-  {
-    std::string l_fileToSave = p_fileName;
-    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
-    {
-      l_fileToSave.append(".root");
-    }
-  
-    JPetWriter l_writer(l_fileToSave.c_str());
-    l_writer.write(fTRBs, fTRBsObjectName);
-    l_writer.closeTFile();
-  }
-}
-
-void JPetParamManager::generateRootFileForTOMBs(const char *p_fileName)
-{
-  if(!fTOMBs.empty())
-  {
-    std::string l_fileToSave = p_fileName;
-    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
-    {
-      l_fileToSave.append(".root");
-    }
-  
-    JPetWriter l_writer(l_fileToSave.c_str());
-    l_writer.write(fTOMBs, fTOMBsObjectName);
-    l_writer.closeTFile();
   }
 }
 
@@ -693,5 +758,330 @@ int JPetParamManager::getDataSize(const JPetParamManager::ContainerType &p_conta
     
   default:
     assert(1 == 0);	//do przemyslenia
+  }
+}
+
+void JPetParamManager::fillScintillators(const char *p_fileName)
+{
+  std::string l_fileToRead = p_fileName;
+  
+  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
+  {
+    l_fileToRead.append(".root");
+  }
+  
+  JPetReader l_reader(l_fileToRead.c_str());
+  l_reader.fillContainer(fScintillators, fScintilatorsObjectName);
+  l_reader.closeTFile();
+}
+
+void JPetParamManager::fillPMs(const char *p_fileName)
+{
+  std::string l_fileToRead = p_fileName;
+  
+  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
+  {
+    l_fileToRead.append(".root");
+  }
+  
+  JPetReader l_reader(l_fileToRead.c_str());
+  l_reader.fillContainer(fPMs, fPMsObjectName);
+  l_reader.closeTFile();
+}
+
+void JPetParamManager::fillKBs(const char *p_fileName)
+{
+  std::string l_fileToRead = p_fileName;
+  
+  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
+  {
+    l_fileToRead.append(".root");
+  }
+  
+  JPetReader l_reader(l_fileToRead.c_str());
+  l_reader.fillContainer(fKBs, fTRBsObjectName);
+  //std::cout << "l_kb->isActive() = " << fKBs[0].isActive() << std::endl;
+  l_reader.closeTFile();
+}
+
+void JPetParamManager::fillTRBs(const char *p_fileName)
+{
+  std::string l_fileToRead = p_fileName;
+  
+  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
+  {
+    l_fileToRead.append(".root");
+  }
+  
+  JPetReader l_reader(l_fileToRead.c_str());
+  l_reader.fillContainer(fTRBs, fTRBsObjectName);
+  l_reader.closeTFile();
+}
+
+void JPetParamManager::fillTOMBs(const char *p_fileName)
+{
+  std::string l_fileToRead = p_fileName;
+  
+  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
+  {
+    l_fileToRead.append(".root");
+  }
+  
+  JPetReader l_reader(l_fileToRead.c_str());
+  l_reader.fillContainer(fTOMBs, fTOMBsObjectName);
+  l_reader.closeTFile();
+}
+
+void JPetParamManager::fillKBInputData()
+{
+  if(!fKBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetKB>::iterator l_KB_it = fKBs.begin(); l_KB_it != fKBs.end(); ++l_KB_it)
+    {
+      l_KB_it->clearInputs();
+      
+      std::string l_KB_id = boost::lexical_cast<std::string>(l_KB_it->getId());
+      
+      std::string l_sqlQuerry = "SELECT * FROM getKBInputData(" + l_KB_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_KBInput_id = row["KBInput_id"].as<int>();
+	  bool l_KBInput_isActive = row["KBInput_isActive"].as<bool>();
+	  std::string l_KBInput_status = row["KBInput_status"].as<std::string>();
+	  int l_KBInput_portNumber = row["KBInput_portNumber"].as<int>();
+	  std::string l_KBInput_description = row["KBInput_description"].as<std::string>();
+	  int l_KBInput_konradboard_id = row["KBInput_konradboard_id"].as<int>();
+
+	  JPetKB::JPetKBInput l_KBInput(l_KBInput_id,
+					 l_KBInput_isActive,
+					 l_KBInput_status,
+					 l_KBInput_portNumber,
+					 l_KBInput_description,
+					 l_KBInput_konradboard_id);
+
+	  l_KB_it->addInput(l_KBInput);
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillKBOutputData()
+{
+  if(!fKBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetKB>::iterator l_KB_it = fKBs.begin(); l_KB_it != fKBs.end(); ++l_KB_it)
+    {
+      l_KB_it->clearOutputs();
+      
+      std::string l_KB_id = boost::lexical_cast<std::string>(l_KB_it->getId());
+      
+      std::string l_sqlQuerry = "SELECT * FROM getKBOutputData(" + l_KB_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_KBOutput_id = row["KBOutput_id"].as<int>();
+	  bool l_KBOutput_isActive = row["KBOutput_isActive"].as<bool>();
+	  std::string l_KBOutput_status = row["KBOutput_status"].as<std::string>();
+	  int l_KBOutput_portNumber = row["KBOutput_portNumber"].as<int>();
+	  std::string l_KBOutput_description = row["KBOutput_description"].as<std::string>();
+	  bool l_KBOutput_passedinformationistime = row["KBOutput_passedinformationistime"].as<bool>();
+	  int l_KBOutput_konradboard_id = row["KBOutput_konradboard_id"].as<int>();
+	  int l_KBOutput_input_id = row["KBOutput_input_id"].as<int>();
+	  int l_KBOutput_konradboardinput_id = row["KBOutput_konradboardinput_id"].as<int>();
+
+	  JPetKB::JPetKBOutput l_KBOutput(l_KBOutput_id,
+					   l_KBOutput_isActive,
+					   l_KBOutput_status,
+					   l_KBOutput_portNumber,
+					   l_KBOutput_description,
+					   l_KBOutput_passedinformationistime,
+					   l_KBOutput_konradboard_id,
+					   l_KBOutput_input_id,
+					   l_KBOutput_konradboardinput_id);
+
+	  l_KB_it->addOutput(l_KBOutput);
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillTRBInputData()
+{
+  if(!fTRBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetTRB>::iterator l_TRB_it = fTRBs.begin(); l_TRB_it != fTRBs.end(); ++l_TRB_it)
+    {
+      l_TRB_it->clearInputs();
+      
+      std::string l_TRB_id = boost::lexical_cast<std::string>(l_TRB_it->getId());
+
+      std::string l_sqlQuerry = "SELECT * FROM getTRBInputData(" + l_TRB_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_TRBInput_id = row["TRBInput_id"].as<int>();
+	  bool l_TRBInput_isActive = row["TRBInput_isActive"].as<bool>();
+	  std::string l_TRBInput_status = row["TRBInput_status"].as<std::string>();
+	  int l_TRBInput_portNumber = row["TRBInput_portNumber"].as<int>();
+	  std::string l_TRBInput_description = row["TRBInput_description"].as<std::string>();
+	  int l_TRBInput_trb_id = row["TRBInput_trb_id"].as<int>();
+
+	  JPetTRB::JPetTRBInput l_TRBInput(l_TRBInput_id,
+					    l_TRBInput_isActive,
+					    l_TRBInput_status,
+					    l_TRBInput_portNumber,
+					    l_TRBInput_description,
+					    l_TRBInput_trb_id);
+	  l_TRB_it->addInput(l_TRBInput);
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillTRBOutputData()
+{
+  if(!fTRBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetTRB>::iterator l_TRB_it = fTRBs.begin(); l_TRB_it != fTRBs.end(); ++l_TRB_it)
+    {
+      l_TRB_it->clearOutputs();
+      
+      std::string l_TRB_id = boost::lexical_cast<std::string>(l_TRB_it->getId());
+
+      std::string l_sqlQuerry = "SELECT * FROM getTRBOutputData(" + l_TRB_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_TRBOutput_id = row["TRBOutput_id"].as<int>();
+	  bool l_TRBOutput_isActive = row["TRBOutput_isActive"].as<bool>();
+	  std::string l_TRBOutput_status = row["TRBOutput_status"].as<std::string>();
+	  int l_TRBOutput_portNumber = row["TRBOutput_portNumber"].as<int>();
+	  std::string l_TRBOutput_description = row["TRBOutput_description"].as<std::string>();
+	  int l_TRBOutput_trb_id = row["TRBOutput_trb_id"].as<int>();
+	  int l_TRBOutput_trbinput_id = row["TRBOutput_trbinput_id"].as<int>();
+
+	  JPetTRB::JPetTRBOutput l_TRBOutput(l_TRBOutput_id,
+					      l_TRBOutput_isActive,
+					      l_TRBOutput_status,
+					      l_TRBOutput_portNumber,
+					      l_TRBOutput_description,
+					      l_TRBOutput_trb_id,
+					      l_TRBOutput_trbinput_id);
+	  l_TRB_it->addOutput(l_TRBOutput);
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::generateRootFileForScintillators(const char *p_fileName)
+{
+  if(!fScintillators.empty())
+  {
+    std::string l_fileToSave = p_fileName;
+    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
+    {
+      l_fileToSave.append(".root");
+    }
+  
+    JPetWriter l_writer(l_fileToSave.c_str());
+    l_writer.write(fScintillators, fScintilatorsObjectName);
+    l_writer.closeTFile();
+  }
+}
+
+void JPetParamManager::generateRootFileForPMs(const char *p_fileName)
+{
+  if(!fPMs.empty())
+  {
+    std::string l_fileToSave = p_fileName;
+    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
+    {
+      l_fileToSave.append(".root");
+    }
+  
+    JPetWriter l_writer(l_fileToSave.c_str());
+    l_writer.write(fPMs, fPMsObjectName);
+    l_writer.closeTFile();
+  }
+}
+
+void JPetParamManager::generateRootFileForKBs(const char *p_fileName)
+{
+  if(!fKBs.empty())
+  {
+    std::string l_fileToSave = p_fileName;
+    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
+    {
+      l_fileToSave.append(".root");
+    }
+  
+    JPetWriter l_writer(l_fileToSave.c_str());
+    l_writer.write(fKBs, fKBsObjectName);
+    l_writer.closeTFile();
+  }
+}
+
+void JPetParamManager::generateRootFileForTRBs(const char *p_fileName)
+{
+  if(!fTRBs.empty())
+  {
+    std::string l_fileToSave = p_fileName;
+    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
+    {
+      l_fileToSave.append(".root");
+    }
+  
+    JPetWriter l_writer(l_fileToSave.c_str());
+    l_writer.write(fTRBs, fTRBsObjectName);
+    l_writer.closeTFile();
+  }
+}
+
+void JPetParamManager::generateRootFileForTOMBs(const char *p_fileName)
+{
+  if(!fTOMBs.empty())
+  {
+    std::string l_fileToSave = p_fileName;
+    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
+    {
+      l_fileToSave.append(".root");
+    }
+  
+    JPetWriter l_writer(l_fileToSave.c_str());
+    l_writer.write(fTOMBs, fTOMBsObjectName);
+    l_writer.closeTFile();
   }
 }

@@ -381,319 +381,16 @@ void JPetParamManager::fillTOMBs(const int p_run_id)
   }
 }
 
-void JPetParamManager::fillContainers(const int p_run_id)
-{ 
-  fillScintillators(p_run_id);
-  fillPMs(p_run_id);
-  fillKBs(p_run_id);
-  fillTRBs(p_run_id);
-  fillTOMBs(p_run_id);
+void JPetParamManager::fillKBInputOutputData()
+{
+  fillKBInputData();
+  fillKBOutputData();
 }
 
-void JPetParamManager::fillContainers(const JPetParamManager::ContainerType &p_containerType, const char *p_fileName)
+void JPetParamManager::fillTRBInputOutputData()
 {
-  switch(p_containerType) 
-  {
-    case kScintillator:
-    {
-      fillScintillators(p_fileName);
-      break;
-    }
-    case kPM:
-    {
-      fillPMs(p_fileName);
-      break;
-    }
-    case kKB:
-    {
-      fillKBs(p_fileName);
-      break;
-    }
-    case kTRB:
-    {
-      fillTRBs(p_fileName);
-      break;
-    }
-    case kTOMB:
-    {
-      fillTOMBs(p_fileName);
-      break;
-    }
-  }
-}
-
-void JPetParamManager::generateRootFile(const JPetParamManager::ContainerType &p_containerType, const char *p_fileName)
-{
-  switch(p_containerType) 
-  {
-    case kScintillator:
-    {
-      generateRootFileForScintillators(p_fileName);
-      break;
-    }
-    case kPM:
-    {
-      generateRootFileForPMs(p_fileName);
-      break;
-    }
-    case kKB:
-    {
-      generateRootFileForKBs(p_fileName);
-      break;
-    }
-    case kTRB:
-    {
-      generateRootFileForTRBs(p_fileName);
-      break;
-    }
-    case kTOMB:
-    {
-      generateRootFileForTOMBs(p_fileName);
-      break;
-    }
-  }
-}
-
-void JPetParamManager::fillScintillators(const char *p_fileName)
-{
-  std::string l_fileToRead = p_fileName;
-  
-  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
-  {
-    l_fileToRead.append(".root");
-  }
-  
-  JPetReader l_reader(l_fileToRead.c_str());
-  l_reader.fillContainer(fScintillators, fScintilatorsObjectName);
-  l_reader.closeTFile();
-}
-
-void JPetParamManager::fillPMs(const char *p_fileName)
-{
-  std::string l_fileToRead = p_fileName;
-  
-  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
-  {
-    l_fileToRead.append(".root");
-  }
-  
-  JPetReader l_reader(l_fileToRead.c_str());
-  l_reader.fillContainer(fPMs, fPMsObjectName);
-  l_reader.closeTFile();
-}
-
-void JPetParamManager::fillKBs(const char *p_fileName)
-{
-  std::string l_fileToRead = p_fileName;
-  
-  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
-  {
-    l_fileToRead.append(".root");
-  }
-  
-  JPetReader l_reader(l_fileToRead.c_str());
-  l_reader.fillContainer(fKBs, fTRBsObjectName);
-  //std::cout << "l_kb->isActive() = " << fKBs[0].isActive() << std::endl;
-  l_reader.closeTFile();
-}
-
-void JPetParamManager::fillTRBs(const char *p_fileName)
-{
-  std::string l_fileToRead = p_fileName;
-  
-  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
-  {
-    l_fileToRead.append(".root");
-  }
-  
-  JPetReader l_reader(l_fileToRead.c_str());
-  l_reader.fillContainer(fTRBs, fTRBsObjectName);
-  l_reader.closeTFile();
-}
-
-void JPetParamManager::fillTOMBs(const char *p_fileName)
-{
-  std::string l_fileToRead = p_fileName;
-  
-  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
-  {
-    l_fileToRead.append(".root");
-  }
-  
-  JPetReader l_reader(l_fileToRead.c_str());
-  l_reader.fillContainer(fTOMBs, fTOMBsObjectName);
-  l_reader.closeTFile();
-}
-
-void JPetParamManager::generateRootFileForScintillators(const char *p_fileName)
-{
-  if(!fScintillators.empty())
-  {
-    std::string l_fileToSave = p_fileName;
-    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
-    {
-      l_fileToSave.append(".root");
-    }
-  
-    JPetWriter l_writer(l_fileToSave.c_str());
-    l_writer.write(fScintillators, fScintilatorsObjectName);
-    l_writer.closeTFile();
-  }
-}
-
-void JPetParamManager::generateRootFileForPMs(const char *p_fileName)
-{
-  if(!fPMs.empty())
-  {
-    std::string l_fileToSave = p_fileName;
-    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
-    {
-      l_fileToSave.append(".root");
-    }
-  
-    JPetWriter l_writer(l_fileToSave.c_str());
-    l_writer.write(fPMs, fPMsObjectName);
-    l_writer.closeTFile();
-  }
-}
-
-void JPetParamManager::generateRootFileForKBs(const char *p_fileName)
-{
-  if(!fKBs.empty())
-  {
-    std::string l_fileToSave = p_fileName;
-    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
-    {
-      l_fileToSave.append(".root");
-    }
-  
-    JPetWriter l_writer(l_fileToSave.c_str());
-    l_writer.write(fKBs, fKBsObjectName);
-    l_writer.closeTFile();
-  }
-}
-
-void JPetParamManager::generateRootFileForTRBs(const char *p_fileName)
-{
-  if(!fTRBs.empty())
-  {
-    std::string l_fileToSave = p_fileName;
-    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
-    {
-      l_fileToSave.append(".root");
-    }
-  
-    JPetWriter l_writer(l_fileToSave.c_str());
-    l_writer.write(fTRBs, fTRBsObjectName);
-    l_writer.closeTFile();
-  }
-}
-
-void JPetParamManager::generateRootFileForTOMBs(const char *p_fileName)
-{
-  if(!fTOMBs.empty())
-  {
-    std::string l_fileToSave = p_fileName;
-    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
-    {
-      l_fileToSave.append(".root");
-    }
-  
-    JPetWriter l_writer(l_fileToSave.c_str());
-    l_writer.write(fTOMBs, fTOMBsObjectName);
-    l_writer.closeTFile();
-  }
-}
-
-template <typename T>
-std::vector<T>& JPetParamManager::getContainer(const JPetParamManager::ContainerType &p_containerType)
-{
-  switch(p_containerType) 
-  {
-  case kScintillator:
-    return fScintillators;
-  case kPM:
-    return fPMs;
-  case kKB:
-    return fKBs;
-  case kTRB:
-    return fTRBs;
-  case kTOMB:
-    return fTOMBs;
-    
-  default:
-    assert(1 == 0);	//do przemyslenia
-  }
-}
-
-template <typename T>
-bool JPetParamManager::getData(const JPetParamManager::ContainerType &p_containerType, unsigned int p_index, T &p_data)
-{
-  switch(p_containerType) 
-  {
-    case kScintillator:
-    {
-      if(p_index < fScintillators.size())
-      {
-	p_data = fScintillators[p_index];
-	return true;
-      }
-    }
-    case kPM:
-    {
-      if(p_index < fPMs.size())
-      {
-	p_data = fPMs[p_index];
-	return true;
-      }
-    }
-    case kKB:
-    {
-      if(p_index < fKBs.size())
-      {
-	p_data = fKBs[p_index];
-	return true;
-      }
-    }
-    case kTRB:
-    {
-      if(p_index < fTRBs.size())
-      {
-	p_data = fTRBs[p_index];
-	return true;
-      }
-    }
-    case kTOMB:
-    {
-      if(p_index < fTOMBs.size())
-      {
-	p_data = fTOMBs[p_index];
-	return true;
-      }
-    }
-  }
-  
-  return false;
-}
-
-int JPetParamManager::getDataSize(const JPetParamManager::ContainerType &p_containerType) const
-{
-  switch(p_containerType) 
-  {
-  case kScintillator:
-    return fScintillators.size();
-  case kPM:
-    return fPMs.size();
-  case kKB:
-    return fKBs.size();
-  case kTRB:
-    return fTRBs.size();
-  case kTOMB:
-    return fTOMBs.size();
-    
-  default:
-    assert(1 == 0);	//do przemyslenia
-  }
+  fillTRBInputData();
+  fillTRBOutputData();
 }
 
 void JPetParamManager::fillScintillatorsTRefs()
@@ -868,6 +565,47 @@ void JPetParamManager::fillTRBsTRefs()
   }
 }
 
+void JPetParamManager::fillContainers(const int p_run_id)
+{ 
+  fillScintillators(p_run_id);
+  fillPMs(p_run_id);
+  fillKBs(p_run_id);
+  fillTRBs(p_run_id);
+  fillTOMBs(p_run_id);
+}
+
+void JPetParamManager::fillContainers(const JPetParamManager::ContainerType &p_containerType, const char *p_fileName)
+{
+  switch(p_containerType) 
+  {
+    case kScintillator:
+    {
+      fillScintillators(p_fileName);
+      break;
+    }
+    case kPM:
+    {
+      fillPMs(p_fileName);
+      break;
+    }
+    case kKB:
+    {
+      fillKBs(p_fileName);
+      break;
+    }
+    case kTRB:
+    {
+      fillTRBs(p_fileName);
+      break;
+    }
+    case kTOMB:
+    {
+      fillTOMBs(p_fileName);
+      break;
+    }
+  }
+}
+
 void JPetParamManager::fillContainersTRefs()
 {
   fillScintillatorsTRefs();
@@ -897,5 +635,453 @@ void JPetParamManager::fillContainersTRefs(const JPetParamManager::ContainerType
       fillTRBsTRefs();
       break;
     }
+  }
+}
+
+void JPetParamManager::generateRootFile(const JPetParamManager::ContainerType &p_containerType, const char *p_fileName)
+{
+  switch(p_containerType) 
+  {
+    case kScintillator:
+    {
+      generateRootFileForScintillators(p_fileName);
+      break;
+    }
+    case kPM:
+    {
+      generateRootFileForPMs(p_fileName);
+      break;
+    }
+    case kKB:
+    {
+      generateRootFileForKBs(p_fileName);
+      break;
+    }
+    case kTRB:
+    {
+      generateRootFileForTRBs(p_fileName);
+      break;
+    }
+    case kTOMB:
+    {
+      generateRootFileForTOMBs(p_fileName);
+      break;
+    }
+  }
+}
+
+template <typename T>
+std::vector<T>& JPetParamManager::getContainer(const JPetParamManager::ContainerType &p_containerType)
+{
+  switch(p_containerType) 
+  {
+  case kScintillator:
+    return fScintillators;
+  case kPM:
+    return fPMs;
+  case kKB:
+    return fKBs;
+  case kTRB:
+    return fTRBs;
+  case kTOMB:
+    return fTOMBs;
+    
+  default:
+    assert(1 == 0);	//do przemyslenia
+  }
+}
+
+template <typename T>
+bool JPetParamManager::getData(const JPetParamManager::ContainerType &p_containerType, unsigned int p_index, T &p_data)
+{
+  switch(p_containerType) 
+  {
+    case kScintillator:
+    {
+      if(p_index < fScintillators.size())
+      {
+	p_data = fScintillators[p_index];
+	return true;
+      }
+    }
+    case kPM:
+    {
+      if(p_index < fPMs.size())
+      {
+	p_data = fPMs[p_index];
+	return true;
+      }
+    }
+    case kKB:
+    {
+      if(p_index < fKBs.size())
+      {
+	p_data = fKBs[p_index];
+	return true;
+      }
+    }
+    case kTRB:
+    {
+      if(p_index < fTRBs.size())
+      {
+	p_data = fTRBs[p_index];
+	return true;
+      }
+    }
+    case kTOMB:
+    {
+      if(p_index < fTOMBs.size())
+      {
+	p_data = fTOMBs[p_index];
+	return true;
+      }
+    }
+  }
+  
+  return false;
+}
+
+int JPetParamManager::getDataSize(const JPetParamManager::ContainerType &p_containerType) const
+{
+  switch(p_containerType) 
+  {
+  case kScintillator:
+    return fScintillators.size();
+  case kPM:
+    return fPMs.size();
+  case kKB:
+    return fKBs.size();
+  case kTRB:
+    return fTRBs.size();
+  case kTOMB:
+    return fTOMBs.size();
+    
+  default:
+    assert(1 == 0);	//do przemyslenia
+  }
+}
+
+void JPetParamManager::fillScintillators(const char *p_fileName)
+{
+  std::string l_fileToRead = p_fileName;
+  
+  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
+  {
+    l_fileToRead.append(".root");
+  }
+  
+  JPetReader l_reader(l_fileToRead.c_str());
+  l_reader.fillContainer(fScintillators, fScintilatorsObjectName);
+  l_reader.closeTFile();
+}
+
+void JPetParamManager::fillPMs(const char *p_fileName)
+{
+  std::string l_fileToRead = p_fileName;
+  
+  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
+  {
+    l_fileToRead.append(".root");
+  }
+  
+  JPetReader l_reader(l_fileToRead.c_str());
+  l_reader.fillContainer(fPMs, fPMsObjectName);
+  l_reader.closeTFile();
+}
+
+void JPetParamManager::fillKBs(const char *p_fileName)
+{
+  std::string l_fileToRead = p_fileName;
+  
+  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
+  {
+    l_fileToRead.append(".root");
+  }
+  
+  JPetReader l_reader(l_fileToRead.c_str());
+  l_reader.fillContainer(fKBs, fTRBsObjectName);
+  //std::cout << "l_kb->isActive() = " << fKBs[0].isActive() << std::endl;
+  l_reader.closeTFile();
+}
+
+void JPetParamManager::fillTRBs(const char *p_fileName)
+{
+  std::string l_fileToRead = p_fileName;
+  
+  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
+  {
+    l_fileToRead.append(".root");
+  }
+  
+  JPetReader l_reader(l_fileToRead.c_str());
+  l_reader.fillContainer(fTRBs, fTRBsObjectName);
+  l_reader.closeTFile();
+}
+
+void JPetParamManager::fillTOMBs(const char *p_fileName)
+{
+  std::string l_fileToRead = p_fileName;
+  
+  if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
+  {
+    l_fileToRead.append(".root");
+  }
+  
+  JPetReader l_reader(l_fileToRead.c_str());
+  l_reader.fillContainer(fTOMBs, fTOMBsObjectName);
+  l_reader.closeTFile();
+}
+
+void JPetParamManager::fillKBInputData()
+{
+  if(!fKBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetKB>::iterator l_KB_it = fKBs.begin(); l_KB_it != fKBs.end(); ++l_KB_it)
+    {
+      l_KB_it->clearInputs();
+      
+      std::string l_KB_id = boost::lexical_cast<std::string>(l_KB_it->getId());
+      
+      std::string l_sqlQuerry = "SELECT * FROM getKBInputData(" + l_KB_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_KBInput_id = row["KBInput_id"].as<int>();
+	  bool l_KBInput_isActive = row["KBInput_isActive"].as<bool>();
+	  std::string l_KBInput_status = row["KBInput_status"].as<std::string>();
+	  int l_KBInput_portNumber = row["KBInput_portNumber"].as<int>();
+	  std::string l_KBInput_description = row["KBInput_description"].as<std::string>();
+	  int l_KBInput_konradboard_id = row["KBInput_konradboard_id"].as<int>();
+
+	  JPetKB::JPetKBInput l_KBInput(l_KBInput_id,
+					 l_KBInput_isActive,
+					 l_KBInput_status,
+					 l_KBInput_portNumber,
+					 l_KBInput_description,
+					 l_KBInput_konradboard_id);
+
+	  l_KB_it->addInput(l_KBInput);
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillKBOutputData()
+{
+  if(!fKBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetKB>::iterator l_KB_it = fKBs.begin(); l_KB_it != fKBs.end(); ++l_KB_it)
+    {
+      l_KB_it->clearOutputs();
+      
+      std::string l_KB_id = boost::lexical_cast<std::string>(l_KB_it->getId());
+      
+      std::string l_sqlQuerry = "SELECT * FROM getKBOutputData(" + l_KB_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_KBOutput_id = row["KBOutput_id"].as<int>();
+	  bool l_KBOutput_isActive = row["KBOutput_isActive"].as<bool>();
+	  std::string l_KBOutput_status = row["KBOutput_status"].as<std::string>();
+	  int l_KBOutput_portNumber = row["KBOutput_portNumber"].as<int>();
+	  std::string l_KBOutput_description = row["KBOutput_description"].as<std::string>();
+	  bool l_KBOutput_passedinformationistime = row["KBOutput_passedinformationistime"].as<bool>();
+	  int l_KBOutput_konradboard_id = row["KBOutput_konradboard_id"].as<int>();
+	  int l_KBOutput_input_id = row["KBOutput_input_id"].as<int>();
+	  int l_KBOutput_konradboardinput_id = row["KBOutput_konradboardinput_id"].as<int>();
+
+	  JPetKB::JPetKBOutput l_KBOutput(l_KBOutput_id,
+					   l_KBOutput_isActive,
+					   l_KBOutput_status,
+					   l_KBOutput_portNumber,
+					   l_KBOutput_description,
+					   l_KBOutput_passedinformationistime,
+					   l_KBOutput_konradboard_id,
+					   l_KBOutput_input_id,
+					   l_KBOutput_konradboardinput_id);
+
+	  l_KB_it->addOutput(l_KBOutput);
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillTRBInputData()
+{
+  if(!fTRBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetTRB>::iterator l_TRB_it = fTRBs.begin(); l_TRB_it != fTRBs.end(); ++l_TRB_it)
+    {
+      l_TRB_it->clearInputs();
+      
+      std::string l_TRB_id = boost::lexical_cast<std::string>(l_TRB_it->getId());
+
+      std::string l_sqlQuerry = "SELECT * FROM getTRBInputData(" + l_TRB_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_TRBInput_id = row["TRBInput_id"].as<int>();
+	  bool l_TRBInput_isActive = row["TRBInput_isActive"].as<bool>();
+	  std::string l_TRBInput_status = row["TRBInput_status"].as<std::string>();
+	  int l_TRBInput_portNumber = row["TRBInput_portNumber"].as<int>();
+	  std::string l_TRBInput_description = row["TRBInput_description"].as<std::string>();
+	  int l_TRBInput_trb_id = row["TRBInput_trb_id"].as<int>();
+
+	  JPetTRB::JPetTRBInput l_TRBInput(l_TRBInput_id,
+					    l_TRBInput_isActive,
+					    l_TRBInput_status,
+					    l_TRBInput_portNumber,
+					    l_TRBInput_description,
+					    l_TRBInput_trb_id);
+	  l_TRB_it->addInput(l_TRBInput);
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::fillTRBOutputData()
+{
+  if(!fTRBs.empty())
+  {
+    DB::SERVICES::DBHandler &l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+    
+    for(std::vector<JPetTRB>::iterator l_TRB_it = fTRBs.begin(); l_TRB_it != fTRBs.end(); ++l_TRB_it)
+    {
+      l_TRB_it->clearOutputs();
+      
+      std::string l_TRB_id = boost::lexical_cast<std::string>(l_TRB_it->getId());
+
+      std::string l_sqlQuerry = "SELECT * FROM getTRBOutputData(" + l_TRB_id + ");";
+      pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry)
+      {
+	for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  int l_TRBOutput_id = row["TRBOutput_id"].as<int>();
+	  bool l_TRBOutput_isActive = row["TRBOutput_isActive"].as<bool>();
+	  std::string l_TRBOutput_status = row["TRBOutput_status"].as<std::string>();
+	  int l_TRBOutput_portNumber = row["TRBOutput_portNumber"].as<int>();
+	  std::string l_TRBOutput_description = row["TRBOutput_description"].as<std::string>();
+	  int l_TRBOutput_trb_id = row["TRBOutput_trb_id"].as<int>();
+	  int l_TRBOutput_trbinput_id = row["TRBOutput_trbinput_id"].as<int>();
+
+	  JPetTRB::JPetTRBOutput l_TRBOutput(l_TRBOutput_id,
+					      l_TRBOutput_isActive,
+					      l_TRBOutput_status,
+					      l_TRBOutput_portNumber,
+					      l_TRBOutput_description,
+					      l_TRBOutput_trb_id,
+					      l_TRBOutput_trbinput_id);
+	  l_TRB_it->addOutput(l_TRBOutput);
+	}
+      }
+    }
+  }
+}
+
+void JPetParamManager::generateRootFileForScintillators(const char *p_fileName)
+{
+  if(!fScintillators.empty())
+  {
+    std::string l_fileToSave = p_fileName;
+    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
+    {
+      l_fileToSave.append(".root");
+    }
+  
+    JPetWriter l_writer(l_fileToSave.c_str());
+    l_writer.write(fScintillators, fScintilatorsObjectName);
+    l_writer.closeTFile();
+  }
+}
+
+void JPetParamManager::generateRootFileForPMs(const char *p_fileName)
+{
+  if(!fPMs.empty())
+  {
+    std::string l_fileToSave = p_fileName;
+    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
+    {
+      l_fileToSave.append(".root");
+    }
+  
+    JPetWriter l_writer(l_fileToSave.c_str());
+    l_writer.write(fPMs, fPMsObjectName);
+    l_writer.closeTFile();
+  }
+}
+
+void JPetParamManager::generateRootFileForKBs(const char *p_fileName)
+{
+  if(!fKBs.empty())
+  {
+    std::string l_fileToSave = p_fileName;
+    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
+    {
+      l_fileToSave.append(".root");
+    }
+  
+    JPetWriter l_writer(l_fileToSave.c_str());
+    l_writer.write(fKBs, fKBsObjectName);
+    l_writer.closeTFile();
+  }
+}
+
+void JPetParamManager::generateRootFileForTRBs(const char *p_fileName)
+{
+  if(!fTRBs.empty())
+  {
+    std::string l_fileToSave = p_fileName;
+    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
+    {
+      l_fileToSave.append(".root");
+    }
+  
+    JPetWriter l_writer(l_fileToSave.c_str());
+    l_writer.write(fTRBs, fTRBsObjectName);
+    l_writer.closeTFile();
+  }
+}
+
+void JPetParamManager::generateRootFileForTOMBs(const char *p_fileName)
+{
+  if(!fTOMBs.empty())
+  {
+    std::string l_fileToSave = p_fileName;
+    if(CommonTools::findSubstring(l_fileToSave, std::string(".root")) == std::string::npos)
+    {
+      l_fileToSave.append(".root");
+    }
+  
+    JPetWriter l_writer(l_fileToSave.c_str());
+    l_writer.write(fTOMBs, fTOMBsObjectName);
+    l_writer.closeTFile();
   }
 }
