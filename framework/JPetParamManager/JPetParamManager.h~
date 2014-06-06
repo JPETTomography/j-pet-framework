@@ -43,14 +43,27 @@ public:
 		   const std::string &p_TOMBsObjectName);
   ~JPetParamManager(void);
   
+  void readFile(const char* file_name);
+  
   void fillScintillators(const int p_run_id);
   void fillPMs(const int p_run_id);
   void fillKBs(const int p_run_id);
   void fillTRBs(const int p_run_id);
   void fillTOMBs(const int p_run_id);
   
+  void fillKBInputOutputData(void);
+  void fillTRBInputOutputData(void);
+  
   void fillContainers(const int p_run_id);
   void fillContainers(const JPetParamManager::ContainerType &p_containerType, const char *p_fileName);
+  
+  void fillScintillatorsTRefs(void);
+  void fillPMsTRefs(void);
+  void fillKBsTRefs(void);
+  void fillTRBsTRefs(void);
+  
+  void fillContainersTRefs(void);
+  void fillContainersTRefs(const JPetParamManager::ContainerType &p_containerType);
   
   void generateRootFile(const JPetParamManager::ContainerType &p_containerType, const char *p_fileName);
   
@@ -61,12 +74,22 @@ public:
   
   int getDataSize(const JPetParamManager::ContainerType &p_containerType) const;
   
+  // friend void JPetScin::clearTRefPMs();
+  // friend void JPetPM::clearTRefKBs();
+  // friend void JPetKB::clearTRefTRBs();
+  // friend void JPetTRB::clearTRefTOMB();
+  
 protected:  
   void fillScintillators(const char *p_fileName);
   void fillPMs(const char *p_fileName);
   void fillKBs(const char *p_fileName);
   void fillTRBs(const char *p_fileName);
   void fillTOMBs(const char *p_fileName);
+  
+  void fillKBInputData(void);
+  void fillKBOutputData(void);
+  void fillTRBInputData(void);
+  void fillTRBOutputData(void);
   
   void generateRootFileForScintillators(const char *p_fileName);
   void generateRootFileForPMs(const char *p_fileName);

@@ -15,6 +15,7 @@ class JPetKB: public TNamed
 protected:
   struct JPetKBChannel
   {
+    JPetKBChannel(void);
     JPetKBChannel(int p_id, 
 		  bool p_isActive, 
 		  std::string p_status, 
@@ -30,6 +31,7 @@ protected:
   
   struct JPetKBInput : public JPetKBChannel
   {
+    JPetKBInput(void);
     JPetKBInput(int p_id, 
 		bool p_isActive, 
 		std::string p_status, 
@@ -42,19 +44,18 @@ protected:
 
   struct JPetKBOutput : public JPetKBChannel
   {
+    JPetKBOutput(void);
     JPetKBOutput(int p_id, 
 		 bool p_isActive, 
 		 std::string p_status, 
 		 int p_portNumber, 
 		 std::string p_description, 
 		 bool p_passedInformationIsTime, 
-		 std::string p_passedInformation, 
 		 int p_KBId, 
 		 int p_inputId, 
 		 int p_KBInputId);
     
     bool fPassedInformationIsTime;
-    std::string fPassedInformation;
     int fKBId;
     int fInputId;
     int fKBInputId;
@@ -86,6 +87,38 @@ public:
   {
     fTRefTRBs.push_back(&p_TRB);
   }
+  std::size_t getTRefTRBsSize() const
+  {
+    return fTRefTRBs.size();
+  }
+  
+  std::vector<JPetKB::JPetKBInput> getInputs() const { return fInputs; }
+  void setInputs(std::vector<JPetKBInput> &p_Inputs)
+  {
+    fInputs = p_Inputs;
+  }
+  void addInput(JPetKBInput &p_Input)
+  {
+    fInputs.push_back(p_Input);
+  }
+  std::size_t getInputsSize() const
+  {
+    return fInputs.size();
+  }
+
+  std::vector<JPetKB::JPetKBOutput> getOutputs() const { return fOutputs; }
+  void setOutputs(std::vector<JPetKBOutput> &p_Outputs)
+  {
+    fOutputs = p_Outputs;
+  }
+  void addOutput(JPetKBOutput &p_Output)
+  {
+    fOutputs.push_back(p_Output);
+  }
+  std::size_t getOutputsSize() const
+  {
+    return fOutputs.size();
+  }
   
   friend class JPetParamManager;
   
@@ -98,10 +131,22 @@ protected:
   JPetUser fUser;
 
   std::vector<TRef> fTRefTRBs;
+  std::vector<JPetKBInput> fInputs;
+  std::vector<JPetKBOutput> fOutputs;
   
   void clearTRefTRBs()
   {
     fTRefTRBs.clear();
+  }
+  
+  void clearInputs()
+  {
+    fInputs.clear();
+  }
+  
+  void clearOutputs()
+  {
+    fOutputs.clear();
   }
   
   ClassDef(JPetKB, 1);

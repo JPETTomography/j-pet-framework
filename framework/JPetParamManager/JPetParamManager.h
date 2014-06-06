@@ -51,13 +51,16 @@ public:
   void fillTRBs(const int p_run_id);
   void fillTOMBs(const int p_run_id);
   
-  void fillContainers(const int p_run_id);
-  void fillContainers(const JPetParamManager::ContainerType &p_containerType, const char *p_fileName);
+  void fillKBInputOutputData(void);
+  void fillTRBInputOutputData(void);
   
   void fillScintillatorsTRefs(void);
   void fillPMsTRefs(void);
   void fillKBsTRefs(void);
   void fillTRBsTRefs(void);
+  
+  void fillContainers(const int p_run_id);
+  void fillContainers(const JPetParamManager::ContainerType &p_containerType, const char *p_fileName);
   
   void fillContainersTRefs(void);
   void fillContainersTRefs(const JPetParamManager::ContainerType &p_containerType);
@@ -82,6 +85,11 @@ protected:
   void fillKBs(const char *p_fileName);
   void fillTRBs(const char *p_fileName);
   void fillTOMBs(const char *p_fileName);
+  
+  void fillKBInputData(void);
+  void fillKBOutputData(void);
+  void fillTRBInputData(void);
+  void fillTRBOutputData(void);
   
   void generateRootFileForScintillators(const char *p_fileName);
   void generateRootFileForPMs(const char *p_fileName);
