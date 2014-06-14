@@ -7,6 +7,7 @@
 #include "../JPetWriter/JPetWriter.h"
 #include <boost/lexical_cast.hpp>
 #include <sstream>
+#include <iostream>
 
 
 JPetParamManager::JPetParamManager() :
@@ -670,74 +671,53 @@ void JPetParamManager::generateRootFile(const JPetParamManager::ContainerType &p
   }
 }
 
-template <typename T>
-std::vector<T>& JPetParamManager::getContainer(const JPetParamManager::ContainerType &p_containerType)
+bool JPetParamManager::getScintillatorData(unsigned int p_index, JPetScin &p_data)
 {
-  switch(p_containerType) 
+  if(p_index < fScintillators.size())
   {
-  case kScintillator:
-    return fScintillators;
-  case kPM:
-    return fPMs;
-  case kKB:
-    return fKBs;
-  case kTRB:
-    return fTRBs;
-  case kTOMB:
-    return fTOMBs;
-    
-  default:
-    assert(1 == 0);	//do przemyslenia
+    p_data = fScintillators[p_index];
+    return true;
   }
+  return false;
 }
 
-template <typename T>
-bool JPetParamManager::getData(const JPetParamManager::ContainerType &p_containerType, unsigned int p_index, T &p_data)
+bool JPetParamManager::getPMData(unsigned int p_index, JPetPM &p_data)
 {
-  switch(p_containerType) 
+  if(p_index < fPMs.size())
   {
-    case kScintillator:
-    {
-      if(p_index < fScintillators.size())
-      {
-	p_data = fScintillators[p_index];
-	return true;
-      }
-    }
-    case kPM:
-    {
-      if(p_index < fPMs.size())
-      {
-	p_data = fPMs[p_index];
-	return true;
-      }
-    }
-    case kKB:
-    {
-      if(p_index < fKBs.size())
-      {
-	p_data = fKBs[p_index];
-	return true;
-      }
-    }
-    case kTRB:
-    {
-      if(p_index < fTRBs.size())
-      {
-	p_data = fTRBs[p_index];
-	return true;
-      }
-    }
-    case kTOMB:
-    {
-      if(p_index < fTOMBs.size())
-      {
-	p_data = fTOMBs[p_index];
-	return true;
-      }
-    }
+    p_data = fPMs[p_index];
+    return true;
   }
-  
+  return false;
+}
+
+bool JPetParamManager::getKBData(unsigned int p_index, JPetKB &p_data)
+{
+  if(p_index < fKBs.size())
+  {
+    p_data = fKBs[p_index];
+    return true;
+  }
+  return false;
+}
+
+bool JPetParamManager::getTRBData(unsigned int p_index, JPetTRB &p_data)
+{
+  if(p_index < fTRBs.size())
+  {
+    p_data = fTRBs[p_index];
+    return true;
+  }
+  return false;
+}
+
+bool JPetParamManager::getTOMBData(unsigned int p_index, JPetTOMB &p_data)
+{
+  if(p_index < fTOMBs.size())
+  {
+    p_data = fTOMBs[p_index];
+    return true;
+  }
   return false;
 }
 
@@ -763,16 +743,20 @@ int JPetParamManager::getDataSize(const JPetParamManager::ContainerType &p_conta
 
 void JPetParamManager::fillScintillators(const char *p_fileName)
 {
+  std::cout << "Andrzej fillScintillators() 1" << std::endl;
   std::string l_fileToRead = p_fileName;
   
   if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
   {
     l_fileToRead.append(".root");
   }
-  
+std::cout << "Andrzej fillScintillators() 2" << std::endl;
   JPetReader l_reader(l_fileToRead.c_str());
+std::cout << "Andrzej fillScintillators() 3" << std::endl;
   l_reader.fillContainer(fScintillators, fScintilatorsObjectName);
+std::cout << "Andrzej fillScintillators() 4" << std::endl;
   l_reader.closeTFile();
+std::cout << "Andrzej fillScintillators() 5" << std::endl;
 }
 
 void JPetParamManager::fillPMs(const char *p_fileName)

@@ -72,9 +72,6 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
     }
     */
 
-  fCmdParser.parse(argc, (const char **)argv);
-  
-std::cout << "JPetManager::ParseCmdLine()" << endl;
     if(fCmdParser.isRunNumberSet())
     {
 std::cout << "Scins" << std::endl;      
@@ -92,7 +89,7 @@ std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetP
 std::cout << "TOMBs" << std::endl;      
 std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kTOMB) << std::endl;
 
-	fParamManager.fillContainers(fCmdParser.getRunNumber());
+      fParamManager.fillContainers(fCmdParser.getRunNumber());
 
 std::cout << "Scins" << std::endl;      
 std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kScintillator) << std::endl;

@@ -7,6 +7,7 @@
 #include <TBranch.h>
 #include <vector>
 #include <boost/noncopyable.hpp>
+#include <iostream>
 
 #include "../JPetScin/JPetScin.h"
 #include "../JPetPM/JPetPM.h"
@@ -16,7 +17,7 @@
 
 #include "../../JPetLoggerInclude.h"
 
-// Czesc kodu nie jest moja - trzeba poprawic
+// czesc kodu nie jest moja - trzeba poprawic
 class JPetReader : private boost::noncopyable
 {
 public:
@@ -50,15 +51,20 @@ protected:
 template <class T>
 void JPetReader::fillContainer(std::vector<T> &p_container, const std::string &p_objectName)
 {
+std::cout << "Andrzej fillContainer() 1" << std::endl;
   TList *l_TList = (TList*)fTFile.Get(p_objectName.c_str());
-  
+std::cout << "Andrzej fillContainer() 2" << std::endl;  
   TObject *l_obj;
-  
+std::cout << "Andrzej fillContainer() 3" << std::endl;
   TIter next(l_TList);
+std::cout << "Andrzej fillContainer() 4" << std::endl;
   while(l_obj = next())
   {
+    std::cout << "Andrzej fillContainer() while(...) 5" << std::endl;
     T *l_item = static_cast<T*>(l_obj);
+    std::cout << "Andrzej fillContainer() while(...) 6" << std::endl;
     p_container.push_back(*l_item);
+    std::cout << "Andrzej fillContainer() while(...) 7" << std::endl;
   }
 }
 

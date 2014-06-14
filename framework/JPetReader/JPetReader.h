@@ -51,7 +51,6 @@ template <class T>
 void JPetReader::fillContainer(std::vector<T> &p_container, const std::string &p_objectName)
 {
   TList *l_TList = (TList*)fTFile.Get(p_objectName.c_str());
-  
   TObject *l_obj;
   
   TIter next(l_TList);
