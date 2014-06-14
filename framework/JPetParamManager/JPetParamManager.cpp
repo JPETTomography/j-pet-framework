@@ -670,74 +670,53 @@ void JPetParamManager::generateRootFile(const JPetParamManager::ContainerType &p
   }
 }
 
-template <typename T>
-std::vector<T>& JPetParamManager::getContainer(const JPetParamManager::ContainerType &p_containerType)
+bool JPetParamManager::getScintillatorData(unsigned int p_index, JPetScin &p_data)
 {
-  switch(p_containerType) 
+  if(p_index < fScintillators.size())
   {
-  case kScintillator:
-    return fScintillators;
-  case kPM:
-    return fPMs;
-  case kKB:
-    return fKBs;
-  case kTRB:
-    return fTRBs;
-  case kTOMB:
-    return fTOMBs;
-    
-  default:
-    assert(1 == 0);	//do przemyslenia
+    p_data = fScintillators[p_index];
+    return true;
   }
+  return false;
 }
 
-template <typename T>
-bool JPetParamManager::getData(const JPetParamManager::ContainerType &p_containerType, unsigned int p_index, T &p_data)
+bool JPetParamManager::getPMData(unsigned int p_index, JPetPM &p_data)
 {
-  switch(p_containerType) 
+  if(p_index < fPMs.size())
   {
-    case kScintillator:
-    {
-      if(p_index < fScintillators.size())
-      {
-	p_data = fScintillators[p_index];
-	return true;
-      }
-    }
-    case kPM:
-    {
-      if(p_index < fPMs.size())
-      {
-	p_data = fPMs[p_index];
-	return true;
-      }
-    }
-    case kKB:
-    {
-      if(p_index < fKBs.size())
-      {
-	p_data = fKBs[p_index];
-	return true;
-      }
-    }
-    case kTRB:
-    {
-      if(p_index < fTRBs.size())
-      {
-	p_data = fTRBs[p_index];
-	return true;
-      }
-    }
-    case kTOMB:
-    {
-      if(p_index < fTOMBs.size())
-      {
-	p_data = fTOMBs[p_index];
-	return true;
-      }
-    }
+    p_data = fPMs[p_index];
+    return true;
   }
-  
+  return false;
+}
+
+bool JPetParamManager::getKBData(unsigned int p_index, JPetKB &p_data)
+{
+  if(p_index < fKBs.size())
+  {
+    p_data = fKBs[p_index];
+    return true;
+  }
+  return false;
+}
+
+bool JPetParamManager::getTRBData(unsigned int p_index, JPetTRB &p_data)
+{
+  if(p_index < fTRBs.size())
+  {
+    p_data = fTRBs[p_index];
+    return true;
+  }
+  return false;
+}
+
+bool JPetParamManager::getTOMBData(unsigned int p_index, JPetTOMB &p_data)
+{
+  if(p_index < fTOMBs.size())
+  {
+    p_data = fTOMBs[p_index];
+    return true;
+  }
   return false;
 }
 
@@ -769,7 +748,6 @@ void JPetParamManager::fillScintillators(const char *p_fileName)
   {
     l_fileToRead.append(".root");
   }
-  
   JPetReader l_reader(l_fileToRead.c_str());
   l_reader.fillContainer(fScintillators, fScintilatorsObjectName);
   l_reader.closeTFile();

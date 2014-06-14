@@ -18,10 +18,10 @@ JPetReader::JPetReader(const char* p_filename) :
 						fFile(NULL),
 						fTFile(p_filename, "READ")
 {
-  if(OpenFile(p_filename))
+  /*if(OpenFile(p_filename))
   {
     ReadData("");
-  }
+  }*/
 }
 
 JPetReader::~JPetReader()

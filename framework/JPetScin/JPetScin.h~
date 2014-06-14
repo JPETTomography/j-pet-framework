@@ -3,16 +3,18 @@
 #define _JPETSCIN_H_
 
 #include "TNamed.h"
-//#include <TRef.h>
+#include <TRef.h>
 #include "../JPetUser/JPetUser.h"
+#include "../JPetPM/JPetPM.h"
+//#include "../JPetParamManager/JPetParamManager.h"
 
 
 class JPetScin: public TNamed
 {
-public:
+protected:
   enum Dimension {kLength, kHeight, kWidth};
   
-  struct ScinDimensions
+  struct ScinDimensions: public TNamed
   {
     float fLength;
     float fHeight;
@@ -20,9 +22,11 @@ public:
     
     ScinDimensions(float p_length, float p_height, float p_width) : fLength(p_length), fHeight(p_height), fWidth(p_width)
     {}
+    
+    ClassDef(ScinDimensions, 1);
   };
   
-  struct ScinType
+  struct ScinType: public TNamed
   {
     int fId;
     std::string fName;
@@ -30,9 +34,11 @@ public:
     
     ScinType(int p_id, std::string p_name, std::string p_description) : fId(p_id), fName(p_name), fDescription(p_description)
     {}
+    
+    ClassDef(ScinType, 1);
   };
   
-  struct ScinCalibration
+  struct ScinCalibration: public TNamed
   {
     int fId;
     std::string fName;
@@ -40,8 +46,11 @@ public:
     
     ScinCalibration(int p_id, std::string p_name, float p_attlength) : fId(p_id), fName(p_name), fAttlength(p_attlength)
     {}
+    
+    ClassDef(ScinCalibration, 1);
   };
 
+public:
   JPetScin(void);
   JPetScin(int p_id,
 	   bool p_isActive,
@@ -71,7 +80,22 @@ public:
   JPetUser getUser() const { return fUser; }
   
   std::pair<TRef, TRef> getTRefPMs() const { return fTRefPMs; }
+  void setTRefPMs(JPetPM &p_leftPM, JPetPM &p_rightPM)
+  {
+    fTRefPMs.first = &p_leftPM;
+    fTRefPMs.second = &p_rightPM;
+  }
+  void setLeftTRefPM(JPetPM &p_PM)
+  {
+    fTRefPMs.first = &p_PM;
+  }
+  void setRightTRefPM(JPetPM &p_PM)
+  {
+    fTRefPMs.second = &p_PM;
+  }
 
+  friend class JPetParamManager;
+  
 protected:
   int fId;
   bool fIsActive;
@@ -83,6 +107,12 @@ protected:
   JPetUser fUser;
   
   std::pair<TRef, TRef> fTRefPMs;
+  
+  void clearTRefPMs()
+  {
+    fTRefPMs.first = NULL;
+    fTRefPMs.second = NULL;
+  }
   
   ClassDef(JPetScin, 1);
 };

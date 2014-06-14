@@ -13,19 +13,21 @@
 
 class JPetPM: public TNamed
 {
-public:
+protected:
   enum Side {kLeft, kRight};
 
-  struct PMModel
+  struct PMModel: public TNamed
   {
     int fId;
     std::string fName;
     
     PMModel(int p_id, std::string p_name) : fId(p_id), fName(p_name)
     {}
+    
+    ClassDef(PMModel, 1);
   };
   
-  struct PMCalibration
+  struct PMCalibration: public TNamed
   {
     int fId;
     std::string fName;
@@ -50,8 +52,11 @@ public:
 				     fGainAlpha(p_gainAlpha), 
 				     fGainBeta(p_gainBeta)
     {}
+    
+    ClassDef(PMCalibration, 1);
   };
-  
+
+public:
   JPetPM(void);
   JPetPM(JPetPM::Side p_side,
 	 int p_id,
