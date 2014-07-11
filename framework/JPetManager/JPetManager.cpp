@@ -31,7 +31,7 @@ void JPetManager::AddTask(JPetAnalysisModule* mod)
 
 void JPetManager::Run()
 {
-  UnpackFile(); /// @todo some more clever way :P
+  UnpackFile();
   JPetWriter* currentWriter = 0;
   std::vector<JPetAnalysisModule*>::iterator taskIter;
   // pseudo-input container
@@ -55,9 +55,7 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
         fParamManager.readFile(fCmdParser.getParam().c_str());
     }
     if(fCmdParser.fileTypeIsSet()) {
-      /// @todo fileType should be probably enum not string
       if (fCmdParser.getFileType()=="hld") {
-        /// @todo other two parameters must be also set somewhere
         fUnpacker.setParams(fCmdParser.getFileName().c_str());
       }
     }
@@ -67,7 +65,6 @@ JPetManager::~JPetManager()
 {
   std::vector<JPetAnalysisModule*>::iterator taskIter;
   for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
-    (*taskIter)->Terminate();
     delete (*taskIter);
     *taskIter = 0;
   }
