@@ -2,7 +2,7 @@
 #include <limits>
 
 ClassImp(JPetSigCh);
-/// @todo init is not complete
+
 const float JPetSigCh::kTimeUnset = std::numeric_limits<float>::infinity();
 void JPetSigCh::init()
 {
@@ -12,19 +12,18 @@ void JPetSigCh::init()
   fIsComplete = false;
 }
 
-/// @todo what to do with those pointers, that is a horrible leak now
 JPetSigCh::JPetSigCh(const JPetSigCh& obj)
 {
   init();
   if (this != &obj) {
-    fAmpl = obj.getAmpl();
-    fIsSlow = obj.isSlow();
-    fIsComplete = obj.isComplete();
-    setPM(obj.getPM());
-    setTRB(obj.getTRB());
-    setScin(obj.getScin());
-    setBarrelSlot(obj.getBarrelSlot());
-    fChannels = obj.getChannels();
+    fAmpl = obj.fAmpl;
+    fIsSlow = obj.fIsSlow;
+    fIsComplete = obj.fIsComplete;
+    fPM = obj.fPM;
+    fTRB = obj.fTRB;
+    fScin = obj.fScin;
+    fBarrelSlot = obj.fBarrelSlot;
+    fChannels = obj.fChannels;
   }
 }
 
@@ -40,12 +39,6 @@ JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time)
   if (fall_edge_time == 0) fIsSlow = true;
   addCh(edge_time, fall_edge_time);
 }
-
-/// @todo add some destructor
-//JPetSigCh::~JPetSigCh() 
-//{
-//
-//}
 
 float JPetSigCh::getTime(EdgeType type) const {
   assert ((type == kRising) || (type == kFalling));

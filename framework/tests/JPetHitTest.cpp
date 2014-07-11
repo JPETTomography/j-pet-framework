@@ -25,17 +25,19 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetHit hit;
-  BOOST_CHECK_EQUAL(hit.GetEnergy(), 0.0f);
-  BOOST_CHECK_EQUAL(hit.GetQualityOfEnergy(), 0.0f);
-  BOOST_CHECK_EQUAL(hit.GetTime(), 0.0f);
-  BOOST_CHECK_EQUAL(hit.GetQualityOfTime(), 0.0f);
+  double epsilon = 0.0001;  
+  BOOST_CHECK_CLOSE(hit.GetEnergy(), 0.0f, epsilon);
+  BOOST_CHECK_CLOSE(hit.GetQualityOfEnergy(), 0.0f, epsilon);
+  BOOST_CHECK_CLOSE(hit.GetTime(), 0.0f, epsilon);
+  BOOST_CHECK_CLOSE(hit.GetQualityOfTime(), 0.0f, epsilon);
   
   BOOST_CHECK(hit.fPos != NULL);
-  /*BOOST_CHECK(hit.fSignals->first == NULL);
-  BOOST_CHECK(hit.fSignals->second == NULL);
-  BOOST_CHECK(hit.fBarrelSlot == NULL);
-  BOOST_CHECK(hit.fScintillator == NULL);
-  BOOST_CHECK(hit.fTSlot == NULL);*/
+  
+//  BOOST_CHECK(hit.fSignals->first == NULL);
+//  BOOST_CHECK(hit.fSignals->second == NULL);
+//  BOOST_CHECK(hit.fBarrelSlot == NULL);
+  //BOOST_CHECK(hit.fScintillator == NULL);
+  //BOOST_CHECK(hit.fTSlot == NULL);
 }
 
 BOOST_AUTO_TEST_CASE(init_constructor )

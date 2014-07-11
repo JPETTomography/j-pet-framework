@@ -37,5 +37,7 @@ LOG = JPet.log
 %Test.exe: %Test.o
 ###################
 all: $(TESTS)
+run: all
+	./run_tests.pl 
 clean:
 	rm -f *.exe *.o $(LOG) 

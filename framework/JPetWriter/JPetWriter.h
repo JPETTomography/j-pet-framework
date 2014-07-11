@@ -7,6 +7,7 @@
 #include <TFile.h>
 #include <TNamed.h>
 #include <TTree.h>
+#include <boost/noncopyable.hpp>
 #include "../../JPetLoggerInclude.h"
 
  #include "../JPetBarrelSlot/JPetBarrelSlot.h"
@@ -20,17 +21,13 @@
  #include "../JPetTSlot/JPetTSlot.h"
 
 
-/// @todo what about the copy constructor and the asignment operator
 
-class JPetWriter {
+class JPetWriter : private boost::noncopyable {
 public:
     JPetWriter(const char* file_name);
     virtual ~JPetWriter();
     template <class T>
     bool Write(const T& obj);
-    /**
-     * @todo Argument prbably should be const, but root method TTree::Branch() used in it is not. How to solve it?
-     */
     template <class T>
     bool Write(std::vector<T>& obj);
     //bool OpenFile(const char* filename);
