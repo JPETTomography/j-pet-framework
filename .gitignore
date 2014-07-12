@@ -1,0 +1,10 @@
+*.o
+*.x
+*.a
+*.so
+*.root
+*Dict.cpp
+*Dict.h
+*dict.cc
+*dict.h
+*~
