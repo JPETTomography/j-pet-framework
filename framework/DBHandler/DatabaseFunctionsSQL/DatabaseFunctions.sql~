@@ -1207,33 +1207,33 @@ SELECT * FROM getTRBInputData(1);
 CREATE OR REPLACE FUNCTION getTRBOutputData(IN p_TRB_id INTEGER)
 RETURNS TABLE
 (
-  TRBOutput_id INTEGER,
-  TRBOutput_isActive BOOLEAN,
-  TRBOutput_status CHARACTER VARYING(255),
-  TRBOutput_portNumber INTEGER,
-  TRBOutput_description CHARACTER VARYING(255),
-  TRBOutput_trb_id INTEGER,
-  TRBOutput_trbinput_id INTEGER
+	TRBOutput_id INTEGER,
+	TRBOutput_isActive BOOLEAN,
+	TRBOutput_status CHARACTER VARYING(255),
+	TRBOutput_portNumber INTEGER,
+	TRBOutput_description CHARACTER VARYING(255),
+	TRBOutput_trb_id INTEGER,
+	TRBOutput_trbinput_id INTEGER
 ) AS
 $BODY$
 BEGIN
   FOR 
-    TRBOutput_id,
-    TRBOutput_isActive,
-    TRBOutput_status,
-    TRBOutput_portNumber,
-    TRBOutput_description,
-    TRBOutput_trb_id,
-    TRBOutput_trbinput_id
+	TRBOutput_id,
+	TRBOutput_isActive,
+	TRBOutput_status,
+	TRBOutput_portNumber,
+	TRBOutput_description,
+	TRBOutput_trb_id,
+	TRBOutput_trbinput_id
   IN
     SELECT
-      "TRBOutput".id AS KBOutput_id,
-      "TRBOutput".isactive AS KBOutput_isActive,
-      "TRBOutput".status AS KBOutput_status,
-      "TRBOutput".portnumber AS KBOutput_portNumber,
-      "TRBOutput".description AS KBOutput_description,
-      "TRBOutput".trb_id AS TRBOutput_trb_id,
-      "TRBOutput".trbinput_id AS TRBOutput_trbinput_id
+		"TRBOutput".id AS KBOutput_id,
+		"TRBOutput".isactive AS KBOutput_isActive,
+		"TRBOutput".status AS KBOutput_status,
+		"TRBOutput".portnumber AS KBOutput_portNumber,
+		"TRBOutput".description AS KBOutput_description,
+		"TRBOutput".trb_id AS TRBOutput_trb_id,
+		"TRBOutput".trbinput_id AS TRBOutput_trbinput_id
     FROM "TRBOutput"
       WHERE
 	"TRBOutput".trb_id = p_TRB_id

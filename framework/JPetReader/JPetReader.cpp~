@@ -1,6 +1,7 @@
 // JPetReader.cpp - Reader
 #include "JPetReader.h"
 #include <cassert>
+#include <iostream>
 #include "../JPetUserInfoStructure/JPetUserInfoStructure.h"
 
 
@@ -60,18 +61,23 @@ bool JPetReader::OpenFile (const char* filename) {
  * gdy nie ma obiektu o danej nazwie w pliku - Karol
  */
 void JPetReader::ReadData (const char* objname) {
+  std::cout << "Andrzej ReadData() 1" << std::endl;
   assert(objname);
+  std::cout << "Andrzej ReadData() 2" << std::endl;
   //if (objname[0]== 0) { ///@warning nie rozumiem tego warunku
   //  ERROR("No object name specified");
   //  return;
   //}
+  std::cout << "Andrzej ReadData() 3" << std::endl;
   fTree = static_cast<TTree*>(fFile->Get(objname));
   assert(fTree);
+  std::cout << "Andrzej ReadData() 4" << std::endl;
   TObjArray* arr = fTree->GetListOfBranches();
   fBranch = (TBranch*)(arr->At(0));
   //fBranch = fTree->GetBranch(objname);
   assert(fBranch);
   fBranch->SetAddress(&fObject);
+  std::cout << "Andrzej ReadData() 5" << std::endl;
 }
 
 TObject* JPetReader::GetHeader(){

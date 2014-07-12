@@ -77,7 +77,7 @@ public:
   bool getPMData(unsigned int p_index, JPetPM &p_data);
   bool getKBData(unsigned int p_index, JPetKB &p_data);
   bool getTRBData(unsigned int p_index, JPetTRB &p_data);
-  bool getTOMBData(unsigned int p_index, JPetTOMB &p_data);
+  bool getTOMBDATA(unsigned int p_index, JPetTOMB &p_data);
   
   template <typename T>
   const std::vector<T>& getContainer(const JPetParamManager::ContainerType &p_containerType) const	// not working

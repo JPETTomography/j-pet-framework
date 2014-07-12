@@ -7,6 +7,7 @@
 #include "./JPetManager.h"
 //#include "../JPetAnalysisModule/JPetAnalysisModule.h"
 #include <cassert>
+#include <iostream>
 
 ClassImp(JPetManager);
 
@@ -25,27 +26,38 @@ JPetManager::JPetManager(): TNamed("JPetMainManager", "JPetMainManager")
 // @todo check if the module is not already registered
 void JPetManager::AddTask(JPetAnalysisModule* mod)
 {
+std::cout << "Andrzej AddTask() 1" << std::endl;
   assert(mod);
   fTasks.push_back(mod);
+std::cout << "Andrzej AddTask() 2" << std::endl;
 }
 
 void JPetManager::Run()
 {
-  UnpackFile();
+std::cout << "Andrzej Run() 1" << std::endl;
+  UnpackFile(); /// @todo some more clever way :P
+std::cout << "Andrzej Run() 2" << std::endl;
   JPetWriter* currentWriter = 0;
   std::vector<JPetAnalysisModule*>::iterator taskIter;
   // pseudo-input container
   long long  kNevent = 0;
+std::cout << "Andrzej Run() 3" << std::endl;
     for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
+std::cout << "Andrzej Run() for(...) 4" << std::endl;
     (*taskIter)->CreateInputObjects(); /// readers
     (*taskIter)->CreateOutputObjects(); /// writers + histograms
     // tutaj pobierz liczbe zdarzen/obiektow z kontenera wejsciowego
     // (*taskIter)->GetInputModule() czy cos w tym stylu
+std::cout << "Andrzej Run() for(...) 5" << std::endl;
     kNevent = (*taskIter)->GetEventNb();
+std::cout << "Andrzej Run() for(...) 6" << std::endl;
     for (long long i = 0; i < kNevent; i++) {
+std::cout << "Andrzej Run() for(...) for(...) 7" << std::endl;
       (*taskIter)->Exec();
+std::cout << "Andrzej Run() for(...) for(...) 8" << std::endl;
     }
     (*taskIter)->Terminate();
+std::cout << "Andrzej Run() for(...) 9" << std::endl;
   }
 }
 
@@ -56,7 +68,9 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
         fParamManager.readFile(fCmdParser.getParam().c_str());
     }
     if(fCmdParser.fileTypeIsSet()) {
+      /// @todo fileType should be probably enum not string
       if (fCmdParser.getFileType()=="hld") {
+        /// @todo other two parameters must be also set somewhere
         fUnpacker.setParams(fCmdParser.getFileName().c_str());
       }
     }
@@ -110,6 +124,7 @@ JPetManager::~JPetManager()
 {
   std::vector<JPetAnalysisModule*>::iterator taskIter;
   for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
+    (*taskIter)->Terminate();
     delete (*taskIter);
     *taskIter = 0;
   }

@@ -80,7 +80,7 @@ public:
   {
     fInputs = p_Inputs;
   }
-  void addInput(JPetTRBInput &p_Input)
+  void setInputs(JPetTRBInput &p_Input)
   {
     fInputs.push_back(p_Input);
   }
@@ -94,7 +94,7 @@ public:
   {
     fOutputs = p_Outputs;
   }
-  void addOutput(JPetTRBOutput &p_Output)
+  void setOutputs(JPetTRBOutput &p_Output)
   {
     fOutputs.push_back(p_Output);
   }

@@ -1,6 +1,5 @@
 // JPetWriter.cpp - Writer
 #include "JPetWriter.h"
-#include "../JPetUserInfoStructure/JPetUserInfoStructure.h"
 
 
 JPetWriter::JPetWriter(const char* p_fileName) : 
