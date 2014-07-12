@@ -7,6 +7,7 @@
 #include "../JPetWriter/JPetWriter.h"
 #include <boost/lexical_cast.hpp>
 #include <sstream>
+#include <iostream>
 
 
 JPetParamManager::JPetParamManager() :
@@ -742,15 +743,20 @@ int JPetParamManager::getDataSize(const JPetParamManager::ContainerType &p_conta
 
 void JPetParamManager::fillScintillators(const char *p_fileName)
 {
+  std::cout << "Andrzej fillScintillators() 1" << std::endl;
   std::string l_fileToRead = p_fileName;
   
   if(CommonTools::findSubstring(l_fileToRead, std::string(".root")) == std::string::npos)
   {
     l_fileToRead.append(".root");
   }
+std::cout << "Andrzej fillScintillators() 2" << std::endl;
   JPetReader l_reader(l_fileToRead.c_str());
+std::cout << "Andrzej fillScintillators() 3" << std::endl;
   l_reader.fillContainer(fScintillators, fScintilatorsObjectName);
+std::cout << "Andrzej fillScintillators() 4" << std::endl;
   l_reader.closeTFile();
+std::cout << "Andrzej fillScintillators() 5" << std::endl;
 }
 
 void JPetParamManager::fillPMs(const char *p_fileName)

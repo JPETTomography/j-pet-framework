@@ -22,6 +22,7 @@ public:
   
   static std::size_t findSubstring(const std::string &p_string, const std::string &p_substring)
   {
+    // TODO check extension of the file. If necessary change it to another.
     return p_string.find(p_substring);
   }
 };

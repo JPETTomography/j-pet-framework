@@ -1,9 +1,8 @@
-
+// JPetWriter.h - Writer
 #ifndef JPETWRITER_H 
 #define JPETWRITER_H 
 
 #include <vector>
-#include <string>
 #include <TFile.h>
 #include <TList.h>
 #include <TTree.h>
@@ -29,7 +28,9 @@ class JPetWriter : private boost::noncopyable
 public:
   JPetWriter(const char *p_fileName);
   virtual ~JPetWriter(void);
-
+  
+  JPetWriter(const char* file_name);
+  virtual ~JPetWriter();
   template <class T>
   bool Write(const T& obj);
   template <class T>

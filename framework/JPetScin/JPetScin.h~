@@ -14,7 +14,7 @@ class JPetScin: public TNamed
 protected:
   enum Dimension {kLength, kHeight, kWidth};
   
-  struct ScinDimensions
+  struct ScinDimensions: public TNamed
   {
     float fLength;
     float fHeight;
@@ -22,9 +22,11 @@ protected:
     
     ScinDimensions(float p_length, float p_height, float p_width) : fLength(p_length), fHeight(p_height), fWidth(p_width)
     {}
+    
+    ClassDef(ScinDimensions, 1);
   };
   
-  struct ScinType
+  struct ScinType: public TNamed
   {
     int fId;
     std::string fName;
@@ -32,9 +34,11 @@ protected:
     
     ScinType(int p_id, std::string p_name, std::string p_description) : fId(p_id), fName(p_name), fDescription(p_description)
     {}
+    
+    ClassDef(ScinType, 1);
   };
   
-  struct ScinCalibration
+  struct ScinCalibration: public TNamed
   {
     int fId;
     std::string fName;
@@ -42,6 +46,8 @@ protected:
     
     ScinCalibration(int p_id, std::string p_name, float p_attlength) : fId(p_id), fName(p_name), fAttlength(p_attlength)
     {}
+    
+    ClassDef(ScinCalibration, 1);
   };
 
 public:

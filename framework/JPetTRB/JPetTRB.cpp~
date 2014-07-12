@@ -50,7 +50,7 @@ JPetTRB::JPetTRBInput::JPetTRBInput(int p_id,
 JPetTRB::JPetTRBOutput::JPetTRBOutput() :
 					  JPetTRBChannel(0, 
 							 false,
-							 std::string(""),
+							 std::string(""),, 
 							 0, 
 							 std::string("")),
 							 fTRBId(0),
