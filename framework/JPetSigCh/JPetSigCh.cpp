@@ -4,26 +4,29 @@
 ClassImp(JPetSigCh);
 
 const float JPetSigCh::kTimeUnset = std::numeric_limits<float>::infinity();
+
 void JPetSigCh::init()
 {
   SetNameTitle("JPetSigCh", "Signal Channel Structure");
-  fAmpl = 0;
+  fValue = kTimeUnset;
+  /* 
   fIsSlow = false;
-  fIsComplete = false;
+  fIsComplete = false; 
+  */
 }
 
 JPetSigCh::JPetSigCh(const JPetSigCh& obj)
 {
   init();
   if (this != &obj) {
-    fAmpl = obj.fAmpl;
-    fIsSlow = obj.fIsSlow;
-    fIsComplete = obj.fIsComplete;
+    fValue = obj.fValue;
+    /* fIsSlow = obj.fIsSlow; */
+    /* fIsComplete = obj.fIsComplete; */
     fPM = obj.fPM;
     fTRB = obj.fTRB;
     fScin = obj.fScin;
     fBarrelSlot = obj.fBarrelSlot;
-    fChannels = obj.fChannels;
+    /* fChannels = obj.fChannels; */
   }
 }
 
@@ -33,13 +36,25 @@ JPetSigCh& JPetSigCh::operator=(JPetSigCh obj)
   return *this;
 }
 
+/*
 JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time)
 {
   init();
   if (fall_edge_time == 0) fIsSlow = true;
   addCh(edge_time, fall_edge_time);
 }
+*/
 
+JPetSigCh::JPetSigCh(EdgeType Edge, float EdgeTime)
+{
+  init();
+  // @todo: perform some sanity checks of the given values
+  fType = Edge;
+  fValue = EdgeTime;
+
+}
+
+/*
 float JPetSigCh::getTime(EdgeType type) const {
   assert ((type == kRising) || (type == kFalling));
   if (type == kRising) return fChannels.first;
@@ -52,7 +67,9 @@ float JPetSigCh::getTime(EdgeType type) const {
   }
   return 0;
 }
+*/
 
+/*
 template <class T>
 void JPetSigCh::set(T** dest, const T& source) throw(std::bad_alloc)
 {
@@ -76,10 +93,19 @@ void JPetSigCh::set(T** dest, const T& source) throw(std::bad_alloc)
     ** dest = source;
   }
 }
+*/
 
+/*
 void JPetSigCh::addCh(float rise_edge_time, float fall_edge_time)
 {
   fChannels.first = rise_edge_time;
   fChannels.second = fall_edge_time;
 }
+*/
 
+bool JPetSigCh::isSlow() const{
+  if( fType == kSlow ){
+    return true;
+  }
+  return false;
+}
