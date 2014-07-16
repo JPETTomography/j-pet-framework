@@ -21,12 +21,15 @@ class JPetTSlot: public TNamed
   inline size_t getNumberOfSigCh() const { return fSigChannels.size(); }
   inline const std::vector<JPetSigCh>& getSigChVect() const { return fSigChannels; }
   inline const JPetSigCh& operator[](int index) const { return fSigChannels[index]; }
+  inline unsigned int getIndex() const { return fIndex; }
+  inline void setIndex(unsigned int index) { fIndex = index; }
 
   virtual ~JPetTSlot() {}
 
   ClassDef(JPetTSlot, 1);
  private:
   std::vector<JPetSigCh> fSigChannels;
+  unsigned int fIndex;
 };
 
 #endif
