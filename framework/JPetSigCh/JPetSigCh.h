@@ -6,10 +6,10 @@
 #include <map>
 #include <TClass.h>
 
-#include "../JPetPM/JPetPM.h"
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetScin/JPetScin.h"
-#include "../JPetTRB/JPetTRB.h"
+/* #include "../JPetPM/JPetPM.h" */
+/* #include "../JPetBarrelSlot/JPetBarrelSlot.h" */
+/* #include "../JPetScin/JPetScin.h" */
+/* #include "../JPetTRB/JPetTRB.h" */
 #include "../../JPetLoggerInclude.h"
 
 
@@ -28,9 +28,9 @@ class JPetSigCh: public TNamed
     /* swap(first.fChannels, second.fChannels); */
     /* swap(first.fIsSlow, second.fIsSlow); */
     /* swap(first.fIsComplete, second.fIsComplete); */
-    swap(first.fPM, second.fPM);
-    swap(first.fScin, second.fScin);
-    swap(first.fBarrelSlot, second.fBarrelSlot);
+    /* swap(first.fPM, second.fPM); */
+    /* swap(first.fScin, second.fScin); */
+    /* swap(first.fBarrelSlot, second.fBarrelSlot); */
   }
 
   JPetSigCh() { init(); }
@@ -44,10 +44,10 @@ class JPetSigCh: public TNamed
   /**
    * @warning This method may cause seg fault, when is called with kFalling as first argument and object is of type "slow".
    */
-  inline JPetPM getPM() const { return fPM; }
-  inline JPetTRB getTRB() const {return fTRB; }
-  inline JPetScin getScin() const { return fScin; }
-  inline JPetBarrelSlot getBarrelSlot() const { return fBarrelSlot; }
+  /* inline JPetPM getPM() const { return fPM; } */
+  /* inline JPetTRB getTRB() const {return fTRB; } */
+  /* inline JPetScin getScin() const { return fScin; } */
+  /* inline JPetBarrelSlot getBarrelSlot() const { return fBarrelSlot; } */
   inline EdgeType getType() const { return fType; }
 
   bool isSlow() const ;
@@ -57,10 +57,10 @@ class JPetSigCh: public TNamed
   inline Channels getChannels() const { return fChannels; }
   void addCh(float rise_edge_time, float fall_edge_time);
   */
-  inline void setPM(const JPetPM& pm) { fPM = pm; }
-  inline void setTRB(const JPetTRB& trb) { fTRB = trb; }
-  inline void setScin(const JPetScin& scin) { fScin = scin; }
-  inline void setBarrelSlot(const JPetBarrelSlot& barrel_slot) { fBarrelSlot = barrel_slot; }
+  /* inline void setPM(const JPetPM& pm) { fPM = pm; } */
+  /* inline void setTRB(const JPetTRB& trb) { fTRB = trb; } */
+  /* inline void setScin(const JPetScin& scin) { fScin = scin; } */
+  /* inline void setBarrelSlot(const JPetBarrelSlot& barrel_slot) { fBarrelSlot = barrel_sl ot; } */
   inline void setValue( float val ) { fValue = val; }
   inline void setType( EdgeType type ) { fType = type; }
 
@@ -78,10 +78,10 @@ class JPetSigCh: public TNamed
     bool fIsSlow;
     bool fIsComplete;
   */
-  JPetPM fPM;
-  JPetTRB fTRB;
-  JPetScin fScin;
-  JPetBarrelSlot fBarrelSlot;
+  /* JPetPM fPM; */
+  /* JPetTRB fTRB; */
+  /* JPetScin fScin; */
+  /* JPetBarrelSlot fBarrelSlot; */
 
   /* template <class T> void set(T** dest, const T& source) throw(std::bad_alloc); */
   void init();
