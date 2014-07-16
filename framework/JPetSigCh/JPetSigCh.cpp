@@ -22,10 +22,10 @@ JPetSigCh::JPetSigCh(const JPetSigCh& obj)
     fValue = obj.fValue;
     /* fIsSlow = obj.fIsSlow; */
     /* fIsComplete = obj.fIsComplete; */
-    fPM = obj.fPM;
-    fTRB = obj.fTRB;
-    fScin = obj.fScin;
-    fBarrelSlot = obj.fBarrelSlot;
+    /* fPM = obj.fPM; */
+    /* fTRB = obj.fTRB; */
+    /* fScin = obj.fScin; */
+    /* fBarrelSlot = obj.fBarrelSlot; */
     /* fChannels = obj.fChannels; */
   }
 }
