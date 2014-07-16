@@ -6,8 +6,8 @@
 JPetWriter::JPetWriter(const char* p_fileName) : 
 						fFileName(p_fileName),			// string z nazwą pliku
 						fFile(fFileName.c_str(), "RECREATE"),	// plik
-						fIsBranchCreated(false),
-						fTFile(p_fileName, "RECREATE")
+						fIsBranchCreated(false)//,
+						//fTFile(p_fileName, "RECREATE")
 {
   if(fFile.IsZombie())
   {
@@ -22,7 +22,7 @@ JPetWriter::JPetWriter(const char* p_fileName) :
 
 JPetWriter::~JPetWriter()
 {
-  closeTFile();
+  //  closeTFile();
 }
 
 void JPetWriter::CloseFile() {

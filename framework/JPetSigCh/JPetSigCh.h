@@ -48,6 +48,7 @@ class JPetSigCh: public TNamed
   inline JPetTRB getTRB() const {return fTRB; }
   inline JPetScin getScin() const { return fScin; }
   inline JPetBarrelSlot getBarrelSlot() const { return fBarrelSlot; }
+  inline EdgeType getType() const { return fType; }
 
   bool isSlow() const ;
   /* float getTime(EdgeType type) const ; */
