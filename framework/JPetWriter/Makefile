@@ -9,8 +9,8 @@ DICT_OBJECTS  =  $(SOURCES:.cpp=Dict.cpp)
 OBJECTS      +=  $(SOURCES:.cpp=Dict.o)
 HEADERS       =  $(SOURCES:.cpp=.h) 
 
-%.o: %.cpp
-	$(CC) $^ -o $@  -c $(COPTS)
+%.o: %.cpp %.h
+	$(CC) $< -o $@  -c $(COPTS)
 all: $(DICT_OBJECTS) $(OBJECTS)
 %Dict.cpp:
 	@echo "Generating dictionary ..."
