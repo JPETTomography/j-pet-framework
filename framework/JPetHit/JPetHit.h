@@ -69,7 +69,7 @@ class JPetHit : public TNamed {
               fLeftSignal = leftSignal;
 	      fRightSignal = rightSignal;}
   inline void SetLeftSignal(JPetSignal* LeftSignal) {fLeftSignal=LeftSignal;}
-  inline void SetRightRight(JPetSignal* RightSignal) {fRightSignal=RightSignal;}
+  inline void SetRightSignal(JPetSignal* RightSignal) {fRightSignal=RightSignal;}
   //inline const JPetSignals& GetSignals() const {return *fSignals;};
   //inline void SetScintillator(TRef fScintillator) {fScintillator=Scintillator;}
   inline void SetBarrelSlot(JPetBarrelSlot* BarrelSlot) {fBarrelSlot=BarrelSlot;}

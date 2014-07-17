@@ -10,10 +10,13 @@
 
 #include "../JPetSigCh/JPetSigCh.h"
 #include <TNamed.h>
+#include <TClonesArray.h>
 #include <cassert>
 #include <vector>
 
 /// structure mimics the structure History described in the  PET UJ Report 19 ->table 39 (p.18)
+
+/*
 struct History: public TObject {
  public:
   History(int hld = 0, int tslot = 0, int channel = 0, int daq = 0) :
@@ -49,16 +52,16 @@ struct ExtendedThreshold {
   JPetSigCh fSigCh;
   ClassDef(ExtendedThreshold,1);
 };
-
+*/
 
 
 class JPetSignal: public TNamed
 {
  public:
-  enum Edge {kFalling, kRising};
+  /* enum Edge {kFalling, kRising}; */
 
   JPetSignal();
-  JPetSignal(double time, double qual, bool left, const std::vector<ExtendedThreshold>& falling, const std::vector<ExtendedThreshold>& rising);
+  //  JPetSignal(double time, double qual, bool left, const std::vector<ExtendedThreshold>& falling, const std::vector<ExtendedThreshold>& rising);
   virtual ~JPetSignal();
   inline float GetT() const {
     assert(fTime >= 0);
@@ -71,9 +74,13 @@ class JPetSignal: public TNamed
   inline bool IsLeft() const {
     return fLeft;
   }
-  int GetNTresholds(Edge edge) const;
+  int GetNPoints(JPetSigCh::EdgeType edge) const;
 
+  void AddPoint(const JPetSigCh& sigch);
 
+  const TClonesArray & GetPoints(JPetSigCh::EdgeType edge) const;
+
+  /*
   inline void setExtendedThreshold(const ExtendedThreshold& thr, Edge edge, int index) {
     assert((edge == kRising) || (edge == kFalling));
     assert(index >= 0);
@@ -100,14 +107,20 @@ class JPetSignal: public TNamed
     return fFallingPoints;
   }
   inline const std::vector<ExtendedThreshold>& getRisingPoints() const {
-    return fRisingPoints;
+  return fRisingPoints;
   }
+  */
+
  private:
   double fTime;
   double fQualityOfTime;
   bool fLeft;
-  std::vector<ExtendedThreshold> fFallingPoints;
-  std::vector<ExtendedThreshold> fRisingPoints;
+  TClonesArray fFallingPoints;
+  TClonesArray fRisingPoints;
+  int fNFalling;
+  int fNRising;
+  /* std::vector<ExtendedThreshold> fFallingPoints; */
+  /* std::vector<ExtendedThreshold> fRisingPoints; */
   ClassDef(JPetSignal, 1);
 };
 #endif /*  !JPETSIGNAL_H */

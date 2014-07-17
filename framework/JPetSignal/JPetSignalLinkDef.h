@@ -5,9 +5,9 @@
 #pragma link off all functions;
 #pragma link C++ nestedclasses;
 
-#pragma link C++ struct History;
-#pragma link C++ struct ExtendedThreshold;
-#pragma link C++ std::vector<ExtendedThreshold>;
+//#pragma link C++ struct History;
+//#pragma link C++ struct ExtendedThreshold;
+//#pragma link C++ std::vector<ExtendedThreshold>;
 
 #pragma link C++ class JPetSignal+;
 
