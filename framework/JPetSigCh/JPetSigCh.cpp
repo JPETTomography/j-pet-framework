@@ -20,6 +20,10 @@ JPetSigCh::JPetSigCh(const JPetSigCh& obj)
   init();
   if (this != &obj) {
     fValue = obj.fValue;
+    fType = obj.fType;
+    fPMID = obj.fPMID;
+    fThreshold = obj.fThreshold;
+    
     /* fIsSlow = obj.fIsSlow; */
     /* fIsComplete = obj.fIsComplete; */
     /* fPM = obj.fPM; */

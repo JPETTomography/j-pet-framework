@@ -25,6 +25,9 @@ class JPetSigCh: public TNamed
     using std::swap;
     swap(first.fValue, second.fValue);
     swap(first.fType, second.fType);
+    swap(first.fPMID, second.fPMID);
+    swap(first.fThreshold, second.fThreshold);
+
     /* swap(first.fChannels, second.fChannels); */
     /* swap(first.fIsSlow, second.fIsSlow); */
     /* swap(first.fIsComplete, second.fIsComplete); */
@@ -64,6 +67,12 @@ class JPetSigCh: public TNamed
   inline void setValue( float val ) { fValue = val; }
   inline void setType( EdgeType type ) { fType = type; }
 
+  inline void setPMID( Int_t pmid ) { fPMID = pmid; }
+  inline void setThreshold( float thr ) { fThreshold = thr; }
+  
+  inline Int_t getPMID() const { return fPMID; }
+  inline float getThreshold() const { return fThreshold; }
+
 /*
   inline void setSlow( bool isSlow ) { fIsSlow = isSlow; }
   inline void setComplete( bool isComplete ) { fIsComplete = isComplete; }
@@ -71,6 +80,8 @@ class JPetSigCh: public TNamed
   ClassDef(JPetSigCh, 1);
 
  protected:
+  Int_t fPMID;
+  float fThreshold;
   EdgeType fType;
   float fValue;
   /*
