@@ -21,3 +21,27 @@ JPetEvent::JPetEvent(float Time, float QualityOfTime, JPetHit& firstHit, JPetHit
 
 JPetEvent::~JPetEvent() {
 }
+
+JPetEvent::AddHit(JPetHit* hit){
+  assert( hit != NULL );
+  if( fFirstHit == NULL ){
+    fFirstHit = hit;
+    return 1;
+  }else if( fSecondHit == NULL){
+    fSecondHit = hit;
+    return 2;
+  }else{
+    return 0;
+  }
+}
+
+JPetHit & operator[](int i) const{
+  assert( i < 2 && i > 0 );
+  if( i==0 ){
+    return *fFirstHit;
+  }else if(i==1){
+    return *fSecondHit;
+  }else{
+    return NULL;
+  }
+}

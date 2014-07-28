@@ -7,6 +7,11 @@
 #include "../JPetSigCh/JPetSigCh.h"
 #include <TClonesArray.h>
 
+/**
+ * @brief Class representing a time window of the TRB board.
+ *
+ * A single TSlot contains many SigCh objects representing TDC hits recorded during a time window of the TRB board. 
+ */
 class JPetTSlot: public TNamed
 {
  public:
@@ -16,13 +21,30 @@ class JPetTSlot: public TNamed
     fSize = 0;
   }
 
-  inline void addCh(JPetSigCh& new_ch) { new (fSigChannels[fSize++]) JPetSigCh(new_ch); }
+  void addCh(JPetSigCh& new_ch);
 
   inline size_t size() const { return fSigChannels.GetEntries(); }
   inline size_t getNumberOfSigCh() const { return fSigChannels.GetEntries(); }
   inline const TClonesArray & getSigChVect() const { return fSigChannels; }
-  inline JPetSigCh * operator[](int index) const { return (JPetSigCh*)fSigChannels[index]; }
+  /**
+   * @brief Get i-th SigCh object from this time window as if from an array
+   *
+   * @param i number of SigCh object to be returned; i should be between 0 and getNumberOfSigCh-1 
+   */
+  inline JPetSigCh * operator[](int i) const { return (JPetSigCh*)fSigChannels[i]; }
+  /**
+   * @brief Get the index number of this TSlot
+   *
+   * Each TSlot (time window) in a HLD file is assigned an index number, counting from first TSlot in the file. This number may be useful if empty TSlots are skipped during analysis.
+   */
   inline unsigned int getIndex() const { return fIndex; }
+
+  /**
+   * @brief Get the index number of this TSlot
+   *
+   * Each TSlot (time window) in a HLD file is assigned an index number, counting from first TSlot in the file. This number may be useful if empty TSlots are skipped during analysis.
+   * @oaram index a squential number of this TSlot counting from sirst TSlot in a HLD file
+   */
   inline void setIndex(unsigned int index) { fIndex = index; }
 
   virtual ~JPetTSlot() {
@@ -30,10 +52,11 @@ class JPetTSlot: public TNamed
   }
 
   ClassDef(JPetTSlot, 1);
+
  private:
   int fSize;
   TClonesArray fSigChannels;
-  unsigned int fIndex;
+  unsigned int fIndex; ///< sequential number of this TSlot in the HLD file
 };
 
 #endif
