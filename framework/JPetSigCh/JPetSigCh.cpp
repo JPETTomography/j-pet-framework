@@ -9,106 +9,29 @@ void JPetSigCh::init()
 {
   SetNameTitle("JPetSigCh", "Signal Channel Structure");
   fValue = kTimeUnset;
-  /* 
-  fIsSlow = false;
-  fIsComplete = false; 
-  */
 }
 
-JPetSigCh::JPetSigCh(const JPetSigCh& obj)
-{
-  init();
-  if (this != &obj) {
-    fValue = obj.fValue;
-    fType = obj.fType;
-    fPMID = obj.fPMID;
-    fThreshold = obj.fThreshold;
-    
-    /* fIsSlow = obj.fIsSlow; */
-    /* fIsComplete = obj.fIsComplete; */
-    /* fPM = obj.fPM; */
-    /* fTRB = obj.fTRB; */
-    /* fScin = obj.fScin; */
-    /* fBarrelSlot = obj.fBarrelSlot; */
-    /* fChannels = obj.fChannels; */
-  }
-}
-
-JPetSigCh& JPetSigCh::operator=(JPetSigCh obj)
-{
-  my_swap(*this, obj);
-  return *this;
-}
-
-/*
-JPetSigCh::JPetSigCh(float edge_time, float fall_edge_time)
-{
-  init();
-  if (fall_edge_time == 0) fIsSlow = true;
-  addCh(edge_time, fall_edge_time);
-}
-*/
 
 JPetSigCh::JPetSigCh(EdgeType Edge, float EdgeTime)
 {
   init();
   // @todo: perform some sanity checks of the given values
+  assert( EdgeTime > 0. );
+
   fType = Edge;
   fValue = EdgeTime;
 
 }
 
-/*
-float JPetSigCh::getTime(EdgeType type) const {
-  assert ((type == kRising) || (type == kFalling));
-  if (type == kRising) return fChannels.first;
-  if (type == kFalling) { 
-    if (isSlow()) {
-      ERROR("This instance of JPetSigCh is of slow type, hence has no falling edge data.");
-      return 0;
-    }
-    return fChannels.second;
+bool JPetSigCh::isCharge() const{
+  if( fType == kCharge ){
+    return true;
   }
-  return 0;
+  return false;
 }
-*/
 
-/*
-template <class T>
-void JPetSigCh::set(T** dest, const T& source) throw(std::bad_alloc)
-{
-  assert(dest != 0);
-
-  if ( &source == 0 && *dest != 0 ) {
-    delete *dest;
-    *dest = 0;
-    return;
-  }
-
-  if (&source != 0) {
-    if (*dest == 0) {
-      try {
-        *dest = new T;
-      } catch (std::bad_alloc& b_a) {
-        ERROR("Could not allocate memory.");
-        ERROR(b_a.what());
-      }
-    }
-    ** dest = source;
-  }
-}
-*/
-
-/*
-void JPetSigCh::addCh(float rise_edge_time, float fall_edge_time)
-{
-  fChannels.first = rise_edge_time;
-  fChannels.second = fall_edge_time;
-}
-*/
-
-bool JPetSigCh::isSlow() const{
-  if( fType == kSlow ){
+bool JPetSigCh::isTime() const{
+  if( fType == kRising || fType == kFalling ){
     return true;
   }
   return false;
