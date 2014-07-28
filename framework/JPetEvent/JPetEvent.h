@@ -42,7 +42,7 @@ class JPetEvent: public TNamed {
    *
    * @param i should be either 0 or 1 as the event can have 0-2 hits
    */
-  JPetHit & operator[](int i) const;
+  const JPetHit & operator[](int i) const;
   //inline const JPetHits& GetHits() const {return *fHits;};
   // inline void SetHits(JPetHits* hits) {fHits = hits;};
   // inline void SetHits(JPetHits& hits) {fHits = &hits;};
