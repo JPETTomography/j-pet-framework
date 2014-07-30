@@ -63,10 +63,10 @@ class JPetHit : public TNamed {
   inline const float GetPos (int index) const {return (*fPos)(index);}
   inline const TVector3& GetPos() const {return *fPos;}
   inline const JPetSignal& GetSignal(Signal pos) const {
-                     if(pos==kLeft) return *fLeftSignal;
-		     else return *fRightSignal;}
-  inline const JPetSignal& GetLeftSignal() const {return *fLeftSignal;}
-  inline const JPetSignal& GetRightSignal() const {return *fRightSignal;}
+                     if(pos==kLeft) return fLeftSignal;
+		     else return fRightSignal;}
+  inline const JPetSignal& GetLeftSignal() const {return fLeftSignal;}
+  inline const JPetSignal& GetRightSignal() const {return fRightSignal;}
   //inline const JPetSignals& GetSignals() const {return *fSignals;};
   inline JPetScin * GetScintillator() const {return (JPetScin*)fScintillator.GetObject();}
   inline const JPetBarrelSlot * GetBarrelSlot() const {return (JPetBarrelSlot*)fBarrelSlot.GetObject();}
@@ -92,11 +92,11 @@ class JPetHit : public TNamed {
   inline void SetPos (float x,float y,float z) {fPos->SetXYZ(x,y,z);}
   //inline void SetSignals (JPetSignals* signals) {fSignals = signals;};
   //inline void SetSignals (JPetSignals& signals) {fSignals = &signals;};
-  inline void SetSignals (JPetSignal* leftSignal, JPetSignal* rightSignal) {
+  inline void SetSignals (JPetSignal & leftSignal, JPetSignal & rightSignal) {
               fLeftSignal = leftSignal;
 	      fRightSignal = rightSignal;}
-  inline void SetLeftSignal(JPetSignal* LeftSignal) {fLeftSignal=LeftSignal;}
-  inline void SetRightSignal(JPetSignal* RightSignal) {fRightSignal=RightSignal;}
+  inline void SetLeftSignal(JPetSignal LeftSignal) {fLeftSignal=LeftSignal;}
+  inline void SetRightSignal(JPetSignal RightSignal) {fRightSignal=RightSignal;}
   //inline const JPetSignals& GetSignals() const {return *fSignals;};
   //inline void SetScintillator(TRef fScintillator) {fScintillator=Scintillator;}
   inline void SetBarrelSlot(JPetBarrelSlot* bs) {fBarrelSlot.SetObject(bs);}
@@ -114,8 +114,8 @@ class JPetHit : public TNamed {
   float fQualityOfTimeDiff;
   float fPosAlongStrip; ///< reconstructed position along scintillator strip (from "left" to "right") [cm]
   TVector3* fPos;
-  JPetSignal* fLeftSignal;
-  JPetSignal* fRightSignal;
+  JPetSignal fLeftSignal;
+  JPetSignal fRightSignal;
 
   // references to parametric objects
   TRef fBarrelSlot; ///< BarrelSlot in which the hit was recorded
