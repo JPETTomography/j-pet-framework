@@ -57,11 +57,11 @@ class JPetHit : public TNamed {
    * @return position along the strip in cm, measured from the "left" end of the strip.
    */
   inline const float GetPosAlongStrip() const {return fPosAlongStrip;}
-  inline const float GetPosX() const {return fPos->X();}
-  inline const float GetPosY() const  {return fPos->Y();}
-  inline const float GetPosZ() const  {return fPos->Z();}
-  inline const float GetPos (int index) const {return (*fPos)(index);}
-  inline const TVector3& GetPos() const {return *fPos;}
+  inline const float GetPosX() const {return fPos.X();}
+  inline const float GetPosY() const  {return fPos.Y();}
+  inline const float GetPosZ() const  {return fPos.Z();}
+  inline const float GetPos (int index) const {return fPos(index);}
+  inline const TVector3& GetPos() const {return fPos;}
   inline const JPetSignal& GetSignal(Signal pos) const {
                      if(pos==kLeft) return fLeftSignal;
 		     else return fRightSignal;}
@@ -86,10 +86,10 @@ class JPetHit : public TNamed {
    * The position should be in cm, measured from the "left" end of the strip. This value should be set after calculation of the position using the time difference of the two signals.
    */
   inline void SetPosAlongStrip(float pos) {fPosAlongStrip = pos;}
-  inline void SetPosX(float x) {fPos->SetX(x);}
-  inline void SetPosY(float y) {fPos->SetY(y);}
-  inline void SetPosZ(float z) {fPos->SetZ(z);}
-  inline void SetPos (float x,float y,float z) {fPos->SetXYZ(x,y,z);}
+  inline void SetPosX(float x) {fPos.SetX(x);}
+  inline void SetPosY(float y) {fPos.SetY(y);}
+  inline void SetPosZ(float z) {fPos.SetZ(z);}
+  inline void SetPos (float x,float y,float z) {fPos.SetXYZ(x,y,z);}
   //inline void SetSignals (JPetSignals* signals) {fSignals = signals;};
   //inline void SetSignals (JPetSignals& signals) {fSignals = &signals;};
   inline void SetSignals (JPetSignal & leftSignal, JPetSignal & rightSignal) {
@@ -113,7 +113,7 @@ class JPetHit : public TNamed {
   float fTimeDiff; ///< reconstructed time difference between signals at two ends of scintillator
   float fQualityOfTimeDiff;
   float fPosAlongStrip; ///< reconstructed position along scintillator strip (from "left" to "right") [cm]
-  TVector3* fPos;
+  TVector3 fPos;
   JPetSignal fLeftSignal;
   JPetSignal fRightSignal;
 
