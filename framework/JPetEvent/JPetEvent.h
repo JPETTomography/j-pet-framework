@@ -49,21 +49,22 @@ class JPetEvent: public TNamed {
   /**
    * @brief Set both hits of this event at once.
    */
-  inline void SetHits(JPetHit* firstHit, JPetHit* secondHit) {
-              fFirstHit = firstHit;
-	      fSecondHit = secondHit;};
+  inline void SetHits(JPetHit & firstHit, JPetHit & secondHit) {
+    fFirstHit=new JPetHit( firstHit );
+    fSecondHit= new JPetHit( secondHit );
+  }
   /**
    * @brief Set the first hit of this event.
    *
    * Using this method the user is responsible for controlling which hit is first and second and ensuring that both hits of the events are set. 
    */
-  inline void SetFirstHit(JPetHit* firstHit) {fFirstHit=firstHit;};
+  inline void SetFirstHit(JPetHit & firstHit) {fFirstHit=new JPetHit( firstHit ); }
   /**
    * @brief Set the second hit of this event.
    *
    * Using this method the user is responsible for controlling which hit is first and second and ensuring that both hits of the events are set.
    */
-  inline void SetSecondHit(JPetHit* secondHit) {fSecondHit=secondHit;};
+  inline void SetSecondHit(JPetHit & secondHit) {fSecondHit= new JPetHit( secondHit ); };
   /**
    * @brief Add a JPetHit object to this event
    *

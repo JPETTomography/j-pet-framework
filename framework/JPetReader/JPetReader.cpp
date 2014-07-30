@@ -15,8 +15,7 @@ JPetReader::JPetReader(const char* p_filename) :
 						fBranch(0), 
 						fObject(0), 
 						fTree(0), 
-						fFile(NULL),
-						fTFile(p_filename, "READ")
+						fFile(NULL)
 {
   /*if(OpenFile(p_filename))
   {
@@ -27,7 +26,6 @@ JPetReader::JPetReader(const char* p_filename) :
 JPetReader::~JPetReader()
 {
   CloseFile();
-  closeTFile();
 }
 
 void JPetReader::CloseFile () {
@@ -79,11 +77,3 @@ TObject* JPetReader::GetHeader(){
     return fTree->GetUserInfo()->At(JPetUserInfoStructure::kHeader);
 }
 
-void JPetReader::closeTFile()
-{
-  if(fTFile.IsOpen())
-  {
-    fTFile.cd();
-    fTFile.Close();
-  }
-}

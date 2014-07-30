@@ -84,7 +84,7 @@ class JPetSignal: public TNamed
   /**
    * @brief Add a JPetSigCh object to the signal.
    *
-   * The JPetSigCh object is automatically added to the array of rising-edge or falling-edge points depending on the type ehich was set in it.
+   * The JPetSigCh object is automatically added to the array of rising-edge or falling-edge points depending on the type which was set in it. The array is sorted afterwards so that the JPetSigCh objects are sorted by ascending value of their threshold.
    */  
   void AddPoint(const JPetSigCh& sigch);
 
@@ -94,6 +94,18 @@ class JPetSignal: public TNamed
    * @param edge Either JPetSigCh::kFalling or JPetSigCh::kRising
    */
   const TClonesArray & GetPoints(JPetSigCh::EdgeType edge) const;
+
+  /**
+   * @brief Returns a reference to a single point from a rising of falling edge of the signal
+   *
+   * Note that the points are sorted by their threshold values, so that i=0 and edge=JPetSigCh::kFalling should return the first point of the falling edge.
+   *
+   * @param edge Either JPetSigCh::kFalling or JPetSigCh::kRising
+   * @param i index of the point, should be between 0 and the value returned by GetNPoints(edge)-1
+   */
+  const JPetSigCh & GetPoint(int i, JPetSigCh::EdgeType edge) const;
+  
+  
 
   inline void SetPMID( Int_t pmid ) { fPMID = pmid; }
   inline Int_t GetPMID() const { return fPMID; }

@@ -45,12 +45,14 @@ int JPetSignal::GetNPoints(JPetSigCh::EdgeType edge) const
 
 void JPetSignal::AddPoint(const JPetSigCh& sigch){
   
-  assert((sigch.getType() == JPetSigCh::kRising) || (sigch.getType() == JPetSigCh::kFalling));
-
-  if (sigch.getType() == JPetSigCh::kRising && fNRising < 4) {
+  assert((sigch.GetType() == JPetSigCh::kRising) || (sigch.GetType() == JPetSigCh::kFalling));
+  
+  if (sigch.GetType() == JPetSigCh::kRising && fNRising < 4) {
     new (fRisingPoints[fNRising++]) JPetSigCh(sigch);
+    fRisingPoints.Sort();
   } else if(fNFalling < 4) {
     new (fFallingPoints[fNFalling++]) JPetSigCh(sigch);
+    fFallingPoints.Sort();
   }
   
 }
@@ -62,4 +64,11 @@ const TClonesArray & JPetSignal::GetPoints(JPetSigCh::EdgeType edge) const{
   } else {
     return fFallingPoints;
   }
+}
+
+const JPetSigCh & JPetSignal::GetPoint(int i, JPetSigCh::EdgeType edge) const{
+  assert( i>=0 && i<GetNPoints( edge ) );
+  
+  JPetSigCh * sc = (JPetSigCh*)(GetPoints( edge )[i]);
+  return *sc;
 }

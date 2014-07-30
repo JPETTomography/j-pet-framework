@@ -23,7 +23,7 @@ public:
 enum EdgeType { kRising, kFalling, kCharge };
 const static float kTimeUnset;
 
-JPetSigCh() { init(); }
+JPetSigCh() { Init(); }
 JPetSigCh(EdgeType Edge, float EdgeTime);
 ~JPetSigCh() {}
 
@@ -32,43 +32,52 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
  *
  * @return either time with respect to beginning of the time window (TSlot) or charge (if getType()==kCharge)
  */
-  inline float getValue() const { return fValue; }
+  inline float GetValue() const { return fValue; }
 
   /**
    * @brief Used to obtain the type of the signal information
    *
    * Rising edge, falling edge or charge (kCharge)
    */
-  inline EdgeType getType() const { return fType; }
+  inline EdgeType GetType() const { return fType; }
 
-  inline JPetPM * getPM() const { return (JPetPM*) fPM.GetObject(); }
-  inline JPetTRB * getTRB() const {return (JPetTRB*) fTRB.GetObject(); }
-  inline JPetKB * getKB() const {return (JPetKB*) fKB.GetObject(); }
+  inline JPetPM * GetPM() const { return (JPetPM*) fPM.GetObject(); }
+  inline JPetTRB * GetTRB() const {return (JPetTRB*) fTRB.GetObject(); }
+  inline JPetKB * GetKB() const {return (JPetKB*) fKB.GetObject(); }
 
 /**
  * Returns true if the value of the signal represents charge information (integral of the signal calculated by front-end board)
  */
-  bool isCharge() const ;
+  bool IsCharge() const ;
  
 /**
  * Returns true if the value of the signal represents time information from the TDC
  */
-  bool isTime() const ;
+  bool IsTime() const ;
 
-  inline void setPM(JPetPM * pm) { fPM.SetObject( pm ); }
-  inline void setTRB(JPetTRB * trb) { fTRB.SetObject( trb ); }
-  inline void setKB(JPetKB * kb) { fKB.SetObject( kb ); }
+  inline void SetPM(JPetPM * pm) { fPM.SetObject( pm ); }
+  inline void SetTRB(JPetTRB * trb) { fTRB.SetObject( trb ); }
+  inline void SetKB(JPetKB * kb) { fKB.SetObject( kb ); }
 
-  inline void setValue( float val ) { fValue = val; }
-  inline void setType( EdgeType type ) { fType = type; }
+  inline void SetValue( float val ) { fValue = val; }
+  inline void SetType( EdgeType type ) { fType = type; }
 
-  inline void setPMID( Int_t pmid ) { fPMID = pmid; }
-  inline void setThreshold( float thr ) { fThreshold = thr; }
-  inline void setDAQch( Int_t daqch ) { fDAQch = daqch; }
+  inline void SetPMID( Int_t pmid ) { fPMID = pmid; }
+  inline void SetThreshold( float thr ) { fThreshold = thr; }
+  inline void SetDAQch( Int_t daqch ) { fDAQch = daqch; }
   
-  inline Int_t getPMID() const { return fPMID; }
-  inline float getThreshold() const { return fThreshold; }
-  inline Int_t getDAQch() const { return fDAQch; }
+  inline Int_t GetPMID() const { return fPMID; }
+  inline float GetThreshold() const { return fThreshold; }
+  inline Int_t GetDAQch() const { return fDAQch; }
+
+  /**
+   * @brief Compares this SigCh with another by their threshold value
+   *
+   * This method overrides TObject::Compare, see its reference.
+   */
+  Int_t Compare(const TObject* obj) const;
+  inline Bool_t IsSortable() const { return true; }
+  
 
   ClassDef(JPetSigCh, 1);
 
@@ -90,7 +99,7 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
   
 
   /* template <class T> void set(T** dest, const T& source) throw(std::bad_alloc); */
-  void init();
+  void Init();
 };
 
 #endif
