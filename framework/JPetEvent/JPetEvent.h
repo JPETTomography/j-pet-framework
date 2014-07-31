@@ -35,8 +35,8 @@ class JPetEvent: public TNamed {
   /// Set the reconstructed absolute time of the event wrt beginning of the run
   inline void SetTime(float time) {fTime = time;};
   inline void SetQualityOfTime(float qualityOfTime) {fQualityOfTime = qualityOfTime;};
-  inline const JPetHit& GetFirstHit() const {return *fFirstHit;};
-  inline const JPetHit& GetSecondHit() const {return *fSecondHit;};
+  inline const JPetHit& GetFirstHit() const {return fFirstHit;};
+  inline const JPetHit& GetSecondHit() const {return fSecondHit;};
   /**
    * @brief Access the hits of the event as elements if an array
    *
@@ -50,21 +50,22 @@ class JPetEvent: public TNamed {
    * @brief Set both hits of this event at once.
    */
   inline void SetHits(JPetHit & firstHit, JPetHit & secondHit) {
-    fFirstHit=new JPetHit( firstHit );
-    fSecondHit= new JPetHit( secondHit );
+    fFirstHit = firstHit;
+    fSecondHit = secondHit;
+    fNhits = 2;
   }
   /**
    * @brief Set the first hit of this event.
    *
    * Using this method the user is responsible for controlling which hit is first and second and ensuring that both hits of the events are set. 
    */
-  inline void SetFirstHit(JPetHit & firstHit) {fFirstHit=new JPetHit( firstHit ); }
+  inline void SetFirstHit(JPetHit & firstHit) {fFirstHit = firstHit; }
   /**
    * @brief Set the second hit of this event.
    *
    * Using this method the user is responsible for controlling which hit is first and second and ensuring that both hits of the events are set.
    */
-  inline void SetSecondHit(JPetHit & secondHit) {fSecondHit= new JPetHit( secondHit ); };
+  inline void SetSecondHit(JPetHit & secondHit) {fSecondHit = secondHit; };
   /**
    * @brief Add a JPetHit object to this event
    *
@@ -72,7 +73,7 @@ class JPetEvent: public TNamed {
    *
    * @return number of hits set in this event after adding the provided hit (i.e. 1 or 2), or 0 if the event already had two set hits (and the new hit was not added).
    */
-  int AddHit(JPetHit* hit);
+  int AddHit(JPetHit & hit);
   /// Set the reconstructed time difference between the two hits of the event
   inline void SetTimeDiff(float td) {fTimeDiff = td;}
   inline void SetQualityOfTimeDiff(float qtd) {fQualityOfTime = qtd;}
@@ -87,8 +88,9 @@ class JPetEvent: public TNamed {
   float fTimeDiff; ///< reconstructed time difference between the two hits of the event
   float fQualityOfTimeDiff;
 
-  JPetHit* fFirstHit;
-  JPetHit* fSecondHit;
+  JPetHit fFirstHit;
+  JPetHit fSecondHit;
+  float fNhits;
 
 };
 
