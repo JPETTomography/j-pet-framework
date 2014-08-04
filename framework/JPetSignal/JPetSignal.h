@@ -30,27 +30,31 @@ class JPetSignal: public TNamed
   virtual ~JPetSignal();
 
 
-  /// Returns the time reconstructed for this signal using its falling-edge and rising-edge points.
+  /**
+   * @brief Returns the time reconstructed for this signal using its falling-edge and rising-edge points.
+   *
+   * The time is in picoseconds and is the ABSOLUTE time w.r.t. beginning of measurement.
+   */
   inline float GetTime() const {
     assert(fTime >= 0);
     return fTime;
   }
 
   /**
-   * @brief Sets the reconstructed time of this signal.
+   * @brief Sets the reconstructed time of this signal [ps].
    *
-   * Intended to be used after a procedure which reconstructs the time using falling and rising edge points of the signal.
+   * Intended to be used after a procedure which reconstructs the time using falling and rising edge points of the signal. The time should be in picoseconds and should be the ABSLOUTE time w.r.t. beginning of measurement (it can be counted using the index of the TSlot * width of the time window).
    */
   inline void SetTime(float time){ fTime=time; }
 
   /**
-   * @brief Sets the reconstructed time of this signal.
+   * @brief Sets the reconstructed energy of this signal [keV].
    *
    * Intended to be used after a procedure which reconstructs energy using falling and rising edge points of the signal or using the charge from frontend electronics.
    */
   inline void SetEnergy(float energy){ fEnergy=energy; }
 
-  /// Returns the time reconstructed for this signal.
+  /// Returns the energy reconstructed for this signal [keV].
   inline float GetEnergy() const {
     assert(fEnergy >= 0);
     return fEnergy;
@@ -115,9 +119,9 @@ class JPetSignal: public TNamed
   inline JPetBarrelSlot * GetBarrelSlot() const { return (JPetBarrelSlot*) fBarrelSlot.GetObject(); }
     
  private:
-  double fTime; ///< time reconstructed for the whole signal
+  double fTime; ///< absolute time reconstructed for the whole signal [ps]
   double fQualityOfTime; ///< quantitative measure of the time reconstruction quality (scale is yet to be decided)
-  double fEnergy; ///< energy reconstructed for the whole signal
+  double fEnergy; ///< energy reconstructed for the whole signal [keV]
   double fQualityOfEnergy; ///< quantitative measure of the energy reconstruction quality (scale is yet to be decided)
   bool fLeft;
   TClonesArray fFallingPoints; ///< array of JPetSigCh objects from falling edge of the signal

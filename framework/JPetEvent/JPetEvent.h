@@ -29,10 +29,10 @@ class JPetEvent: public TNamed {
   JPetEvent();
   JPetEvent(float Time, float QualityOfTime, JPetHit& firstHit, JPetHit& secondHit);
   virtual ~JPetEvent();
-  /// Get the reconstructed absolute time of the event wrt beginning of the run
+  /// Get the reconstructed absolute time of the event wrt beginning of the run [ps]
   inline const float GetTime() const {return fTime;};
   inline const float GetQualityOfTime() const {return fQualityOfTime;};
-  /// Set the reconstructed absolute time of the event wrt beginning of the run
+  /// Set the reconstructed absolute time of the event wrt beginning of the run [ps]
   inline void SetTime(float time) {fTime = time;};
   inline void SetQualityOfTime(float qualityOfTime) {fQualityOfTime = qualityOfTime;};
   inline const JPetHit& GetFirstHit() const {return fFirstHit;};
@@ -74,18 +74,19 @@ class JPetEvent: public TNamed {
    * @return number of hits set in this event after adding the provided hit (i.e. 1 or 2), or 0 if the event already had two set hits (and the new hit was not added).
    */
   int AddHit(JPetHit & hit);
-  /// Set the reconstructed time difference between the two hits of the event
+  /// Set the reconstructed time difference between the two hits of the event [ps]
   inline void SetTimeDiff(float td) {fTimeDiff = td;}
   inline void SetQualityOfTimeDiff(float qtd) {fQualityOfTime = qtd;}
+  inline float GetTimeDiff() const { return fTimeDiff; }
 
   ClassDef(JPetEvent,1);
 
   private:
   
-  float fTime; ///< reconstructed absolute time of the event wrt to beginning of the run
+  float fTime; ///< reconstructed absolute time of the event wrt to beginning of the run [ps]
   float fQualityOfTime;
   
-  float fTimeDiff; ///< reconstructed time difference between the two hits of the event
+  float fTimeDiff; ///< reconstructed time difference between the two hits of the event [ps]
   float fQualityOfTimeDiff;
 
   JPetHit fFirstHit;
