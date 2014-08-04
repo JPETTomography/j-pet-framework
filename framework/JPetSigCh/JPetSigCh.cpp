@@ -46,9 +46,11 @@ Int_t JPetSigCh::Compare(const TObject* obj) const{
 
   JPetSigCh * that = (JPetSigCh*)obj;
 
-  if( that->GetThreshold() > this->GetThreshold() ){
+  /* if( that->GetThreshold() > this->GetThreshold() ){ */
+  if( that->GetValue() > this->GetValue() ){
     return -1;
-  }else if( that->GetThreshold() < this->GetThreshold() ){
+  /* }else if( that->GetThreshold() < this->GetThreshold() ){ */
+  }else if( that->GetValue() < this->GetValue() ){
     return 1;
   }
  

@@ -22,7 +22,7 @@ TString JPetTreeHeader::Stringify() const
   tmp.Append( "\nproducer version    :  " ).Append( TString::Itoa( fProducerVersion, 10.));
   tmp.Append("\n");
 
-  tmp.Append( "number if HLD files :  " ).Append( TString::Itoa( fHLDnames.size(), 10.));
+  tmp.Append( "number of HLD files :  " ).Append( TString::Itoa( fHLDnames.size(), 10.));
   tmp.Append( "\nList of HLD files:\n" );
   tmp.Append("-----------------------------------------------------------------\n");
   // iterate over all HLD files

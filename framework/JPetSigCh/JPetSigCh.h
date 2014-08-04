@@ -30,7 +30,7 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
 /**
  * @brief Used to obtain the time or charge carried by the TDC signal.
  *
- * @return either time with respect to beginning of the time window (TSlot) or charge (if getType()==kCharge)
+ * @return either time with respect to beginning of the time window [ps] (TSlot) or charge (if getType()==kCharge)
  */
   inline float GetValue() const { return fValue; }
 
@@ -58,7 +58,7 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
   inline void SetPM(JPetPM * pm) { fPM.SetObject( pm ); }
   inline void SetTRB(JPetTRB * trb) { fTRB.SetObject( trb ); }
   inline void SetKB(JPetKB * kb) { fKB.SetObject( kb ); }
-
+  // Set time wrt beginning of TSlot [ps] or charge
   inline void SetValue( float val ) { fValue = val; }
   inline void SetType( EdgeType type ) { fType = type; }
 
@@ -83,12 +83,12 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
 
  protected:
   EdgeType fType; ///< type of the SigCh: kFalling, kRising (time) or kCharge (charge)
-  float fValue; ///< main value of the SigCh; either time (if fType is kRiging or kFalling) or charge (if fType is kCharge)
+  float fValue; ///< main value of the SigCh; either time [ps] (if fType is kRiging or kFalling) or charge (if fType is kCharge)
 
   // these members can be used for simple analysis
   // if no parametric objects are available
   Int_t fPMID; ///< ID of Photomultiplier
-  float fThreshold; ///< value of threshold
+  float fThreshold; ///< value of threshold [mV]
   int fDAQch; ///< Number of DAQ channer from the raw HLD file
 
   // if parametric objects are available, these references should be used

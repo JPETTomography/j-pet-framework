@@ -41,11 +41,11 @@ class JPetHit : public TNamed {
   JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime, TVector3& Position, 
           JPetSignal& LeftSignal, JPetSignal& RightSignal, JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator);
   virtual ~JPetHit();
-  /// Returns the reconstructed energy of this hit
+  /// Returns the reconstructed energy of this hit [keV]
   inline const float GetEnergy() const {return fEnergy;}
   /// Returns a quantitative measure of the hit energy reconstruction quality
   inline const float GetQualityOfEnergy() const {return fQualityOfEnergy;}
-  /// Returns the time reconstructed for this hit
+  /// Returns the absolute time reconstructed for this hit [ps]
   inline const float GetTime() const {return fTime;}
   /// Returns the reconstructed time difference between signals on two ends of scintillator (difference "left" - "right") 
   inline const float GetTimeDiff() const {return fTimeDiff;}
@@ -71,13 +71,13 @@ class JPetHit : public TNamed {
   inline JPetScin * GetScintillator() const {return (JPetScin*)fScintillator.GetObject();}
   inline const JPetBarrelSlot * GetBarrelSlot() const {return (JPetBarrelSlot*)fBarrelSlot.GetObject();}
 
-  /// Sets the reconstructed energy of the hit
+  /// Sets the reconstructed energy of the hit [keV]
   inline void SetEnergy(float energy) {fEnergy = energy;}
   inline void SetQualityOfEnergy(float qualityOfEnergy) {fQualityOfEnergy = qualityOfEnergy;}
-  /// Sets the reconstructed time of the hit into scintillator
+  /// Sets the reconstructed time of the hit into scintillator [ps]
   inline void SetTime(float time) {fTime = time;}
   inline void SetQualityOfTime(float qualityOfTime) {fQualityOfTime = qualityOfTime;}
-  /// Sets the reconstructed time difference between two signals at ends of the scintillator (difference "left" - "right")
+  /// Sets the reconstructed time difference between two signals at ends of the scintillator (difference "left" - "right") [ps]
   inline void SetTimeDiff(float td) {fTimeDiff = td;}
   inline void SetQualityOfTimeDiff(float qtd) {fQualityOfTime = qtd;}
   /**
@@ -106,11 +106,11 @@ class JPetHit : public TNamed {
   
   private:
    
-  float fEnergy; ///< reconstructed energy of the hit
+  float fEnergy; ///< reconstructed energy of the hit [keV]
   float fQualityOfEnergy;
-  float fTime; ///< reconstructed time of the hit
+  float fTime; ///< reconstructed time of the hit [ps]
   float fQualityOfTime;
-  float fTimeDiff; ///< reconstructed time difference between signals at two ends of scintillator
+  float fTimeDiff; ///< reconstructed time difference between signals at two ends of scintillator [ps]
   float fQualityOfTimeDiff;
   float fPosAlongStrip; ///< reconstructed position along scintillator strip (from "left" to "right") [cm]
   TVector3 fPos;
