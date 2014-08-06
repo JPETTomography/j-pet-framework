@@ -69,3 +69,24 @@ JPetManager::~JPetManager()
     *taskIter = 0;
   }
 }
+
+/**
+ * @brief Get Input File name stripped off the extension and the suffixes like .tslot.* or .phys.*
+ *
+ * Example: if the file given on command line was ../file.phys.hit.root, this method will return ../file
+ */
+const char * JPetManager::getInputFileName() const{
+  std::string name = fCmdParser.getFileName().c_str(); 
+  // strip suffixes of type .tslot.* and .phys.*
+  int pos = name.find(".tslot");
+  if( pos == std::string::npos ){
+    pos = name.find(".phys");
+  }
+  if( pos == std::string::npos ){
+    pos = name.find(".hld");
+  }
+  if( pos != std::string::npos ){
+    name.erase( pos );
+  }
+  return name.c_str();
+}
