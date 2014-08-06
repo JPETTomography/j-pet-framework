@@ -26,3 +26,12 @@ void JPetAnalysisModule::RunSubmodules(){
 void JPetAnalysisModule::AddSubmodule( JPetAnalysisModule* new_submodule ){
 	fSubmodules.push_back( new_submodule );
 }
+
+int JPetAnalysisModule::AddStatsObject(TObject * statObj){
+  fStats.Add( statObj );
+  return fStats.GetEntries();
+}
+
+const TList * JPetAnalysisModule::GetStatsObjects() const{
+  return &fStats;
+}

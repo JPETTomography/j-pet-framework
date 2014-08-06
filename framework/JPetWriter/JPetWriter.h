@@ -42,6 +42,8 @@ public:
   bool write(const T &p_item, const std::string &p_objectName);
   template <class T>
   bool write(std::vector<T> &p_container, const std::string &p_objectName);
+
+  int WriteObject(const TObject* obj, const char* name){ return fFile.WriteObject(obj, name); }
   
   virtual void closeTFile(void);
   
