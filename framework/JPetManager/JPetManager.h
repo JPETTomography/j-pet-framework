@@ -29,7 +29,7 @@ class JPetManager: public TNamed {
   void Run();
   void AddTask(JPetAnalysisModule* mod);
   void ParseCmdLine(int argc, char** argv);
-  const char* getInputFileName() const { return fCmdParser.getFileName().c_str(); }
+  const char* getInputFileName() const;
   JPetParamManager & getParamManagerInstance() { return fParamManager; }
   void UnpackFile() { if(fCmdParser.fileTypeIsSet()) fUnpacker.Exec();}
  
