@@ -72,8 +72,15 @@ void JPetReader::ReadData (const char* objname) {
   fBranch->SetAddress(&fObject);
 }
 
-TObject* JPetReader::GetHeader(){
-    // @todo The same as in writer. At() should take an enum that keeps positions of different things.
-    return fTree->GetUserInfo()->At(JPetUserInfoStructure::kHeader);
+/**
+ * @brief Returns a copy of the header read from input file.
+ * 
+ * Using a copy rather than direct pointer is essential as the original header belongs to JPetReader::fTree and would be deleted along with it.
+ */
+JPetTreeHeader * JPetReader::GetHeader() const {
+  // get a pointer to a header wchich belongs to fTree
+  JPetTreeHeader * header =  (JPetTreeHeader*)fTree->GetUserInfo()->At(JPetUserInfoStructure::kHeader);
+  // return a COPY of this header
+  return new JPetTreeHeader( *header );
 }
 
