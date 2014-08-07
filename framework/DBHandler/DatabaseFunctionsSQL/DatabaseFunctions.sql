@@ -1,10 +1,6 @@
 /* 
   All functions functions which have been added to database.
-  Last update 27.04.2014
-  
-  [Last bug]
-  "Setup".id = "Run".id
-  "Setup".id = "Run".setup_id
+  Last update 01.06.2014
 */
 
 1)
@@ -184,7 +180,7 @@ BEGIN
       INNER JOIN "KBTRBConnection" ON "TRBInput".id = "KBTRBConnection".trbinput_id
       INNER JOIN "TRBConfigEntry" ON "KBTRBConnection".id = "TRBConfigEntry".id
       INNER JOIN "Setup" ON "TRBTOMBConnection".setup_id = "Setup".id
-      INNER JOIN "Run" ON "Setup".id = "Run".setup_id
+      INNER JOIN "Run" ON "Setup".id = "Run".id
     AND
       "Run".id = p_run_id
   LOOP
@@ -236,7 +232,7 @@ BEGIN
       INNER JOIN "PMKBConnection" ON "KonradBoardInput".id = "PMKBConnection".konradboardinput_id
       INNER JOIN "PhotoMultiplier" ON "PMKBConnection".photomultiplier_id = "PhotoMultiplier".id
       INNER JOIN "Setup" ON "TRBTOMBConnection".setup_id = "Setup".id
-      INNER JOIN "Run" ON "Setup".id = "Run".setup_id
+      INNER JOIN "Run" ON "Setup".id = "Run".id
     AND
       "Run".id = p_run_id
   LOOP
@@ -273,7 +269,7 @@ BEGIN
       INNER JOIN "TRBTOMBConnection" ON "TRBOutput".id = "TRBTOMBConnection".trboutput_id
       INNER JOIN "TOMBInput" ON "TRBTOMBConnection".tombinput_id = "TOMBInput".id
       INNER JOIN "Setup" ON "TRBTOMBConnection".setup_id = "Setup".id
-      INNER JOIN "Run" ON "Setup".id = "Run".setup_id
+      INNER JOIN "Run" ON "Setup".id = "Run".id
     AND
       "Run".id = p_run_id
   LOOP
@@ -318,7 +314,7 @@ BEGIN
       INNER JOIN "KBTRBConnection" ON "TRBInput".id = "KBTRBConnection".trbinput_id
       INNER JOIN "KonradBoardOutput" ON "KBTRBConnection".konradboardoutput_id = "KonradBoardOutput".id
       INNER JOIN "Setup" ON "TRBTOMBConnection".setup_id = "Setup".id
-      INNER JOIN "Run" ON "Setup".id = "Run".setup_id
+      INNER JOIN "Run" ON "Setup".id = "Run".id
     AND
       "Run".id = p_run_id      
   LOOP
@@ -329,7 +325,285 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM passedInformationIsTimeBasedOnTOMBInputIdFunction(1);
 
-9)
+
+
+/**! PONIZSZE FUNKCJE TRZEBA POPRAWIC !**/
+
+
+***********Scintillators************
+
+
+CREATE OR REPLACE FUNCTION getScintillatorsData(IN p_run_id INTEGER)
+RETURNS TABLE
+(
+  scintillator_id INTEGER,
+  scintillator_isactive BOOLEAN,
+  scintillator_status CHARACTER VARYING(255),
+
+  scintillator_length DOUBLE PRECISION,
+  scintillator_width DOUBLE PRECISION,
+  scintillator_height DOUBLE PRECISION,
+  scintillator_description CHARACTER VARYING(255),
+
+  scintillatortype_id INTEGER,
+  scintillatortype_name CHARACTER VARYING(255),
+  scintillatortype_description CHARACTER VARYING(255),
+
+  scintillatorcalibration_id INTEGER,
+  scintillatorcalibration_name CHARACTER VARYING(255),
+  scintillatorcalibration_attlength REAL,
+
+  user_id INTEGER,
+  user_name CHARACTER VARYING(255),
+  user_lastname CHARACTER VARYING(255),
+  user_login CHARACTER VARYING(255),
+  user_password  CHARACTER VARYING(255),
+  user_isroot BOOLEAN,
+  user_creationdate TIMESTAMP,
+  user_lastlogindate TIMESTAMP,
+
+  setup_id INTEGER,
+  run_id INTEGER  
+) AS
+$BODY$
+BEGIN
+  FOR 
+    scintillator_id,
+    scintillator_isactive,
+    scintillator_status,
+
+    scintillator_length,
+    scintillator_width,
+    scintillator_height,
+    scintillator_description,
+
+    scintillatortype_id,
+    scintillatortype_name,
+    scintillatortype_description,
+
+    scintillatorcalibration_id,
+    scintillatorcalibration_name,
+    scintillatorcalibration_attlength,
+
+    user_id,
+    user_name,
+    user_lastname,
+    user_login,
+    user_password,
+    user_isroot,
+    user_creationdate,
+    user_lastlogindate,
+
+    setup_id,
+    run_id
+
+  IN
+
+      SELECT
+	"Scintillator".id AS scintillator_id,
+	"Scintillator".isactive AS scintillator_isactive,
+	"Scintillator".status AS scintillator_status,
+	"Scintillator".length AS scintillator_length,
+	"Scintillator".width AS scintillator_width,
+	"Scintillator".height AS scintillator_height,
+	"Scintillator".description AS scintillator_description,
+
+	"ScintillatorType".id AS scintillatortype_id,
+	"ScintillatorType".name AS scintillatortype_name,
+	"ScintillatorType".description AS scintillatortype_description,
+
+	"ScintillatorCalibration".id AS scintillatorcalibration_id,
+	"ScintillatorCalibration".name AS scintillatorcalibration_name,
+	"ScintillatorCalibration".attlength AS scintillatorcalibration_attlength,
+
+	"PETUser".id AS user_id,
+	"PETUser".name AS user_name,
+	"PETUser".lastname AS user_lastname,
+	"PETUser".login AS user_login,
+	"PETUser".password AS user_password,
+	"PETUser".isroot AS user_isroot,
+	"PETUser".creationdate AS user_creationdate,
+	"PETUser".lastlogindate AS user_lastlogindate,
+	
+	"Setup".id AS setup_id,
+	"Run".id AS run_id
+
+      FROM "ScintillatorCalibration", "Scintillator", "ScintillatorType", "SLSCConnection", "PETUser", "Run", "Setup"
+	WHERE
+	  "Scintillator".scintillatorcalibration_id = "ScintillatorCalibration".id
+	  AND
+	  "Scintillator".scintillatortype_id = "ScintillatorType".id
+	  AND
+	  "SLSCConnection".scintillator_id = "Scintillator".id
+	  AND
+	  "SLSCConnection".setup_id = "Setup".id
+	  AND
+	  "Run".setup_id = "Setup".id
+	  AND
+	  "Scintillator".creator_id = "PETUser".id
+	  AND
+	  "Run".id = p_run_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getScintillatorsData(1);
+
+
+***********PhotoMultipliers************
+
+
+CREATE OR REPLACE FUNCTION getPhotoMultipliersData(IN p_run_id INTEGER)
+RETURNS TABLE
+(
+  hvpmconnection_id INTEGER,
+  hvpmconnection_isrightside BOOLEAN,
+
+  photomultiplier_id INTEGER,
+  photomultiplier_isactive BOOLEAN,
+  photomultiplier_status CHARACTER VARYING(255),
+  photomultiplier_name CHARACTER VARYING(255),
+  photomultiplier_maxhv DOUBLE PRECISION,
+  photomultiplier_description CHARACTER VARYING(255),
+  photomultiplier_producer CHARACTER VARYING(255),
+  photomultiplier_boughtdate TIMESTAMP,
+  photomultiplier_serialnumber CHARACTER VARYING(255),
+  photomultiplier_takespositivevoltage BOOLEAN,
+
+  pmmodel_id INTEGER,
+  pmmodel_name CHARACTER VARYING(255),
+
+  pmcalibration_id INTEGER,
+  pmcalibration_name CHARACTER VARYING(255),
+  pmcalibration_opthv REAL,
+  pmcalibration_c2e_1 REAL,
+  pmcalibration_c2e_2 REAL,
+  pmcalibration_gainalpha REAL,
+  pmcalibration_gainbeta REAL,
+
+  user_id INTEGER,
+  user_name CHARACTER VARYING(255),
+  user_lastname CHARACTER VARYING(255),
+  user_login CHARACTER VARYING(255),
+  user_password  CHARACTER VARYING(255),
+  user_isroot BOOLEAN,
+  user_creationdate TIMESTAMP,
+  user_lastlogindate TIMESTAMP,
+
+  setup_id INTEGER,
+  run_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    hvpmconnection_id,
+    hvpmconnection_isrightside,
+
+    photomultiplier_id,
+    photomultiplier_isactive,
+    photomultiplier_status,
+    photomultiplier_name,
+    photomultiplier_maxhv,
+    photomultiplier_description,
+    photomultiplier_producer,
+    photomultiplier_boughtdate,
+    photomultiplier_serialnumber,
+    photomultiplier_takespositivevoltage,
+
+    pmmodel_id,
+    pmmodel_name,
+
+    pmcalibration_id,
+    pmcalibration_name,
+    pmcalibration_opthv,
+    pmcalibration_c2e_1,
+    pmcalibration_c2e_2,
+    pmcalibration_gainalpha,
+    pmcalibration_gainbeta,
+
+    user_id,
+    user_name,
+    user_lastname,
+    user_login,
+    user_password,
+    user_isroot,
+    user_creationdate,
+    user_lastlogindate,
+
+    setup_id,
+    run_id
+
+  IN
+
+      SELECT
+	"HVPMConnection".id AS hvpmconnection_id,
+	"HVPMConnection".isrightside AS hvpmconnection_isrightside,
+
+	"PhotoMultiplier".id AS photomultiplier_id,
+	"PhotoMultiplier".isactive AS photomultiplier_isactive,
+	"PhotoMultiplier".status AS photomultiplier_status,
+	"PhotoMultiplier".name AS photomultiplier_name,
+	"PhotoMultiplier".maxhv AS photomultiplier_maxhv,
+	"PhotoMultiplier".description AS photomultiplier_description,
+	"PhotoMultiplier".producer AS photomultiplier_producer,
+	"PhotoMultiplier".boughtdate AS photomultiplier_boughtdate,
+	"PhotoMultiplier".serialnumber AS photomultiplier_serialnumber,
+	"PhotoMultiplier".takespositivevoltage AS photomultiplier_takespositivevoltage,
+
+	"PhotoMultiplier".pmmodel_id AS pmmodel_id,
+	"PMModel".name AS pmmodel_name,
+
+	"PhotoMultiplier".pmcalibration_id AS pmcalibration_id,
+	"PMCalibration".name AS pmcalibration_name,
+	"PMCalibration".opthv AS pmcalibration_opthv,
+	"PMCalibration".c2e_1 AS pmcalibration_c2e_1,
+	"PMCalibration".c2e_2 AS pmcalibration_c2e_2,
+	"PMCalibration".gainalpha AS pmcalibration_gainalpha,
+	"PMCalibration".gainbeta AS pmcalibration_gainbeta,
+
+	"PETUser".id AS user_id,
+	"PETUser".name AS user_name,
+	"PETUser".lastname AS user_lastname,
+	"PETUser".login AS user_login,
+	"PETUser".password AS user_password,
+	"PETUser".isroot AS user_isroot,
+	"PETUser".creationdate AS user_creationdate,
+	"PETUser".lastlogindate AS user_lastlogindate,
+	
+	"Setup".id AS setup_id,
+	"Run".id AS run_id
+
+      FROM "HVPMConnection", "PhotoMultiplier", "PMModel", "PMCalibration", "PETUser", "Run", "Setup"
+	WHERE
+	  "PhotoMultiplier".pmcalibration_id = "PMCalibration".id
+	  AND
+	  "HVPMConnection".photomultiplier_id = "PhotoMultiplier".id
+	  AND
+	  "HVPMConnection".setup_id = "Setup".id
+	  AND
+	  "Run".setup_id = "Setup".id
+	  AND
+	  "PhotoMultiplier".creator_id = "PETUser".id
+	  AND
+	  "Run".id = p_run_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getPhotoMultipliersData(1);
+
+
+***********KBs************
+
+
+Wczesniej stworzylem funkcje "getKonradBoardsData" i dodalem do bazy danych rowniez na kozie
+teraz funkcje zmienilem (dodalem PETUser oraz z inner join na where) trzeba to poprawic bo daje
+zle wyniki za duzo rows. Na kozie jeszcze nie zmienilem tej funkcji.
+
 CREATE OR REPLACE FUNCTION getKonradBoardsData(IN p_run_id INTEGER)
 RETURNS TABLE
 (
@@ -356,6 +630,15 @@ RETURNS TABLE
   konradboardoutput_konradboard_id INTEGER,
   konradboardoutput_input_id INTEGER,
   konradboardoutput_konradboardinput_id INTEGER,
+
+  user_id INTEGER,
+  user_name CHARACTER VARYING(255),
+  user_lastname CHARACTER VARYING(255),
+  user_login CHARACTER VARYING(255),
+  user_password  CHARACTER VARYING(255),
+  user_isroot BOOLEAN,
+  user_creationdate TIMESTAMP,
+  user_lastlogindate TIMESTAMP,
 
   setup_id INTEGER,
   run_id INTEGER  
@@ -387,6 +670,15 @@ BEGIN
     konradboardoutput_input_id,
     konradboardoutput_konradboardinput_id,
 
+    user_id,
+    user_name,
+    user_lastname,
+    user_login,
+    user_password,
+    user_isroot,
+    user_creationdate,
+    user_lastlogindate,
+
     setup_id,
     run_id
 
@@ -415,16 +707,35 @@ BEGIN
 	"KonradBoardOutput".passedinformationistime AS konradboardoutput_passedinformationistime,
 	"KonradBoardOutput".konradboard_id AS konradboardoutput_konradboard_id,
 	"KonradBoardOutput".input_id AS konradboardoutput_input_id,
-	"KonradBoardOutput".input_id AS konradboardoutput_konradboardinput_id
+	"KonradBoardOutput".input_id AS konradboardoutput_konradboardinput_id,
 	
-      FROM "KonradBoard"
-	INNER JOIN "KonradBoardInput" ON "KonradBoard".id = "KonradBoardInput".konradboard_id
-	INNER JOIN "KonradBoardOutput" ON "KonradBoardInput".id = "KonradBoardOutput".konradboardinput_id
-	INNER JOIN "KBTRBConnection" ON "KonradBoardOutput".id = "KBTRBConnection".konradboardoutput_id
-	INNER JOIN "Setup" ON "KBTRBConnection".setup_id = "Setup".id
-	INNER JOIN "Run" ON "Setup".id = "Run".setup_id
-      AND
-	"Run".id = p_run_id      
+	"PETUser".id AS user_id,
+	"PETUser".name AS user_name,
+	"PETUser".lastname AS user_lastname,
+	"PETUser".login AS user_login,
+	"PETUser".password AS user_password,
+	"PETUser".isroot AS user_isroot,
+	"PETUser".creationdate AS user_creationdate,
+	"PETUser".lastlogindate AS user_lastlogindate,
+	
+	"Setup".id AS setup_id,
+	"Run".id AS run_id
+	
+      FROM "KonradBoard", "KonradBoardInput", "KonradBoardOutput", "KBTRBConnection", "PETUser", "Setup", "Run"
+	WHERE
+	  "KonradBoardInput".konradboard_id = "KonradBoard".id
+	  AND
+	  "KonradBoardOutput".konradboard_id = "KonradBoard".id
+	  AND
+	  "KBTRBConnection".konradboardoutput_id = "KonradBoardOutput".id
+	  AND
+	  "KBTRBConnection".setup_id = "Setup".id
+	  AND
+	  "Run".setup_id = "Setup".id
+	  AND
+	  "KonradBoard".creator_id = "PETUser".id
+	  AND
+	  "Run".id = p_run_id     
   LOOP
     RETURN NEXT;
   END LOOP;
@@ -432,3 +743,505 @@ END
 $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getKonradBoardsData(1);
+
+
+***********TRBs************
+
+
+CREATE OR REPLACE FUNCTION getTRBsData(IN p_run_id INTEGER)
+RETURNS TABLE
+(
+  TRB_id INTEGER,
+  TRB_isactive BOOLEAN,
+  TRB_status CHARACTER VARYING(255),
+  TRB_maxch INTEGER,
+  TRB_name CHARACTER VARYING(255),
+  TRB_description CHARACTER VARYING(255),
+  TRB_version INTEGER,
+
+  user_id INTEGER,
+  user_name CHARACTER VARYING(255),
+  user_lastname CHARACTER VARYING(255),
+  user_login CHARACTER VARYING(255),
+  user_password  CHARACTER VARYING(255),
+  user_isroot BOOLEAN,
+  user_creationdate TIMESTAMP,
+  user_lastlogindate TIMESTAMP,
+
+  setup_id INTEGER,
+  run_id INTEGER  
+) AS
+$BODY$
+BEGIN
+  FOR 
+    TRB_id,
+    TRB_isactive,
+    TRB_status,
+    TRB_maxch,
+    TRB_name,
+    TRB_description,
+    TRB_version,
+
+    user_id,
+    user_name,
+    user_lastname,
+    user_login,
+    user_password,
+    user_isroot,
+    user_creationdate,
+    user_lastlogindate,
+
+    setup_id,
+    run_id
+
+  IN
+
+      SELECT
+	"TRB".id AS TRB_id,
+	"TRB".isactive AS TRB_isactive,
+	"TRB".status AS TRB_status,
+	"TRB".maxch AS TRB_maxch,
+	"TRB".name AS TRB_name,
+	"TRB".description AS TRB_description,
+	"TRB".version AS TRB_version,
+
+	"PETUser".id AS user_id,
+	"PETUser".name AS user_name,
+	"PETUser".lastname AS user_lastname,
+	"PETUser".login AS user_login,
+	"PETUser".password AS user_password,
+	"PETUser".isroot AS user_isroot,
+	"PETUser".creationdate AS user_creationdate,
+	"PETUser".lastlogindate AS user_lastlogindate,
+	
+	"Setup".id AS setup_id,
+	"Run".id AS run_id
+
+      FROM "TRB", "TRBOutput", "TRBTOMBConnection", "PETUser", "Run", "Setup"
+	WHERE
+	  "TRBOutput".trb_id = "TRB".id
+	  AND
+	  "TRBTOMBConnection".trboutput_id = "TRBOutput".id
+	  AND
+	  "TRBTOMBConnection".setup_id = "Setup".id
+	  AND
+	  "Run".setup_id = "Setup".id
+	  AND
+	  "TRB".creator_id = "PETUser".id
+	  AND
+	  "Run".id = p_run_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getTRBsData(1);
+
+
+***********TOMB************
+
+
+CREATE OR REPLACE FUNCTION getTOMBData(IN p_run_id INTEGER)
+RETURNS TABLE
+(
+  TOMB_id INTEGER,
+  TOMB_description CHARACTER VARYING(255),
+  TOMB_setup_id INTEGER,
+
+  setup_id INTEGER,
+  run_id INTEGER  
+) AS
+$BODY$
+BEGIN
+  FOR 
+    TOMB_id,
+    TOMB_description,
+    TOMB_setup_id,
+
+    setup_id,
+    run_id
+
+  IN
+
+      SELECT
+	"TRBOffsetMappingBoard".id AS TOMB_id,
+	"TRBOffsetMappingBoard".description AS TOMB_description,
+	"TRBOffsetMappingBoard".setup_id AS TOMB_setup_id,
+	
+	"Setup".id AS setup_id,
+	"Run".id AS run_id
+
+      FROM "TRBOffsetMappingBoard", "Run", "Setup"
+	WHERE
+	  "TRBOffsetMappingBoard".setup_id = "Setup".id
+	  AND
+	  "Run".setup_id = "Setup".id
+	  AND
+	  "Run".id = p_run_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getTOMBData(1);
+
+
+****************************************************************************************
+
+*********************************FUNCTION to fill TRefs*********************************
+
+************************************Scintillators***************************************
+
+
+CREATE OR REPLACE FUNCTION getPhotoMultipliersForScintillator(IN p_scintillator_id INTEGER)
+RETURNS TABLE
+(
+  SLSCConnection_id INTEGER,
+  Slot_id INTEGER,
+  HVPMConnection_id INTEGER,
+  PhotoMultiplier_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    SLSCConnection_id,
+    Slot_id,
+    HVPMConnection_id,
+    PhotoMultiplier_id
+
+  IN
+
+      SELECT
+	"SLSCConnection".id AS SLSCConnection_id,
+	"Slot".id AS Slot_id,
+	"HVPMConnection".id AS HVPMConnection_id,
+	"PhotoMultiplier".id AS PhotoMultiplier_id
+
+      FROM "SLSCConnection", "Slot", "HVPMConnection", "PhotoMultiplier"
+	WHERE
+	  "PhotoMultiplier".id = "HVPMConnection".photomultiplier_id
+	  AND
+	  "HVPMConnection".slot_id = "Slot".id
+	  AND
+	  "SLSCConnection".slot_id = "Slot".id
+	  AND
+	  "SLSCConnection".scintillator_id = p_scintillator_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getPhotoMultipliersForScintillator(1);
+
+
+****************************************************************************************
+
+************************************PhotoMultipliers***************************************
+
+// dobra funkcja
+CREATE OR REPLACE FUNCTION getKonradBoardsForPhotoMultiplier(IN p_photoMultiplier_id INTEGER)
+RETURNS TABLE
+(
+  PMKBConnection_id INTEGER,
+  KonradBoardInput_id INTEGER,
+  KonradBoard_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    PMKBConnection_id,
+	KonradBoardInput_id,
+	KonradBoard_id
+  IN
+	SELECT
+		"PMKBConnection".id AS PMKBConnection_id,
+		"KonradBoardInput".id AS KonradBoardInput_id,
+		"KonradBoard".id AS KonradBoard_id
+
+	FROM "PMKBConnection", "KonradBoardInput", "KonradBoard"
+		WHERE
+		  "KonradBoard".id = "KonradBoardInput".konradboard_id
+		  AND
+		  "KonradBoardInput".id = "PMKBConnection".konradboardinput_id
+		  AND
+		  "PMKBConnection".photomultiplier_id = p_photoMultiplier_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getKonradBoardsForPhotoMultiplier(57);
+
+
+*********************************************************************
+
+************************************KonradBoards***************************************
+
+// trzeba poprawic ta funckje
+CREATE OR REPLACE FUNCTION getTRBsForKonradBoard(IN p_konradBoard_id INTEGER)
+RETURNS TABLE
+(
+	KonradBoardOutput_id INTEGER,
+	KBTRBConnection_id INTEGER,
+	TRBInput_id INTEGER,
+	TRB_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+	KonradBoardOutput_id,
+	KBTRBConnection_id,
+	TRBInput_id,
+	TRB_id
+  IN
+      SELECT
+		"KonradBoardOutput".id AS KonradBoardOutput_id,
+		"KBTRBConnection".id AS KBTRBConnection_id,
+		"TRBInput".id AS TRBInput_id,
+		"TRB".id AS TRB_id
+
+      FROM "KonradBoardOutput", "KBTRBConnection", "TRBInput", "TRB"
+		WHERE
+		  "TRB".id = "TRBInput".trb_id
+		  AND
+		  "TRBInput".id = "KBTRBConnection".trbinput_id
+		  AND
+		  "KBTRBConnection".konradboardoutput_id = "KonradBoardOutput".id
+		  AND
+		  "KonradBoardOutput".konradboard_id = p_konradBoard_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getTRBsForKonradBoard(1);
+
+
+*********************************************************************
+
+************************************TRBs***************************************
+
+// trzeba poprawic ta funckje
+CREATE OR REPLACE FUNCTION getTOMBForTRB(IN p_TRB_id INTEGER)
+RETURNS TABLE
+(
+	TRBOutput_id INTEGER,
+	TRBTOMBConnection_id INTEGER,
+	TOMBInput_id INTEGER,
+	TOMB_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+	TRBOutput_id,
+	TRBTOMBConnection_id,
+	TOMBInput_id,
+	TOMB_id
+  IN
+      SELECT
+		"TRBOutput".id AS TRBOutput_id,
+		"TRBTOMBConnection".id AS TRBTOMBConnection_id,
+		"TOMBInput".id AS TOMBInput_id,
+		"TRBOffsetMappingBoard".id AS TOMB_id
+
+      FROM "TRBOutput", "TRBTOMBConnection", "TOMBInput", "TRBOffsetMappingBoard"
+		WHERE
+		  "TRBOffsetMappingBoard".id = "TOMBInput".trboffsetmappingboard_id
+		  AND
+		  "TOMBInput".id = "TRBTOMBConnection".tombinput_id
+		  AND
+		  "TRBTOMBConnection".trboutput_id = "TRBOutput".id
+		  AND
+		  "TRBOutput".trb_id = p_TRB_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getTOMBForTRB(1);
+
+
+****************************************************************************************
+
+*********************************FUNCTION to Input/Output*********************************
+
+************************************KonradBoard***************************************
+
+CREATE OR REPLACE FUNCTION getKBInputData(IN p_KB_id INTEGER)
+RETURNS TABLE
+(
+  KBInput_id INTEGER,
+  KBInput_isActive BOOLEAN,
+  KBInput_status CHARACTER VARYING(255),
+  KBInput_portNumber INTEGER,
+  KBInput_description CHARACTER VARYING(255),
+  KBInput_konradboard_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    KBInput_id,
+    KBInput_isActive,
+    KBInput_status,
+    KBInput_portNumber,
+    KBInput_description,
+    KBInput_konradboard_id
+  IN
+    SELECT
+      "KonradBoardInput".id AS KBInput_id,
+      "KonradBoardInput".isactive AS KBInput_isActive,
+      "KonradBoardInput".status AS KBInput_status,
+      "KonradBoardInput".portnumber AS KBInput_portNumber,
+      "KonradBoardInput".description AS KBInput_description,
+      "KonradBoardInput".konradboard_id AS KBInput_konradboard_id
+    FROM "KonradBoardInput"
+      WHERE
+	"KonradBoardInput".konradboard_id = p_KB_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getKBInputData(1);
+
+******************************************************************************************
+
+CREATE OR REPLACE FUNCTION getKBOutputData(IN p_KB_id INTEGER)
+RETURNS TABLE
+(
+  KBOutput_id INTEGER,
+  KBOutput_isActive BOOLEAN,
+  KBOutput_status CHARACTER VARYING(255),
+  KBOutput_portNumber INTEGER,
+  KBOutput_description CHARACTER VARYING(255),
+  KBOutput_passedinformationistime BOOLEAN,
+  KBOutput_konradboard_id INTEGER,
+  KBOutput_input_id INTEGER,
+  KBOutput_konradboardinput_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    KBOutput_id,
+    KBOutput_isActive,
+    KBOutput_status,
+    KBOutput_portNumber,
+    KBOutput_description,
+    KBOutput_passedinformationistime,
+    KBOutput_konradboard_id,
+    KBOutput_input_id,
+    KBOutput_konradboardinput_id
+  IN
+    SELECT
+      "KonradBoardOutput".id AS KBOutput_id,
+      "KonradBoardOutput".isactive AS KBOutput_isActive,
+      "KonradBoardOutput".status AS KBOutput_status,
+      "KonradBoardOutput".portnumber AS KBOutput_portNumber,
+      "KonradBoardOutput".description AS KBOutput_description,
+      "KonradBoardOutput".passedinformationistime AS KBOutput_passedinformationistime,		
+      "KonradBoardOutput".konradboard_id AS KBOutput_konradboard_id,
+      "KonradBoardOutput".input_id AS KBOutput_input_id,
+      "KonradBoardOutput".konradboardinput_id AS konradboardinput_id
+    FROM "KonradBoardOutput"
+      WHERE
+	"KonradBoardOutput".konradboard_id = p_KB_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getKBOutputData(1);
+
+******************************************************************************************
+
+************************************TRB***************************************
+
+CREATE OR REPLACE FUNCTION getTRBInputData(IN p_TRB_id INTEGER)
+RETURNS TABLE
+(
+  TRBInput_id INTEGER,
+  TRBInput_isActive BOOLEAN,
+  TRBInput_status CHARACTER VARYING(255),
+  TRBInput_portNumber INTEGER,
+  TRBInput_description CHARACTER VARYING(255),
+  TRBInput_trb_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    TRBInput_id,
+    TRBInput_isActive,
+    TRBInput_status,
+    TRBInput_portNumber,
+    TRBInput_description,
+    TRBInput_trb_id
+  IN
+    SELECT
+      "TRBInput".id AS TRBInput_id,
+      "TRBInput".isactive AS TRBInput_isActive,
+      "TRBInput".status AS TRBInput_status,
+      "TRBInput".portnumber AS TRBInput_portNumber,
+      "TRBInput".description AS TRBInput_description,
+      "TRBInput".trb_id AS TRBInput_trb_id
+    FROM "TRBInput"
+      WHERE
+	"TRBInput".trb_id = p_TRB_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getTRBInputData(1);
+
+******************************************************************************************
+
+CREATE OR REPLACE FUNCTION getTRBOutputData(IN p_TRB_id INTEGER)
+RETURNS TABLE
+(
+  TRBOutput_id INTEGER,
+  TRBOutput_isActive BOOLEAN,
+  TRBOutput_status CHARACTER VARYING(255),
+  TRBOutput_portNumber INTEGER,
+  TRBOutput_description CHARACTER VARYING(255),
+  TRBOutput_trb_id INTEGER,
+  TRBOutput_trbinput_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    TRBOutput_id,
+    TRBOutput_isActive,
+    TRBOutput_status,
+    TRBOutput_portNumber,
+    TRBOutput_description,
+    TRBOutput_trb_id,
+    TRBOutput_trbinput_id
+  IN
+    SELECT
+      "TRBOutput".id AS KBOutput_id,
+      "TRBOutput".isactive AS KBOutput_isActive,
+      "TRBOutput".status AS KBOutput_status,
+      "TRBOutput".portnumber AS KBOutput_portNumber,
+      "TRBOutput".description AS KBOutput_description,
+      "TRBOutput".trb_id AS TRBOutput_trb_id,
+      "TRBOutput".trbinput_id AS TRBOutput_trbinput_id
+    FROM "TRBOutput"
+      WHERE
+	"TRBOutput".trb_id = p_TRB_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getTRBOutputData(1);
+

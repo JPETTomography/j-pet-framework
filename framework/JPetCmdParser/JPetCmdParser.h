@@ -34,6 +34,9 @@ public:
     inline bool paramIsSet() const { return (bool)fVariablesMap.count("param"); }
     inline const std::string& getParam() const {return fVariablesMap["param"].as< std::string >(); }
     
+    inline bool isRunNumberSet() const { return (bool)fVariablesMap.count("runId"); }
+    inline const int getRunNumber() const { return fVariablesMap["runId"].as<int>();}
+    
 private:
 	po::options_description fOptDescriptions;
 	po::variables_map fVariablesMap;

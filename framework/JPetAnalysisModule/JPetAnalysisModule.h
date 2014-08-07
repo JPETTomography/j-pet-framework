@@ -9,8 +9,9 @@
 #define JPETANALYSISMODULE_H
 
 #include <vector>
-#include "TNamed.h"
-#include "TTree.h"
+#include <TNamed.h>
+#include <TTree.h>
+#include <TList.h>
 
 class JPetAnalysisModule: public TNamed {
  public:
@@ -24,6 +25,9 @@ class JPetAnalysisModule: public TNamed {
   virtual void RunSubmodules();
   virtual void Terminate()=0; // called once when analysis terminates
 
+  int AddStatsObject(TObject * statObj);
+  const TList * GetStatsObjects() const; 
+
   ClassDef(JPetAnalysisModule,1);
 
 protected:
@@ -31,5 +35,6 @@ protected:
   TTree fSubmoduleSharedTree;
   TTree* fSuperSharedTree;
   std::vector< JPetAnalysisModule* > fSubmodules;
+  TList fStats; ///< a list to store all objects for statistics of the processing, i.e. histograms
 };
 #endif /*  !JPETANALYSISMODULE_H */

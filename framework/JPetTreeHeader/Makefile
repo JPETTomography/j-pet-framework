@@ -1,20 +1,24 @@
 CC            =  g++
 LD            =  g++
 COPTS         =  `root-config --cflags` -fPIC
-LDOPTS        =  `root-config --glibs` -g
-CFLAGS        =  -std=c++0x
+LDOPTS        =  `root-config --glibs`
 #C++ Files
-SOURCES       =  JPetParamManager.cpp
+SOURCES       =  JPetTreeHeader.cpp
 OBJECTS       =  $(SOURCES:.cpp=.o)
 DICT_OBJECTS  =  $(SOURCES:.cpp=Dict.cpp)
 OBJECTS      +=  $(SOURCES:.cpp=Dict.o)
 HEADERS       =  $(SOURCES:.cpp=.h) 
 
+
 %.o: %.cpp
-	$(CC) $^ -o $@  -c $(COPTS) $(CFLAGS)
+	$(CC) $^ -o $@  -c $(COPTS)
 all: $(DICT_OBJECTS) $(OBJECTS)
+
+# sharedlib: $(OBJECTS)
+# 	$(LD) -shared -o libJPetTreeHeader.so  JPetTreeHeader.o JPetTSlotRawHeader.o JPetTSlotRawHeaderDict.o $(LDOPTS)
+
 %Dict.cpp:
 	@echo "Generating dictionary ..."
-	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
+	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS) linkdef.h
 clean:
 	rm -f $(OBJECTS) *Dict*
