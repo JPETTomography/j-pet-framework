@@ -8,11 +8,14 @@
 #include <vector>
 #include <boost/noncopyable.hpp>
 
+/*
 #include "../JPetScin/JPetScin.h"
 #include "../JPetPM/JPetPM.h"
 #include "../JPetKB/JPetKB.h"
 #include "../JPetTRB/JPetTRB.h"
 #include "../JPetTOMB/JPetTOMB.h"
+*/
+#include "../JPetTreeHeader/JPetTreeHeader.h"
 
 #include "../../JPetLoggerInclude.h"
 
@@ -30,7 +33,7 @@ public:
   virtual bool OpenFile(const char* filename);
   virtual void ReadData(const char* objname = "");
   virtual TNamed& GetData () {return *fObject;}
-  TObject* GetHeader();
+  JPetTreeHeader * GetHeader()const;
   
   template <class T>
   void fillContainer(std::vector<T> &p_container, const std::string &p_objectName);
