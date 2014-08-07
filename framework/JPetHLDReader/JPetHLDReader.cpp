@@ -1,18 +1,21 @@
 #include "JPetHLDReader.h"
 #include <iostream>
 #include <cassert>
-#include "../JPetTSlot/JPetTSlot.h"
 
-JPetHLDReader::JPetHLDReader(): 
-  fBranch(0), 
-  fTSlot(0), 
-  fTree(0)
-{ /* */ }
+JPetHLDReader::JPetHLDReader():
+  fBranch(0),
+  fEvent(0),
+  fTree(0),
+  fFile(NULL)
+{
+  /* */
+}
 
-JPetHLDReader::JPetHLDReader (const char* filename): 
-  fBranch(0),  
-  fTSlot(0), 
-  fTree(0)
+JPetHLDReader::JPetHLDReader (const char* filename):
+  fBranch(0),
+  fEvent(0),
+  fTree(0),
+  fFile(NULL)
 {
   if (OpenFile(filename) ) ReadData();
 }
@@ -24,9 +27,13 @@ JPetHLDReader::~JPetHLDReader ()
 
 void JPetHLDReader::CloseFile ()
 {
-  if (fFile.IsOpen()) fFile.Close();
+  if (fFile != NULL) {
+    if (fFile->IsOpen()) fFile->Close();
+    delete fFile;
+    fFile = NULL;
+  }
   fBranch = 0;
-  fTSlot = 0;
+  fEvent = 0;
   fTree = 0;
 }
 
@@ -34,9 +41,9 @@ void JPetHLDReader::CloseFile ()
 bool JPetHLDReader::OpenFile (const char* filename)
 {
   CloseFile();
-  fFile.Open(filename);
+  fFile = new TFile(filename);
 
-  if ((!fFile.IsOpen()) || fFile.IsZombie()) {
+  if ((!fFile->IsOpen()) || fFile->IsZombie()) {
     ERROR("Cannot open file.");
     CloseFile();
     return false;
@@ -47,40 +54,9 @@ bool JPetHLDReader::OpenFile (const char* filename)
 
 void JPetHLDReader::ReadData ()
 {
-  fTree = static_cast<TTree*>(fFile.Get("T"));
+  fTree = static_cast<TTree*>(fFile->Get("T")); /// @todo add some comment
   assert(fTree);
   fBranch = fTree->GetBranch("event");
   assert(fBranch);
-  fBranch->SetAddress(&fTSlot);
+  fBranch->SetAddress(&fEvent);
 }
-//
-//
-//       nbytes += Tn->GetEntry(i);
-//       //cout <<"Event nr: " <<i <<endl;
-//       Tot_NADCHits = event->GetTotalNTDCHits();
-//       //cout <<"Total number of ADC hits=" <<Tot_NADCHits<<endl;
-//       Tot_NTDCHits = event->GetTotalNADCHits();
-//       //cout <<"Total number of TDC hits="<<Tot_NTDCHits<<endl;
-//       TDCReferenceTime = event->GetTDCReferenceTime();
-//       //cout <<"TDC reference time"<<TDCReferenceTime<<endl;
-//
-//       tdc = event->GetTDCHitsArray();
-//       adc = event->GetADCHitsArray();
-//       signal->nChannel = tdc->GetEntriesFast();//Number of channels fired in event
-//       signal->nSig = event->GetTotalNADCHits();
-//     //loop over all channels
-//       for(ii=0;ii<signal->nSig; ii++)
-//      {
-//        TDCHit* tshit = (TDCHit*) tdc->At(ii);
-//
-//          signal->channel[ii] = tshit->GetChannel();
-//
-//        for(j=0;j<maxChannelHits;j++)
-//           {
-//             signal->LTimes[ii][j] = tshit->GetLeadTime(j);
-//             signal->TTimes[ii][j] = tshit->GetTrailTime(j);
-//           }
-//      }
-//
-//return 0;
-//}

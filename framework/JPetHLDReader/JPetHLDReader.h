@@ -14,29 +14,37 @@
 
 #include "../../JPetLoggerInclude.h"
 
-class TSlot;
+#include "../JPetUnpacker/Unpacker2/Event.h"
+
+class Event;
 
 class JPetHLDReader
 {
- public:
+public:
   JPetHLDReader();
   explicit JPetHLDReader(const char* filename);
   virtual ~JPetHLDReader();
 
   void CloseFile();
-  long long GetEntries () const { return fTree->GetEntries(); }
-  int GetEntry (int entryNo) { return fTree->GetEntry(entryNo); }
+  long long GetEntries () const {
+    return fTree->GetEntries();
+  }
+  int GetEntry (int entryNo) {
+    return fTree->GetEntry(entryNo);
+  }
   bool OpenFile(const char* filename);
   void ReadData();
-  TSlot& GetData() { return *fTSlot; }
-  
- protected:
+  Event& GetData() {
+    return *fEvent;
+  }
+
+protected:
   TBranch* fBranch;
   TTree* fTree;
-  TSlot* fTSlot;
-  TFile fFile;
+  Event* fEvent;
+  TFile* fFile;
 
- private:
+private:
   JPetHLDReader(const JPetHLDReader&);
   void operator=(const JPetHLDReader);
 };

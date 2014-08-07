@@ -9,6 +9,8 @@
 //#pragma link C++ struct ExtendedThreshold;
 //#pragma link C++ std::vector<ExtendedThreshold>;
 
-#pragma link C++ class JPetSignal+;
+#pragma link C++ enum JPetSigCh::EdgeType;
+
+#pragma link C++ class JPetSigCh+;
 
 #endif

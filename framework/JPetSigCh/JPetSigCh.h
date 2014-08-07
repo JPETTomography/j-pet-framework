@@ -1,82 +1,105 @@
 #ifndef _JPETSIGCH_H_
 #define _JPETSIGCH_H_
 
-
 #include <cassert>
 #include <vector>
-#include <map>
 #include <TClass.h>
+#include <TRef.h>
 
 #include "../JPetPM/JPetPM.h"
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetScin/JPetScin.h"
 #include "../JPetTRB/JPetTRB.h"
+#include "../JPetKB/JPetKB.h"
 #include "../../JPetLoggerInclude.h"
 
 
-
+/**
+ * @brief Class respresenting a SIGnal from a single tdc CHannel.
+ *
+ * Contains either time corresponding to a single threshold and slpe type of a frontend board or charge from a single PM (if available in a given setup). 
+ */
 class JPetSigCh: public TNamed
 {
+public:
+enum EdgeType { kRising, kFalling, kCharge };
+const static float kTimeUnset;
 
- public:
-  enum EdgeType { kRising, kFalling };
-  typedef std::pair < float, float > Channels;
-  const static float kTimeUnset;
+JPetSigCh() { Init(); }
+JPetSigCh(EdgeType Edge, float EdgeTime);
+~JPetSigCh() {}
 
-  /// @warning here I dont know who should be the owner of JPetTRB etc elements
-  friend void my_swap(JPetSigCh& first, JPetSigCh& second) {
-    using std::swap;
-    swap(first.fAmpl, second.fAmpl);
-    swap(first.fChannels, second.fChannels);
-    swap(first.fIsSlow, second.fIsSlow);
-    swap(first.fIsComplete, second.fIsComplete);
-    swap(first.fPM, second.fPM);
-    swap(first.fScin, second.fScin);
-    swap(first.fBarrelSlot, second.fBarrelSlot);
-  }
+/**
+ * @brief Used to obtain the time or charge carried by the TDC signal.
+ *
+ * @return either time with respect to beginning of the time window [ps] (TSlot) or charge (if getType()==kCharge)
+ */
+  inline float GetValue() const { return fValue; }
 
-  JPetSigCh() { init(); }
-  JPetSigCh(const JPetSigCh& obj);
-  JPetSigCh& operator= (const JPetSigCh obj);
-  JPetSigCh(float EdgeTime, float FallEdgeTime);
-  ~JPetSigCh() {}
-  inline bool isSlow() const { return fIsSlow; }
-  inline bool isComplete() const { return fIsComplete; }
-  inline float getAmpl() const { return fAmpl; }
   /**
-   * @warning This method may cause seg fault, when is called with kFalling as first argument and object is of type "slow".
+   * @brief Used to obtain the type of the signal information
+   *
+   * Rising edge, falling edge or charge (kCharge)
    */
-  inline JPetPM getPM() const { return fPM; }
-  inline JPetTRB getTRB() const {return fTRB; }
-  inline JPetScin getScin() const { return fScin; }
-  inline JPetBarrelSlot getBarrelSlot() const { return fBarrelSlot; }
+  inline EdgeType GetType() const { return fType; }
 
-  float getTime(EdgeType type) const ;
+  inline JPetPM * GetPM() const { return (JPetPM*) fPM.GetObject(); }
+  inline JPetTRB * GetTRB() const {return (JPetTRB*) fTRB.GetObject(); }
+  inline JPetKB * GetKB() const {return (JPetKB*) fKB.GetObject(); }
+
+/**
+ * Returns true if the value of the signal represents charge information (integral of the signal calculated by front-end board)
+ */
+  bool IsCharge() const ;
+ 
+/**
+ * Returns true if the value of the signal represents time information from the TDC
+ */
+  bool IsTime() const ;
+
+  inline void SetPM(JPetPM * pm) { fPM.SetObject( pm ); }
+  inline void SetTRB(JPetTRB * trb) { fTRB.SetObject( trb ); }
+  inline void SetKB(JPetKB * kb) { fKB.SetObject( kb ); }
+  // Set time wrt beginning of TSlot [ps] or charge
+  inline void SetValue( float val ) { fValue = val; }
+  inline void SetType( EdgeType type ) { fType = type; }
+
+  inline void SetPMID( Int_t pmid ) { fPMID = pmid; }
+  inline void SetThreshold( float thr ) { fThreshold = thr; }
+  inline void SetDAQch( Int_t daqch ) { fDAQch = daqch; }
   
-  inline Channels getChannels() const { return fChannels; }
-  void addCh(float rise_edge_time, float fall_edge_time);
-  inline void setPM(const JPetPM& pm) { fPM = pm; }
-  inline void setTRB(const JPetTRB& trb) { fTRB = trb; }
-  inline void setScin(const JPetScin& scin) { fScin = scin; }
-  inline void setBarrelSlot(const JPetBarrelSlot& barrel_slot) { fBarrelSlot = barrel_slot; }
-  inline void setSlow( bool isSlow ) { fIsSlow = isSlow; }
-  inline void setComplete( bool isComplete ) { fIsComplete = isComplete; }
-  inline void setAmplitude( float ampl ) { fAmpl = ampl; }
-	
+  inline Int_t GetPMID() const { return fPMID; }
+  inline float GetThreshold() const { return fThreshold; }
+  inline Int_t GetDAQch() const { return fDAQch; }
+
+  /**
+   * @brief Compares this SigCh with another by their threshold value
+   *
+   * This method overrides TObject::Compare, see its reference.
+   */
+  Int_t Compare(const TObject* obj) const;
+  inline Bool_t IsSortable() const { return true; }
+  
+
   ClassDef(JPetSigCh, 1);
 
  protected:
-  float fAmpl;
-  Channels fChannels; /// fChannels.first is rising edge and fChannels.second is falling edge
-  bool fIsSlow;
-  bool fIsComplete;
-  JPetPM fPM;
-  JPetTRB fTRB;
-  JPetScin fScin;
-  JPetBarrelSlot fBarrelSlot;
+  EdgeType fType; ///< type of the SigCh: kFalling, kRising (time) or kCharge (charge)
+  float fValue; ///< main value of the SigCh; either time [ps] (if fType is kRiging or kFalling) or charge (if fType is kCharge)
 
-  template <class T> void set(T** dest, const T& source) throw(std::bad_alloc);
-  void init();
+  // these members can be used for simple analysis
+  // if no parametric objects are available
+  Int_t fPMID; ///< ID of Photomultiplier
+  float fThreshold; ///< value of threshold [mV]
+  int fDAQch; ///< Number of DAQ channer from the raw HLD file
+
+  // if parametric objects are available, these references should be used
+  // rather than the above members
+  TRef fPM;
+  TRef fKB;
+  TRef fTRB;
+  
+
+  /* template <class T> void set(T** dest, const T& source) throw(std::bad_alloc); */
+  void Init();
 };
 
 #endif
