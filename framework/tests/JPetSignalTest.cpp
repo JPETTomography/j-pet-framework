@@ -28,56 +28,56 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_CHECK_EQUAL(signal.GetT(), 0); 
   BOOST_CHECK_EQUAL(signal.GetQual(), 0); 
   BOOST_CHECK_EQUAL(signal.IsLeft(), true); 
-  BOOST_CHECK_EQUAL(signal.GetNTresholds(JPetSignal::kRising), 0); 
-  BOOST_CHECK_EQUAL(signal.GetNTresholds(JPetSignal::kFalling), 0); 
+  BOOST_CHECK_EQUAL(signal.GetNTresholds(JPetSignal::Trailing), 0); 
+  BOOST_CHECK_EQUAL(signal.GetNTresholds(JPetSignal::Leading), 0); 
 }
 
 BOOST_AUTO_TEST_CASE( some_init_constructor )
 {
 
-  std::vector<ExtendedThreshold> falling;
-  std::vector<ExtendedThreshold> rising;
+  std::vector<ExtendedThreshold> leading;
+  std::vector<ExtendedThreshold> trailing;
  
-  JPetSignal signal(100, 2, false, falling, rising);
+  JPetSignal signal(100, 2, false, leading, trailing);
   BOOST_CHECK_EQUAL(signal.GetT(), 100); 
   BOOST_CHECK_EQUAL(signal.GetQual(), 2); 
   BOOST_CHECK_EQUAL(signal.IsLeft(), false); 
-  BOOST_CHECK_EQUAL(signal.GetNTresholds(JPetSignal::kRising), 0); 
-  BOOST_CHECK_EQUAL(signal.GetNTresholds(JPetSignal::kFalling), 0); 
+  BOOST_CHECK_EQUAL(signal.GetNTresholds(JPetSignal::Trailing), 0); 
+  BOOST_CHECK_EQUAL(signal.GetNTresholds(JPetSignal::Leading), 0); 
   
 }
 
 BOOST_AUTO_TEST_CASE( gettersPointsTest )
 {
 
-  std::vector<ExtendedThreshold> falling;
+  std::vector<ExtendedThreshold> leading;
   ExtendedThreshold thresh;
   thresh.fThreshold = 2;
   thresh.fTime = 2.5;
   thresh.fQuality = 10;
-  falling.push_back(thresh);
+  leading.push_back(thresh);
   thresh.fThreshold = 10;
   thresh.fTime = 100;
   thresh.fQuality = 50;
   thresh.fSigCh = JPetSigCh(5); 
-  falling.push_back(thresh);
-  std::vector<ExtendedThreshold> rising;
+  leading.push_back(thresh);
+  std::vector<ExtendedThreshold> trailing;
   thresh.fSigCh = JPetSigCh(1000); 
   thresh.fThreshold = 1100;
-  rising.push_back(thresh);
+  trailing.push_back(thresh);
  
-  JPetSignal signal(100, 2, false, falling, rising);
-  BOOST_CHECK_EQUAL(signal.GetNTresholds(JPetSignal::kRising), 1); 
-  BOOST_CHECK_EQUAL(signal.GetNTresholds(JPetSignal::kFalling), 2); 
-  const std::vector<ExtendedThreshold>& resultFalling = signal.getFallingPoints();
-  BOOST_CHECK_CLOSE( resultFalling.at(0).fThreshold,  falling.at(0).fThreshold, 0.01);
-  BOOST_CHECK_CLOSE( resultFalling.at(0).fTime,  falling.at(0).fTime, 0.01);
-  BOOST_CHECK_CLOSE( resultFalling.at(0).fQuality,  falling.at(0).fQuality, 0.01);
-  BOOST_CHECK_CLOSE( resultFalling.at(1).fTime,  falling.at(1).fTime, 0.01);
-  BOOST_CHECK_CLOSE( resultFalling.at(1).fTime,  falling.at(1).fTime, 0.01);
-  BOOST_CHECK_CLOSE( resultFalling.at(1).fQuality,  falling.at(1).fQuality, 0.01);
-  const std::vector<ExtendedThreshold>& resultRising = signal.getRisingPoints();
-  BOOST_CHECK_CLOSE( resultRising.at(0).fTime,  rising.at(0).fTime, 0.01);
+  JPetSignal signal(100, 2, false, leading, trailing);
+  BOOST_CHECK_EQUAL(signal.GetNTresholds(JPetSignal::Trailing), 1); 
+  BOOST_CHECK_EQUAL(signal.GetNTresholds(JPetSignal::Leading), 2); 
+  const std::vector<ExtendedThreshold>& resultLeading = signal.getLeadingPoints();
+  BOOST_CHECK_CLOSE( resultLeading.at(0).fThreshold,  leading.at(0).fThreshold, 0.01);
+  BOOST_CHECK_CLOSE( resultLeading.at(0).fTime,  leading.at(0).fTime, 0.01);
+  BOOST_CHECK_CLOSE( resultLeading.at(0).fQuality,  leading.at(0).fQuality, 0.01);
+  BOOST_CHECK_CLOSE( resultLeading.at(1).fTime,  leading.at(1).fTime, 0.01);
+  BOOST_CHECK_CLOSE( resultLeading.at(1).fTime,  leading.at(1).fTime, 0.01);
+  BOOST_CHECK_CLOSE( resultLeading.at(1).fQuality,  leading.at(1).fQuality, 0.01);
+  const std::vector<ExtendedThreshold>& resultTrailing = signal.getTrailingPoints();
+  BOOST_CHECK_CLOSE( resultTrailing.at(0).fTime,  trailing.at(0).fTime, 0.01);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
