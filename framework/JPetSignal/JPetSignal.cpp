@@ -13,20 +13,20 @@ JPetSignal::JPetSignal() :
   fTime(0),
   fQualityOfTime(0),
   fLeft(true),
-  fFallingPoints("JPetSigCh", 4),
-  fRisingPoints("JPetSigCh", 4),
-  fNRising(0),
-  fNFalling(0)
+  fLeadingPoints("JPetSigCh", 4),
+  fTrailingPoints("JPetSigCh", 4),
+  fNTrailing(0),
+  fNLeading(0)
 { }
 
 /*
-JPetSignal::JPetSignal(double time, double qual, bool left, const std::vector<ExtendedThreshold>& falling, const std::vector<ExtendedThreshold>& rising) :
+JPetSignal::JPetSignal(double time, double qual, bool left, const std::vector<ExtendedThreshold>& leading, const std::vector<ExtendedThreshold>& trailing) :
   TNamed("JPetSignal", "Signal Structure"),
   fTime(time),
   fQualityOfTime(qual),
   fLeft(left),
-  fFallingPoints(falling),
-  fRisingPoints(rising)
+  fLeadingPoints(leading),
+  fTrailingPoints(trailing)
 { }
 */
 
@@ -35,34 +35,34 @@ JPetSignal::~JPetSignal()
 
 int JPetSignal::GetNPoints(JPetSigCh::EdgeType edge) const
 {
-  assert((edge == JPetSigCh::kRising) || (edge == JPetSigCh::kFalling));
-  if (edge == JPetSigCh::kRising) {
-    return fRisingPoints.GetEntries();
+  assert((edge == JPetSigCh::Trailing) || (edge == JPetSigCh::Leading));
+  if (edge == JPetSigCh::Trailing) {
+    return fTrailingPoints.GetEntries();
   } else {
-    return fFallingPoints.GetEntries();
+    return fLeadingPoints.GetEntries();
   }
 }
 
 void JPetSignal::AddPoint(const JPetSigCh& sigch){
   
-  assert((sigch.GetType() == JPetSigCh::kRising) || (sigch.GetType() == JPetSigCh::kFalling));
+  assert((sigch.GetType() == JPetSigCh::Trailing) || (sigch.GetType() == JPetSigCh::Leading));
   
-  if (sigch.GetType() == JPetSigCh::kRising && fNRising < 4) {
-    new (fRisingPoints[fNRising++]) JPetSigCh(sigch);
-    fRisingPoints.Sort();
-  } else if(fNFalling < 4) {
-    new (fFallingPoints[fNFalling++]) JPetSigCh(sigch);
-    fFallingPoints.Sort();
+  if (sigch.GetType() == JPetSigCh::Trailing && fNTrailing < 4) {
+    new (fTrailingPoints[fNTrailing++]) JPetSigCh(sigch);
+    fTrailingPoints.Sort();
+  } else if(fNLeading < 4) {
+    new (fLeadingPoints[fNLeading++]) JPetSigCh(sigch);
+    fLeadingPoints.Sort();
   }
   
 }
 
 const TClonesArray & JPetSignal::GetPoints(JPetSigCh::EdgeType edge) const{
-  assert((edge == JPetSigCh::kRising) || (edge == JPetSigCh::kFalling));
-  if (edge == JPetSigCh::kRising) {
-    return fRisingPoints;
+  assert((edge == JPetSigCh::Trailing) || (edge == JPetSigCh::Leading));
+  if (edge == JPetSigCh::Trailing) {
+    return fTrailingPoints;
   } else {
-    return fFallingPoints;
+    return fLeadingPoints;
   }
 }
 

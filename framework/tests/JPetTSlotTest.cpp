@@ -29,8 +29,8 @@ BOOST_AUTO_TEST_CASE( first )
   JPetTSlot test2(test.getSigChVect());
 
   for (size_t i = 0; i < test.size() || i < test2.size() ; i++) {
-    BOOST_CHECK_EQUAL(test[i].getTime(JPetSigCh::kRising), test2[i].getTime(JPetSigCh::kRising));
-    BOOST_CHECK_EQUAL(test[i].getTime(JPetSigCh::kFalling), test2[i].getTime(JPetSigCh::kFalling));
+    BOOST_CHECK_EQUAL(test[i].getTime(JPetSigCh::Trailing), test2[i].getTime(JPetSigCh::Trailing));
+    BOOST_CHECK_EQUAL(test[i].getTime(JPetSigCh::Leading), test2[i].getTime(JPetSigCh::Leading));
   }
 }
 

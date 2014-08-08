@@ -20,7 +20,7 @@
 class JPetSigCh: public TNamed
 {
 public:
-enum EdgeType { kRising, kFalling, kCharge };
+enum EdgeType { Trailing, Leading, Charge };
 const static float kTimeUnset;
 
 JPetSigCh() { Init(); }
@@ -30,14 +30,14 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
 /**
  * @brief Used to obtain the time or charge carried by the TDC signal.
  *
- * @return either time with respect to beginning of the time window [ps] (TSlot) or charge (if getType()==kCharge)
+ * @return either time with respect to beginning of the time window [ps] (TSlot) or charge (if getType()==Charge)
  */
   inline float GetValue() const { return fValue; }
 
   /**
    * @brief Used to obtain the type of the signal information
    *
-   * Rising edge, falling edge or charge (kCharge)
+   * Trailing edge, leading edge or charge (Charge)
    */
   inline EdgeType GetType() const { return fType; }
 
@@ -82,8 +82,8 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
   ClassDef(JPetSigCh, 1);
 
  protected:
-  EdgeType fType; ///< type of the SigCh: kFalling, kRising (time) or kCharge (charge)
-  float fValue; ///< main value of the SigCh; either time [ps] (if fType is kRiging or kFalling) or charge (if fType is kCharge)
+  EdgeType fType; ///< type of the SigCh: Leading, Trailing (time) or Charge (charge)
+  float fValue; ///< main value of the SigCh; either time [ps] (if fType is kRiging or Leading) or charge (if fType is Charge)
 
   // these members can be used for simple analysis
   // if no parametric objects are available

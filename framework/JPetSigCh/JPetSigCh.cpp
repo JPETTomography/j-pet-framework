@@ -25,14 +25,14 @@ JPetSigCh::JPetSigCh(EdgeType Edge, float EdgeTime)
 }
 
 bool JPetSigCh::IsCharge() const{
-  if( fType == kCharge ){
+  if( fType == Charge ){
     return true;
   }
   return false;
 }
 
 bool JPetSigCh::IsTime() const{
-  if( fType == kRising || fType == kFalling ){
+  if( fType == Trailing || fType == Leading ){
     return true;
   }
   return false;
