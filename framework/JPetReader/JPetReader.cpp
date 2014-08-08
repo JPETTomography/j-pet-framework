@@ -77,7 +77,7 @@ void JPetReader::ReadData (const char* objname) {
  * 
  * Using a copy rather than direct pointer is essential as the original header belongs to JPetReader::fTree and would be deleted along with it.
  */
-JPetTreeHeader * JPetReader::GetHeader() const {
+JPetTreeHeader * JPetReader::GetHeaderClone() const {
   // get a pointer to a header wchich belongs to fTree
   JPetTreeHeader * header =  (JPetTreeHeader*)fTree->GetUserInfo()->At(JPetUserInfoStructure::kHeader);
   // return a COPY of this header

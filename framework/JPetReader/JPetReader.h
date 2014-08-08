@@ -33,7 +33,7 @@ public:
   virtual bool OpenFile(const char* filename);
   virtual void ReadData(const char* objname = "");
   virtual TNamed& GetData () {return *fObject;}
-  JPetTreeHeader * GetHeader()const;
+  JPetTreeHeader * GetHeaderClone()const;
   
   template <class T>
   void fillContainer(std::vector<T> &p_container, const std::string &p_objectName);
