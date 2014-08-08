@@ -5,8 +5,10 @@
   */
 
 #include "./JPetManager.h"
+#include "../../JPetLoggerInclude.h"
 //#include "../JPetAnalysisModule/JPetAnalysisModule.h"
 #include <cassert>
+#include <ctime>
 
 ClassImp(JPetManager);
 
@@ -31,6 +33,9 @@ void JPetManager::AddTask(JPetAnalysisModule* mod)
 
 void JPetManager::Run()
 {
+  // write to log about starting
+  INFO( "========== Starting processing tasks: " + GetTimeString() + " ==========" );
+
   UnpackFile();
   JPetWriter* currentWriter = 0;
   std::vector<JPetAnalysisModule*>::iterator taskIter;
@@ -47,6 +52,8 @@ void JPetManager::Run()
     }
     (*taskIter)->Terminate();
   }
+
+    INFO( "======== Finished processing all tasks: " + GetTimeString() + " ========\n" );
 }
 
 void JPetManager::ParseCmdLine(int argc, char** argv){
@@ -89,4 +96,17 @@ const char * JPetManager::getInputFileName() const{
     name.erase( pos );
   }
   return name.c_str();
+}
+
+/**
+ * @brief returns the time TString in the format dd.mm.yyyy HH:MM
+ */
+TString JPetManager::GetTimeString() const
+{
+  time_t _tm =time(NULL );
+  struct tm * curtime = localtime ( &_tm );
+  char buf[100];
+  strftime( buf, 100, "%m.%d.%Y %R", curtime);
+  
+  return TString( buf );
 }
