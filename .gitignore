@@ -8,3 +8,5 @@
 *dict.cc
 *dict.h
 *~
+*.log
+*.kate-swp
