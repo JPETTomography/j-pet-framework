@@ -5,10 +5,8 @@
   */
 
 #include "./JPetManager.h"
-#include "../../JPetLoggerInclude.h"
 //#include "../JPetAnalysisModule/JPetAnalysisModule.h"
 #include <cassert>
-#include <ctime>
 
 ClassImp(JPetManager);
 
@@ -33,9 +31,6 @@ void JPetManager::AddTask(JPetAnalysisModule* mod)
 
 void JPetManager::Run()
 {
-  // write to log about starting
-  INFO( "========== Starting processing tasks: " + GetTimeString() + " ==========" );
-
   UnpackFile();
   JPetWriter* currentWriter = 0;
   std::vector<JPetAnalysisModule*>::iterator taskIter;
@@ -52,12 +47,9 @@ void JPetManager::Run()
     }
     (*taskIter)->Terminate();
   }
-
-    INFO( "======== Finished processing all tasks: " + GetTimeString() + " ========\n" );
 }
 
 void JPetManager::ParseCmdLine(int argc, char** argv){
-
     fCmdParser.parse(argc, (const char **)argv);
     if (fCmdParser.paramIsSet()){
         fParamManager.readFile(fCmdParser.getParam().c_str());
@@ -66,50 +58,6 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
       if (fCmdParser.getFileType()=="hld") {
         fUnpacker.setParams(fCmdParser.getFileName().c_str());
       }
-    }
-/*    
-    if(fCmdParser.isRunNumberSet())
-    {
-      std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize() << std::endl;
-      std::cout << "fCmdParser.isRunNumberSet()" << std::endl;
-      fParamManager.fillKBsData(fCmdParser.getRunNumber());
-      std::cout << "fParamManager.getKBsDataSize() = " << fParamManager.getKBsDataSize() << std::endl;
-    }
-    */
-
-    if(fCmdParser.isRunNumberSet())
-    {
-std::cout << "Scins" << std::endl;      
-std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kScintillator) << std::endl;
-      
-std::cout << "PMs" << std::endl;      
-std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kPM) << std::endl;
-      
-std::cout << "KBs" << std::endl;      
-std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kKB) << std::endl;
-      
-std::cout << "TRBs" << std::endl;      
-std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kTRB) << std::endl;
-      
-std::cout << "TOMBs" << std::endl;      
-std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kTOMB) << std::endl;
-
-      fParamManager.fillContainers(fCmdParser.getRunNumber());
-
-std::cout << "Scins" << std::endl;      
-std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kScintillator) << std::endl;
-      
-std::cout << "PMs" << std::endl;      
-std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kPM) << std::endl;
-      
-std::cout << "KBs" << std::endl;      
-std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kKB) << std::endl;
-      
-std::cout << "TRBs" << std::endl;      
-std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kTRB) << std::endl;
-      
-std::cout << "TOMBs" << std::endl;      
-std::cout << "fParamManager.getDataSize() = " << fParamManager.getDataSize(JPetParamManager::kTOMB) << std::endl;
     }
 }
 
@@ -120,38 +68,4 @@ JPetManager::~JPetManager()
     delete (*taskIter);
     *taskIter = 0;
   }
-}
-
-/**
- * @brief Get Input File name stripped off the extension and the suffixes like .tslot.* or .phys.*
- *
- * Example: if the file given on command line was ../file.phys.hit.root, this method will return ../file
- */
-const char * JPetManager::getInputFileName() const{
-  std::string name = fCmdParser.getFileName().c_str(); 
-  // strip suffixes of type .tslot.* and .phys.*
-  int pos = name.find(".tslot");
-  if( pos == std::string::npos ){
-    pos = name.find(".phys");
-  }
-  if( pos == std::string::npos ){
-    pos = name.find(".hld");
-  }
-  if( pos != std::string::npos ){
-    name.erase( pos );
-  }
-  return name.c_str();
-}
-
-/**
- * @brief returns the time TString in the format dd.mm.yyyy HH:MM
- */
-TString JPetManager::GetTimeString() const
-{
-  time_t _tm =time(NULL );
-  struct tm * curtime = localtime ( &_tm );
-  char buf[100];
-  strftime( buf, 100, "%m.%d.%Y %R", curtime);
-  
-  return TString( buf );
 }

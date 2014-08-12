@@ -4,19 +4,32 @@
 
 ClassImp(JPetTOMB);
 
-JPetTOMB::JPetTOMB() :
-		      fId(0),
-		      fDescription(std::string("")),
-		      fSetupId(0)
-{}
 
-JPetTOMB::JPetTOMB(int p_id,
+JPetTOMB::JPetTOMBInput::JPetTOMBInput(int p_id, std::string p_description) : m_id(p_id), m_description(p_description)
+{
+}
+
+JPetTOMB::JPetTOMB(int p_id, 
 		   std::string p_description,
-		   int p_setupId) :
-							  fId(p_id),
-							  fDescription(p_description),
-							  fSetupId(p_setupId)
-{}
-  
+		   int p_TOMBInputId, 
+		   std::string p_TOMBInputDescription) :
+							  m_id(p_id),
+							  m_description(p_description),
+							  m_TOMBInput(p_TOMBInputId, p_TOMBInputDescription)
+{
+  SetName("JPetTOMB");
+}
+
 JPetTOMB::~JPetTOMB()
-{}
+{
+}
+
+int JPetTOMB::id() const
+{
+  return m_id;
+}
+
+std::string JPetTOMB::description() const
+{
+  return m_description;
+}

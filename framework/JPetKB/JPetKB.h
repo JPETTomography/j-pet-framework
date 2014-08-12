@@ -3,11 +3,9 @@
 #define JPET_KB_H
 
 #include "TNamed.h"
+//#include "../JPetUser/JPetUser.h"
 #include <TRef.h>
-#include <vector>
-#include "../JPetUser/JPetUser.h"
 #include "../JPetTRB/JPetTRB.h"
-//#include "../JPetParamManager/JPetParamManager.h"
 
 
 class JPetKB: public TNamed
@@ -15,140 +13,93 @@ class JPetKB: public TNamed
 protected:
   struct JPetKBChannel
   {
-    JPetKBChannel(void);
-    JPetKBChannel(int p_id, 
-		  bool p_isActive, 
-		  std::string p_status, 
-		  int p_portNumber, 
-		  std::string p_description);
-    
-    int fId;
-    bool fIsActive;
-    std::string fStatus;
-    int fPortNumber;
-    std::string fDescription;
+    int m_id;
+    bool m_isActive;
+    std::string m_status;
+    int m_portNumber;
+    std::string m_description;
   };
   
   struct JPetKBInput : public JPetKBChannel
   {
-    JPetKBInput(void);
-    JPetKBInput(int p_id, 
-		bool p_isActive, 
-		std::string p_status, 
-		int p_portNumber, 
-		std::string p_description, 
-		int p_KBId);
+    JPetKBInput(int p_KBId);
     
-    int fKBId;
+    int m_KBId;
   };
 
   struct JPetKBOutput : public JPetKBChannel
   {
-    JPetKBOutput(void);
-    JPetKBOutput(int p_id, 
-		 bool p_isActive, 
-		 std::string p_status, 
-		 int p_portNumber, 
-		 std::string p_description, 
-		 bool p_passedInformationIsTime, 
-		 int p_KBId, 
-		 int p_inputId, 
-		 int p_KBInputId);
+    JPetKBOutput(bool p_passedInformationIsTime, std::string p_passedInformation, int p_KBId, int p_inputId, int p_KBInputId);
     
-    bool fPassedInformationIsTime;
-    int fKBId;
-    int fInputId;
-    int fKBInputId;
+    bool m_passedInformationIsTime;
+    std::string m_passedInformation;
+    int m_KBId;
+    int m_inputId;
+    int m_KBInputId;
   };
   
+  int m_id;
+  bool m_isActive;
+  std::string m_status;
+  std::string m_description;
+  int m_version;
+  //JPetUser &m_JPetUser;		//creatorId
+  int m_userId;		// creatorId
+
 public:
-  JPetKB(void);
-  JPetKB(int p_id, 
-	 bool p_isActive, 
-	 std::string p_status, 
-	 std::string p_description, 
-	 int p_version, 
-	 const JPetUser &p_user);
-  ~JPetKB(void);
+  JPetKB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId);
+  virtual ~JPetKB(void);
   
-  int getId() const { return fId; }
-  bool getIsActive() const { return fIsActive; }
-  std::string getStatus() const { return fStatus; }
-  std::string getDescription() const { return fDescription; }
-  int getVersion() const { return fVersion; }
-  JPetUser getUser() const { return fUser; }
+  virtual int id(void) const;
+  virtual bool isActive(void) const;
+  virtual std::string status(void) const;
+  virtual std::string description(void) const;
+  virtual int version(void) const;
   
-  std::vector<TRef> getTRefTRBs() const { return fTRefTRBs; }
+  JPetTRB* getTRefTRB() { return (JPetTRB*)fTRefTRBs.GetObject(); }
+  
+  void setTRefTRB(JPetTRB &p_TRB)
+  {
+    fTRefTRBs = &p_TRB;
+  }
+  
+  /*std::vector<TRef> getTRefTRBs() const { return fTRefTRBs; }
+
+  JPetTRB* getTRefTRB(int p_index)
+  {
+    if(p_index < fTRefTRBs.size())
+    {
+      return (JPetTRB*)fTRefTRBs[p_index].GetObject();
+    }
+    return NULL;
+  }
+  
   void setTRefTRBs(std::vector<TRef> &p_TRefTRBs)
   {
     fTRefTRBs = p_TRefTRBs;
   }
-  void addTRefTRB(JPetTRB &p_TRB)
+  
+  void addTRefKB(JPetTRB &p_TRB)
   {
     fTRefTRBs.push_back(&p_TRB);
-  }
-  std::size_t getTRefTRBsSize() const
-  {
-    return fTRefTRBs.size();
-  }
-  
-  std::vector<JPetKB::JPetKBInput> getInputs() const { return fInputs; }
-  void setInputs(std::vector<JPetKBInput> &p_Inputs)
-  {
-    fInputs = p_Inputs;
-  }
-  void addInput(JPetKBInput &p_Input)
-  {
-    fInputs.push_back(p_Input);
-  }
-  std::size_t getInputsSize() const
-  {
-    return fInputs.size();
-  }
+  }*/
 
-  std::vector<JPetKB::JPetKBOutput> getOutputs() const { return fOutputs; }
-  void setOutputs(std::vector<JPetKBOutput> &p_Outputs)
-  {
-    fOutputs = p_Outputs;
-  }
-  void addOutput(JPetKBOutput &p_Output)
-  {
-    fOutputs.push_back(p_Output);
-  }
-  std::size_t getOutputsSize() const
-  {
-    return fOutputs.size();
-  }
-  
-  friend class JPetParamManager;
-  
 protected:
-  int fId;
-  bool fIsActive;
-  std::string fStatus;
-  std::string fDescription;
-  int fVersion;
-  JPetUser fUser;
-
-  std::vector<TRef> fTRefTRBs;
-  std::vector<JPetKBInput> fInputs;
-  std::vector<JPetKBOutput> fOutputs;
+  TRef fTRefTRBs;
+  
+  void clearTRefTRBs()
+  {
+    fTRefTRBs = NULL;
+  }
+  
+  /*std::vector<TRef> fTRefTRBs;
   
   void clearTRefTRBs()
   {
     fTRefTRBs.clear();
-  }
+  }*/
   
-  void clearInputs()
-  {
-    fInputs.clear();
-  }
-  
-  void clearOutputs()
-  {
-    fOutputs.clear();
-  }
-  
+private:
   ClassDef(JPetKB, 1);
 };
 
