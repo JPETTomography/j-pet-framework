@@ -16,7 +16,6 @@
 #include <vector>
 #include <list>
 #include <TNamed.h> 
-#include <TString.h>
 
 class JPetAnalysisModule;
 class JPetReader;
@@ -30,11 +29,10 @@ class JPetManager: public TNamed {
   void Run();
   void AddTask(JPetAnalysisModule* mod);
   void ParseCmdLine(int argc, char** argv);
-  const char* getInputFileName() const;
+  const char* getInputFileName() const { return fCmdParser.getFileName().c_str(); }
   JPetParamManager & getParamManagerInstance() { return fParamManager; }
   void UnpackFile() { if(fCmdParser.fileTypeIsSet()) fUnpacker.Exec();}
-  TString GetTimeString() const;
-
+ 
   ClassDef(JPetManager,1);
 
  private:

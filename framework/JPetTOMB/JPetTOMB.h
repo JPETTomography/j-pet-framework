@@ -8,31 +8,25 @@
 class JPetTOMB: public TNamed
 {
 protected:
-  struct TOMBInput
+  struct JPetTOMBInput
   {
-    int fId;
-    std::string fDescription;
-    
-    TOMBInput(int p_id, std::string p_description) : fId(p_id), fDescription(p_description)
-    {}
+    JPetTOMBInput(int p_id, std::string p_description);
+    int m_id;
+    std::string m_description;
   };
   
+  int m_id;
+  std::string m_description;
+  JPetTOMBInput m_TOMBInput;
+  
 public:
-  JPetTOMB(void);
-  JPetTOMB(int p_id, std::string p_description, int p_setupId);
-  ~JPetTOMB(void);
+  JPetTOMB(int p_id, std::string p_description, int p_TOMBInputId, std::string p_TOMBInputDescription);
+  virtual ~JPetTOMB(void);
   
-  int getId() const { return fId; }
-  std::string getDescription() const { return fDescription; }
-  int getSetupId() const { return fSetupId; }
-  //TOMBInput getTOMBInput() const { return fTOMBInput; }
+  virtual int id(void) const;
+  virtual std::string description(void) const;
   
-protected:
-  int fId;
-  std::string fDescription;
-  int fSetupId;
-  //TOMBInput fTOMBInput;
-  
+private:
   ClassDef(JPetTOMB, 1);
 };
 
