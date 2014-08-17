@@ -23,3 +23,5 @@ foreach (@testFiles) {
 #  `$run_command`;
 
 }
+
+system("cd ./ROOTExamples/; ./run_tests.sh")

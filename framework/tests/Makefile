@@ -36,8 +36,11 @@ LOG = JPet.log
 %Test.o: %Test.cpp
 %Test.exe: %Test.o
 ###################
-all: $(TESTS)
+all: $(TESTS) 
+	cd ./ROOTExamples/; make;
 run: all
 	./run_tests.pl 
+	cd ./ROOTExamples/; ./run_tests.sh
 clean:
 	rm -f *.exe *.o $(LOG) 
+	cd ./ROOTExamples/; make clean
