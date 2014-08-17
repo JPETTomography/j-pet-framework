@@ -1,0 +1,70 @@
+Aim
+---
+TODO
+
+Expected output
+---------------
+TODO
+
+Description
+--------------
+TODO
+
+Additional info
+--------------
+TODO
+
+Description
+------------
+TODO
+
+Compiling 
+------------
+TODO
+
+Running
+------------
+TODO
+
+Author
+------------
+TODO
+
+
+
+Testy:
+1)
+Klasa A, B
+A TRef na B
+zapis/odczyt do pliku
+wykorzystanie funkcji
+setTRef(), getTRef()
+
+2)
+Klasa A, B
+A TRef na B
+zapis/odczyt do pliku
+wykorzystanie funkcji na innym obiekcie ParamClass
+setTRef(), getTRef()
+
+3)
+Klasa A, B
+A TRef (std::vector) na B
+zapis/odczyt do pliku
+wykorzystanie funkcji
+setTRef(), getTRef()
+
+4)
+Klasa A, B
+A TRef (std::vector) na B
+zapis/odczyt do pliku
+wykorzystanie funkcji na innym obiekcie ParamClass
+setTRef(), getTRef()
+
+5)
+proba sprawdzenia TClonesArray 
+- bledy testow zaraz po kompilacji EventClass (z TClonesArray) bez uzycia TClonesArray w testach
+jezeli jest zapis/odczyt z pliku
+
+6), 7), 8), 9) analogiczne testy do 1), 2), 3), 4)
+przy uzyciu nieco inne metody zapisu do pliku TList.
