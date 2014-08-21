@@ -99,8 +99,8 @@ class JPetHit : public TNamed {
   inline void SetRightSignal(JPetSignal RightSignal) {fRightSignal=RightSignal;}
   //inline const JPetSignals& GetSignals() const {return *fSignals;};
   //inline void SetScintillator(TRef fScintillator) {fScintillator=Scintillator;}
-  inline void SetBarrelSlot(JPetBarrelSlot* bs) {fBarrelSlot.SetObject(bs);}
-  inline void SetScintillator(JPetScin* sc) {fScintillator.SetObject(sc);}
+  inline void SetBarrelSlot(JPetBarrelSlot* bs) {fBarrelSlot = bs;}
+  inline void SetScintillator(JPetScin* sc) {fScintillator = sc;}
 
   ClassDef(JPetHit,1);
   

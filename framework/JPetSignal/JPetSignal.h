@@ -113,8 +113,8 @@ class JPetSignal: public TNamed
 
   inline void SetPMID( Int_t pmid ) { fPMID = pmid; }
   inline Int_t GetPMID() const { return fPMID; }
-  inline void SetPM(JPetPM * pm) { fPM.SetObject( pm ); }
-  inline void SetBarrelSlot(JPetBarrelSlot * bs) { fBarrelSlot.SetObject( bs ); }
+  inline void SetPM(JPetPM * pm) { fPM = pm; }
+  inline void SetBarrelSlot(JPetBarrelSlot * bs) { fBarrelSlot = bs; }
   inline JPetPM * GetPM() const { return (JPetPM*) fPM.GetObject(); }
   inline JPetBarrelSlot * GetBarrelSlot() const { return (JPetBarrelSlot*) fBarrelSlot.GetObject(); }
     
