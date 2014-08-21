@@ -55,9 +55,9 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
  */
   bool IsTime() const ;
 
-  inline void SetPM(JPetPM * pm) { fPM.SetObject( pm ); }
-  inline void SetTRB(JPetTRB * trb) { fTRB.SetObject( trb ); }
-  inline void SetKB(JPetKB * kb) { fKB.SetObject( kb ); }
+  inline void SetPM(JPetPM * pm) { fPM = pm; }
+  inline void SetTRB(JPetTRB * trb) { fTRB = trb; }
+  inline void SetKB(JPetKB * kb) { fKB= kb; }
   // Set time wrt beginning of TSlot [ps] or charge
   inline void SetValue( float val ) { fValue = val; }
   inline void SetType( EdgeType type ) { fType = type; }
