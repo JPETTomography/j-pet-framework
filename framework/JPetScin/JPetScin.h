@@ -62,6 +62,8 @@ protected:
     fTRefPMLeft = NULL;
     fTRefPMRight = NULL;
   }
+  
+  friend class JPetParamManager;
 };
 
 #endif
