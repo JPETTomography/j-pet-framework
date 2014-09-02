@@ -42,6 +42,8 @@ protected:
   {
     fTRefTOMB = NULL;
   }
+  
+  friend class JPetParamManager;
 };
 
 #endif

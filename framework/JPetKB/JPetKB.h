@@ -101,6 +101,8 @@ protected:
   
 private:
   ClassDef(JPetKB, 1);
+  
+  friend class JPetParamManager;
 };
 
 #endif // JPET_KB_H

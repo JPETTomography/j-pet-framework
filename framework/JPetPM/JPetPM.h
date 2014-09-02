@@ -78,6 +78,8 @@ protected:
   {
     fTRefKBs.clear();
   }*/
+  
+  friend class JPetParamManager;
 };
 
 #endif
