@@ -31,7 +31,9 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_CHECK_CLOSE(hit.GetTime(), 0.0f, epsilon);
   BOOST_CHECK_CLOSE(hit.GetQualityOfTime(), 0.0f, epsilon);
   
-  BOOST_CHECK(hit.fPos != NULL);
+  BOOST_CHECK_CLOSE(hit.fPos.X(),0, epsilon );
+  BOOST_CHECK_CLOSE(hit.fPos.Y(),0, epsilon );
+  BOOST_CHECK_CLOSE(hit.fPos.Z(),0, epsilon );
   
 //  BOOST_CHECK(hit.fSignals->first == NULL);
 //  BOOST_CHECK(hit.fSignals->second == NULL);
