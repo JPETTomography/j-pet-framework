@@ -23,7 +23,7 @@
 #include "../JPetTRB/JPetTRB.h"
 #include "../JPetTOMB/JPetTOMB.h"
 
-// Czesc kodu nie jest moja - trzeba poprawic
+
 class JPetWriter : private boost::noncopyable
 {
 public:
