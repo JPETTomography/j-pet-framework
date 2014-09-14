@@ -19,7 +19,7 @@
 
 #include "../../JPetLoggerInclude.h"
 
-// czesc kodu nie jest moja - trzeba poprawic
+
 class JPetReader : private boost::noncopyable
 {
 public:
