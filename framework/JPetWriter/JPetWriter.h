@@ -7,7 +7,14 @@
 #include <TFile.h>
 #include <TList.h>
 #include <TTree.h>
+
+#ifndef __CINT__
 #include <boost/noncopyable.hpp>
+#else
+namespace boost;
+class boost::noncopyable;
+#endif /* __CINT __ */
+
 #include "../../JPetLoggerInclude.h"
 
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
@@ -22,6 +29,7 @@
 #include "../JPetKB/JPetKB.h"
 #include "../JPetTRB/JPetTRB.h"
 #include "../JPetTOMB/JPetTOMB.h"
+
 
 
 class JPetWriter : private boost::noncopyable

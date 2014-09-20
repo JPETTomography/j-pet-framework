@@ -5,6 +5,7 @@
  */
 
 #include "JPetTreeHeader.h"
+#include "../CommonTools/CommonTools.h"
 
 ClassImp(JPetTreeHeader);
 
@@ -17,22 +18,22 @@ TString JPetTreeHeader::Stringify() const
 {
   TString tmp;
   tmp.Append( "Data file info:" );
-  tmp.Append( "\nrun number          :  " ).Append( TString::Itoa( fRunNo, 10.));
+  tmp.Append( "\nrun number          :  " ).Append( CommonTools::Itoa(fRunNo));
   tmp.Append( "\nproducer name       :  " ).Append( fProducerName );
-  tmp.Append( "\nproducer version    :  " ).Append( TString::Itoa( fProducerVersion, 10.));
+  tmp.Append( "\nproducer version    :  " ).Append( CommonTools::Itoa( fProducerVersion));
   tmp.Append("\n");
 
-  tmp.Append( "number of HLD files :  " ).Append( TString::Itoa( fHLDnames.size(), 10.));
+  tmp.Append( "number of HLD files :  " ).Append( CommonTools::Itoa( fHLDnames.size()));
   tmp.Append( "\nList of HLD files:\n" );
   tmp.Append("-----------------------------------------------------------------\n");
   // iterate over all HLD files
   for (int i = 0; i < fHLDnames.size(); i++ ) {
     tmp.Append( "file : " ).Append( getHLDname(i) ).Append("   ");
-    tmp.Append( "id : " ).Append( TString::Itoa( getHLDid(i), 10.) ).Append("\n");
+    tmp.Append( "id : " ).Append( CommonTools::Itoa( getHLDid(i)) ).Append("\n");
     tmp.Append( "time window width : " ).Append( Form( "%f ps", getHLDwindowWidth(i) ) ).Append("\n");
     tmp.Append( "start time : " ).Append( Form("%lf", getHLDstartTime(i) ) ).Append("\n");
-    tmp.Append( "first event : " ).Append( TString::Itoa( getHLDfirstEvt(i), 10) ).Append("   ");
-    tmp.Append( "number of events : " ).Append( TString::Itoa( getHLDnEvts(i), 10.) ).Append("\n");
+    tmp.Append( "first event : " ).Append( CommonTools::Itoa( getHLDfirstEvt(i)) ).Append("   ");
+    tmp.Append( "number of events : " ).Append( CommonTools::Itoa( getHLDnEvts(i)) ).Append("\n");
     tmp.Append("-----------------------------------------------------------------\n");
   }
   
