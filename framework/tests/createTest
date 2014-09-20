@@ -1,0 +1,90 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Cwd;
+#0. check if a folder already exist
+#1. create a folder
+#2. create a Makefile
+#4. create a test file
+
+my $pwd = cwd();
+#current path
+my $pathToTemplates = $pwd."/templates";
+
+(scalar(@ARGV) == 1) or die "bad number of arguments $?";
+
+my $project = $ARGV[0];
+my $dir = $project."Test";
+
+if (-d $dir)
+{
+  die "the directory called $dir already exists\n";
+}
+elsif (-e $dir)
+{
+  die "not-directory called $dir already exists\n";
+}
+
+mkdir($dir) or die "cannot create $dir directory \n";
+
+chdir($dir) or die "$!";
+
+createFiles($project);
+
+sub getFileContent {
+  my $file = $_[0];
+  my $content = do {
+    local $/ = undef;
+    open my $fh,"<",$file
+    or die "could not open $file: $!";
+    <$fh>;
+  };
+  return $content;
+}
+
+sub createFiles 
+{
+  my $project = $_[0];
+  createFile("Makefile", 
+             "_Makefile_", 
+             sub { my $content=$_[0];
+                  $content=~s/PROJECT =/PROJECT=$project/;
+                  return $content;
+                 }
+             );
+
+  createFile("$project"."Test.cpp",
+             "_TestTemplateFile_", 
+             sub { my $content=$_[0];
+                  $content=~s/Project/$project/g;
+                  # my $module = $project."Test";
+                  # $content=~s/ProjectTest/$module/;
+                  return $content;
+                }
+            );
+}
+
+sub createFile
+{
+  my $file = $_[0];
+  my $template = $_[1];
+  my $filter = $_[2];
+  my $content = getFileContent($pathToTemplates."/".$template);
+  $content = $filter->($content);
+  saveToFile($file, $content);
+}
+
+sub saveToFile {
+  my $file = $_[0];
+  my $content = $_[1];
+  if (-f $file) {
+#i should probably remove also the directory
+    die "$file already exists\n";
+  }
+  open my $fh, ">", , $file
+  or die "could not open $file: $!";
+  print $fh $content;
+  close $fh;
+}
+

@@ -1,0 +1,47 @@
+Aim
+---
+Show how to create new unit test of a class ABClass and how to run the code
+
+Expected output
+---------------
+New directory ABClassTest with predifined:
+Makefile
+ABClassTest.cpp
+
+
+Description
+--------------
+Use createTest script to generate a predefined code which 
+will be placed in ABClassTest directory.
+Use script run_tests.pl to run all the defined tests.
+
+Additional info
+--------------
+Important, directories name that contain unit test code should finish with
+"Test", because run_tests.pl use it to determine which folders contain tests. 
+This suffix is added automatically by createTest script.
+
+Compiling 
+------------
+Call Makefile from the main directory (tests) to compile all tests 
+OR
+enter to chosen folder and call the Makefile to compile a given test
+
+Running
+------------
+To create a new unit test folder of class ABClass call:
+./createTest ABClass
+The folder ABClassTest will be created.
+Next, add the appropriate test code into ABClassTest/ABClassTest.cpp
+and modify ABClassTest/Makefile if needed. 
+
+To run all tests use perl script run_tests.pl
+./run_tests.pl
+It should invoke all the tests from subfolders.
+One can also define the BOOST information level (all, error) e.g.
+./run_tests.pl all 
+will display more detailed information about performed tests.
+
+Author
+------------
+Wojciech Krzemien
