@@ -12,6 +12,7 @@ class JPetCmdParser;
 
 #ifndef __CINT__
 #include "boost/program_options.hpp" // Library parsing command line arguments
+#endif /* __CINT__ */
 #include <string>
 
 namespace po = boost::program_options;
@@ -43,5 +44,4 @@ private:
 
 };
 
-#endif /* __CINT__ */
 #endif /* _JPET_CMD_PARSER_H_ */

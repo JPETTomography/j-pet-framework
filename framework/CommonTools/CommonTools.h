@@ -3,13 +3,15 @@
 #define COMMON_TOOLS_H
 #include <boost/noncopyable.hpp>
 #include <ctime>
+#include <sstream>
+#include <string>
+
 
 
 class CommonTools : public boost::noncopyable
 {
 public:
-  static const std::string currentDateTime() 
-  {
+  static const std::string currentDateTime() {
     time_t     now = time(0);
     struct tm  tstruct;
     char       buf[80];
@@ -19,11 +21,31 @@ public:
 
     return buf;
   }
-  
-  static std::size_t findSubstring(const std::string &p_string, const std::string &p_substring)
-  {
+
+  static std::size_t findSubstring(const std::string& p_string, const std::string& p_substring) {
     // TODO check extension of the file. If necessary change it to another.
     return p_string.find(p_substring);
+  }
+
+  static std::string Itoa(int x) {
+    return intToString(x);
+  }
+
+  static std::string intToString(int x) {
+    std::ostringstream out;
+    out << x;
+    return out.str();
+  }
+  static std::string doubleToString(double x) {
+    std::ostringstream out;
+    out << x;
+    return out.str();
+  }
+  static int stringToInt(const std::string& str) {
+    std::istringstream in(str);
+    int num;
+    in >> num;
+    return num;
   }
 };
 

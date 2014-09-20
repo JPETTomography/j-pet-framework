@@ -8,6 +8,13 @@
 #include <vector>
 #include <boost/noncopyable.hpp>
 
+#ifndef __CINT__
+#include <boost/noncopyable.hpp>
+#else
+namespace boost;
+class boost::noncopyable;
+#endif /* __CINT __ */
+
 /*
 #include "../JPetScin/JPetScin.h"
 #include "../JPetPM/JPetPM.h"

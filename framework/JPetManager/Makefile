@@ -11,15 +11,16 @@ LDOPTS        =  `root-config --glibs` -g -lboost_program_options
 #C++ Files
 SOURCES       =  JPetManager.cpp
 OBJECTS       =  $(SOURCES:.cpp=.o)
-DICT_OBJECTS  =  $(SOURCES:.cpp=Dict.cpp)
-OBJECTS      +=  $(SOURCES:.cpp=Dict.o)
+#DICT_OBJECTS  =  $(SOURCES:.cpp=Dict.cpp)
+#OBJECTS      +=  $(SOURCES:.cpp=Dict.o)
 HEADERS       =  $(SOURCES:.cpp=.h) 
 
 %.o: %.cpp
 	$(CC) $^ -o $@  -c $(COPTS)
-all: $(DICT_OBJECTS) $(OBJECTS)
+#all: $(DICT_OBJECTS) $(OBJECTS)
+all: $(OBJECTS)
 %Dict.cpp:
-	@echo "Generating dictionary ..."
-	@rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
+	echo "Generating dictionary ..."
+	rootcint -f $@ -c -P -I$(ROOTSYS) $(HEADERS)
 clean:
 	rm -f $(OBJECTS) *Dict*
