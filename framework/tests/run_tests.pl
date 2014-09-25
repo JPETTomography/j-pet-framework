@@ -10,10 +10,15 @@ if ( @ARGV > 0) {
 } else {
   $level="error";
 }
-my @testFiles = `ls *Test.exe`;
-foreach (@testFiles) {
-  chomp $_;  
-  my $run_command = "./".$_."  --log_level=".$level;
+my @tests = `ls -d *Test/`;
+#my @testFiles = `ls *Test.exe`;
+#foreach (@testFiles) {
+foreach my $test_dir (@tests) {
+  chomp $test_dir;  
+  my $test =$test_dir;
+  chop $test; #remove trailing /
+  $test = $test.".exe";
+  my $run_command = $test_dir.$test." --log_level=".$level;
   open my $handler, $run_command." |";
   while (<$handler>) {
     print $_;
@@ -24,4 +29,4 @@ foreach (@testFiles) {
 
 }
 
-system("cd ./ROOTExamples/; ./run_tests.sh")
+#system("cd ./ROOTExamples/; ./run_tests.sh")

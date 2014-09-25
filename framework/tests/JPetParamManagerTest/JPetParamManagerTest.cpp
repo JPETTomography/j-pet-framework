@@ -3,8 +3,7 @@
 #include <boost/test/unit_test.hpp>
 
 #define private public
-
-#include "../JPetParamManager/JPetParamManager.h"
+#include "../../JPetParamManager/JPetParamManager.h"
 
 #include <cstddef>
 

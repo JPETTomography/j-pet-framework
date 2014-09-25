@@ -1,16 +1,9 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE JPetSignalTest
+#define BOOST_TEST_MODULE JPetTSlotTest
 #include <boost/test/unit_test.hpp>
 
 #define private public
-
-#include "../JPetTSlot/JPetTSlot.h"
-#include "../JPetSigCh/JPetSigCh.h"
-#include "../JPetPM/JPetPM.h"
-#include "../JPetScin/JPetScin.h"
-#include "../JPetTRB/JPetTRB.h"
-#include "../JPetSignal/JPetSignal.h"
-#include <vector>
+#include "../../JPetTSlot/JPetTSlot.h"
 
 /// @todo update methods tests are outdated
 //#include <TError.h> /// gErrorIgnoreLevel

@@ -10,7 +10,7 @@
 #include <cassert>
 #include <ctime>
 
-ClassImp(JPetManager);
+//ClassImp(JPetManager);
 
 JPetManager& JPetManager::GetManager()
 {

@@ -2,13 +2,11 @@
 #define BOOST_TEST_MODULE JPetReaderTest
 #include <boost/test/unit_test.hpp>
 
-#define protected public
 #define private public
-
-#include "../JPetSigCh/JPetSigCh.h"
-#include "../JPetSignal/JPetSignal.h"
-#include "../JPetWriter/JPetWriter.h"
-#include "../JPetReader/JPetReader.h"
+#define protected public
+#include "../../JPetReader/JPetReader.h"
+#include "../../JPetWriter/JPetWriter.h"
+#include "../../JPetSigCh/JPetSigCh.h"
 
 #include <cstddef>
 #include <iostream>
@@ -16,7 +14,6 @@
 
 #include <TError.h> /// gErrorIgnoreLevel
 #include <TObjString.h>
-
 
 BOOST_AUTO_TEST_SUITE (FirstSuite)
 
@@ -94,6 +91,5 @@ BOOST_AUTO_TEST_CASE (read_and_write_header )
     //TObjString* output_string = static_cast<TObjString *>(reader.GetHeader());
     //BOOST_CHECK(input_string.Compare(output_string) == 0);
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()
