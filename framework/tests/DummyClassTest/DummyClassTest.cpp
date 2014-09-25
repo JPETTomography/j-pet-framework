@@ -6,7 +6,7 @@
 
 #define private public
 
-#include "../DummyClass/DummyClass.h"
+#include "../../DummyClass/DummyClass.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
   

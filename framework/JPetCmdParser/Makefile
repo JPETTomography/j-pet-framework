@@ -16,7 +16,8 @@ HEADERS       =  $(SOURCES:.cpp=.h)
 
 %.o: %.cpp
 	$(CC) $^  -o $@  -c $(COPTS)
-all: $(OBJECTS) #$(DICT_OBJECTS)
+all: $(OBJECTS) 
+#$(DICT_OBJECTS)
 #%Dict.cpp:
 #	@echo $(HEADERS)
 #	@echo "Generating dictionary ..."

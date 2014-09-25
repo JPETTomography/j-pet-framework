@@ -3,8 +3,8 @@
 #include <boost/test/unit_test.hpp>
 
 #define private public
+#include "../../JPetScin/JPetScin.h"
 
-#include "../JPetScin/JPetScin.h"
 //  public:
 //JPetScin();
 //JPetScin(int id, float attenLen, float length, float height, float width);

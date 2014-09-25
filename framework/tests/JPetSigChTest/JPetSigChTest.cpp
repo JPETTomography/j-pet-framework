@@ -1,16 +1,9 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE JPetSignalTest
+#define BOOST_TEST_MODULE JPetSigChTest
 #include <boost/test/unit_test.hpp>
 
 #define private public
-
-#include "../JPetSigCh/JPetSigCh.h"
-#include "../JPetPM/JPetPM.h"
-#include "../JPetScin/JPetScin.h"
-#include "../JPetTRB/JPetTRB.h"
-#include "../JPetSignal/JPetSignal.h"
-#include <vector>
-
+#include "../../JPetSigCh/JPetSigCh.h"
 
 /// @todo update the method list - tests are outdated
 //  JPetSigCh() { init(); }
@@ -95,5 +88,4 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 //  BOOST_CHECK_EQUAL(test.getPM().getID(), test2.getPM().getID());
 //  BOOST_CHECK_EQUAL(test.getTRB().getID(), test2.getTRB().getID());
 //}
-
 BOOST_AUTO_TEST_SUITE_END()

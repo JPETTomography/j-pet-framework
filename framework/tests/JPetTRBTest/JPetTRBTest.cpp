@@ -3,8 +3,8 @@
 #include <boost/test/unit_test.hpp>
 
 #define private public
+#include "../../JPetTRB/JPetTRB.h"
 
-#include "../JPetTRB/JPetTRB.h"
 //  public:
 //  JPetTRB();
 //  JPetTRB(int id, int type, int channel,);

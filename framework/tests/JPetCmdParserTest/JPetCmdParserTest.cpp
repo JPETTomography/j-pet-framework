@@ -3,12 +3,12 @@
   *  @file JPetCmdParserTest.cpp
   *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
   */ 
-  #include "../JPetCmdParser/JPetCmdParser.h"
-  
-  #define BOOST_TEST_DYN_LINK
-  #define BOOST_TEST_MODULE  JPetCmdParserTest
-  #include <boost/test/unit_test.hpp>
-  #include <cstdlib>
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE JPetCmdParserTest
+#include <boost/test/unit_test.hpp>
+#include <cstdlib>
+#define private public
+#include "../../JPetCmdParser/JPetCmdParser.h"
 
   BOOST_AUTO_TEST_SUITE(FirstSuite)
 
@@ -39,4 +39,3 @@
   }
 
   BOOST_AUTO_TEST_SUITE_END()
-  
