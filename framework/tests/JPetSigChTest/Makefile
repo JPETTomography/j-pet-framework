@@ -1,12 +1,12 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetSigCh
-EXTRA_MODULES =
+EXTRA_MODULES =JPetPM JPetFEB JPetTRB
 #classes that need Dictionnaries 
-DICTS =JPetSigCh
-PQXX_LIB_SET = YES
-DBHANDLER_LIB_SET = YES
-UNPACKER_LIB_SET = YES
+DICTS =JPetSigCh JPetPM JPetFEB JPetTRB
+PQXX_LIB_SET = NO
+DBHANDLER_LIB_SET = NO
+UNPACKER_LIB_SET = NO
 ###################
 OS = $(shell uname)
 CO = g++
@@ -25,8 +25,6 @@ OBJ_EXTRA= $(SRC_EXTRA:.cpp=.o)
 OBJ_ALL = $(OBJ_MODULE)
 OBJ_ALL += $(OBJ_EXTRA)
 ##################
-SHAREDLIBS = $(SRC_DIR)/../libJPetFramework.so
-###################
 #ROOT DICTIONNARIES
 OBJ_DICT =$(foreach DICT, $(DICTS), $(SRC_DIR)/$(DICT)/$(DICT)Dict.o) 
 OBJ_ALL += $(OBJ_DICT)
@@ -53,7 +51,7 @@ endif
 %.o: %.cpp
 	$(CO) -o $@ $(CFLAGS) -c $<
 %.exe: %.o
-	$(CO) -o $@ $< $(OBJ_ALL) $(LDFLAGS) $(SHAREDLIBS)
+	$(CO) -o $@ $< $(OBJ_ALL) $(LDFLAGS)
 
 ###################
 %Test.o: %Test.cpp
