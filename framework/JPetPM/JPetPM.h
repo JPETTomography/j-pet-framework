@@ -4,7 +4,7 @@
 #include "TNamed.h"
 #include <utility>
 #include <TRef.h>
-#include "../JPetKB/JPetKB.h"
+#include "../JPetFEB/JPetFEB.h"
 
 /**
  * @brief Parametric class representing database information on parameters of a photomultiplier.
@@ -30,20 +30,20 @@ class JPetPM: public TNamed
   inline void setHVgain(float g1, float g2) { fHVgain.first = g1; fHVgain.second = g2; }
   inline void setHVgain(const std::pair<float,float>& gain) { fHVgain = gain; }
 
-  JPetKB* getTRefKB() { return (JPetKB*)fTRefKBs.GetObject(); }
+  JPetFEB* getTRefKB() { return (JPetFEB*)fTRefKBs.GetObject(); }
   
-  void setTRefKB(JPetKB &p_KB)
+  void setTRefKB(JPetFEB &p_KB)
   {
     fTRefKBs = &p_KB;
   }
   
   /*std::vector<TRef> getTRefKBs() const { return fTRefKBs; }
 
-  JPetKB* getTRefKB(int p_index)
+  JPetFEB* getTRefKB(int p_index)
   {
     if(p_index < fTRefKBs.size())
     {
-      return (JPetKB*)fTRefKBs[p_index].GetObject();
+      return (JPetFEB*)fTRefKBs[p_index].GetObject();
     }
     return NULL;
   }
@@ -53,7 +53,7 @@ class JPetPM: public TNamed
     fTRefKBs = p_TRefKBs;
   }
   
-  void addTRefKB(JPetKB &p_KB)
+  void addTRefKB(JPetFEB &p_KB)
   {
     fTRefKBs.push_back(&p_KB);
   }*/

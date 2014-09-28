@@ -18,7 +18,7 @@ class boost::noncopyable;
 /*
 #include "../JPetScin/JPetScin.h"
 #include "../JPetPM/JPetPM.h"
-#include "../JPetKB/JPetKB.h"
+#include "../JPetFEB/JPetFEB.h"
 #include "../JPetTRB/JPetTRB.h"
 #include "../JPetTOMB/JPetTOMB.h"
 */

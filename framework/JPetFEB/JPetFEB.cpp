@@ -1,30 +1,30 @@
-// JPet Konrad Board - JPetKB.cpp
-#include "JPetKB.h"
+// JPet Konrad Board - JPetFEB.cpp
+#include "JPetFEB.h"
 
 
-ClassImp(JPetKB);
+ClassImp(JPetFEB);
 
 
-JPetKB::JPetKBInput::JPetKBInput(int p_KBId) : JPetKBChannel(), m_KBId(p_KBId)
+JPetFEB::JPetFEBInput::JPetFEBInput(int p_FEBId) : JPetFEBChannel(), m_FEBId(p_FEBId)
 {
 }
 
-JPetKB::JPetKBOutput::JPetKBOutput(bool p_passedInformationIsTime,
+JPetFEB::JPetFEBOutput::JPetFEBOutput(bool p_passedInformationIsTime,
 				    std::string p_passedInformation, 
-				    int p_KBId, 
+				    int p_FEBId, 
 				    int p_inputId, 
-				    int p_KBInputId) : 
-						      JPetKBChannel(),
+				    int p_FEBInputId) : 
+						      JPetFEBChannel(),
 						      m_passedInformationIsTime(p_passedInformationIsTime),
 						      m_passedInformation(p_passedInformation),
-						      m_KBId(p_KBId),
+						      m_FEBId(p_FEBId),
 						      m_inputId(p_inputId),
-						      m_KBInputId(p_KBInputId)
+						      m_FEBInputId(p_FEBInputId)
 {
 }
 
 
-JPetKB::JPetKB(int p_id, 
+JPetFEB::JPetFEB(int p_id, 
 	       bool p_isActive, 
 	       std::string p_status, 
 	       std::string p_description, 
@@ -37,34 +37,34 @@ JPetKB::JPetKB(int p_id,
 				      m_version(p_version),
 				      m_userId(p_userId) 
 {
-  SetName("JPetKB");
+  SetName("JPetFEB");
 }
 
-JPetKB::~JPetKB()
+JPetFEB::~JPetFEB()
 {
 }
 
-int JPetKB::id() const
+int JPetFEB::id() const
 {
   return m_id;
 }
 
-bool JPetKB::isActive() const
+bool JPetFEB::isActive() const
 {
   return m_isActive;
 }
 
-std::string JPetKB::status() const
+std::string JPetFEB::status() const
 {
   return m_status;
 }
 
-std::string JPetKB::description() const
+std::string JPetFEB::description() const
 {
   return m_description;
 }
 
-int JPetKB::version() const
+int JPetFEB::version() const
 {
   return m_version;
 }
