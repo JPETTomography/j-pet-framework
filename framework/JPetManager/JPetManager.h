@@ -22,6 +22,11 @@ class JPetAnalysisModule;
 class JPetReader;
 class JPetWriter;
 
+/**
+ * @brief Main manager of the analysis performed with the J-PET Framework.
+ *
+ * Each anaylsis program needs an instance of the JPetManager which is responsible for parsing command  line arguments, handling data from the database and for executing subsequent Analysis Modules.
+ */
 class JPetManager: public TNamed {
  public:
   static JPetManager& GetManager();

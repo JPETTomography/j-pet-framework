@@ -5,7 +5,10 @@
 #include <TRef.h>
 #include "../JPetTOMB/JPetTOMB.h"
 
-
+/**
+ * @brief Parametric class representing database information on parameters of a TRB board.
+ *
+ */
 class JPetTRB: public TNamed
 {
  public:

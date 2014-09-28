@@ -7,7 +7,11 @@
 #include <TRef.h>
 #include "../JPetTRB/JPetTRB.h"
 
-
+/**
+ * @brief Parametric class representing database information on parameters of a front-end board.
+ *
+ * The board represented by this class can be: KonradBoard(KB), Majewski Board or MP board.
+ */
 class JPetKB: public TNamed
 {
 protected:

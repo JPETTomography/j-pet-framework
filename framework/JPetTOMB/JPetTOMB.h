@@ -4,7 +4,11 @@
 
 #include "TNamed.h"
 
-
+/**
+ * @brief Parametric class representing the abstract global channel number from the database.
+ *
+ * The TOMB channel abstracts over the hardware channels of certain TRB and fron-end boards (FEB).
+ */
 class JPetTOMB: public TNamed
 {
 protected:

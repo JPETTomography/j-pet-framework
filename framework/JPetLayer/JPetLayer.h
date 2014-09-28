@@ -10,6 +10,11 @@
 class JPetSlot;
 class JPetFrame;
 
+/**
+ * @brief Parametric class representing database information on a single cyllindrical layer of a JPetFrame.
+ *
+ * The layer consists of slots represented by JPetBarrelSlot objects.
+ */
 class JPetLayer: public TNamed
 {
 protected:

@@ -6,7 +6,10 @@
 #include <TRef.h>
 #include "../JPetKB/JPetKB.h"
 
-
+/**
+ * @brief Parametric class representing database information on parameters of a photomultiplier.
+ *
+ */
 class JPetPM: public TNamed 
 {
  public:

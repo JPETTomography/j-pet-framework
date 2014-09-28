@@ -5,7 +5,10 @@
 #include <TRef.h>
 #include "../JPetPM/JPetPM.h"
 
-
+/**
+ * @brief Parametric class representing database information on parameters of a scintillator.
+ *
+ */
 class JPetScin: public TNamed
 {
  public:
