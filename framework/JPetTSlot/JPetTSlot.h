@@ -8,7 +8,7 @@
 #include <TClonesArray.h>
 
 /**
- * @brief Class representing a time window of the TRB board.
+ * @brief Data class representing a time window of the TRB board.
  *
  * A single TSlot contains many SigCh objects representing TDC hits recorded during a time window of the TRB board. 
  */

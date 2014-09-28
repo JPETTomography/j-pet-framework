@@ -13,6 +13,18 @@
 #include <TTree.h>
 #include <TList.h>
 
+/**
+ * @brief Template of a single module of the analysis representing one stage of the processing.
+ *
+ * In order to implement one stage of data analysis, user should create a class inheriting from JPetAnalysisModule and fill its methods with custom analysis code. Next, the Analysis Module object must be created and added as a task to the JPetManager in order to be executed. 
+ The following methods can be filled with the user code:
+ + CreateInputObjects
+ + CreateOutputObjects
+ + Exec
+ + Terminate
+
+ Moreover, the AddStatsObject(TObject*) method can be used to store any TObject (like TH1 or TGraph) in an internal TList. Such stored objects can be accessed by GetStatsObjects()->At(i) where i is the number of stored object. Add objects from the list will be written to the ROOT file at the end of processing. This mechanism is intended for saving any statistics of the data processing (See workdir/AnalysisExample).
+ */
 class JPetAnalysisModule: public TNamed {
  public:
   JPetAnalysisModule();

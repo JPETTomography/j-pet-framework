@@ -18,6 +18,11 @@
 
 class Event;
 
+/**
+ * @brief A class responsible for reading any data from an unpacked HLD file.
+ *
+ * This if a special case of JPetReader adapted for reading the ROOT files produced by the JPetUnpacker of HLD files. It should be used in the first JPetAnalysisModule whose processing is not preceded by any other module. In all subsequent modules, JPetReader should be used instead.
+ */
 class JPetHLDReader
 {
 public:

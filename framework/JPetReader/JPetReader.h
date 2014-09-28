@@ -26,7 +26,11 @@ class boost::noncopyable;
 
 #include "../../JPetLoggerInclude.h"
 
-
+/**
+ * @brief A class responsible for reading any data from ROOT trees.
+ *
+ * All objects inheriting from JPetAnalysisModule should use this class in order to access and read data from ROOT files.
+ */
 class JPetReader : private boost::noncopyable
 {
 public:

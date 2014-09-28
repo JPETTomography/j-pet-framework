@@ -16,7 +16,7 @@
 class JPetHit;
 
 /**
- * @brief A class representing an event with two photon hits recorded in the barrel.
+ * @brief Data class representing an event with two photon hits recorded in the barrel.
  *
  * An event consists of two hits (JPetHit objects) in two barel slots.
  */

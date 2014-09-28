@@ -13,7 +13,7 @@
 
 
 /**
- * @brief Class respresenting a SIGnal from a single tdc CHannel.
+ * @brief Data class respresenting a SIGnal from a single tdc CHannel.
  *
  * Contains either time corresponding to a single threshold and slpe type of a frontend board or charge from a single PM (if available in a given setup). 
  */

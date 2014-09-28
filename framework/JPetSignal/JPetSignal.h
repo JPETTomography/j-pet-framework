@@ -17,7 +17,7 @@
 #include <vector>
 
 /**
- * @brief Class representing a signal from a single photomultiplier
+ * @brief Data class representing a signal from a single photomultiplier
  *
  * The signal consists of two arrays of time values (JPetSigCh objects) - points probed on the leading and trailing edge. It  also contains characteristic values reconstructed for this signal using the points, such as reconstructed time and energy and quality of their reconstruction.
  */

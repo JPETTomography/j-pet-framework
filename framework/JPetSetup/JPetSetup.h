@@ -5,7 +5,10 @@
 #include "TNamed.h"
 #include "../JPetUser/JPetUser.h"
 
-
+/**
+ * @brief Parametric class representing database information on a single setup of the PET system.
+ *
+ */
 class JPetSetup: public TNamed
 {
 protected:

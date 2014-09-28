@@ -3,6 +3,11 @@
 
 #include "TNamed.h"
 
+/**
+ * @brief Parametric class representing database information on a single slot of the physical PET barrel.
+ *
+ * A BarrelSlot consists of one scintillator strip and two photomultipliers at the scintillator's ends.
+ */
 class JPetBarrelSlot: public TNamed
 {
  public:

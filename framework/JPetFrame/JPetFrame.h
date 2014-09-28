@@ -11,6 +11,12 @@
 class JPetLayer;
 class JPetSlot;
 
+
+/**
+ * @brief Parametric class representing database information on a whole mechanical structure frame of the PET setup.
+ *
+ * The frame consists of one or more layers represented by JPetLayer objects.
+ */
 class JPetFrame: public TNamed
 {
 protected:

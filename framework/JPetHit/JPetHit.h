@@ -26,7 +26,7 @@ class JPetSignal;
 class JPetTSlot;
 
 /**
- * @brief A class representing a reconstructed hit of a photon in the scintillator strip.
+ * @brief Data class representing a reconstructed hit of a photon in the scintillator strip.
  *
  * It contains two objects of type JPetSignal ("left" and "right") which represent signals at two ends of a scintillator strip, from which the hit was reconstructed.
  */
