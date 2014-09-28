@@ -8,7 +8,7 @@
 
 #include "../JPetPM/JPetPM.h"
 #include "../JPetTRB/JPetTRB.h"
-#include "../JPetKB/JPetKB.h"
+#include "../JPetFEB/JPetFEB.h"
 #include "../../JPetLoggerInclude.h"
 
 
@@ -43,7 +43,7 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
 
   inline JPetPM * GetPM() const { return (JPetPM*) fPM.GetObject(); }
   inline JPetTRB * GetTRB() const {return (JPetTRB*) fTRB.GetObject(); }
-  inline JPetKB * GetKB() const {return (JPetKB*) fKB.GetObject(); }
+  inline JPetFEB * GetKB() const {return (JPetFEB*) fKB.GetObject(); }
 
 /**
  * Returns true if the value of the signal represents charge information (integral of the signal calculated by front-end board)
@@ -57,7 +57,7 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
 
   inline void SetPM(JPetPM * pm) { fPM = pm; }
   inline void SetTRB(JPetTRB * trb) { fTRB = trb; }
-  inline void SetKB(JPetKB * kb) { fKB= kb; }
+  inline void SetKB(JPetFEB * kb) { fKB= kb; }
   // Set time wrt beginning of TSlot [ps] or charge
   inline void SetValue( float val ) { fValue = val; }
   inline void SetType( EdgeType type ) { fType = type; }

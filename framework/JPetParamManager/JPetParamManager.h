@@ -45,13 +45,13 @@ public:
 	int getPMsSize() const { return fPMsSize; }
 
 	// KBs
-	void addKB(JPetKB &kb)
+	void addKB(JPetFEB &kb)
 	{
-	  new (fKBs[fKBsSize++]) JPetKB(kb);
+	  new (fKBs[fKBsSize++]) JPetFEB(kb);
 	}
 	inline const TClonesArray & getKBs() const { return fKBs; }
-	//inline JPetKB & operator[](int i) const { return *((JPetKB*)fKBs[i]); }
-	inline JPetKB & getKB(int i) const { return *((JPetKB*)fKBs[i]); }
+	//inline JPetFEB & operator[](int i) const { return *((JPetFEB*)fKBs[i]); }
+	inline JPetFEB & getKB(int i) const { return *((JPetFEB*)fKBs[i]); }
 	int getKBsSize() const { return fKBsSize; }
 	
 	// TRBs
@@ -82,9 +82,9 @@ public:
 	JPetPM* getPM(int i);
 	int getPMsSize() const { return fPMs.size(); }*/
 	
-	/*void addKB(JPetKB &kb);
-	std::vector<JPetKB*> getKB();
-	JPetKB* getKB(int i);
+	/*void addKB(JPetFEB &kb);
+	std::vector<JPetFEB*> getKB();
+	JPetFEB* getKB(int i);
 	int getKBsSize() const { return fKBs.size(); }*/
 	
 	/*void addTRB(JPetTRB &trb);
@@ -132,7 +132,7 @@ private:
 	
 	//std::vector<JPetScin*> fScintillators;
 	//std::vector<JPetPM*> fPMs;
-	//std::vector<JPetKB*> fKBs;
+	//std::vector<JPetFEB*> fKBs;
 	//std::vector<JPetTRB*> fTRBs;
 	//JPetTOMB* fTOMB;		//for one run it is only one TOMB module
 };

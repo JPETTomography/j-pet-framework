@@ -102,17 +102,17 @@ JPetPM* JPetParamManager::getPM(int i)
   return NULL;
 }
 
-void JPetParamManager::addKB(JPetKB &kb)
+void JPetParamManager::addKB(JPetFEB &kb)
 {
   fKBs.push_back(&kb);
 }
 
-std::vector<JPetKB*> JPetParamManager::getKB()
+std::vector<JPetFEB*> JPetParamManager::getKB()
 {
   return fKBs;
 }
 
-JPetKB* JPetParamManager::getKB(int i)
+JPetFEB* JPetParamManager::getKB(int i)
 {
   if(i < fKBs.size())
   {
@@ -162,7 +162,7 @@ bool JPetParamManager::writerAllContainers(const char *fileName)
     //for(std::vector<JPetPM*>::iterator it = fPMs.begin() ; it != fPMs.end(); ++it)
       //fWriter->WriteObject(it, fileName);
     // KBs
-    //for(std::vector<JPetKB*>::iterator it = fKBs.begin() ; it != fKBs.end(); ++it)
+    //for(std::vector<JPetFEB*>::iterator it = fKBs.begin() ; it != fKBs.end(); ++it)
       //fWriter->WriteObject(it, fileName);
     // TRBs
     //for(std::vector<JPetTRB*>::iterator it = fTRBs.begin() ; it != fTRBs.end(); ++it)
@@ -315,7 +315,7 @@ void JPetParamManager::fillKBs(const int p_run_id)
       int l_setup_id = row["setup_id"].as<int>();
       int l_run_id = row["run_id"].as<int>();
       
-      /*JPetKB *l_KB = new JPetKB(l_konradboard_id, 
+      /*JPetFEB *l_KB = new JPetFEB(l_konradboard_id, 
 				 l_konradboard_isactive, 
 				 l_konradboard_status, 
 				 l_konradboard_description, 
@@ -325,7 +325,7 @@ void JPetParamManager::fillKBs(const int p_run_id)
       fKBs.push_back(l_KB);*/
 
       
-      JPetKB l_KB(l_konradboard_id, 
+      JPetFEB l_KB(l_konradboard_id, 
 		  l_konradboard_isactive, 
 		  l_konradboard_status, 
 		  l_konradboard_description, 
@@ -528,11 +528,11 @@ void JPetParamManager::fillPMsTRefs()
 	  
 	  for(unsigned int l_KB_index=0u; l_KB_index < l_KBsSize; ++l_KB_index)
 	  {
-	    int l_KB_id = ((JPetKB*)fKBs[l_KB_index])->id();
+	    int l_KB_id = ((JPetFEB*)fKBs[l_KB_index])->id();
 	    
 	    if(l_KB_id == l_KonradBoard_id)
 	    {
-	      ((JPetPM*)fPMs[l_PM_index])->setTRefKB( *((JPetKB*)fKBs[l_KB_index]) );
+	      ((JPetPM*)fPMs[l_PM_index])->setTRefKB( *((JPetFEB*)fKBs[l_KB_index]) );
 	    }
 	  }
 	}
@@ -561,9 +561,9 @@ void JPetParamManager::fillKBsTRefs()
     
     for(unsigned int l_KB_index=0u; l_KB_index < l_KBsSize; ++l_KB_index)
     {
-      ((JPetKB*)fKBs[l_KB_index])->clearTRefTRBs();
+      ((JPetFEB*)fKBs[l_KB_index])->clearTRefTRBs();
       
-      std::string l_KB_id = boost::lexical_cast<std::string>(((JPetKB*)fKBs[l_KB_index])->id());
+      std::string l_KB_id = boost::lexical_cast<std::string>(((JPetFEB*)fKBs[l_KB_index])->id());
       
       std::string l_sqlQuerry = "SELECT * FROM getTRBsForKonradBoard(" + l_KB_id + ");";
       pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
@@ -585,7 +585,7 @@ void JPetParamManager::fillKBsTRefs()
 	    
 	    if(l_TRBId == l_TRB_id)
 	    {
-	      ((JPetKB*)fKBs[l_KB_index])->setTRefTRB( *((JPetTRB*)fTRBs[l_TRB_index]) );
+	      ((JPetFEB*)fKBs[l_KB_index])->setTRefTRB( *((JPetTRB*)fTRBs[l_TRB_index]) );
 	    }
 	  }
 	}

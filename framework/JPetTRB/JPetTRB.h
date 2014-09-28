@@ -32,7 +32,7 @@ class JPetTRB: public TNamed
   int fType;
   int fChannel;
   /// @todo do implementacji
-  //JPetKB* KBId;
+  //JPetFEB* KBId;
   //KBType;
   //KBChan;
   //

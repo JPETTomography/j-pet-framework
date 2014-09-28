@@ -1,6 +1,6 @@
-// JPet Konrad board - JPetKB.h
-#ifndef JPET_KB_H
-#define JPET_KB_H
+// JPet Konrad board - JPetFEB.h
+#ifndef JPET_FEB_H
+#define JPET_FEB_H
 
 #include "TNamed.h"
 //#include "../JPetUser/JPetUser.h"
@@ -8,14 +8,14 @@
 #include "../JPetTRB/JPetTRB.h"
 
 /**
- * @brief Parametric class representing database information on parameters of a front-end board.
+ * @brief Parametric class representing database information on parameters of a front-end board (FEB).
  *
  * The board represented by this class can be: KonradBoard(KB), Majewski Board or MP board.
  */
-class JPetKB: public TNamed
+class JPetFEB: public TNamed
 {
 protected:
-  struct JPetKBChannel
+  struct JPetFEBChannel
   {
     int m_id;
     bool m_isActive;
@@ -24,22 +24,22 @@ protected:
     std::string m_description;
   };
   
-  struct JPetKBInput : public JPetKBChannel
+  struct JPetFEBInput : public JPetFEBChannel
   {
-    JPetKBInput(int p_KBId);
+    JPetFEBInput(int p_FEBId);
     
-    int m_KBId;
+    int m_FEBId;
   };
 
-  struct JPetKBOutput : public JPetKBChannel
+  struct JPetFEBOutput : public JPetFEBChannel
   {
-    JPetKBOutput(bool p_passedInformationIsTime, std::string p_passedInformation, int p_KBId, int p_inputId, int p_KBInputId);
+    JPetFEBOutput(bool p_passedInformationIsTime, std::string p_passedInformation, int p_FEBId, int p_inputId, int p_FEBInputId);
     
     bool m_passedInformationIsTime;
     std::string m_passedInformation;
-    int m_KBId;
+    int m_FEBId;
     int m_inputId;
-    int m_KBInputId;
+    int m_FEBInputId;
   };
   
   int m_id;
@@ -51,8 +51,8 @@ protected:
   int m_userId;		// creatorId
 
 public:
-  JPetKB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId);
-  virtual ~JPetKB(void);
+  JPetFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId);
+  virtual ~JPetFEB(void);
   
   virtual int id(void) const;
   virtual bool isActive(void) const;
@@ -104,9 +104,9 @@ protected:
   }*/
   
 private:
-  ClassDef(JPetKB, 1);
+  ClassDef(JPetFEB, 1);
   
   friend class JPetParamManager;
 };
 
-#endif // JPET_KB_H
+#endif // JPET_FEB_H

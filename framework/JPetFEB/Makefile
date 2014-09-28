@@ -3,7 +3,7 @@ LD            =  g++
 COPTS         =  `root-config --cflags` -fPIC
 LDOPTS        =  `root-config --glibs` -g
 #C++ Files
-SOURCES       =  JPetKB.cpp
+SOURCES       =  JPetFEB.cpp
 OBJECTS       =  $(SOURCES:.cpp=.o)
 DICT_OBJECTS  =  $(SOURCES:.cpp=Dict.cpp)
 OBJECTS      +=  $(SOURCES:.cpp=Dict.o)
