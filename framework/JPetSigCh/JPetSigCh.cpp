@@ -4,12 +4,14 @@
 
 ClassImp(JPetSigCh);
 
-const float JPetSigCh::kTimeUnset = std::numeric_limits<float>::infinity();
+const float JPetSigCh::kUnset = std::numeric_limits<float>::infinity();
 
 void JPetSigCh::Init()
 {
   SetNameTitle("JPetSigCh", "Signal Channel Structure");
-  fValue = kTimeUnset;
+  fValue = kUnset;
+  fType = Leading;
+  fThreshold = kUnset;
 }
 
 
@@ -46,13 +48,13 @@ Int_t JPetSigCh::Compare(const TObject* obj) const{
 
   JPetSigCh * that = (JPetSigCh*)obj;
 
-  /* if( that->GetThreshold() > this->GetThreshold() ){ */
-  if( that->GetValue() > this->GetValue() ){
+  if( that->GetThreshold() > this->GetThreshold() ){
+    //  if( that->GetValue() > this->GetValue() ){
     return -1;
-  /* }else if( that->GetThreshold() < this->GetThreshold() ){ */
-  }else if( that->GetValue() < this->GetValue() ){
+  }else if( that->GetThreshold() < this->GetThreshold() ){
+    //}else if( that->GetValue() < this->GetValue() ){
     return 1;
   }
- 
+  
   return 0;
 }
