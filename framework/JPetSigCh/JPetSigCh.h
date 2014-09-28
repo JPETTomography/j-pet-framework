@@ -21,7 +21,7 @@ class JPetSigCh: public TNamed
 {
 public:
 enum EdgeType { Trailing, Leading, Charge };
-const static float kTimeUnset;
+const static float kUnset;
 
 JPetSigCh() { Init(); }
 JPetSigCh(EdgeType Edge, float EdgeTime);
@@ -43,7 +43,7 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
 
   inline JPetPM * GetPM() const { return (JPetPM*) fPM.GetObject(); }
   inline JPetTRB * GetTRB() const {return (JPetTRB*) fTRB.GetObject(); }
-  inline JPetFEB * GetKB() const {return (JPetFEB*) fKB.GetObject(); }
+  inline JPetFEB * GetFEB() const {return (JPetFEB*) fFEB.GetObject(); }
 
 /**
  * Returns true if the value of the signal represents charge information (integral of the signal calculated by front-end board)
@@ -57,7 +57,7 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
 
   inline void SetPM(JPetPM * pm) { fPM = pm; }
   inline void SetTRB(JPetTRB * trb) { fTRB = trb; }
-  inline void SetKB(JPetFEB * kb) { fKB= kb; }
+  inline void SetFEB(JPetFEB * feb) { fFEB= feb; }
   // Set time wrt beginning of TSlot [ps] or charge
   inline void SetValue( float val ) { fValue = val; }
   inline void SetType( EdgeType type ) { fType = type; }
@@ -94,7 +94,7 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
   // if parametric objects are available, these references should be used
   // rather than the above members
   TRef fPM;
-  TRef fKB;
+  TRef fFEB;
   TRef fTRB;
   
 

@@ -7,85 +7,89 @@
 
 /// @todo update the method list - tests are outdated
 //  JPetSigCh() { init(); }
-//  JPetSigCh(const JPetSigCh& obj);
-//  /// @todo must be added~JPetSigCh();
-//  JPetSigCh& operator= (const JPetSigCh obj);
-//  JPetSigCh(float EdgeTime, float FallEdgeTime = 0); 
-//  inline bool isSlow() const;
-//  inline float getAmpl() const;
-//  inline JPetPM getPM() const;
-//  inline JPetTRB getTRB() const;
-//  inline JPetScin getScin() const;
-//  inline JPetBarrelSlot getBarrelSlot() const;
-//  inline float getTime(EdgeType type) const;
-//  inline Channels getChannels() const;
-//  void addCh(float rise_edge_time, float fall_edge_time);
-//  inline void setPM(const JPetPM& pm) { fPM = pm; }
-//  inline void setTRB(const JPetTRB& trb) { fTRB = trb; }
-//  inline void setScin(const JPetScin& scin) { fScin = scin; }
-//  inline void setBarrelSlot(const JPetBarrelSlot& barrel_slot) { fBarrelSlot = barrel_slot; }
+//  JPetSigCh(EdgeType Edge, float EdgeTime);
+//  bool IsCharge() const;
+//  bool IsTime() const;
+//  inline float GetValue() const { return fValue; }
+//  inline EdgeType GetType() const { return fType; }
+//  inline JPetPM * GetPM() const { return (JPetPM*) fPM.GetObject(); }
+//  inline JPetTRB * GetTRB() const {return (JPetTRB*) fTRB.GetObject(); }
+//  inline JPetFEB * GetFEB() const {return (JPetFEB*) fFEB.GetObject(); }
+//  inline void SetPM(JPetPM * pm) { fPM = pm; }
+//  inline void SetTRB(JPetTRB * trb) { fTRB = trb; }
+//  inline void SetFEB(JPetFEB * feb) { fFEB= feb; }
+//  inline void SetValue( float val ) { fValue = val; }
+//  inline void SetType( EdgeType type ) { fType = type; }
+//  inline void SetPMID( Int_t pmid ) { fPMID = pmid; }
+//  inline void SetThreshold( float thr ) { fThreshold = thr; }
+//  inline void SetDAQch( Int_t daqch ) { fDAQch = daqch; }
+//  inline Int_t GetPMID() const { return fPMID; }
+//  inline float GetThreshold() const { return fThreshold; }
+//  inline Int_t GetDAQch() const { return fDAQch; }
+//  Int_t Compare(const TObject* obj) const;
+//  inline Bool_t IsSortable() const { return true; }
 
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-//BOOST_AUTO_TEST_CASE( first )
-//{
-//  JPetSigCh test;
-//  BOOST_CHECK_EQUAL(test.isSlow(), 0);
-//  BOOST_CHECK_EQUAL(test.getAmpl(), 0);
-//  BOOST_CHECK_EQUAL(test.getTime(JPetSigCh::Leading), 0);
-//  BOOST_CHECK_EQUAL(test.getTime(JPetSigCh::Trailing), 0);
-//}
-//
-//BOOST_AUTO_TEST_CASE( second )
-//{
-//  float epsilon = 0.001;
-//  JPetSigCh test;
-//  JPetPM pm_test;
-//  JPetScin scin_test;
-//  JPetTRB trb_test;
-//
-//  test.setPM(pm_test);
-//  test.setScin(scin_test);
-//  test.setTRB(trb_test);
-//  test.addCh(1.2345, 6.789);
-//  BOOST_CHECK_CLOSE(test.getTime(JPetSigCh::Trailing), 1.2345, epsilon);
-//  BOOST_CHECK_CLOSE(test.getTime(JPetSigCh::Leading), 6.789, epsilon);
-//  test.addCh(9.876, 5.4321);
-//  BOOST_CHECK_CLOSE(test.getTime(JPetSigCh::Trailing), 9.876, epsilon);
-//  BOOST_CHECK_CLOSE(test.getTime(JPetSigCh::Leading), 5.4321, epsilon);
-//  test.addCh(6.66, 6.66);
-//  BOOST_CHECK_CLOSE(test.getTime(JPetSigCh::Trailing), 6.66, epsilon);
-//  BOOST_CHECK_CLOSE(test.getTime(JPetSigCh::Leading), 6.66, epsilon);
-//
-//  JPetSigCh test2(test);
-//
-//  BOOST_CHECK_EQUAL(test.getPM().getID(), test2.getPM().getID());
-//  BOOST_CHECK_EQUAL(test.getTRB().getID(), test2.getTRB().getID());
-//  BOOST_CHECK_EQUAL(test.getScin().getID(), test2.getScin().getID());
-//  BOOST_CHECK_CLOSE(test.getTime(JPetSigCh::Leading), test2.getTime(JPetSigCh::Leading), epsilon);
-//  BOOST_CHECK_CLOSE(test.getTime(JPetSigCh::Trailing), test2.getTime(JPetSigCh::Trailing), epsilon);
-//
-//}
-//
-//BOOST_AUTO_TEST_CASE( third )
-//{
-//  float epsilon = 0.001;
-//  JPetSigCh test, test2;
-//  JPetPM pm_test;
-//  JPetScin scin_test;
-//  JPetTRB trb_test;
-//
-//  test.setPM(pm_test);
-//  test.setScin(scin_test);
-//  test.setTRB(trb_test);
-//  test.addCh(1.2345, 6.789);
-//
-//  test2 = test;
-//
-//  BOOST_CHECK_CLOSE(test.getTime(JPetSigCh::Leading), test2.getTime(JPetSigCh::Leading), epsilon);
-//  BOOST_CHECK_CLOSE(test.getTime(JPetSigCh::Trailing), test2.getTime(JPetSigCh::Trailing), epsilon);
-//  BOOST_CHECK_EQUAL(test.getPM().getID(), test2.getPM().getID());
-//  BOOST_CHECK_EQUAL(test.getTRB().getID(), test2.getTRB().getID());
-//}
+BOOST_AUTO_TEST_CASE( first )
+{
+  JPetSigCh test;
+  BOOST_CHECK_EQUAL(test.IsCharge(), 0);
+  BOOST_CHECK_EQUAL(test.IsTime(), 1);
+  BOOST_CHECK_EQUAL(test.GetValue(), JPetSigCh::kUnset);
+  BOOST_CHECK_EQUAL(test.GetType(), JPetSigCh::Leading);
+  BOOST_CHECK_EQUAL(test.GetThreshold(), JPetSigCh::kUnset);
+}
+
+BOOST_AUTO_TEST_CASE( second )
+{
+  float epsilon = 0.001;
+  JPetSigCh test;
+  JPetPM pm_test;
+  JPetFEB feb_test(43, true, "", "", 1, 1);
+  JPetTRB trb_test;
+  float thr_test = 210.043;
+  float time_test = 1.2345;
+
+  test.SetPM(&pm_test);
+  test.SetTRB(&trb_test);
+  test.SetFEB(&feb_test);
+  test.SetThreshold(thr_test);
+  test.SetType(JPetSigCh::Leading);
+  test.SetValue(time_test);
+  
+  BOOST_CHECK_EQUAL(test.IsTime(), 1);
+  BOOST_CHECK_EQUAL(test.IsCharge(), 0);
+  BOOST_CHECK_CLOSE(test.GetValue(), time_test, epsilon);
+  BOOST_CHECK_EQUAL(test.GetType(), JPetSigCh::Leading);
+  
+  JPetSigCh test2(test);
+  
+  BOOST_CHECK_EQUAL(test.GetPM()->getID(), test2.GetPM()->getID());
+  BOOST_CHECK_EQUAL(test.GetTRB()->getID(), test2.GetTRB()->getID());
+  BOOST_CHECK_EQUAL(test.GetFEB()->id(), test2.GetFEB()->id());
+  BOOST_CHECK_EQUAL(test.GetType(), test2.GetType());
+  BOOST_CHECK_CLOSE(test.GetValue(), test2.GetValue(), epsilon);
+  BOOST_CHECK_CLOSE(test.GetThreshold(), test2.GetThreshold(), epsilon);
+}
+
+BOOST_AUTO_TEST_CASE( third )
+{
+  JPetSigCh test;
+  JPetSigCh test2;
+ 
+  test.SetThreshold(  1.2345 );
+  test2.SetThreshold( 2.3456 );
+  
+  BOOST_CHECK_EQUAL(test.IsSortable(), 1);
+  BOOST_CHECK_EQUAL(test2.IsSortable(), 1);
+
+  BOOST_CHECK_EQUAL( test.Compare(&test2), -1 );
+  BOOST_CHECK_EQUAL( test2.Compare(&test), 1 );
+
+  test2 = test;
+  BOOST_CHECK_EQUAL( test2.Compare(&test), 0 );
+}
+
 BOOST_AUTO_TEST_SUITE_END()
