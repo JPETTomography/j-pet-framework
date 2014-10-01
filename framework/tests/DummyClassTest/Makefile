@@ -17,7 +17,7 @@ LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system 
 LDFLAGS += ${LD_BOOST_FLAGS}
 ###################
 TEST_EXEC = $(TEST_MODULE)Test.exe 
-SRC_DIR = ../..
+SRC_DIR = $(PWD)/../..
 SRC_MODULE =  $(SRC_DIR)/$(TEST_MODULE)/$(TEST_MODULE).cpp 
 OBJ_MODULE = $(SRC_MODULE:.cpp=.o) 
 SRC_EXTRA = $(foreach MODULE, $(EXTRA_MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
@@ -41,7 +41,7 @@ ifeq ($(DBHANDLER_LIB_SET), YES)
 endif
 ###################
 ifeq ($(UNPACKER_LIB_SET), YES)
- UNPACKER_DIR = ../../JPetUnpacker
+ UNPACKER_DIR = $(PWD)/../../JPetUnpacker
  OBJ_ALL += $(OBJ_DICT) $(UNPACKER_DIR)/libUnpacker2.so
  ifeq ($(OS),Darwin)
    LDFLAGS += -rpath @loader_path/$(UNPACKER_DIR)

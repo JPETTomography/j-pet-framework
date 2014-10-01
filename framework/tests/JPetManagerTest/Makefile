@@ -1,9 +1,9 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetManager
-EXTRA_MODULES = JPetCmdParser JPetParamManager JPetScin JPetKB JPetTRB JPetTOMB JPetPM JPetUnpacker JPetLogger
+EXTRA_MODULES = JPetCmdParser JPetParamManager JPetScin JPetFEB JPetTRB JPetTOMB JPetPM JPetUnpacker JPetLogger
 #classes that need Dictionnaries 
-DICTS = JPetScin JPetKB JPetTRB JPetTOMB JPetPM JPetUnpacker
+DICTS = JPetScin JPetFEB JPetTRB JPetTOMB JPetPM JPetUnpacker
 PQXX_LIB_SET = YES
 DBHANDLER_LIB_SET = YES
 UNPACKER_LIB_SET = YES
@@ -17,7 +17,7 @@ LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system 
 LDFLAGS += ${LD_BOOST_FLAGS}
 ###################
 TEST_EXEC = $(PROJECT)Test.exe 
-SRC_DIR = ../..
+SRC_DIR = $(PWD)/../..
 SRC_MODULE =  $(SRC_DIR)/$(PROJECT)/$(PROJECT).cpp 
 OBJ_MODULE = $(SRC_MODULE:.cpp=.o) 
 SRC_EXTRA = $(foreach MODULE, $(EXTRA_MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
@@ -42,7 +42,7 @@ ifeq ($(DBHANDLER_LIB_SET), YES)
 endif
 ###################
 ifeq ($(UNPACKER_LIB_SET), YES)
- UNPACKER_DIR = ../../JPetUnpacker
+ UNPACKER_DIR = $(PWD)/../../JPetUnpacker
  OBJ_ALL += $(UNPACKER_DIR)/libUnpacker2.so
  ifeq ($(OS),Darwin)
    LDFLAGS += -rpath @loader_path/$(UNPACKER_DIR)
