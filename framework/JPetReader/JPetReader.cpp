@@ -17,10 +17,10 @@ JPetReader::JPetReader(const char* p_filename) :
 						fTree(0), 
 						fFile(NULL)
 {
-  /*if(OpenFile(p_filename))
+  if(OpenFile(p_filename))
   {
     ReadData("");
-  }*/
+  }
 }
 
 JPetReader::~JPetReader()
