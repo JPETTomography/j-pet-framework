@@ -61,7 +61,7 @@ void JPetManager::ParseCmdLine(int argc, char** argv){
     if (fCmdParser.paramIsSet()){
         fParamManager.readFile(fCmdParser.getParam().c_str());
     }
-    if(fCmdParser.fileTypeIsSet()) {
+    if(fCmdParser.IsFileTypeSet()) {
       if (fCmdParser.getFileType()=="hld") {
         fUnpacker.setParams(fCmdParser.getFileName().c_str());
       }
