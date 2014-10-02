@@ -6,7 +6,6 @@
 #include <TTree.h>
 #include <TBranch.h>
 #include <vector>
-#include <boost/noncopyable.hpp>
 
 #ifndef __CINT__
 #include <boost/noncopyable.hpp>
