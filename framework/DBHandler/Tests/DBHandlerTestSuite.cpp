@@ -54,7 +54,7 @@ protected:
   int checkTableSize(std::string p_tableName) const;
 };
 
-DBHandlerTestSuite::DBHandlerTestSuite() : m_dbHandlerInstance(DBHandlerHelper::getInstanceForTestsDemand()) // UWAGA
+DBHandlerTestSuite::DBHandlerTestSuite() : m_dbHandlerInstance(DBHandlerHelper::getInstance("../../Config/configDB.cfg")) // UWAGA
 {
 }
 

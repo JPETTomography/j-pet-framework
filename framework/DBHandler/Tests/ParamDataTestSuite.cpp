@@ -31,8 +31,8 @@ public:
 
 
 ParamDataTestSuite::ParamDataTestSuite() :
-                                          m_dbHandlerInstance(DBHandlerHelper::getInstanceForTestsDemand()), // UWAGA
-                                          m_paramServer(new DB::SERVER::ParamServer(DBHandlerHelper::getInstanceForTestsDemand())),
+                                          m_dbHandlerInstance(DBHandlerHelper::getInstance("../../Config/configDB.cfg")), // UWAGA
+                                          m_paramServer(new DB::SERVER::ParamServer(DBHandlerHelper::getInstance("../../Config/configDB.cfg"))),
                                           m_paramData(new DB::DATA::ParamData(*m_paramServer))
 {
 

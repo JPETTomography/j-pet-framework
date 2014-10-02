@@ -11,17 +11,24 @@ namespace SERVICES
 {
 
 DBHandler* DBHandler::m_instance = nullptr;
+const char* DBHandler::kDefaultConfigFile ="../Config/configDB.cfg";
 
-DBHandler& DBHandler::getInstance()
-{
+/// function invokes the configuration file only if the getInstance is invoked for the first time
+DBHandler& DBHandler::getInstance(const char* configFile)  {
   if(m_instance == nullptr)
   {
     FUNCTIONS::DBConfigData l_dbconfig;
-    FUNCTIONS::DBConfigControler::readConfigFileAndFillDBConfigData("../Config/configDB.cfg", l_dbconfig);
+    FUNCTIONS::DBConfigControler::readConfigFileAndFillDBConfigData(configFile, l_dbconfig);
 
     m_instance = new DBHandler(l_dbconfig);
   }
   return *m_instance;
+}
+
+
+DBHandler& DBHandler::getInstance()
+{
+  return getInstance(kDefaultConfigFile);
 }
 
 void DBHandler::deleteInstance()
@@ -33,17 +40,6 @@ void DBHandler::deleteInstance()
   }
 }
 
-DBHandler& DBHandler::getInstanceForTestsDemand()
-{
-  if(m_instance == nullptr)
-  {
-    FUNCTIONS::DBConfigData l_dbconfig;
-    FUNCTIONS::DBConfigControler::readConfigFileAndFillDBConfigData("../../Config/configDB.cfg", l_dbconfig);
-
-    m_instance = new DBHandler(l_dbconfig);
-  }
-  return *m_instance;
-}
 
 DBHandler::DBHandler(FUNCTIONS::DBConfigData p_dbconfig) :
                                                               m_dbconfig(p_dbconfig),

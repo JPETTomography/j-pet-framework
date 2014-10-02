@@ -38,8 +38,8 @@ protected:
 
 
 ParamServerTestSuite::ParamServerTestSuite() :
-                                              m_dbHandlerInstance(DBHandlerHelper::getInstanceForTestsDemand()), // UWAGA
-                                              m_paramServer(new SERVER::ParamServer(DBHandlerHelper::getInstanceForTestsDemand()))
+                                              m_dbHandlerInstance(DBHandlerHelper::getInstance("../../Config/configDB.cfg")), // UWAGA
+                                              m_paramServer(new SERVER::ParamServer(DBHandlerHelper::getInstance("../../Config/configDB.cfg")))
 {
 }
 
