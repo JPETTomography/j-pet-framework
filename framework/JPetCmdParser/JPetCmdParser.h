@@ -21,7 +21,7 @@ public:
     void parse(int argc, const char** argv);
     inline const std::string& getFileName() const { return fVariablesMap["file"].as<std::string>();}
     inline const std::string& getFileType() const { return fVariablesMap["type"].as<std::string>();}
-    inline bool fileTypeIsSet() const { return (bool)fVariablesMap.count("type"); }
+    inline bool IsFileTypeSet() const { return (bool)fVariablesMap.count("type"); }
 	/**
      * @brief Method returning lower bound of events range to process or -1 if they were not specified.
      */
