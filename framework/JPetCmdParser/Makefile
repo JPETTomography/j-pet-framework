@@ -1,11 +1,7 @@
 ###################
-BOOST_SYS =/home/${USER}/boost_1_49_0
-BOOST_LIB=${BOOST_SYS}/lib
-BOOST_INC=${BOOST_SYS}/include
-###################
 CC            =  g++
 LD            =  g++
-COPTS         =  `root-config --cflags` -I${BOOST_INC} -fPIC
+COPTS         =  `root-config --cflags` -fPIC
 LDOPTS        =  `root-config --glibs` -lboost_program_options
 #C++ Files
 SOURCES       =  JPetCmdParser.cpp
