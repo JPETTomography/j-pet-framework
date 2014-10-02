@@ -6,8 +6,14 @@
 #include <utility>
 #include <string>
 #include <fstream>
+#ifndef __CINT__
 #include <boost/noncopyable.hpp>
 #include <boost/optional.hpp>
+#else
+namespace boost;
+class boost::noncopyable;
+#endif /* __CINT __ */
+
 #include "../HeaderFiles/DBHandler.h"
 
 
