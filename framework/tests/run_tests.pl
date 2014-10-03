@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use Cwd;
 #my $level = "all";
 #my $level = "error";
 my $level = "";
@@ -11,14 +12,17 @@ if ( @ARGV > 0) {
   $level="error";
 }
 my @tests = `ls -d *Test/`;
-#my @testFiles = `ls *Test.exe`;
-#foreach (@testFiles) {
+my $path = cwd();
 foreach my $test_dir (@tests) {
+  chdir($path);
   chomp $test_dir;  
   my $test =$test_dir;
   chop $test; #remove trailing /
-  $test = $test.".exe";
-  my $run_command = $test_dir.$test." --log_level=".$level;
+  $test = "./".$test.".exe";
+  print $test_dir."\n";
+  chdir($test_dir);
+  #my $run_command = $test_dir.$test." --log_level=".$level;
+  my $run_command = $test." --log_level=".$level;
   open my $handler, $run_command." |";
   while (<$handler>) {
     print $_;
