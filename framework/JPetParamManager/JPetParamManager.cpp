@@ -634,3 +634,17 @@ void JPetParamManager::fillAllTRefs()
     ERROR("Containers are empty.");
   }
 }
+
+
+void JPetParamManager::clearAllContainers() {
+  fScintillatorsSize = 0;
+  fScintillators.Clear();
+  fPMsSize = 0;
+  fPMs.Clear();
+  fKBsSize = 0;
+  fKBs.Clear();
+  fTRBsSize = 0;
+  fTRBs.Clear();
+  fTOMBSize = 0;
+  fTOMB.Clear();
+}
