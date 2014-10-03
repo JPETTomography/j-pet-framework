@@ -54,7 +54,7 @@ class JPetParamManager
   bool writerAllContainers   (const char* fileName);
   bool readAllContainers     (const char* fileName);
 
-  void getParametersFromDatabase(const int p_run_id);
+  void getParametersFromDatabase(const int run);
 
  private:
   void fillScintillators     (const int p_run_id);
