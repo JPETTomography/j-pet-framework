@@ -421,8 +421,8 @@ void JPetParamManager::fillTOMB(const int p_run_id)
   }
 }
 
-void JPetParamManager::getParametersFromDatabase(const int p_run_id) {
-  fillAllContainers(p_run_id);
+void JPetParamManager::getParametersFromDatabase(const int run) {
+  fillAllContainers(run);
 }
 
 void JPetParamManager::fillAllContainers(const int p_run_id)
