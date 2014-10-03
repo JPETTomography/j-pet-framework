@@ -34,7 +34,7 @@
     BOOST_CHECK_EQUAL( (std::string)argv[7], parser.getFileName() );
     BOOST_CHECK_EQUAL( atoi(argv[4]), parser.getLowerEventBound() );
     BOOST_CHECK_EQUAL( atoi(argv[5]), parser.getHigherEventBound() );
-    BOOST_CHECK( parser.paramIsSet() );
+    BOOST_CHECK( parser.isParamSet() );
     BOOST_CHECK_EQUAL( (std::string)argv[9], parser.getParam() );
   }
 

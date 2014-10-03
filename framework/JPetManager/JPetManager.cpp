@@ -1,5 +1,5 @@
 /**
-  *  @copyright Copyright (c) 2014, J-PET collaboration 
+  *  @copyright Copyright (c) 2014, J-PET collaboration
   *  @file JPetManager.cp
   *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
   */
@@ -41,7 +41,7 @@ void JPetManager::Run()
   std::vector<JPetAnalysisModule*>::iterator taskIter;
   // pseudo-input container
   long long  kNevent = 0;
-    for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
+  for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
     (*taskIter)->CreateInputObjects(); /// readers
     (*taskIter)->CreateOutputObjects(); /// writers + histograms
     // tutaj pobierz liczbe zdarzen/obiektow z kontenera wejsciowego
@@ -53,19 +53,24 @@ void JPetManager::Run()
     (*taskIter)->Terminate();
   }
 
-    INFO( "======== Finished processing all tasks: " + GetTimeString() + " ========\n" );
+  INFO( "======== Finished processing all tasks: " + GetTimeString() + " ========\n" );
 }
 
-void JPetManager::ParseCmdLine(int argc, char** argv){
-    fCmdParser.parse(argc, (const char **)argv);
-    if (fCmdParser.paramIsSet()){
-        fParamManager.readFile(fCmdParser.getParam().c_str());
+void JPetManager::ParseCmdLine(int argc, char** argv)
+{
+  fCmdParser.parse(argc, (const char**)argv);
+
+  if (fCmdParser.isRunNumberSet()) { /// we should connect to the database
+    fParamManager.getParametersFromDatabase(fCmdParser.getRunNumber()); /// @todo some error handling
+  }
+  if (fCmdParser.isParamSet()) { /// @todo param name is horrible we should change it
+    fParamManager.readFile(fCmdParser.getParam().c_str());
+  }
+  if (fCmdParser.IsFileTypeSet()) {
+    if (fCmdParser.getFileType() == "hld") {
+      fUnpacker.setParams(fCmdParser.getFileName().c_str());
     }
-    if(fCmdParser.IsFileTypeSet()) {
-      if (fCmdParser.getFileType()=="hld") {
-        fUnpacker.setParams(fCmdParser.getFileName().c_str());
-      }
-    }
+  }
 }
 
 JPetManager::~JPetManager()
@@ -82,17 +87,18 @@ JPetManager::~JPetManager()
  *
  * Example: if the file given on command line was ../file.phys.hit.root, this method will return ../file
  */
-const char * JPetManager::getInputFileName() const{
-  std::string name = fCmdParser.getFileName().c_str(); 
+const char* JPetManager::getInputFileName() const
+{
+  std::string name = fCmdParser.getFileName().c_str();
   // strip suffixes of type .tslot.* and .phys.*
   int pos = name.find(".tslot");
-  if( pos == std::string::npos ){
+  if ( pos == std::string::npos ) {
     pos = name.find(".phys");
   }
-  if( pos == std::string::npos ){
+  if ( pos == std::string::npos ) {
     pos = name.find(".hld");
   }
-  if( pos != std::string::npos ){
+  if ( pos != std::string::npos ) {
     name.erase( pos );
   }
   return name.c_str();
@@ -103,10 +109,10 @@ const char * JPetManager::getInputFileName() const{
  */
 TString JPetManager::GetTimeString() const
 {
-  time_t _tm =time(NULL );
-  struct tm * curtime = localtime ( &_tm );
+  time_t _tm = time(NULL );
+  struct tm* curtime = localtime ( &_tm );
   char buf[100];
   strftime( buf, 100, "%m.%d.%Y %R", curtime);
-  
+
   return TString( buf );
 }
