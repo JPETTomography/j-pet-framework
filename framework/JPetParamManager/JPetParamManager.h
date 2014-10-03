@@ -14,114 +14,49 @@
 
 class JPetParamManager
 {
-public:
+ public:
   JPetParamManager();
   JPetParamManager(const char* dBConfigFile);
-  void readFile(const char* file_name);
-  //int getTRBNumber(int i) const { return fTRBNumbers[i]; }
-  //int getScinNumber(int i) const { return fScinNumbers[i]; }
-  //int getDataSize() const { assert(fTRBNumbers.size() == fScinNumbers.size()); return fTRBNumbers.size() ;}
+  void readFile(const char* file_name); /// @todo what file ???
 
   bool setWriter(JPetWriter* writer);
   bool setReader(JPetReader* reader);
 
   // Scintillators
-  void addScintillator(JPetScin& scintillator) {
-    new (fScintillators[fScintillatorsSize++]) JPetScin(scintillator);
-  }
-  inline const TClonesArray& getScintillators() const {
-    return fScintillators;
-  }
-  //inline JPetScin & operator[](int i) const { return *((JPetScin*)fScintillators[i]); }
-  inline JPetScin& getScintillator(int i) const {
-    return *((JPetScin*)fScintillators[i]);
-  }
-  int getScintillatorsSize() const {
-    return fScintillatorsSize;
-  }
+  inline void addScintillator(JPetScin& scintillator) { new (fScintillators[fScintillatorsSize++]) JPetScin(scintillator); }
+  inline const TClonesArray& getScintillators() const { return fScintillators; }
+  inline JPetScin& getScintillator(int i) const { return *((JPetScin*)fScintillators[i]); }
+  inline int getScintillatorsSize() const { return fScintillatorsSize; }
 
   // PMs
-  void addPM(JPetPM& pm) {
-    new (fPMs[fPMsSize++]) JPetPM(pm);
-  }
-  inline const TClonesArray& getPMs() const {
-    return fPMs;
-  }
-  //inline JPetPM & operator[](int i) const { return *((JPetPM*)fPMs[i]); }
-  inline JPetPM& getPM(int i) const {
-    return *((JPetPM*)fPMs[i]);
-  }
-  int getPMsSize() const {
-    return fPMsSize;
-  }
+  inline void addPM(JPetPM& pm) { new (fPMs[fPMsSize++]) JPetPM(pm);}
+  inline const TClonesArray& getPMs() const { return fPMs; }
+  inline JPetPM& getPM(int i) const { return *((JPetPM*)fPMs[i]);}
+  int getPMsSize() const { return fPMsSize;}
 
   // KBs
-  void addKB(JPetFEB& kb) {
-    new (fKBs[fKBsSize++]) JPetFEB(kb);
-  }
-  inline const TClonesArray& getKBs() const {
-    return fKBs;
-  }
-  //inline JPetFEB & operator[](int i) const { return *((JPetFEB*)fKBs[i]); }
-  inline JPetFEB& getKB(int i) const {
-    return *((JPetFEB*)fKBs[i]);
-  }
-  int getKBsSize() const {
-    return fKBsSize;
-  }
+  inline void addKB(JPetFEB& kb) { new (fKBs[fKBsSize++]) JPetFEB(kb); }
+  inline const TClonesArray& getKBs() const { return fKBs; }
+  inline JPetFEB& getKB(int i) const { return *((JPetFEB*)fKBs[i]); }
+  inline int getKBsSize() const { return fKBsSize;}
 
   // TRBs
-  void addTRB(JPetTRB& trb) {
-    new (fTRBs[fTRBsSize++]) JPetTRB(trb);
-  }
-  inline const TClonesArray& getTRBs() const {
-    return fTRBs;
-  }
-  //inline JPetTRB & operator[](int i) const { return *((JPetTRB*)fTRBs[i]); }
-  inline JPetTRB& getTRB(int i) const {
-    return *((JPetTRB*)fTRBs[i]);
-  }
-  int getTRBsSize() const {
-    return fTRBsSize;
-  }
+  inline void addTRB(JPetTRB& trb) { new (fTRBs[fTRBsSize++]) JPetTRB(trb);}
+  inline const TClonesArray& getTRBs() const {return fTRBs;}
+  inline JPetTRB& getTRB(int i) const { return *((JPetTRB*)fTRBs[i]);}
+  inline int getTRBsSize() const { return fTRBsSize;}
 
   // TOMB
-  void setTOMB(JPetTOMB& tomb) {
-    new (fTOMB[fTOMBSize++]) JPetTOMB(tomb);
-  }
-  inline JPetTOMB& getTOMB() const {
-    return *((JPetTOMB*)fTOMB[0]);
-  }
-  int getTOMBSize() const {
-    return fTOMBSize;  // only 0 or 1
-  }
-
-  /*void addScintillator(JPetScin &scintillator);
-  std::vector<JPetScin*> getScintillators();
-  JPetScin* getScintillator(int i);
-  int getScintillatorsSize() const { return fScintillators.size(); }*/
-
-  /*void addPM(JPetPM &pm);
-  std::vector<JPetPM*> getPMs();
-  JPetPM* getPM(int i);
-  int getPMsSize() const { return fPMs.size(); }*/
-
-  /*void addKB(JPetFEB &kb);
-  std::vector<JPetFEB*> getKB();
-  JPetFEB* getKB(int i);
-  int getKBsSize() const { return fKBs.size(); }*/
-
-  /*void addTRB(JPetTRB &trb);
-  std::vector<JPetTRB*> getTRB();
-  JPetTRB* getTRB(int i);
-  int getTRBsSize() const { return fTRBs.size(); }*/
-
-  /*void setTOMB(JPetTOMB &tomb);
-  JPetTOMB* getTOMB();*/
+  inline void setTOMB(JPetTOMB& tomb) { new (fTOMB[fTOMBSize++]) JPetTOMB(tomb);}
+  inline JPetTOMB& getTOMB() const { return *((JPetTOMB*)fTOMB[0]); }
+  inline int getTOMBSize() const { return fTOMBSize; }// only 0 or 1
 
   bool writerAllContainers   (const char* fileName);
   bool readAllContainers     (const char* fileName);
 
+  void getParametersFromDatabase(const int p_run_id);
+
+ private:
   void fillScintillators     (const int p_run_id);
   void fillPMs               (const int p_run_id);
   void fillKBs               (const int p_run_id);
@@ -137,9 +72,6 @@ public:
 
   void fillAllTRefs          (void);
 
-private:
-  //std::vector<int> fTRBNumbers;
-  //std::vector<int> fScinNumbers;
   JPetWriter* fWriter;
   JPetReader* fReader;
 

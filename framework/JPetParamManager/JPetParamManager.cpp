@@ -421,6 +421,10 @@ void JPetParamManager::fillTOMB(const int p_run_id)
   }
 }
 
+void JPetParamManager::getParametersFromDatabase(const int p_run_id) {
+  fillAllContainers(p_run_id);
+}
+
 void JPetParamManager::fillAllContainers(const int p_run_id)
 {
   fillScintillators(p_run_id);

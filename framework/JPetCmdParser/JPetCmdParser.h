@@ -30,7 +30,7 @@ public:
      * @brief Method returning higher bound of events range to process or -1 if they were not specified.
      */
     inline int getHigherEventBound() const {return fVariablesMap["range"].as< std::vector<int> >()[1];}
-    inline bool paramIsSet() const { return (bool)fVariablesMap.count("param"); }
+    inline bool isParamSet() const { return (bool)fVariablesMap.count("param"); }
     inline const std::string& getParam() const {return fVariablesMap["param"].as< std::string >(); }
     
     inline bool isRunNumberSet() const { return (bool)fVariablesMap.count("runId"); }
