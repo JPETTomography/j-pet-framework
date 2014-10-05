@@ -15,6 +15,7 @@
 class JPetTSlot: public TNamed
 {
 public:
+/// @todo think about changing TClonesArray to something else ? what about cleaning
   JPetTSlot():
     fSigChannels("JPetSigCh", 100),
     fSize(0)
@@ -48,9 +49,8 @@ public:
   }
 
   ClassDef(JPetTSlot, 1);
-
 private:
-  TClonesArray fSigChannels; /// @todo think about changing TClonesArray to something else ? what about cleaning
+  TClonesArray fSigChannels; 
   int fSize;
 };
 

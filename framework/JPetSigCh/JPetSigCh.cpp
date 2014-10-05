@@ -18,7 +18,7 @@ void JPetSigCh::Init()
 JPetSigCh::JPetSigCh(EdgeType Edge, float EdgeTime)
 {
   Init();
-  // @todo: perform some sanity checks of the given values
+  /// @todo: perform some sanity checks of the given values
   assert( EdgeTime > 0. );
 
   fType = Edge;
