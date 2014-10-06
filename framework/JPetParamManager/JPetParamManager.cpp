@@ -3,6 +3,7 @@
 #include <boost/lexical_cast.hpp>
 #include "../JPetLogger/JPetLogger.h"
 //#include "../JPetLogger/JPetLoggerInclude.h"
+#include "../JPetWriter/JPetWriter.h"
 
 using namespace std;
 
@@ -64,140 +65,22 @@ void JPetParamManager::readFile(const char* file_name)
   }*/
 }
 
-bool JPetParamManager::setWriter(JPetWriter* writer)
+
+bool JPetParamManager::writeAllContainers(const char* fileName, JPetWriter* writer)
 {
   if (writer != NULL) {
-    fWriter = writer;
-    return true;
-  }
-  return false;
-}
 
-/*
-void JPetParamManager::addScintillator(JPetScin &scintillator)
-{
-  fScintillators.push_back(&scintillator);
-}
-
-std::vector<JPetScin*> JPetParamManager::getScintillators()
-{
-  return fScintillators;
-}
-
-JPetScin* JPetParamManager::getScintillator(int i)
-{
-  if(i < fScintillators.size())
-  {
-    return fScintillators.at(i);
-  }
-  return NULL;
-}
-
-void JPetParamManager::addPM(JPetPM &pm)
-{
-  fPMs.push_back(&pm);
-}
-
-std::vector<JPetPM*> JPetParamManager::getPMs()
-{
-  return fPMs;
-}
-
-JPetPM* JPetParamManager::getPM(int i)
-{
-  if(i < fPMs.size())
-  {
-    return fPMs.at(i);
-  }
-  return NULL;
-}
-
-void JPetParamManager::addKB(JPetFEB &kb)
-{
-  fKBs.push_back(&kb);
-}
-
-std::vector<JPetFEB*> JPetParamManager::getKB()
-{
-  return fKBs;
-}
-
-JPetFEB* JPetParamManager::getKB(int i)
-{
-  if(i < fKBs.size())
-  {
-    return fKBs.at(i);
-  }
-  return NULL;
-}
-
-void JPetParamManager::addTRB(JPetTRB &trb)
-{
-  fTRBs.push_back(&trb);
-}
-
-std::vector<JPetTRB*> JPetParamManager::getTRB()
-{
-  return fTRBs;
-}
-
-JPetTRB* JPetParamManager::getTRB(int i)
-{
-  if(i < fTRBs.size())
-  {
-    return fTRBs.at(i);
-  }
-  return NULL;
-}
-
-void JPetParamManager::setTOMB(JPetTOMB &tomb)
-{
-  fTOMB = &tomb;
-}
-
-JPetTOMB* JPetParamManager::getTOMB()
-{
-  return fTOMB;
-}
-*/
-bool JPetParamManager::writerAllContainers(const char* fileName)
-{
-  if (fWriter != NULL) {
-    // TODO work out WriteObject() in JPetWriter
-    // Scin
-    //for(std::vector<JPetScin*>::iterator it = fScintillators.begin() ; it != fScintillators.end(); ++it)
-    //fWriter->WriteObject(it, fileName);
-    // PM
-    //for(std::vector<JPetPM*>::iterator it = fPMs.begin() ; it != fPMs.end(); ++it)
-    //fWriter->WriteObject(it, fileName);
-    // KBs
-    //for(std::vector<JPetFEB*>::iterator it = fKBs.begin() ; it != fKBs.end(); ++it)
-    //fWriter->WriteObject(it, fileName);
-    // TRBs
-    //for(std::vector<JPetTRB*>::iterator it = fTRBs.begin() ; it != fTRBs.end(); ++it)
-    //fWriter->WriteObject(it, fileName);
-    // TOMB
-    //fWriter->Write(fTOMB);
-
-    fWriter->WriteObject(&fScintillators, "Scintillators");
-    fWriter->WriteObject(&fPMs, "PMs");
-    fWriter->WriteObject(&fKBs, "KBs");
-    fWriter->WriteObject(&fTRBs, "TRBs");
-    fWriter->WriteObject(&fTOMB, "TOMB");
+    writer->WriteObject(&fScintillators, "Scintillators");
+    writer->WriteObject(&fPMs, "PMs");
+    writer->WriteObject(&fKBs, "KBs");
+    writer->WriteObject(&fTRBs, "TRBs");
+    writer->WriteObject(&fTOMB, "TOMB");
 
     return true;
   }
   return false;
 }
 
-bool JPetParamManager::readAllContainers(const char* fileName)
-{
-  if (fReader != NULL) {
-    //fReader->ReadData();
-    return true;
-  }
-  return false;
-}
 
 void JPetParamManager::fillScintillators(const int p_run_id)
 {

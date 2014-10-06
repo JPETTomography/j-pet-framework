@@ -48,7 +48,8 @@ protected:
   std::string m_description;
   int m_version;
   //JPetUser &m_JPetUser;		//creatorId
-  int m_userId;		// creatorId
+  int m_userId;		// creatorId 
+  /// @todo userId is inaccesible!!!
 
 public:
   JPetFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId);

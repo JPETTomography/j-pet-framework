@@ -9,8 +9,11 @@
 #include "../../JPetLoggerInclude.h"
 #include "../JPetScin/JPetScin.h"
 #include <TClonesArray.h>
-#include "../JPetWriter/JPetWriter.h"
-#include "../JPetReader/JPetReader.h"
+
+
+
+
+class JPetWriter;
 
 class JPetParamManager
 {
@@ -19,7 +22,6 @@ class JPetParamManager
   JPetParamManager(const char* dBConfigFile);
   void readFile(const char* file_name); /// @todo what file ???
 
-  bool setWriter(JPetWriter* writer);
 
   // Scintillators
   inline void addScintillator(JPetScin& scintillator) { new (fScintillators[fScintillatorsSize++]) JPetScin(scintillator); }
@@ -50,30 +52,24 @@ class JPetParamManager
   inline JPetTOMB& getTOMB() const { return *((JPetTOMB*)fTOMB[0]); }
   inline int getTOMBSize() const { return fTOMBSize; }// only 0 or 1
 
-  bool writerAllContainers   (const char* fileName);
-  bool readAllContainers     (const char* fileName);
+  bool writeAllContainers   (const char* fileName, JPetWriter* writer);
 
   void getParametersFromDatabase(const int run);
   void clearAllContainers();
 
  private:
+  void fillAllContainers     (const int p_run_id);
   void fillScintillators     (const int p_run_id);
   void fillPMs               (const int p_run_id);
   void fillKBs               (const int p_run_id);
   void fillTRBs              (const int p_run_id);
   void fillTOMB              (const int p_run_id);
-
-  void fillAllContainers     (const int p_run_id);
-
   void fillScintillatorsTRefs(void);
   void fillPMsTRefs          (void);
   void fillKBsTRefs          (void);
   void fillTRBsTRefs         (void);
 
   void fillAllTRefs          (void);
-
-  JPetWriter* fWriter;
-  JPetReader* fReader;
 
   int fScintillatorsSize;
   TClonesArray fScintillators;
@@ -84,13 +80,7 @@ class JPetParamManager
   int fTRBsSize;
   TClonesArray fTRBs;
   int fTOMBSize;
-  TClonesArray fTOMB;	// for one run it is only one TOMB module
-
-  //std::vector<JPetScin*> fScintillators;
-  //std::vector<JPetPM*> fPMs;
-  //std::vector<JPetFEB*> fKBs;
-  //std::vector<JPetTRB*> fTRBs;
-  //JPetTOMB* fTOMB;		//for one run it is only one TOMB module
+  TClonesArray fTOMB;
 };
 
 #endif
