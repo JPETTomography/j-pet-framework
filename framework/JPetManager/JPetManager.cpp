@@ -63,9 +63,6 @@ void JPetManager::ParseCmdLine(int argc, char** argv)
   if (fCmdParser.isRunNumberSet()) { /// we should connect to the database
     fParamManager.getParametersFromDatabase(fCmdParser.getRunNumber()); /// @todo some error handling
   }
-  if (fCmdParser.isParamSet()) { /// @todo param name is horrible we should change it
-    fParamManager.readFile(fCmdParser.getParam().c_str());
-  }
   if (fCmdParser.IsFileTypeSet()) {
     if (fCmdParser.getFileType() == "hld") {
       fUnpacker.setParams(fCmdParser.getFileName().c_str());

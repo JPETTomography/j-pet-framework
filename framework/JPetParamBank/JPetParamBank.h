@@ -15,11 +15,10 @@
 #include "../JPetTOMB/JPetTOMB.h"
 #include <TClonesArray.h>
 
-class JPetParamBank {
+class JPetParamBank:public TObject {
  public:
-   JPetParamBank(); 
+  JPetParamBank(); 
   void clear();
-   
   // Scintillators
   inline void addScintillator(JPetScin& scintillator) { new (fScintillators[getScintillatorsSize()]) JPetScin(scintillator); }
   inline const TClonesArray& getScintillators() const { return fScintillators; }
@@ -47,12 +46,13 @@ class JPetParamBank {
   // TOMB
   inline void setTOMB(JPetTOMB& tomb) { fTOMB = tomb;}
   inline JPetTOMB getTOMB() const { return fTOMB; }
-
+  inline JPetTOMB* getTOMBAddress() { return &fTOMB; } /// @todo to remove
  private:
   TClonesArray fScintillators;
   TClonesArray fPMs;
   TClonesArray fFEBs;
   TClonesArray fTRBs;
   JPetTOMB fTOMB;
+  ClassDef (JPetParamBank, 1);
 };
 #endif /*  !JPETPARAMBANK_H */

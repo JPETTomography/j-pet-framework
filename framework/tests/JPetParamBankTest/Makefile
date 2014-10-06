@@ -3,7 +3,7 @@
 PROJECT=JPetParamBank
 EXTRA_MODULES = JPetScin JPetPM JPetFEB JPetTRB JPetTOMB
 #classes that need Dictionnaries 
-DICTS = JPetScin JPetPM JPetFEB JPetTRB JPetTOMB
+DICTS = JPetScin JPetPM JPetFEB JPetTRB JPetTOMB JPetParamBank
 PQXX_LIB_SET = 
 DBHANDLER_LIB_SET = 
 UNPACKER_LIB_SET = 

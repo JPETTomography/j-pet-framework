@@ -6,6 +6,8 @@
 
 #include "./JPetParamBank.h"
 
+ClassImp (JPetParamBank);
+
 JPetParamBank::JPetParamBank():
   fScintillators("JPetScin", 100),
   fPMs("JPetPM", 100),
