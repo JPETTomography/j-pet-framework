@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE(fillContainersTest)
 {
   JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
   l_paramManagerInstance.fillAllContainers(1);
-  BOOST_REQUIRE(l_paramManagerInstance.getScintillatorssize() > 0);
+  BOOST_REQUIRE(l_paramManagerInstance.getScintillatorsSize() > 0);
   BOOST_REQUIRE(l_paramManagerInstance.getPMsSize() > 0);
   BOOST_REQUIRE(l_paramManagerInstance.getKBsSize() > 0);
   BOOST_REQUIRE(l_paramManagerInstance.getTRBsSize() > 0);

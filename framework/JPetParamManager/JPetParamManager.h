@@ -20,7 +20,6 @@ class JPetParamManager
   void readFile(const char* file_name); /// @todo what file ???
 
   bool setWriter(JPetWriter* writer);
-  bool setReader(JPetReader* reader);
 
   // Scintillators
   inline void addScintillator(JPetScin& scintillator) { new (fScintillators[fScintillatorsSize++]) JPetScin(scintillator); }

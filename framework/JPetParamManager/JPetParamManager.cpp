@@ -73,14 +73,6 @@ bool JPetParamManager::setWriter(JPetWriter* writer)
   return false;
 }
 
-bool JPetParamManager::setReader(JPetReader* reader)
-{
-  if (reader != NULL) {
-    fReader = reader;
-    return true;
-  }
-  return false;
-}
 /*
 void JPetParamManager::addScintillator(JPetScin &scintillator)
 {
