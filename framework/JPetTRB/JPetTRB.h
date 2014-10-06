@@ -26,6 +26,10 @@ class JPetTRB: public TNamed
   {
     fTRefTOMB = &p_TOMB;
   }
+  void setTRefTOMB(JPetTOMB* pTOMB)
+  {
+    fTRefTOMB = pTOMB;
+  }
   
  private:
   int fID;

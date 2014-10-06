@@ -17,9 +17,9 @@
 
 class JPetParamBank {
  public:
-   JPetParamBank(); 
+  JPetParamBank(); 
   void clear();
-   
+      
   // Scintillators
   inline void addScintillator(JPetScin& scintillator) { new (fScintillators[getScintillatorsSize()]) JPetScin(scintillator); }
   inline const TClonesArray& getScintillators() const { return fScintillators; }
@@ -47,7 +47,7 @@ class JPetParamBank {
   // TOMB
   inline void setTOMB(JPetTOMB& tomb) { fTOMB = tomb;}
   inline JPetTOMB getTOMB() const { return fTOMB; }
-
+  inline JPetTOMB* getTOMBAddress() { return &fTOMB; } /// @todo to remove
  private:
   TClonesArray fScintillators;
   TClonesArray fPMs;
