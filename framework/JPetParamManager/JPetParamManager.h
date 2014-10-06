@@ -24,6 +24,8 @@ class JPetParamManager
   void clearParameters();
 
  private:
+  std::string generateSelectQuery(std::string table, std::string run_id); 
+
   void fillAllContainers     (const int p_run_id);
   void fillScintillators     (const int p_run_id);
   void fillPMs               (const int p_run_id);

@@ -45,6 +45,13 @@ bool JPetParamManager::readParametersFromFile(const char* filename)
   return true;
 }
 
+std::string JPetParamManager::generateSelectQuery(std::string table, std::string run_id) {
+  std::string sqlQuerry = "SELECT * FROM ";
+  sqlQuerry += table;
+  sqlQuerry += "(" +run_id + ");";
+  return sqlQuerry;
+}
+
 void JPetParamManager::fillScintillators(const int p_run_id)
 {
   INFO("Start filling Scintillators container.");
@@ -58,6 +65,7 @@ void JPetParamManager::fillScintillators(const int p_run_id)
 
   if (l_sizeResultQuerry) {
     for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+
       int l_scintillator_id = row["scintillator_id"].as<int>();
 
       double l_scintillator_length = row["scintillator_length"].as<double>();
@@ -104,6 +112,7 @@ void JPetParamManager::fillPMs(const int p_run_id)
 
   if (l_sizeResultQuerry) {
     for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+
       int l_hvpmconnection_id = row["hvpmconnection_id"].as<int>();
       bool l_hvpmconnection_isrightside = row["hvpmconnection_isrightside"].as<bool>();
 
@@ -157,16 +166,6 @@ void JPetParamManager::fillFEBs(const int p_run_id)
 
       int l_setup_id = row["setup_id"].as<int>();
       int l_run_id = row["run_id"].as<int>();
-
-      /*JPetFEB *l_FEB = new JPetFEB(l_konradboard_id,
-      	 l_konradboard_isactive,
-      	 l_konradboard_status,
-      	 l_konradboard_description,
-      	 l_konradboard_version,
-      	 l_konradboard_creator_id);
-
-      fFEBs.push_back(l_FEB);*/
-
 
       JPetFEB l_FEB(l_konradboard_id,
                     l_konradboard_isactive,
