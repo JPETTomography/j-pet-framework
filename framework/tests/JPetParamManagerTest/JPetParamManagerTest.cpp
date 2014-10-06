@@ -9,9 +9,54 @@
 
 const char* gDefaultConfigFile ="DBConfig/configDB.cfg";
 
+/// class JPetParamManager
+//  JPetParamManager();
+//  JPetParamManager(const char* dBConfigFile);
+//  void readFile(const char* file_name); /// @todo what file ???
+//  bool setWriter(JPetWriter* writer);
+//  // Scintillators
+//  inline void addScintillator(JPetScin& scintillator);
+//  inline const TClonesArray& getScintillators() const;
+//  inline JPetScin& getScintillator(int i) const; 
+//  inline int getScintillatorsSize() const; 
+//
+//  // PMs
+//  inline void addPM(JPetPM& pm); 
+//  inline const TClonesArray& getPMs() const
+//  inline JPetPM& getPM(int i) const
+//  int getPMsSize() const
+//
+//  // KBs
+//  inline void addKB(JPetFEB& kb)
+//  inline const TClonesArray& getKBs() const
+//  inline JPetFEB& getKB(int i) const
+//  inline int getKBsSize() const
+//
+//  // TRBs
+//  inline void addTRB(JPetTRB& trb)
+//  inline const TClonesArray& getTRBs() const
+//  inline JPetTRB& getTRB(int i) const
+//  inline int getTRBsSize() const
+//
+//  // TOMB
+//  inline void setTOMB(JPetTOMB& tomb)
+//  inline JPetTOMB& getTOMB() const 
+//  inline int getTOMBSize() const 
+//
+//  bool writerAllContainers   
+//
+//  void getParametersFromDatabase(const int run);
+//  void clearAllContainers();
+
+
 BOOST_AUTO_TEST_SUITE(FirstSuite)
+
+BOOST_AUTO_TEST_CASE(default_constructor)
+{
+  JPetParamManager paramMgr;
   
 
+}  
 BOOST_AUTO_TEST_CASE(fillContainersTest)
 {
   JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
