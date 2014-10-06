@@ -48,6 +48,7 @@ class JPetParamBank:public TObject {
   inline JPetTOMB getTOMB() const { return fTOMB; }
   inline JPetTOMB* getTOMBAddress() { return &fTOMB; } /// @todo to remove
  private:
+
   TClonesArray fScintillators;
   TClonesArray fPMs;
   TClonesArray fFEBs;
