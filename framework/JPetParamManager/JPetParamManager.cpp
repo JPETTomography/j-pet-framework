@@ -22,16 +22,17 @@ JPetParamManager::JPetParamManager(const char* dBConfigFile)
 bool JPetParamManager::saveParametersToFile(JPetWriter* writer)
 {
   if (writer != NULL) {
-    TClonesArray scintillators = fBank.getScintillators(); 
-    TClonesArray pms = fBank.getPMs(); 
-    TClonesArray febs = fBank.getFEBs(); 
-    TClonesArray trbs = fBank.getTRBs(); 
-    JPetTOMB tomb = fBank.getTOMB();
-    writer->WriteObject(&scintillators, "Scintillators");
-    writer->WriteObject(&pms, "PMs");
-    writer->WriteObject(&febs, "FEBs");
-    writer->WriteObject(&trbs, "TRBs");
-    writer->WriteObject(&tomb, "TOMB");
+    writer->WriteObject(&fBank, "ParamBank");
+//    TClonesArray scintillators = fBank.getScintillators(); 
+//    TClonesArray pms = fBank.getPMs(); 
+//    TClonesArray febs = fBank.getFEBs(); 
+//    TClonesArray trbs = fBank.getTRBs(); 
+//    JPetTOMB tomb = fBank.getTOMB();
+//    writer->WriteObject(&scintillators, "Scintillators");
+//    writer->WriteObject(&pms, "PMs");
+//    writer->WriteObject(&febs, "FEBs");
+//    writer->WriteObject(&trbs, "TRBs");
+//    writer->WriteObject(&tomb, "TOMB");
     return true;
   }
   return false;
@@ -486,6 +487,6 @@ void JPetParamManager::fillAllTRefs()
 }
 
 
-void JPetParamManager::clearAllContainers() {
+void JPetParamManager::clearParameters() {
   fBank.clear();
 }

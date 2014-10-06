@@ -21,9 +21,8 @@ class JPetParamManager
   void getParametersFromDatabase(const int run);
   bool saveParametersToFile(JPetWriter * writer);
   //void getParametersFromFile();
-  //
   const JPetParamBank& getParamBank() const { return fBank;}
-  void clearAllContainers();
+  void clearParameters();
 
  private:
   void fillAllContainers     (const int p_run_id);
