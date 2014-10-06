@@ -3,7 +3,8 @@
 #include <boost/lexical_cast.hpp>
 #include "../JPetLogger/JPetLogger.h"
 //#include "../JPetLogger/JPetLoggerInclude.h"
-#include "../JPetWriter/JPetWriter.h"
+
+#include <TFile.h>
 
 using namespace std;
 
@@ -19,25 +20,30 @@ JPetParamManager::JPetParamManager(const char* dBConfigFile)
 
 }
 
-bool JPetParamManager::saveParametersToFile(JPetWriter* writer)
+bool JPetParamManager::saveParametersToFile(const char* filename)
 {
-  if (writer != NULL) {
-    writer->WriteObject(&fBank, "ParamBank");
-//    TClonesArray scintillators = fBank.getScintillators(); 
-//    TClonesArray pms = fBank.getPMs(); 
-//    TClonesArray febs = fBank.getFEBs(); 
-//    TClonesArray trbs = fBank.getTRBs(); 
-//    JPetTOMB tomb = fBank.getTOMB();
-//    writer->WriteObject(&scintillators, "Scintillators");
-//    writer->WriteObject(&pms, "PMs");
-//    writer->WriteObject(&febs, "FEBs");
-//    writer->WriteObject(&trbs, "TRBs");
-//    writer->WriteObject(&tomb, "TOMB");
-    return true;
+  TFile file(filename, "UPDATE");
+  if (!file.IsOpen()) {
+    ERROR("Could not write to file.");
+    return false;
   }
-  return false;
+  file.cd();
+  file.WriteObject(&fBank, "ParamBank");
+  return true;
 }
 
+bool JPetParamManager::readParametersFromFile(const char* filename)
+{
+  TFile file(filename, "READ");
+  if (!file.IsOpen()) {
+    ERROR("Could not read from file.");
+    return false;
+  }
+  JPetParamBank* bank = static_cast<JPetParamBank*>(file.Get("ParamBank"));
+  fBank = *bank; /// @warning that might not work
+  if (!bank) return false;
+  return true;
+}
 
 void JPetParamManager::fillScintillators(const int p_run_id)
 {
@@ -163,11 +169,11 @@ void JPetParamManager::fillFEBs(const int p_run_id)
 
 
       JPetFEB l_FEB(l_konradboard_id,
-                   l_konradboard_isactive,
-                   l_konradboard_status,
-                   l_konradboard_description,
-                   l_konradboard_version,
-                   l_konradboard_creator_id);
+                    l_konradboard_isactive,
+                    l_konradboard_status,
+                    l_konradboard_description,
+                    l_konradboard_version,
+                    l_konradboard_creator_id);
 
       fBank.addFEB(l_FEB);
     }
@@ -253,7 +259,8 @@ void JPetParamManager::fillTOMB(const int p_run_id)
   }
 }
 
-void JPetParamManager::getParametersFromDatabase(const int run) {
+void JPetParamManager::getParametersFromDatabase(const int run)
+{
   fillAllContainers(run);
 }
 
@@ -296,18 +303,18 @@ void JPetParamManager::fillScintillatorsTRefs()
           int l_PhotoMultiplier_id = row["PhotoMultiplier_id"].as<int>();
 
           for (unsigned int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index) {
-    //        int l_PM_id = ((JPetPM*)fPMs[l_PM_index])->getID();
+            //        int l_PM_id = ((JPetPM*)fPMs[l_PM_index])->getID();
             int l_PM_id = fBank.getPM(l_PM_index).getID();
 
             if (l_PM_id == l_PhotoMultiplier_id) {
-  //            JPetPM::Side l_PM_side = ((JPetPM*)fPMs[l_PM_index])->getSide();
+              //            JPetPM::Side l_PM_side = ((JPetPM*)fPMs[l_PM_index])->getSide();
               JPetPM::Side l_PM_side = fBank.getPM(l_PM_index).getSide();
 
               if (l_PM_side == JPetPM::Side::kLeft) {
-          //      ((JPetScin*)fScintillators[l_scintillator_index])->setLeftTRefPM( *((JPetPM*)fPMs[l_PM_index]) );
+                //      ((JPetScin*)fScintillators[l_scintillator_index])->setLeftTRefPM( *((JPetPM*)fPMs[l_PM_index]) );
                 fBank.getScintillator(l_scintillator_index).setLeftTRefPM(fBank.getPM(l_PM_index));
               } else if (l_PM_side == JPetPM::Side::kRight) {
-       //         ((JPetScin*)fScintillators[l_scintillator_index])->setRightTRefPM( *((JPetPM*)fPMs[l_PM_index]) );
+                //         ((JPetScin*)fScintillators[l_scintillator_index])->setRightTRefPM( *((JPetPM*)fPMs[l_PM_index]) );
                 fBank.getScintillator(l_scintillator_index).setRightTRefPM( fBank.getPM(l_PM_index) );
               }
             }
@@ -383,7 +390,7 @@ void JPetParamManager::fillFEBsTRefs()
 
     for (unsigned int l_FEB_index = 0u; l_FEB_index < l_FEBsSize; ++l_FEB_index) {
 
- //     ((JPetFEB*)fFEBs[l_FEB_index])->clearTRefTRBs();
+//     ((JPetFEB*)fFEBs[l_FEB_index])->clearTRefTRBs();
       fBank.getFEB(l_FEB_index).clearTRefTRBs();
 
 //      std::string l_FEB_id = boost::lexical_cast<std::string>(((JPetFEB*)fFEBs[l_FEB_index])->id());
@@ -406,7 +413,7 @@ void JPetParamManager::fillFEBsTRefs()
             int l_TRBId = fBank.getTRB(l_TRB_index).getID();
 
             if (l_TRBId == l_TRB_id) {
-             // ((JPetFEB*)fFEBs[l_FEB_index])->setTRefTRB( *((JPetTRB*)fTRBs[l_TRB_index]) );
+              // ((JPetFEB*)fFEBs[l_FEB_index])->setTRefTRB( *((JPetTRB*)fTRBs[l_TRB_index]) );
               fBank.getFEB(l_FEB_index).setTRefTRB( fBank.getTRB(l_TRB_index));
             }
           }
@@ -455,7 +462,7 @@ void JPetParamManager::fillTRBsTRefs()
             int l_TOMBId = fBank.getTOMB().id();
 
             if (l_TOMBId == l_TOMB_id) {
-             // ((JPetTRB*)fTRBs[l_TRB_index])->setTRefTOMB( *((JPetTOMB*)fTOMB[l_TOMB_index]) );
+              // ((JPetTRB*)fTRBs[l_TRB_index])->setTRefTOMB( *((JPetTOMB*)fTOMB[l_TOMB_index]) );
               fBank.getTRB(l_TRB_index).setTRefTOMB(fBank.getTOMBAddress());
             }
           }
@@ -476,7 +483,7 @@ void JPetParamManager::fillAllTRefs()
       && fBank.getPMsSize() > 0
       && fBank.getFEBsSize() > 0
       && fBank.getTRBsSize() > 0
-      ) {
+     ) {
     fillScintillatorsTRefs();
     fillPMsTRefs();
     fillFEBsTRefs();
@@ -487,6 +494,7 @@ void JPetParamManager::fillAllTRefs()
 }
 
 
-void JPetParamManager::clearParameters() {
+void JPetParamManager::clearParameters()
+{
   fBank.clear();
 }
