@@ -10,7 +10,6 @@
 #include "../JPetScin/JPetScin.h"
 #include "../JPetParamBank/JPetParamBank.h"
 
-class JPetWriter;
 
 class JPetParamManager
 {
@@ -19,8 +18,8 @@ class JPetParamManager
   JPetParamManager(const char* dBConfigFile);
 
   void getParametersFromDatabase(const int run);
-  bool saveParametersToFile(JPetWriter * writer);
-  //void getParametersFromFile();
+  bool saveParametersToFile(const char* filename);
+  bool readParametersFromFile(const char* filename);
   const JPetParamBank& getParamBank() const { return fBank;}
   void clearParameters();
 
