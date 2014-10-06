@@ -15,11 +15,10 @@
 #include "../JPetTOMB/JPetTOMB.h"
 #include <TClonesArray.h>
 
-class JPetParamBank {
+class JPetParamBank:public TObject {
  public:
   JPetParamBank(); 
   void clear();
-      
   // Scintillators
   inline void addScintillator(JPetScin& scintillator) { new (fScintillators[getScintillatorsSize()]) JPetScin(scintillator); }
   inline const TClonesArray& getScintillators() const { return fScintillators; }
@@ -54,5 +53,6 @@ class JPetParamBank {
   TClonesArray fFEBs;
   TClonesArray fTRBs;
   JPetTOMB fTOMB;
+  ClassDef (JPetParamBank, 1);
 };
 #endif /*  !JPETPARAMBANK_H */
