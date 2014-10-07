@@ -55,7 +55,20 @@ BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetParamManager paramMgr;
   
+}  
 
+BOOST_AUTO_TEST_CASE(some_filling)
+{
+  JPetParamManager paramMgr(gDefaultConfigFile);
+  paramMgr.fillScintillators(1);
+  BOOST_REQUIRE(paramMgr.fBank.getScintillatorsSize() > 0);
+  paramMgr.fillPMs(1);
+  BOOST_REQUIRE(paramMgr.fBank.getPMsSize() > 0);
+  paramMgr.fillFEBs(1);
+  BOOST_REQUIRE(paramMgr.fBank.getFEBsSize() > 0);
+  paramMgr.fillTRBs(1);
+  BOOST_REQUIRE(paramMgr.fBank.getTRBsSize() > 0);
+  
 }  
 BOOST_AUTO_TEST_CASE(fillContainersTest)
 {

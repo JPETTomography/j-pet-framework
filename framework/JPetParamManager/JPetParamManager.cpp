@@ -1,8 +1,7 @@
 #include "JPetParamManager.h"
-#include "../DBHandler/HeaderFiles/DBHandler.h"
 #include <boost/lexical_cast.hpp>
 #include "../JPetLogger/JPetLogger.h"
-//#include "../JPetLogger/JPetLoggerInclude.h"
+#include "../DBHandler/HeaderFiles/DBHandler.h"
 
 #include <TFile.h>
 
@@ -52,23 +51,120 @@ std::string JPetParamManager::generateSelectQuery(std::string sqlFun, std::strin
   return sqlQuerry;
 }
 
+/// @brief method calls the remote PostgreSQL function sqlfunction with the run_id argument and returns results from database
+pqxx::result JPetParamManager::getDataFromDB(std::string sqlfunction, int p_run_id) 
+{
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  std::string l_sqlQuerry = generateSelectQuery(sqlfunction,l_run_id);
+  DB::SERVICES::DBHandler& l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
+  return  l_dbHandlerInstance.querry(l_sqlQuerry);
+}
+
+void JPetParamManager::printErrorMessageDB(std::string sqlFunction, int p_run_id) {
+    std::string l_error(sqlFunction);
+    l_error += "() querry for run_id = ";
+    l_error += p_run_id + " return 0 records.";
+    ERROR(l_error.c_str());
+}
+
+
 void JPetParamManager::fillScintillators(const int p_run_id)
 {
   INFO("Start filling Scintillators container.");
-  DB::SERVICES::DBHandler& l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
-  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-
-
-  std::string l_sqlQuerry = generateSelectQuery("getDataFromScintillators",l_run_id);
     //"SELECT * FROM getDataFromScintillators(" + l_run_id + ");";
-
-  pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromScintillators",p_run_id);
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
 
   if (l_sizeResultQuerry) {
     for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+      JPetScin l_scin = generateScintillator(row);
+      fBank.addScintillator(l_scin);
+    }
+  } else {
+    printErrorMessageDB("getDataFromScintillators", p_run_id);
+  }
+}
 
+void JPetParamManager::fillPMs(const int p_run_id)
+{
+  INFO("Start filling PMs container.");
+//  std::string l_sqlQuerry = "SELECT * FROM getDataFromPhotoMultipliers(" + l_run_id + ");";
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromPhotoMultipliers",p_run_id);
+
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+
+  if (l_sizeResultQuerry) {
+    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+      JPetPM l_pm = generatePM(row);
+      fBank.addPM(l_pm);
+    }
+  } else {
+    printErrorMessageDB("getDataFromPhotoMultipliers", p_run_id);
+  }
+}
+
+void JPetParamManager::fillFEBs(const int p_run_id)
+{
+  INFO("Start filling FEBs container.");
+
+  //std::string l_sqlQuerry = "SELECT * FROM getDataFromKonradBoards(" + l_run_id + ");";
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromKonradBoards",p_run_id);
+
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+
+  if (l_sizeResultQuerry) {
+    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+      JPetFEB l_FEB = generateFEB(row);
+      fBank.addFEB(l_FEB);
+    }
+  } else {
+    printErrorMessageDB("getDataFromKonradBoards", p_run_id);
+  }
+}
+
+void JPetParamManager::fillTRBs(const int p_run_id)
+{
+  INFO("Start filling TRBs container.");
+
+
+//  std::string l_sqlQuerry = "SELECT * FROM getDataFromTRBs(" + l_run_id + ");";
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromTRBs",p_run_id);
+
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+
+  if (l_sizeResultQuerry) {
+    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+      JPetTRB l_TRB = generateTRB(row);
+      fBank.addTRB(l_TRB);
+    }
+  } else {
+    printErrorMessageDB("getDataFromTRBs", p_run_id);
+  }
+}
+
+void JPetParamManager::fillTOMB(const int p_run_id)
+{
+  INFO("Start filling TOMBs container.");
+
+//  std::string l_sqlQuerry = "SELECT * FROM getDataFromTOMB(" + l_run_id + ");";
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromTOMB",p_run_id);
+
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+
+  if (l_sizeResultQuerry) {
+    //for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+    {
+      pqxx::result::const_iterator row = l_runDbResults.begin();
+      JPetTOMB l_TOMB = generateTOMB(row);
+      fBank.setTOMB(l_TOMB);
+    }
+  } else {
+    printErrorMessageDB("getDataFromTOMB", p_run_id);
+  }
+}
+
+JPetScin JPetParamManager::generateScintillator(pqxx::result::const_iterator row) {
       int l_scintillator_id = row["scintillator_id"].as<int>();
 
       double l_scintillator_length = row["scintillator_length"].as<double>();
@@ -77,14 +173,7 @@ void JPetParamManager::fillScintillators(const int p_run_id)
 
       int l_setup_id = row["setup_id"].as<int>();
       int l_run_id = row["run_id"].as<int>();
-
-      /*JPetScin *l_scin = new JPetScin(l_scintillator_id,
-      	       0.f,			/// @todo what is attenuation length in database?
-      	       l_scintillator_length,
-      	       l_scintillator_height,
-      	       l_scintillator_width);
-
-      fScintillators.push_back(l_scin);*/
+      
 
       JPetScin l_scin(l_scintillator_id,
                       0.f,			/// @todo what is attenuation length in database?
@@ -92,31 +181,11 @@ void JPetParamManager::fillScintillators(const int p_run_id)
                       l_scintillator_height,
                       l_scintillator_width);
 
-      fBank.addScintillator(l_scin);
-    }
-  } else {
-    std::string l_error("getDataFromScintillators() querry for run_id = ");
-    l_error += p_run_id + " return 0 records.";
-    ERROR(l_error.c_str());
-  }
+      return l_scin;
 }
 
-void JPetParamManager::fillPMs(const int p_run_id)
-{
-  INFO("Start filling PMs container.");
-  DB::SERVICES::DBHandler& l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
 
-  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-
-  std::string l_sqlQuerry = generateSelectQuery("getDataFromPhotoMultipliers",l_run_id);
-//  std::string l_sqlQuerry = "SELECT * FROM getDataFromPhotoMultipliers(" + l_run_id + ");";
-  pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
-
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-
-  if (l_sizeResultQuerry) {
-    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
-
+JPetPM JPetParamManager::generatePM(pqxx::result::const_iterator row) {
       int l_hvpmconnection_id = row["hvpmconnection_id"].as<int>();
       bool l_hvpmconnection_isrightside = row["hvpmconnection_isrightside"].as<bool>();
 
@@ -127,40 +196,14 @@ void JPetParamManager::fillPMs(const int p_run_id)
 
       JPetPM::Side l_side = (l_hvpmconnection_isrightside) ? JPetPM::Side::kRight : JPetPM::Side::kLeft;
 
-      /* Implementarion for
-      JPetPM *l_pm = new JPetPM();
-      l_pm->setID(l_photomultiplier_id);
-      l_pm->setSide(l_side);
-
-      fPMs.push_back(l_pm);*/
-
       JPetPM l_pm;
       l_pm.setID(l_photomultiplier_id);
       l_pm.setSide(l_side);
 
-      fBank.addPM(l_pm);
-    }
-  } else {
-    std::string l_error("getDataFromPhotoMultipliers() querry for run_id = ");
-    l_error += p_run_id + " return 0 records.";
-    ERROR(l_error.c_str());
-  }
+      return  l_pm;
 }
 
-void JPetParamManager::fillFEBs(const int p_run_id)
-{
-  INFO("Start filling FEBs container.");
-  DB::SERVICES::DBHandler& l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
-
-  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-
-  std::string l_sqlQuerry = "SELECT * FROM getDataFromKonradBoards(" + l_run_id + ");";
-  pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
-
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-
-  if (l_sizeResultQuerry) {
-    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+JPetFEB JPetParamManager::generateFEB(pqxx::result::const_iterator row) {
       int l_konradboard_id = row["konradboard_id"].as<int>();
       bool l_konradboard_isactive = row["konradboard_isactive"].as<bool>();
       std::string l_konradboard_status = row["konradboard_status"].as<std::string>();
@@ -177,89 +220,32 @@ void JPetParamManager::fillFEBs(const int p_run_id)
                     l_konradboard_description,
                     l_konradboard_version,
                     l_konradboard_creator_id);
-
-      fBank.addFEB(l_FEB);
-    }
-  } else {
-    std::string l_error("getDataFromKonradBoards() querry for run_id = ");
-    l_error += p_run_id + " return 0 records.";
-    ERROR(l_error.c_str());
-  }
+    return l_FEB;
 }
 
-void JPetParamManager::fillTRBs(const int p_run_id)
-{
-  INFO("Start filling TRBs container.");
-  DB::SERVICES::DBHandler& l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
-
-  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-
-  std::string l_sqlQuerry = "SELECT * FROM getDataFromTRBs(" + l_run_id + ");";
-  pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
-
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-
-  if (l_sizeResultQuerry) {
-    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+JPetTRB JPetParamManager::generateTRB(pqxx::result::const_iterator row) {
       int l_TRB_id = row["TRB_id"].as<int>();
 
       int l_setup_id = row["setup_id"].as<int>();
       int l_run_id = row["run_id"].as<int>();
 
-      /*JPetTRB *l_TRB = new JPetTRB(l_TRB_id,
-      	    0,		/// @todo what is type in database
-      	    0);		/// @todo what is channel in database
-
-      fTRBs.push_back(l_TRB);*/
-
       JPetTRB l_TRB(l_TRB_id,
                     0,		/// @todo what is type in database
                     0);		/// @todo what is channel in database
-
-      fBank.addTRB(l_TRB);
-    }
-  } else {
-    std::string l_error("getDataFromTRBs() querry for run_id = ");
-    l_error += p_run_id + " return 0 records.";
-    ERROR(l_error.c_str());
-  }
+  return l_TRB;
 }
 
-void JPetParamManager::fillTOMB(const int p_run_id)
-{
-  INFO("Start filling TOMBs container.");
-  DB::SERVICES::DBHandler& l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
 
-  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-
-  std::string l_sqlQuerry = "SELECT * FROM getDataFromTOMB(" + l_run_id + ");";
-  pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
-
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-
-  if (l_sizeResultQuerry) {
-    //for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
-    {
-      pqxx::result::const_iterator row = l_runDbResults.begin();
-
+JPetTOMB JPetParamManager::generateTOMB(pqxx::result::const_iterator row) {
       int l_TOMB_id = row["TOMB_id"].as<int>();
       std::string l_TOMB_description = row["TOMB_description"].as<std::string>();
-      //int l_TOMB_setup_id = row["TOMB_setup_id"].as<int>();
 
       int l_setup_id = row["setup_id"].as<int>();
       int l_run_id = row["run_id"].as<int>();
 
-      //fTOMB = new JPetTOMB(l_TOMB_id, l_TOMB_description);
 
       JPetTOMB l_TOMB(l_TOMB_id, l_TOMB_description);
-
-      fBank.setTOMB(l_TOMB);
-    }
-  } else {
-    std::string l_error("getDataFromTOMB() querry for run_id = ");
-    l_error += p_run_id + " return 0 records.";
-    ERROR(l_error.c_str());
-  }
+    return l_TOMB;
 }
 
 void JPetParamManager::getParametersFromDatabase(const int run)
@@ -291,9 +277,10 @@ void JPetParamManager::fillScintillatorsTRefs()
 //      ((JPetScin*)fScintillators[l_scintillator_index])->clearTRefPMs();
 
 //      std::string l_scitillator_id = boost::lexical_cast<std::string>(((JPetScin*)fScintillators[l_scintillator_index])->getID());
-      std::string l_scitillator_id = boost::lexical_cast<std::string>(fBank.getScintillator(l_scintillator_index).getID());
+      std::string l_scintillator_id = boost::lexical_cast<std::string>(fBank.getScintillator(l_scintillator_index).getID());
 
-      std::string l_sqlQuerry = "SELECT * FROM getPhotoMultipliersForScintillator(" + l_scitillator_id + ");";
+  std::string l_sqlQuerry = generateSelectQuery("getPhotoMultipliersForScintillator",l_scintillator_id);
+  //    std::string l_sqlQuerry = "SELECT * FROM getPhotoMultipliersForScintillator(" + l_scitillator_id + ");";
       pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
 
       size_t l_sizeResultQuerry = l_runDbResults.size();
@@ -399,7 +386,8 @@ void JPetParamManager::fillFEBsTRefs()
 //      std::string l_FEB_id = boost::lexical_cast<std::string>(((JPetFEB*)fFEBs[l_FEB_index])->id());
       std::string l_FEB_id = boost::lexical_cast<std::string>(fBank.getFEB(l_FEB_index).id());
 
-      std::string l_sqlQuerry = "SELECT * FROM getTRBsForKonradBoard(" + l_FEB_id + ");";
+  std::string l_sqlQuerry = generateSelectQuery("getTRBsForKonradBoard",l_FEB_id );
+  //    std::string l_sqlQuerry = "SELECT * FROM getTRBsForKonradBoard(" + l_FEB_id + ");";
       pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
 
       size_t l_sizeResultQuerry = l_runDbResults.size();
@@ -448,7 +436,8 @@ void JPetParamManager::fillTRBsTRefs()
       //std::string l_TRB_id = boost::lexical_cast<std::string>(((JPetTRB*)fTRBs[l_TRB_index])->getID());
       std::string l_TRB_id = boost::lexical_cast<std::string>(fBank.getTRB(l_TRB_index).getID());
 
-      std::string l_sqlQuerry = "SELECT * FROM getTOMBForTRB(" + l_TRB_id + ");";
+  std::string l_sqlQuerry = generateSelectQuery("getTOMBForTRB",l_TRB_id );
+//      std::string l_sqlQuerry = "SELECT * FROM getTOMBForTRB(" + l_TRB_id + ");";
       pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
 
       size_t l_sizeResultQuerry = l_runDbResults.size();

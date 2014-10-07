@@ -4,7 +4,6 @@
 
 ClassImp(JPetFEB);
 
-
 JPetFEB::JPetFEBInput::JPetFEBInput(int p_FEBId) : JPetFEBChannel(), m_FEBId(p_FEBId)
 {
 }
