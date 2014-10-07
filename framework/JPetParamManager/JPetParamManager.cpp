@@ -45,9 +45,9 @@ bool JPetParamManager::readParametersFromFile(const char* filename)
   return true;
 }
 
-std::string JPetParamManager::generateSelectQuery(std::string table, std::string run_id) {
+std::string JPetParamManager::generateSelectQuery(std::string sqlFun, std::string run_id) {
   std::string sqlQuerry = "SELECT * FROM ";
-  sqlQuerry += table;
+  sqlQuerry += sqlFun;
   sqlQuerry += "(" +run_id + ");";
   return sqlQuerry;
 }
@@ -58,7 +58,10 @@ void JPetParamManager::fillScintillators(const int p_run_id)
   DB::SERVICES::DBHandler& l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
 
-  std::string l_sqlQuerry = "SELECT * FROM getDataFromScintillators(" + l_run_id + ");";
+
+  std::string l_sqlQuerry = generateSelectQuery("getDataFromScintillators",l_run_id);
+    //"SELECT * FROM getDataFromScintillators(" + l_run_id + ");";
+
   pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
@@ -105,7 +108,8 @@ void JPetParamManager::fillPMs(const int p_run_id)
 
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
 
-  std::string l_sqlQuerry = "SELECT * FROM getDataFromPhotoMultipliers(" + l_run_id + ");";
+  std::string l_sqlQuerry = generateSelectQuery("getDataFromPhotoMultipliers",l_run_id);
+//  std::string l_sqlQuerry = "SELECT * FROM getDataFromPhotoMultipliers(" + l_run_id + ");";
   pqxx::result l_runDbResults = l_dbHandlerInstance.querry(l_sqlQuerry);
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
