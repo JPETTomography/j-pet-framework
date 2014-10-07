@@ -9,7 +9,13 @@
 #include "../../JPetLoggerInclude.h"
 #include "../JPetScin/JPetScin.h"
 #include "../JPetParamBank/JPetParamBank.h"
-
+#ifndef __CINT__
+#include <pqxx/pqxx>
+#else
+class pqxx;
+class pqxx::result;
+class pqxx::result::const_iterator;
+#endif /* __CINT __ */
 
 class JPetParamManager
 {
@@ -24,7 +30,14 @@ class JPetParamManager
   void clearParameters();
 
  private:
-  std::string generateSelectQuery(std::string table, std::string run_id); 
+  pqxx::result getDataFromDB(std::string sqlFunction, int p_run_id);
+  std::string generateSelectQuery(std::string sqlFunction, std::string run_id);
+  void printErrorMessageDB(std::string sqlFunction, int p_run_id);
+  JPetScin generateScintillator(pqxx::result::const_iterator row);
+  JPetPM generatePM(pqxx::result::const_iterator row);
+  JPetFEB generateFEB(pqxx::result::const_iterator row);
+  JPetTRB generateTRB(pqxx::result::const_iterator row);
+  JPetTOMB generateTOMB(pqxx::result::const_iterator row);
 
   void fillAllContainers     (const int p_run_id);
   void fillScintillators     (const int p_run_id);
