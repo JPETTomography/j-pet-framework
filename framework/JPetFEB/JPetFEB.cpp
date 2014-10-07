@@ -4,7 +4,6 @@
 
 ClassImp(JPetFEB);
 
-
 JPetFEB::JPetFEBInput::JPetFEBInput(int p_FEBId) : JPetFEBChannel(), m_FEBId(p_FEBId)
 {
 }
@@ -21,6 +20,17 @@ JPetFEB::JPetFEBOutput::JPetFEBOutput(bool p_passedInformationIsTime,
 						      m_inputId(p_inputId),
 						      m_FEBInputId(p_FEBInputId)
 {
+}
+
+JPetFEB::JPetFEB() :
+				      m_id(0),
+				      m_isActive(false),
+				      m_status(""),
+				      m_description(""),
+				      m_version(0),
+				      m_userId(0) 
+{
+  SetName("JPetFEB");
 }
 
 
