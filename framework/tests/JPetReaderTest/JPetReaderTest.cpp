@@ -38,10 +38,10 @@ BOOST_AUTO_TEST_SUITE (FirstSuite)
 BOOST_AUTO_TEST_CASE (default_constructor)
 {
   JPetReader reader;
-  BOOST_CHECK(reader.fBranch == 0);
-  BOOST_CHECK(reader.fFile == NULL);
-  BOOST_CHECK(reader.fObject == 0);
-  BOOST_CHECK(reader.fTree == 0);
+  BOOST_REQUIRE(reader.fBranch == 0);
+  BOOST_REQUIRE(reader.fFile == NULL);
+  BOOST_REQUIRE(reader.fObject == 0);
+  BOOST_REQUIRE(reader.fTree == 0);
 }
 
 BOOST_AUTO_TEST_CASE (bad_file)
@@ -49,11 +49,11 @@ BOOST_AUTO_TEST_CASE (bad_file)
   gErrorIgnoreLevel = 6000; /// we turn off the ROOT error messages
   JPetReader reader;
   /// not a ROOT file
-  BOOST_CHECK(!reader.OpenFile("bad_file.txt"));
-  BOOST_CHECK(reader.fBranch == 0);
-  BOOST_CHECK(reader.fFile == NULL);
-  BOOST_CHECK(reader.fObject == 0);
-  BOOST_CHECK(reader.fTree == 0);
+  BOOST_REQUIRE(!reader.OpenFile("bad_file.txt"));
+  BOOST_REQUIRE(reader.fBranch == 0);
+  BOOST_REQUIRE(reader.fFile == NULL);
+  BOOST_REQUIRE(reader.fObject == 0);
+  BOOST_REQUIRE(reader.fTree == 0);
 
   reader.CloseFile();
 }
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE (open_file)
   
   //std::cout << "test if OpenFile works" << std::endl;
   JPetReader reader;
-  BOOST_CHECK( reader.OpenFile("test.root") );
+  BOOST_REQUIRE( reader.OpenFile("test.root") );
   reader.ReadData("");
   reader.CloseFile();
 }
@@ -80,33 +80,33 @@ BOOST_AUTO_TEST_CASE (read_and_write_objects )
   writer.CloseFile();
   
   JPetReader reader("test2.root");
-  BOOST_CHECK_EQUAL(reader.GetEntries(), 1);
+  BOOST_REQUIRE_EQUAL(reader.GetEntries(), 1);
   reader.GetEntry(0);
   JPetSignal & signal2 = (JPetSignal&)reader.GetData();
   reader.CloseFile();
-  BOOST_CHECK_EQUAL(signal.GetTime(), signal2.GetTime());
+  BOOST_REQUIRE_EQUAL(signal.GetTime(), signal2.GetTime());
 }
 
 BOOST_AUTO_TEST_CASE (proper_file)
 {
   JPetReader reader;
   bool openedPropery = reader.OpenFile("test2.root");
-  BOOST_CHECK(openedPropery );
+  BOOST_REQUIRE(openedPropery );
   if (openedPropery) {
     reader.ReadData("");
-    BOOST_CHECK(reader.fBranch != 0);
-    BOOST_CHECK(reader.fFile->IsOpen());
-    BOOST_CHECK(reader.fObject != 0);
-    BOOST_CHECK(reader.fTree != 0);
+    BOOST_REQUIRE(reader.fBranch != 0);
+    BOOST_REQUIRE(reader.fFile->IsOpen());
+    BOOST_REQUIRE(reader.fObject != 0);
+    BOOST_REQUIRE(reader.fTree != 0);
 
-    BOOST_CHECK(reader.GetEntries() > 0);
-    BOOST_CHECK(reader.GetEntry(0) > 0);
+    BOOST_REQUIRE(reader.GetEntries() > 0);
+    BOOST_REQUIRE(reader.GetEntry(0) > 0);
 
     reader.CloseFile();
 
-    BOOST_CHECK(reader.fBranch == 0);
-    BOOST_CHECK(reader.fObject == 0);
-    BOOST_CHECK(reader.fTree == 0);
+    BOOST_REQUIRE(reader.fBranch == 0);
+    BOOST_REQUIRE(reader.fObject == 0);
+    BOOST_REQUIRE(reader.fTree == 0);
   }
 }
 
@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE (read_and_write_header )
   
   JPetReader reader("test3.root");
   JPetTreeHeader* output_header = reader.GetHeaderClone();
-  BOOST_CHECK_EQUAL(input_header.GetRunNumber(), output_header->GetRunNumber());
+  BOOST_REQUIRE_EQUAL(input_header.GetRunNumber(), output_header->GetRunNumber());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
