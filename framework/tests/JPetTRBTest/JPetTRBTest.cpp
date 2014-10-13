@@ -21,17 +21,17 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetTRB trb;
-  BOOST_CHECK_EQUAL(trb.getID(), 0);
-  BOOST_CHECK_EQUAL(trb.getType(), 0);
-  BOOST_CHECK_EQUAL(trb.getChannel(), 0);
+  BOOST_REQUIRE_EQUAL(trb.getID(), 0);
+  BOOST_REQUIRE_EQUAL(trb.getType(), 0);
+  BOOST_REQUIRE_EQUAL(trb.getChannel(), 0);
 }
 
 BOOST_AUTO_TEST_CASE( constructor )
 {
   JPetTRB trb(12, 1, 224);
-  BOOST_CHECK_EQUAL(trb.getID(), 12);
-  BOOST_CHECK_EQUAL(trb.getType(), 1);
-  BOOST_CHECK_EQUAL(trb.getChannel(), 224);
+  BOOST_REQUIRE_EQUAL(trb.getID(), 12);
+  BOOST_REQUIRE_EQUAL(trb.getType(), 1);
+  BOOST_REQUIRE_EQUAL(trb.getChannel(), 224);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

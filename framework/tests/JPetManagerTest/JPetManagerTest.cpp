@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE( create_unique_manager )
   JPetManager& manager2 = JPetManager::GetManager(); // it should be the same Manager
   JPetManager* pManager2 = &manager2;
 
-  BOOST_CHECK_EQUAL(pManager, pManager2); 
+  BOOST_REQUIRE_EQUAL(pManager, pManager2); 
 }
 
 BOOST_AUTO_TEST_SUITE_END()
