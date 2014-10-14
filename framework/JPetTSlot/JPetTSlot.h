@@ -28,10 +28,10 @@ public:
   inline size_t size() const {
     return fSigChannels.GetEntries();
   }
-  inline size_t getNumberOfSigCh() const {
+  inline size_t GetNumberOfSigCh() const {
     return fSigChannels.GetEntries();
   }
-  inline const TClonesArray& getSigChVect() const {
+  inline const TClonesArray& GetSigChVect() const {
     return fSigChannels;
   }
   /**
