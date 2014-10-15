@@ -926,8 +926,6 @@ BEGIN
 	  AND
 	  "SLSCConnection".slot_id = "Slot".id
 	  AND
-	  "SLSCConnection".setup_id = 
-	  AND
 	  "SLSCConnection".scintillator_id = p_scintillator_id
   LOOP
     RETURN NEXT;
@@ -1382,7 +1380,7 @@ BEGIN
 
   IN
 
-      SELECT
+      SELECT DISTINCT
 	"KonradBoard".id AS konradboard_id,
 	"KonradBoard".isactive AS konradboard_isactive,
 	"KonradBoard".status AS konradboard_status,
@@ -1432,7 +1430,7 @@ BEGIN
 
   IN
 
-      SELECT
+      SELECT DISTINCT
 	"TRB".id AS TRB_id,
 
 	"Setup".id AS setup_id,
