@@ -60,7 +60,8 @@ void JPetDBParamGetter::fillScintillators(const int p_run_id, JPetParamBank& par
 {
   INFO("Start filling Scintillators container.");
     //"SELECT * FROM getDataFromScintillators(" + l_run_id + ");";
-  pqxx::result l_runDbResults = getDataFromDB("getDataFromScintillators",p_run_id);
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromScintillators",l_run_id);
 
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
@@ -75,22 +76,23 @@ void JPetDBParamGetter::fillScintillators(const int p_run_id, JPetParamBank& par
   }
 }
 
-std::string JPetDBParamGetter::generateSelectQuery(std::string sqlFun, std::string id) 
+std::string JPetDBParamGetter::generateSelectQuery(const std::string& sqlFun, const std::string& arguments) 
 {
   std::string sqlQuerry = "SELECT * FROM ";
   sqlQuerry += sqlFun;
-  sqlQuerry += "(" +id + ");";
+  sqlQuerry += "(" +arguments + ");";
   return sqlQuerry;
 }
 
 /// @brief method calls the remote PostgreSQL function sqlfunction with the id argument and returns results from database
-pqxx::result JPetDBParamGetter::getDataFromDB(std::string sqlfunction, int id) 
+pqxx::result JPetDBParamGetter::getDataFromDB(const std::string& sqlfunction,const  std::string& arguments) 
 {
-  std::string l_run_id = boost::lexical_cast<std::string>(id);
-  std::string l_sqlQuerry = generateSelectQuery(sqlfunction,l_run_id);
+  //std::string l_run_id = boost::lexical_cast<std::string>(id);
+  std::string l_sqlQuerry = generateSelectQuery(sqlfunction,arguments);
   DB::SERVICES::DBHandler& l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
   return  l_dbHandlerInstance.querry(l_sqlQuerry);
 }
+
 
 void JPetDBParamGetter::printErrorMessageDB(std::string sqlFunction, int p_run_id) {
     std::string l_error(sqlFunction);
@@ -105,7 +107,9 @@ void JPetDBParamGetter::fillPMs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling PMs container.");
 //  std::string l_sqlQuerry = "SELECT * FROM getDataFromPhotoMultipliers(" + l_run_id + ");";
-  pqxx::result l_runDbResults = getDataFromDB("getDataFromPhotoMultipliers",p_run_id);
+
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromPhotoMultipliers",l_run_id);
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -124,7 +128,8 @@ void JPetDBParamGetter::fillFEBs(const int p_run_id, JPetParamBank& paramBank)
   INFO("Start filling FEBs container.");
 
   //std::string l_sqlQuerry = "SELECT * FROM getDataFromKonradBoards(" + l_run_id + ");";
-  pqxx::result l_runDbResults = getDataFromDB("getDataFromKonradBoards",p_run_id);
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromKonradBoards",l_run_id);
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -144,7 +149,8 @@ void JPetDBParamGetter::fillTRBs(const int p_run_id, JPetParamBank& paramBank)
 
 
 //  std::string l_sqlQuerry = "SELECT * FROM getDataFromTRBs(" + l_run_id + ");";
-  pqxx::result l_runDbResults = getDataFromDB("getDataFromTRBs",p_run_id);
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromTRBs",l_run_id);
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -163,7 +169,8 @@ void JPetDBParamGetter::fillTOMB(const int p_run_id, JPetParamBank& paramBank)
   INFO("Start filling TOMBs container.");
 
 //  std::string l_sqlQuerry = "SELECT * FROM getDataFromTOMB(" + l_run_id + ");";
-  pqxx::result l_runDbResults = getDataFromDB("getDataFromTOMB",p_run_id);
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromTOMB",l_run_id);
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -279,8 +286,10 @@ void JPetDBParamGetter::fillScintillatorsTRefs(const int p_run_id, JPetParamBank
 
 //      std::string l_scitillator_id = boost::lexical_cast<std::string>(((JPetScin*)fScintillators[l_scintillator_index])->getID());
   //    std::string l_sqlQuerry = "SELECT * FROM getPhotoMultipliersForScintillator(" + l_scitillator_id + ");";
-      
-      pqxx::result l_runDbResults = getDataFromDB("getPhotoMultipliersForScintillator", paramBank.getScintillator(l_scintillator_index).getID());
+    std::string scin_id = boost::lexical_cast<std::string>(paramBank.getScintillator(l_scintillator_index).getID());
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+    std::string args = scin_id + "," + l_run_id;
+      pqxx::result l_runDbResults = getDataFromDB("getPhotoMultipliersForScintillator", args);
 
       size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -331,8 +340,11 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
     for (unsigned int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index) {
 //      ((JPetPM*)fPMs[l_PM_index])->clearTRefFEBs();
     ///wk!!  paramBank.getPM(l_PM_index).clearTRefKBs();
+    std::string pm_id = boost::lexical_cast<std::string>(paramBank.getPM(l_PM_index).getID());
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+    std::string args = pm_id + "," + l_run_id;
 
-      pqxx::result l_runDbResults = getDataFromDB("getKonradBoardsForPhotoMultiplier", paramBank.getPM(l_PM_index).getID());
+      pqxx::result l_runDbResults = getDataFromDB("getKonradBoardsForPhotoMultiplier", args);
 
       size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -377,7 +389,10 @@ void JPetDBParamGetter::fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBa
  ///wk!!!     paramBank.getFEB(l_FEB_index).clearTRefTRBs();
 
 //      std::string l_FEB_id = boost::lexical_cast<std::string>(((JPetFEB*)fFEBs[l_FEB_index])->id());
-      pqxx::result l_runDbResults = getDataFromDB("getTRBsForKonradBoard",paramBank.getFEB(l_FEB_index).id());
+    std::string feb_id = boost::lexical_cast<std::string>(paramBank.getFEB(l_FEB_index).id());
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+    std::string args = feb_id + "," + l_run_id;
+      pqxx::result l_runDbResults = getDataFromDB("getTRBsForKonradBoard",args);
 
       size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -422,7 +437,10 @@ void JPetDBParamGetter::fillTRBsTRefs(const int p_run_id, JPetParamBank& paramBa
  ///wk!!!     paramBank.getTRB(l_TRB_index).clearTRefTOMB();
 
       //std::string l_TRB_id = boost::lexical_cast<std::string>(((JPetTRB*)fTRBs[l_TRB_index])->getID());
-      pqxx::result l_runDbResults = getDataFromDB("getTOMBForTRB",paramBank.getTRB(l_TRB_index).getID());
+    std::string trb_id = boost::lexical_cast<std::string>(paramBank.getTRB(l_TRB_index).getID());
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+    std::string args = trb_id + "," + l_run_id;
+      pqxx::result l_runDbResults = getDataFromDB("getTOMBForTRB",args);
 
       size_t l_sizeResultQuerry = l_runDbResults.size();
 
