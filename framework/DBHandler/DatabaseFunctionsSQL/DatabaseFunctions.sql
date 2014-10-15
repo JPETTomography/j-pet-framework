@@ -979,6 +979,7 @@ SELECT * FROM getKonradBoardsForPhotoMultiplier(57);
 
 *********************************************************************
 
+
 ************************************KonradBoards***************************************
 
 // trzeba poprawic ta funckje
@@ -1021,6 +1022,45 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getTRBsForKonradBoard(1);
 
+
+CREATE OR REPLACE FUNCTION getTRBsForKonradBoard2(IN p_konradBoard_id INTEGER, IN p_run_id INTEGER)
+RETURNS TABLE
+(
+	KonradBoardOutput_id INTEGER,
+	KBTRBConnection_id INTEGER,
+	TRBInput_id INTEGER,
+	TRB_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+	KonradBoardOutput_id,
+	KBTRBConnection_id,
+	TRBInput_id,
+	TRB_id
+  IN
+      SELECT
+		"KonradBoardOutput".id AS KonradBoardOutput_id,
+		"KBTRBConnection".id AS KBTRBConnection_id,
+		"TRBInput".id AS TRBInput_id,
+		"TRB".id AS TRB_id
+
+      FROM "KonradBoardOutput", "KBTRBConnection", "TRBInput", "TRB"
+		WHERE
+		  "TRB".id = "TRBInput".trb_id
+		  AND
+		  "TRBInput".id = "KBTRBConnection".trbinput_id
+		  AND
+		  "KBTRBConnection".konradboardoutput_id = "KonradBoardOutput".id
+		  AND
+		  "KonradBoardOutput".konradboard_id = p_konradBoard_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+SELECT * FROM getTRBsForKonradBoard(1);
 
 *********************************************************************
 

@@ -26,8 +26,8 @@ public:
   JPetParamBank generateParamBank(const int p_run_id);
 
 private:
-  pqxx::result getDataFromDB(std::string sqlFunction, int p_id);
-  std::string generateSelectQuery(std::string sqlFunction, std::string arg);
+  pqxx::result getDataFromDB(const std::string& sqlFunction, const std::string& args);
+  std::string generateSelectQuery(const std::string& sqlFunction, const std::string& args);
   void printErrorMessageDB(std::string sqlFunction, int p_run_id);
   JPetScin generateScintillator(pqxx::result::const_iterator row);
   JPetPM generatePM(pqxx::result::const_iterator row);
