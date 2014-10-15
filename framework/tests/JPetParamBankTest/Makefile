@@ -1,7 +1,7 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetParamBank
-EXTRA_MODULES = JPetScin JPetPM JPetFEB JPetTRB JPetTOMB
+EXTRA_MODULES = JPetScin JPetPM JPetFEB JPetTRB JPetTOMB JPetLogger
 #classes that need Dictionnaries 
 DICTS = JPetScin JPetPM JPetFEB JPetTRB JPetTOMB JPetParamBank
 PQXX_LIB_SET = 

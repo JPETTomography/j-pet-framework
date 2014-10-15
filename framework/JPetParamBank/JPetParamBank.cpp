@@ -24,3 +24,27 @@ void JPetParamBank::clear()
   fTRBs.Clear();
   fTOMB.Clear();
 }
+
+
+int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const 
+{
+  int size =-1;
+  switch (type) {
+    case kScintillator:
+      size = getScintillatorsSize();
+      break;
+    case kFEB:
+      size = getFEBsSize();
+      break;
+    case kTRB:
+      size = getTRBsSize();
+      break;
+    case kTOMB:
+      size = getTOMBSize();
+      break;
+    default:
+      ERROR("bad type");
+      break;
+  }
+  return size; 
+}

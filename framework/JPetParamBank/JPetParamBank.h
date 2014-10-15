@@ -13,12 +13,19 @@
 #include "../JPetFEB/JPetFEB.h"
 #include "../JPetPM/JPetPM.h"
 #include "../JPetTOMB/JPetTOMB.h"
+#include "../../JPetLoggerInclude.h"
 #include <TClonesArray.h>
+#include <cassert>
 
 class JPetParamBank:public TObject {
  public:
+  enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMB, SIZE};
+
   JPetParamBank(); 
   void clear();
+
+
+  int getSize(ParamObjectType type) const;
   // Scintillators
   inline void addScintillator(JPetScin& scintillator) { new (fScintillators[getScintillatorsSize()]) JPetScin(scintillator); }
   inline const TClonesArray& getScintillators() const { return fScintillators; }
@@ -47,6 +54,7 @@ class JPetParamBank:public TObject {
   inline void setTOMB(JPetTOMB& tomb) { fTOMB = tomb;}
   inline JPetTOMB getTOMB() const { return fTOMB; }
   inline JPetTOMB* getTOMBAddress() { return &fTOMB; } /// @todo to remove
+  inline int getTOMBSize() const { return 1;}
  private:
 
   TClonesArray fScintillators;
