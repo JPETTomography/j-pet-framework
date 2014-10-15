@@ -23,20 +23,20 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetBarrelSlot slot;
   float epsilon = 0.0001;
-  BOOST_CHECK_EQUAL(slot.getSlotID(), 0);
-  BOOST_CHECK_EQUAL(slot.getLayerID(), 0);
-  BOOST_CHECK_EQUAL(slot.getLayerRad(), 0);
-  BOOST_CHECK_CLOSE(slot.getSlotTheta(), 0., epsilon);
+  BOOST_REQUIRE_EQUAL(slot.getSlotID(), 0);
+  BOOST_REQUIRE_EQUAL(slot.getLayerID(), 0);
+  BOOST_REQUIRE_EQUAL(slot.getLayerRad(), 0);
+  BOOST_REQUIRE_CLOSE(slot.getSlotTheta(), 0., epsilon);
 }
 
 BOOST_AUTO_TEST_CASE( constructor )
 {
   JPetBarrelSlot slot(1, 2, 3, 5.5);
   float epsilon = 0.0001;
-  BOOST_CHECK_EQUAL(slot.getSlotID(), 1);
-  BOOST_CHECK_EQUAL(slot.getLayerID(), 2);
-  BOOST_CHECK_EQUAL(slot.getLayerRad(), 3);
-  BOOST_CHECK_CLOSE(slot.getSlotTheta(), 5.5, epsilon);
+  BOOST_REQUIRE_EQUAL(slot.getSlotID(), 1);
+  BOOST_REQUIRE_EQUAL(slot.getLayerID(), 2);
+  BOOST_REQUIRE_EQUAL(slot.getLayerRad(), 3);
+  BOOST_REQUIRE_CLOSE(slot.getSlotTheta(), 5.5, epsilon);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
