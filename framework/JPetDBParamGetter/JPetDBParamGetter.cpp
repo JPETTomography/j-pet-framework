@@ -295,9 +295,9 @@ void JPetDBParamGetter::fillScintillatorsTRefs(const int p_run_id, JPetParamBank
 
       if (l_sizeResultQuerry) {
         for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
-          int l_SLSCConnection_id = row["SLSCConnection_id"].as<int>();
-          int l_TOMB_id = row["Slot_id"].as<int>();
-          int l_HVPMConnection_id = row["HVPMConnection_id"].as<int>();
+	  //          int l_SLSCConnection_id = row["SLSCConnection_id"].as<int>();
+          //          int l_TOMB_id = row["Slot_id"].as<int>();
+          //          int l_HVPMConnection_id = row["HVPMConnection_id"].as<int>();
           int l_PhotoMultiplier_id = row["PhotoMultiplier_id"].as<int>();
 
           for (unsigned int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index) {
@@ -350,8 +350,8 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
 
       if (l_sizeResultQuerry) {
         for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
-          int l_PMFEBConnection_id = row["PMKBConnection_id"].as<int>();
-          int l_KonradBoardInput_id = row["KonradBoardInput_id"].as<int>();
+	  //   int l_PMFEBConnection_id = row["PMKBConnection_id"].as<int>();
+          // int l_KonradBoardInput_id = row["KonradBoardInput_id"].as<int>();
           int l_KonradBoard_id = row["KonradBoard_id"].as<int>();
 
           for (unsigned int l_FEB_index = 0u; l_FEB_index < l_FEBsSize; ++l_FEB_index) {
@@ -398,9 +398,9 @@ void JPetDBParamGetter::fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBa
 
       if (l_sizeResultQuerry) {
         for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
-          int l_KonradBoardOutput_id = row["KonradBoardOutput_id"].as<int>();
-          int l_FEBTRBConnection_id = row["KBTRBConnection_id"].as<int>();
-          int l_TRBInput_id = row["TRBInput_id"].as<int>();
+          //int l_KonradBoardOutput_id = row["KonradBoardOutput_id"].as<int>();
+          //int l_FEBTRBConnection_id = row["KBTRBConnection_id"].as<int>();
+          //int l_TRBInput_id = row["TRBInput_id"].as<int>();
           int l_TRB_id = row["TRB_id"].as<int>();
 
           for (unsigned int l_TRB_index = 0u; l_TRB_index < l_TRBsSize; ++l_TRB_index) {
@@ -423,8 +423,10 @@ void JPetDBParamGetter::fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBa
   }
 }
 
+
 void JPetDBParamGetter::fillTRBsTRefs(const int p_run_id, JPetParamBank& paramBank)
 {
+  /*
   INFO("Start filling TRBs TRefs.");
 
   int l_TRBsSize = paramBank.getTRBsSize();
@@ -469,6 +471,7 @@ void JPetDBParamGetter::fillTRBsTRefs(const int p_run_id, JPetParamBank& paramBa
     if (l_TOMBSize == 0)
       ERROR("TOMBs container is empty.");
   }
+  */
 }
 
 void JPetDBParamGetter::fillTRefs(JPetDBParamGetter::ParamObjectType type) 
