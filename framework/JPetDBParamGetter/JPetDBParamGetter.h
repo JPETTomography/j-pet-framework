@@ -23,8 +23,7 @@ public:
   enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMB, SIZE};
   JPetDBParamGetter();
   JPetDBParamGetter(const char* dBConfigFile);
-  void fillAllContainers     (const int p_run_id);
-  const JPetParamBank& getParamBank() const { return fBank; }
+  JPetParamBank generateParamBank(const int p_run_id);
 
 private:
   pqxx::result getDataFromDB(std::string sqlFunction, int p_id);
@@ -38,18 +37,18 @@ private:
 
   void fillTRefs(ParamObjectType type);
 
-  void fillScintillators     (const int p_run_id);
-  void fillPMs               (const int p_run_id);
-  void fillFEBs               (const int p_run_id);
-  void fillTRBs              (const int p_run_id);
-  void fillTOMB              (const int p_run_id);
-  void fillScintillatorsTRefs(void);
-  void fillPMsTRefs          (void);
-  void fillFEBsTRefs          (void);
-  void fillTRBsTRefs         (void);
-  void fillAllTRefs          (void);
+  void fillScintillators(const int p_run_id, JPetParamBank& paramBank);
+  void fillParamContainer(ParamObjectType type, const int p_run_id, JPetParamBank& paramBank);
 
-  JPetParamBank fBank;
+  void fillPMs(const int p_run_id, JPetParamBank& paramBank);
+  void fillFEBs(const int p_run_id, JPetParamBank& paramBank);
+  void fillTRBs(const int p_run_id, JPetParamBank& paramBank);
+  void fillTOMB(const int p_run_id, JPetParamBank& paramBank);
+  void fillScintillatorsTRefs(const int p_run_id, JPetParamBank& paramBank);
+  void fillPMsTRefs(const int p_run_id, JPetParamBank& paramBank);
+  void fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank);
+  void fillTRBsTRefs(const int p_run_id, JPetParamBank& paramBank);
+  void fillAllTRefs(const int p_run_id, JPetParamBank& paramBank);
 
 };
 #endif /*  !JPETDBPARAMGETTER_H */

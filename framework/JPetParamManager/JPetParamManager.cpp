@@ -16,8 +16,7 @@ JPetParamManager::JPetParamManager(const char* dBConfigFile):fDBParamGetter(dBCo
 
 void JPetParamManager::getParametersFromDatabase(const int run)
 {
-  fDBParamGetter.fillAllContainers(run);
-  fBank = fDBParamGetter.getParamBank();
+  fBank = fDBParamGetter.generateParamBank(run);
 }
 
 bool JPetParamManager::saveParametersToFile(const char* filename)
