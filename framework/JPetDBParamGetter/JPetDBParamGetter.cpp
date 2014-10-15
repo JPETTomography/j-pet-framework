@@ -19,7 +19,64 @@ JPetDBParamGetter::JPetDBParamGetter(const char* dBConfigFile)
 
 }
 
-std::string JPetDBParamGetter::generateSelectQuery(std::string sqlFun, std::string id) {
+JPetParamBank JPetDBParamGetter::generateParamBank(const int p_run_id) 
+{
+  JPetParamBank paramBank;
+  fillScintillators(p_run_id, paramBank);
+  fillPMs(p_run_id, paramBank);
+  fillFEBs(p_run_id, paramBank);
+  fillTRBs(p_run_id, paramBank);
+  fillTOMB(p_run_id, paramBank);
+  fillAllTRefs(p_run_id, paramBank);
+  return paramBank;
+}
+
+//void JPetDBParamGetter::fillParamContainer(ParamObjectType type, const int p_run_id, JPetParamBank& paramBank)
+//{
+//
+//  // enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMB, SIZE};
+//  static const char* sqlFunctions[] = {"getDataFromScintillators", "getDataFromPhotoMultipliers","getDataFromKonradBoards", "getDataFromTRBs" ,"getDataFromTOMB"};
+//
+//  INFO("Start filling Scintillators container.");
+//    //"SELECT * FROM getDataFromScintillators(" + l_run_id + ");";
+//  pqxx::result l_runDbResults = getDataFromDB("getDataFromScintillators",p_run_id);
+//
+//
+//  size_t l_sizeResultQuerry = l_runDbResults.size();
+//
+//  if (l_sizeResultQuerry) {
+//    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+//      JPetScin l_scin = generateScintillator(row);
+//      paramBank.addScintillator(l_scin);
+//    }
+//  } else {
+//    printErrorMessageDB(sqlFunctions[type], p_run_id);
+//  }
+//
+//}
+
+
+void JPetDBParamGetter::fillScintillators(const int p_run_id, JPetParamBank& paramBank)
+{
+  INFO("Start filling Scintillators container.");
+    //"SELECT * FROM getDataFromScintillators(" + l_run_id + ");";
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromScintillators",p_run_id);
+
+
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+
+  if (l_sizeResultQuerry) {
+    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+      JPetScin l_scin = generateScintillator(row);
+      paramBank.addScintillator(l_scin);
+    }
+  } else {
+    printErrorMessageDB("getDataFromScintillators", p_run_id);
+  }
+}
+
+std::string JPetDBParamGetter::generateSelectQuery(std::string sqlFun, std::string id) 
+{
   std::string sqlQuerry = "SELECT * FROM ";
   sqlQuerry += sqlFun;
   sqlQuerry += "(" +id + ");";
@@ -43,26 +100,8 @@ void JPetDBParamGetter::printErrorMessageDB(std::string sqlFunction, int p_run_i
 }
 
 
-void JPetDBParamGetter::fillScintillators(const int p_run_id)
-{
-  INFO("Start filling Scintillators container.");
-    //"SELECT * FROM getDataFromScintillators(" + l_run_id + ");";
-  pqxx::result l_runDbResults = getDataFromDB("getDataFromScintillators",p_run_id);
 
-
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-
-  if (l_sizeResultQuerry) {
-    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
-      JPetScin l_scin = generateScintillator(row);
-      fBank.addScintillator(l_scin);
-    }
-  } else {
-    printErrorMessageDB("getDataFromScintillators", p_run_id);
-  }
-}
-
-void JPetDBParamGetter::fillPMs(const int p_run_id)
+void JPetDBParamGetter::fillPMs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling PMs container.");
 //  std::string l_sqlQuerry = "SELECT * FROM getDataFromPhotoMultipliers(" + l_run_id + ");";
@@ -73,14 +112,14 @@ void JPetDBParamGetter::fillPMs(const int p_run_id)
   if (l_sizeResultQuerry) {
     for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
       JPetPM l_pm = generatePM(row);
-      fBank.addPM(l_pm);
+      paramBank.addPM(l_pm);
     }
   } else {
     printErrorMessageDB("getDataFromPhotoMultipliers", p_run_id);
   }
 }
 
-void JPetDBParamGetter::fillFEBs(const int p_run_id)
+void JPetDBParamGetter::fillFEBs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling FEBs container.");
 
@@ -92,14 +131,14 @@ void JPetDBParamGetter::fillFEBs(const int p_run_id)
   if (l_sizeResultQuerry) {
     for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
       JPetFEB l_FEB = generateFEB(row);
-      fBank.addFEB(l_FEB);
+      paramBank.addFEB(l_FEB);
     }
   } else {
     printErrorMessageDB("getDataFromKonradBoards", p_run_id);
   }
 }
 
-void JPetDBParamGetter::fillTRBs(const int p_run_id)
+void JPetDBParamGetter::fillTRBs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling TRBs container.");
 
@@ -112,14 +151,14 @@ void JPetDBParamGetter::fillTRBs(const int p_run_id)
   if (l_sizeResultQuerry) {
     for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
       JPetTRB l_TRB = generateTRB(row);
-      fBank.addTRB(l_TRB);
+      paramBank.addTRB(l_TRB);
     }
   } else {
     printErrorMessageDB("getDataFromTRBs", p_run_id);
   }
 }
 
-void JPetDBParamGetter::fillTOMB(const int p_run_id)
+void JPetDBParamGetter::fillTOMB(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling TOMBs container.");
 
@@ -133,7 +172,7 @@ void JPetDBParamGetter::fillTOMB(const int p_run_id)
     {
       pqxx::result::const_iterator row = l_runDbResults.begin();
       JPetTOMB l_TOMB = generateTOMB(row);
-      fBank.setTOMB(l_TOMB);
+      paramBank.setTOMB(l_TOMB);
     }
   } else {
     printErrorMessageDB("getDataFromTOMB", p_run_id);
@@ -225,33 +264,23 @@ JPetTOMB JPetDBParamGetter::generateTOMB(pqxx::result::const_iterator row) {
 }
 
 
-void JPetDBParamGetter::fillAllContainers(const int p_run_id)
-{
-  fillScintillators(p_run_id);
-  fillPMs(p_run_id);
-  fillFEBs(p_run_id);
-  fillTRBs(p_run_id);
-  fillTOMB(p_run_id);
-  fillAllTRefs();
-}
-
-void JPetDBParamGetter::fillScintillatorsTRefs()
+void JPetDBParamGetter::fillScintillatorsTRefs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling Scintillators TRefs.");
 
-  int l_scintillatorsSize = fBank.getScintillatorsSize();
-  int l_PMsSize = fBank.getPMsSize();
+  int l_scintillatorsSize = paramBank.getScintillatorsSize();
+  int l_PMsSize = paramBank.getPMsSize();
 
   if (l_scintillatorsSize > 0 && l_PMsSize > 0) {
 
     for (unsigned int l_scintillator_index = 0u; l_scintillator_index < l_scintillatorsSize; ++l_scintillator_index) {
-///wk!!      fBank.getScintillator(l_scintillator_index).clearTRefPMs();
+///wk!!      paramBank.getScintillator(l_scintillator_index).clearTRefPMs();
 //      ((JPetScin*)fScintillators[l_scintillator_index])->clearTRefPMs();
 
 //      std::string l_scitillator_id = boost::lexical_cast<std::string>(((JPetScin*)fScintillators[l_scintillator_index])->getID());
   //    std::string l_sqlQuerry = "SELECT * FROM getPhotoMultipliersForScintillator(" + l_scitillator_id + ");";
       
-      pqxx::result l_runDbResults = getDataFromDB("getPhotoMultipliersForScintillator", fBank.getScintillator(l_scintillator_index).getID());
+      pqxx::result l_runDbResults = getDataFromDB("getPhotoMultipliersForScintillator", paramBank.getScintillator(l_scintillator_index).getID());
 
       size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -264,18 +293,18 @@ void JPetDBParamGetter::fillScintillatorsTRefs()
 
           for (unsigned int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index) {
             //        int l_PM_id = ((JPetPM*)fPMs[l_PM_index])->getID();
-            int l_PM_id = fBank.getPM(l_PM_index).getID();
+            int l_PM_id = paramBank.getPM(l_PM_index).getID();
 
             if (l_PM_id == l_PhotoMultiplier_id) {
               //            JPetPM::Side l_PM_side = ((JPetPM*)fPMs[l_PM_index])->getSide();
-              JPetPM::Side l_PM_side = fBank.getPM(l_PM_index).getSide();
+              JPetPM::Side l_PM_side = paramBank.getPM(l_PM_index).getSide();
 
               if (l_PM_side == JPetPM::Side::kLeft) {
                 //      ((JPetScin*)fScintillators[l_scintillator_index])->setLeftTRefPM( *((JPetPM*)fPMs[l_PM_index]) );
-                fBank.getScintillator(l_scintillator_index).setLeftTRefPM(fBank.getPM(l_PM_index));
+                paramBank.getScintillator(l_scintillator_index).setLeftTRefPM(paramBank.getPM(l_PM_index));
               } else if (l_PM_side == JPetPM::Side::kRight) {
                 //         ((JPetScin*)fScintillators[l_scintillator_index])->setRightTRefPM( *((JPetPM*)fPMs[l_PM_index]) );
-                fBank.getScintillator(l_scintillator_index).setRightTRefPM( fBank.getPM(l_PM_index) );
+                paramBank.getScintillator(l_scintillator_index).setRightTRefPM( paramBank.getPM(l_PM_index) );
               }
             }
           }
@@ -290,20 +319,20 @@ void JPetDBParamGetter::fillScintillatorsTRefs()
   }
 }
 
-void JPetDBParamGetter::fillPMsTRefs()
+void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling PMs TRefs.");
 
-  int l_PMsSize = fBank.getPMsSize();
-  int l_FEBsSize = fBank.getFEBsSize();
+  int l_PMsSize = paramBank.getPMsSize();
+  int l_FEBsSize = paramBank.getFEBsSize();
 
   if (l_PMsSize > 0 && l_FEBsSize > 0) {
 
     for (unsigned int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index) {
 //      ((JPetPM*)fPMs[l_PM_index])->clearTRefFEBs();
-    ///wk!!  fBank.getPM(l_PM_index).clearTRefKBs();
+    ///wk!!  paramBank.getPM(l_PM_index).clearTRefKBs();
 
-      pqxx::result l_runDbResults = getDataFromDB("getKonradBoardsForPhotoMultiplier", fBank.getPM(l_PM_index).getID());
+      pqxx::result l_runDbResults = getDataFromDB("getKonradBoardsForPhotoMultiplier", paramBank.getPM(l_PM_index).getID());
 
       size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -315,11 +344,11 @@ void JPetDBParamGetter::fillPMsTRefs()
 
           for (unsigned int l_FEB_index = 0u; l_FEB_index < l_FEBsSize; ++l_FEB_index) {
 //            int l_FEB_id = ((JPetFEB*)fFEBs[l_FEB_index])->id();
-            int l_FEB_id = fBank.getFEB(l_FEB_index).id();
+            int l_FEB_id = paramBank.getFEB(l_FEB_index).id();
 
             if (l_FEB_id == l_KonradBoard_id) {
 //              ((JPetPM*)fPMs[l_PM_index])->setTRefFEB( *((JPetFEB*)fFEBs[l_FEB_index]) );
-              fBank.getPM(l_PM_index).setTRefKB(fBank.getFEB(l_FEB_index) );
+              paramBank.getPM(l_PM_index).setTRefKB(paramBank.getFEB(l_FEB_index) );
             }
           }
         }
@@ -333,22 +362,22 @@ void JPetDBParamGetter::fillPMsTRefs()
   }
 }
 
-void JPetDBParamGetter::fillFEBsTRefs()
+void JPetDBParamGetter::fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling FEBs TRefs.");
 
-  int l_FEBsSize = fBank.getFEBsSize();
-  int l_TRBsSize = fBank.getTRBsSize();
+  int l_FEBsSize = paramBank.getFEBsSize();
+  int l_TRBsSize = paramBank.getTRBsSize();
 
   if (l_FEBsSize > 0 && l_TRBsSize > 0) {
 
     for (unsigned int l_FEB_index = 0u; l_FEB_index < l_FEBsSize; ++l_FEB_index) {
 
 //     ((JPetFEB*)fFEBs[l_FEB_index])->clearTRefTRBs();
- ///wk!!!     fBank.getFEB(l_FEB_index).clearTRefTRBs();
+ ///wk!!!     paramBank.getFEB(l_FEB_index).clearTRefTRBs();
 
 //      std::string l_FEB_id = boost::lexical_cast<std::string>(((JPetFEB*)fFEBs[l_FEB_index])->id());
-      pqxx::result l_runDbResults = getDataFromDB("getTRBsForKonradBoard",fBank.getFEB(l_FEB_index).id());
+      pqxx::result l_runDbResults = getDataFromDB("getTRBsForKonradBoard",paramBank.getFEB(l_FEB_index).id());
 
       size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -361,11 +390,11 @@ void JPetDBParamGetter::fillFEBsTRefs()
 
           for (unsigned int l_TRB_index = 0u; l_TRB_index < l_TRBsSize; ++l_TRB_index) {
 //            int l_TRBId = ((JPetTRB*)fTRBs[l_TRB_index])->getID();
-            int l_TRBId = fBank.getTRB(l_TRB_index).getID();
+            int l_TRBId = paramBank.getTRB(l_TRB_index).getID();
 
             if (l_TRBId == l_TRB_id) {
               // ((JPetFEB*)fFEBs[l_FEB_index])->setTRefTRB( *((JPetTRB*)fTRBs[l_TRB_index]) );
-              fBank.getFEB(l_FEB_index).setTRefTRB( fBank.getTRB(l_TRB_index));
+              paramBank.getFEB(l_FEB_index).setTRefTRB( paramBank.getTRB(l_TRB_index));
             }
           }
         }
@@ -379,21 +408,21 @@ void JPetDBParamGetter::fillFEBsTRefs()
   }
 }
 
-void JPetDBParamGetter::fillTRBsTRefs()
+void JPetDBParamGetter::fillTRBsTRefs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling TRBs TRefs.");
 
-  int l_TRBsSize = fBank.getTRBsSize();
+  int l_TRBsSize = paramBank.getTRBsSize();
   int l_TOMBSize = 1;
 
   if (l_TRBsSize > 0 && l_TOMBSize > 0) {
 
     for (unsigned int l_TRB_index = 0u; l_TRB_index < l_TRBsSize; ++l_TRB_index) {
 //      ((JPetTRB*)fTRBs[l_TRB_index])->clearTRefTOMB();
- ///wk!!!     fBank.getTRB(l_TRB_index).clearTRefTOMB();
+ ///wk!!!     paramBank.getTRB(l_TRB_index).clearTRefTOMB();
 
       //std::string l_TRB_id = boost::lexical_cast<std::string>(((JPetTRB*)fTRBs[l_TRB_index])->getID());
-      pqxx::result l_runDbResults = getDataFromDB("getTOMBForTRB",fBank.getTRB(l_TRB_index).getID());
+      pqxx::result l_runDbResults = getDataFromDB("getTOMBForTRB",paramBank.getTRB(l_TRB_index).getID());
 
       size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -406,11 +435,11 @@ void JPetDBParamGetter::fillTRBsTRefs()
 
           for (unsigned int l_TOMB_index = 0u; l_TOMB_index < l_TOMBSize; ++l_TOMB_index) {
 //            int l_TOMBId = ((JPetTOMB*)fTOMB[l_TOMB_index])->id();
-            int l_TOMBId = fBank.getTOMB().id();
+            int l_TOMBId = paramBank.getTOMB().id();
 
             if (l_TOMBId == l_TOMB_id) {
               // ((JPetTRB*)fTRBs[l_TRB_index])->setTRefTOMB( *((JPetTOMB*)fTOMB[l_TOMB_index]) );
-              fBank.getTRB(l_TRB_index).setTRefTOMB(fBank.getTOMBAddress());
+              paramBank.getTRB(l_TRB_index).setTRefTOMB(paramBank.getTOMBAddress());
             }
           }
         }
@@ -431,17 +460,17 @@ void JPetDBParamGetter::fillTRefs(JPetDBParamGetter::ParamObjectType type)
 //  INFO(entryInfo);
 // 
 //
-//  int l_TRBsSize = fBank.getTRBsSize();
+//  int l_TRBsSize = paramBank.getTRBsSize();
 //  int l_TOMBSize = 1;
 //
 //  if (l_TRBsSize > 0 && l_TOMBSize > 0) {
 //
 //    for (unsigned int l_TRB_index = 0u; l_TRB_index < l_TRBsSize; ++l_TRB_index) {
 ////      ((JPetTRB*)fTRBs[l_TRB_index])->clearTRefTOMB();
-//      fBank.getTRB(l_TRB_index).clearTRefTOMB();
+//      paramBank.getTRB(l_TRB_index).clearTRefTOMB();
 //
 //      //std::string l_TRB_id = boost::lexical_cast<std::string>(((JPetTRB*)fTRBs[l_TRB_index])->getID());
-//      pqxx::result l_runDbResults = getDataFromDB("getTOMBForTRB",fBank.getTRB(l_TRB_index).getID());
+//      pqxx::result l_runDbResults = getDataFromDB("getTOMBForTRB",paramBank.getTRB(l_TRB_index).getID());
 //
 //      size_t l_sizeResultQuerry = l_runDbResults.size();
 //
@@ -454,11 +483,11 @@ void JPetDBParamGetter::fillTRefs(JPetDBParamGetter::ParamObjectType type)
 //
 //          for (unsigned int l_TOMB_index = 0u; l_TOMB_index < l_TOMBSize; ++l_TOMB_index) {
 ////            int l_TOMBId = ((JPetTOMB*)fTOMB[l_TOMB_index])->id();
-//            int l_TOMBId = fBank.getTOMB().id();
+//            int l_TOMBId = paramBank.getTOMB().id();
 //
 //            if (l_TOMBId == l_TOMB_id) {
 //              // ((JPetTRB*)fTRBs[l_TRB_index])->setTRefTOMB( *((JPetTOMB*)fTOMB[l_TOMB_index]) );
-//              fBank.getTRB(l_TRB_index).setTRefTOMB(fBank.getTOMBAddress());
+//              paramBank.getTRB(l_TRB_index).setTRefTOMB(paramBank.getTOMBAddress());
 //            }
 //          }
 //        }
@@ -474,17 +503,17 @@ void JPetDBParamGetter::fillTRefs(JPetDBParamGetter::ParamObjectType type)
 }
 
 
-void JPetDBParamGetter::fillAllTRefs()
+void JPetDBParamGetter::fillAllTRefs(const int p_run_id, JPetParamBank& paramBank)
 {
-  if (fBank.getScintillatorsSize() > 0
-      && fBank.getPMsSize() > 0
-      && fBank.getFEBsSize() > 0
-      && fBank.getTRBsSize() > 0
+  if (paramBank.getScintillatorsSize() > 0
+      && paramBank.getPMsSize() > 0
+      && paramBank.getFEBsSize() > 0
+      && paramBank.getTRBsSize() > 0
      ) {
-    fillScintillatorsTRefs();
-    fillPMsTRefs();
-    fillFEBsTRefs();
-    fillTRBsTRefs();
+    fillScintillatorsTRefs(p_run_id,  paramBank);
+    fillPMsTRefs(p_run_id, paramBank);
+    fillFEBsTRefs(p_run_id, paramBank);
+    fillTRBsTRefs(p_run_id, paramBank);
   } else {
     ERROR("Containers are empty.");
   }
