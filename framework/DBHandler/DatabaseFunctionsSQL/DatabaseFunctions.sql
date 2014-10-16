@@ -1693,7 +1693,9 @@ RETURNS TABLE
   tomb INTEGER,
   trb_id INTEGER,
   konradboard_id INTEGER,
-  photomultiplier_id INTEGER
+  photomultiplier_id INTEGER,
+  threshold INTEGER,
+  slot_id INTEGER
 ) AS
 $BODY$
 BEGIN
@@ -1701,40 +1703,52 @@ BEGIN
     tomb,
     trb_id,
     konradboard_id,
-    photomultiplier_id
+    photomultiplier_id,
+    threshold,
+    slot_id
   IN
-	SELECT
-		"TRBOutput".portnumber AS tomb,
-		"TRB".id AS trb_id,
-		"KonradBoard".id AS konradboard_id,
-		"PhotoMultiplier".id AS photomultiplier_id
-	FROM "Run", "TRBInput", "KBTRBConnection", "TRB", "TRBOutput",
-	"KonradBoardOutput", "KonradBoard", "KonradBoardInput",
-	"PMKBConnection", "PhotoMultiplier"
-	WHERE
-		"Run".id = p_run_id
+       SELECT
+                "TRBOutput".portnumber AS tomb,
+                "TRB".id AS trb_id,
+                "KonradBoard".id AS konradboard_id,
+                "PhotoMultiplier".id AS photomultiplier_id,
+                "TRBConfigEntry".threshold AS threshold,
+                "HVPMConnection".slot_id AS slot_id
+        FROM "Run", "TRBInput", "KBTRBConnection", "TRB", "TRBOutput",
+        "KonradBoardOutput", "KonradBoard", "KonradBoardInput",
+        "PMKBConnection", "PhotoMultiplier", "TRBConfigEntry", "HVPMConnection"
+        WHERE
+                "Run".id = p_run_id
+                AND
+                "Run".setup_id = "KBTRBConnection".setup_id
+                AND
+                "KBTRBConnection".trbinput_id = "TRBInput".id
+                AND
+                "TRBInput".trb_id = "TRB".id
+                AND
+                "TRB".id = "TRBOutput".trb_id
+                AND
+	        "TRBInput".portnumber = "TRBOutput".portnumber
+                AND
+                "KBTRBConnection".konradboardoutput_id = "KonradBoardOutput".id
+                AND
+                "KonradBoardOutput".konradboard_id = "KonradBoard".id
+                AND
+                "KonradBoard".id = "KonradBoardInput".konradboard_id
 		AND
-		"Run".setup_id = "KBTRBConnection".setup_id
+                "KonradBoardInput".portnumber = (SELECT in_portnumber from KBinPortsFromOutPorts("KonradBoard".id) WHERE out_portnumber="KonradBoardOutput".portnumber )
+                AND
+                "KonradBoardInput".id = "PMKBConnection".konradboardinput_id
+                AND
+                "PMKBConnection".photomultiplier_id = "PhotoMultiplier".id
+                AND
+		"TRBConfigEntry".id =  "KBTRBConnection".id
 		AND
-		"KBTRBConnection".trbinput_id = "TRBInput".id
+		"TRBConfigEntry".trbconfig_id = "Run".setup_id
 		AND
-		"TRBInput".trb_id = "TRB".id
+		"HVPMConnection".setup_id = "Run".setup_id
 		AND
-		"TRB".id = "TRBOutput".trb_id
-		AND
-		"TRBInput".portnumber = "TRBOutput".portnumber
-		AND
-		"KBTRBConnection".konradboardoutput_id = "KonradBoardOutput".id
-		AND
-		"KonradBoardOutput".konradboard_id = "KonradBoard".id
-		AND
-		"KonradBoard".id = "KonradBoardInput".konradboard_id
-		AND
-		"KonradBoardInput".portnumber = (SELECT in_portnumber from KBinPortsFromOutPorts("KonradBoard".id) WHERE out_portnumber="KonradBoardOutput".portnumber )
-		AND
-		"KonradBoardInput".id = "PMKBConnection".konradboardinput_id
-		AND
-		"PMKBConnection".photomultiplier_id = "PhotoMultiplier".id
+		"HVPMConnection".photomultiplier_id = "PhotoMultiplier".id
 	  LOOP
     RETURN NEXT;
   END LOOP;
