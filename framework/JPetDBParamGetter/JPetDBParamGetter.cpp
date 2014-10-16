@@ -27,6 +27,7 @@ JPetParamBank JPetDBParamGetter::generateParamBank(const int p_run_id)
   fillFEBs(p_run_id, paramBank);
   fillTRBs(p_run_id, paramBank);
   fillTOMB(p_run_id, paramBank);
+  fillTOMBChannels(p_run_id, paramBank);
   fillAllTRefs(p_run_id, paramBank);
   return paramBank;
 }
@@ -186,6 +187,32 @@ void JPetDBParamGetter::fillTOMB(const int p_run_id, JPetParamBank& paramBank)
   }
 }
 
+
+void JPetDBParamGetter::fillTOMBChannels(const int p_run_id, JPetParamBank& paramBank)
+{
+  INFO("Start filling TOMBChannels container.");
+
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getEverythingVsTOMB",l_run_id);
+  
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+
+  if (l_sizeResultQuerry) {
+    {
+      for (pqxx::result::const_iterator row = l_runDbResults.begin(); 
+	   row != l_runDbResults.end(); 
+	   ++row) {
+	JPetTOMBChannel l_TOMBChannel = generateTOMBChannel(row);
+	paramBank.addTOMBChannel(l_TOMBChannel);
+    }
+
+    }
+  } else {
+    printErrorMessageDB("getDataFromTOMBChannels", p_run_id);
+  }
+}
+
+
 JPetScin JPetDBParamGetter::generateScintillator(pqxx::result::const_iterator row) {
       int l_scintillator_id = row["scintillator_id"].as<int>();
 
@@ -269,6 +296,14 @@ JPetTOMB JPetDBParamGetter::generateTOMB(pqxx::result::const_iterator row) {
       JPetTOMB l_TOMB(l_TOMB_id, l_TOMB_description);
     return l_TOMB;
 }
+
+
+JPetTOMBChannel JPetDBParamGetter::generateTOMBChannel(pqxx::result::const_iterator row) {
+      int l_TOMB_no = row["tomb"].as<int>();
+      JPetTOMBChannel l_TOMBChannel(l_TOMB_no);
+    return l_TOMBChannel;
+}
+
 
 
 void JPetDBParamGetter::fillScintillatorsTRefs(const int p_run_id, JPetParamBank& paramBank)
@@ -474,6 +509,81 @@ void JPetDBParamGetter::fillTRBsTRefs(const int p_run_id, JPetParamBank& paramBa
   */
 }
 
+
+void JPetDBParamGetter::fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank& paramBank)
+{
+  INFO("Start filling TOMBChannels TRefs.");
+
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getEverythingVsTOMB",l_run_id);
+  
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+
+  if (l_sizeResultQuerry) {
+    {
+      for (pqxx::result::const_iterator row = l_runDbResults.begin(); 
+	   row != l_runDbResults.end(); 
+	   ++row) 
+	{
+	  int l_TOMB_no = row["tomb"].as<int>();
+	  int l_TRB_id = row["trb_id"].as<int>();
+	  int l_FEB_id = row["konradboard_id"].as<int>();
+	  int l_PM_id = row["photomultiplier_id"].as<int>();
+	  int l_Slot_id = row["slot_id"].as<int>();
+	  float l_Threshold = row["threshold"].as<float>();
+	  
+	  // find index of TOMBChannel with l_TOMB_no
+	  int tombch_index;
+	  for(tombch_index=0;
+	      tombch_index < paramBank.getTOMBChannelsSize();
+	      tombch_index++)
+	    {
+	      if( l_TOMB_no == paramBank.getTOMBChannel(tombch_index).getChannel() ){
+		break;
+	      }
+	    }
+	  // TRBs
+	  for(int l_trb_index=0;
+	      l_trb_index < paramBank.getTRBsSize();
+	      l_trb_index++)
+	    {
+	      if( paramBank.getTRB(l_trb_index).getID() == l_TRB_id ){
+		paramBank.getTOMBChannel(tombch_index).setTRefTRB( paramBank.getTRB(l_trb_index) );
+	      }
+	    }
+
+	  // FEBs
+	  for(int l_feb_index=0;
+	      l_feb_index < paramBank.getFEBsSize();
+	      l_feb_index++)
+	    {
+	      if( paramBank.getFEB(l_feb_index).id() == l_FEB_id ){
+		paramBank.getTOMBChannel(tombch_index).setTRefFEB( paramBank.getFEB(l_feb_index) );
+	      }
+	    }
+
+	  // PMs
+	  for(int l_pm_index=0;
+	      l_pm_index < paramBank.getPMsSize();
+	      l_pm_index++)
+	    {
+	      if( paramBank.getPM(l_pm_index).getID() == l_PM_id ){
+		paramBank.getTOMBChannel(tombch_index).setTRefPM( paramBank.getPM(l_pm_index) );
+	      }
+	    }
+
+	  // thresholds
+	  paramBank.getTOMBChannel(tombch_index).setThreshold( l_Threshold );
+	}
+
+    }
+  } else {
+    printErrorMessageDB("getDataFromTOMBChannels", p_run_id);
+  }
+
+}
+
+
 void JPetDBParamGetter::fillTRefs(JPetDBParamGetter::ParamObjectType type) 
 {
 //  std::string typeText = getParamObjectTypeAsText(type);
@@ -535,6 +645,7 @@ void JPetDBParamGetter::fillAllTRefs(const int p_run_id, JPetParamBank& paramBan
     fillPMsTRefs(p_run_id, paramBank);
     fillFEBsTRefs(p_run_id, paramBank);
     fillTRBsTRefs(p_run_id, paramBank);
+    fillTOMBChannelsTRefs(p_run_id, paramBank);
   } else {
     ERROR("Containers are empty.");
   }

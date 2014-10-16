@@ -20,7 +20,7 @@ class pqxx::result::const_iterator;
 class JPetDBParamGetter
 {
 public:
-  enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMB, SIZE};
+  enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMB, kTOMBChannel, SIZE};
   JPetDBParamGetter();
   JPetDBParamGetter(const char* dBConfigFile);
   JPetParamBank generateParamBank(const int p_run_id);
@@ -34,6 +34,7 @@ private:
   JPetFEB generateFEB(pqxx::result::const_iterator row);
   JPetTRB generateTRB(pqxx::result::const_iterator row);
   JPetTOMB generateTOMB(pqxx::result::const_iterator row);
+  JPetTOMBChannel generateTOMBChannel(pqxx::result::const_iterator row);
 
   void fillTRefs(ParamObjectType type);
 
@@ -44,10 +45,12 @@ private:
   void fillFEBs(const int p_run_id, JPetParamBank& paramBank);
   void fillTRBs(const int p_run_id, JPetParamBank& paramBank);
   void fillTOMB(const int p_run_id, JPetParamBank& paramBank);
+  void fillTOMBChannels(const int p_run_id, JPetParamBank& paramBank);
   void fillScintillatorsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillPMsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillTRBsTRefs(const int p_run_id, JPetParamBank& paramBank);
+  void fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillAllTRefs(const int p_run_id, JPetParamBank& paramBank);
 
 };

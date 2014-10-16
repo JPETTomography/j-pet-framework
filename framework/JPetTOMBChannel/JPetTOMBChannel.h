@@ -22,6 +22,7 @@ protected:
   std::string m_description;
   
 public:
+  JPetTOMBChannel();
   JPetTOMBChannel(unsigned int p_channel);
   virtual ~JPetTOMBChannel(void);
   
