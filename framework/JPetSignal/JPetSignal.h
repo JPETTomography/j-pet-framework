@@ -110,6 +110,8 @@ class JPetSignal: public TNamed
   const JPetSigCh & GetPoint(int i, JPetSigCh::EdgeType edge) const;
   
   
+  inline void SetTSlotIndex( int index ){ fTSlotIndex = index; }
+  inline int GetTSlotIndex()const{ return fTSlotIndex; }
 
   inline void SetPMID( Int_t pmid ) { fPMID = pmid; }
   inline Int_t GetPMID() const { return fPMID; }
@@ -136,6 +138,8 @@ class JPetSignal: public TNamed
   // references to parametric objects
   TRef fPM; ///< Photomultiplier which recorded this signal
   TRef fBarrelSlot; ///< BarrelSlot containing the PM which recorded this signal
+
+  int fTSlotIndex; // index of original TSlot
 
   ClassDef(JPetSignal, 1);
 };
