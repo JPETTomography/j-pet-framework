@@ -19,17 +19,19 @@ JPetDBParamGetter::JPetDBParamGetter(const char* dBConfigFile)
 
 }
 
-JPetParamBank JPetDBParamGetter::generateParamBank(const int p_run_id) 
+/// dopisac ze ktos inny musi zniszczyc
+JPetParamBank* JPetDBParamGetter::generateParamBank(const int p_run_id) 
 {
-  JPetParamBank paramBank;
-  fillScintillators(p_run_id, paramBank);
-  fillPMs(p_run_id, paramBank);
-  fillFEBs(p_run_id, paramBank);
-  fillTRBs(p_run_id, paramBank);
-  fillTOMB(p_run_id, paramBank);
-  fillTOMBChannels(p_run_id, paramBank);
-  fillAllTRefs(p_run_id, paramBank);
-  return paramBank;
+  /// we use new ... explanation 
+  JPetParamBank* pParamBank =  new JPetParamBank;
+  fillScintillators(p_run_id, *pParamBank);
+  fillPMs(p_run_id, *pParamBank);
+  fillFEBs(p_run_id, *pParamBank);
+  fillTRBs(p_run_id, *pParamBank);
+  fillTOMB(p_run_id, *pParamBank);
+  fillTOMBChannels(p_run_id, *pParamBank);
+  fillAllTRefs(p_run_id, *pParamBank);
+  return pParamBank;
 }
 
 //void JPetDBParamGetter::fillParamContainer(ParamObjectType type, const int p_run_id, JPetParamBank& paramBank)

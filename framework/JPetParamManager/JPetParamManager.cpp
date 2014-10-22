@@ -5,17 +5,33 @@
 using namespace std;
 
 
-JPetParamManager::JPetParamManager()
+JPetParamManager::JPetParamManager():
+  fBank(0)
 {
+  /* */
+}
+
+JPetParamManager::~JPetParamManager()
+{
+  if (fBank) {
+    delete fBank;
+    fBank = 0;
+  }
 }
 
 /// @param DBConfigFile configuration file with the database connection settings
-JPetParamManager::JPetParamManager(const char* dBConfigFile):fDBParamGetter(dBConfigFile)
+JPetParamManager::JPetParamManager(const char* dBConfigFile):
+  fDBParamGetter(dBConfigFile),
+  fBank(0)
 {
 }
 
 void JPetParamManager::getParametersFromDatabase(const int run)
 {
+  if (fBank) {
+    delete fBank;
+    fBank = 0;
+  }
   fBank = fDBParamGetter.generateParamBank(run);
 }
 
@@ -27,7 +43,7 @@ bool JPetParamManager::saveParametersToFile(const char* filename)
     return false;
   }
   file.cd();
-  file.WriteObject(&fBank, "ParamBank");
+  file.WriteObject(fBank, "ParamBank");
   return true;
 }
 
@@ -38,16 +54,15 @@ bool JPetParamManager::readParametersFromFile(const char* filename)
     ERROR("Could not read from file.");
     return false;
   }
-  JPetParamBank* bank = static_cast<JPetParamBank*>(file.Get("ParamBank"));
-  std::cout<<"\t\t->left PM id  NEW: "<<bank->getScintillator(0).getTRefPMLeft()->getID()<<std::endl;
-  
-  fBank = *bank; /// @warning that might not work
-  if (!bank) return false;
+  fBank = static_cast<JPetParamBank*>(file.Get("ParamBank"));
+
+  if (!fBank) return false;
   return true;
 }
 
 
 void JPetParamManager::clearParameters()
 {
-  fBank.clear();
+  assert(fBank);
+  fBank->clear();
 }

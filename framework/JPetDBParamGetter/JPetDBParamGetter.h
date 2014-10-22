@@ -23,7 +23,7 @@ public:
   enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMB, kTOMBChannel, SIZE};
   JPetDBParamGetter();
   JPetDBParamGetter(const char* dBConfigFile);
-  JPetParamBank generateParamBank(const int p_run_id);
+  JPetParamBank* generateParamBank(const int p_run_id);
 
 private:
   pqxx::result getDataFromDB(const std::string& sqlFunction, const std::string& args);
