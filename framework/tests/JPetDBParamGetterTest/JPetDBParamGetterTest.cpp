@@ -49,13 +49,13 @@ BOOST_AUTO_TEST_CASE(some_filling)
 {
   JPetDBParamGetter paramGetter(gDefaultConfigFile);
   int run  = 1;
-  JPetParamBank bank = paramGetter.generateParamBank(run);
-  std::cout <<"FEB numbers:"<<bank.getFEBsSize()  <<std::endl;
+  JPetParamBank* bank = paramGetter.generateParamBank(run);
+  std::cout <<"FEB numbers:"<<bank->getFEBsSize()  <<std::endl;
 
-  BOOST_REQUIRE(bank.getScintillatorsSize()== 2);
-  BOOST_REQUIRE(bank.getPMsSize() == 4);
-  BOOST_REQUIRE(bank.getFEBsSize() == 1);
-  BOOST_REQUIRE(bank.getTRBsSize() == 1);
+  BOOST_REQUIRE(bank->getScintillatorsSize()== 2);
+  BOOST_REQUIRE(bank->getPMsSize() == 4);
+  BOOST_REQUIRE(bank->getFEBsSize() == 1);
+  BOOST_REQUIRE(bank->getTRBsSize() == 1);
 
 }
 
@@ -63,15 +63,15 @@ BOOST_AUTO_TEST_CASE(run_26)
 {
   JPetDBParamGetter paramGetter(gDefaultConfigFile);
   int run  = 26;
-  JPetParamBank bank = paramGetter.generateParamBank(run);
-std::cout <<"FEB numbers:"<<bank.getFEBsSize()  <<std::endl;
-std::cout <<"PM numbers:"<<bank.getPMsSize()  <<std::endl;
-std::cout <<"TRB numbers:"<<bank.getTRBsSize()  <<std::endl;
-std::cout <<"Scintillators number:"<<bank.getScintillatorsSize()  <<std::endl;
-  BOOST_REQUIRE(bank.getScintillatorsSize() > 0);
-  BOOST_REQUIRE(bank.getPMsSize() > 0);
-  BOOST_REQUIRE(bank.getFEBsSize() > 0);
-  BOOST_REQUIRE(bank.getTRBsSize() > 0);
+  JPetParamBank* bank = paramGetter.generateParamBank(run);
+std::cout <<"FEB numbers:"<<bank->getFEBsSize()  <<std::endl;
+std::cout <<"PM numbers:"<<bank->getPMsSize()  <<std::endl;
+std::cout <<"TRB numbers:"<<bank->getTRBsSize()  <<std::endl;
+std::cout <<"Scintillators number:"<<bank->getScintillatorsSize()  <<std::endl;
+  BOOST_REQUIRE(bank->getScintillatorsSize() > 0);
+  BOOST_REQUIRE(bank->getPMsSize() > 0);
+  BOOST_REQUIRE(bank->getFEBsSize() > 0);
+  BOOST_REQUIRE(bank->getTRBsSize() > 0);
 
 }
 //BOOST_AUTO_TEST_CASE(fillContainersTest)
