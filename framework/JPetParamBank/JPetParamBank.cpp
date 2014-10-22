@@ -13,6 +13,7 @@ JPetParamBank::JPetParamBank():
   fPMs("JPetPM", 100),
   fFEBs("JPetFEB", 100),
   fTRBs("JPetTRB", 100),
+  fTOMBChannels("JPetTOMBChannel", 500),
   fTOMB(0,"")
 { /* */}
 
@@ -23,6 +24,7 @@ void JPetParamBank::clear()
   fFEBs.Clear();
   fTRBs.Clear();
   fTOMB.Clear();
+  fTOMBChannels.Clear();
 }
 
 
@@ -41,6 +43,9 @@ int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const
       break;
     case kTOMB:
       size = getTOMBSize();
+      break;
+    case kTOMBChannel:
+      size = getTOMBChannelsSize();
       break;
     default:
       ERROR("bad type");
