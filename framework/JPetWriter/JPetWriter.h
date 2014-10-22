@@ -98,7 +98,7 @@ bool JPetWriter::Write( std::vector<T>& obj) {
 	  fIsBranchCreated = true;
 	}
 	
-	for (int i = 0; i < obj.size(); i++){
+	for (unsigned int i = 0; i < obj.size(); i++){
         	filler = &obj[i]; 
 		fTree.Fill();      
 	}

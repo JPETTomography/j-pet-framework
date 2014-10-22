@@ -16,17 +16,20 @@ class JPetParamManager
 
   JPetParamManager();
   JPetParamManager(const char* dBConfigFile);
+  ~JPetParamManager();
 
   void getParametersFromDatabase(const int run);
   bool saveParametersToFile(const char* filename);
   bool readParametersFromFile(const char* filename);
-  const JPetParamBank& getParamBank() const { return fBank;}
+  const JPetParamBank& getParamBank() const { return *fBank;}
   void clearParameters();
 
  private:
+  JPetParamManager(const JPetParamManager&);
+  JPetParamManager& operator=(const JPetParamManager&);
 
   JPetDBParamGetter fDBParamGetter;
-  JPetParamBank fBank;
+  JPetParamBank* fBank;
 };
 
 #endif
