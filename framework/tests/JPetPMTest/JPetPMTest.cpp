@@ -26,12 +26,12 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetPM pm;
   float epsilon = 0.0001; 
-  BOOST_CHECK_EQUAL(pm.getSide(), JPetPM::kLeft);
-  BOOST_CHECK_EQUAL(pm.getID(), 0);
-  BOOST_CHECK_EQUAL(pm.getHVset(), 0);
-  BOOST_CHECK_EQUAL(pm.getHVopt(), 0);
-  BOOST_CHECK_CLOSE(pm.getHVgain(JPetPM::kFirst), 0, epsilon);
-  BOOST_CHECK_CLOSE(pm.getHVgain(JPetPM::kSecond), 0, epsilon);
+  BOOST_REQUIRE_EQUAL(pm.getSide(), JPetPM::kLeft);
+  BOOST_REQUIRE_EQUAL(pm.getID(), 0);
+  BOOST_REQUIRE_EQUAL(pm.getHVset(), 0);
+  BOOST_REQUIRE_EQUAL(pm.getHVopt(), 0);
+  BOOST_REQUIRE_CLOSE(pm.getHVgain(JPetPM::kFirst), 0, epsilon);
+  BOOST_REQUIRE_CLOSE(pm.getHVgain(JPetPM::kSecond), 0, epsilon);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

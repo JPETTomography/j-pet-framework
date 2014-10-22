@@ -13,8 +13,8 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( my_test1 )
 {
   DummyClass obj;
-  BOOST_CHECK_EQUAL(&obj, &obj);
-  BOOST_CHECK_EQUAL(1, 1);
+  BOOST_REQUIRE_EQUAL(&obj, &obj);
+  BOOST_REQUIRE_EQUAL(1, 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

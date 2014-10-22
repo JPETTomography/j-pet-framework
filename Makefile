@@ -17,8 +17,8 @@ DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader J
 DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader
 WRITERS = JPetWriter
-#Modules that without ROOT dictionnaries
-NONDMODULES = DummyClass JPetLogger JPetCmdParser JPetParamManager JPetManager $(READERS) $(WRITERS)
+#Modules without ROOT dictionnaries
+NONDMODULES = DummyClass JPetLogger JPetCmdParser JPetParamManager JPetManager $(READERS) $(WRITERS) JPetDBParamGetter
 MODULES = $(DMODULES) $(NONDMODULES)
 ################
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
@@ -57,8 +57,7 @@ Dict.cpp:
 	@echo "Generating dictionary ..."
 	@rootcint -f  Dict.cpp -c -P -I$(ROOTSYS) $(HEADERS)
 modules:
-	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE);))
-
+	@($(foreach MODULE, $(MODULES), cd $(SRC_DIR)/$(MODULE);$(MAKE)||exit $$?;))
 sharedlib: modules
 	$(LD) -shared -o $(LIBFRAMEWORK) $(OBJECTS) $(DICT_OBJS) $(LIB_LDOPTS);
 ifeq ($(OS), Darwin)

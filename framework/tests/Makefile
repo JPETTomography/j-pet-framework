@@ -6,7 +6,7 @@ all: compile_test
 	echo $(TESTS)
 	cd $(ROOT_TEST_DIR); make;
 compile_test:
-	@($(foreach TEST, $(TESTS), cd $(SRC_DIR)/$(TEST);$(MAKE);))
+	@($(foreach TEST, $(TESTS), cd $(SRC_DIR)/$(TEST);$(MAKE)||exit $$? ;))
 run: all
 	./run_tests.pl 
 	cd $(ROOT_TEST_DIR); ./run_tests.sh

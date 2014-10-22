@@ -29,13 +29,13 @@
     
     JPetCmdParser parser;
     parser.parse(argc, argv);
-    BOOST_CHECK( parser.IsFileTypeSet() );
-    BOOST_CHECK_EQUAL( (std::string)argv[2], parser.getFileType() );
-    BOOST_CHECK_EQUAL( (std::string)argv[7], parser.getFileName() );
-    BOOST_CHECK_EQUAL( atoi(argv[4]), parser.getLowerEventBound() );
-    BOOST_CHECK_EQUAL( atoi(argv[5]), parser.getHigherEventBound() );
-    BOOST_CHECK( parser.isParamSet() );
-    BOOST_CHECK_EQUAL( (std::string)argv[9], parser.getParam() );
+    BOOST_REQUIRE( parser.IsFileTypeSet() );
+    BOOST_REQUIRE_EQUAL( (std::string)argv[2], parser.getFileType() );
+    BOOST_REQUIRE_EQUAL( (std::string)argv[7], parser.getFileName() );
+    BOOST_REQUIRE_EQUAL( atoi(argv[4]), parser.getLowerEventBound() );
+    BOOST_REQUIRE_EQUAL( atoi(argv[5]), parser.getHigherEventBound() );
+    BOOST_REQUIRE( parser.isParamSet() );
+    BOOST_REQUIRE_EQUAL( (std::string)argv[9], parser.getParam() );
   }
 
   BOOST_AUTO_TEST_SUITE_END()
