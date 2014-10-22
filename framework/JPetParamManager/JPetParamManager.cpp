@@ -39,6 +39,8 @@ bool JPetParamManager::readParametersFromFile(const char* filename)
     return false;
   }
   JPetParamBank* bank = static_cast<JPetParamBank*>(file.Get("ParamBank"));
+  std::cout<<"\t\t->left PM id  NEW: "<<bank->getScintillator(0).getTRefPMLeft()->getID()<<std::endl;
+  
   fBank = *bank; /// @warning that might not work
   if (!bank) return false;
   return true;
