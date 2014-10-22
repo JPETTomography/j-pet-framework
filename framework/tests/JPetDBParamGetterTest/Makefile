@@ -1,12 +1,12 @@
 ###################
 #THIS PART CAN BE MODIFIED
-PROJECT=JPetParamManager
-EXTRA_MODULES = JPetScin JPetFEB JPetTRB JPetTOMB JPetPM JPetTreeHeader JPetReader JPetWriter JPetLogger JPetParamBank JPetDBParamGetter
+PROJECT=JPetDBParamGetter
+EXTRA_MODULES =JPetScin JPetFEB JPetTRB JPetTOMB JPetPM JPetTreeHeader JPetLogger JPetParamBank
 #classes that need Dictionnaries 
 DICTS = JPetScin JPetFEB JPetTRB JPetTOMB JPetPM JPetTreeHeader JPetParamBank
-PQXX_LIB_SET = YES
-DBHANDLER_LIB_SET = YES
-UNPACKER_LIB_SET = 
+PQXX_LIB_SET =YES
+DBHANDLER_LIB_SET =YES
+UNPACKER_LIB_SET =
 ###################
 OS = $(shell uname)
 CO = g++

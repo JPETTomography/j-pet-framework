@@ -1,9 +1,8 @@
-// JPet Konrad board - JPetFEB.h
+// JPet Front-end board - JPetFEB.h
 #ifndef JPET_FEB_H
 #define JPET_FEB_H
 
 #include "TNamed.h"
-//#include "../JPetUser/JPetUser.h"
 #include <TRef.h>
 #include "../JPetTRB/JPetTRB.h"
 
@@ -52,6 +51,7 @@ protected:
   /// @todo userId is inaccesible!!!
 
 public:
+  JPetFEB();
   JPetFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId);
   virtual ~JPetFEB(void);
   

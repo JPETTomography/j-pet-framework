@@ -28,8 +28,8 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetTSlot test;
   BOOST_REQUIRE(test.size() == 0);
-  BOOST_REQUIRE(test.getNumberOfSigCh() == 0);
-  BOOST_REQUIRE(test.getSigChVect().GetEntries() == 0);
+  BOOST_REQUIRE(test.GetNumberOfSigCh() == 0);
+  BOOST_REQUIRE(test.GetSigChVect().GetEntries() == 0);
 
 }
 
@@ -42,14 +42,14 @@ BOOST_AUTO_TEST_CASE( some_channels )
   test.AddCh(ch_test3);
 
   BOOST_REQUIRE(test.size() == 3);
-  BOOST_REQUIRE(test.getNumberOfSigCh() == 3);
-  BOOST_REQUIRE(test.getSigChVect().GetEntries() == 3);
+  BOOST_REQUIRE(test.GetNumberOfSigCh() == 3);
+  BOOST_REQUIRE(test.GetSigChVect().GetEntries() == 3);
   double epsilon = 0.001;
   BOOST_REQUIRE_CLOSE(test[0].GetValue(), 1.2, epsilon);
   BOOST_REQUIRE_CLOSE(test[1].GetValue(), 1.5, epsilon);
   BOOST_REQUIRE_CLOSE(test[2].GetValue(), 98, epsilon);
 
-  TClonesArray array = test.getSigChVect();
+  TClonesArray array = test.GetSigChVect();
   BOOST_REQUIRE_CLOSE(static_cast<JPetSigCh*>(array.At(0))->GetValue(), 1.2, epsilon);
   BOOST_REQUIRE_CLOSE(static_cast<JPetSigCh*>(array.At(1))->GetValue(), 1.5, epsilon);
   BOOST_REQUIRE_CLOSE(static_cast<JPetSigCh*>(array.At(2))->GetValue(), 98, epsilon);

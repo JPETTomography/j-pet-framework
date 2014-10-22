@@ -3,7 +3,7 @@
   Last update 01.06.2014
 */
 
-1)
+--1)
 CREATE OR REPLACE FUNCTION photomultiplierInformationFunction()
 RETURNS TABLE
 (
@@ -37,7 +37,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM photomultiplierInformationFunction();
 
-1.1)
+--1.1)
 CREATE OR REPLACE FUNCTION photomultiplierInformationFunction(IN p_run_id INTEGER)
 RETURNS TABLE
 (
@@ -72,7 +72,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM photomultiplierInformationFunction(1);
 
-2)
+--2)
 CREATE OR REPLACE FUNCTION runDataFunction()
 RETURNS TABLE
 (
@@ -100,7 +100,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM runDataFunction();
 
-3)
+--3)
 CREATE OR REPLACE FUNCTION runDataFunction(IN p_run_id INTEGER)
 RETURNS TABLE
 (
@@ -129,7 +129,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM runDataFunction(1);
 
-4)
+--4)
 CREATE OR REPLACE FUNCTION sizeOfTableFunction
 (
   p_tableName varchar(100)
@@ -146,7 +146,7 @@ $$ LANGUAGE plpgsql STRICT;
 
 SELECT * FROM sizeOfTableFunction('Run');
 
-5)
+--5)
 CREATE OR REPLACE FUNCTION thresholdFromTRBConfigEntryBasedOnTOMBInputIdFunction(IN p_run_id INTEGER)
 RETURNS TABLE
 (
@@ -191,7 +191,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM thresholdFromTRBConfigEntryBasedOnTOMBInputIdFunction(1);
 
-6)
+--6)
 CREATE OR REPLACE FUNCTION photomultiplierIdBasedOnTOMBInputIdFunction(IN p_run_id INTEGER)
 RETURNS TABLE
 (
@@ -243,7 +243,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM photomultiplierIdBasedOnTOMBInputIdFunction(1);
 
-7)
+--7)
 CREATE OR REPLACE FUNCTION tombinputIdBasedOnTRBIdAndTRBoutputIdFunction(IN p_run_id INTEGER)
 RETURNS TABLE
 (
@@ -280,7 +280,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM tombinputIdBasedOnTRBIdAndTRBoutputIdFunction(1);
 
-8)
+--8)
 CREATE OR REPLACE FUNCTION passedInformationIsTimeBasedOnTOMBInputIdFunction(IN p_run_id INTEGER)
 RETURNS TABLE
 (
@@ -327,10 +327,10 @@ SELECT * FROM passedInformationIsTimeBasedOnTOMBInputIdFunction(1);
 
 
 
-/**! PONIZSZE FUNKCJE TRZEBA POPRAWIC !**/
+/**! PONIZSZE FUNKCJE TRZEBA POPRAWIC ! **/
 
 
-***********Scintillators************
+/***********Scintillators************/
 
 
 CREATE OR REPLACE FUNCTION getScintillatorsData(IN p_run_id INTEGER)
@@ -452,7 +452,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 SELECT * FROM getScintillatorsData(1);
 
 
-***********PhotoMultipliers************
+/***********PhotoMultipliers************/
 
 
 CREATE OR REPLACE FUNCTION getPhotoMultipliersData(IN p_run_id INTEGER)
@@ -597,12 +597,13 @@ $BODY$ LANGUAGE plpgsql STABLE;
 SELECT * FROM getPhotoMultipliersData(1);
 
 
-***********KBs************
+/***********KBs************/
 
-
+/*
 Wczesniej stworzylem funkcje "getKonradBoardsData" i dodalem do bazy danych rowniez na kozie
 teraz funkcje zmienilem (dodalem PETUser oraz z inner join na where) trzeba to poprawic bo daje
 zle wyniki za duzo rows. Na kozie jeszcze nie zmienilem tej funkcji.
+*/
 
 CREATE OR REPLACE FUNCTION getKonradBoardsData(IN p_run_id INTEGER)
 RETURNS TABLE
@@ -745,7 +746,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 SELECT * FROM getKonradBoardsData(1);
 
 
-***********TRBs************
+/***********TRBs************/
 
 
 CREATE OR REPLACE FUNCTION getTRBsData(IN p_run_id INTEGER)
@@ -839,7 +840,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 SELECT * FROM getTRBsData(1);
 
 
-***********TOMB************
+/***********TOMB************/
 
 
 CREATE OR REPLACE FUNCTION getTOMBData(IN p_run_id INTEGER)
@@ -888,11 +889,9 @@ $BODY$ LANGUAGE plpgsql STABLE;
 SELECT * FROM getTOMBData(1);
 
 
-****************************************************************************************
-
-*********************************FUNCTION to fill TRefs*********************************
-
-************************************Scintillators***************************************
+/**************************************************************************************/
+/*********************************FUNCTION to fill TRefs*******************************/
+/************************************Scintillators*************************************/
 
 
 CREATE OR REPLACE FUNCTION getPhotoMultipliersForScintillator(IN p_scintillator_id INTEGER)
@@ -937,11 +936,9 @@ $BODY$ LANGUAGE plpgsql STABLE;
 SELECT * FROM getPhotoMultipliersForScintillator(1);
 
 
-****************************************************************************************
+/*******************************PhotoMultipliers***************************************/
 
-************************************PhotoMultipliers***************************************
-
-// dobra funkcja
+/* dobra funkcja */
 CREATE OR REPLACE FUNCTION getKonradBoardsForPhotoMultiplier(IN p_photoMultiplier_id INTEGER)
 RETURNS TABLE
 (
@@ -977,11 +974,9 @@ $BODY$ LANGUAGE plpgsql STABLE;
 SELECT * FROM getKonradBoardsForPhotoMultiplier(57);
 
 
-*********************************************************************
+/**********************************KonradBoards***************************************/
 
-************************************KonradBoards***************************************
-
-// trzeba poprawic ta funckje
+/* trzeba poprawic ta funckje */
 CREATE OR REPLACE FUNCTION getTRBsForKonradBoard(IN p_konradBoard_id INTEGER)
 RETURNS TABLE
 (
@@ -1022,11 +1017,9 @@ $BODY$ LANGUAGE plpgsql STABLE;
 SELECT * FROM getTRBsForKonradBoard(1);
 
 
-*********************************************************************
+/************************************TRBs***************************************/
 
-************************************TRBs***************************************
-
-// trzeba poprawic ta funckje
+/* trzeba poprawic ta funckje */
 CREATE OR REPLACE FUNCTION getTOMBForTRB(IN p_TRB_id INTEGER)
 RETURNS TABLE
 (
@@ -1067,11 +1060,9 @@ $BODY$ LANGUAGE plpgsql STABLE;
 SELECT * FROM getTOMBForTRB(1);
 
 
-****************************************************************************************
+/*********************************FUNCTION to Input/Output*****************************/
 
-*********************************FUNCTION to Input/Output*********************************
-
-************************************KonradBoard***************************************
+/**********************************KonradBoard***************************************/
 
 CREATE OR REPLACE FUNCTION getKBInputData(IN p_KB_id INTEGER)
 RETURNS TABLE
@@ -1111,7 +1102,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getKBInputData(1);
 
-******************************************************************************************
+/**************************************************************************************/
 
 CREATE OR REPLACE FUNCTION getKBOutputData(IN p_KB_id INTEGER)
 RETURNS TABLE
@@ -1160,9 +1151,8 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getKBOutputData(1);
 
-******************************************************************************************
 
-************************************TRB***************************************
+/************************************TRB***************************************/
 
 CREATE OR REPLACE FUNCTION getTRBInputData(IN p_TRB_id INTEGER)
 RETURNS TABLE
@@ -1202,7 +1192,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getTRBInputData(1);
 
-******************************************************************************************
+/**************************************************************************************/
 
 CREATE OR REPLACE FUNCTION getTRBOutputData(IN p_TRB_id INTEGER)
 RETURNS TABLE
@@ -1245,14 +1235,15 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getTRBOutputData(1);
 
-***********************************************************************
+/***********************************************************************
 ***********************NOWE FUNKCJE SQL 02.09.14***********************
-***********************************************************************
+***********************************************************************/
+/*
+ Trzeba sprawdzic czy daja dobre wyniki !
+ Dodane na serwer koza
+*/
 
-// Trzeba sprawdzic czy daja dobre wyniki !
-// Dodane na serwer koza
-
-***********Scintillators************
+/***********Scintillators************/
 
 CREATE OR REPLACE FUNCTION getDataFromScintillators(IN p_run_id INTEGER)
 RETURNS TABLE
@@ -1307,7 +1298,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getDataFromScintillators(1);
 
-***********PMs************
+/***********PMs************/
 
 CREATE OR REPLACE FUNCTION getDataFromPhotoMultipliers(IN p_run_id INTEGER)
 RETURNS TABLE
@@ -1359,7 +1350,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getDataFromPhotoMultipliers(1);
 
-***********KBs************
+/***********KBs************/
 
 CREATE OR REPLACE FUNCTION getDataFromKonradBoards(IN p_run_id INTEGER)
 RETURNS TABLE
@@ -1389,7 +1380,7 @@ BEGIN
 
   IN
 
-      SELECT
+      SELECT DISTINCT
 	"KonradBoard".id AS konradboard_id,
 	"KonradBoard".isactive AS konradboard_isactive,
 	"KonradBoard".status AS konradboard_status,
@@ -1419,7 +1410,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getDataFromKonradBoards(1);
 
-***********TRBs************
+/***********TRBs************/
 
 CREATE OR REPLACE FUNCTION getDataFromTRBs(IN p_run_id INTEGER)
 RETURNS TABLE
@@ -1439,7 +1430,7 @@ BEGIN
 
   IN
 
-      SELECT
+      SELECT DISTINCT
 	"TRB".id AS TRB_id,
 
 	"Setup".id AS setup_id,
@@ -1464,7 +1455,7 @@ $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getDataFromTRBs(1);
 
-***********TOMB************
+/***********TOMB**********/
 
 CREATE OR REPLACE FUNCTION getDataFromTOMB(IN p_run_id INTEGER)
 RETURNS TABLE
@@ -1510,3 +1501,257 @@ END
 $BODY$ LANGUAGE plpgsql STABLE;
 
 SELECT * FROM getDataFromTOMB(1);
+
+
+
+/****** zmodyfikowane  funkcje -- alek 15.10.2014  ******/
+
+
+CREATE OR REPLACE FUNCTION getPhotoMultipliersForScintillator(IN p_scintillator_id INTEGER, IN p_run_id INTEGER)
+RETURNS TABLE
+(
+  PhotoMultiplier_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+    PhotoMultiplier_id
+  IN
+	  SELECT "HVPMConnection".photomultiplier_id as photomultiplier_id 
+	  FROM "SLSCConnection", "Slot", "HVPMConnection", "Run"
+		WHERE 
+		"Run".id = p_run_id
+		AND
+		"SLSCConnection".setup_id = "HVPMConnection".setup_id
+		AND
+		"SLSCConnection".scintillator_id = p_scintillator_id
+	        AND 
+		"Slot".id = "SLSCConnection".slot_id 
+		AND 
+		"HVPMConnection".setup_id = "Run".setup_id
+		AND 
+		"HVPMConnection".slot_id = "Slot".id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+
+CREATE OR REPLACE FUNCTION getKonradBoardsForPhotoMultiplier(IN p_photoMultiplier_id INTEGER, IN p_run_id INTEGER)
+RETURNS TABLE
+(
+--  PMKBConnection_id INTEGER,
+--  KonradBoardInput_id INTEGER,
+  KonradBoard_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+--      PMKBConnection_id,
+--	KonradBoardInput_id,
+	KonradBoard_id
+  IN
+	SELECT
+--		"PMKBConnection".id AS PMKBConnection_id,
+--		"KonradBoardInput".id AS KonradBoardInput_id,
+		"KonradBoard".id AS KonradBoard_id
+
+	FROM "PMKBConnection", "KonradBoardInput", "KonradBoard", "Run"
+		WHERE
+		  "Run".setup_id = "PMKBConnection".setup_id
+		  AND
+		  "Run".id = p_run_id
+		  AND
+		  "KonradBoard".id = "KonradBoardInput".konradboard_id
+		  AND
+		  "KonradBoardInput".id = "PMKBConnection".konradboardinput_id
+		  AND
+		  "PMKBConnection".photomultiplier_id = p_photoMultiplier_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+
+CREATE OR REPLACE FUNCTION getTRBsForKonradBoard(IN p_konradBoard_id INTEGER, IN p_run_id INTEGER)
+RETURNS TABLE
+(
+--	KonradBoardOutput_id INTEGER,
+--	KBTRBConnection_id INTEGER,
+--	TRBInput_id INTEGER,
+	TRB_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+--	KonradBoardOutput_id,
+--	KBTRBConnection_id,
+--	TRBInput_id,
+	TRB_id
+  IN
+      SELECT DISTINCT
+--		"KonradBoardOutput".id AS KonradBoardOutput_id,
+--		"KBTRBConnection".id AS KBTRBConnection_id,
+--		"TRBInput".id AS TRBInput_id,
+		"TRB".id AS TRB_id
+
+      FROM "KonradBoardOutput", "KBTRBConnection", "TRBInput", "TRB", "Run"
+		WHERE
+		  "Run".setup_id = "KBTRBConnection".setup_id
+		  AND
+		  "Run".id = p_run_id
+		  AND
+		  "TRB".id = "TRBInput".trb_id
+		  AND
+		  "TRBInput".id = "KBTRBConnection".trbinput_id
+		  AND
+		  "KBTRBConnection".konradboardoutput_id = "KonradBoardOutput".id
+		  AND
+		  "KonradBoardOutput".konradboard_id = p_konradBoard_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+
+CREATE OR REPLACE FUNCTION getTOMBForTRB(IN p_TRB_id INTEGER)
+RETURNS TABLE
+(
+	TRBOutput_id INTEGER,
+	TRBTOMBConnection_id INTEGER,
+	TOMBInput_id INTEGER,
+	TOMB_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR 
+	TRBOutput_id,
+	TRBTOMBConnection_id,
+	TOMBInput_id,
+	TOMB_id
+  IN
+      SELECT
+		"TRBOutput".id AS TRBOutput_id,
+		"TRBTOMBConnection".id AS TRBTOMBConnection_id,
+		"TOMBInput".id AS TOMBInput_id,
+		"TRBOffsetMappingBoard".id AS TOMB_id
+
+      FROM "TRBOutput", "TRBTOMBConnection", "TOMBInput", "TRBOffsetMappingBoard"
+		WHERE
+		  "TRBOffsetMappingBoard".id = "TOMBInput".trboffsetmappingboard_id
+		  AND
+		  "TOMBInput".id = "TRBTOMBConnection".tombinput_id
+		  AND
+		  "TRBTOMBConnection".trboutput_id = "TRBOutput".id
+		  AND
+		  "TRBOutput".trb_id = p_TRB_id
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+CREATE OR REPLACE FUNCTION KBinPortsFromOutPorts(IN p_kb_id INTEGER)
+RETURNS TABLE
+(
+  in_portnumber INTEGER,
+  out_portnumber INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR
+    in_portnumber,
+    out_portnumber
+  IN
+    SELECT
+	("KonradBoardOutput".portnumber-1)*
+	(SELECT count(*) FROM "KonradBoardInput" WHERE "KonradBoardInput".konradboard_id=p_kb_id) /
+	(SELECT count(*) FROM "KonradBoardOutput" WHERE "KonradBoardOutput".konradboard_id=p_kb_id ) +1
+	AS in_portnumber,
+	"KonradBoardOutput".portnumber AS out_portnumber
+    FROM "KonradBoardOutput"
+      WHERE
+	"KonradBoardOutput".konradboard_id = p_kb_id
+    
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
+
+--- Get everything based in TRBOutput portnumber (in future basen on TOMB) ---
+
+
+
+CREATE OR REPLACE FUNCTION getEverythingVsTOMB(p_run_id INTEGER)
+RETURNS TABLE
+(
+  tomb INTEGER,
+  trb_id INTEGER,
+  konradboard_id INTEGER,
+  photomultiplier_id INTEGER,
+  threshold INTEGER,
+  slot_id INTEGER
+) AS
+$BODY$
+BEGIN
+  FOR
+    tomb,
+    trb_id,
+    konradboard_id,
+    photomultiplier_id,
+    threshold,
+    slot_id
+  IN
+       SELECT
+                "TRBOutput".portnumber AS tomb,
+                "TRB".id AS trb_id,
+                "KonradBoard".id AS konradboard_id,
+                "PhotoMultiplier".id AS photomultiplier_id,
+                "TRBConfigEntry".threshold AS threshold,
+                "HVPMConnection".slot_id AS slot_id
+        FROM "Run", "TRBInput", "KBTRBConnection", "TRB", "TRBOutput",
+        "KonradBoardOutput", "KonradBoard", "KonradBoardInput",
+        "PMKBConnection", "PhotoMultiplier", "TRBConfigEntry", "HVPMConnection"
+        WHERE
+                "Run".id = p_run_id
+                AND
+                "Run".setup_id = "KBTRBConnection".setup_id
+                AND
+                "KBTRBConnection".trbinput_id = "TRBInput".id
+                AND
+                "TRBInput".trb_id = "TRB".id
+                AND
+                "TRB".id = "TRBOutput".trb_id
+                AND
+	        "TRBInput".portnumber = "TRBOutput".portnumber
+                AND
+                "KBTRBConnection".konradboardoutput_id = "KonradBoardOutput".id
+                AND
+                "KonradBoardOutput".konradboard_id = "KonradBoard".id
+                AND
+                "KonradBoard".id = "KonradBoardInput".konradboard_id
+		AND
+                "KonradBoardInput".portnumber = (SELECT in_portnumber from KBinPortsFromOutPorts("KonradBoard".id) WHERE out_portnumber="KonradBoardOutput".portnumber )
+                AND
+                "KonradBoardInput".id = "PMKBConnection".konradboardinput_id
+                AND
+                "PMKBConnection".photomultiplier_id = "PhotoMultiplier".id
+                AND
+		"TRBConfigEntry".id =  "KBTRBConnection".id
+		AND
+		"TRBConfigEntry".trbconfig_id = "Run".setup_id
+		AND
+		"HVPMConnection".setup_id = "Run".setup_id
+		AND
+		"HVPMConnection".photomultiplier_id = "PhotoMultiplier".id
+	  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$ LANGUAGE plpgsql STABLE;
+
