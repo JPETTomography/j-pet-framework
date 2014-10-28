@@ -28,7 +28,6 @@ JPetParamBank* JPetDBParamGetter::generateParamBank(const int p_run_id)
   fillPMs(p_run_id, *pParamBank);
   fillFEBs(p_run_id, *pParamBank);
   fillTRBs(p_run_id, *pParamBank);
-  fillTOMB(p_run_id, *pParamBank);
   fillTOMBChannels(p_run_id, *pParamBank);
   fillAllTRefs(p_run_id, *pParamBank);
   return pParamBank;
@@ -167,27 +166,6 @@ void JPetDBParamGetter::fillTRBs(const int p_run_id, JPetParamBank& paramBank)
   }
 }
 
-void JPetDBParamGetter::fillTOMB(const int p_run_id, JPetParamBank& paramBank)
-{
-  INFO("Start filling TOMBs container.");
-
-//  std::string l_sqlQuerry = "SELECT * FROM getDataFromTOMB(" + l_run_id + ");";
-  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-  pqxx::result l_runDbResults = getDataFromDB("getDataFromTOMB",l_run_id);
-
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-
-  if (l_sizeResultQuerry) {
-    //for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
-    {
-      pqxx::result::const_iterator row = l_runDbResults.begin();
-      JPetTOMB l_TOMB = generateTOMB(row);
-      paramBank.setTOMB(l_TOMB);
-    }
-  } else {
-    printErrorMessageDB("getDataFromTOMB", p_run_id);
-  }
-}
 
 
 void JPetDBParamGetter::fillTOMBChannels(const int p_run_id, JPetParamBank& paramBank)
@@ -287,17 +265,6 @@ JPetTRB JPetDBParamGetter::generateTRB(pqxx::result::const_iterator row) {
 }
 
 
-JPetTOMB JPetDBParamGetter::generateTOMB(pqxx::result::const_iterator row) {
-      int l_TOMB_id = row["TOMB_id"].as<int>();
-      std::string l_TOMB_description = row["TOMB_description"].as<std::string>();
-
-      int l_setup_id = row["setup_id"].as<int>();
-      int l_run_id = row["run_id"].as<int>();
-
-
-      JPetTOMB l_TOMB(l_TOMB_id, l_TOMB_description);
-    return l_TOMB;
-}
 
 
 JPetTOMBChannel JPetDBParamGetter::generateTOMBChannel(pqxx::result::const_iterator row) {
