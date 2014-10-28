@@ -20,7 +20,7 @@ class pqxx::result::const_iterator;
 class JPetDBParamGetter
 {
 public:
-  enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMB, kTOMBChannel, SIZE};
+  enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMBChannel, kBarrelSlot, SIZE};
   JPetDBParamGetter();
   JPetDBParamGetter(const char* dBConfigFile);
   JPetParamBank* generateParamBank(const int p_run_id);

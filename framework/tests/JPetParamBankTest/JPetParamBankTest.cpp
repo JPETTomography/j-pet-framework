@@ -15,11 +15,13 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_REQUIRE(bank.getPMsSize() == 0);
   BOOST_REQUIRE(bank.getFEBsSize() == 0);
   BOOST_REQUIRE(bank.getTRBsSize() == 0);
+  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 0);
 
   BOOST_REQUIRE(bank.getScintillators().GetEntries() == 0);
   BOOST_REQUIRE(bank.getPMs().GetEntries() == 0);
   BOOST_REQUIRE(bank.getFEBs().GetEntries() == 0);
   BOOST_REQUIRE(bank.getTRBs().GetEntries() == 0);
+  BOOST_REQUIRE(bank.getBarrelSlots().GetEntries() == 0);
 }
 
 BOOST_AUTO_TEST_CASE( adding_some_elements )
@@ -29,20 +31,24 @@ BOOST_AUTO_TEST_CASE( adding_some_elements )
   JPetPM pm;
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
   JPetTRB trb;
+  JPetBarrelSlot slot(1,2,3,4);
   bank.addScintillator(scint);
   bank.addPM(pm);
   bank.addTRB(trb);
   bank.addFEB(feb);
+  bank.addBarrelSlot(slot);
 
   BOOST_REQUIRE(bank.getScintillatorsSize() == 1);
   BOOST_REQUIRE(bank.getPMsSize() == 1);
   BOOST_REQUIRE(bank.getFEBsSize() == 1);
   BOOST_REQUIRE(bank.getTRBsSize() == 1);
+  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 1);
 
   BOOST_REQUIRE(bank.getScintillators().GetEntries() == 1);
   BOOST_REQUIRE(bank.getPMs().GetEntries() == 1);
   BOOST_REQUIRE(bank.getFEBs().GetEntries() == 1);
   BOOST_REQUIRE(bank.getTRBs().GetEntries() == 1);
+  BOOST_REQUIRE(bank.getBarrelSlots().GetEntries() == 1);
 
 
   BOOST_REQUIRE(bank.getFEB(0).id() == 1);
@@ -50,6 +56,7 @@ BOOST_AUTO_TEST_CASE( adding_some_elements )
   BOOST_REQUIRE(bank.getFEB(0).status() == "testStatus");
   BOOST_REQUIRE(bank.getFEB(0).description() == "descr");
   BOOST_REQUIRE(bank.getFEB(0).version() == 1);
+
 }
 
 BOOST_AUTO_TEST_CASE( saving_reading_file )
