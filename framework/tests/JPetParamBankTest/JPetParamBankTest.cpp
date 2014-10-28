@@ -20,8 +20,6 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_REQUIRE(bank.getPMs().GetEntries() == 0);
   BOOST_REQUIRE(bank.getFEBs().GetEntries() == 0);
   BOOST_REQUIRE(bank.getTRBs().GetEntries() == 0);
-  BOOST_REQUIRE(bank.getTOMB().id() == 0);
-  BOOST_REQUIRE(bank.getTOMB().description() == "");
 }
 
 BOOST_AUTO_TEST_CASE( adding_some_elements )
@@ -31,12 +29,10 @@ BOOST_AUTO_TEST_CASE( adding_some_elements )
   JPetPM pm;
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
   JPetTRB trb;
-  JPetTOMB tomb(111, "testTOMB");
   bank.addScintillator(scint);
   bank.addPM(pm);
   bank.addTRB(trb);
   bank.addFEB(feb);
-  bank.setTOMB(tomb);
 
   BOOST_REQUIRE(bank.getScintillatorsSize() == 1);
   BOOST_REQUIRE(bank.getPMsSize() == 1);
@@ -47,8 +43,6 @@ BOOST_AUTO_TEST_CASE( adding_some_elements )
   BOOST_REQUIRE(bank.getPMs().GetEntries() == 1);
   BOOST_REQUIRE(bank.getFEBs().GetEntries() == 1);
   BOOST_REQUIRE(bank.getTRBs().GetEntries() == 1);
-  BOOST_REQUIRE(bank.getTOMB().id() == 111);
-  BOOST_REQUIRE(bank.getTOMB().description() == "testTOMB");
 
 
   BOOST_REQUIRE(bank.getFEB(0).id() == 1);
@@ -75,8 +69,6 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   scint2.setTRefPMs(pm3, pm4);
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
   JPetTRB trb;
-  JPetTOMB tomb(111, "testTOMB");
-  bank.setTOMB(tomb);
   bank.addPM(pm1);
   bank.addPM(pm2);
   bank.addPM(pm3);
@@ -109,8 +101,6 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   BOOST_REQUIRE(bank2.getPMs().GetEntries() == 4);
   BOOST_REQUIRE(bank2.getFEBs().GetEntries() == 1);
   BOOST_REQUIRE(bank2.getTRBs().GetEntries() == 1);
-  BOOST_REQUIRE(bank2.getTOMB().id() == 111);
-  BOOST_REQUIRE(bank2.getTOMB().description() == "testTOMB");
 
 
   BOOST_REQUIRE(bank2.getFEB(0).id() == 1);

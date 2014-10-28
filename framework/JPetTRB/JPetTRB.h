@@ -3,7 +3,6 @@
 
 #include "TNamed.h"
 #include <TRef.h>
-#include "../JPetTOMB/JPetTOMB.h"
 
 /**
  * @brief Parametric class representing database information on parameters of a TRB board.
@@ -21,15 +20,6 @@ class JPetTRB: public TNamed
   inline void setType(int type) { fType = type; }
   inline void setChannel(int ch) { fChannel = ch; }
 
-  JPetTOMB* getTRefTOMB() { return (JPetTOMB*)fTRefTOMB.GetObject(); }
-  void setTRefTOMB(JPetTOMB &p_TOMB)
-  {
-    fTRefTOMB = &p_TOMB;
-  }
-  void setTRefTOMB(JPetTOMB* pTOMB)
-  {
-    fTRefTOMB = pTOMB;
-  }
   
  private:
   int fID;
@@ -40,15 +30,9 @@ class JPetTRB: public TNamed
   //KBType;
   //KBChan;
   //
-  ClassDef(JPetTRB, 1);
+  ClassDef(JPetTRB, 2);
   
 protected:
-  TRef fTRefTOMB;
-  
-  void clearTRefTOMB()
-  {
-    fTRefTOMB = NULL;
-  }
   
   friend class JPetParamManager;
 };

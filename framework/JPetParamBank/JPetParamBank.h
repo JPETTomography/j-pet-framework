@@ -13,14 +13,13 @@
 #include "../JPetFEB/JPetFEB.h"
 #include "../JPetPM/JPetPM.h"
 #include "../JPetTOMBChannel/JPetTOMBChannel.h"
-#include "../JPetTOMB/JPetTOMB.h"
 #include "../../JPetLoggerInclude.h"
 #include <TClonesArray.h>
 #include <cassert>
 
 class JPetParamBank:public TObject {
  public:
-  enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMB, kTOMBChannel, SIZE};
+  enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMBChannel, SIZE};
 
   JPetParamBank(); 
   void clear();
@@ -51,11 +50,6 @@ class JPetParamBank:public TObject {
   inline JPetTRB& getTRB(int i) const { return *((JPetTRB*)fTRBs[i]);}
   inline int getTRBsSize() const { return fTRBs.GetEntries();}
 
-  // TOMB
-  inline void setTOMB(JPetTOMB& tomb) { fTOMB = tomb;}
-  inline JPetTOMB getTOMB() const { return fTOMB; }
-  inline JPetTOMB* getTOMBAddress() { return &fTOMB; } /// @todo to remove
-  inline int getTOMBSize() const { return 1;}
  
   // TOMB Channels
   inline void addTOMBChannel(JPetTOMBChannel& tombchannel) { new (fTOMBChannels[getTOMBChannelsSize()]) JPetTOMBChannel(tombchannel);}
@@ -64,13 +58,14 @@ class JPetParamBank:public TObject {
   inline int getTOMBChannelsSize() const { return fTOMBChannels.GetEntries();}
   
  private:
+  JPetParamBank(const JPetParamBank&);
+  void operator=(const JPetParamBank&);
 
   TClonesArray fScintillators;
   TClonesArray fPMs;
   TClonesArray fFEBs;
   TClonesArray fTRBs;
   TClonesArray fTOMBChannels;
-  JPetTOMB fTOMB;
-  ClassDef (JPetParamBank, 1);
+  ClassDef (JPetParamBank, 2);
 };
 #endif /*  !JPETPARAMBANK_H */

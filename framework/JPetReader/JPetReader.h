@@ -19,7 +19,6 @@ class boost::noncopyable;
 #include "../JPetPM/JPetPM.h"
 #include "../JPetFEB/JPetFEB.h"
 #include "../JPetTRB/JPetTRB.h"
-#include "../JPetTOMB/JPetTOMB.h"
 */
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 
