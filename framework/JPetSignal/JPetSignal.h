@@ -119,7 +119,10 @@ class JPetSignal: public TNamed
   inline void SetBarrelSlot(JPetBarrelSlot * bs) { fBarrelSlot = bs; }
   inline JPetPM * GetPM() const { return (JPetPM*) fPM.GetObject(); }
   inline JPetBarrelSlot * GetBarrelSlot() const { return (JPetBarrelSlot*) fBarrelSlot.GetObject(); }
-    
+
+  inline int GetNumberOfSetLeadingEdgePoints (void) const { return fNLeading; }
+  inline int GetNumberOfSetTrailingEdgePoints(void) const { return fNTrailing; }
+
  private:
   double fTime; ///< absolute time reconstructed for the whole signal [ps]
   double fQualityOfTime; ///< quantitative measure of the time reconstruction quality (scale is yet to be decided)
