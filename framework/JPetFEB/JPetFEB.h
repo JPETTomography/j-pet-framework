@@ -55,7 +55,8 @@ public:
   JPetFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId);
   virtual ~JPetFEB(void);
   
-  virtual int id(void) const;
+  virtual int getID(void) const;
+  virtual void setID(int p_id);
   virtual bool isActive(void) const;
   virtual std::string status(void) const;
   virtual std::string description(void) const;
@@ -68,26 +69,6 @@ public:
     fTRefTRBs = &p_TRB;
   }
   
-  /*std::vector<TRef> getTRefTRBs() const { return fTRefTRBs; }
-
-  JPetTRB* getTRefTRB(int p_index)
-  {
-    if(p_index < fTRefTRBs.size())
-    {
-      return (JPetTRB*)fTRefTRBs[p_index].GetObject();
-    }
-    return NULL;
-  }
-  
-  void setTRefTRBs(std::vector<TRef> &p_TRefTRBs)
-  {
-    fTRefTRBs = p_TRefTRBs;
-  }
-  
-  void addTRefKB(JPetTRB &p_TRB)
-  {
-    fTRefTRBs.push_back(&p_TRB);
-  }*/
 
 protected:
   TRef fTRefTRBs;
@@ -97,12 +78,6 @@ protected:
     fTRefTRBs = NULL;
   }
   
-  /*std::vector<TRef> fTRefTRBs;
-  
-  void clearTRefTRBs()
-  {
-    fTRefTRBs.clear();
-  }*/
   
 private:
   ClassDef(JPetFEB, 1);

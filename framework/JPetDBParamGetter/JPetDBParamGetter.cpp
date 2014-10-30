@@ -362,8 +362,8 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
           int l_KonradBoard_id = row["KonradBoard_id"].as<int>();
 
           for (unsigned int l_FEB_index = 0u; l_FEB_index < l_FEBsSize; ++l_FEB_index) {
-//            int l_FEB_id = ((JPetFEB*)fFEBs[l_FEB_index])->id();
-            int l_FEB_id = paramBank.getFEB(l_FEB_index).id();
+//            int l_FEB_id = ((JPetFEB*)fFEBs[l_FEB_index])->getID();
+            int l_FEB_id = paramBank.getFEB(l_FEB_index).getID();
 
             if (l_FEB_id == l_KonradBoard_id) {
 //              ((JPetPM*)fPMs[l_PM_index])->setTRefFEB( *((JPetFEB*)fFEBs[l_FEB_index]) );
@@ -431,8 +431,8 @@ void JPetDBParamGetter::fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBa
 //     ((JPetFEB*)fFEBs[l_FEB_index])->clearTRefTRBs();
  ///wk!!!     paramBank.getFEB(l_FEB_index).clearTRefTRBs();
 
-//      std::string l_FEB_id = boost::lexical_cast<std::string>(((JPetFEB*)fFEBs[l_FEB_index])->id());
-    std::string feb_id = boost::lexical_cast<std::string>(paramBank.getFEB(l_FEB_index).id());
+//      std::string l_FEB_id = boost::lexical_cast<std::string>(((JPetFEB*)fFEBs[l_FEB_index])->getID());
+    std::string feb_id = boost::lexical_cast<std::string>(paramBank.getFEB(l_FEB_index).getID());
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
     std::string args = feb_id + "," + l_run_id;
       pqxx::result l_runDbResults = getDataFromDB("getTRBsForKonradBoard",args);
@@ -565,7 +565,7 @@ void JPetDBParamGetter::fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank&
 	      l_feb_index < paramBank.getFEBsSize();
 	      l_feb_index++)
 	    {
-	      if( paramBank.getFEB(l_feb_index).id() == l_FEB_id ){
+	      if( paramBank.getFEB(l_feb_index).getID() == l_FEB_id ){
 		paramBank.getTOMBChannel(tombch_index).setTRefFEB( paramBank.getFEB(l_feb_index) );
 	      }
 	    }
