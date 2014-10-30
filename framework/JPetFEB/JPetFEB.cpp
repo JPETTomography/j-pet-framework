@@ -54,9 +54,14 @@ JPetFEB::~JPetFEB()
 {
 }
 
-int JPetFEB::id() const
+int JPetFEB::getID() const
 {
   return m_id;
+}
+
+void JPetFEB::setID(int p_id)
+{
+  m_id = p_id;
 }
 
 bool JPetFEB::isActive() const
