@@ -275,6 +275,7 @@ JPetTOMBChannel JPetDBParamGetter::generateTOMBChannel(pqxx::result::const_itera
 
 
 
+/*
 void JPetDBParamGetter::fillScintillatorsTRefs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling Scintillators TRefs.");
@@ -331,6 +332,7 @@ void JPetDBParamGetter::fillScintillatorsTRefs(const int p_run_id, JPetParamBank
       ERROR("PMs container is empty.");
   }
 }
+*/
 
 void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBank)
 {
@@ -338,6 +340,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
 
   int l_PMsSize = paramBank.getPMsSize();
   int l_FEBsSize = paramBank.getFEBsSize();
+  int l_ScinsSize = paramBank.getScintillatorsSize();
 
   if (l_PMsSize > 0 && l_FEBsSize > 0) {
 
@@ -376,6 +379,42 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
     if (l_FEBsSize == 0)
       ERROR("FEBs container is empty.");
   }
+
+
+  if (l_PMsSize > 0 && l_ScinsSize > 0) {
+
+    for (unsigned int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index) {
+//      ((JPetPM*)fPMs[l_PM_index])->clearTRefFEBs();
+    ///wk!!  paramBank.getPM(l_PM_index).clearTRefKBs();
+    std::string pm_id = boost::lexical_cast<std::string>(paramBank.getPM(l_PM_index).getID());
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  std::string args = pm_id + "," + l_run_id;
+
+      pqxx::result l_runDbResults = getDataFromDB("getScintillatorsForPhotoMultiplier", args);
+
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+
+      if (l_sizeResultQuerry) {
+        for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+          int l_scin_id = row["Scintillator_id"].as<int>();
+          for (unsigned int l_scin_index = 0u; l_scin_index < l_ScinsSize; ++l_scin_index) {
+            int l_ScinId = paramBank.getScintillator(l_scin_index).getID();
+
+            if (l_scin_id == l_ScinId) {
+              paramBank.getPM(l_PM_index).setTRefScin(paramBank.getScintillator(l_scin_index) );
+            }
+          }
+        }
+      }
+    }
+  } else {
+    if (l_PMsSize == 0)
+      ERROR("PMs container is empty.");
+    if (l_ScinsSize == 0)
+      ERROR("Scintillators container is empty.");
+  }
+
+
 }
 
 void JPetDBParamGetter::fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank)
@@ -610,7 +649,7 @@ void JPetDBParamGetter::fillAllTRefs(const int p_run_id, JPetParamBank& paramBan
       && paramBank.getFEBsSize() > 0
       && paramBank.getTRBsSize() > 0
      ) {
-    fillScintillatorsTRefs(p_run_id,  paramBank);
+    //    fillScintillatorsTRefs(p_run_id,  paramBank);
     fillPMsTRefs(p_run_id, paramBank);
     fillFEBsTRefs(p_run_id, paramBank);
     fillTRBsTRefs(p_run_id, paramBank);

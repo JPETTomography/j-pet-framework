@@ -1617,6 +1617,44 @@ END
 $BODY$ LANGUAGE plpgsql STABLE;
 
 
+CREATE OR REPLACE FUNCTION getscintillatorsforphotomultiplier(IN p_photomultiplier_id integer, IN p_run_id integer)
+  RETURNS TABLE
+  (
+		Scintillator_id INTEGER
+  ) AS
+$BODY$
+BEGIN
+  FOR 
+--      PMKBConnection_id,
+--	KonradBoardInput_id,
+	Scintillator_id
+  IN
+	SELECT
+--		"PMKBConnection".id AS PMKBConnection_id,
+--		"KonradBoardInput".id AS KonradBoardInput_id,
+		"SLSCConnection".scintillator_id AS Scintillator_id
+	FROM "HVPMConnection", "Slot", "SLSCConnection", "Run"
+		WHERE
+		  "Run".setup_id = "HVPMConnection".setup_id
+		  AND
+		  "Run".setup_id = "SLSCConnection".setup_id
+		  AND
+		  "Run".id = p_run_id
+		  AND
+		  "HVPMConnection".photomultiplier_id = p_photoMultiplier_id
+		  AND
+		  "HVPMConnection".slot_id = "Slot".id
+		  AND
+		  "Slot".id = "SLSCConnection".slot_id	  
+  LOOP
+    RETURN NEXT;
+  END LOOP;
+END
+$BODY$
+  LANGUAGE plpgsql STABLE;
+
+
+
 CREATE OR REPLACE FUNCTION getTOMBForTRB(IN p_TRB_id INTEGER)
 RETURNS TABLE
 (

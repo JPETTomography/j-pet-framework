@@ -5,6 +5,9 @@
 #include <utility>
 #include <TRef.h>
 #include "../JPetFEB/JPetFEB.h"
+#include "../JPetScin/JPetScin.h"
+
+class JPetScin;
 
 /**
  * @brief Parametric class representing database information on parameters of a photomultiplier.
@@ -32,6 +35,10 @@ class JPetPM: public TNamed
 
   JPetFEB* getTRefKB() { return (JPetFEB*)fTRefKBs.GetObject(); }
   
+
+  void setTRefScin(JPetScin &p_scin){ fTRefScin = &p_scin; }
+  JPetScin & getScin() const { return (JPetScin&)*(fTRefScin.GetObject()); }
+
   void setTRefKB(JPetFEB &p_KB)
   {
     fTRefKBs = &p_KB;
@@ -69,7 +76,8 @@ class JPetPM: public TNamed
   
 protected:
   TRef fTRefKBs;
-  
+  TRef fTRefScin;
+
   void clearTRefKBs()
   {
     fTRefKBs = NULL;

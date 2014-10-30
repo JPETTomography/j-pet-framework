@@ -3,7 +3,8 @@
 
 #include "TNamed.h"
 #include <TRef.h>
-#include "../JPetPM/JPetPM.h"
+//#include "../JPetPM/JPetPM.h"
+
 
 /**
  * @brief Parametric class representing database information on parameters of a scintillator.
@@ -33,6 +34,7 @@ class JPetScin: public TNamed
   inline void setScinSize(ScinDimensions size) { fScinSize = size; }
   void setScinSize(Dimension dim, float value);
 
+  /*
   JPetPM* getTRefPMLeft() { return (JPetPM*)fTRefPMLeft.GetObject(); }
   JPetPM* getTRefPMRight(){ return (JPetPM*)fTRefPMRight.GetObject(); }
   
@@ -49,7 +51,7 @@ class JPetScin: public TNamed
   {
     fTRefPMRight = &p_PM;
   }
-  
+  */
  private:
   int fID;
   float fAttenLen;  /// attenuation length
@@ -57,6 +59,7 @@ class JPetScin: public TNamed
   ClassDef(JPetScin, 1);
   
 protected:
+  /*
   TRef fTRefPMLeft;
   TRef fTRefPMRight;
   
@@ -65,7 +68,8 @@ protected:
     fTRefPMLeft = NULL;
     fTRefPMRight = NULL;
   }
-  
+  */
+
   friend class JPetParamManager;
 };
 
