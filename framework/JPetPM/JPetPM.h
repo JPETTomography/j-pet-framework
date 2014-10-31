@@ -17,6 +17,11 @@ class JPetPM: public TNamed
   enum GainNumber {kFirst, kSecond};
 
   JPetPM();
+  JPetPM(Side side,
+	 int id,
+	 int HVset,
+	 int HVopt,
+	 std::pair<float, float> HVgainNumber);
   inline Side getSide() const { return fSide; }
   inline int getID() const { return fID; }
   inline int getHVset() const { return fHVset; }

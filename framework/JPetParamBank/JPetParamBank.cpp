@@ -30,28 +30,28 @@ void JPetParamBank::clear()
 }
 
 
-int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const
+int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const 
 {
-  int size = -1;
+  int size =-1;
   switch (type) {
-  case kScintillator:
-    size = getScintillatorsSize();
-    break;
-  case kFEB:
-    size = getFEBsSize();
-    break;
-  case kTRB:
-    size = getTRBsSize();
-    break;
-  case kTOMBChannel:
-    size = getTOMBChannelsSize();
-    break;
-  case kBarrelSlot:
-    size = getBarrelSlotsSize();
-    break;
-  default:
-    ERROR("bad type");
-    break;
+    case kScintillator:
+      size = getScintillatorsSize();
+      break;
+    case kPM:
+      size = getPMsSize();
+      break;
+    case kFEB:
+      size = getFEBsSize();
+      break;
+    case kTRB:
+      size = getTRBsSize();
+      break;
+    case kTOMBChannel:
+      size = getTOMBChannelsSize();
+      break;
+    default:
+      ERROR("bad type");
+      break;
   }
-  return size;
+  return size; 
 }

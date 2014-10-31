@@ -10,5 +10,18 @@ JPetPM::JPetPM():
   SetName("JPetPM");
 }
 
+JPetPM::JPetPM(Side side, 
+	       int id, 
+	       int HVset, 
+	       int HVopt, 
+	       std::pair<float, float> HVgainNumber):
+  fSide(side),
+  fID(id),
+  fHVset(HVset),
+  fHVopt(HVopt),
+  fHVgain(HVgainNumber)
+{
+  SetName("JPetPM");
+}
 
 ClassImp(JPetPM);

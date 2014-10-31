@@ -6,56 +6,133 @@
 #include "../../JPetParamBank/JPetParamBank.h"
 #include <TFile.h>
 
-BOOST_AUTO_TEST_SUITE(FirstSuite)
+BOOST_AUTO_TEST_SUITE(ParamBankTS)
 
-BOOST_AUTO_TEST_CASE( default_constructor )
+BOOST_AUTO_TEST_CASE(DefaultConstructorTest)
 {
   JPetParamBank bank;
   BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
   BOOST_REQUIRE(bank.getPMsSize() == 0);
   BOOST_REQUIRE(bank.getFEBsSize() == 0);
   BOOST_REQUIRE(bank.getTRBsSize() == 0);
-  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 0);
+  BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
 
   BOOST_REQUIRE(bank.getScintillators().GetEntries() == 0);
   BOOST_REQUIRE(bank.getPMs().GetEntries() == 0);
   BOOST_REQUIRE(bank.getFEBs().GetEntries() == 0);
   BOOST_REQUIRE(bank.getTRBs().GetEntries() == 0);
-  BOOST_REQUIRE(bank.getBarrelSlots().GetEntries() == 0);
+  BOOST_REQUIRE(bank.getTOMBChannels().GetEntries() == 0);
 }
 
-BOOST_AUTO_TEST_CASE( adding_some_elements )
+BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
 {
   JPetParamBank bank;
-  JPetScin scint;
-  JPetPM pm;
+  JPetScin scint(111, 8.f, 2.f, 4.f, 8.f);
+  JPetPM pm(JPetPM::kRight, 222, 32, 64, std::make_pair(16.f, 32.f));
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
-  JPetTRB trb;
-  JPetBarrelSlot slot(1,2,3,4);
+  JPetTRB trb(333, 64, 128);
+  JPetTOMBChannel TOMBChannel(32u);
+  
   bank.addScintillator(scint);
   bank.addPM(pm);
-  bank.addTRB(trb);
   bank.addFEB(feb);
-  bank.addBarrelSlot(slot);
+  bank.addTRB(trb);
+  bank.addTOMBChannel(TOMBChannel);
 
   BOOST_REQUIRE(bank.getScintillatorsSize() == 1);
   BOOST_REQUIRE(bank.getPMsSize() == 1);
   BOOST_REQUIRE(bank.getFEBsSize() == 1);
   BOOST_REQUIRE(bank.getTRBsSize() == 1);
-  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 1);
+  BOOST_REQUIRE(bank.getTOMBChannelsSize() == 1);
 
   BOOST_REQUIRE(bank.getScintillators().GetEntries() == 1);
   BOOST_REQUIRE(bank.getPMs().GetEntries() == 1);
   BOOST_REQUIRE(bank.getFEBs().GetEntries() == 1);
   BOOST_REQUIRE(bank.getTRBs().GetEntries() == 1);
-  BOOST_REQUIRE(bank.getBarrelSlots().GetEntries() == 1);
+  BOOST_REQUIRE(bank.getTOMBChannels().GetEntries() == 1);
 
+  BOOST_REQUIRE(bank.getScintillator(0).getID() == 111);
+  BOOST_CHECK_CLOSE(bank.getScintillator(0).getAttenLen(), 8.f, 0.001);
+  struct JPetScin::ScinDimensions scin_dimensions(2.f, 4.f, 8.f);
+  scin_dimensions = bank.getScintillator(0).getScinSize();
+  BOOST_CHECK_CLOSE(scin_dimensions.fLength, 2.f, 0.001);
+  BOOST_CHECK_CLOSE(scin_dimensions.fHeight, 4.f, 0.001);
+  BOOST_CHECK_CLOSE(scin_dimensions.fWidth, 8.f, 0.001);
+  
+  BOOST_REQUIRE(bank.getPM(0).getSide() == JPetPM::kRight);
+  BOOST_REQUIRE(bank.getPM(0).getID() == 222);
+  BOOST_REQUIRE(bank.getPM(0).getHVset() == 32);
+  BOOST_REQUIRE(bank.getPM(0).getHVopt() == 64);
+  BOOST_CHECK_CLOSE(bank.getPM(0).getHVgain(JPetPM::kFirst), 16.f, 0.001);
+  BOOST_CHECK_CLOSE(bank.getPM(0).getHVgain(JPetPM::kSecond), 32.f, 0.001);
+  std::pair<float, float> HVgain = bank.getPM(0).getHVgain();
+  BOOST_CHECK_CLOSE(HVgain.first, 16.f, 0.001);
+  BOOST_CHECK_CLOSE(HVgain.second, 32.f, 0.001);
 
   BOOST_REQUIRE(bank.getFEB(0).id() == 1);
-  BOOST_REQUIRE(bank.getFEB(0).isActive());
+  BOOST_REQUIRE(bank.getFEB(0).isActive() == true);
   BOOST_REQUIRE(bank.getFEB(0).status() == "testStatus");
   BOOST_REQUIRE(bank.getFEB(0).description() == "descr");
   BOOST_REQUIRE(bank.getFEB(0).version() == 1);
+  
+  BOOST_REQUIRE(bank.getTRB(0).getID() == 333);
+  BOOST_REQUIRE(bank.getTRB(0).getType() == 64);
+  BOOST_REQUIRE(bank.getTRB(0).getChannel() == 128);
+  
+  BOOST_REQUIRE(bank.getTOMBChannel(0).getChannel() == 32u);
+}
+
+BOOST_AUTO_TEST_CASE(clearAllContainersTest)
+{
+  JPetParamBank bank;
+  JPetScin scint(111, 8.f, 2.f, 4.f, 8.f);
+  JPetPM pm(JPetPM::kRight, 222, 32, 64, std::make_pair(16.f, 32.f));
+  JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
+  JPetTRB trb(333, 64, 128);
+  JPetTOMBChannel TOMBChannel(32u);
+  
+  bank.addScintillator(scint);
+  bank.addPM(pm);
+  bank.addFEB(feb);
+  bank.addTRB(trb);
+  bank.addTOMBChannel(TOMBChannel);
+
+  BOOST_REQUIRE(bank.getScintillatorsSize() == 1);
+  BOOST_REQUIRE(bank.getPMsSize() == 1);
+  BOOST_REQUIRE(bank.getFEBsSize() == 1);
+  BOOST_REQUIRE(bank.getTRBsSize() == 1);
+  BOOST_REQUIRE(bank.getTOMBChannelsSize() == 1);
+  
+  bank.clear();
+  
+  BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
+  BOOST_REQUIRE(bank.getPMsSize() == 0);
+  BOOST_REQUIRE(bank.getFEBsSize() == 0);
+  BOOST_REQUIRE(bank.getTRBsSize() == 0);
+  BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
+}
+
+BOOST_AUTO_TEST_CASE(getSizeTest)
+{
+  JPetParamBank bank;
+  JPetScin scint(111, 8.f, 2.f, 4.f, 8.f);
+  JPetPM pm(JPetPM::kRight, 222, 32, 64, std::make_pair(16.f, 32.f));
+  JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
+  JPetTRB trb(333, 64, 128);
+  JPetTOMBChannel TOMBChannel(32u);
+  
+  bank.addScintillator(scint);
+  bank.addPM(pm);
+  bank.addFEB(feb);
+  bank.addTRB(trb);
+  bank.addTOMBChannel(TOMBChannel);
+  
+  BOOST_REQUIRE(bank.getSize(JPetParamBank::kScintillator) == 1);
+  BOOST_REQUIRE(bank.getSize(JPetParamBank::kPM) == 1);
+  BOOST_REQUIRE(bank.getSize(JPetParamBank::kFEB) == 1);
+  BOOST_REQUIRE(bank.getSize(JPetParamBank::kTRB) == 1);
+  BOOST_REQUIRE(bank.getSize(JPetParamBank::kTOMBChannel) == 1);
+
 
 }
 
@@ -109,7 +186,6 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   BOOST_REQUIRE(bank2.getFEBs().GetEntries() == 1);
   BOOST_REQUIRE(bank2.getTRBs().GetEntries() == 1);
 
-
   BOOST_REQUIRE(bank2.getFEB(0).id() == 1);
   BOOST_REQUIRE(bank2.getFEB(0).isActive());
   BOOST_REQUIRE(bank2.getFEB(0).status() == "testStatus");
@@ -127,3 +203,4 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
