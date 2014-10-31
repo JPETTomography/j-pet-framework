@@ -102,7 +102,7 @@ class JPetParamBank: public TObject
   inline void addTOMBChannel(JPetTOMBChannel& tombchannel) {
     new (fTOMBChannels[getTOMBChannelsSize()]) JPetTOMBChannel(tombchannel);
   }
-  inline const TClonesArray& getTOMBCHannels() const {
+  inline const TClonesArray& getTOMBChannels() const {
     return fTOMBChannels;
   }
   inline JPetTOMBChannel& getTOMBChannel(int i) const {
