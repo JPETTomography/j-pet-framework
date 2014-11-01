@@ -32,6 +32,7 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
   JPetTRB trb(333, 64, 128);
   JPetTOMBChannel TOMBChannel(32u);
+  float epsilon = 0.0001f;
   
   bank.addScintillator(scint);
   bank.addPM(pm);
@@ -52,22 +53,22 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   BOOST_REQUIRE(bank.getTOMBChannels().GetEntries() == 1);
 
   BOOST_REQUIRE(bank.getScintillator(0).getID() == 111);
-  BOOST_CHECK_CLOSE(bank.getScintillator(0).getAttenLen(), 8.f, 0.001);
+  BOOST_CHECK_CLOSE(bank.getScintillator(0).getAttenLen(), 8.f, epsilon);
   struct JPetScin::ScinDimensions scin_dimensions(2.f, 4.f, 8.f);
   scin_dimensions = bank.getScintillator(0).getScinSize();
-  BOOST_CHECK_CLOSE(scin_dimensions.fLength, 2.f, 0.001);
-  BOOST_CHECK_CLOSE(scin_dimensions.fHeight, 4.f, 0.001);
-  BOOST_CHECK_CLOSE(scin_dimensions.fWidth, 8.f, 0.001);
+  BOOST_CHECK_CLOSE(scin_dimensions.fLength, 2.f, epsilon);
+  BOOST_CHECK_CLOSE(scin_dimensions.fHeight, 4.f, epsilon);
+  BOOST_CHECK_CLOSE(scin_dimensions.fWidth, 8.f, epsilon);
   
   BOOST_REQUIRE(bank.getPM(0).getSide() == JPetPM::kRight);
   BOOST_REQUIRE(bank.getPM(0).getID() == 222);
   BOOST_REQUIRE(bank.getPM(0).getHVset() == 32);
   BOOST_REQUIRE(bank.getPM(0).getHVopt() == 64);
-  BOOST_CHECK_CLOSE(bank.getPM(0).getHVgain(JPetPM::kFirst), 16.f, 0.001);
-  BOOST_CHECK_CLOSE(bank.getPM(0).getHVgain(JPetPM::kSecond), 32.f, 0.001);
+  BOOST_CHECK_CLOSE(bank.getPM(0).getHVgain(JPetPM::kFirst), 16.f, epsilon);
+  BOOST_CHECK_CLOSE(bank.getPM(0).getHVgain(JPetPM::kSecond), 32.f, epsilon);
   std::pair<float, float> HVgain = bank.getPM(0).getHVgain();
-  BOOST_CHECK_CLOSE(HVgain.first, 16.f, 0.001);
-  BOOST_CHECK_CLOSE(HVgain.second, 32.f, 0.001);
+  BOOST_CHECK_CLOSE(HVgain.first, 16.f, epsilon);
+  BOOST_CHECK_CLOSE(HVgain.second, 32.f, epsilon);
 
   BOOST_REQUIRE(bank.getFEB(0).id() == 1);
   BOOST_REQUIRE(bank.getFEB(0).isActive() == true);
