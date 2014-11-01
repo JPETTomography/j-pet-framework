@@ -474,6 +474,140 @@ BOOST_AUTO_TEST_CASE(generateSelectQueryTest)
   BOOST_REQUIRE(selectQuerry == "SELECT * FROM getDataFromTRBs(1);");
 }
 
+BOOST_AUTO_TEST_CASE(fillContainersTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  int run  = 1;
+  JPetParamBank bank;
+  
+  std::cout << "Scintillators number:" << bank.getScintillatorsSize() <<std::endl;
+  std::cout << "PM numbers:" << bank.getPMsSize() <<std::endl;
+  std::cout << "FEB numbers:" << bank.getFEBsSize() <<std::endl;
+  std::cout << "TRB numbers:" << bank.getTRBsSize() <<std::endl;
+  std::cout << "TOMB channel numbers:" << bank.getTOMBChannelsSize() <<std::endl;
+
+  BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
+  BOOST_REQUIRE(bank.getPMsSize() == 0);
+  BOOST_REQUIRE(bank.getFEBsSize() == 0);
+  BOOST_REQUIRE(bank.getTRBsSize() == 0);
+  BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
+  
+  paramGetter.fillScintillators(run, bank);
+  paramGetter.fillPMs(run, bank);
+  paramGetter.fillFEBs(run, bank);
+  paramGetter.fillTRBs(run, bank);
+  paramGetter.fillTOMBChannels(run, bank);
+  
+  BOOST_REQUIRE(bank.getScintillatorsSize() == 2);
+  BOOST_REQUIRE(bank.getPMsSize() == 4);
+  BOOST_REQUIRE(bank.getFEBsSize() == 1);
+  BOOST_REQUIRE(bank.getTRBsSize() == 1);
+  BOOST_REQUIRE(bank.getTOMBChannelsSize() == 4);
+  
+  bank.clear();
+  
+  BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
+  BOOST_REQUIRE(bank.getPMsSize() == 0);
+  BOOST_REQUIRE(bank.getFEBsSize() == 0);
+  BOOST_REQUIRE(bank.getTRBsSize() == 0);
+  BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
+}
+
+BOOST_AUTO_TEST_CASE(generateScintillatorTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  JPetParamBank bank;
+  
+  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromScintillators", "1");
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+  
+  if(l_sizeResultQuerry) 
+  {
+    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
+    {
+      JPetScin l_scin = paramGetter.generateScintillator(row);
+      bank.addScintillator(l_scin);
+    }
+  }
+  BOOST_REQUIRE(bank.getScintillatorsSize() == 2);
+}
+
+BOOST_AUTO_TEST_CASE(generatePMTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  JPetParamBank bank;
+  
+  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromPhotoMultipliers", "1");
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+  
+  if(l_sizeResultQuerry) 
+  {
+    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
+    {
+      JPetPM l_pm = paramGetter.generatePM(row);
+      bank.addPM(l_pm);
+    }
+  }
+  BOOST_REQUIRE(bank.getPMsSize() == 4);
+}
+
+BOOST_AUTO_TEST_CASE(generateFEBTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  JPetParamBank bank;
+  
+  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromKonradBoards", "1");
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+  
+  if(l_sizeResultQuerry) 
+  {
+    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
+    {
+      JPetFEB l_FEB = paramGetter.generateFEB(row);
+      bank.addFEB(l_FEB);
+    }
+  }
+  BOOST_REQUIRE(bank.getFEBsSize() == 1);
+}
+
+BOOST_AUTO_TEST_CASE(generateTRBTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  JPetParamBank bank;
+  
+  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromTRBs", "1");
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+  
+  if(l_sizeResultQuerry) 
+  {
+    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
+    {
+      JPetTRB l_TRB = paramGetter.generateTRB(row);
+      bank.addTRB(l_TRB);
+    }
+  }
+  BOOST_REQUIRE(bank.getTRBsSize() == 1);
+}
+
+BOOST_AUTO_TEST_CASE(generateTOMBChannelTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  JPetParamBank bank;
+  
+  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getEverythingVsTOMB", "1");
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+  
+  if(l_sizeResultQuerry) 
+  {
+    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
+    {
+      JPetTOMBChannel l_TOMBChannel = paramGetter.generateTOMBChannel(row);
+      bank.addTOMBChannel(l_TOMBChannel);
+    }
+  }
+  BOOST_REQUIRE(bank.getTOMBChannelsSize() == 4);
+}
+
 
 
 
