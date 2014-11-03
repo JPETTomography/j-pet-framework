@@ -18,9 +18,8 @@ protected:
     int photomultiplier_id;
   };
   
-  typedef struct JPetPMCalibAssignment JPetPMCalibAssignment;
-  
 public:
+  JPetPMCalib();
   JPetPMCalib(int id,
 	      std::string name,
 	      float opthv,

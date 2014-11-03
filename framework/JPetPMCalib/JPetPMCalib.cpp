@@ -6,6 +6,19 @@ JPetPMCalib::JPetPMCalibAssignment::JPetPMCalibAssignment(int id, int photomulti
 {
 }
 
+JPetPMCalib::JPetPMCalib():
+                          id(0),
+                          name(""),
+                          opthv(0.0),
+                          c2e_1(0.0),
+                          c2e_2(0.0),
+                          gainalpha(0.0),
+                          gainbeta(0.0),
+                          PMCalibAssignment(0,0)
+{
+  SetName("JPetPMCalib");
+}
+
 JPetPMCalib::JPetPMCalib(int id,
 			  std::string name,
 			  float opthv,
