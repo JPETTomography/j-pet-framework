@@ -11,6 +11,7 @@ ClassImp (JPetParamBank);
 JPetParamBank::JPetParamBank():
   fScintillators("JPetScin", 100),
   fPMs("JPetPM", 100),
+  fPMCalibs("JPetPMCalib", 100),
   fFEBs("JPetFEB", 100),
   fTRBs("JPetTRB", 100),
   fBarrelSlots("JPetBarrelSlot", 100),
@@ -23,6 +24,7 @@ void JPetParamBank::clear()
 {
   fScintillators.Clear();
   fPMs.Clear();
+  fPMCalibs.Clear();
   fFEBs.Clear();
   fTRBs.Clear();
   fBarrelSlots.Clear();
@@ -39,6 +41,9 @@ int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const
       break;
     case kPM:
       size = getPMsSize();
+      break;
+    case kPMCalib:
+      size = getPMCalibsSize();
       break;
     case kFEB:
       size = getFEBsSize();

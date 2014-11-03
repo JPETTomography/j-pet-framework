@@ -51,12 +51,14 @@ BOOST_AUTO_TEST_CASE(dummyFillingTest)
   
   std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl;
   std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl;
+  std::cout << "PMCalib numbers:" << bank->getPMCalibsSize() <<std::endl;
   std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl;
   std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl;
   std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl;
 
   BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank->getPMsSize() == 4);
+  BOOST_REQUIRE(bank->getPMCalibsSize() == 0); // 0 due to run id == 1  // TODO Check it with DB
   BOOST_REQUIRE(bank->getFEBsSize() == 1);
   BOOST_REQUIRE(bank->getTRBsSize() == 1);
   BOOST_REQUIRE(bank->getTOMBChannelsSize() == 4);
@@ -69,11 +71,13 @@ BOOST_AUTO_TEST_CASE(run26Test)
   JPetParamBank* bank = paramGetter.generateParamBank(run);
   std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl;
   std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl;
+  std::cout << "PMCalib numbers:" << bank->getPMCalibsSize() <<std::endl;
   std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl;
   std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl;
   std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl;
   BOOST_REQUIRE(bank->getScintillatorsSize() > 0);
   BOOST_REQUIRE(bank->getPMsSize() > 0);
+  BOOST_REQUIRE(bank->getPMCalibsSize() == 0); // 0 due to run id == 26  // TODO Check it with DB
   BOOST_REQUIRE(bank->getFEBsSize() > 0);
   BOOST_REQUIRE(bank->getTRBsSize() > 0);
   BOOST_REQUIRE(bank->getTOMBChannelsSize() > 0);
@@ -482,24 +486,28 @@ BOOST_AUTO_TEST_CASE(fillContainersTest)
   
   std::cout << "Scintillators number:" << bank.getScintillatorsSize() <<std::endl;
   std::cout << "PM numbers:" << bank.getPMsSize() <<std::endl;
+  std::cout << "PMCalib numbers:" << bank.getPMCalibsSize() <<std::endl;
   std::cout << "FEB numbers:" << bank.getFEBsSize() <<std::endl;
   std::cout << "TRB numbers:" << bank.getTRBsSize() <<std::endl;
   std::cout << "TOMB channel numbers:" << bank.getTOMBChannelsSize() <<std::endl;
 
   BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
   BOOST_REQUIRE(bank.getPMsSize() == 0);
+  BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
   BOOST_REQUIRE(bank.getFEBsSize() == 0);
   BOOST_REQUIRE(bank.getTRBsSize() == 0);
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
   
   paramGetter.fillScintillators(run, bank);
   paramGetter.fillPMs(run, bank);
+  paramGetter.fillPMCalibs(run, bank);
   paramGetter.fillFEBs(run, bank);
   paramGetter.fillTRBs(run, bank);
   paramGetter.fillTOMBChannels(run, bank);
   
   BOOST_REQUIRE(bank.getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank.getPMsSize() == 4);
+  BOOST_REQUIRE(bank.getPMCalibsSize() == 0); // 0 due to run id == 1  // TODO Check it with DB
   BOOST_REQUIRE(bank.getFEBsSize() == 1);
   BOOST_REQUIRE(bank.getTRBsSize() == 1);
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 4);
@@ -508,6 +516,7 @@ BOOST_AUTO_TEST_CASE(fillContainersTest)
   
   BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
   BOOST_REQUIRE(bank.getPMsSize() == 0);
+  BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
   BOOST_REQUIRE(bank.getFEBsSize() == 0);
   BOOST_REQUIRE(bank.getTRBsSize() == 0);
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
@@ -549,6 +558,25 @@ BOOST_AUTO_TEST_CASE(generatePMTest)
     }
   }
   BOOST_REQUIRE(bank.getPMsSize() == 4);
+}
+
+BOOST_AUTO_TEST_CASE(generatePMCalibTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  JPetParamBank bank;
+  
+  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromPhotoMultipliersCalibration", "2"); // TODO Check it with DB
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+  
+  if(l_sizeResultQuerry) 
+  {
+    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
+    {
+      JPetPMCalib l_pmCalib = paramGetter.generatePMCalib(row);
+      bank.addPMCalib(l_pmCalib);
+    }
+  }
+  BOOST_REQUIRE(bank.getPMCalibsSize() == 4); // TODO Check it with DB
 }
 
 BOOST_AUTO_TEST_CASE(generateFEBTest)
@@ -610,41 +638,6 @@ BOOST_AUTO_TEST_CASE(generateTOMBChannelTest)
 
 
 
-
-BOOST_AUTO_TEST_CASE(default_constructor)
-{
-  JPetDBParamGetter paramGetter;
-}
-
-BOOST_AUTO_TEST_CASE(some_filling)
-{
-  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-  int run  = 1;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-  std::cout <<"FEB numbers:"<<bank->getFEBsSize()  <<std::endl;
-
-  BOOST_REQUIRE(bank->getScintillatorsSize()== 2);
-  BOOST_REQUIRE(bank->getPMsSize() == 4);
-  BOOST_REQUIRE(bank->getFEBsSize() == 1);
-  BOOST_REQUIRE(bank->getTRBsSize() == 1);
-
-}
-
-BOOST_AUTO_TEST_CASE(run_26)
-{
-  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-  int run  = 26;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-std::cout <<"FEB numbers:"<<bank->getFEBsSize()  <<std::endl;
-std::cout <<"PM numbers:"<<bank->getPMsSize()  <<std::endl;
-std::cout <<"TRB numbers:"<<bank->getTRBsSize()  <<std::endl;
-std::cout <<"Scintillators number:"<<bank->getScintillatorsSize()  <<std::endl;
-  BOOST_REQUIRE(bank->getScintillatorsSize() > 0);
-  BOOST_REQUIRE(bank->getPMsSize() > 0);
-  BOOST_REQUIRE(bank->getFEBsSize() > 0);
-  BOOST_REQUIRE(bank->getTRBsSize() > 0);
-
-}
 //BOOST_AUTO_TEST_CASE(fillContainersTest)
 //{
 //  JPetDBParamGetter paramGetter(gDefaultConfigFile);

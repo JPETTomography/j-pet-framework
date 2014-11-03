@@ -26,6 +26,7 @@ JPetParamBank* JPetDBParamGetter::generateParamBank(const int p_run_id)
   JPetParamBank* pParamBank =  new JPetParamBank;
   fillScintillators(p_run_id, *pParamBank);
   fillPMs(p_run_id, *pParamBank);
+  fillPMCalibs(p_run_id, *pParamBank);
   fillFEBs(p_run_id, *pParamBank);
   fillTRBs(p_run_id, *pParamBank);
   fillTOMBChannels(p_run_id, *pParamBank);
@@ -122,6 +123,26 @@ void JPetDBParamGetter::fillPMs(const int p_run_id, JPetParamBank& paramBank)
     }
   } else {
     printErrorMessageDB("getDataFromPhotoMultipliers", p_run_id);
+  }
+}
+
+void JPetDBParamGetter::fillPMCalibs(const int p_run_id, JPetParamBank& paramBank)
+{
+  INFO("Start filling PMCalibs container.");
+//  std::string l_sqlQuerry = "SELECT * FROM getDataFromPhotoMultipliersCalibration(" + l_run_id + ");";
+
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromPhotoMultipliersCalibration",l_run_id);
+
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+
+  if (l_sizeResultQuerry) {
+    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+      JPetPMCalib l_pmCalib = generatePMCalib(row);
+      paramBank.addPMCalib(l_pmCalib);
+    }
+  } else {
+    printErrorMessageDB("getDataFromPhotoMultipliersCalibration", p_run_id);
   }
 }
 
@@ -232,6 +253,34 @@ JPetPM JPetDBParamGetter::generatePM(pqxx::result::const_iterator row) {
       return  l_pm;
 }
 
+JPetPMCalib JPetDBParamGetter::generatePMCalib(pqxx::result::const_iterator row)
+{
+  int l_pm_calibration_id = row["pm_calibration_id"].as<int>();
+  std::string l_pm_calibration_name = row["pm_calibration_name"].as<std::string>();
+  double l_pm_calibration_opthv = row["pm_calibration_opthv"].as<double>();
+  double l_pm_calibration_c2e_1 = row["pm_calibration_c2e_1"].as<double>();
+  double l_pm_calibration_c2e_2 = row["pm_calibration_c2e_2"].as<double>();
+  double l_pm_calibration_gainalpha = row["pm_calibration_gainalpha"].as<double>();
+  double l_pm_calibration_gainbeta = row["pm_calibration_gainbeta"].as<double>();
+  int l_pm_calibration_assignment_id = row["pm_calibration_assignment_id"].as<int>();
+  int l_pm_calibration_assignment_photomuliplier_id = row["pm_calibration_assignment_photomuliplier_id"].as<int>();
+
+  // int l_setup_id = row["setup_id"].as<int>();
+  // int l_run_id = row["run_id"].as<int>();
+  
+  JPetPMCalib l_PMCalib(l_pm_calibration_id,
+			l_pm_calibration_name,
+			l_pm_calibration_opthv,
+			l_pm_calibration_c2e_1,
+			l_pm_calibration_c2e_2,
+			l_pm_calibration_gainalpha,
+			l_pm_calibration_gainbeta,
+			l_pm_calibration_assignment_id,
+			l_pm_calibration_assignment_photomuliplier_id);
+  
+  return l_PMCalib;
+}
+
 JPetFEB JPetDBParamGetter::generateFEB(pqxx::result::const_iterator row) {
       int l_konradboard_id = row["konradboard_id"].as<int>();
       bool l_konradboard_isactive = row["konradboard_isactive"].as<bool>();
@@ -272,8 +321,6 @@ JPetTOMBChannel JPetDBParamGetter::generateTOMBChannel(pqxx::result::const_itera
       JPetTOMBChannel l_TOMBChannel(l_TOMB_no);
     return l_TOMBChannel;
 }
-
-
 
 void JPetDBParamGetter::fillScintillatorsTRefs(const int p_run_id, JPetParamBank& paramBank)
 {

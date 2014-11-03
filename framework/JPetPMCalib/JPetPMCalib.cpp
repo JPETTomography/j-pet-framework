@@ -1,16 +1,9 @@
 #include "JPetPMCalib.h"
 
 
-JPetPMCalib::JPetPMCalib() :
-			    id(0),
-			    name(""),
-			    opthv(0.f),
-			    c2e_1(0.f),
-			    c2e_2(0.f),
-			    gainalpha(0.f),
-			    gainbeta(0.f)
+JPetPMCalib::JPetPMCalibAssignment::JPetPMCalibAssignment(int id, int photomultiplier_id) : id(id), 
+											       photomultiplier_id(photomultiplier_id)
 {
-  SetName("JPetPMCalib");
 }
 
 JPetPMCalib::JPetPMCalib(int id,
@@ -19,14 +12,18 @@ JPetPMCalib::JPetPMCalib(int id,
 			  float c2e_1,
 			  float c2e_2,
 			  float gainalpha,
-			  float gainbeta) :
+			  float gainbeta,
+			  int PMCalibAssignmentId,
+			  int PMCalibAssignmentPhotomultiplierId) :
 					  id(id),
 					  name(name),
 					  opthv(opthv),
 					  c2e_1(c2e_1),
 					  c2e_2(c2e_2),
 					  gainalpha(gainalpha),
-					  gainbeta(gainbeta)
+					  gainbeta(gainbeta),
+					  PMCalibAssignment(PMCalibAssignmentId, 
+							    PMCalibAssignmentPhotomultiplierId)
 {
   SetName("JPetPMCalib");
 }
