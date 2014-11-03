@@ -9,15 +9,27 @@
  */
 class JPetPMCalib: public TNamed 
 {
+protected:
+  struct JPetPMCalibAssignment
+  {
+    JPetPMCalibAssignment(int id, int photomultiplier_id);
+    
+    int id;
+    int photomultiplier_id;
+  };
+  
+  typedef struct JPetPMCalibAssignment JPetPMCalibAssignment;
+  
 public:
-  JPetPMCalib(void);
   JPetPMCalib(int id,
 	      std::string name,
 	      float opthv,
 	      float c2e_1,
 	      float c2e_2,
 	      float gainalpha,
-	      float gainbeta);
+	      float gainbeta,
+	      int PMCalibAssignmentId,
+	      int PMCalibAssignmentPhotomultiplierId);
   
   virtual ~JPetPMCalib(void);
   
@@ -28,6 +40,7 @@ public:
   virtual float GetC2e_2(void) const { return c2e_2; };
   virtual float GetGainalpha(void) const {return gainalpha; };
   virtual float GetGainbeta(void) const { return gainbeta; };
+  virtual JPetPMCalibAssignment GetPMCalibAssignment(void) { return PMCalibAssignment; }
   
 protected:
   int id;
@@ -37,6 +50,8 @@ protected:
   float c2e_2;
   float gainalpha;
   float gainbeta;
+  
+  JPetPMCalibAssignment PMCalibAssignment;
   
   friend class JPetParamManager;
   

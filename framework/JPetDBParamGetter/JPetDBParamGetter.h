@@ -20,7 +20,7 @@ class pqxx::result::const_iterator;
 class JPetDBParamGetter
 {
 public:
-  enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMBChannel, kBarrelSlot, SIZE};
+  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, SIZE};
   JPetDBParamGetter();
   JPetDBParamGetter(const char* dBConfigFile);
   JPetParamBank* generateParamBank(const int p_run_id);
@@ -31,6 +31,7 @@ private:
   void printErrorMessageDB(std::string sqlFunction, int p_run_id);
   JPetScin generateScintillator(pqxx::result::const_iterator row);
   JPetPM generatePM(pqxx::result::const_iterator row);
+  JPetPMCalib generatePMCalib(pqxx::result::const_iterator row);
   JPetFEB generateFEB(pqxx::result::const_iterator row);
   JPetTRB generateTRB(pqxx::result::const_iterator row);
   JPetTOMBChannel generateTOMBChannel(pqxx::result::const_iterator row);
@@ -41,6 +42,7 @@ private:
   void fillParamContainer(ParamObjectType type, const int p_run_id, JPetParamBank& paramBank);
 
   void fillPMs(const int p_run_id, JPetParamBank& paramBank);
+  void fillPMCalibs(const int p_run_id, JPetParamBank& paramBank);
   void fillFEBs(const int p_run_id, JPetParamBank& paramBank);
   void fillTRBs(const int p_run_id, JPetParamBank& paramBank);
   void fillTOMBChannels(const int p_run_id, JPetParamBank& paramBank);

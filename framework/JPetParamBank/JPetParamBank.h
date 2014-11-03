@@ -12,6 +12,7 @@
 #include "../JPetTRB/JPetTRB.h"
 #include "../JPetFEB/JPetFEB.h"
 #include "../JPetPM/JPetPM.h"
+#include "../JPetPMCalib/JPetPMCalib.h"
 
 #include "../JPetTOMBChannel/JPetTOMBChannel.h"
 #include "../../JPetLoggerInclude.h"
@@ -21,7 +22,7 @@
 class JPetParamBank: public TObject
 {
  public:
-  enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMBChannel, kBarrelSlot, SIZE};
+  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, SIZE};
 
   JPetParamBank();
   void clear();
@@ -56,6 +57,20 @@ class JPetParamBank: public TObject
     return fPMs.GetEntries();
   }
 
+  // PMCalibs
+  inline void addPMCalib(JPetPMCalib& pmCalib) {
+    new (fPMCalibs[getPMCalibsSize()]) JPetPMCalib(pmCalib);
+  }
+  inline const TClonesArray& getPMCalibs() const {
+    return fPMCalibs;
+  }
+  inline JPetPMCalib& getPMCalib(int i) const {
+    return *((JPetPMCalib*)fPMCalibs[i]);
+  }
+  int getPMCalibsSize() const {
+    return fPMCalibs.GetEntries();
+  }
+  
   // FEBs
   inline void addFEB(JPetFEB& kb) {
     new (fFEBs[getFEBsSize()]) JPetFEB(kb);
@@ -118,6 +133,7 @@ class JPetParamBank: public TObject
 
   TClonesArray fScintillators;
   TClonesArray fPMs;
+  TClonesArray fPMCalibs;
   TClonesArray fFEBs;
   TClonesArray fTRBs;
   TClonesArray fBarrelSlots;;
