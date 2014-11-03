@@ -223,7 +223,7 @@ JPetPM JPetDBParamGetter::generatePM(pqxx::result::const_iterator row) {
       int l_setup_id = row["setup_id"].as<int>();
       int l_run_id = row["run_id"].as<int>();
 
-      JPetPM::Side l_side = (l_hvpmconnection_isrightside) ? JPetPM::Side::kRight : JPetPM::Side::kLeft;
+      JPetPM::Side l_side = (l_hvpmconnection_isrightside) ? JPetPM::Side::SideB : JPetPM::Side::SideA;
 
       JPetPM l_pm;
       l_pm.setID(l_photomultiplier_id);
@@ -367,7 +367,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
 
             if (l_FEB_id == l_KonradBoard_id) {
 //              ((JPetPM*)fPMs[l_PM_index])->setTRefFEB( *((JPetFEB*)fFEBs[l_FEB_index]) );
-              paramBank.getPM(l_PM_index).setTRefKB(paramBank.getFEB(l_FEB_index) );
+              paramBank.getPM(l_PM_index).setTRefFEB(paramBank.getFEB(l_FEB_index) );
             }
           }
         }

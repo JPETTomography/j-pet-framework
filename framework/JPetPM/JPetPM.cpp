@@ -1,7 +1,7 @@
 #include "JPetPM.h"
 
 JPetPM::JPetPM():
-  fSide(kLeft),
+  fSide(SideA),
   fID(0),
   fHVset(0),
   fHVopt(0),

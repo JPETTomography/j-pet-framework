@@ -62,7 +62,10 @@ public:
   virtual std::string description(void) const;
   virtual int version(void) const;
   
-  JPetTRB* getTRefTRB() { return (JPetTRB*)fTRefTRBs.GetObject(); }
+  const JPetTRB & getTRB() 
+  { 
+    return (JPetTRB&)*fTRefTRBs.GetObject(); 
+  }
   
   void setTRefTRB(JPetTRB &p_TRB)
   {

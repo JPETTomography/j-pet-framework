@@ -24,7 +24,7 @@ JPetEvent::JPetEvent(float Time, float QualityOfTime, JPetHit& firstHit, JPetHit
 JPetEvent::~JPetEvent() {
 }
 
-int JPetEvent::AddHit(JPetHit & hit){
+int JPetEvent::addHit(JPetHit & hit){
   
   if( fNhits == 0 ){
     fFirstHit = hit;

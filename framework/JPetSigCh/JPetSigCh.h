@@ -32,43 +32,41 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
  *
  * @return either time with respect to beginning of the time window [ps] (TSlot) or charge (if getType()==Charge)
  */
-  inline float GetValue() const { return fValue; }
+  inline float getValue() const { return fValue; }
 
   /**
    * @brief Used to obtain the type of the signal information
    *
    * Trailing edge, leading edge or charge (Charge)
    */
-  inline EdgeType GetType() const { return fType; }
+  inline EdgeType getType() const { return fType; }
 
-  inline JPetPM * GetPM() const { return (JPetPM*) fPM.GetObject(); }
-  inline JPetTRB * GetTRB() const {return (JPetTRB*) fTRB.GetObject(); }
-  inline JPetFEB * GetFEB() const {return (JPetFEB*) fFEB.GetObject(); }
+  inline const JPetPM & getPM() const { return (JPetPM&)*fPM.GetObject(); }
+  inline const JPetTRB & getTRB() const {return (JPetTRB&)*fTRB.GetObject(); }
+  inline const JPetFEB & getFEB() const {return (JPetFEB&)*fFEB.GetObject(); }
 
 /**
  * Returns true if the value of the signal represents charge information (integral of the signal calculated by front-end board)
  */
-  bool IsCharge() const ;
+  bool isCharge() const ;
  
 /**
  * Returns true if the value of the signal represents time information from the TDC
  */
-  bool IsTime() const ;
+  bool isTime() const ;
 
-  inline void SetPM(JPetPM * pm) { fPM = pm; }
-  inline void SetTRB(JPetTRB * trb) { fTRB = trb; }
-  inline void SetFEB(JPetFEB * feb) { fFEB= feb; }
+  inline void setPM(const JPetPM & pm) { fPM = const_cast<JPetPM*>(&pm); }
+  inline void setTRB(const JPetTRB & trb) { fTRB = const_cast<JPetTRB*>(&trb); }
+      inline void setFEB(const JPetFEB & feb) { fFEB = const_cast<JPetFEB*>(&feb); }
   // Set time wrt beginning of TSlot [ps] or charge
-  inline void SetValue( float val ) { fValue = val; }
-  inline void SetType( EdgeType type ) { fType = type; }
+  inline void setValue( float val ) { fValue = val; }
+  inline void setType( EdgeType type ) { fType = type; }
 
-  inline void SetPMID( Int_t pmid ) { fPMID = pmid; }
-  inline void SetThreshold( float thr ) { fThreshold = thr; }
-  inline void SetDAQch( Int_t daqch ) { fDAQch = daqch; }
+  inline void setThreshold( float thr ) { fThreshold = thr; }
+  inline void setDAQch( Int_t daqch ) { fDAQch = daqch; }
   
-  inline Int_t GetPMID() const { return fPMID; }
-  inline float GetThreshold() const { return fThreshold; }
-  inline Int_t GetDAQch() const { return fDAQch; }
+  inline float getThreshold() const { return fThreshold; }
+  inline Int_t getDAQch() const { return fDAQch; }
 
   /**
    * @brief Compares this SigCh with another by their threshold value

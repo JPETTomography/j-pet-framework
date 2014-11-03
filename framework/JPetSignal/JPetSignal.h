@@ -35,7 +35,7 @@ class JPetSignal: public TNamed
    *
    * The time is in picoseconds and is the ABSOLUTE time w.r.t. beginning of measurement.
    */
-  inline float GetTime() const {
+  inline float getTime() const {
     assert(fTime >= 0);
     return fTime;
   }
@@ -45,36 +45,33 @@ class JPetSignal: public TNamed
    *
    * Intended to be used after a procedure which reconstructs the time using leading and trailing edge points of the signal. The time should be in picoseconds and should be the ABSLOUTE time w.r.t. beginning of measurement (it can be counted using the index of the TSlot * width of the time window).
    */
-  inline void SetTime(float time){ fTime=time; }
+  inline void setTime(float time){ fTime=time; }
 
   /**
    * @brief Sets the reconstructed energy of this signal [keV].
    *
    * Intended to be used after a procedure which reconstructs energy using leading and trailing edge points of the signal or using the charge from frontend electronics.
    */
-  inline void SetEnergy(float energy){ fEnergy=energy; }
+  inline void setEnergy(float energy){ fEnergy=energy; }
 
   /// Returns the energy reconstructed for this signal [keV].
-  inline float GetEnergy() const {
+  inline float getEnergy() const {
     assert(fEnergy >= 0);
     return fEnergy;
   }
   
   /// Returns a quantitative measure of the time reconstruction quality (scale is yet to be decided)
-  inline float GetQualityOfTime() const {
+  inline float getQualityOfTime() const {
     assert(fQualityOfTime >= 0);
     return fQualityOfTime;
   }
 
   /// Returns a quantitative measure of the energy reconstruction quality (scale is yet to be decided)
-  inline float GetQualityOfEnergy() const {
+  inline float getQualityOfEnergy() const {
     assert(fQualityOfEnergy >= 0);
     return fQualityOfEnergy;
   }
   
-  inline bool IsLeft() const {
-    return fLeft;
-  }
 
   /**
    * @brief Returns the number of points recorded on a leading or trailing edge of this signal.
@@ -83,21 +80,21 @@ class JPetSignal: public TNamed
    *
    * @param edge Either JPetSigCh::Leading or JPetSigCh::Trailing
    */
-  int GetNPoints(JPetSigCh::EdgeType edge) const;
+  int getNPoints(JPetSigCh::EdgeType edge) const;
 
   /**
    * @brief Add a JPetSigCh object to the signal.
    *
    * The JPetSigCh object is automatically added to the array of trailing-edge or leading-edge points depending on the type which was set in it. The array is sorted afterwards so that the JPetSigCh objects are sorted by ascending value of their threshold.
    */  
-  void AddPoint(const JPetSigCh& sigch);
+  void addPoint(const JPetSigCh& sigch);
 
   /**
    * @brief Returns a reference to an array of trailing-edge or leading-edge points of this signal.
    *
    * @param edge Either JPetSigCh::Leading or JPetSigCh::Trailing
    */
-  const TClonesArray & GetPoints(JPetSigCh::EdgeType edge) const;
+  const TClonesArray & getPoints(JPetSigCh::EdgeType edge) const;
 
   /**
    * @brief Returns a reference to a single point from a trailing of leading edge of the signal
@@ -107,21 +104,18 @@ class JPetSignal: public TNamed
    * @param edge Either JPetSigCh::Leading or JPetSigCh::Trailing
    * @param i index of the point, should be between 0 and the value returned by GetNPoints(edge)-1
    */
-  const JPetSigCh & GetPoint(int i, JPetSigCh::EdgeType edge) const;
+  const JPetSigCh & getPoint(int i, JPetSigCh::EdgeType edge) const;
   
-  
-  inline void SetTSlotIndex( int index ){ fTSlotIndex = index; }
-  inline int GetTSlotIndex()const{ return fTSlotIndex; }
+  inline void setTSlotIndex( int index ){ fTSlotIndex = index; }
+  inline int getTSlotIndex()const{ return fTSlotIndex; }
 
-  inline void SetPMID( Int_t pmid ) { fPMID = pmid; }
-  inline Int_t GetPMID() const { return fPMID; }
-  inline void SetPM(JPetPM * pm) { fPM = pm; }
-  inline void SetBarrelSlot(JPetBarrelSlot * bs) { fBarrelSlot = bs; }
-  inline JPetPM * GetPM() const { return (JPetPM*) fPM.GetObject(); }
-  inline JPetBarrelSlot * GetBarrelSlot() const { return (JPetBarrelSlot*) fBarrelSlot.GetObject(); }
+  inline void setPM(JPetPM & pm) { fPM = &pm; }
+  inline void setBarrelSlot(JPetBarrelSlot & bs) { fBarrelSlot = &bs; }
+  inline const JPetPM & getPM() const { return (JPetPM&)*fPM.GetObject(); }
+  inline const JPetBarrelSlot & getBarrelSlot() const { return (JPetBarrelSlot&)*fBarrelSlot.GetObject(); }
 
-  inline int GetNumberOfSetLeadingEdgePoints (void) const { return fNLeading; }
-  inline int GetNumberOfSetTrailingEdgePoints(void) const { return fNTrailing; }
+  inline int getNumberOfSetLeadingEdgePoints (void) const { return fNLeading; }
+  inline int getNumberOfSetTrailingEdgePoints(void) const { return fNTrailing; }
 
  private:
   double fTime; ///< absolute time reconstructed for the whole signal [ps]

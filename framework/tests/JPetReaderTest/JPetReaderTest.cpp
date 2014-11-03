@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE (read_and_write_objects )
 {
   JPetWriter writer("test2.root");
   JPetSignal signal;
-  signal.SetTime(101.43);
+  signal.setTime(101.43);
   writer.Write( signal );
   writer.CloseFile();
   
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE (read_and_write_objects )
   reader.GetEntry(0);
   JPetSignal & signal2 = (JPetSignal&)reader.GetData();
   reader.CloseFile();
-  BOOST_REQUIRE_EQUAL(signal.GetTime(), signal2.GetTime());
+  BOOST_REQUIRE_EQUAL(signal.getTime(), signal2.getTime());
 }
 
 BOOST_AUTO_TEST_CASE (proper_file)

@@ -16,7 +16,7 @@ class JPetScin;
 class JPetPM: public TNamed 
 {
  public:
-  enum Side {kLeft, kRight};
+  enum Side {SideA, SideB};
   enum GainNumber {kFirst, kSecond};
 
   JPetPM();
@@ -33,15 +33,14 @@ class JPetPM: public TNamed
   inline void setHVgain(float g1, float g2) { fHVgain.first = g1; fHVgain.second = g2; }
   inline void setHVgain(const std::pair<float,float>& gain) { fHVgain = gain; }
 
-  JPetFEB* getTRefKB() { return (JPetFEB*)fTRefKBs.GetObject(); }
+  const JPetFEB & getFEB() { return (JPetFEB&)*(fTRefFEB.GetObject()); }
   
-
   void setTRefScin(JPetScin &p_scin){ fTRefScin = &p_scin; }
   JPetScin & getScin() const { return (JPetScin&)*(fTRefScin.GetObject()); }
 
-  void setTRefKB(JPetFEB &p_KB)
+  void setTRefFEB(JPetFEB &p_FEB)
   {
-    fTRefKBs = &p_KB;
+    fTRefFEB = &p_FEB;
   }
   
   /*std::vector<TRef> getTRefKBs() const { return fTRefKBs; }
@@ -75,12 +74,12 @@ class JPetPM: public TNamed
   ClassDef(JPetPM, 1);
   
 protected:
-  TRef fTRefKBs;
+  TRef fTRefFEB;
   TRef fTRefScin;
 
-  void clearTRefKBs()
+  void clearTRefFEBs()
   {
-    fTRefKBs = NULL;
+    fTRefFEB = NULL;
   }
   
   /*std::vector<TRef> fTRefKBs;

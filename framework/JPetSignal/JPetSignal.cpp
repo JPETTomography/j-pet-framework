@@ -33,7 +33,7 @@ JPetSignal::JPetSignal(double time, double qual, bool left, const std::vector<Ex
 JPetSignal::~JPetSignal()
 { }
 
-int JPetSignal::GetNPoints(JPetSigCh::EdgeType edge) const
+int JPetSignal::getNPoints(JPetSigCh::EdgeType edge) const
 {
   assert((edge == JPetSigCh::Trailing) || (edge == JPetSigCh::Leading));
   if (edge == JPetSigCh::Trailing) {
@@ -43,11 +43,11 @@ int JPetSignal::GetNPoints(JPetSigCh::EdgeType edge) const
   }
 }
 
-void JPetSignal::AddPoint(const JPetSigCh& sigch){
+void JPetSignal::addPoint(const JPetSigCh& sigch){
   
-  assert((sigch.GetType() == JPetSigCh::Trailing) || (sigch.GetType() == JPetSigCh::Leading));
+  assert((sigch.getType() == JPetSigCh::Trailing) || (sigch.getType() == JPetSigCh::Leading));
   
-  if (sigch.GetType() == JPetSigCh::Trailing && fNTrailing < 4) {
+  if (sigch.getType() == JPetSigCh::Trailing && fNTrailing < 4) {
     new (fTrailingPoints[fNTrailing++]) JPetSigCh(sigch);
     fTrailingPoints.Sort();
   } else if(fNLeading < 4) {
@@ -57,7 +57,7 @@ void JPetSignal::AddPoint(const JPetSigCh& sigch){
   
 }
 
-const TClonesArray & JPetSignal::GetPoints(JPetSigCh::EdgeType edge) const{
+const TClonesArray & JPetSignal::getPoints(JPetSigCh::EdgeType edge) const{
   assert((edge == JPetSigCh::Trailing) || (edge == JPetSigCh::Leading));
   if (edge == JPetSigCh::Trailing) {
     return fTrailingPoints;
@@ -66,9 +66,9 @@ const TClonesArray & JPetSignal::GetPoints(JPetSigCh::EdgeType edge) const{
   }
 }
 
-const JPetSigCh & JPetSignal::GetPoint(int i, JPetSigCh::EdgeType edge) const{
-  assert( i>=0 && i<GetNPoints( edge ) );
+const JPetSigCh & JPetSignal::getPoint(int i, JPetSigCh::EdgeType edge) const{
+  assert( i >= 0 && i < getNPoints( edge ) );
   
-  JPetSigCh * sc = (JPetSigCh*)(GetPoints( edge )[i]);
+  JPetSigCh * sc = (JPetSigCh*)(getPoints( edge )[i]);
   return *sc;
 }
