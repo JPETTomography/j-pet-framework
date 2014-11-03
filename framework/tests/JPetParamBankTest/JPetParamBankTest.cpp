@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE( adding_some_elements )
   BOOST_REQUIRE(bank.getBarrelSlots().GetEntries() == 1);
 
 
-  BOOST_REQUIRE(bank.getFEB(0).id() == 1);
+  BOOST_REQUIRE(bank.getFEB(0).getID() == 1);
   BOOST_REQUIRE(bank.getFEB(0).isActive());
   BOOST_REQUIRE(bank.getFEB(0).status() == "testStatus");
   BOOST_REQUIRE(bank.getFEB(0).description() == "descr");
@@ -72,8 +72,12 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   pm2.setID(2);
   pm3.setID(3);
   pm4.setID(4);
-  scint1.setTRefPMs(pm1, pm2);
-  scint2.setTRefPMs(pm3, pm4);
+  /* scint1.setTRefPMs(pm1, pm2); */
+  /* scint2.setTRefPMs(pm3, pm4); */
+  pm1.setTRefScin( scint1 );
+  pm2.setTRefScin( scint1 );
+  pm3.setTRefScin( scint2 );
+  pm4.setTRefScin( scint2 );
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
   JPetTRB trb;
   bank.addPM(pm1);
@@ -110,16 +114,24 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   BOOST_REQUIRE(bank2.getTRBs().GetEntries() == 1);
 
 
-  BOOST_REQUIRE(bank2.getFEB(0).id() == 1);
+  BOOST_REQUIRE(bank2.getFEB(0).getID() == 1);
   BOOST_REQUIRE(bank2.getFEB(0).isActive());
   BOOST_REQUIRE(bank2.getFEB(0).status() == "testStatus");
   BOOST_REQUIRE(bank2.getFEB(0).description() == "descr");
   BOOST_REQUIRE(bank2.getFEB(0).version() == 1);
 
+  /*
   BOOST_REQUIRE(bank2.getScintillator(0).getTRefPMLeft()->getID() == 1);
   BOOST_REQUIRE(bank2.getScintillator(0).getTRefPMRight()->getID() == 2);
   BOOST_REQUIRE(bank2.getScintillator(1).getTRefPMLeft()->getID() == 3);
   BOOST_REQUIRE(bank2.getScintillator(1).getTRefPMRight()->getID() == 4);
+  */
+
+  BOOST_REQUIRE(bank2.getPM(0).getScin().getID() == 1);
+  BOOST_REQUIRE(bank2.getPM(0).getScin().getID() == 2);
+  BOOST_REQUIRE(bank2.getPM(1).getScin().getID() == 3);
+  BOOST_REQUIRE(bank2.getPM(1).getScin().getID() == 4);
+  
   BOOST_REQUIRE(bank2.getScintillator(0).getID() == 1);
   BOOST_REQUIRE(bank2.getScintillator(1).getID() == 2);
 

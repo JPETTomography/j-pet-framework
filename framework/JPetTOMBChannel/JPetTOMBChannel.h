@@ -31,9 +31,9 @@ public:
   void setTRefPM(JPetPM& p_PM){ fPM = &p_PM; }
   void setThreshold(float p_threshold){ fThreshold = p_threshold; }
   
-  JPetFEB * getTRefFEB()const{ return (JPetFEB*)fFEB.GetObject(); }
-  JPetTRB * getTRefTRB()const{ return (JPetTRB*)fTRB.GetObject(); }
-  JPetPM * getTRefPM()const{ return (JPetPM*)fPM.GetObject(); }
+  const JPetFEB & getTRefFEB()const{ return (JPetFEB&)*fFEB.GetObject(); }
+  const JPetTRB & getTRefTRB()const{ return (JPetTRB&)*fTRB.GetObject(); }
+  const JPetPM & getTRefPM()const{ return (JPetPM&)*fPM.GetObject(); }
   float getThreshold()const{ return fThreshold; }
   unsigned int getChannel()const{ return fChannel; }
 
