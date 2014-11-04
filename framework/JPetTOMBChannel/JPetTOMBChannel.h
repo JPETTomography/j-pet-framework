@@ -26,14 +26,14 @@ public:
   JPetTOMBChannel(unsigned int p_channel);
   virtual ~JPetTOMBChannel(void);
   
-  void setTRefFEB(JPetFEB& p_FEB){ fFEB = &p_FEB; }
-  void setTRefTRB(JPetTRB& p_TRB){ fTRB = &p_TRB; }
-  void setTRefPM(JPetPM& p_PM){ fPM = &p_PM; }
+  void setFEB(JPetFEB& p_FEB){ fFEB = &p_FEB; }
+  void setTRB(JPetTRB& p_TRB){ fTRB = &p_TRB; }
+  void setPM(JPetPM& p_PM){ fPM = &p_PM; }
   void setThreshold(float p_threshold){ fThreshold = p_threshold; }
   
-  const JPetFEB & getTRefFEB()const{ return (JPetFEB&)*fFEB.GetObject(); }
-  const JPetTRB & getTRefTRB()const{ return (JPetTRB&)*fTRB.GetObject(); }
-  const JPetPM & getTRefPM()const{ return (JPetPM&)*fPM.GetObject(); }
+  const JPetFEB & getFEB()const{ return (JPetFEB&)*fFEB.GetObject(); }
+  const JPetTRB & getTRB()const{ return (JPetTRB&)*fTRB.GetObject(); }
+  const JPetPM & getPM()const{ return (JPetPM&)*fPM.GetObject(); }
   float getThreshold()const{ return fThreshold; }
   unsigned int getChannel()const{ return fChannel; }
 

@@ -67,7 +67,7 @@ public:
     return (JPetTRB&)*fTRefTRBs.GetObject(); 
   }
   
-  void setTRefTRB(JPetTRB &p_TRB)
+  void setTRB(JPetTRB &p_TRB)
   {
     fTRefTRBs = &p_TRB;
   }

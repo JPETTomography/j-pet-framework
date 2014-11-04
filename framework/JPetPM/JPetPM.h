@@ -40,10 +40,10 @@ class JPetPM: public TNamed
 
   const JPetFEB & getFEB() { return (JPetFEB&)*(fTRefFEB.GetObject()); }
   
-  void setTRefScin(JPetScin &p_scin){ fTRefScin = &p_scin; }
+  void setScin(JPetScin &p_scin){ fTRefScin = &p_scin; }
   JPetScin & getScin() const { return (JPetScin&)*(fTRefScin.GetObject()); }
 
-  void setTRefFEB(JPetFEB &p_FEB)
+  void setFEB(JPetFEB &p_FEB)
   {
     fTRefFEB = &p_FEB;
   }
