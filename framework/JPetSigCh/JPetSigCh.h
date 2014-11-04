@@ -57,7 +57,7 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
 
   inline void setPM(const JPetPM & pm) { fPM = const_cast<JPetPM*>(&pm); }
   inline void setTRB(const JPetTRB & trb) { fTRB = const_cast<JPetTRB*>(&trb); }
-      inline void setFEB(const JPetFEB & feb) { fFEB = const_cast<JPetFEB*>(&feb); }
+  inline void setFEB(const JPetFEB & feb) { fFEB = const_cast<JPetFEB*>(&feb); }
   // Set time wrt beginning of TSlot [ps] or charge
   inline void setValue( float val ) { fValue = val; }
   inline void setType( EdgeType type ) { fType = type; }

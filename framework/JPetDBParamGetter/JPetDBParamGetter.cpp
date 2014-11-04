@@ -416,7 +416,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
 
             if (l_FEB_id == l_KonradBoard_id) {
 //              ((JPetPM*)fPMs[l_PM_index])->setTRefFEB( *((JPetFEB*)fFEBs[l_FEB_index]) );
-              paramBank.getPM(l_PM_index).setTRefFEB(paramBank.getFEB(l_FEB_index) );
+              paramBank.getPM(l_PM_index).setFEB(paramBank.getFEB(l_FEB_index) );
             }
           }
         }
@@ -450,7 +450,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
             int l_ScinId = paramBank.getScintillator(l_scin_index).getID();
 
             if (l_scin_id == l_ScinId) {
-              paramBank.getPM(l_PM_index).setTRefScin(paramBank.getScintillator(l_scin_index) );
+              paramBank.getPM(l_PM_index).setScin(paramBank.getScintillator(l_scin_index) );
             }
           }
         }
@@ -501,7 +501,7 @@ void JPetDBParamGetter::fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBa
 
             if (l_TRBId == l_TRB_id) {
               // ((JPetFEB*)fFEBs[l_FEB_index])->setTRefTRB( *((JPetTRB*)fTRBs[l_TRB_index]) );
-              paramBank.getFEB(l_FEB_index).setTRefTRB( paramBank.getTRB(l_TRB_index));
+              paramBank.getFEB(l_FEB_index).setTRB( paramBank.getTRB(l_TRB_index));
             }
           }
         }
@@ -605,7 +605,7 @@ void JPetDBParamGetter::fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank&
 	      l_trb_index++)
 	    {
 	      if( paramBank.getTRB(l_trb_index).getID() == l_TRB_id ){
-		paramBank.getTOMBChannel(tombch_index).setTRefTRB( paramBank.getTRB(l_trb_index) );
+		paramBank.getTOMBChannel(tombch_index).setTRB( paramBank.getTRB(l_trb_index) );
 	      }
 	    }
 
@@ -615,7 +615,7 @@ void JPetDBParamGetter::fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank&
 	      l_feb_index++)
 	    {
 	      if( paramBank.getFEB(l_feb_index).getID() == l_FEB_id ){
-		paramBank.getTOMBChannel(tombch_index).setTRefFEB( paramBank.getFEB(l_feb_index) );
+		paramBank.getTOMBChannel(tombch_index).setFEB( paramBank.getFEB(l_feb_index) );
 	      }
 	    }
 
@@ -625,7 +625,7 @@ void JPetDBParamGetter::fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank&
 	      l_pm_index++)
 	    {
 	      if( paramBank.getPM(l_pm_index).getID() == l_PM_id ){
-		paramBank.getTOMBChannel(tombch_index).setTRefPM( paramBank.getPM(l_pm_index) );
+		paramBank.getTOMBChannel(tombch_index).setPM( paramBank.getPM(l_pm_index) );
 	      }
 	    }
 
