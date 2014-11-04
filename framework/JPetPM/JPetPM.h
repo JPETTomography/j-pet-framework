@@ -76,7 +76,7 @@ class JPetPM: public TNamed
   int fHVopt;
   std::pair<float, float> fHVgain;
 
-  ClassDef(JPetPM, 1);
+  ClassDef(JPetPM, 2);
   
 protected:
   TRef fTRefFEB;

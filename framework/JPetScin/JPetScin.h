@@ -56,7 +56,7 @@ class JPetScin: public TNamed
   int fID;
   float fAttenLen;  /// attenuation length
   ScinDimensions fScinSize; /// @todo check if there is no problem with the ROOT dictionnary
-  ClassDef(JPetScin, 1);
+  ClassDef(JPetScin, 2);
   
 protected:
   /*
