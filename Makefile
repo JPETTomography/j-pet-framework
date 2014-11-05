@@ -4,7 +4,7 @@ LD    = $(CC)
 COPTS    = `root-config --cflags` -fPIC
 LDOPTS    = `root-config --glibs`
 DEBUG = -g
-LD_BOOST_FLAGS = -lboost_program_options -lboost_filesystem -lboost_system  
+LD_BOOST_FLAGS = -lboost_program_options -lboost_filesystem -lboost_system -lboost_regex  
 LDOPTS	+= $(LD_BOOST_FLAGS)
 LDOPTS	+= $(DEBUG)
 ################

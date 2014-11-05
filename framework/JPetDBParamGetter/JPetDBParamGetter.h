@@ -53,5 +53,7 @@ private:
   void fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillAllTRefs(const int p_run_id, JPetParamBank& paramBank);
 
+  int getTOMBChannelFromDescription(std::string p_desc) const;
+
 };
 #endif /*  !JPETDBPARAMGETTER_H */
