@@ -1728,7 +1728,8 @@ $BODY$ LANGUAGE plpgsql STABLE;
 CREATE OR REPLACE FUNCTION getEverythingVsTOMB(p_run_id INTEGER)
 RETURNS TABLE
 (
-  tomb INTEGER,
+  tomb CHARACTER VARYING(255),
+  trb_portnumber INTEGER,
   trb_id INTEGER,
   konradboard_id INTEGER,
   photomultiplier_id INTEGER,
@@ -1739,6 +1740,7 @@ $BODY$
 BEGIN
   FOR
     tomb,
+    trb_portnumber,
     trb_id,
     konradboard_id,
     photomultiplier_id,
@@ -1746,7 +1748,8 @@ BEGIN
     slot_id
   IN
        SELECT
-                "TRBOutput".portnumber AS tomb,
+		"TOMBInput".description AS tomb,
+                "TRBOutput".portnumber AS trb_portnumber,
                 "TRB".id AS trb_id,
                 "KonradBoard".id AS konradboard_id,
                 "PhotoMultiplier".id AS photomultiplier_id,
@@ -1754,7 +1757,7 @@ BEGIN
                 "HVPMConnection".slot_id AS slot_id
         FROM "Run", "TRBInput", "KBTRBConnection", "TRB", "TRBOutput",
         "KonradBoardOutput", "KonradBoard", "KonradBoardInput",
-        "PMKBConnection", "PhotoMultiplier", "TRBConfigEntry", "HVPMConnection"
+        "PMKBConnection", "PhotoMultiplier", "TRBConfigEntry", "HVPMConnection", "TRBTOMBConnection", "TOMBInput"
         WHERE
                 "Run".id = p_run_id
                 AND
@@ -1787,6 +1790,12 @@ BEGIN
 		"HVPMConnection".setup_id = "Run".setup_id
 		AND
 		"HVPMConnection".photomultiplier_id = "PhotoMultiplier".id
+		AND
+		"TRBOutput".id = "TRBTOMBConnection".trboutput_id
+		AND
+		"TRBTOMBConnection".setup_id = "Run".setup_id
+		AND
+		"TRBTOMBConnection".tombinput_id = "TOMBInput".id
 	  LOOP
     RETURN NEXT;
   END LOOP;
