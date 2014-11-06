@@ -109,7 +109,7 @@ class JPetSignal: public TNamed
   inline void setTSlotIndex( int index ){ fTSlotIndex = index; }
   inline int getTSlotIndex()const{ return fTSlotIndex; }
 
-  inline void setPM(JPetPM & pm) { fPM = &pm; }
+  inline void setPM(const JPetPM & pm) { fPM = const_cast<JPetPM*>(&pm); }
   inline void setBarrelSlot(JPetBarrelSlot & bs) { fBarrelSlot = &bs; }
   inline const JPetPM & getPM() const { return (JPetPM&)*fPM.GetObject(); }
   inline const JPetBarrelSlot & getBarrelSlot() const { return (JPetBarrelSlot&)*fBarrelSlot.GetObject(); }
