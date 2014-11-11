@@ -42,8 +42,8 @@ BOOST_AUTO_TEST_CASE (open_file)
   BOOST_CHECK_EQUAL(reader.fSegmentSize, 502);
 
   JPetSignal* sig = reader.ReadData();
-  int points  = sig->GetNumberOfSetLeadingEdgePoints();
-      points += sig->GetNumberOfSetTrailingEdgePoints();
+  int points  = sig->getNumberOfSetLeadingEdgePoints();
+      points += sig->getNumberOfSetTrailingEdgePoints();
 
   BOOST_CHECK_EQUAL(points, 502);
 

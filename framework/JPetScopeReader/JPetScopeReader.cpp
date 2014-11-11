@@ -107,12 +107,12 @@ JPetSignal* JPetScopeReader::ReadData() {
     
     fInputFile >> value >> threshold;
 
-    sigCh.SetValue(value * 1000000000000); // file holds time in seconds, while SigCh requires it in picoseconds
-    sigCh.SetThreshold(threshold * 1000);  // file holds thresholds in volts, while SigCh requires it in milivolts
-    if (i < fSegmentSize/2) sigCh.SetType(JPetSigCh::EdgeType::Leading);
-    else sigCh.SetType(JPetSigCh::EdgeType::Trailing);
+    sigCh.setValue(value * 1000000000000); // file holds time in seconds, while SigCh requires it in picoseconds
+    sigCh.setThreshold(threshold * 1000);  // file holds thresholds in volts, while SigCh requires it in milivolts
+    if (i < fSegmentSize/2) sigCh.setType(JPetSigCh::EdgeType::Leading);
+    else sigCh.setType(JPetSigCh::EdgeType::Trailing);
 
-    sig->AddPoint(sigCh);
+    sig->addPoint(sigCh);
   }
 
   return sig;
