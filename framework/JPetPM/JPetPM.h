@@ -5,6 +5,9 @@
 #include <utility>
 #include <TRef.h>
 #include "../JPetFEB/JPetFEB.h"
+#include "../JPetScin/JPetScin.h"
+
+class JPetScin;
 
 /**
  * @brief Parametric class representing database information on parameters of a photomultiplier.
@@ -13,10 +16,15 @@
 class JPetPM: public TNamed 
 {
  public:
-  enum Side {kLeft, kRight};
+  enum Side {SideA, SideB};
   enum GainNumber {kFirst, kSecond};
 
   JPetPM();
+  JPetPM(Side side,
+	 int id,
+	 int HVset,
+	 int HVopt,
+	 std::pair<float, float> HVgainNumber);
   inline Side getSide() const { return fSide; }
   inline int getID() const { return fID; }
   inline int getHVset() const { return fHVset; }
@@ -30,11 +38,14 @@ class JPetPM: public TNamed
   inline void setHVgain(float g1, float g2) { fHVgain.first = g1; fHVgain.second = g2; }
   inline void setHVgain(const std::pair<float,float>& gain) { fHVgain = gain; }
 
-  JPetFEB* getTRefKB() { return (JPetFEB*)fTRefKBs.GetObject(); }
+  const JPetFEB & getFEB() { return (JPetFEB&)*(fTRefFEB.GetObject()); }
   
-  void setTRefKB(JPetFEB &p_KB)
+  void setScin(JPetScin &p_scin){ fTRefScin = &p_scin; }
+  JPetScin & getScin() const { return (JPetScin&)*(fTRefScin.GetObject()); }
+
+  void setFEB(JPetFEB &p_FEB)
   {
-    fTRefKBs = &p_KB;
+    fTRefFEB = &p_FEB;
   }
   
   /*std::vector<TRef> getTRefKBs() const { return fTRefKBs; }
@@ -65,14 +76,15 @@ class JPetPM: public TNamed
   int fHVopt;
   std::pair<float, float> fHVgain;
 
-  ClassDef(JPetPM, 1);
+  ClassDef(JPetPM, 2);
   
 protected:
-  TRef fTRefKBs;
-  
-  void clearTRefKBs()
+  TRef fTRefFEB;
+  TRef fTRefScin;
+
+  void clearTRefFEBs()
   {
-    fTRefKBs = NULL;
+    fTRefFEB = NULL;
   }
   
   /*std::vector<TRef> fTRefKBs;

@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetPM pm;
   float epsilon = 0.0001; 
-  BOOST_REQUIRE_EQUAL(pm.getSide(), JPetPM::kLeft);
+  BOOST_REQUIRE_EQUAL(pm.getSide(), JPetPM::SideA);
   BOOST_REQUIRE_EQUAL(pm.getID(), 0);
   BOOST_REQUIRE_EQUAL(pm.getHVset(), 0);
   BOOST_REQUIRE_EQUAL(pm.getHVopt(), 0);

@@ -4,7 +4,7 @@ LD    = $(CC)
 COPTS    = `root-config --cflags` -fPIC
 LDOPTS    = `root-config --glibs`
 DEBUG = -g
-LD_BOOST_FLAGS = -lboost_program_options -lboost_filesystem -lboost_system  
+LD_BOOST_FLAGS = -lboost_program_options -lboost_filesystem -lboost_system -lboost_regex  
 LDOPTS	+= $(LD_BOOST_FLAGS)
 LDOPTS	+= $(DEBUG)
 ################
@@ -13,7 +13,7 @@ UNPACKER_LIB = Unpacker2
 ################
 SRC_DIR = $(PWD)/framework
 #Modules that should have ROOT dictionnaries
-DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot JPetUnpacker JPetFrame JPetFEB JPetLayer JPetSetup JPetSlot JPetTOMBChannel JPetUser JPetTreeHeader JPetParamBank
+DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot JPetUnpacker JPetFrame JPetFEB JPetLayer JPetSetup JPetSlot JPetTOMBChannel JPetUser JPetTreeHeader JPetParamBank JPetPMCalib
 DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader JPetScopeReader
 WRITERS = JPetWriter
