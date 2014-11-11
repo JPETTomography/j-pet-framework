@@ -8,24 +8,22 @@
 /// @todo update the method list - tests are outdated
 //  JPetSigCh() { init(); }
 //  JPetSigCh(EdgeType Edge, float EdgeTime);
-//  bool IsCharge() const;
-//  bool IsTime() const;
-//  inline float GetValue() const { return fValue; }
-//  inline EdgeType GetType() const { return fType; }
-//  inline JPetPM * GetPM() const { return (JPetPM*) fPM.GetObject(); }
-//  inline JPetTRB * GetTRB() const {return (JPetTRB*) fTRB.GetObject(); }
-//  inline JPetFEB * GetFEB() const {return (JPetFEB*) fFEB.GetObject(); }
-//  inline void SetPM(JPetPM * pm) { fPM = pm; }
-//  inline void SetTRB(JPetTRB * trb) { fTRB = trb; }
-//  inline void SetFEB(JPetFEB * feb) { fFEB= feb; }
-//  inline void SetValue( float val ) { fValue = val; }
-//  inline void SetType( EdgeType type ) { fType = type; }
-//  inline void SetPMID( Int_t pmid ) { fPMID = pmid; }
-//  inline void SetThreshold( float thr ) { fThreshold = thr; }
-//  inline void SetDAQch( Int_t daqch ) { fDAQch = daqch; }
-//  inline Int_t GetPMID() const { return fPMID; }
-//  inline float GetThreshold() const { return fThreshold; }
-//  inline Int_t GetDAQch() const { return fDAQch; }
+//  bool isCharge() const;
+//  bool isTime() const;
+//  inline float getValue() const { return fValue; }
+//  inline EdgeType getType() const { return fType; }
+//  inline JPetPM * getPM() const { return (JPetPM*) fPM.GetObject(); }
+//  inline JPetTRB * getTRB() const {return (JPetTRB*) fTRB.GetObject(); }
+//  inline JPetFEB * getFEB() const {return (JPetFEB*) fFEB.GetObject(); }
+//  inline void setPM(JPetPM * pm) { fPM = pm; }
+//  inline void setTRB(JPetTRB * trb) { fTRB = trb; }
+//  inline void setFEB(JPetFEB * feb) { fFEB= feb; }
+//  inline void setValue( float val ) { fValue = val; }
+//  inline void setType( EdgeType type ) { fType = type; }
+//  inline void setThreshold( float thr ) { fThreshold = thr; }
+//  inline void setDAQch( Int_t daqch ) { fDAQch = daqch; }
+//  inline float getThreshold() const { return fThreshold; }
+//  inline Int_t getDAQch() const { return fDAQch; }
 //  Int_t Compare(const TObject* obj) const;
 //  inline Bool_t IsSortable() const { return true; }
 
@@ -35,11 +33,11 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( first )
 {
   JPetSigCh test;
-  BOOST_REQUIRE_EQUAL(test.IsCharge(), 0);
-  BOOST_REQUIRE_EQUAL(test.IsTime(), 1);
-  BOOST_REQUIRE_EQUAL(test.GetValue(), JPetSigCh::kUnset);
-  BOOST_REQUIRE_EQUAL(test.GetType(), JPetSigCh::Leading);
-  BOOST_REQUIRE_EQUAL(test.GetThreshold(), JPetSigCh::kUnset);
+  BOOST_REQUIRE_EQUAL(test.isCharge(), 0);
+  BOOST_REQUIRE_EQUAL(test.isTime(), 1);
+  BOOST_REQUIRE_EQUAL(test.getValue(), JPetSigCh::kUnset);
+  BOOST_REQUIRE_EQUAL(test.getType(), JPetSigCh::Leading);
+  BOOST_REQUIRE_EQUAL(test.getThreshold(), JPetSigCh::kUnset);
 }
 
 BOOST_AUTO_TEST_CASE( second )
@@ -52,26 +50,26 @@ BOOST_AUTO_TEST_CASE( second )
   float thr_test = 210.043;
   float time_test = 1.2345;
 
-  test.SetPM(&pm_test);
-  test.SetTRB(&trb_test);
-  test.SetFEB(&feb_test);
-  test.SetThreshold(thr_test);
-  test.SetType(JPetSigCh::Leading);
-  test.SetValue(time_test);
+  test.setPM(pm_test);
+  test.setTRB(trb_test);
+  test.setFEB(feb_test);
+  test.setThreshold(thr_test);
+  test.setType(JPetSigCh::Leading);
+  test.setValue(time_test);
   
-  BOOST_REQUIRE_EQUAL(test.IsTime(), 1);
-  BOOST_REQUIRE_EQUAL(test.IsCharge(), 0);
-  BOOST_REQUIRE_CLOSE(test.GetValue(), time_test, epsilon);
-  BOOST_REQUIRE_EQUAL(test.GetType(), JPetSigCh::Leading);
+  BOOST_REQUIRE_EQUAL(test.isTime(), 1);
+  BOOST_REQUIRE_EQUAL(test.isCharge(), 0);
+  BOOST_REQUIRE_CLOSE(test.getValue(), time_test, epsilon);
+  BOOST_REQUIRE_EQUAL(test.getType(), JPetSigCh::Leading);
   
   JPetSigCh test2(test);
   
-  BOOST_REQUIRE_EQUAL(test.GetPM()->getID(), test2.GetPM()->getID());
-  BOOST_REQUIRE_EQUAL(test.GetTRB()->getID(), test2.GetTRB()->getID());
-  BOOST_REQUIRE_EQUAL(test.GetFEB()->id(), test2.GetFEB()->id());
-  BOOST_REQUIRE_EQUAL(test.GetType(), test2.GetType());
-  BOOST_REQUIRE_CLOSE(test.GetValue(), test2.GetValue(), epsilon);
-  BOOST_REQUIRE_CLOSE(test.GetThreshold(), test2.GetThreshold(), epsilon);
+  BOOST_REQUIRE_EQUAL(test.getPM().getID(), test2.getPM().getID());
+  BOOST_REQUIRE_EQUAL(test.getTRB().getID(), test2.getTRB().getID());
+  BOOST_REQUIRE_EQUAL(test.getFEB().getID(), test2.getFEB().getID());
+  BOOST_REQUIRE_EQUAL(test.getType(), test2.getType());
+  BOOST_REQUIRE_CLOSE(test.getValue(), test2.getValue(), epsilon);
+  BOOST_REQUIRE_CLOSE(test.getThreshold(), test2.getThreshold(), epsilon);
 }
 
 BOOST_AUTO_TEST_CASE( third )
@@ -79,8 +77,8 @@ BOOST_AUTO_TEST_CASE( third )
   JPetSigCh test;
   JPetSigCh test2;
  
-  test.SetThreshold(  1.2345 );
-  test2.SetThreshold( 2.3456 );
+  test.setThreshold(  1.2345 );
+  test2.setThreshold( 2.3456 );
   
   BOOST_REQUIRE_EQUAL(test.IsSortable(), 1);
   BOOST_REQUIRE_EQUAL(test2.IsSortable(), 1);

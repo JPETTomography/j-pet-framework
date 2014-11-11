@@ -11,6 +11,7 @@ ClassImp (JPetParamBank);
 JPetParamBank::JPetParamBank():
   fScintillators("JPetScin", 100),
   fPMs("JPetPM", 100),
+  fPMCalibs("JPetPMCalib", 100),
   fFEBs("JPetFEB", 100),
   fTRBs("JPetTRB", 100),
   fBarrelSlots("JPetBarrelSlot", 100),
@@ -23,6 +24,7 @@ void JPetParamBank::clear()
 {
   fScintillators.Clear();
   fPMs.Clear();
+  fPMCalibs.Clear();
   fFEBs.Clear();
   fTRBs.Clear();
   fBarrelSlots.Clear();
@@ -30,28 +32,31 @@ void JPetParamBank::clear()
 }
 
 
-int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const
+int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const 
 {
-  int size = -1;
+  int size =-1;
   switch (type) {
-  case kScintillator:
-    size = getScintillatorsSize();
-    break;
-  case kFEB:
-    size = getFEBsSize();
-    break;
-  case kTRB:
-    size = getTRBsSize();
-    break;
-  case kTOMBChannel:
-    size = getTOMBChannelsSize();
-    break;
-  case kBarrelSlot:
-    size = getBarrelSlotsSize();
-    break;
-  default:
-    ERROR("bad type");
-    break;
+    case kScintillator:
+      size = getScintillatorsSize();
+      break;
+    case kPM:
+      size = getPMsSize();
+      break;
+    case kPMCalib:
+      size = getPMCalibsSize();
+      break;
+    case kFEB:
+      size = getFEBsSize();
+      break;
+    case kTRB:
+      size = getTRBsSize();
+      break;
+    case kTOMBChannel:
+      size = getTOMBChannelsSize();
+      break;
+    default:
+      ERROR("bad type");
+      break;
   }
-  return size;
+  return size; 
 }

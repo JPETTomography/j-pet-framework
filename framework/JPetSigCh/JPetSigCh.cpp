@@ -26,14 +26,14 @@ JPetSigCh::JPetSigCh(EdgeType Edge, float EdgeTime)
 
 }
 
-bool JPetSigCh::IsCharge() const{
+bool JPetSigCh::isCharge() const{
   if( fType == Charge ){
     return true;
   }
   return false;
 }
 
-bool JPetSigCh::IsTime() const{
+bool JPetSigCh::isTime() const{
   if( fType == Trailing || fType == Leading ){
     return true;
   }
@@ -48,10 +48,10 @@ Int_t JPetSigCh::Compare(const TObject* obj) const{
 
   JPetSigCh * that = (JPetSigCh*)obj;
 
-  if( that->GetThreshold() > this->GetThreshold() ){
+  if( that->getThreshold() > this->getThreshold() ){
     //  if( that->GetValue() > this->GetValue() ){
     return -1;
-  }else if( that->GetThreshold() < this->GetThreshold() ){
+  }else if( that->getThreshold() < this->getThreshold() ){
     //}else if( that->GetValue() < this->GetValue() ){
     return 1;
   }

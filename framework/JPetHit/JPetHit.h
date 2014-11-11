@@ -28,79 +28,75 @@ class JPetTSlot;
 /**
  * @brief Data class representing a reconstructed hit of a photon in the scintillator strip.
  *
- * It contains two objects of type JPetSignal ("left" and "right") which represent signals at two ends of a scintillator strip, from which the hit was reconstructed.
+ * It contains two objects of type JPetSignal (from "Side A" and "Side B" of the Barrel) which represent signals at two ends of a scintillator strip, from which the hit was reconstructed.
  */
 class JPetHit : public TNamed {
 
   public:
   
-  //typedef std::pair<JPetSignal*,JPetSignal*> JPetSignals;
-  enum Signal {kLeft,kRight};
+  enum Signal {SideA,SideB};
   
   JPetHit();
   JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime, TVector3& Position, 
-          JPetSignal& LeftSignal, JPetSignal& RightSignal, JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator);
+          JPetSignal& SignalA, JPetSignal& SignalB, JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator);
   virtual ~JPetHit();
   /// Returns the reconstructed energy of this hit [keV]
-  inline const float GetEnergy() const {return fEnergy;}
+  inline const float getEnergy() const {return fEnergy;}
   /// Returns a quantitative measure of the hit energy reconstruction quality
-  inline const float GetQualityOfEnergy() const {return fQualityOfEnergy;}
+  inline const float getQualityOfEnergy() const {return fQualityOfEnergy;}
   /// Returns the absolute time reconstructed for this hit [ps]
-  inline const float GetTime() const {return fTime;}
-  /// Returns the reconstructed time difference between signals on two ends of scintillator (difference "left" - "right") 
-  inline const float GetTimeDiff() const {return fTimeDiff;}
+  inline const float getTime() const {return fTime;}
+  /// Returns the reconstructed time difference between signals on two ends of scintillator (difference "Side A" - "Side B") 
+  inline const float getTimeDiff() const {return fTimeDiff;}
   /// Returns a quantitative measure of the hit time reconstruction quality
-  inline const float GetQualityOfTime() const {return fQualityOfTime;}
+  inline const float getQualityOfTime() const {return fQualityOfTime;}
+  inline const float getQualityOfTimeDiff() const {return fQualityOfTimeDiff;}
   /**
    * @brief Returns the 1-dim position of the hit along the scintillator
    *
-   * @return position along the strip in cm, measured from the "left" end of the strip.
+   * @return position along the strip in cm, measured from the "Side A" end of the strip.
    */
-  inline const float GetPosAlongStrip() const {return fPosAlongStrip;}
-  inline const float GetPosX() const {return fPos.X();}
-  inline const float GetPosY() const  {return fPos.Y();}
-  inline const float GetPosZ() const  {return fPos.Z();}
-  inline const float GetPos (int index) const {return fPos(index);}
-  inline const TVector3& GetPos() const {return fPos;}
-  inline const JPetSignal& GetSignal(Signal pos) const {
-                     if(pos==kLeft) return fLeftSignal;
-		     else return fRightSignal;}
-  inline const JPetSignal& GetLeftSignal() const {return fLeftSignal;}
-  inline const JPetSignal& GetRightSignal() const {return fRightSignal;}
-  //inline const JPetSignals& GetSignals() const {return *fSignals;};
-  inline JPetScin * GetScintillator() const {return (JPetScin*)fScintillator.GetObject();}
-  inline const JPetBarrelSlot * GetBarrelSlot() const {return (JPetBarrelSlot*)fBarrelSlot.GetObject();}
+  inline const float getPosAlongStrip() const {return fPosAlongStrip;}
+  inline const float getPosX() const {return fPos.X();}
+  inline const float getPosY() const  {return fPos.Y();}
+  inline const float getPosZ() const  {return fPos.Z();}
+  inline const float getPos(int index) const {return fPos(index);}
+  inline const TVector3& getPos() const {return fPos;}
+  inline const JPetSignal& getSignal(Signal pos) const {
+                     if(pos==SideA) return fSignalA;
+		     else return fSignalB;}
+  inline const JPetSignal& getSignalA() const {return fSignalA;}
+  inline const JPetSignal& getSignalB() const {return fSignalB;}
+
+  inline const JPetScin& getScintillator() const {return (JPetScin&)*fScintillator.GetObject();}
+  inline const JPetBarrelSlot& getBarrelSlot() const {return (JPetBarrelSlot&)*fBarrelSlot.GetObject();}
 
   /// Sets the reconstructed energy of the hit [keV]
-  inline void SetEnergy(float energy) {fEnergy = energy;}
-  inline void SetQualityOfEnergy(float qualityOfEnergy) {fQualityOfEnergy = qualityOfEnergy;}
+  inline void setEnergy(float energy) {fEnergy = energy;}
+  inline void setQualityOfEnergy(float qualityOfEnergy) {fQualityOfEnergy = qualityOfEnergy;}
   /// Sets the reconstructed time of the hit into scintillator [ps]
-  inline void SetTime(float time) {fTime = time;}
-  inline void SetQualityOfTime(float qualityOfTime) {fQualityOfTime = qualityOfTime;}
-  /// Sets the reconstructed time difference between two signals at ends of the scintillator (difference "left" - "right") [ps]
-  inline void SetTimeDiff(float td) {fTimeDiff = td;}
-  inline void SetQualityOfTimeDiff(float qtd) {fQualityOfTime = qtd;}
+  inline void setTime(float time) {fTime = time;}
+  inline void setQualityOfTime(float qualityOfTime) {fQualityOfTime = qualityOfTime;}
+  /// Sets the reconstructed time difference between two signals at ends of the scintillator (difference "Side A" - "Side B") [ps]
+  inline void setTimeDiff(float td) {fTimeDiff = td;}
+  inline void setQualityOfTimeDiff(float qtd) {fQualityOfTimeDiff = qtd;}
   /**
    * @brief Sets the 1-dim position of the hit along the scintillator
    *
-   * The position should be in cm, measured from the "left" end of the strip. This value should be set after calculation of the position using the time difference of the two signals.
+   * The position should be in cm, measured from the "A Side" end of the strip. This value should be set after calculation of the position using the time difference of the two signals.
    */
-  inline void SetPosAlongStrip(float pos) {fPosAlongStrip = pos;}
-  inline void SetPosX(float x) {fPos.SetX(x);}
-  inline void SetPosY(float y) {fPos.SetY(y);}
-  inline void SetPosZ(float z) {fPos.SetZ(z);}
-  inline void SetPos (float x,float y,float z) {fPos.SetXYZ(x,y,z);}
-  //inline void SetSignals (JPetSignals* signals) {fSignals = signals;};
-  //inline void SetSignals (JPetSignals& signals) {fSignals = &signals;};
-  inline void SetSignals (JPetSignal & leftSignal, JPetSignal & rightSignal) {
-              fLeftSignal = leftSignal;
-	      fRightSignal = rightSignal;}
-  inline void SetLeftSignal(JPetSignal LeftSignal) {fLeftSignal=LeftSignal;}
-  inline void SetRightSignal(JPetSignal RightSignal) {fRightSignal=RightSignal;}
-  //inline const JPetSignals& GetSignals() const {return *fSignals;};
-  //inline void SetScintillator(TRef fScintillator) {fScintillator=Scintillator;}
-  inline void SetBarrelSlot(JPetBarrelSlot* bs) {fBarrelSlot = bs;}
-  inline void SetScintillator(JPetScin* sc) {fScintillator = sc;}
+  inline void setPosAlongStrip(float pos) {fPosAlongStrip = pos;}
+  inline void setPosX(float x) {fPos.SetX(x);}
+  inline void setPosY(float y) {fPos.SetY(y);}
+  inline void setPosZ(float z) {fPos.SetZ(z);}
+  inline void setPos (float x,float y,float z) {fPos.SetXYZ(x,y,z);}
+  inline void setSignals (JPetSignal & p_sigA, JPetSignal & p_sigB) {
+              fSignalA = p_sigA;
+	      fSignalB = p_sigB;}
+  inline void setSignalA(JPetSignal & p_sig) {fSignalA=p_sig;}
+  inline void setSignalB(JPetSignal & p_sig) {fSignalB=p_sig;}
+  inline void setBarrelSlot(JPetBarrelSlot& bs) {fBarrelSlot = &bs;}
+  inline void setScintillator(JPetScin& sc) {fScintillator = &sc;}
 
   ClassDef(JPetHit,1);
   
@@ -112,10 +108,10 @@ class JPetHit : public TNamed {
   float fQualityOfTime;
   float fTimeDiff; ///< reconstructed time difference between signals at two ends of scintillator [ps]
   float fQualityOfTimeDiff;
-  float fPosAlongStrip; ///< reconstructed position along scintillator strip (from "left" to "right") [cm]
+  float fPosAlongStrip; ///< reconstructed position along scintillator strip (from "Side A" to "Side B") [cm]
   TVector3 fPos;
-  JPetSignal fLeftSignal;
-  JPetSignal fRightSignal;
+  JPetSignal fSignalA;
+  JPetSignal fSignalB;
 
   // references to parametric objects
   TRef fBarrelSlot; ///< BarrelSlot in which the hit was recorded
