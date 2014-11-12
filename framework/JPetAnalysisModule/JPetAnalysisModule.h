@@ -33,7 +33,7 @@ class JPetAnalysisModule: public TNamed {
   virtual void CreateInputObjects(const char* inputFilename=0)=0; //
   virtual void CreateOutputObjects(const char* outputFilename=0)=0; //
   virtual void Exec()=0; // called for every event
-  virtual long long GetEventNb()=0;
+  virtual long long GetEventNb()const=0;
   virtual void RunSubmodules();
   virtual void Terminate()=0; // called once when analysis terminates
 
