@@ -525,7 +525,7 @@ void JPetDBParamGetter::fillAllTRefs(const int p_run_id, JPetParamBank& paramBan
      ) {
     fillPMsTRefs(p_run_id, paramBank);
     fillFEBsTRefs(p_run_id, paramBank);
-    fillTRBsTRefs(p_run_id, paramBank);
+    //fillTRBsTRefs(p_run_id, paramBank);
     fillTOMBChannelsTRefs(p_run_id, paramBank);
   } else {
     ERROR("Containers are empty.");
