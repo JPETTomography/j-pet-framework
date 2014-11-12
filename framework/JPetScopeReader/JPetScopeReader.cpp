@@ -7,49 +7,49 @@
 
 #include "./JPetScopeReader.h"
 
-#include <sstream>
+//#include <sstream>
 
 #include "../JPetSignal/JPetSignal.h"
 #include "../../JPetLoggerInclude.h"
 
-JPetScopeReader::JPetScopeReader(): fInputFile(), fScopeType(), fDate(), fIsFileOpened(false), fSegments(0), fSegmentSize(0) {
+JPetScopeReader::JPetScopeReader(): fInputFile(), fScopeType(), fDate(), fIsFileOpen(false), fSegments(0), fSegmentSize(0) {
 }
 
-JPetScopeReader::JPetScopeReader(const char* filename): fInputFile(), fScopeType(), fDate(), fIsFileOpened(false), fSegments(0), fSegmentSize(0) {
-  OpenFile(filename);
-  ReadHeader();
+JPetScopeReader::JPetScopeReader(const char* filename): fInputFile(), fScopeType(), fDate(), fIsFileOpen(false), fSegments(0), fSegmentSize(0) {
+  openFile(filename);
+  readHeader();
 }
 
 JPetScopeReader::~JPetScopeReader() {
 }
 
-void JPetScopeReader::OpenFile(const char* filename) {
+void JPetScopeReader::openFile(const char* filename) {
   
-  if (fIsFileOpened) CloseFile();
+  if (fIsFileOpen) closeFile();
 
   fInputFile.open(filename);
 
   if (fInputFile.is_open()) {
-    fIsFileOpened = true;
+    fIsFileOpen = true;
   } else {
     ERROR("Error: cannot open file");
   }
 }
 
-void JPetScopeReader::CloseFile() {
-  if (fIsFileOpened) {
+void JPetScopeReader::closeFile() {
+  if (fIsFileOpen) {
     fInputFile.close();
-    fIsFileOpened = false;
+    fIsFileOpen = false;
     fSegmentSize = 0;
   }
 }
 
-void JPetScopeReader::ReadHeader() {
+void JPetScopeReader::readHeader() {
 
 //  std::stringstream buf;
   std::string tmp;
 
-  if (fIsFileOpened) {
+  if (fIsFileOpen) {
 
 //    getline(fInputFile, tmp); buf << tmp;
 //    buf >> fScopeType;
@@ -95,7 +95,7 @@ void JPetScopeReader::ReadHeader() {
   
 }
 
-JPetSignal* JPetScopeReader::ReadData() {
+JPetSignal* JPetScopeReader::readData() {
   
   JPetSignal* sig = new JPetSignal();
 
@@ -103,16 +103,16 @@ JPetSignal* JPetScopeReader::ReadData() {
 
   for (int i = 0; i < fSegmentSize; ++i) {
     
-    JPetSigCh sigCh;
+    JPetSigCh* sigCh = new JPetSigCh();
     
     fInputFile >> value >> threshold;
 
-    sigCh.setValue(value * 1000000000000); // file holds time in seconds, while SigCh requires it in picoseconds
-    sigCh.setThreshold(threshold * 1000);  // file holds thresholds in volts, while SigCh requires it in milivolts
-    if (i < fSegmentSize/2) sigCh.setType(JPetSigCh::EdgeType::Leading);
-    else sigCh.setType(JPetSigCh::EdgeType::Trailing);
+    sigCh->setValue(value * 1000000000000); // file holds time in seconds, while SigCh requires it in picoseconds
+    sigCh->setThreshold(threshold * 1000);  // file holds thresholds in volts, while SigCh requires it in milivolts
+    sigCh->setPMID(fPMID);
+    sigCh->setType(JPetSigCh::EdgeType::Leading);
 
-    sig->addPoint(sigCh);
+    sig->addPoint(*sigCh);
   }
 
   return sig;

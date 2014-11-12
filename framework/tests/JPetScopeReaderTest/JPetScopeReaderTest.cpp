@@ -21,7 +21,8 @@ BOOST_AUTO_TEST_CASE (default_constructor)
   JPetScopeReader reader;
 
   BOOST_REQUIRE(reader.fInputFile.is_open() == false);
-  BOOST_REQUIRE(reader.fIsFileOpened == false);
+  BOOST_REQUIRE(reader.fisFileOpen == false);
+
   BOOST_REQUIRE_EQUAL(reader.fSegments, 0);
   BOOST_REQUIRE_EQUAL(reader.fSegmentSize, 0);
 }
@@ -29,25 +30,26 @@ BOOST_AUTO_TEST_CASE (default_constructor)
 BOOST_AUTO_TEST_CASE (open_file)
 {
   JPetScopeReader reader;
-  reader.OpenFile("C1_00000.txt");
+  reader.openFile("C1_00000.txt");
 
   BOOST_REQUIRE(reader.fInputFile.is_open());
   BOOST_REQUIRE(reader.fIsFileOpened);
+
   BOOST_REQUIRE_EQUAL(reader.fSegments, 0);
   BOOST_REQUIRE_EQUAL(reader.fSegmentSize, 0);
 
-  reader.ReadHeader();
+  reader.readHeader();
 
   BOOST_CHECK_EQUAL(reader.fSegments, 1);
   BOOST_CHECK_EQUAL(reader.fSegmentSize, 502);
 
-  JPetSignal* sig = reader.ReadData();
+  JPetSignal* sig = reader.readData();
   int points  = sig->getNumberOfSetLeadingEdgePoints();
       points += sig->getNumberOfSetTrailingEdgePoints();
 
   BOOST_CHECK_EQUAL(points, 502);
 
-  reader.CloseFile();
+  reader.closeFile();
 
   BOOST_REQUIRE(reader.fInputFile.is_open() == false);
   BOOST_REQUIRE(reader.fIsFileOpened == false);
