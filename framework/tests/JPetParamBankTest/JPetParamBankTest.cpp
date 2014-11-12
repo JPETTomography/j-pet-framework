@@ -174,10 +174,10 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   pm3.setID(3);
   pm4.setID(4);
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
-  pm1.setTRefScin(scint1);
-  pm2.setTRefScin(scint1);
-  pm3.setTRefScin(scint2);
-  pm4.setTRefScin(scint2);
+  pm1.setScin(scint1);
+  pm2.setScin(scint1);
+  pm3.setScin(scint2);
+  pm4.setScin(scint2);
 
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
   JPetTRB trb;
