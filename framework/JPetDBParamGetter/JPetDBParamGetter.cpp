@@ -85,7 +85,6 @@ void JPetDBParamGetter::printErrorMessageDB(std::string sqlFunction, int p_run_i
 void JPetDBParamGetter::fillPMs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling PMs container.");
-//  std::string l_sqlQuerry = "SELECT * FROM getDataFromPhotoMultipliers(" + l_run_id + ");";
 
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
   pqxx::result l_runDbResults = getDataFromDB("getDataFromPhotoMultipliers",l_run_id);
@@ -105,7 +104,6 @@ void JPetDBParamGetter::fillPMs(const int p_run_id, JPetParamBank& paramBank)
 void JPetDBParamGetter::fillPMCalibs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling PMCalibs container.");
-//  std::string l_sqlQuerry = "SELECT * FROM getDataFromPhotoMultipliersCalibration(" + l_run_id + ");";
 
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
   pqxx::result l_runDbResults = getDataFromDB("getDataFromPhotoMultipliersCalibration",l_run_id);
@@ -126,7 +124,6 @@ void JPetDBParamGetter::fillFEBs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling FEBs container.");
 
-  //std::string l_sqlQuerry = "SELECT * FROM getDataFromKonradBoards(" + l_run_id + ");";
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
   pqxx::result l_runDbResults = getDataFromDB("getDataFromKonradBoards",l_run_id);
 
@@ -146,8 +143,6 @@ void JPetDBParamGetter::fillTRBs(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling TRBs container.");
 
-
-//  std::string l_sqlQuerry = "SELECT * FROM getDataFromTRBs(" + l_run_id + ");";
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
   pqxx::result l_runDbResults = getDataFromDB("getDataFromTRBs",l_run_id);
 
@@ -240,9 +235,6 @@ JPetPMCalib JPetDBParamGetter::generatePMCalib(pqxx::result::const_iterator row)
   double l_pm_calibration_gainbeta = row["pm_calibration_gainbeta"].as<double>();
   int l_pm_calibration_assignment_id = row["pm_calibration_assignment_id"].as<int>();
   int l_pm_calibration_assignment_photomuliplier_id = row["pm_calibration_assignment_photomuliplier_id"].as<int>();
-
-  // int l_setup_id = row["setup_id"].as<int>();
-  // int l_run_id = row["run_id"].as<int>();
   
   JPetPMCalib l_PMCalib(l_pm_calibration_id,
 			l_pm_calibration_name,
@@ -335,8 +327,6 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
   if (l_PMsSize > 0 && l_FEBsSize > 0) {
 
     for (unsigned int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index) {
-//      ((JPetPM*)fPMs[l_PM_index])->clearTRefFEBs();
-    ///wk!!  paramBank.getPM(l_PM_index).clearTRefKBs();
     std::string pm_id = boost::lexical_cast<std::string>(paramBank.getPM(l_PM_index).getID());
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
     std::string args = pm_id + "," + l_run_id;
@@ -347,16 +337,12 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
 
       if (l_sizeResultQuerry) {
         for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
-	  //   int l_PMFEBConnection_id = row["PMKBConnection_id"].as<int>();
-          // int l_KonradBoardInput_id = row["KonradBoardInput_id"].as<int>();
           int l_KonradBoard_id = row["KonradBoard_id"].as<int>();
 
           for (unsigned int l_FEB_index = 0u; l_FEB_index < l_FEBsSize; ++l_FEB_index) {
-//            int l_FEB_id = ((JPetFEB*)fFEBs[l_FEB_index])->getID();
             int l_FEB_id = paramBank.getFEB(l_FEB_index).getID();
 
             if (l_FEB_id == l_KonradBoard_id) {
-//              ((JPetPM*)fPMs[l_PM_index])->setTRefFEB( *((JPetFEB*)fFEBs[l_FEB_index]) );
               paramBank.getPM(l_PM_index).setFEB(paramBank.getFEB(l_FEB_index) );
             }
           }
@@ -374,8 +360,6 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
   if (l_PMsSize > 0 && l_ScinsSize > 0) {
 
     for (unsigned int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index) {
-//      ((JPetPM*)fPMs[l_PM_index])->clearTRefFEBs();
-    ///wk!!  paramBank.getPM(l_PM_index).clearTRefKBs();
     std::string pm_id = boost::lexical_cast<std::string>(paramBank.getPM(l_PM_index).getID());
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
   std::string args = pm_id + "," + l_run_id;
