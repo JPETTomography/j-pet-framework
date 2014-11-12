@@ -43,6 +43,7 @@ private:
   void fillPMCalibs(const int p_run_id, JPetParamBank& paramBank);
   void fillFEBs(const int p_run_id, JPetParamBank& paramBank);
   void fillTOMBChannels(const int p_run_id, JPetParamBank& paramBank);
+  void fillTRBs(const int p_run_id, JPetParamBank& paramBank);
   void fillPMsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillTRBsTRefs(const int p_run_id, JPetParamBank& paramBank);
