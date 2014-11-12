@@ -5,11 +5,9 @@
 #include "TNamed.h"
 #include "../JPetUser/JPetUser.h"
 #include "../JPetLayer/JPetLayer.h"
-#include "../JPetSlot/JPetSlot.h"
 
 
 class JPetLayer;
-class JPetSlot;
 
 
 /**
@@ -26,10 +24,9 @@ protected:
   int m_version;
   JPetUser &m_JPetUser;		//creatorId
   JPetLayer &m_JPetLayer;
-  JPetSlot &m_JPetSlot;
   
 public:
-  JPetFrame(int p_id, std::string p_status, std::string p_description, int p_version, JPetUser &p_JPetUser, JPetLayer &p_JPetLayer, JPetSlot &p_JPetSlot);
+  JPetFrame(int p_id, std::string p_status, std::string p_description, int p_version, JPetUser &p_JPetUser, JPetLayer &p_JPetLayer);
   virtual ~JPetFrame(void);
   
   virtual int id(void) const;

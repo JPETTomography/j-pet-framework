@@ -35,7 +35,6 @@ BOOST_AUTO_TEST_SUITE(DBParamGetterTS)
 //  void fillTRBs(const int p_run_id, JPetParamBank& paramBank);
 //  void fillPMsTRefs(const int p_run_id, JPetParamBank& paramBank);
 //  void fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank);
-//  void fillTRBsTRefs(const int p_run_id, JPetParamBank& paramBank);
 //  void fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank& paramBank);
 //  void fillAllTRefs(const int p_run_id, JPetParamBank& paramBank);
 //
@@ -107,7 +106,6 @@ BOOST_AUTO_TEST_CASE(fillTRefsTest)
   
   paramGetter.fillPMsTRefs(run, *bank);
   paramGetter.fillFEBsTRefs(run, *bank);
-  paramGetter.fillTRBsTRefs(run, *bank);
   paramGetter.fillTOMBChannelsTRefs(run, *bank);
   
   // PM TRef to Scint

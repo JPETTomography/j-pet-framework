@@ -14,7 +14,7 @@
 #else
 class pqxx;
 class pqxx::result;
-class pqxx::result::const_iterator;
+class pqxx::result::const_iterator;r
 #endif /* __CINT __ */
 
 class JPetDBParamGetter
@@ -46,7 +46,6 @@ private:
   void fillTRBs(const int p_run_id, JPetParamBank& paramBank);
   void fillPMsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank);
-  void fillTRBsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillAllTRefs(const int p_run_id, JPetParamBank& paramBank);
 
