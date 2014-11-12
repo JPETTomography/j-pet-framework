@@ -22,15 +22,17 @@ class JPetScopeReader {
 
   virtual ~JPetScopeReader();
 
-  void OpenFile(const char* filename);
-  void CloseFile();
-  void ReadHeader();
-  JPetSignal* ReadData();
+  void openFile(const char* filename);
+  void closeFile();
+  void readHeader();
+  JPetSignal* readData();
   
 
-  inline int GetSegments() const {return fSegments;}
-  inline int GetSegmentSize() const {return fSegmentSize;}
-  inline bool IsFileOpened() const {return fIsFileOpened;}
+  inline int getSegments() const {return fSegments;}
+  inline int getSegmentSize() const {return fSegmentSize;}
+  inline bool isFileOpen() const {return fIsFileOpen;}
+
+  inline void setPMID(int PMID) {fPMID = PMID;}
 
   private:
 
@@ -40,8 +42,9 @@ class JPetScopeReader {
   std::string fDate;
   std::string fTime;
 
-  bool fIsFileOpened;
+  bool fIsFileOpen;
 
+  int fPMID;
   int fSegments;
   int fSegmentSize;
   
