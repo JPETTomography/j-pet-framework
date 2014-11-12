@@ -36,17 +36,13 @@ private:
   JPetTRB generateTRB(pqxx::result::const_iterator row);
   JPetTOMBChannel generateTOMBChannel(pqxx::result::const_iterator row);
 
-  void fillTRefs(ParamObjectType type);
-
   void fillScintillators(const int p_run_id, JPetParamBank& paramBank);
   void fillParamContainer(ParamObjectType type, const int p_run_id, JPetParamBank& paramBank);
 
   void fillPMs(const int p_run_id, JPetParamBank& paramBank);
   void fillPMCalibs(const int p_run_id, JPetParamBank& paramBank);
   void fillFEBs(const int p_run_id, JPetParamBank& paramBank);
-  void fillTRBs(const int p_run_id, JPetParamBank& paramBank);
   void fillTOMBChannels(const int p_run_id, JPetParamBank& paramBank);
-  void fillScintillatorsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillPMsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillTRBsTRefs(const int p_run_id, JPetParamBank& paramBank);
