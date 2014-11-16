@@ -25,6 +25,10 @@ JPetCmdParser::JPetCmdParser()
   ;
 }
 
+JPetCmdParser::~JPetCmdParser()
+{
+}
+
 void JPetCmdParser::parse(int argc, const char** argv)
 {
   try {

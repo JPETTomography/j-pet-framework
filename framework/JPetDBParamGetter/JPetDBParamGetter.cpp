@@ -20,6 +20,10 @@ JPetDBParamGetter::JPetDBParamGetter(const char* dBConfigFile)
 
 }
 
+JPetDBParamGetter::~JPetDBParamGetter()
+{
+}
+
 /// dopisac ze ktos inny musi zniszczyc
 JPetParamBank* JPetDBParamGetter::generateParamBank(const int p_run_id) 
 {

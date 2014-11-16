@@ -17,3 +17,7 @@ JPetTRB::JPetTRB(int id, int type, int ch):
 {
   SetName("JPetTRB");
 }
+
+JPetTRB::~JPetTRB()
+{
+}

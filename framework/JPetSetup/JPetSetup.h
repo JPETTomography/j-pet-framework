@@ -28,6 +28,11 @@ public:
   JPetSetup(int p_id, std::string p_name, std::string p_description, JPetUser &p_JPetUser);
   virtual ~JPetSetup(void);
   
+private:
+  JPetSetup(const JPetSetup &setup);
+  JPetSetup& operator=(const JPetSetup &setup);
+  
+public:
   virtual int id(void) const;
   virtual std::string name(void) const;
   virtual std::string creationDate(void) const;

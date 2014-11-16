@@ -18,6 +18,12 @@ class JPetMacroLoader: public JPetAnalysisModule {
 
   JPetMacroLoader(const char* name, const char* filename);
   virtual ~JPetMacroLoader();
+  
+private:
+  JPetMacroLoader(const JPetMacroLoader &macroLoader);
+  JPetMacroLoader& operator=(const JPetMacroLoader &macroLoader);
+  
+public:
   virtual void CreateInputObjects(const char* inputFilename=0);
   virtual void CreateOutputObjects(const char* outputFilename=0);
   virtual void Exec();

@@ -20,6 +20,10 @@ JPetParamBank::JPetParamBank():
   /* */
 }
 
+JPetParamBank::~JPetParamBank()
+{
+}
+
 void JPetParamBank::clear()
 {
   fScintillators.Clear();
