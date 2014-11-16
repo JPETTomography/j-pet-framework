@@ -24,4 +24,8 @@ JPetPM::JPetPM(Side side,
   SetName("JPetPM");
 }
 
+JPetPM::~JPetPM()
+{
+}
+
 ClassImp(JPetPM);

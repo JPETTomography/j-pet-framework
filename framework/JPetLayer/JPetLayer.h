@@ -25,6 +25,12 @@ public:
   JPetLayer(int p_id, std::string p_name, float p_thetaAngle, JPetFrame &p_JPetFrame);
   virtual ~JPetLayer(void);
   
+private:
+  JPetLayer(const JPetLayer &layer);
+  JPetLayer& operator=(const JPetLayer &layer);
+  
+public:
+  
   virtual int id(void) const;
   virtual std::string name(void) const;
   virtual float radius(void) const;

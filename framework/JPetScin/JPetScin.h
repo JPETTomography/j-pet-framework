@@ -25,6 +25,8 @@ class JPetScin: public TNamed
 
   JPetScin();
   JPetScin(int id, float attenLen, float length, float height, float width);
+  ~JPetScin();
+
   inline int getID() const { return fID; }
   inline float getAttenLen() const { return fAttenLen; }
   inline ScinDimensions getScinSize() const { return fScinSize; }

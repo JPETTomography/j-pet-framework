@@ -10,9 +10,11 @@
  */
 class JPetBarrelSlot: public TNamed
 {
- public:
+public:
   JPetBarrelSlot();
   JPetBarrelSlot(int slotId, int layerID, int layerRad, float slotTheta);
+  ~JPetBarrelSlot();
+  
   inline int getSlotID() const { return fSlotID; }
   inline int getLayerID() const { return fLayerID; }
   inline int getLayerRad() const { return fLayerRad; }
@@ -21,8 +23,8 @@ class JPetBarrelSlot: public TNamed
   inline void setLayerID(int id) { fLayerID = id; }
   inline void setLayerRad(int layerRad) { fLayerRad = layerRad; }
   inline void setSlotTheta(float slotTheta) { fSlotTheta = slotTheta;}
-
- private:
+  
+private:
   int fSlotID;
   int fLayerID;
   int fLayerRad;

@@ -29,6 +29,11 @@ public:
   JPetFrame(int p_id, std::string p_status, std::string p_description, int p_version, JPetUser &p_JPetUser, JPetLayer &p_JPetLayer);
   virtual ~JPetFrame(void);
   
+private:
+  JPetFrame(const JPetFrame &frame);
+  JPetFrame& operator=(const JPetFrame &frame);
+  
+public:
   virtual int id(void) const;
   virtual std::string status(void) const;
   virtual std::string description(void) const;

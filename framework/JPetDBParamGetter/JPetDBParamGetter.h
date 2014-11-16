@@ -24,7 +24,12 @@ public:
   JPetDBParamGetter();
   JPetDBParamGetter(const char* dBConfigFile);
   JPetParamBank* generateParamBank(const int p_run_id);
-
+  ~JPetDBParamGetter();
+  
+private:
+  JPetDBParamGetter(const JPetDBParamGetter &DBParamGetter);
+  JPetDBParamGetter& operator=(const JPetDBParamGetter &DBParamGetter);
+  
 private:
   pqxx::result getDataFromDB(const std::string& sqlFunction, const std::string& args);
   std::string generateSelectQuery(const std::string& sqlFunction, const std::string& args);

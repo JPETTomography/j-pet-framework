@@ -14,3 +14,6 @@ JPetBarrelSlot::JPetBarrelSlot(int slotID, int layerID, int layerRad, float slot
   fLayerRad(layerRad),
   fSlotTheta(slotTheta)
 { /* */ }
+
+JPetBarrelSlot::~JPetBarrelSlot()
+{ /* */ }
