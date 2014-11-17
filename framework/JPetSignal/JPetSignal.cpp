@@ -47,10 +47,10 @@ void JPetSignal::addPoint(const JPetSigCh& sigch){
   
   assert((sigch.getType() == JPetSigCh::Trailing) || (sigch.getType() == JPetSigCh::Leading));
   
-  if (sigch.getType() == JPetSigCh::Trailing && fNTrailing < 4) {
+  if (sigch.getType() == JPetSigCh::Trailing) {
     new (fTrailingPoints[fNTrailing++]) JPetSigCh(sigch);
     fTrailingPoints.Sort();
-  } else if(fNLeading < 4) {
+  } else {
     new (fLeadingPoints[fNLeading++]) JPetSigCh(sigch);
     fLeadingPoints.Sort();
   }

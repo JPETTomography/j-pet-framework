@@ -98,6 +98,9 @@ class JPetHit : public TNamed {
   inline void setBarrelSlot(JPetBarrelSlot& bs) {fBarrelSlot = &bs;}
   inline void setScintillator(JPetScin& sc) {fScintillator = &sc;}
 
+  inline int getScinID () const {return fScinID;}
+  inline void setScinID (int scinID) {fScinID = scinID;}
+
   ClassDef(JPetHit,1);
   
   private:
@@ -112,6 +115,8 @@ class JPetHit : public TNamed {
   TVector3 fPos;
   JPetSignal fSignalA;
   JPetSignal fSignalB;
+
+  int fScinID; ///< For simple reconstruction
 
   // references to parametric objects
   TRef fBarrelSlot; ///< BarrelSlot in which the hit was recorded
