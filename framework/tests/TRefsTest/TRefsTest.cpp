@@ -4,6 +4,7 @@
 #include  "TestEvent.h"
 
 
+#include <TROOT.h>
 #include <TFile.h>
 #include <TList.h>
 #include <TTree.h>
@@ -23,7 +24,8 @@ void printIds(const TestEvent& event)
   }
 }
 
-TFile* closeAndDeleteTFile(TFile* file) {
+TFile* closeAndDeleteTFile(TFile* file)
+{
   if (file) {
     file->Close();
     delete file;
@@ -218,7 +220,7 @@ BOOST_AUTO_TEST_CASE( my_TList_TTree_saving_to_TFile_only_read)
     BOOST_REQUIRE(b_eve->getRefEvent()->getId() == paramIndex);
     paramIndex = (paramIndex + 1) % kParamSize;
   }
-  file =closeAndDeleteTFile(file);
+  file = closeAndDeleteTFile(file);
 }
 
 BOOST_AUTO_TEST_CASE( my_TList_TTree_saving_to_separate_files)
@@ -253,7 +255,7 @@ BOOST_AUTO_TEST_CASE( my_TList_TTree_saving_to_separate_files)
   fileData->Write();
   fileData = closeAndDeleteTFile(fileData);
   fileParam->WriteObject (params, "params");
-  fileParam =closeAndDeleteTFile(fileParam);
+  fileParam = closeAndDeleteTFile(fileParam);
   params = 0;
   dataTree = 0;
 
@@ -277,8 +279,8 @@ BOOST_AUTO_TEST_CASE( my_TList_TTree_saving_to_separate_files)
     BOOST_REQUIRE(b_eve->getRefEvent()->getId() == paramIndex);
     paramIndex = (paramIndex + 1) % kParamSize;
   }
-  fileData =closeAndDeleteTFile(fileData);
-  fileParam=closeAndDeleteTFile(fileParam);
+  fileData = closeAndDeleteTFile(fileData);
+  fileParam = closeAndDeleteTFile(fileParam);
 }
 
 
@@ -351,7 +353,7 @@ BOOST_AUTO_TEST_CASE( my_stlvector_subevents_TTree_TFile)
 
     int subParamIndex = 0; // params for subevents
     for (int k = 0; k < kSubEventSize; k++) {
-      TestEvent subevent(static_cast<TestEvent*>(params->At(subParamIndex)) , kParamSize + kDataSize + i* kSubEventSize + k);
+      TestEvent subevent(static_cast<TestEvent*>(params->At(subParamIndex)) , kParamSize + kDataSize + i * kSubEventSize + k);
       eve->addSubEvent(subevent);
       subParamIndex = (subParamIndex + 1) % kParamSize;
     }
@@ -410,6 +412,35 @@ BOOST_AUTO_TEST_CASE( my_stlvector_subevents_TTree_TFile)
 
     paramIndex = (paramIndex + 1) % kParamSize;
   }
-  file =closeAndDeleteTFile(file);
+  file = closeAndDeleteTFile(file);
 }
+
+/// based on Alek's example sent to ROOT forum
+/// See http://root.cern.ch/phpBB3/viewtopic.php?f=3&t=18865
+/// and #547
+BOOST_AUTO_TEST_CASE( trefs_after_close_file  )
+{
+  TFile file("data4.root", "RECREATE", "", 0);
+  TNamed* A = new TNamed("A", "Object A");
+  TRef B;
+  B = A; // assign the TRef
+  file.WriteObject( A , "A");
+  file.WriteObject( &B , "B" );
+  file.Close("R");
+
+  delete A;
+
+  TFile file2("data4.root", "READ");
+  TNamed* A2 = (TNamed*)file2.Get("A");
+  TRef* B2 = (TRef*)file2.Get("B");
+  file2.Close("R");
+  BOOST_REQUIRE(std::string(A2->GetTitle())=="Object A");
+  TNamed* A_referenced = (TNamed*)(B2->GetObject());  // dereference the TRef
+  /// BOOST_REQUIRE(A_referenced)
+  /// @error A_referenced == NULL
+  /// It should be still valid:
+  /// BOOST_REQUIRE(std::string(A_referenced->GetTitle()) =="Object A");
+  /// But it is not, somehow closing TFile makes the TRef not-valid
+}
+
 BOOST_AUTO_TEST_SUITE_END()
