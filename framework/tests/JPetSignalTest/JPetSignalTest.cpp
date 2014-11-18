@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(GetTrailingAndLeadingPointsTest)
   signal.addPoint(sigCh);
   BOOST_CHECK( ( (JPetSigCh*)signal.getPoints(JPetSigCh::Trailing)[0] )->getType() == JPetSigCh::Trailing);
   BOOST_CHECK(signal.getPoints(JPetSigCh::Trailing)[1] == NULL);
-  BOOST_CHECK(signal.getNumberOfSetTrailingEdgePoints() == 1);
+  BOOST_CHECK(signal.getNumberOfTrailingEdgePoints() == 1);
   
   sigCh.setType(JPetSigCh::Leading);
   signal.addPoint(sigCh);
@@ -105,8 +105,8 @@ BOOST_AUTO_TEST_CASE(GetTrailingAndLeadingPointTest)
   sigCh.setType(JPetSigCh::Leading);
   signal.addPoint(sigCh);
   signal.addPoint(sigCh);
-  BOOST_CHECK(signal.getNumberOfSetTrailingEdgePoints() == 2);
-  BOOST_CHECK(signal.getNumberOfSetLeadingEdgePoints() == 2);
+  BOOST_CHECK(signal.getNumberOfTrailingEdgePoints() == 2);
+  BOOST_CHECK(signal.getNumberOfLeadingEdgePoints() == 2);
   
   sigCh = signal.getPoint(0, JPetSigCh::Trailing);
   BOOST_CHECK(sigCh.getType() == JPetSigCh::Trailing);

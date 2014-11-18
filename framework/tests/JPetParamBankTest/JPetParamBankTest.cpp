@@ -79,8 +79,8 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   BOOST_REQUIRE(bank.getPMCalib(0).GetId() == 256);
   BOOST_REQUIRE(bank.getPMCalib(0).GetNamePM() == "JPetPMCalibTest");
   BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetOpthv(), 2.f, epsilon);
-  BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetC2e_1(), 4.f, epsilon);
-  BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetC2e_2(), 8.f, epsilon);
+  BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetECalConst1(), 4.f, epsilon);
+  BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetECalConst2(), 8.f, epsilon);
   BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetGainalpha(), 16.f, epsilon);
   BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetGainbeta(), 32.f, epsilon);
   BOOST_REQUIRE(bank.getPMCalib(0).GetPMCalibAssignment().id == 128);
