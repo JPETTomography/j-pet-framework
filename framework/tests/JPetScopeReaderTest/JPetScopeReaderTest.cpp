@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE (default_constructor)
   JPetScopeReader reader;
 
   BOOST_REQUIRE(reader.fInputFile.is_open() == false);
-  BOOST_REQUIRE(reader.fisFileOpen == false);
+  BOOST_REQUIRE(reader.fIsFileOpen == false);
 
   BOOST_REQUIRE_EQUAL(reader.fSegments, 0);
   BOOST_REQUIRE_EQUAL(reader.fSegmentSize, 0);
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE (open_file)
   reader.openFile("C1_00000.txt");
 
   BOOST_REQUIRE(reader.fInputFile.is_open());
-  BOOST_REQUIRE(reader.fIsFileOpened);
+  BOOST_REQUIRE(reader.fIsFileOpen);
 
   BOOST_REQUIRE_EQUAL(reader.fSegments, 0);
   BOOST_REQUIRE_EQUAL(reader.fSegmentSize, 0);
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE (open_file)
   reader.closeFile();
 
   BOOST_REQUIRE(reader.fInputFile.is_open() == false);
-  BOOST_REQUIRE(reader.fIsFileOpened == false);
+  BOOST_REQUIRE(reader.fIsFileOpen == false);
 
 }
 

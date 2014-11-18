@@ -110,7 +110,7 @@ JPetSignal* JPetScopeReader::readData() {
     sigCh->setValue(value * 1000000000000); // file holds time in seconds, while SigCh requires it in picoseconds
     sigCh->setThreshold(threshold * 1000);  // file holds thresholds in volts, while SigCh requires it in milivolts
     sigCh->setPMID(fPMID);
-    sigCh->setType(JPetSigCh::EdgeType::Leading);
+    sigCh->setType(JPetSigCh::Leading);
 
     sig->addPoint(*sigCh);
   }
