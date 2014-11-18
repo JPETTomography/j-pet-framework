@@ -23,6 +23,14 @@ JPetScopeReader::JPetScopeReader(const char* filename): fInputFile(), fScopeType
 JPetScopeReader::~JPetScopeReader() {
 }
 
+JPetSignal* JPetScopeReader::generateSignal(const char* filename) {
+  openFile(filename);
+  readHeader();
+  JPetSignal* sig = readData();
+  closeFile();
+  return sig;
+}
+
 void JPetScopeReader::openFile(const char* filename) {
   
   if (fIsFileOpen) closeFile();
