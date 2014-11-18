@@ -28,10 +28,6 @@ public:
   JPetEvent(float Time, float QualityOfTime, JPetHit& firstHit, JPetHit& secondHit);
   virtual ~JPetEvent();
   
-private:
-  JPetEvent(const JPetEvent &event);
-  JPetEvent& operator=(const JPetEvent &event);
-  
 public:
   /// Get the reconstructed absolute time of the event wrt beginning of the run [ps]
   inline const float getTime() const {return fTime;};
