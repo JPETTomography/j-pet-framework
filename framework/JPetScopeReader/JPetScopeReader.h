@@ -42,6 +42,7 @@ class JPetScopeReader {
   std::string fScopeType;
   std::string fDate;
   std::string fTime;
+  std::string fFilename;
 
   bool fIsFileOpen;
 
