@@ -20,12 +20,12 @@ Unpacker_Lattice_TDC::Unpacker_Lattice_TDC(string bT, string bA, string hA, int 
   coarseTimes = new float*[channelNumber];
  
   for(int i = 0; i < channelNumber; i++) {
-    leadTimes[i] = new float[1000];
-    trailTimes[i] = new float[1000];
+    leadTimes[i] = new float[128];
+    trailTimes[i] = new float[128];
     leadMult[i] = 0;
     trailMult[i] = 0;
-    fineTimes[i] = new float[1000];
-    coarseTimes[i] = new float[1000];
+    fineTimes[i] = new float[128];
+    coarseTimes[i] = new float[128];
   }
   
   corrections = new TH1F*[cN];
@@ -91,10 +91,10 @@ void Unpacker_Lattice_TDC::Clear() {
     delete [] fineTimes[i];
     delete [] coarseTimes[i];
     
-    leadTimes[i] = new float[1000];
-    trailTimes[i] = new float[1000];
-    fineTimes[i] = new float[1000];
-    coarseTimes[i] = new float[1000];
+    leadTimes[i] = new float[128];
+    trailTimes[i] = new float[128];
+    fineTimes[i] = new float[128];
+    coarseTimes[i] = new float[128];
     
     leadMult[i] = 0;
     trailMult[i] = 0;
