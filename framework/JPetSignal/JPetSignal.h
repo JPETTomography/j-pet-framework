@@ -117,8 +117,8 @@ class JPetSignal: public TNamed
   inline const JPetPM & getPM() const { return (JPetPM&)*fPM.GetObject(); }
   inline const JPetBarrelSlot & getBarrelSlot() const { return (JPetBarrelSlot&)*fBarrelSlot.GetObject(); }
 
-  inline int getNumberOfSetLeadingEdgePoints (void) const { return fNLeading; }
-  inline int getNumberOfSetTrailingEdgePoints(void) const { return fNTrailing; }
+  inline int getNumberOfLeadingEdgePoints (void) const { return fLeadingPoints.GetEntries(); }
+  inline int getNumberOfTrailingEdgePoints(void) const { return fTrailingPoints.GetEntries(); }
 
  private:
   double fTime; ///< absolute time reconstructed for the whole signal [ps]
@@ -128,8 +128,6 @@ class JPetSignal: public TNamed
   bool fLeft;
   TClonesArray fLeadingPoints; ///< array of JPetSigCh objects from leading edge of the signal
   TClonesArray fTrailingPoints; ///< array of JPetSigCh objects from trailing edge of the signal
-  int fNLeading; ///< number of set leading edge points; needed for TClonesArray usage
-  int fNTrailing;  ///< number of set trailing edge points; needed for TClonesArray usage
 
   // these members can be used for simple analysis
   // if no parametric objects are available
