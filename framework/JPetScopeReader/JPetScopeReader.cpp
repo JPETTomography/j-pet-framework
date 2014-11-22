@@ -8,6 +8,7 @@
 #include "./JPetScopeReader.h"
 
 //#include <sstream>
+#include <TString.h>
 
 #include "../JPetSignal/JPetSignal.h"
 #include "../../JPetLoggerInclude.h"
@@ -26,7 +27,11 @@ JPetScopeReader::~JPetScopeReader() {
 JPetSignal* JPetScopeReader::generateSignal(const char* filename) {
   openFile(filename);
   readHeader();
-  JPetSignal* sig = readData();
+  JPetSignal* sig;
+
+  if (fIsFileOpen) sig = readData();
+  else sig = new JPetSignal();
+
   closeFile();
   return sig;
 }
@@ -36,11 +41,12 @@ void JPetScopeReader::openFile(const char* filename) {
   if (fIsFileOpen) closeFile();
 
   fInputFile.open(filename);
+  fFilename = filename;
 
   if (fInputFile.is_open()) {
     fIsFileOpen = true;
   } else {
-    ERROR("Error: cannot open file");
+    ERROR(Form("Error: cannot open file %s", fFilename.c_str()));
   }
 }
 
@@ -114,6 +120,12 @@ JPetSignal* JPetScopeReader::readData() {
     JPetSigCh* sigCh = new JPetSigCh();
     
     fInputFile >> value >> threshold;
+
+    if (fInputFile.fail()) {
+      fInputFile.clear();
+      fInputFile.ignore(255, '\n');
+      ERROR(Form("Non-numerical symbol in file %s at line %d", fFilename.c_str(), i + 6));
+    }
 
     sigCh->setValue(value * 1000000000000); // file holds time in seconds, while SigCh requires it in picoseconds
     sigCh->setThreshold(threshold * 1000);  // file holds thresholds in volts, while SigCh requires it in milivolts
