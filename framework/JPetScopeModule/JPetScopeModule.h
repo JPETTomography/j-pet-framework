@@ -30,12 +30,12 @@ class JPetScopeModule: public JPetAnalysisModule {
   virtual void CreateInputObjects(const char* inputFilename = 0) {createInputObjects(inputFilename);}
   virtual void CreateOutputObjects(const char* outputFilename = 0) {createOutputObjects(outputFilename);}
   virtual void Exec() {exec();}
-  virtual long long GetEventNb() {return fFiles.size();}
+  virtual long long GetEventNb() const {return fFiles.size();}
   virtual void Terminate() {terminate();}
   virtual void createInputObjects(const char* inputFilename = 0);
   virtual void createOutputObjects(const char* outputFilename = 0);
   virtual void exec();
-  virtual long long getEventNb() {return fFiles.size();}
+  virtual long long getEventNb() const {return fFiles.size();}
   virtual void terminate();
   void setFileName(const char* name);
 
