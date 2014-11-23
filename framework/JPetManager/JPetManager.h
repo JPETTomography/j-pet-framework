@@ -13,7 +13,7 @@
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetUnpacker/JPetUnpacker.h"
 
-#include <vector>
+//#include <vector>
 #include <list>
 #include <TNamed.h> 
 #include <TString.h>
@@ -50,6 +50,6 @@ class JPetManager: public TNamed {
   JPetCmdParser fCmdParser;
   JPetParamManager fParamManager;
   JPetUnpacker fUnpacker;
-  std::vector<JPetAnalysisModule*> fTasks;
+  std::list<JPetAnalysisModule*> fTasks;
 };
 #endif /*  !JPETMANAGER_H */
