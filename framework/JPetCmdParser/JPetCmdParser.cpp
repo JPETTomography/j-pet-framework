@@ -5,6 +5,7 @@
  */
 
 #include "JPetCmdParser.h"
+#include "../CommonTools/CommonTools.h"
 
 using namespace std;
 
@@ -17,12 +18,16 @@ JPetCmdParser::JPetCmdParser()
 
   fOptDescriptions.add_options()
   ("help,h", "produce help message")
-  ("type,t", po::value<string>()->required(), "type of file: hld or root")
+  ("type,t", po::value<string>()->required(), "type of file: hld, root or scope")
   ("file,f", po::value<string>()->required(), "File to open")
   ("range,r", po::value< vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process.")
   ("param,p", po::value<string>(), "File with TRB numbers.")
   ("runId,i", po::value<int>(), "Run id.")
   ;
+}
+
+JPetCmdParser::~JPetCmdParser()
+{
 }
 
 void JPetCmdParser::parse(int argc, const char** argv)
@@ -66,6 +71,7 @@ void JPetCmdParser::parse(int argc, const char** argv)
     if (
         fVariablesMap["type"].as <string>().compare("hld")
         && fVariablesMap["type"].as <string>().compare("root")
+        && fVariablesMap["type"].as <string>().compare("scope")
     ) {
       cerr << "Wrong type of file: " << fVariablesMap["type"].as< string >() << endl;
       cerr << "Possible options: hld or root" << endl;
@@ -81,6 +87,13 @@ void JPetCmdParser::parse(int argc, const char** argv)
 	cerr << "Wrong number of run id: " << l_runId << endl;
 	exit(-1);
       }
+    }
+    
+    string fileName(fVariablesMap["file"].as<string>());
+    if( ! CommonTools::ifFileExisting(fileName) )
+    {
+      cerr << "File : " << fileName << " does not exist" << endl;
+      exit(-1);
     }
 
   } catch (exception& e) {

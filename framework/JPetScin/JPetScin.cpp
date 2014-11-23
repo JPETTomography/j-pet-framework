@@ -22,6 +22,10 @@ fScinSize(length, height, width)
   SetName("JPetScin");
 }
 
+JPetScin::~JPetScin()
+{
+}
+
 float JPetScin::getScinSize(JPetScin::Dimension dim) const
 {
   float value = 0;

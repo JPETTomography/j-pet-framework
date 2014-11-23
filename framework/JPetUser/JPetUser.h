@@ -36,6 +36,11 @@ public:
 	   std::string p_lastLoginDate);
   virtual ~JPetUser(void);
   
+private:
+  JPetUser(const JPetUser &user);
+  JPetUser& operator=(const JPetUser &user);
+  
+public:
   static bool isUserLogged(void);
   virtual bool logIn(void);
   virtual bool logOut(void);

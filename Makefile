@@ -13,9 +13,9 @@ UNPACKER_LIB = Unpacker2
 ################
 SRC_DIR = $(PWD)/framework
 #Modules that should have ROOT dictionnaries
-DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot JPetUnpacker JPetFrame JPetFEB JPetLayer JPetSetup JPetSlot JPetTOMBChannel JPetUser JPetTreeHeader JPetParamBank JPetPMCalib
+DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot JPetUnpacker JPetFrame JPetFEB JPetLayer JPetSetup  JPetTOMBChannel JPetUser JPetTreeHeader JPetParamBank JPetPMCalib JPetScopeModule
 DICTS   = $(DMODULES)
-READERS = JPetReader JPetHLDReader
+READERS = JPetReader JPetHLDReader JPetScopeReader
 WRITERS = JPetWriter
 #Modules without ROOT dictionnaries
 NONDMODULES = DummyClass JPetLogger JPetCmdParser JPetParamManager JPetManager $(READERS) $(WRITERS) JPetDBParamGetter

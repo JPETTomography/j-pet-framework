@@ -37,6 +37,9 @@ public:
   float getThreshold()const{ return fThreshold; }
   unsigned int getChannel()const{ return fChannel; }
 
+  inline bool operator==(const JPetTOMBChannel& channel) { return GetUniqueID() == channel.GetUniqueID(); }
+  inline bool operator!=(const JPetTOMBChannel& channel) { return GetUniqueID() != channel.GetUniqueID(); }
+
 private:
   unsigned int fChannel;
   TRef fFEB;

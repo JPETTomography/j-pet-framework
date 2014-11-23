@@ -25,6 +25,7 @@ class JPetParamBank: public TObject
   enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, SIZE};
 
   JPetParamBank();
+  ~JPetParamBank();
   void clear();
 
 

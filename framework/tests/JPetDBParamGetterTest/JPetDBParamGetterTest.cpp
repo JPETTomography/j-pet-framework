@@ -10,33 +10,36 @@ const char* gDefaultConfigFile = "DBConfig/configDB.cfg";
 BOOST_AUTO_TEST_SUITE(DBParamGetterTS)
 
 //public:
-//  enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMB, SIZE};
+//  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, SIZE};
 //  JPetDBParamGetter();
 //  JPetDBParamGetter(const char* dBConfigFile);
-//  JPetParamBank generateParamBank(const int p_run_id);
-//
+//  JPetParamBank* generateParamBank(const int p_run_id);
 //private:
-//  pqxx::result getDataFromDB(std::string sqlFunction, int p_id);
-//  std::string generateSelectQuery(std::string sqlFunction, std::string arg);
+//  pqxx::result getDataFromDB(const std::string& sqlFunction, const std::string& args);
+//  std::string generateSelectQuery(const std::string& sqlFunction, const std::string& args);
 //  void printErrorMessageDB(std::string sqlFunction, int p_run_id);
 //  JPetScin generateScintillator(pqxx::result::const_iterator row);
 //  JPetPM generatePM(pqxx::result::const_iterator row);
+//  JPetPMCalib generatePMCalib(pqxx::result::const_iterator row);
 //  JPetFEB generateFEB(pqxx::result::const_iterator row);
 //  JPetTRB generateTRB(pqxx::result::const_iterator row);
-//  JPetTOMB generateTOMB(pqxx::result::const_iterator row);
-//
-//  void fillTRefs(ParamObjectType type);
+//  JPetTOMBChannel generateTOMBChannel(pqxx::result::const_iterator row);
 //
 //  void fillScintillators(const int p_run_id, JPetParamBank& paramBank);
+//  void fillParamContainer(ParamObjectType type, const int p_run_id, JPetParamBank& paramBank);
+//
 //  void fillPMs(const int p_run_id, JPetParamBank& paramBank);
+//  void fillPMCalibs(const int p_run_id, JPetParamBank& paramBank);
 //  void fillFEBs(const int p_run_id, JPetParamBank& paramBank);
+//  void fillTOMBChannels(const int p_run_id, JPetParamBank& paramBank);
 //  void fillTRBs(const int p_run_id, JPetParamBank& paramBank);
-//  void fillTOMB(const int p_run_id, JPetParamBank& paramBank);
-//  void fillScintillatorsTRefs(JPetParamBank& paramBank);
-//  void fillPMsTRefs(JPetParamBank& paramBank);
-//  void fillFEBsTRefs(JPetParamBank& paramBank);
-//  void fillTRBsTRefs(JPetParamBank& paramBank);
-//  void fillAllTRefs(JPetParamBank& paramBank);
+//  void fillPMsTRefs(const int p_run_id, JPetParamBank& paramBank);
+//  void fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank);
+//  void fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank& paramBank);
+//  void fillAllTRefs(const int p_run_id, JPetParamBank& paramBank);
+//
+//  int getTOMBChannelFromDescription(std::string p_desc) const;
+//
 
 BOOST_AUTO_TEST_CASE(defaultConstructorTest)
 {
@@ -101,366 +104,84 @@ BOOST_AUTO_TEST_CASE(fillTRefsTest)
   BOOST_REQUIRE(bank->getTRBsSize() == 1);
   BOOST_REQUIRE(bank->getTOMBChannelsSize() == 4);
   
-  paramGetter.fillScintillatorsTRefs(run, *bank);
   paramGetter.fillPMsTRefs(run, *bank);
   paramGetter.fillFEBsTRefs(run, *bank);
-  paramGetter.fillTRBsTRefs(run, *bank);
   paramGetter.fillTOMBChannelsTRefs(run, *bank);
   
-  // Scintillator 1 TRef
-  BOOST_REQUIRE(bank->getScintillator(0).getTRefPMLeft() != NULL);
-  
-  JPetPM* pm_ptr = bank->getScintillator(0).getTRefPMLeft();
-  JPetPM& pm_ref = bank->getPM(2);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
-  
-  pm_ptr = bank->getScintillator(0).getTRefPMRight();
+  // PM TRef to Scint
+  JPetPM& pm_ref = bank->getPM(0);
+  BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(1).getID());
   pm_ref = bank->getPM(1);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
- 
-  pm_ptr = bank->getScintillator(1).getTRefPMLeft();
-  pm_ref = bank->getPM(3);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
-  
-  pm_ptr = bank->getScintillator(1).getTRefPMRight();
-  pm_ref = bank->getPM(0);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
-  
-  // Scintillator 2 TRef
-  BOOST_REQUIRE(bank->getScintillator(1).getTRefPMLeft() != NULL);
-  
-  pm_ptr = bank->getScintillator(0).getTRefPMLeft();
+  BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(0).getID());
   pm_ref = bank->getPM(2);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
- 
-  pm_ptr = bank->getScintillator(0).getTRefPMRight();
-  pm_ref = bank->getPM(1);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
-   
-  pm_ptr = bank->getScintillator(1).getTRefPMLeft();
+  BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(0).getID());
   pm_ref = bank->getPM(3);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
+  BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(1).getID());
   
-  pm_ptr = bank->getScintillator(1).getTRefPMRight();
-  pm_ref = bank->getPM(0);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
-
-  // std::cout << "pm_ptr->getID():" << pm_ptr->getID() <<std::endl;
-  // std::cout << "pm_ref.getID():" << pm_ref.getID() <<std::endl;
+  BOOST_REQUIRE(bank->getPM(0).getFEB().isActive());
+  BOOST_REQUIRE(bank->getPM(1).getFEB().isActive());
+  BOOST_REQUIRE(bank->getPM(2).getFEB().isActive());
+  BOOST_REQUIRE(bank->getPM(3).getFEB().isActive());
   
-  // PM 1 TRef
-  BOOST_REQUIRE(bank->getPM(0).getTRefKB() != NULL);
-  
-  JPetFEB* FEB_ptr = bank->getPM(0).getTRefKB();
-  JPetFEB& FEB_ref = bank->getFEB(0);
-  
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  // PM 2 TRef
-  BOOST_REQUIRE(bank->getPM(1).getTRefKB() != NULL);
-  
-  FEB_ptr = bank->getPM(0).getTRefKB();
-  FEB_ref = bank->getFEB(0);
-  
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  // PM 3 TRef
-  BOOST_REQUIRE(bank->getPM(2).getTRefKB() != NULL);
-  
-  FEB_ptr = bank->getPM(0).getTRefKB();
-  FEB_ref = bank->getFEB(0);
-  
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  // PM 4 TRef
-  BOOST_REQUIRE(bank->getPM(3).getTRefKB() != NULL);
-  
-  FEB_ptr = bank->getPM(0).getTRefKB();
-  FEB_ref = bank->getFEB(0);
-  
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  // FEB TRef
-  BOOST_REQUIRE(bank->getFEB(0).getTRefTRB() != NULL);
-  
-  JPetTRB* TRB_ptr = bank->getFEB(0).getTRefTRB();
-  JPetTRB& TRB_ref = bank->getTRB(0);
-  
-  BOOST_REQUIRE(TRB_ptr->getID() == TRB_ref.getID());
-  
-  // TRB TRef
-  // Lack of implementation
-  
-  // TOMBChannels 1 TRefs
+  // TOMBChannels  1
   JPetTOMBChannel& TOMBChannel_ref = bank->getTOMBChannel(0);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
+  BOOST_REQUIRE(TOMBChannel_ref.getFEB().isActive());
   
-  FEB_ptr = TOMBChannel_ref.getTRefFEB();
-  FEB_ref = bank->getFEB(0);
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
+  JPetFEB& FEB_ref = bank->getFEB(0);
+  const JPetFEB& FEB_ref2 = TOMBChannel_ref.getFEB();
+  BOOST_REQUIRE(FEB_ref.getID() == FEB_ref2.getID());
+  JPetTRB& TRB_ref = bank->getTRB(0);
+  const JPetTRB& TRB_ref2 = TOMBChannel_ref.getTRB();
+  BOOST_REQUIRE(TRB_ref.getID() == TRB_ref2.getID());
+  JPetPM& PM_ref = bank->getPM(0);
+  const JPetPM& PM_ref2 =TOMBChannel_ref.getPM();
+  BOOST_REQUIRE(PM_ref.getID() == PM_ref2.getID());
+
+
   
-  TRB_ptr  = TOMBChannel_ref.getTRefTRB();
-  TRB_ref = bank->getTRB(0);
-  BOOST_REQUIRE(TRB_ptr->getID() == TRB_ref.getID());
-  
-  JPetPM* PM_ptr = TOMBChannel_ref.getTRefPM();
-  JPetPM& PM_ref = bank->getPM(1);
-  BOOST_REQUIRE(PM_ptr->getID() == PM_ref.getID());
-  
-  // TOMBChannels 2 TRefs
-  TOMBChannel_ref = bank->getTOMBChannel(1);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  
-  FEB_ptr = TOMBChannel_ref.getTRefFEB();
-  FEB_ref = bank->getFEB(0);
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  TRB_ptr  = TOMBChannel_ref.getTRefTRB();
-  TRB_ref = bank->getTRB(0);
-  BOOST_REQUIRE(TRB_ptr->getID() == TRB_ref.getID());
-  
-  PM_ptr = TOMBChannel_ref.getTRefPM();
-  PM_ref = bank->getPM(0);
-  BOOST_REQUIRE(PM_ptr->getID() == PM_ref.getID());
-  
+//  // TOMBChannels 2 
+//  TOMBChannel_ref = bank->getTOMBChannel(1);
+//  BOOST_REQUIRE(TOMBChannel_ref.getFEB().isActive());
+//  FEB_ref = bank->getFEB(0);
+//  FEB_ref2 = TOMBChannel_ref.getFEB();
+//  BOOST_REQUIRE(FEB_ref.getID() == FEB_ref2.getID());
+//  TRB_ref = bank->getTRB(0);
+//  TRB_ref2 = TOMBChannel_ref.getTRB();
+//  BOOST_REQUIRE(TRB_ref.getID() == TRB_ref2.getID());
+//  PM_ref = bank->getPM(0);
+//  PM_ref2 =TOMBChannel_ref.getPM();
+//  BOOST_REQUIRE(PM_ref.getID() == PM_ref2.getID());
+//  
+//  TOMBChannel_ref = bank->getTOMBChannel(2);
+//  BOOST_REQUIRE(TOMBChannel_ref.getFEB().isActive());
+//  FEB_ref = bank->getFEB(0);
+//  FEB_ref2 = TOMBChannel_ref.getFEB();
+//  BOOST_REQUIRE(FEB_ref.getID() == FEB_ref2.getID());
+//  TRB_ref = bank->getTRB(0);
+//  TRB_ref2 = TOMBChannel_ref.getTRB();
+//  BOOST_REQUIRE(TRB_ref.getID() == TRB_ref2.getID());
+//  PM_ref = bank->getPM(0);
+//  PM_ref2 =TOMBChannel_ref.getPM();
+//  BOOST_REQUIRE(PM_ref.getID() == PM_ref2.getID());
+//
+//  TOMBChannel_ref = bank->getTOMBChannel(3);
+//  BOOST_REQUIRE(TOMBChannel_ref.getFEB().isActive());
+//  FEB_ref = bank->getFEB(0);
+//  FEB_ref2 = TOMBChannel_ref.getFEB();
+//  BOOST_REQUIRE(FEB_ref.getID() == FEB_ref2.getID());
+//  TRB_ref = bank->getTRB(0);
+//  TRB_ref2 = TOMBChannel_ref.getTRB();
+//  BOOST_REQUIRE(TRB_ref.getID() == TRB_ref2.getID());
+//  PM_ref = bank->getPM(0);
+//  PM_ref2 =TOMBChannel_ref.getPM();
+//  BOOST_REQUIRE(PM_ref.getID() == PM_ref2.getID());
+
   /* 
    * Possible bug in implementation - for the same TOMBChannel two PMs are possible?
   TOMBChannel_ref = bank->getTOMBChannel(1);
   PM_ref = bank->getPM(2);
   */
-  
-  // TOMBChannels 3 TRefs
-  TOMBChannel_ref = bank->getTOMBChannel(2);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  
-  FEB_ptr = TOMBChannel_ref.getTRefFEB();
-  FEB_ref = bank->getFEB(0);
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  TRB_ptr  = TOMBChannel_ref.getTRefTRB();
-  TRB_ref = bank->getTRB(0);
-  BOOST_REQUIRE(TRB_ptr->getID() == TRB_ref.getID());
-  
-  PM_ptr = TOMBChannel_ref.getTRefPM();
-  PM_ref = bank->getPM(3);
-  BOOST_REQUIRE(PM_ptr->getID() == PM_ref.getID());
-  
-  // TOMBChannels 4 TRefs
-  TOMBChannel_ref = bank->getTOMBChannel(3);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  
-  FEB_ptr = TOMBChannel_ref.getTRefFEB();
-  FEB_ref = bank->getFEB(0);
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  TRB_ptr  = TOMBChannel_ref.getTRefTRB();
-  TRB_ref = bank->getTRB(0);
-  BOOST_REQUIRE(TRB_ptr->getID() == TRB_ref.getID());
-  
-  PM_ptr = TOMBChannel_ref.getTRefPM();
-  PM_ref = bank->getPM(2);
-  BOOST_REQUIRE(PM_ptr->getID() == PM_ref.getID());
-}
-
-BOOST_AUTO_TEST_CASE(fillAllTRefsTest)
-{
-  /// Copy paste detector - must changed
-  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-  int run  = 1;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-  
-  std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl;
-  std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl;
-  std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl;
-  std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl;
-  std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl;
-
-  BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
-  BOOST_REQUIRE(bank->getPMsSize() == 4);
-  BOOST_REQUIRE(bank->getFEBsSize() == 1);
-  BOOST_REQUIRE(bank->getTRBsSize() == 1);
-  BOOST_REQUIRE(bank->getTOMBChannelsSize() == 4);
-  
-  paramGetter.fillAllTRefs(run, *bank);
-  
-  // Scintillator 1 TRef
-  BOOST_REQUIRE(bank->getScintillator(0).getTRefPMLeft() != NULL);
-  
-  JPetPM* pm_ptr = bank->getScintillator(0).getTRefPMLeft();
-  JPetPM& pm_ref = bank->getPM(2);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
-  
-  pm_ptr = bank->getScintillator(0).getTRefPMRight();
-  pm_ref = bank->getPM(1);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
- 
-  pm_ptr = bank->getScintillator(1).getTRefPMLeft();
-  pm_ref = bank->getPM(3);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
-  
-  pm_ptr = bank->getScintillator(1).getTRefPMRight();
-  pm_ref = bank->getPM(0);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
-  
-  // Scintillator 2 TRef
-  BOOST_REQUIRE(bank->getScintillator(1).getTRefPMLeft() != NULL);
-  
-  pm_ptr = bank->getScintillator(0).getTRefPMLeft();
-  pm_ref = bank->getPM(2);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
- 
-  pm_ptr = bank->getScintillator(0).getTRefPMRight();
-  pm_ref = bank->getPM(1);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
-   
-  pm_ptr = bank->getScintillator(1).getTRefPMLeft();
-  pm_ref = bank->getPM(3);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
-  
-  pm_ptr = bank->getScintillator(1).getTRefPMRight();
-  pm_ref = bank->getPM(0);
-  BOOST_REQUIRE(pm_ptr->getID() == pm_ref.getID());
-
-  // std::cout << "pm_ptr->getID():" << pm_ptr->getID() <<std::endl;
-  // std::cout << "pm_ref.getID():" << pm_ref.getID() <<std::endl;
-  
-  // PM 1 TRef
-  BOOST_REQUIRE(bank->getPM(0).getTRefKB() != NULL);
-  
-  JPetFEB* FEB_ptr = bank->getPM(0).getTRefKB();
-  JPetFEB& FEB_ref = bank->getFEB(0);
-  
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  // PM 2 TRef
-  BOOST_REQUIRE(bank->getPM(1).getTRefKB() != NULL);
-  
-  FEB_ptr = bank->getPM(0).getTRefKB();
-  FEB_ref = bank->getFEB(0);
-  
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  // PM 3 TRef
-  BOOST_REQUIRE(bank->getPM(2).getTRefKB() != NULL);
-  
-  FEB_ptr = bank->getPM(0).getTRefKB();
-  FEB_ref = bank->getFEB(0);
-  
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  // PM 4 TRef
-  BOOST_REQUIRE(bank->getPM(3).getTRefKB() != NULL);
-  
-  FEB_ptr = bank->getPM(0).getTRefKB();
-  FEB_ref = bank->getFEB(0);
-  
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  // FEB TRef
-  BOOST_REQUIRE(bank->getFEB(0).getTRefTRB() != NULL);
-  
-  JPetTRB* TRB_ptr = bank->getFEB(0).getTRefTRB();
-  JPetTRB& TRB_ref = bank->getTRB(0);
-  
-  BOOST_REQUIRE(TRB_ptr->getID() == TRB_ref.getID());
-  
-  // TRB TRef
-  // Lack of implementation
-  
-  // TOMBChannels 1 TRefs
-  JPetTOMBChannel& TOMBChannel_ref = bank->getTOMBChannel(0);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  
-  FEB_ptr = TOMBChannel_ref.getTRefFEB();
-  FEB_ref = bank->getFEB(0);
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  TRB_ptr  = TOMBChannel_ref.getTRefTRB();
-  TRB_ref = bank->getTRB(0);
-  BOOST_REQUIRE(TRB_ptr->getID() == TRB_ref.getID());
-  
-  JPetPM* PM_ptr = TOMBChannel_ref.getTRefPM();
-  JPetPM& PM_ref = bank->getPM(1);
-  BOOST_REQUIRE(PM_ptr->getID() == PM_ref.getID());
-  
-  // TOMBChannels 2 TRefs
-  TOMBChannel_ref = bank->getTOMBChannel(1);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  
-  FEB_ptr = TOMBChannel_ref.getTRefFEB();
-  FEB_ref = bank->getFEB(0);
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  TRB_ptr  = TOMBChannel_ref.getTRefTRB();
-  TRB_ref = bank->getTRB(0);
-  BOOST_REQUIRE(TRB_ptr->getID() == TRB_ref.getID());
-  
-  PM_ptr = TOMBChannel_ref.getTRefPM();
-  PM_ref = bank->getPM(0);
-  BOOST_REQUIRE(PM_ptr->getID() == PM_ref.getID());
-  
-  /* 
-   * Possible bug in implementation - for the same TOMBChannel two PMs are possible?
-  TOMBChannel_ref = bank->getTOMBChannel(1);
-  PM_ref = bank->getPM(2);
-  */
-  
-  // TOMBChannels 3 TRefs
-  TOMBChannel_ref = bank->getTOMBChannel(2);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  
-  FEB_ptr = TOMBChannel_ref.getTRefFEB();
-  FEB_ref = bank->getFEB(0);
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  TRB_ptr  = TOMBChannel_ref.getTRefTRB();
-  TRB_ref = bank->getTRB(0);
-  BOOST_REQUIRE(TRB_ptr->getID() == TRB_ref.getID());
-  
-  PM_ptr = TOMBChannel_ref.getTRefPM();
-  PM_ref = bank->getPM(3);
-  BOOST_REQUIRE(PM_ptr->getID() == PM_ref.getID());
-  
-  // TOMBChannels 4 TRefs
-  TOMBChannel_ref = bank->getTOMBChannel(3);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  BOOST_REQUIRE(TOMBChannel_ref.getTRefFEB() != NULL);
-  
-  FEB_ptr = TOMBChannel_ref.getTRefFEB();
-  FEB_ref = bank->getFEB(0);
-  BOOST_REQUIRE(FEB_ptr->id() == FEB_ref.id());
-  
-  TRB_ptr  = TOMBChannel_ref.getTRefTRB();
-  TRB_ref = bank->getTRB(0);
-  BOOST_REQUIRE(TRB_ptr->getID() == TRB_ref.getID());
-  
-  PM_ptr = TOMBChannel_ref.getTRefPM();
-  PM_ref = bank->getPM(2);
-  BOOST_REQUIRE(PM_ptr->getID() == PM_ref.getID());
-}
+}  
 
 BOOST_AUTO_TEST_CASE(getDataFromDBTest)
 {
@@ -635,65 +356,6 @@ BOOST_AUTO_TEST_CASE(generateTOMBChannelTest)
   }
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 4);
 }
-
-
-
-//BOOST_AUTO_TEST_CASE(fillContainersTest)
-//{
-//  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-//  paramGetter.fillAllContainers(1);
-//  BOOST_REQUIRE(bank.getScintillatorsSize() > 0);
-//  BOOST_REQUIRE(bank.getPMsSize() > 0);
-//  BOOST_REQUIRE(bank.getFEBsSize() > 0);
-//  BOOST_REQUIRE(bank.getTRBsSize() > 0);
-//}
-//
-//BOOST_AUTO_TEST_CASE(fillContainersTRefsTest)
-//{
-//  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-//  paramGetter.fillAllContainers(1);
-//
-//  paramGetter.fillAllTRefs();
-//}
-//
-//
-//BOOST_AUTO_TEST_CASE(fillAllContainers)
-//{
-//  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-//  paramGetter.fillAllContainers(1);
-//
-//  paramGetter.fillAllTRefs();
-//}
-
-
-
-//BOOST_AUTO_TEST_CASE(fillWriteAndReadContainersTest)
-//{
-//  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-//  paramGetter.fillAllContainers(1);
-//
-//  const char* l_fileName = "param_manager_test_file.txt";
-//  JPetWriter l_writerInstance(l_fileName);
-//  JPetReader l_readerInstance(l_fileName);
-//
-//  paramGetter.setWriter(&l_writerInstance);
-//  paramGetter.setReader(&l_readerInstance);
-//
-//  paramGetter.writerAllContainers(l_fileName);
-//  paramGetter.readAllContainers(l_fileName);
-//}
-//
-//BOOST_AUTO_TEST_CASE(containersIdTest)
-//{
-//  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-//  paramGetter.fillAllContainers(1);
-//
-//  BOOST_REQUIRE(paramGetter.getScintillator(0).getID() >= 0);
-//  BOOST_REQUIRE(paramGetter.getPM(0).getID() >= 0);
-//  BOOST_REQUIRE(paramGetter.getKB(0).id() >= 0);
-//  BOOST_REQUIRE(paramGetter.getTRB(0).getID() >= 0);
-//  BOOST_REQUIRE(paramGetter.getTOMB().id() >= 0);
-//}
 
 
 BOOST_AUTO_TEST_SUITE_END()
