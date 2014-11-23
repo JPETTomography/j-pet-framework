@@ -56,8 +56,6 @@ public:
 
   int WriteObject(const TObject* obj, const char* name){ return fFile.WriteObject(obj, name); }
   
-  virtual void closeTFile(void);
-  
 protected:
   std::string fFileName;
   TFile fFile;
@@ -70,6 +68,16 @@ protected:
 
 template <class T>
 bool JPetWriter::Write(const T& obj){
+//  if(!fIsBranchCreated) {
+//    std::cout <<"creating branch" <<std::endl;
+//    fTree.Branch(obj.GetName(), obj.GetName(), &obj);
+//    fIsBranchCreated = true;
+//  }
+//  fTree.Fill();      
+//  //fTree.FlushBaskets();
+
+//  return true;
+
     std::vector<T> wrapper;
     wrapper.push_back(obj);
     return Write(wrapper);
@@ -110,10 +118,13 @@ bool JPetWriter::Write( std::vector<T>& obj) {
 template <class T>
 bool JPetWriter::write(const T &p_item, const std::string &p_objectName)
 {
-  std::vector<T> l_wrapper;
-  l_wrapper.push_back(p_item);
+fTFile.WriteObject(&p_item, p_objectName.c_str());
+return true;
   
-  return write(l_wrapper, p_objectName);
+//  std::vector<T> l_wrapper;
+//  l_wrapper.push_back(p_item);
+//  
+//  return write(l_wrapper, p_objectName);
 }
 
 template <class T>

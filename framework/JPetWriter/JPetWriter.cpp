@@ -18,6 +18,7 @@ JPetWriter::JPetWriter(const char* p_fileName) :
   {
     ERROR("Could not open file to write.");
   }
+//  fTree.SetAutoSave(10000);
 }
 
 JPetWriter::~JPetWriter()
@@ -40,11 +41,3 @@ void JPetWriter::WriteHeader(TObject* header){
     fTree.GetUserInfo()->AddAt(header, JPetUserInfoStructure::kHeader);
 }
 
-void JPetWriter::closeTFile()
-{
-  if(fTFile.IsOpen())
-  {
-    fTFile.cd();
-    fTFile.Close();
-  }
-}
