@@ -30,7 +30,10 @@ JPetScopeModule::JPetScopeModule(const char* name, const char* title): JPetAnaly
 }
 
 JPetScopeModule::~JPetScopeModule() {
-  if (fWriter != NULL) delete fWriter;
+  if (fWriter != NULL) {
+    delete fWriter;
+    fWriter = 0;
+  }
 }
 
 void JPetScopeModule::createInputObjects(const char* inputFilename)
@@ -210,8 +213,11 @@ void JPetScopeModule::exec() {
 }
 
 void JPetScopeModule::terminate() {
-
-  fWriter->CloseFile();
+//  assert(fWriter);
+//  if(fWriter->IsOpenFile()) {
+//    std::cout <<"in JPetScope terminate()" <<std::endl;
+//    fWriter->CloseFile();
+//  }
 }
 
 

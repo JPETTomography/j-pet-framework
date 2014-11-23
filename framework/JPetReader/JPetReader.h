@@ -40,11 +40,12 @@ public:
   virtual long long GetEntries () const { return fTree->GetEntries(); }
   virtual int GetEntry (int entryNo) {return fTree->GetEntry(entryNo); } /// the name of the function is bad but it mimics ROOT function 
   virtual bool OpenFile(const char* filename);
-  virtual void ReadData(const char* objname = "");
+  virtual void ReadData(const char* objname = "tree");
   virtual TNamed& GetData () {return *fObject;}
   JPetTreeHeader * GetHeaderClone()const;
   virtual TObject * GetObject(const char * name) const {return fFile->Get(name);}
-  virtual bool isOpen() const {return fFile->IsOpen(); }
+  virtual bool isOpen() const {if (fFile) return fFile->IsOpen(); 
+                               else return false;}
   
   template <class T>
   void fillContainer(std::vector<T> &p_container, const std::string &p_objectName);

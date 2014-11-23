@@ -6,24 +6,29 @@
 JPetWriter::JPetWriter(const char* p_fileName) : 
 						fFileName(p_fileName),			// string z nazwą pliku
 						fFile(fFileName.c_str(), "RECREATE"),	// plik
-						fIsBranchCreated(false)
+						fIsBranchCreated(false),
+                                                fTree("tree","tree")
 {
   if(fFile.IsZombie())
   {
     ERROR("Could not open file to write.");
   }
-//  fTree.SetAutoSave(10000);
+  fTree.SetAutoSave(10000);
 }
 
 JPetWriter::~JPetWriter()
 {
-  //  closeTFile();
+  if(isOpen()) {
+    fTree.FlushBaskets();
+    fTree.AutoSave();
+  }
+
 }
 
 void JPetWriter::CloseFile() {
-    if (IsOpenFile() ) {
-      fFile.cd();
-      fTree.Write();
+    if (isOpen() ) {
+      fTree.FlushBaskets();
+      fTree.AutoSave();
       fFile.Close();
     }
     fFileName.clear();
