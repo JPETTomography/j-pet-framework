@@ -48,13 +48,10 @@ public:
   //bool OpenFile(const char* filename);
   void WriteHeader(TObject* header);
   void CloseFile();
-  
-  template <class T>
-  bool write(const T &p_item, const std::string &p_objectName);
-  template <class T>
-  bool write(std::vector<T> &p_container, const std::string &p_objectName);
+  inline bool IsOpenFile() const {return fFile.IsOpen();}
 
   int WriteObject(const TObject* obj, const char* name){ return fFile.WriteObject(obj, name); }
+  
   
 protected:
   std::string fFileName;
@@ -62,7 +59,6 @@ protected:
   bool fIsBranchCreated;
   TTree fTree;
   
-  TFile fTFile;
   TList fTList;
 };
 
@@ -113,43 +109,6 @@ bool JPetWriter::Write( std::vector<T>& obj) {
 	fTree.FlushBaskets();
     
 	return true;
-}
-
-template <class T>
-bool JPetWriter::write(const T &p_item, const std::string &p_objectName)
-{
-fTFile.WriteObject(&p_item, p_objectName.c_str());
-return true;
-  
-//  std::vector<T> l_wrapper;
-//  l_wrapper.push_back(p_item);
-//  
-//  return write(l_wrapper, p_objectName);
-}
-
-template <class T>
-bool JPetWriter::write(std::vector<T> &p_container, const std::string &p_objectName)
-{
-  if(p_container.empty())
-  {
-    WARNING("Vector passed is empty");
-    return false;
-  }
-  
-  if(!fTFile.IsOpen())
-  {
-    ERROR("Could not write to file.");
-    return false;
-  }
-  
-  for(typename std::vector<T>::iterator it = p_container.begin(); it != p_container.end(); ++it)
-  {
-    fTList.Add(&(*it));
-  }
-
-  fTFile.WriteObject(&fTList, p_objectName.c_str());
-  
-  return true;
 }
 
 #endif	// JPETWRITER_H

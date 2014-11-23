@@ -6,15 +6,9 @@
 JPetWriter::JPetWriter(const char* p_fileName) : 
 						fFileName(p_fileName),			// string z nazwą pliku
 						fFile(fFileName.c_str(), "RECREATE"),	// plik
-						fIsBranchCreated(false)//,
-						//fTFile(p_fileName, "RECREATE")
+						fIsBranchCreated(false)
 {
   if(fFile.IsZombie())
-  {
-    ERROR("Could not open file to write.");
-  }
-  
-  if(fTFile.IsZombie())
   {
     ERROR("Could not open file to write.");
   }
@@ -27,7 +21,7 @@ JPetWriter::~JPetWriter()
 }
 
 void JPetWriter::CloseFile() {
-    if (fFile.IsOpen() ) {
+    if (IsOpenFile() ) {
       fFile.cd();
       fTree.Write();
       fFile.Close();
