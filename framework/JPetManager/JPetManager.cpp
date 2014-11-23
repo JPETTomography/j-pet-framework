@@ -44,8 +44,7 @@ void JPetManager::Run()
       JPetScopeModule* module = new JPetScopeModule("JPetScopeModule", "Process Oscilloscope ASCII data into JPetEvent structures.");
       module->setFileName(getInputFileName());
       fTasks.push_front(module);
-    }
-    else {
+    } else {
       UnpackFile();
     }
   }

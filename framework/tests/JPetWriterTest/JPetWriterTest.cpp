@@ -28,9 +28,9 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( my_test1 )
 {
   JPetWriter writer("test.root");
-  BOOST_REQUIRE(writer.IsOpenFile());
+  BOOST_REQUIRE(writer.isOpen());
   writer.CloseFile();
-  BOOST_REQUIRE(!writer.IsOpenFile());
+  BOOST_REQUIRE(!writer.isOpen());
 }
 
 BOOST_AUTO_TEST_CASE( my_test2 )
@@ -45,7 +45,6 @@ BOOST_AUTO_TEST_CASE( my_test2 )
   BOOST_REQUIRE_EQUAL(reader.GetEntries(), 1);
   reader.GetEntry(0);
   TNamed& objOut = (TNamed&)reader.GetData();
-  reader.CloseFile();
   BOOST_REQUIRE(std::string(objOut.GetName())=="TNamed");
   BOOST_REQUIRE(std::string(objOut.GetTitle())=="Title of this testObj");
 }
@@ -93,7 +92,6 @@ BOOST_AUTO_TEST_CASE( my_test3 )
     BOOST_REQUIRE(std::string(objOut.GetName())=="TNamed");
     BOOST_REQUIRE(std::string(objOut.GetTitle())==Form("Title of this testObj%d",i));
   }
-  reader.CloseFile();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

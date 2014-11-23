@@ -59,4 +59,4 @@ endif
 ###################
 all: $(TEST_EXEC) 
 clean:
-	rm -f *.exe *.o $(LOG) 
+	rm -f *.exe *.o $(LOG) *.root

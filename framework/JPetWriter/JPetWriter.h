@@ -49,7 +49,6 @@ public:
   virtual bool isOpen() const {return fFile.IsOpen(); }
   void WriteHeader(TObject* header);
   void CloseFile();
-  inline bool IsOpenFile() const {return fFile.IsOpen();}
 
   int WriteObject(const TObject* obj, const char* name){ return fFile.WriteObject(obj, name); }
   
@@ -65,16 +64,6 @@ protected:
 
 template <class T>
 bool JPetWriter::Write(const T& obj){
-//  if(!fIsBranchCreated) {
-//    std::cout <<"creating branch" <<std::endl;
-//    fTree.Branch(obj.GetName(), obj.GetName(), &obj);
-//    fIsBranchCreated = true;
-//  }
-//  fTree.Fill();      
-//  //fTree.FlushBaskets();
-
-//  return true;
-
     std::vector<T> wrapper;
     wrapper.push_back(obj);
     return Write(wrapper);
