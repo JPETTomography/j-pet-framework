@@ -5,6 +5,7 @@
  */
 
 #include "JPetCmdParser.h"
+#include "../CommonTools/CommonTools.h"
 
 using namespace std;
 
@@ -86,6 +87,13 @@ void JPetCmdParser::parse(int argc, const char** argv)
 	cerr << "Wrong number of run id: " << l_runId << endl;
 	exit(-1);
       }
+    }
+    
+    string fileName(fVariablesMap["file"].as<string>());
+    if( ! CommonTools::ifFileExisting(fileName) )
+    {
+      cerr << "File : " << fileName << " does not exist" << endl;
+      exit(-1);
     }
 
   } catch (exception& e) {
