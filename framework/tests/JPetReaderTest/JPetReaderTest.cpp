@@ -54,21 +54,22 @@ BOOST_AUTO_TEST_CASE (bad_file)
   BOOST_REQUIRE(reader.fFile == NULL);
   BOOST_REQUIRE(reader.fObject == 0);
   BOOST_REQUIRE(reader.fTree == 0);
-
-  reader.CloseFile();
 }
 
 BOOST_AUTO_TEST_CASE (open_file)
 {
-  //std::cout << "test if open constructor works" << std::endl;
+  JPetWriter writer("test.root");
+  JPetSignal signal;
+  signal.setTime(101.43);
+  writer.Write( signal );
+  writer.CloseFile();
+
   JPetReader constructor_open("test.root");
   constructor_open.CloseFile();
-  
-  //std::cout << "test if OpenFile works" << std::endl;
+
   JPetReader reader;
   BOOST_REQUIRE( reader.OpenFile("test.root") );
-  reader.ReadData("");
-  reader.CloseFile();
+  reader.ReadData("tree");
 }
 
 BOOST_AUTO_TEST_CASE (read_and_write_objects )
@@ -83,7 +84,6 @@ BOOST_AUTO_TEST_CASE (read_and_write_objects )
   BOOST_REQUIRE_EQUAL(reader.GetEntries(), 1);
   reader.GetEntry(0);
   JPetSignal & signal2 = (JPetSignal&)reader.GetData();
-  reader.CloseFile();
   BOOST_REQUIRE_EQUAL(signal.getTime(), signal2.getTime());
 }
 
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE (proper_file)
   bool openedPropery = reader.OpenFile("test2.root");
   BOOST_REQUIRE(openedPropery );
   if (openedPropery) {
-    reader.ReadData("");
+    reader.ReadData("tree");
     BOOST_REQUIRE(reader.fBranch != 0);
     BOOST_REQUIRE(reader.fFile->IsOpen());
     BOOST_REQUIRE(reader.fObject != 0);
@@ -101,12 +101,6 @@ BOOST_AUTO_TEST_CASE (proper_file)
 
     BOOST_REQUIRE(reader.GetEntries() > 0);
     BOOST_REQUIRE(reader.GetEntry(0) > 0);
-
-    reader.CloseFile();
-
-    BOOST_REQUIRE(reader.fBranch == 0);
-    BOOST_REQUIRE(reader.fObject == 0);
-    BOOST_REQUIRE(reader.fTree == 0);
   }
 }
 

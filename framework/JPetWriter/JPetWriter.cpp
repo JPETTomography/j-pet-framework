@@ -6,29 +6,29 @@
 JPetWriter::JPetWriter(const char* p_fileName) : 
 						fFileName(p_fileName),			// string z nazwą pliku
 						fFile(fFileName.c_str(), "RECREATE"),	// plik
-						fIsBranchCreated(false)//,
-						//fTFile(p_fileName, "RECREATE")
+						fIsBranchCreated(false),
+                                                fTree("tree","tree")
 {
   if(fFile.IsZombie())
   {
     ERROR("Could not open file to write.");
   }
-  
-  if(fTFile.IsZombie())
-  {
-    ERROR("Could not open file to write.");
-  }
+  fTree.SetAutoSave(10000);
 }
 
 JPetWriter::~JPetWriter()
 {
-  //  closeTFile();
+  if(isOpen()) {
+    fTree.FlushBaskets();
+    fTree.AutoSave();
+  }
+
 }
 
 void JPetWriter::CloseFile() {
-    if (fFile.IsOpen() ) {
-      fFile.cd();
-      fTree.Write();
+    if (isOpen() ) {
+      fTree.FlushBaskets();
+      fTree.AutoSave();
       fFile.Close();
     }
     fFileName.clear();
@@ -40,11 +40,3 @@ void JPetWriter::WriteHeader(TObject* header){
     fTree.GetUserInfo()->AddAt(header, JPetUserInfoStructure::kHeader);
 }
 
-void JPetWriter::closeTFile()
-{
-  if(fTFile.IsOpen())
-  {
-    fTFile.cd();
-    fTFile.Close();
-  }
-}

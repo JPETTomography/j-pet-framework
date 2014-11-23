@@ -1,19 +1,19 @@
 ###################
 #THIS PART CAN BE MODIFIED
-PROJECT=JPetReader
-EXTRA_MODULES = JPetWriter JPetSignal JPetSigCh JPetTSlot JPetTreeHeader JPetLogger
+PROJECT=JPetWriter
+EXTRA_MODULES = JPetLogger JPetReader JPetTreeHeader
 #classes that need Dictionnaries 
-DICTS = JPetSignal JPetSigCh JPetTSlot JPetTreeHeader
+DICTS = JPetTreeHeader
 PQXX_LIB_SET = 
 DBHANDLER_LIB_SET = 
-UNPACKER_LIB_SET =
+UNPACKER_LIB_SET = 
 ###################
 OS = $(shell uname)
 CO = g++
 CFLAGS = -Wall `root-config --cflags`
 ###################
-LDFLAGS = -Wall `root-config --glibs --ldflags`
-LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system -lboost_program_options
+LDFLAGS = -Wall `root-config --glibs --ldflags` 
+LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system -lboost_program_options -lboost_regex
 LDFLAGS += ${LD_BOOST_FLAGS}
 ###################
 TEST_EXEC = $(PROJECT)Test.exe 
@@ -51,7 +51,7 @@ endif
 %.o: %.cpp
 	$(CO) -o $@ $(CFLAGS) -c $<
 %.exe: %.o
-	$(CO) -o $@ $< $(OBJ_ALL) $(LDFLAGS)
+	$(CO) -o $@ $< $(OBJ_ALL) $(LDFLAGS) 
 
 ###################
 %Test.o: %Test.cpp
