@@ -49,6 +49,9 @@ class JPetPM: public TNamed
   {
     fTRefFEB = &p_FEB;
   }
+
+  inline bool operator==(const JPetPM& pm) { return GetUniqueID() == pm.GetUniqueID(); }
+  inline bool operator!=(const JPetPM& pm) { return GetUniqueID() != pm.GetUniqueID(); }
   
   /*std::vector<TRef> getTRefKBs() const { return fTRefKBs; }
 

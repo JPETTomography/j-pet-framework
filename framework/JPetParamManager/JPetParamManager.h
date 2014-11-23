@@ -8,6 +8,8 @@
 #include "../../JPetLoggerInclude.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetDBParamGetter/JPetDBParamGetter.h"
+#include "../JPetReader/JPetReader.h"
+#include "../JPetWriter/JPetWriter.h"
 
 class JPetParamManager
 {
@@ -19,6 +21,10 @@ class JPetParamManager
   ~JPetParamManager();
 
   void getParametersFromDatabase(const int run);
+  
+  bool readParametersFromFile(JPetReader * reader);
+  bool saveParametersToFile(JPetWriter * writer);
+
   bool saveParametersToFile(const char* filename);
   bool readParametersFromFile(const char* filename);
   const JPetParamBank& getParamBank() const { return *fBank;}
