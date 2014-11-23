@@ -25,6 +25,8 @@ class JPetScin: public TNamed
 
   JPetScin();
   JPetScin(int id, float attenLen, float length, float height, float width);
+  ~JPetScin();
+
   inline int getID() const { return fID; }
   inline float getAttenLen() const { return fAttenLen; }
   inline ScinDimensions getScinSize() const { return fScinSize; }
@@ -33,6 +35,9 @@ class JPetScin: public TNamed
   inline void setAttenLen(float attenLen) { fAttenLen = attenLen; }
   inline void setScinSize(ScinDimensions size) { fScinSize = size; }
   void setScinSize(Dimension dim, float value);
+
+  inline bool operator==(const JPetScin& scin) { return GetUniqueID() == scin.GetUniqueID(); }
+  inline bool operator!=(const JPetScin& scin) { return GetUniqueID() != scin.GetUniqueID(); }
 
   /*
   JPetPM* getTRefPMLeft() { return (JPetPM*)fTRefPMLeft.GetObject(); }

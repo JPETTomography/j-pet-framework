@@ -10,19 +10,25 @@
  */
 class JPetBarrelSlot: public TNamed
 {
- public:
+public:
   JPetBarrelSlot();
   JPetBarrelSlot(int slotId, int layerID, int layerRad, float slotTheta);
+  ~JPetBarrelSlot();
+  
   inline int getSlotID() const { return fSlotID; }
   inline int getLayerID() const { return fLayerID; }
   inline int getLayerRad() const { return fLayerRad; }
   inline float getSlotTheta() const { return fSlotTheta; }
+
+  inline bool operator==(const JPetBarrelSlot& bslot) { return GetUniqueID() == bslot.GetUniqueID(); }
+  inline bool operator!=(const JPetBarrelSlot& bslot) { return GetUniqueID() != bslot.GetUniqueID(); }
+
   inline void setSlotID(int id) { fSlotID = id; }
   inline void setLayerID(int id) { fLayerID = id; }
   inline void setLayerRad(int layerRad) { fLayerRad = layerRad; }
   inline void setSlotTheta(float slotTheta) { fSlotTheta = slotTheta;}
-
- private:
+  
+private:
   int fSlotID;
   int fLayerID;
   int fLayerRad;

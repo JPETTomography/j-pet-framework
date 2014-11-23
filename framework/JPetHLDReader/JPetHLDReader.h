@@ -29,7 +29,8 @@ public:
   JPetHLDReader();
   explicit JPetHLDReader(const char* filename);
   virtual ~JPetHLDReader();
-
+  
+public:
   void CloseFile();
   long long GetEntries () const {
     return fTree->GetEntries();

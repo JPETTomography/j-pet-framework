@@ -25,6 +25,8 @@ class JPetPM: public TNamed
 	 int HVset,
 	 int HVopt,
 	 std::pair<float, float> HVgainNumber);
+  ~JPetPM();
+
   inline Side getSide() const { return fSide; }
   inline int getID() const { return fID; }
   inline int getHVset() const { return fHVset; }
@@ -47,6 +49,9 @@ class JPetPM: public TNamed
   {
     fTRefFEB = &p_FEB;
   }
+
+  inline bool operator==(const JPetPM& pm) { return GetUniqueID() == pm.GetUniqueID(); }
+  inline bool operator!=(const JPetPM& pm) { return GetUniqueID() != pm.GetUniqueID(); }
   
   /*std::vector<TRef> getTRefKBs() const { return fTRefKBs; }
 

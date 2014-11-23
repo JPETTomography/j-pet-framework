@@ -25,10 +25,17 @@
 
  Moreover, the AddStatsObject(TObject*) method can be used to store any TObject (like TH1 or TGraph) in an internal TList. Such stored objects can be accessed by GetStatsObjects()->At(i) where i is the number of stored object. Add objects from the list will be written to the ROOT file at the end of processing. This mechanism is intended for saving any statistics of the data processing (See workdir/AnalysisExample).
  */
-class JPetAnalysisModule: public TNamed {
- public:
+class JPetAnalysisModule: public TNamed 
+{
+public:
   JPetAnalysisModule();
   JPetAnalysisModule(const char* name, const char* title, TTree * shared_tree = NULL);
+  
+private:
+  JPetAnalysisModule(const JPetAnalysisModule &analysisModule);
+  JPetAnalysisModule& operator=(const JPetAnalysisModule &analysisModule);
+  
+public:
   virtual ~JPetAnalysisModule(); 
   virtual void CreateInputObjects(const char* inputFilename=0)=0; //
   virtual void CreateOutputObjects(const char* outputFilename=0)=0; //

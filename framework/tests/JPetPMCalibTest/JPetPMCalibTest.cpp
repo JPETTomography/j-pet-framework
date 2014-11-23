@@ -15,8 +15,8 @@ BOOST_AUTO_TEST_CASE(DefaultConstructorTest)
   BOOST_REQUIRE_EQUAL(pmCalib.GetId(), 256);
   BOOST_REQUIRE_EQUAL(pmCalib.GetNamePM(), "PMCalib");
   BOOST_REQUIRE_CLOSE(pmCalib.GetOpthv(), 2.f, epsilon);
-  BOOST_REQUIRE_CLOSE(pmCalib.GetC2e_1(), 4.f, epsilon);
-  BOOST_REQUIRE_CLOSE(pmCalib.GetC2e_2(), 8.f, epsilon);
+  BOOST_REQUIRE_CLOSE(pmCalib.GetECalConst1(), 4.f, epsilon);
+  BOOST_REQUIRE_CLOSE(pmCalib.GetECalConst2(), 8.f, epsilon);
   BOOST_REQUIRE_CLOSE(pmCalib.GetGainalpha(), 16.f, epsilon);
   BOOST_REQUIRE_CLOSE(pmCalib.GetGainbeta(), 32.f, epsilon);
   BOOST_REQUIRE_EQUAL(pmCalib.GetPMCalibAssignment().id, 64);

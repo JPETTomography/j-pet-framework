@@ -5,10 +5,13 @@
   */
 
 #include "./JPetManager.h"
-#include "../../JPetLoggerInclude.h"
-//#include "../JPetAnalysisModule/JPetAnalysisModule.h"
+
 #include <cassert>
 #include <ctime>
+#include <string>
+
+#include "../../JPetLoggerInclude.h"
+#include "../JPetScopeModule/JPetScopeModule.h"
 
 //ClassImp(JPetManager);
 
@@ -36,9 +39,19 @@ void JPetManager::Run()
   // write to log about starting
   INFO( "========== Starting processing tasks: " + GetTimeString() + " ==========" );
 
-  UnpackFile();
+  if (fCmdParser.IsFileTypeSet()) {
+    if (fCmdParser.getFileType() == "scope") {
+      JPetScopeModule* module = new JPetScopeModule("JPetScopeModule", "Process Oscilloscope ASCII data into JPetEvent structures.");
+      module->setFileName(getInputFileName());
+      fTasks.push_front(module);
+    }
+    else {
+      UnpackFile();
+    }
+  }
+
   JPetWriter* currentWriter = 0;
-  std::vector<JPetAnalysisModule*>::iterator taskIter;
+  std::list<JPetAnalysisModule*>::iterator taskIter;
   // pseudo-input container
   long long  kNevent = 0;
   for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
@@ -70,7 +83,7 @@ void JPetManager::ParseCmdLine(int argc, char** argv)
 
 JPetManager::~JPetManager()
 {
-  std::vector<JPetAnalysisModule*>::iterator taskIter;
+  std::list<JPetAnalysisModule*>::iterator taskIter;
   for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
     delete (*taskIter);
     *taskIter = 0;

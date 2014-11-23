@@ -14,21 +14,9 @@ JPetSignal::JPetSignal() :
   fQualityOfTime(0),
   fLeft(true),
   fLeadingPoints("JPetSigCh", 4),
-  fTrailingPoints("JPetSigCh", 4),
-  fNTrailing(0),
-  fNLeading(0)
+  fTrailingPoints("JPetSigCh", 4)
 { }
 
-/*
-JPetSignal::JPetSignal(double time, double qual, bool left, const std::vector<ExtendedThreshold>& leading, const std::vector<ExtendedThreshold>& trailing) :
-  TNamed("JPetSignal", "Signal Structure"),
-  fTime(time),
-  fQualityOfTime(qual),
-  fLeft(left),
-  fLeadingPoints(leading),
-  fTrailingPoints(trailing)
-{ }
-*/
 
 JPetSignal::~JPetSignal()
 { }
@@ -47,11 +35,11 @@ void JPetSignal::addPoint(const JPetSigCh& sigch){
   
   assert((sigch.getType() == JPetSigCh::Trailing) || (sigch.getType() == JPetSigCh::Leading));
   
-  if (sigch.getType() == JPetSigCh::Trailing && fNTrailing < 4) {
-    new (fTrailingPoints[fNTrailing++]) JPetSigCh(sigch);
+  if (sigch.getType() == JPetSigCh::Trailing) {
+    new (fTrailingPoints[getNumberOfTrailingEdgePoints()]) JPetSigCh(sigch);
     fTrailingPoints.Sort();
-  } else if(fNLeading < 4) {
-    new (fLeadingPoints[fNLeading++]) JPetSigCh(sigch);
+  } else {
+    new (fLeadingPoints[getNumberOfLeadingEdgePoints()]) JPetSigCh(sigch);
     fLeadingPoints.Sort();
   }
   

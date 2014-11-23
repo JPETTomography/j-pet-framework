@@ -14,7 +14,7 @@
 #else
 class pqxx;
 class pqxx::result;
-class pqxx::result::const_iterator;
+class pqxx::result::const_iterator;r
 #endif /* __CINT __ */
 
 class JPetDBParamGetter
@@ -24,7 +24,12 @@ public:
   JPetDBParamGetter();
   JPetDBParamGetter(const char* dBConfigFile);
   JPetParamBank* generateParamBank(const int p_run_id);
-
+  ~JPetDBParamGetter();
+  
+private:
+  JPetDBParamGetter(const JPetDBParamGetter &DBParamGetter);
+  JPetDBParamGetter& operator=(const JPetDBParamGetter &DBParamGetter);
+  
 private:
   pqxx::result getDataFromDB(const std::string& sqlFunction, const std::string& args);
   std::string generateSelectQuery(const std::string& sqlFunction, const std::string& args);
@@ -36,20 +41,16 @@ private:
   JPetTRB generateTRB(pqxx::result::const_iterator row);
   JPetTOMBChannel generateTOMBChannel(pqxx::result::const_iterator row);
 
-  void fillTRefs(ParamObjectType type);
-
   void fillScintillators(const int p_run_id, JPetParamBank& paramBank);
   void fillParamContainer(ParamObjectType type, const int p_run_id, JPetParamBank& paramBank);
 
   void fillPMs(const int p_run_id, JPetParamBank& paramBank);
   void fillPMCalibs(const int p_run_id, JPetParamBank& paramBank);
   void fillFEBs(const int p_run_id, JPetParamBank& paramBank);
-  void fillTRBs(const int p_run_id, JPetParamBank& paramBank);
   void fillTOMBChannels(const int p_run_id, JPetParamBank& paramBank);
-  void fillScintillatorsTRefs(const int p_run_id, JPetParamBank& paramBank);
+  void fillTRBs(const int p_run_id, JPetParamBank& paramBank);
   void fillPMsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank);
-  void fillTRBsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillAllTRefs(const int p_run_id, JPetParamBank& paramBank);
 

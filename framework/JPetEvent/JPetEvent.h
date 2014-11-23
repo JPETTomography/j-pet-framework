@@ -21,13 +21,14 @@ class JPetHit;
  * An event consists of two hits (JPetHit objects) in two barel slots.
  * Please note that the order of the hits in an event is random.
  */
-class JPetEvent: public TNamed {
-  
-  public:
-
+class JPetEvent: public TNamed 
+{  
+public:
   JPetEvent();
   JPetEvent(float Time, float QualityOfTime, JPetHit& firstHit, JPetHit& secondHit);
   virtual ~JPetEvent();
+  
+public:
   /// Get the reconstructed absolute time of the event wrt beginning of the run [ps]
   inline const float getTime() const {return fTime;};
   inline const float getQualityOfTime() const {return fQualityOfTime;};

@@ -79,8 +79,8 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   BOOST_REQUIRE(bank.getPMCalib(0).GetId() == 256);
   BOOST_REQUIRE(bank.getPMCalib(0).GetNamePM() == "JPetPMCalibTest");
   BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetOpthv(), 2.f, epsilon);
-  BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetC2e_1(), 4.f, epsilon);
-  BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetC2e_2(), 8.f, epsilon);
+  BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetECalConst1(), 4.f, epsilon);
+  BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetECalConst2(), 8.f, epsilon);
   BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetGainalpha(), 16.f, epsilon);
   BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetGainbeta(), 32.f, epsilon);
   BOOST_REQUIRE(bank.getPMCalib(0).GetPMCalibAssignment().id == 128);
@@ -174,10 +174,10 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   pm3.setID(3);
   pm4.setID(4);
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
-  pm1.setTRefScin(scint1);
-  pm2.setTRefScin(scint1);
-  pm3.setTRefScin(scint2);
-  pm4.setTRefScin(scint2);
+  pm1.setScin(scint1);
+  pm2.setScin(scint1);
+  pm3.setScin(scint2);
+  pm4.setScin(scint2);
 
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
   JPetTRB trb;

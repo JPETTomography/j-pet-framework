@@ -61,10 +61,12 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
   // Set time wrt beginning of TSlot [ps] or charge
   inline void setValue( float val ) { fValue = val; }
   inline void setType( EdgeType type ) { fType = type; }
-
+  
+  inline void setPMID (Int_t PMID) { fPMID = PMID; }
   inline void setThreshold( float thr ) { fThreshold = thr; }
   inline void setDAQch( Int_t daqch ) { fDAQch = daqch; }
-  
+
+  inline Int_t getPMID() const { return fPMID; }
   inline float getThreshold() const { return fThreshold; }
   inline Int_t getDAQch() const { return fDAQch; }
 
