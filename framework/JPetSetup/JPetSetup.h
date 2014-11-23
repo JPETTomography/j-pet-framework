@@ -37,6 +37,9 @@ public:
   virtual std::string name(void) const;
   virtual std::string creationDate(void) const;
   virtual std::string modifiedDate(void) const;
+
+  inline bool operator==(const JPetSetup& setup) { return GetUniqueID() == setup.GetUniqueID(); }
+  inline bool operator!=(const JPetSetup& setup) { return GetUniqueID() != setup.GetUniqueID(); }
   
 private:
   ClassDef(JPetSetup, 1);

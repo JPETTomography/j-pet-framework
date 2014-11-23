@@ -9,6 +9,7 @@ namespace boost;
 class boost::noncopyable;
 #endif /* __CINT __ */
 #include <ctime>
+#include <fstream>
 #include <sstream>
 #include <string>
 
@@ -52,6 +53,17 @@ public:
     int num;
     in >> num;
     return num;
+  }
+  static bool ifFileExisting(const std::string &name)
+  {
+    std::ifstream f(name.c_str());
+    if(f.good())
+    {
+      f.close();
+      return true;
+    }
+    f.close();
+    return false;
   }
 };
 
