@@ -46,6 +46,7 @@ public:
   template <class T>
   bool Write(std::vector<T>& obj);
   //bool OpenFile(const char* filename);
+  virtual bool isOpen() const {return fFile.IsOpen(); }
   void WriteHeader(TObject* header);
   void CloseFile();
   inline bool IsOpenFile() const {return fFile.IsOpen();}

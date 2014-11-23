@@ -43,6 +43,8 @@ public:
   virtual void ReadData(const char* objname = "");
   virtual TNamed& GetData () {return *fObject;}
   JPetTreeHeader * GetHeaderClone()const;
+  virtual TObject * GetObject(const char * name) const {return fFile->Get(name);}
+  virtual bool isOpen() const {return fFile->IsOpen(); }
   
   template <class T>
   void fillContainer(std::vector<T> &p_container, const std::string &p_objectName);

@@ -36,6 +36,9 @@ class JPetScin: public TNamed
   inline void setScinSize(ScinDimensions size) { fScinSize = size; }
   void setScinSize(Dimension dim, float value);
 
+  inline bool operator==(const JPetScin& scin) { return GetUniqueID() == scin.GetUniqueID(); }
+  inline bool operator!=(const JPetScin& scin) { return GetUniqueID() != scin.GetUniqueID(); }
+
   /*
   JPetPM* getTRefPMLeft() { return (JPetPM*)fTRefPMLeft.GetObject(); }
   JPetPM* getTRefPMRight(){ return (JPetPM*)fTRefPMRight.GetObject(); }
