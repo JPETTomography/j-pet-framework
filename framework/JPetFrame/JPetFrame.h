@@ -38,6 +38,9 @@ public:
   virtual std::string status(void) const;
   virtual std::string description(void) const;
   virtual int version(void) const;
+
+  inline bool operator==(const JPetFrame& frame) { return GetUniqueID() == frame.GetUniqueID(); }
+  inline bool operator!=(const JPetFrame& frame) { return GetUniqueID() != frame.GetUniqueID(); }
   
 private:
   ClassDef(JPetFrame, 1);

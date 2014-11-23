@@ -19,6 +19,10 @@ public:
   inline int getLayerID() const { return fLayerID; }
   inline int getLayerRad() const { return fLayerRad; }
   inline float getSlotTheta() const { return fSlotTheta; }
+
+  inline bool operator==(const JPetBarrelSlot& bslot) { return GetUniqueID() == bslot.GetUniqueID(); }
+  inline bool operator!=(const JPetBarrelSlot& bslot) { return GetUniqueID() != bslot.GetUniqueID(); }
+
   inline void setSlotID(int id) { fSlotID = id; }
   inline void setLayerID(int id) { fLayerID = id; }
   inline void setLayerRad(int layerRad) { fLayerRad = layerRad; }
