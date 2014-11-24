@@ -3,40 +3,45 @@
 #include "../JPetUserInfoStructure/JPetUserInfoStructure.h"
 
 
-JPetWriter::JPetWriter(const char* p_fileName) : 
-						fFileName(p_fileName),			// string z nazwą pliku
-						fFile(fFileName.c_str(), "RECREATE"),	// plik
-						fIsBranchCreated(false),
-                                                fTree("tree","tree")
+JPetWriter::JPetWriter(const char* p_fileName) :
+  fFileName(p_fileName),			// string z nazwą pliku
+  fFile(0),	// plik
+  fIsBranchCreated(false),
+  fTree(0)
 {
-  if(fFile.IsZombie())
-  {
+  fFile = new TFile(fFileName.c_str(), "RECREATE");
+  if (!isOpen()) {
     ERROR("Could not open file to write.");
+  } else {
+    fTree = new TTree("tree", "tree");
+    fTree->SetAutoSave(10000);
   }
-  fTree.SetAutoSave(10000);
 }
 
 JPetWriter::~JPetWriter()
 {
-  if(isOpen()) {
-    fTree.FlushBaskets();
-    fTree.AutoSave();
+  if (isOpen()) {
+    fTree->AutoSave("SaveSelf");
+    delete fFile;
+    fFile = 0;
+    fTree = 0;
   }
-
 }
 
-void JPetWriter::CloseFile() {
-    if (isOpen() ) {
-      fTree.FlushBaskets();
-      fTree.AutoSave();
-      fFile.Close();
-    }
-    fFileName.clear();
-    fIsBranchCreated = false;
+void JPetWriter::CloseFile()
+{
+  if (isOpen() ) {
+    fTree->AutoSave("SaveSelf");
+    delete fFile;
+    fFile = 0;
+  }
+  fFileName.clear();
+  fIsBranchCreated = false;
 }
 
-void JPetWriter::WriteHeader(TObject* header){
-     // @todo as the second argument should be passed some enum to indicate position of header
-    fTree.GetUserInfo()->AddAt(header, JPetUserInfoStructure::kHeader);
+void JPetWriter::WriteHeader(TObject* header)
+{
+  // @todo as the second argument should be passed some enum to indicate position of header
+  fTree->GetUserInfo()->AddAt(header, JPetUserInfoStructure::kHeader);
 }
 
