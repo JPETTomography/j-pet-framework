@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE (default_constructor)
 {
   JPetReader reader;
   BOOST_REQUIRE(reader.fBranch == 0);
-  BOOST_REQUIRE(reader.fFile == NULL);
+  BOOST_REQUIRE(!reader.isOpen());
   BOOST_REQUIRE(reader.fObject == 0);
   BOOST_REQUIRE(reader.fTree == 0);
 }
@@ -51,34 +51,48 @@ BOOST_AUTO_TEST_CASE (bad_file)
   /// not a ROOT file
   BOOST_REQUIRE(!reader.OpenFile("bad_file.txt"));
   BOOST_REQUIRE(reader.fBranch == 0);
-  BOOST_REQUIRE(reader.fFile == NULL);
+  BOOST_REQUIRE(!reader.isOpen());
   BOOST_REQUIRE(reader.fObject == 0);
   BOOST_REQUIRE(reader.fTree == 0);
 }
 
 BOOST_AUTO_TEST_CASE (open_file)
 {
-  JPetWriter writer("test.root");
+  TFile file("test.root", "RECREATE");
+  TTree tree("tree", "tree");
+  JPetSignal* filler = 0;
+  tree.Branch("JPetSignal", "JPetSignal", &filler);
+
   JPetSignal signal;
   signal.setTime(101.43);
-  writer.Write( signal );
-  writer.CloseFile();
+  filler = &signal;
+  tree.Fill();
+  file.Write();
+  file.Close("R");
 
   JPetReader constructor_open("test.root");
+  std::cout <<"open?:"<< constructor_open.fFile->IsOpen()<<std::endl;
+  BOOST_REQUIRE(constructor_open.ReadData("tree"));
   constructor_open.CloseFile();
 
   JPetReader reader;
-  BOOST_REQUIRE( reader.OpenFile("test.root") );
-  reader.ReadData("tree");
+  BOOST_REQUIRE(reader.OpenFile("test.root") );
+  BOOST_REQUIRE(reader.ReadData("tree"));
 }
 
 BOOST_AUTO_TEST_CASE (read_and_write_objects )
 {
-  JPetWriter writer("test2.root");
+  TFile file("test2.root", "RECREATE");
+  TTree tree("tree", "tree");
+  JPetSignal* filler = 0;
+  tree.Branch("JPetSignal", "JPetSignal", &filler);
+
   JPetSignal signal;
   signal.setTime(101.43);
-  writer.Write( signal );
-  writer.CloseFile();
+  filler = &signal;
+  tree.Fill();
+  file.Write();
+  file.Close("R");
   
   JPetReader reader("test2.root");
   BOOST_REQUIRE_EQUAL(reader.GetEntries(), 1);
@@ -95,7 +109,7 @@ BOOST_AUTO_TEST_CASE (proper_file)
   if (openedPropery) {
     reader.ReadData("tree");
     BOOST_REQUIRE(reader.fBranch != 0);
-    BOOST_REQUIRE(reader.fFile->IsOpen());
+    BOOST_REQUIRE(reader.isOpen());
     BOOST_REQUIRE(reader.fObject != 0);
     BOOST_REQUIRE(reader.fTree != 0);
 

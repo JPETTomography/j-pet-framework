@@ -8,14 +8,14 @@ JPetReader::JPetReader() :
   fBranch(0),
   fObject(0),
   fTree(0),
-  fFile(NULL)
+  fFile(0)
 {}
 
 JPetReader::JPetReader(const char* p_filename) :
   fBranch(0),
   fObject(0),
   fTree(0),
-  fFile(NULL)
+  fFile(0)
 {
   if (OpenFile(p_filename)) {
     ReadData("tree");
@@ -24,19 +24,16 @@ JPetReader::JPetReader(const char* p_filename) :
 
 JPetReader::~JPetReader()
 {
-  if (isOpen()) {
+  if (fFile) {
     delete fFile;
-    fFile = NULL;
+    fFile = 0;
   }
 }
 
 void JPetReader::CloseFile ()
 {
-  if (fFile != NULL) {
-    if (fFile->IsOpen()) fFile->Close();
-    delete fFile;
-    fFile = NULL;
-  }
+  if (fFile) delete fFile;
+  fFile = 0;
   fBranch = 0;
   fObject = 0;
   fTree = 0;
@@ -46,26 +43,38 @@ void JPetReader::CloseFile ()
 bool JPetReader::OpenFile (const char* filename)
 {
   CloseFile();
-
   fFile = new TFile(filename);
-
-  if ((!fFile->IsOpen()) || fFile->IsZombie()) {
-    ERROR("Cannot open file.");
-    CloseFile();
+  if ((!isOpen()) || fFile->IsZombie()) {
+    ERROR("Cannot open file");
     return false;
   }
   return true;
 }
 
-void JPetReader::ReadData (const char* objname)
+bool JPetReader::ReadData (const char* treename)
 {
-  assert(objname);
-  fTree = static_cast<TTree*>(fFile->Get(objname));
-  assert(fTree);
+  
+  if (!isOpen() ) {
+    ERROR("File not open");
+    return false;
+  }
+  if (!treename) {
+    ERROR("empty tree name");
+    return false;
+  }
+  fTree = static_cast<TTree*>(fFile->Get(treename));
+  if (!fTree) {
+    ERROR("in reading tree");
+    return false;
+  }
   TObjArray* arr = fTree->GetListOfBranches();
   fBranch = (TBranch*)(arr->At(0));
-  assert(fBranch);
+  if (!fBranch) {
+    ERROR("in reading branch from tree");
+    return false;
+  }
   fBranch->SetAddress(&fObject);
+  return true;
 }
 
 /**
