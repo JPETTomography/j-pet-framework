@@ -80,6 +80,14 @@ void JPetManager::ParseCmdLine(int argc, char** argv)
   }
 }
 
+int JPetManager::getRunNumber() const
+{
+  if (fCmdParser.isRunNumberSet()) {
+    return fCmdParser.getRunNumber();
+  }
+  return -1;
+}
+
 JPetManager::~JPetManager()
 {
   std::list<JPetAnalysisModule*>::iterator taskIter;
