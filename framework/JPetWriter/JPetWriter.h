@@ -1,6 +1,6 @@
 
-#ifndef JPETWRITER_H 
-#define JPETWRITER_H 
+#ifndef JPETWRITER_H
+#define JPETWRITER_H
 
 #include <vector>
 #include <string>
@@ -38,7 +38,7 @@ class boost::noncopyable;
 class JPetWriter : private boost::noncopyable
 {
 public:
-  JPetWriter(const char *p_fileName);
+  JPetWriter(const char* p_fileName);
   virtual ~JPetWriter(void);
 
   template <class T>
@@ -46,59 +46,64 @@ public:
   template <class T>
   bool Write(std::vector<T>& obj);
   //bool OpenFile(const char* filename);
-  virtual bool isOpen() const {return fFile.IsOpen(); }
+  virtual bool isOpen() const {
+    if (fFile) return (fFile->IsOpen() && !fFile->IsZombie());
+    else return false;
+  }
   void WriteHeader(TObject* header);
   void CloseFile();
 
-  int WriteObject(const TObject* obj, const char* name){ return fFile.WriteObject(obj, name); }
-  
-  
+  int WriteObject(const TObject* obj, const char* name) {
+    return fFile->WriteObject(obj, name);
+  }
+
+
 protected:
   std::string fFileName;
-  TFile fFile;
+  TFile* fFile;
   bool fIsBranchCreated;
-  TTree fTree;
-  
+  TTree* fTree;
+
   TList fTList;
 };
 
 template <class T>
-bool JPetWriter::Write(const T& obj){
-    std::vector<T> wrapper;
-    wrapper.push_back(obj);
-    return Write(wrapper);
+bool JPetWriter::Write(const T& obj)
+{
+  std::vector<T> wrapper;
+  wrapper.push_back(obj);
+  return Write(wrapper);
 }
 
 template <class T>
-bool JPetWriter::Write( std::vector<T>& obj) {
-	
-    if (obj.size() == 0) {
-        WARNING("Vector passed is empty");
-        return false;
-    }
-    
-    if ( !fFile.IsOpen() ) {
-		ERROR("Could not write to file. Have you closed it already?");
-		return false;
-	}
-    
-    fFile.cd(/*fFileName.c_str()*/); // -> http://root.cern.ch/drupal/content/current-directory
-	
-	T* filler = &obj[0];
-    
-	if(!fIsBranchCreated) {
-	  fTree.Branch(filler->GetName(), filler->GetName(), &filler);
-	  fIsBranchCreated = true;
-	}
-	
-	for (unsigned int i = 0; i < obj.size(); i++){
-        	filler = &obj[i]; 
-		fTree.Fill();      
-	}
-	
-	fTree.FlushBaskets();
-    
-	return true;
+bool JPetWriter::Write( std::vector<T>& obj)
+{
+
+  if (obj.size() == 0) {
+    WARNING("Vector passed is empty");
+    return false;
+  }
+
+  if ( !fFile->IsOpen() ) {
+    ERROR("Could not write to file. Have you closed it already?");
+    return false;
+  }
+
+  fFile->cd(/*fFileName.c_str()*/); // -> http://root.cern.ch/drupal/content/current-directory
+
+  T* filler = &obj[0];
+
+  if (!fIsBranchCreated) {
+    fTree->Branch(filler->GetName(), filler->GetName(), &filler);
+    fIsBranchCreated = true;
+  }
+
+  for (unsigned int i = 0; i < obj.size(); i++) {
+    filler = &obj[i];
+    fTree->Fill();
+  }
+
+  return true;
 }
 
 #endif	// JPETWRITER_H
