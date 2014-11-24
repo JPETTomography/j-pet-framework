@@ -21,7 +21,7 @@ class JPetUnpacker: public TObject
 
   JPetUnpacker();
   ~JPetUnpacker();
-  bool Exec();
+  bool exec();
   inline int getEventsToProcess() const { return fEventsToProcess; }
   inline std::string getHldFile() const { return fHldFile; }
   inline std::string getCfgFile() const { return fCfgFile; }

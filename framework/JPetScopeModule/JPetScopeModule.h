@@ -27,11 +27,6 @@ class JPetScopeModule: public JPetAnalysisModule {
   JPetScopeModule();
   JPetScopeModule(const char* name, const char* title);
   virtual ~JPetScopeModule();
-  virtual void CreateInputObjects(const char* inputFilename = 0) {createInputObjects(inputFilename);}
-  virtual void CreateOutputObjects(const char* outputFilename = 0) {createOutputObjects(outputFilename);}
-  virtual void Exec() {exec();}
-  virtual long long GetEventNb() {return fFiles.size();}
-  virtual void Terminate() {terminate();}
   virtual void createInputObjects(const char* inputFilename = 0);
   virtual void createOutputObjects(const char* outputFilename = 0);
   virtual void exec();
