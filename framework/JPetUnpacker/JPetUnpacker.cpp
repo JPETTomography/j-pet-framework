@@ -31,7 +31,7 @@ void JPetUnpacker::setParams(const std::string& hldFile,  int numOfEvents, const
   fEventsToProcess = numOfEvents;
 }
 
-bool JPetUnpacker::Exec()
+bool JPetUnpacker::exec()
 {
   if ( !boost::filesystem::exists(getHldFile())) 
   {

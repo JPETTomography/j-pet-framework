@@ -54,13 +54,13 @@ void JPetManager::Run()
   // pseudo-input container
   long long  kNevent = 0;
   for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
-    (*taskIter)->CreateInputObjects(); /// readers
-    (*taskIter)->CreateOutputObjects(); /// writers + histograms
-    kNevent = (*taskIter)->GetEventNb();
+    (*taskIter)->createInputObjects(); /// readers
+    (*taskIter)->createOutputObjects(); /// writers + histograms
+    kNevent = (*taskIter)->getEventNb();
     for (long long i = 0; i < kNevent; i++) {
-      (*taskIter)->Exec();
+      (*taskIter)->exec();
     }
-    (*taskIter)->Terminate();
+    (*taskIter)->terminate();
   }
 
   INFO( "======== Finished processing all tasks: " + GetTimeString() + " ========\n" );
