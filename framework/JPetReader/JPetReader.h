@@ -36,14 +36,14 @@ public:
   explicit JPetReader(const char* p_filename);
   virtual ~JPetReader(void);
   
-  virtual void CloseFile();
-  virtual long long GetEntries () const { return fTree->GetEntries(); }
-  virtual int GetEntry (int entryNo) {return fTree->GetEntry(entryNo); } /// the name of the function is bad but it mimics ROOT function 
-  virtual bool OpenFile(const char* filename);
-  virtual bool ReadData(const char* objname = "tree");
-  virtual TNamed& GetData () {return *fObject;}
-  JPetTreeHeader * GetHeaderClone()const;
-  virtual TObject * GetObject(const char * name) { if(fFile) return fFile->Get(name);
+  virtual void closeFile();
+  virtual long long getEntries () const { return fTree->GetEntries(); }
+  virtual int getEntry (int entryNo) {return fTree->GetEntry(entryNo); } /// the name of the function is bad but it mimics ROOT function 
+  virtual bool openFile(const char* filename);
+  virtual bool readData(const char* objname = "tree");
+  virtual TNamed& getData () {return *fObject;}
+  JPetTreeHeader * getHeaderClone()const;
+  virtual TObject * getObject(const char * name) { if(fFile) return fFile->Get(name);
                                                   else return 0;}
   virtual bool isOpen() const { if(fFile) return (fFile->IsOpen() && !fFile->IsZombie()); 
                                 else return false; } 

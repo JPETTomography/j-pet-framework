@@ -53,7 +53,7 @@ bool JPetParamManager::saveParametersToFile(JPetWriter * writer)
     ERROR("Could not write parameters to file. The provided JPetWriter is closed.");
     return false;
   }
-  writer->WriteObject(fBank, "ParamBank");
+  writer->writeObject(fBank, "ParamBank");
   return true;
 }
 
@@ -64,7 +64,7 @@ bool JPetParamManager::readParametersFromFile(JPetReader * reader)
     ERROR("Cannot read parameters from file. The provided JPetReader is closed.");
     return false;
   }
-  fBank = static_cast<JPetParamBank*>(reader->GetObject("ParamBank"));
+  fBank = static_cast<JPetParamBank*>(reader->getObject("ParamBank"));
 
   if (!fBank) return false;
   return true;
