@@ -41,8 +41,8 @@ public:
   virtual float GetGainbeta(void) const { return gainbeta; };
   virtual JPetPMCalibAssignment GetPMCalibAssignment(void) { return PMCalibAssignment; }
 
-  inline bool operator==(const JPetPMCalib& calib) { return GetUniqueID() == calib.GetUniqueID(); }
-  inline bool operator!=(const JPetPMCalib& calib) { return GetUniqueID() != calib.GetUniqueID(); }
+  inline bool operator==(const JPetPMCalib& calib) { return GetId() == calib.GetId(); }
+  inline bool operator!=(const JPetPMCalib& calib) { return GetId() != calib.GetId(); }
   
 protected:
   int id;

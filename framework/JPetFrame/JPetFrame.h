@@ -39,8 +39,8 @@ public:
   virtual std::string description(void) const;
   virtual int version(void) const;
 
-  inline bool operator==(const JPetFrame& frame) { return GetUniqueID() == frame.GetUniqueID(); }
-  inline bool operator!=(const JPetFrame& frame) { return GetUniqueID() != frame.GetUniqueID(); }
+  inline bool operator==(const JPetFrame& frame) { return id() == frame.id(); }
+  inline bool operator!=(const JPetFrame& frame) { return id() != frame.id(); }
   
 private:
   ClassDef(JPetFrame, 1);
