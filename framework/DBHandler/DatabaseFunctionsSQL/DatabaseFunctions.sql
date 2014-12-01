@@ -1794,6 +1794,8 @@ BEGIN
 		"TRBOutput".id = "TRBTOMBConnection".trboutput_id
 		AND
 		"TRBTOMBConnection".setup_id = "Run".setup_id
+		AND	
+		"PMKBConnection".setup_id = "Run".setup_id
 		AND
 		"TRBTOMBConnection".tombinput_id = "TOMBInput".id
 	  LOOP
