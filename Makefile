@@ -78,6 +78,5 @@ clean:
 	@($(foreach MODULE, $(MODULES),$(MAKE) -C $(SRC_DIR)/$(MODULE) clean;))
 	@($(foreach EXAMPLE, $(EXAMPLE_DIRS), $(MAKE) -C $(EXAMPLE) clean;))
 	$(MAKE) -C $(SRC_DIR)/DBHandler clean
-	$(MAKE) -C $(TEST_DIR) clean
-	$(MAKE) -C $(SRC_DIR)/tests clean
+	cd $(TEST_DIR); $(MAKE) clean
 
