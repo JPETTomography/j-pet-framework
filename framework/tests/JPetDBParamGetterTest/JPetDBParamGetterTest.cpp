@@ -357,5 +357,63 @@ BOOST_AUTO_TEST_CASE(generateTOMBChannelTest)
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 4);
 }
 
+BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  int run  = 2;
+  JPetParamBank bank;
+  
+  std::cout << "PMCalib numbers:" << bank.getPMCalibsSize() <<std::endl;
+
+  BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
+  
+  paramGetter.fillPMCalibs(run, bank);
+  
+  BOOST_REQUIRE(bank.getPMCalibsSize() == 4); // 0 due to run id == 1  // TODO Check it with DB
+  
+  BOOST_REQUIRE(bank.getPMCalib(0).GetId() == 1);
+  BOOST_REQUIRE(bank.getPMCalib(0).GetNamePM() == "dummy");
+  BOOST_REQUIRE(bank.getPMCalib(0).GetOpthv() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(0).GetECalConst1() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(0).GetECalConst2() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(0).GetGainalpha() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(0).GetGainbeta() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(0).GetPMCalibAssignment().id == 1);
+  BOOST_REQUIRE(bank.getPMCalib(0).GetPMCalibAssignment().photomultiplier_id == 1);
+  
+  BOOST_REQUIRE(bank.getPMCalib(1).GetId() == 1);
+  BOOST_REQUIRE(bank.getPMCalib(1).GetNamePM() == "dummy");
+  BOOST_REQUIRE(bank.getPMCalib(1).GetOpthv() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(1).GetECalConst1() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(1).GetECalConst2() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(1).GetGainalpha() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(1).GetGainbeta() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(1).GetPMCalibAssignment().id == 4);
+  BOOST_REQUIRE(bank.getPMCalib(1).GetPMCalibAssignment().photomultiplier_id == 4);
+  
+  BOOST_REQUIRE(bank.getPMCalib(2).GetId() == 1);
+  BOOST_REQUIRE(bank.getPMCalib(2).GetNamePM() == "dummy");
+  BOOST_REQUIRE(bank.getPMCalib(2).GetOpthv() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(2).GetECalConst1() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(2).GetECalConst2() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(2).GetGainalpha() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(2).GetGainbeta() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(2).GetPMCalibAssignment().id == 2);
+  BOOST_REQUIRE(bank.getPMCalib(2).GetPMCalibAssignment().photomultiplier_id == 3);
+  
+  BOOST_REQUIRE(bank.getPMCalib(3).GetId() == 1);
+  BOOST_REQUIRE(bank.getPMCalib(3).GetNamePM() == "dummy");
+  BOOST_REQUIRE(bank.getPMCalib(3).GetOpthv() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(3).GetECalConst1() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(3).GetECalConst2() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(3).GetGainalpha() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(3).GetGainbeta() == 0);
+  BOOST_REQUIRE(bank.getPMCalib(3).GetPMCalibAssignment().id == 3);
+  BOOST_REQUIRE(bank.getPMCalib(3).GetPMCalibAssignment().photomultiplier_id == 7);
+  
+  bank.clear();
+
+  BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
