@@ -141,7 +141,7 @@ void JPetParamManager::getTOMBDataAndCreateXMLFile(const int p_run_id)
       }
       ++numberOfChannels;
     }
-    createXMLFile("out.xml", channelOffset, numberOfChannels);
+    createXMLFile("conf.xml", channelOffset, numberOfChannels);
     return;
   }
   ERROR("TOMBChannelsSize is equal to zero.");
