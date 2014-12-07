@@ -36,6 +36,10 @@ class JPetParamManager
 
   JPetDBParamGetter fDBParamGetter;
   JPetParamBank* fBank;
+
+ protected:
+  void createXMLFile(const std::string &channelDataFileName, int channelOffset, int numberOfChannels);
+  void getTOMBDataAndCreateXMLFile(const int p_run_id);
 };
 
 #endif
