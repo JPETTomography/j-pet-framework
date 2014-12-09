@@ -24,11 +24,11 @@ private:
   JPetMacroLoader& operator=(const JPetMacroLoader &macroLoader);
   
 public:
-  virtual void CreateInputObjects(const char* inputFilename=0);
-  virtual void CreateOutputObjects(const char* outputFilename=0);
-  virtual void Exec();
-  virtual long long GetEventNb() {return fEventNb;}
-  virtual void Terminate();
+  virtual void createInputObjects(const char* inputFilename=0);
+  virtual void createOutputObjects(const char* outputFilename=0);
+  virtual void exec();
+  virtual long long getEventNb() {return fEventNb;}
+  virtual void terminate();
 
   ClassDef(JPetMacroLoader,1);
 

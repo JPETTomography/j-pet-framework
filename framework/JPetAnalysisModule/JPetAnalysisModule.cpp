@@ -18,20 +18,20 @@ JPetAnalysisModule::~JPetAnalysisModule()
 	
 }
 
-void JPetAnalysisModule::RunSubmodules(){
+void JPetAnalysisModule::runSubmodules(){
 	for (int i = 0; i < fSubmodules.size(); i++)
-		fSubmodules[i]->Exec();
+		fSubmodules[i]->exec();
 }
 
-void JPetAnalysisModule::AddSubmodule( JPetAnalysisModule* new_submodule ){
+void JPetAnalysisModule::addSubmodule( JPetAnalysisModule* new_submodule ){
 	fSubmodules.push_back( new_submodule );
 }
 
-int JPetAnalysisModule::AddStatsObject(TObject * statObj){
+int JPetAnalysisModule::addStatsObject(TObject * statObj){
   fStats.Add( statObj );
   return fStats.GetEntries();
 }
 
-const TList * JPetAnalysisModule::GetStatsObjects() const{
+const TList * JPetAnalysisModule::getStatsObjects() const{
   return &fStats;
 }

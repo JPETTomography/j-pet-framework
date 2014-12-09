@@ -17,8 +17,8 @@ JPetReader::JPetReader(const char* p_filename) :
   fTree(0),
   fFile(0)
 {
-  if (OpenFile(p_filename)) {
-    ReadData("tree");
+  if (openFile(p_filename)) {
+    readData("tree");
   }
 }
 
@@ -30,7 +30,7 @@ JPetReader::~JPetReader()
   }
 }
 
-void JPetReader::CloseFile ()
+void JPetReader::closeFile ()
 {
   if (fFile) delete fFile;
   fFile = 0;
@@ -40,9 +40,9 @@ void JPetReader::CloseFile ()
 }
 
 
-bool JPetReader::OpenFile (const char* filename)
+bool JPetReader::openFile (const char* filename)
 {
-  CloseFile();
+  closeFile();
   fFile = new TFile(filename);
   if ((!isOpen()) || fFile->IsZombie()) {
     ERROR("Cannot open file");
@@ -51,7 +51,7 @@ bool JPetReader::OpenFile (const char* filename)
   return true;
 }
 
-bool JPetReader::ReadData (const char* treename)
+bool JPetReader::readData (const char* treename)
 {
   
   if (!isOpen() ) {
@@ -82,7 +82,7 @@ bool JPetReader::ReadData (const char* treename)
  *
  * Using a copy rather than direct pointer is essential as the original header belongs to JPetReader::fTree and would be deleted along with it.
  */
-JPetTreeHeader* JPetReader::GetHeaderClone() const
+JPetTreeHeader* JPetReader::getHeaderClone() const
 {
   // get a pointer to a header wchich belongs to fTree
   JPetTreeHeader* header =  (JPetTreeHeader*)fTree->GetUserInfo()->At(JPetUserInfoStructure::kHeader);

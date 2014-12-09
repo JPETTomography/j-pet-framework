@@ -290,7 +290,7 @@ int JPetDBParamGetter::getTOMBChannelFromDescription(std::string p_desc) const
 {
   // parsing the string description of a TOMB channel to extract the channel number
   // convention: tast 4 characters of the description represent the number
-     const char * l_pattern = ".*(\\d{4}).*";
+     const char * l_pattern = ".*\\s(\\d{1,4}).*";
      boost::regex l_regex(l_pattern);
      boost::smatch l_matches;
 

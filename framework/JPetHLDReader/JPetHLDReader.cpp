@@ -17,15 +17,15 @@ JPetHLDReader::JPetHLDReader (const char* filename):
   fTree(0),
   fFile(NULL)
 {
-  if (OpenFile(filename) ) ReadData();
+  if (openFile(filename) ) readData();
 }
 
 JPetHLDReader::~JPetHLDReader ()
 {
-  CloseFile();
+  closeFile();
 }
 
-void JPetHLDReader::CloseFile ()
+void JPetHLDReader::closeFile ()
 {
   if (fFile != NULL) {
     if (fFile->IsOpen()) fFile->Close();
@@ -38,21 +38,21 @@ void JPetHLDReader::CloseFile ()
 }
 
 
-bool JPetHLDReader::OpenFile (const char* filename)
+bool JPetHLDReader::openFile (const char* filename)
 {
-  CloseFile();
+  closeFile();
   fFile = new TFile(filename);
 
   if ((!fFile->IsOpen()) || fFile->IsZombie()) {
     ERROR("Cannot open file.");
-    CloseFile();
+    closeFile();
     return false;
   }
   return true;
 }
 
 
-void JPetHLDReader::ReadData ()
+void JPetHLDReader::readData ()
 {
   fTree = static_cast<TTree*>(fFile->Get("T")); /// @todo add some comment
   assert(fTree);

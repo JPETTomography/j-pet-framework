@@ -31,16 +31,16 @@ public:
   virtual ~JPetHLDReader();
   
 public:
-  void CloseFile();
-  long long GetEntries () const {
+  void closeFile();
+  long long getEntries () const {
     return fTree->GetEntries();
   }
-  int GetEntry (int entryNo) {
+  int getEntry (int entryNo) {
     return fTree->GetEntry(entryNo);
   }
-  bool OpenFile(const char* filename);
-  void ReadData();
-  Event& GetData() {
+  bool openFile(const char* filename);
+  void readData();
+  Event& getData() {
     return *fEvent;
   }
 

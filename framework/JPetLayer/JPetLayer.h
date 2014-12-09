@@ -35,8 +35,8 @@ public:
   virtual std::string name(void) const;
   virtual float radius(void) const;
 
-  inline bool operator==(const JPetLayer& layer) { return GetUniqueID() == layer.GetUniqueID(); }
-  inline bool operator!=(const JPetLayer& layer) { return GetUniqueID() != layer.GetUniqueID(); }
+  inline bool operator==(const JPetLayer& layer) { return id() == layer.id(); }
+  inline bool operator!=(const JPetLayer& layer) { return id() != layer.id(); }
   
 private:
   ClassDef(JPetLayer, 1);

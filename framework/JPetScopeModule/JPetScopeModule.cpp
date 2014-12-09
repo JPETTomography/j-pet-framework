@@ -197,7 +197,7 @@ void JPetScopeModule::exec() {
 
     event->setHits(*hit1, *hit2);
 
-    fWriter->Write(*event);
+    fWriter->write(*event);
 
     delete sig1;
     delete sig2;
@@ -216,7 +216,7 @@ void JPetScopeModule::terminate() {
 //  assert(fWriter);
 //  if(fWriter->IsOpenFile()) {
 //    std::cout <<"in JPetScope terminate()" <<std::endl;
-//    fWriter->CloseFile();
+//    fWriter->closeFile();
 //  }
 }
 

@@ -38,7 +38,7 @@ class JPetManager: public TNamed {
   const char* getInputFileName() const;
   int getRunNumber() const;
   JPetParamManager & getParamManagerInstance() { return fParamManager; }
-  void UnpackFile() { if(fCmdParser.IsFileTypeSet()) fUnpacker.Exec();}
+  void UnpackFile() { if(fCmdParser.IsFileTypeSet()) fUnpacker.exec();}
   TString GetTimeString() const;
 
 //  ClassDef(JPetManager,1);
