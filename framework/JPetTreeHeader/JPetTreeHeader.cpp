@@ -9,77 +9,53 @@
 
 ClassImp(JPetTreeHeader);
 
-JPetTreeHeader::JPetTreeHeader( int run, TString producer, int version ):
-  fRunNo(run), fProducerName(producer), fProducerVersion(version)
+JPetTreeHeader::JPetTreeHeader():
+  fRunNo(-1),
+  fSourcePosition(-1),
+  fBaseFilename("filename not set")
 {
 }
 
-TString JPetTreeHeader::Stringify() const
+
+JPetTreeHeader::JPetTreeHeader(int run):
+  fRunNo(run),
+  fSourcePosition(-1),
+  fBaseFilename("filename not set")
+{
+}
+
+TString JPetTreeHeader::stringify() const
 {
   TString tmp;
-  tmp.Append( "Data file info:" );
-  tmp.Append( "\nrun number          :  " ).Append( CommonTools::Itoa(fRunNo));
-  tmp.Append( "\nproducer name       :  " ).Append( fProducerName );
-  tmp.Append( "\nproducer version    :  " ).Append( CommonTools::Itoa( fProducerVersion));
-  tmp.Append("\n");
-
-  tmp.Append( "number of HLD files :  " ).Append( CommonTools::Itoa( fHLDnames.size()));
-  tmp.Append( "\nList of HLD files:\n" );
   tmp.Append("-----------------------------------------------------------------\n");
-  // iterate over all HLD files
-  for (int i = 0; i < fHLDnames.size(); i++ ) {
-    tmp.Append( "file : " ).Append( getHLDname(i) ).Append("   ");
-    tmp.Append( "id : " ).Append( CommonTools::Itoa( getHLDid(i)) ).Append("\n");
-    tmp.Append( "time window width : " ).Append( Form( "%f ps", getHLDwindowWidth(i) ) ).Append("\n");
-    tmp.Append( "start time : " ).Append( Form("%lf", getHLDstartTime(i) ) ).Append("\n");
-    tmp.Append( "first event : " ).Append( CommonTools::Itoa( getHLDfirstEvt(i)) ).Append("   ");
-    tmp.Append( "number of events : " ).Append( CommonTools::Itoa( getHLDnEvts(i)) ).Append("\n");
+  tmp.Append("------------------------- General Info --------------------------\n");
+  tmp.Append("-----------------------------------------------------------------\n");
+  tmp.Append( "Run number              : " ).Append( CommonTools::Itoa(fRunNo)).Append("\n");
+  tmp.Append( "Base file name          : " ).Append( getBaseFileName() ).Append("\n");
+  tmp.Append( "Source (if any) position: " ).Append( Form("%lf",getSourcePosition()) ).Append("\n");
+  tmp.Append("-----------------------------------------------------------------\n");
+  tmp.Append("-------------- Processing history (oldest first)-----------------\n");
+  tmp.Append("-----------------------------------------------------------------\n");
+  // iterate over all stages of processing history
+  for (int i = 0; i < getStagesNb(); i++ ) {
+    const ProcessingStageInfo & info = getProcessingStageInfo(i);
+    tmp.Append( "Module Name         : " ).Append( info.fModuleName ).Append("\n");
+    tmp.Append( "Module desc.        : " ).Append( info.fModuleDescription ).Append("\n");
+    tmp.Append( "Module version      : " ).Append( CommonTools::Itoa( info.fModuleVersion ) ).Append("\n");
+    tmp.Append( "Started processing  : " ).Append( info.fCreationTime ).Append("\n");
     tmp.Append("-----------------------------------------------------------------\n");
   }
   
   return tmp;
 }
 
-
-int JPetTreeHeader::addHLDinfo(TString name, int id, int nEvts, float width,
-			       int firstEvt, double startT )
+int JPetTreeHeader::addStageInfo(TString p_name, TString p_title, int p_version, TString p_time_stamp )
 {
-
-  fHLDnames.push_back( name );
-  fHLDids.push_back( id );
-  fHLDwinWidths.push_back( width );
-  fHLDstartTimes.push_back( startT );
-  fHLDnEvts.push_back( nEvts );
-  fHLDfirstEvt.push_back( firstEvt );
-
-  return fHLDnames.size();
+  ProcessingStageInfo stage;
+  stage.fModuleName = p_name;
+  stage.fModuleDescription = p_title;
+  stage.fModuleVersion = p_version;
+  stage.fCreationTime = p_time_stamp;
+  fStages.push_back( stage );
 }
 
-TString JPetTreeHeader::getHLDname(int no) const
-{
-  return fHLDnames.at( no );
-}
-
-int JPetTreeHeader::getHLDid(int no) const
-{
-  return fHLDids.at( no );
-}
-
-int JPetTreeHeader::getHLDnEvts(int no) const
-{
-  return fHLDnEvts.at( no );
-}
-
-float JPetTreeHeader::getHLDwindowWidth(int no) const{
-  return fHLDwinWidths.at( no );
-}
-
-int JPetTreeHeader::getHLDfirstEvt(int no) const
-{
-  return fHLDfirstEvt.at( no );
-}
-
-double JPetTreeHeader::getHLDstartTime(int no) const
-{
-  return fHLDstartTimes.at( no );
-}

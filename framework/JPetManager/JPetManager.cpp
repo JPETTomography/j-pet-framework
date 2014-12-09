@@ -54,8 +54,8 @@ void JPetManager::Run()
   // pseudo-input container
   long long  kNevent = 0;
   for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
-    (*taskIter)->createInputObjects(); /// readers
-    (*taskIter)->createOutputObjects(); /// writers + histograms
+    (*taskIter)->createInputObjects( getInputFileName() ); /// readers
+    (*taskIter)->createOutputObjects( getInputFileName() ); /// writers + histograms
     kNevent = (*taskIter)->getEventNb();
     for (long long i = 0; i < kNevent; i++) {
       (*taskIter)->exec();
@@ -78,6 +78,14 @@ void JPetManager::ParseCmdLine(int argc, char** argv)
       fUnpacker.setParams(fCmdParser.getFileName().c_str());
     }
   }
+}
+
+int JPetManager::getRunNumber() const
+{
+  if (fCmdParser.isRunNumberSet()) {
+    return fCmdParser.getRunNumber();
+  }
+  return -1;
 }
 
 JPetManager::~JPetManager()
@@ -104,6 +112,9 @@ const char* JPetManager::getInputFileName() const
   }
   if ( pos == std::string::npos ) {
     pos = name.find(".hld");
+  }
+  if ( pos == std::string::npos ) {
+    pos = name.find(".root");
   }
   if ( pos != std::string::npos ) {
     name.erase( pos );
