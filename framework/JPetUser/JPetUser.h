@@ -54,6 +54,9 @@ public:
   virtual bool isRoot(void) const;
   virtual std::string creationDate(void) const;
   virtual std::string lastLoginDate(void) const;
+
+  inline bool operator==(const JPetUser& user) { return id() == user.id(); }
+  inline bool operator!=(const JPetUser& user) { return id() != user.id(); }
   
 private:
   ClassDef(JPetUser, 1);

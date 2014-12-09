@@ -72,8 +72,8 @@ public:
     fTRefTRBs = &p_TRB;
   }
 
-  inline bool operator==(const JPetFEB& feb) { return GetUniqueID() == feb.GetUniqueID(); }
-  inline bool operator!=(const JPetFEB& feb) { return GetUniqueID() != feb.GetUniqueID(); }
+  inline bool operator==(const JPetFEB& feb) { return getID() == feb.getID(); }
+  inline bool operator!=(const JPetFEB& feb) { return getID() != feb.getID(); }
   
 
 protected:

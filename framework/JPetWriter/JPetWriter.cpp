@@ -28,7 +28,7 @@ JPetWriter::~JPetWriter()
   }
 }
 
-void JPetWriter::CloseFile()
+void JPetWriter::closeFile()
 {
   if (isOpen() ) {
     fTree->AutoSave("SaveSelf");
@@ -39,7 +39,7 @@ void JPetWriter::CloseFile()
   fIsBranchCreated = false;
 }
 
-void JPetWriter::WriteHeader(TObject* header)
+void JPetWriter::writeHeader(TObject* header)
 {
   // @todo as the second argument should be passed some enum to indicate position of header
   fTree->GetUserInfo()->AddAt(header, JPetUserInfoStructure::kHeader);

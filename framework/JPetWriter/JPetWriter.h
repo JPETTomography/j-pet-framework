@@ -42,18 +42,18 @@ public:
   virtual ~JPetWriter(void);
 
   template <class T>
-  bool Write(const T& obj);
+  bool write(const T& obj);
   template <class T>
-  bool Write(std::vector<T>& obj);
+  bool write(std::vector<T>& obj);
   //bool OpenFile(const char* filename);
   virtual bool isOpen() const {
     if (fFile) return (fFile->IsOpen() && !fFile->IsZombie());
     else return false;
   }
-  void WriteHeader(TObject* header);
-  void CloseFile();
+  void writeHeader(TObject* header);
+  void closeFile();
 
-  int WriteObject(const TObject* obj, const char* name) {
+  int writeObject(const TObject* obj, const char* name) {
     return fFile->WriteObject(obj, name);
   }
 
@@ -68,15 +68,15 @@ protected:
 };
 
 template <class T>
-bool JPetWriter::Write(const T& obj)
+bool JPetWriter::write(const T& obj)
 {
   std::vector<T> wrapper;
   wrapper.push_back(obj);
-  return Write(wrapper);
+  return write(wrapper);
 }
 
 template <class T>
-bool JPetWriter::Write( std::vector<T>& obj)
+bool JPetWriter::write( std::vector<T>& obj)
 {
 
   if (obj.size() == 0) {

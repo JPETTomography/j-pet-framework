@@ -38,8 +38,8 @@ public:
   virtual std::string creationDate(void) const;
   virtual std::string modifiedDate(void) const;
 
-  inline bool operator==(const JPetSetup& setup) { return GetUniqueID() == setup.GetUniqueID(); }
-  inline bool operator!=(const JPetSetup& setup) { return GetUniqueID() != setup.GetUniqueID(); }
+  inline bool operator==(const JPetSetup& setup) { return id() == setup.id(); }
+  inline bool operator!=(const JPetSetup& setup) { return id() != setup.id(); }
   
 private:
   ClassDef(JPetSetup, 1);

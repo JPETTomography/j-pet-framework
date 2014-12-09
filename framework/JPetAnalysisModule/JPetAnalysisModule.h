@@ -18,12 +18,12 @@
  *
  * In order to implement one stage of data analysis, user should create a class inheriting from JPetAnalysisModule and fill its methods with custom analysis code. Next, the Analysis Module object must be created and added as a task to the JPetManager in order to be executed. 
  The following methods can be filled with the user code:
- + CreateInputObjects
- + CreateOutputObjects
- + Exec
- + Terminate
+ + createInputObjects
+ + createOutputObjects
+ + exec
+ + terminate
 
- Moreover, the AddStatsObject(TObject*) method can be used to store any TObject (like TH1 or TGraph) in an internal TList. Such stored objects can be accessed by GetStatsObjects()->At(i) where i is the number of stored object. Add objects from the list will be written to the ROOT file at the end of processing. This mechanism is intended for saving any statistics of the data processing (See workdir/AnalysisExample).
+ Moreover, the addStatsObject(TObject*) method can be used to store any TObject (like TH1 or TGraph) in an internal TList. Such stored objects can be accessed by getStatsObjects()->At(i) where i is the number of stored object. Add objects from the list will be written to the ROOT file at the end of processing. This mechanism is intended for saving any statistics of the data processing (See workdir/AnalysisExample).
  */
 class JPetAnalysisModule: public TNamed 
 {
@@ -37,20 +37,20 @@ private:
   
 public:
   virtual ~JPetAnalysisModule(); 
-  virtual void CreateInputObjects(const char* inputFilename=0)=0; //
-  virtual void CreateOutputObjects(const char* outputFilename=0)=0; //
-  virtual void Exec()=0; // called for every event
-  virtual long long GetEventNb()const=0;
-  virtual void RunSubmodules();
-  virtual void Terminate()=0; // called once when analysis terminates
+  virtual void createInputObjects(const char* inputFilename=0)=0; //
+  virtual void createOutputObjects(const char* outputFilename=0)=0; //
+  virtual void exec()=0; // called for every event
+  virtual long long getEventNb()=0;
+  virtual void runSubmodules();
+  virtual void terminate()=0; // called once when analysis terminates
 
-  int AddStatsObject(TObject * statObj);
-  const TList * GetStatsObjects() const; 
+  int addStatsObject(TObject * statObj);
+  const TList * getStatsObjects() const; 
 
   ClassDef(JPetAnalysisModule,1);
 
 protected:
-  virtual void AddSubmodule( JPetAnalysisModule* new_submodule );
+  virtual void addSubmodule( JPetAnalysisModule* new_submodule );
   TTree fSubmoduleSharedTree;
   TTree* fSuperSharedTree;
   std::vector< JPetAnalysisModule* > fSubmodules;

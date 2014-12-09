@@ -36,9 +36,10 @@ public:
   const JPetPM & getPM()const{ return (JPetPM&)*fPM.GetObject(); }
   float getThreshold()const{ return fThreshold; }
   unsigned int getChannel()const{ return fChannel; }
+  std::string getDescription()const{ return m_description; }
 
-  inline bool operator==(const JPetTOMBChannel& channel) { return GetUniqueID() == channel.GetUniqueID(); }
-  inline bool operator!=(const JPetTOMBChannel& channel) { return GetUniqueID() != channel.GetUniqueID(); }
+  inline bool operator==(const JPetTOMBChannel& channel) { return getChannel() == channel.getChannel(); }
+  inline bool operator!=(const JPetTOMBChannel& channel) { return getChannel() != channel.getChannel(); }
 
 private:
   unsigned int fChannel;

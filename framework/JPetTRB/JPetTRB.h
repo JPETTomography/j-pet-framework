@@ -22,8 +22,8 @@ class JPetTRB: public TNamed
   inline void setType(int type) { fType = type; }
   inline void setChannel(int ch) { fChannel = ch; }
 
-  inline bool operator==(const JPetTRB& trb) { return GetUniqueID() == trb.GetUniqueID(); }
-  inline bool operator!=(const JPetTRB& trb) { return GetUniqueID() != trb.GetUniqueID(); }
+  inline bool operator==(const JPetTRB& trb) { return getID() == trb.getID(); }
+  inline bool operator!=(const JPetTRB& trb) { return getID() != trb.getID(); }
   
  private:
   int fID;

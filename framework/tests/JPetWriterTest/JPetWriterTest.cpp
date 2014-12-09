@@ -18,7 +18,7 @@
 //  //bool OpenFile(const char* filename);
 //  void WriteHeader(TObject* header);
 //  inline bool IsOpenFile() const {return fFile.IsOpen();}
-//  void CloseFile();
+//  void closeFile();
 //
 //  int WriteObject(const TObject* obj, const char* name){ return fFile.WriteObject(obj, name); }
 //  
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE( my_test1 )
 {
   JPetWriter writer("test.root");
   BOOST_REQUIRE(writer.isOpen());
-  writer.CloseFile();
+  writer.closeFile();
   BOOST_REQUIRE(!writer.isOpen());
 }
 
@@ -38,13 +38,13 @@ BOOST_AUTO_TEST_CASE( my_test2 )
   std::string fileName = "test2.root";
   JPetWriter writer(fileName.c_str());
   TNamed obj("TNamed", "Title of this testObj");
-  writer.Write(obj);
-  writer.CloseFile();
+  writer.write(obj);
+  writer.closeFile();
   
   JPetReader reader(fileName.c_str());
-  BOOST_REQUIRE_EQUAL(reader.GetEntries(), 1);
-  reader.GetEntry(0);
-  TNamed& objOut = (TNamed&)reader.GetData();
+  BOOST_REQUIRE_EQUAL(reader.getEntries(), 1);
+  reader.getEntry(0);
+  TNamed& objOut = (TNamed&)reader.getData();
   BOOST_REQUIRE(std::string(objOut.GetName())=="TNamed");
   BOOST_REQUIRE(std::string(objOut.GetTitle())=="Title of this testObj");
 }
@@ -79,16 +79,16 @@ BOOST_AUTO_TEST_CASE( my_test3 )
   for (int i = 0; i < kHugeNumberOfObjects; i++) {
     TNamed obj("TNamed", Form("Title of this testObj%d",i));
     if (i%1000==0) std::cout<<"*"<<std::flush;
-    writer.Write(obj);
+    writer.write(obj);
   }
   std::cout <<std::endl;
-  writer.CloseFile();
+  writer.closeFile();
   
   JPetReader reader(fileName.c_str());
-  BOOST_REQUIRE_EQUAL(reader.GetEntries(), kHugeNumberOfObjects);
+  BOOST_REQUIRE_EQUAL(reader.getEntries(), kHugeNumberOfObjects);
   for (int i = 0; i < kHugeNumberOfObjects; i++) {
-    reader.GetEntry(i);
-    TNamed& objOut = (TNamed&)reader.GetData();
+    reader.getEntry(i);
+    TNamed& objOut = (TNamed&)reader.getData();
     BOOST_REQUIRE(std::string(objOut.GetName())=="TNamed");
     BOOST_REQUIRE(std::string(objOut.GetTitle())==Form("Title of this testObj%d",i));
   }

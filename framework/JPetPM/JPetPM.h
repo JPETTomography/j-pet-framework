@@ -50,8 +50,8 @@ class JPetPM: public TNamed
     fTRefFEB = &p_FEB;
   }
 
-  inline bool operator==(const JPetPM& pm) { return GetUniqueID() == pm.GetUniqueID(); }
-  inline bool operator!=(const JPetPM& pm) { return GetUniqueID() != pm.GetUniqueID(); }
+  inline bool operator==(const JPetPM& pm) { return getID() == pm.getID(); }
+  inline bool operator!=(const JPetPM& pm) { return getID() != pm.getID(); }
   
   /*std::vector<TRef> getTRefKBs() const { return fTRefKBs; }
 
