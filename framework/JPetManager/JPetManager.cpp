@@ -113,6 +113,9 @@ const char* JPetManager::getInputFileName() const
   if ( pos == std::string::npos ) {
     pos = name.find(".hld");
   }
+  if ( pos == std::string::npos ) {
+    pos = name.find(".root");
+  }
   if ( pos != std::string::npos ) {
     name.erase( pos );
   }
