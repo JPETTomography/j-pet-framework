@@ -12,14 +12,6 @@
 #include <ostream>
 #include <vector>
 
-struct ProcessingStageInfo
-{
-  TString fModuleName;
-  TString fModuleDescription;
-  int fModuleVersion;
-  TString fCreationTime;
-
-};
 
 /**
  * @brief A class representing a header with info on JPet ROOT Trees.
@@ -27,6 +19,16 @@ struct ProcessingStageInfo
  * Encapsulates information from the top-level of JPet data files as defined in Report 19, tables 37+. A TreeHeader object is intended to be stored in evert JPet ROOT file along with a respective TTree which it describes.
  */
 class JPetTreeHeader: public TObject{
+ protected:
+  struct ProcessingStageInfo
+  {
+    TString fModuleName;
+    TString fModuleDescription;
+    int fModuleVersion;
+    TString fCreationTime;
+  };
+
+
  public:
   JPetTreeHeader();
   JPetTreeHeader(int run);
@@ -55,6 +57,7 @@ class JPetTreeHeader: public TObject{
   ClassDef(JPetTreeHeader, 2);
 
 protected:
+
   int fRunNo;
   TString fBaseFilename;
   double fSourcePosition;
