@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE (proper_file)
 
 BOOST_AUTO_TEST_CASE (read_and_write_header )
 {
-  JPetTreeHeader input_header(43, "test", 1);
+  JPetTreeHeader input_header(1);
   JPetWriter writer("test3.root");
   writer.writeHeader(&input_header);
   JPetTSlot tslot;
@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE (read_and_write_header )
   
   JPetReader reader("test3.root");
   JPetTreeHeader* output_header = reader.getHeaderClone();
-  BOOST_REQUIRE_EQUAL(input_header.GetRunNumber(), output_header->GetRunNumber());
+  BOOST_REQUIRE_EQUAL(input_header.getRunNumber(), output_header->getRunNumber());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
