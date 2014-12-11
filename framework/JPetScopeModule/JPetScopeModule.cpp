@@ -23,7 +23,7 @@ using namespace boost::filesystem;
 
 ClassImp(JPetScopeModule);
 
-static map <int, string> :: iterator fIt;
+static multimap <int, string> :: iterator fIt;
 
 JPetScopeModule::JPetScopeModule(): JPetAnalysisModule() {
   gSystem->Load("libTree");
@@ -149,21 +149,33 @@ void JPetScopeModule::createInputObjects(const char* inputFilename)
 }
 
 void JPetScopeModule::createOutputObjects(const char* outputFilename) {
-  fCurrentPosition = (*fIt).first;
-  terminate();
-  INFO (Form("Creating root file for position %d", fCurrentPosition));
-  string out_fn(fOutFilename.Data());
-  int last_dot = out_fn.find_last_of(".");
-  string out_fn2  = out_fn.substr(0,last_dot+1);
-         out_fn2 += to_string(fCurrentPosition);
-	 out_fn2 += out_fn.substr(last_dot);
-  fWriter = new JPetWriter(out_fn2.c_str());
-  fHeader = new JPetTreeHeader(JPetManager::GetManager().getRunNumber());
-  fHeader->setBaseFileName(JPetManager::GetManager().getInputFileName());
-  fHeader->addStageInfo(GetName(), GetTitle(), MODULE_VERSION, JPetManager::GetManager().GetTimeString());
-  fHeader->setSourcePosition(fCurrentPosition);
-  fWriter->writeHeader(fHeader);
+  
+  if (fFiles.empty()) {
+    ERROR("No files for processing.");
   }
+  else {
+    fCurrentPosition = (*fIt).first;
+    terminate();
+
+    INFO (Form("Creating root file for position %d", fCurrentPosition));
+
+    string out_fn(fOutFilename.Data());
+    int last_dot = out_fn.find_last_of(".");
+
+    string out_fn2  = out_fn.substr(0,last_dot+1);
+           out_fn2 += to_string(fCurrentPosition);
+           out_fn2 += out_fn.substr(last_dot);
+
+    fWriter = new JPetWriter(out_fn2.c_str());
+
+    fHeader = new JPetTreeHeader(JPetManager::GetManager().getRunNumber());
+    fHeader->setBaseFileName(JPetManager::GetManager().getInputFileName());
+    fHeader->addStageInfo(GetName(), GetTitle(), MODULE_VERSION, JPetManager::GetManager().GetTimeString());
+    fHeader->setSourcePosition(fCurrentPosition);
+
+    fWriter->writeHeader(fHeader);
+  }
+}
 
 void JPetScopeModule::exec() {  
   
