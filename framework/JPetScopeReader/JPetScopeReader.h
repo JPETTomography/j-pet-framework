@@ -24,7 +24,7 @@ class JPetScopeReader {
 
   JPetSignal* generateSignal (const char* filename);
   
-  inline int getSegments() const {return fSegments;}
+  //inline int getSegments() const {return fSegments;}
   inline int getSegmentSize() const {return fSegmentSize;}
   inline bool isFileOpen() const {return fIsFileOpen;}
 
@@ -47,7 +47,7 @@ class JPetScopeReader {
   bool fIsFileOpen;
 
   int fPMID;
-  int fSegments;
+  //int fSegments;
   int fSegmentSize;
   
 };
