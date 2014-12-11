@@ -7,16 +7,18 @@
 
 #include "./JPetScopeReader.h"
 
-//#include <sstream>
+#include <iostream>
 #include <TString.h>
 
 #include "../JPetSignal/JPetSignal.h"
 #include "../../JPetLoggerInclude.h"
 
-JPetScopeReader::JPetScopeReader(): fInputFile(), fScopeType(), fDate(), fIsFileOpen(false), fSegments(0), fSegmentSize(0) {
+using namespace std;
+
+JPetScopeReader::JPetScopeReader(): fInputFile(), fScopeType(), fDate(), fIsFileOpen(false), fPrintFile(false), fPMID(0), fSegmentSize(0) {
 }
 
-JPetScopeReader::JPetScopeReader(const char* filename): fInputFile(), fScopeType(), fDate(), fIsFileOpen(false), fSegments(0), fSegmentSize(0) {
+JPetScopeReader::JPetScopeReader(const char* filename): fInputFile(), fScopeType(), fDate(), fIsFileOpen(false), fPrintFile(false), fPMID(0), fSegmentSize(0) {
   openFile(filename);
   readHeader();
 }
@@ -61,28 +63,9 @@ void JPetScopeReader::closeFile() {
 void JPetScopeReader::readHeader() {
 
 //  std::stringstream buf;
-  std::string tmp;
+  string tmp;
 
   if (fIsFileOpen) {
-
-//    getline(fInputFile, tmp); buf << tmp;
-//    buf >> fScopeType;
-//
-//    getline(fInputFile, tmp); buf << tmp;
-//    buf >> tmp;
-//    buf >> fSegments;
-//    buf >> tmp;
-//    buf >> fSegmentSize;
-//
-//    getline(fInputFile, tmp); buf << tmp;
-//
-//
-//    getline(fInputFile, tmp); buf << tmp;
-//    buf >> tmp;
-//    buf >> fDate;
-//    buf >> fTime;
-//
-//    getline(fInputFile, tmp); buf << tmp;
 
     fInputFile >> fScopeType;
     fInputFile >> tmp;
@@ -105,7 +88,13 @@ void JPetScopeReader::readHeader() {
     fInputFile >> tmp;
     fInputFile >> tmp;
 
+    if (fPrintFile) {
+      cout << "Scope type: " << fScopeType << endl;
+      cout << "Segment size: " << fSegmentSize << endl;
+      cout << "Date and time: " << fDate << " " << fTime << endl;
     }
+
+  }
   
 }
 
@@ -115,11 +104,15 @@ JPetSignal* JPetScopeReader::readData() {
 
   float value, threshold;
 
+  if (fPrintFile) cout << "value:      " << "threshold:" << endl; 
+
   for (int i = 0; i < fSegmentSize; ++i) {
     
     JPetSigCh* sigCh = new JPetSigCh();
     
     fInputFile >> value >> threshold;
+
+    if (fPrintFile) cout << value << " " << threshold << endl;;
 
     if (fInputFile.fail()) {
       fInputFile.clear();

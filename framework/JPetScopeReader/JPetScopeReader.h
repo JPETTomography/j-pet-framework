@@ -23,6 +23,8 @@ class JPetScopeReader {
   virtual ~JPetScopeReader();
 
   JPetSignal* generateSignal (const char* filename);
+
+  void setPrintFile (bool print = true);
   
   //inline int getSegments() const {return fSegments;}
   inline int getSegmentSize() const {return fSegmentSize;}
@@ -45,6 +47,7 @@ class JPetScopeReader {
   std::string fFilename;
 
   bool fIsFileOpen;
+  bool fPrintFile;
 
   int fPMID;
   //int fSegments;
