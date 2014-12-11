@@ -11,6 +11,7 @@
 
 #include <cstddef>
 #include <fstream>
+#include <map>
 #include <string>
 #include <set>
 
@@ -19,6 +20,8 @@
 #include "../JPetWriter/JPetWriter.h"
 
 #define MODULE_VERSION 0.1
+
+class JPetTreeHeader;
 
 class JPetScopeModule: public JPetAnalysisModule {
 
@@ -34,9 +37,17 @@ class JPetScopeModule: public JPetAnalysisModule {
   virtual void terminate();
   void setFileName(const char* name);
 
+  // functions for debugging:
+  virtual void printCollPositions ();
+  virtual void printFiles();
+
   ClassDef(JPetScopeModule, MODULE_VERSION );
 
   private:
+
+  int readFromConfig (int to_erase, const char* fmt, ...);
+
+  int fCurrentPosition;
 
   typedef struct configStruct {
     int pm1, pm2, pm3, pm4;
@@ -48,10 +59,12 @@ class JPetScopeModule: public JPetAnalysisModule {
 
   std::ifstream fConfigFile;
   
-  std::set <std::string> fFiles;
+  std::multimap <int, std::string> fFiles;
+  std::set <int> fCollPositions;
 
   JPetWriter* fWriter;
   JPetScopeReader fReader;
+  JPetTreeHeader* fHeader;
   
   TString fInFilename;
   TString fOutFilename;
