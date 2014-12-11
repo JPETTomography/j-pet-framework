@@ -89,7 +89,7 @@ void JPetScopeReader::readHeader() {
     fInputFile >> tmp;
 
     fInputFile >> tmp;
-    fInputFile >> fSegments;
+    fInputFile >> tmp;
     fInputFile >> tmp;
     fInputFile >> fSegmentSize;
 
