@@ -1,7 +1,7 @@
 CC = g++
 LD = $(CC)
 #######################
-COPTS = -Wall -fPIC `root-config --cflags`
+COPTS = -Wall -fPIC `root-config --cflags` -std=c++0x
 LDOPTS = -Wall `root-config --glibs` -lboost_program_options -lboost_system -lboost_regex -lboost_filesystem
 #######################
 SOURCES       =  JPetScopeModule.cpp

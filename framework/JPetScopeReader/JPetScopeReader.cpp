@@ -30,7 +30,7 @@ JPetSignal* JPetScopeReader::generateSignal(const char* filename) {
   JPetSignal* sig;
 
   if (fIsFileOpen) sig = readData();
-  else sig = new JPetSignal();
+  else sig = 0;
 
   closeFile();
   return sig;
