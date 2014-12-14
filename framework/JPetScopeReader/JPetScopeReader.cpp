@@ -116,6 +116,8 @@ JPetSignal* JPetScopeReader::readData() {
 
     if (stat != 2) {
       ERROR(Form("Non-numerical symbol in file %s at line %d", fFilename.c_str(), i + 6));
+      char tmp[256];
+      fgets(tmp, 256, fInputFile);
     }
 
     sigCh->setValue(value * 1000000000000); // file holds time in seconds, while SigCh requires it in picoseconds
