@@ -8,6 +8,7 @@
 #ifndef _JPETSCOPEREADER_H_
 #define _JPETSCOPEREADER_H_
 
+#include <cstdio>
 #include <fstream>
 #include <string>
 
@@ -23,13 +24,12 @@ class JPetScopeReader {
   virtual ~JPetScopeReader();
 
   JPetSignal* generateSignal (const char* filename);
-
-  void setPrintFile (bool print = true);
-  
+    
   //inline int getSegments() const {return fSegments;}
   inline int getSegmentSize() const {return fSegmentSize;}
-  inline bool isFileOpen() const {return fIsFileOpen;}
-
+  inline bool isFileOpen() const {if(fInputFile==0) return false; else return true;}
+  
+  inline void setPrintFile (bool print = true) {fPrintFile = print;}
   inline void setPMID(int PMID) {fPMID = PMID;}
 
   private:
@@ -39,14 +39,13 @@ class JPetScopeReader {
   void readHeader();
   JPetSignal* readData();
 
-  std::ifstream fInputFile;
+  FILE* fInputFile;
 
   std::string fScopeType;
   std::string fDate;
   std::string fTime;
   std::string fFilename;
 
-  bool fIsFileOpen;
   bool fPrintFile;
 
   int fPMID;
