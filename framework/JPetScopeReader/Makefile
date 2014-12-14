@@ -1,6 +1,6 @@
 CC            =  g++
 LD            =  g++
-COPTS         =  `root-config --cflags` -fPIC
+COPTS         =  `root-config --cflags` -fPIC -std=c++0x -O2
 LDOPTS        =  `root-config --glibs` -g
 #C++ Files
 SOURCES       =  JPetScopeReader.cpp

@@ -15,10 +15,10 @@
 
 using namespace std;
 
-JPetScopeReader::JPetScopeReader(): fInputFile(), fScopeType(), fDate(), fIsFileOpen(false), fPrintFile(false), fPMID(0), fSegmentSize(0) {
+JPetScopeReader::JPetScopeReader(): fInputFile(0), fScopeType(), fDate(), fPrintFile(false), fPMID(0), fSegmentSize(0) {
 }
 
-JPetScopeReader::JPetScopeReader(const char* filename): fInputFile(), fScopeType(), fDate(), fIsFileOpen(false), fPrintFile(false), fPMID(0), fSegmentSize(0) {
+JPetScopeReader::JPetScopeReader(const char* filename): fInputFile(0), fScopeType(), fDate(), fPrintFile(false), fPMID(0), fSegmentSize(0) {
   openFile(filename);
   readHeader();
 }
@@ -31,7 +31,7 @@ JPetSignal* JPetScopeReader::generateSignal(const char* filename) {
   readHeader();
   JPetSignal* sig;
 
-  if (fIsFileOpen) sig = readData();
+  if (isFileOpen()) sig = readData();
   else sig = 0;
 
   closeFile();
@@ -39,23 +39,22 @@ JPetSignal* JPetScopeReader::generateSignal(const char* filename) {
 }
 
 void JPetScopeReader::openFile(const char* filename) {
-  
-  if (fIsFileOpen) closeFile();
 
-  fInputFile.open(filename);
+  if (isFileOpen()) closeFile();
+
+  fInputFile = fopen(filename, "r");
   fFilename = filename;
 
-  if (fInputFile.is_open()) {
-    fIsFileOpen = true;
-  } else {
+  if (!isFileOpen()) {
     ERROR(Form("Error: cannot open file %s", fFilename.c_str()));
   }
 }
 
 void JPetScopeReader::closeFile() {
-  if (fIsFileOpen) {
-    fInputFile.close();
-    fIsFileOpen = false;
+  if (isFileOpen()) {
+
+    fclose(fInputFile);
+    fInputFile = 0;
     fSegmentSize = 0;
   }
 }
@@ -63,30 +62,30 @@ void JPetScopeReader::closeFile() {
 void JPetScopeReader::readHeader() {
 
 //  std::stringstream buf;
-  string tmp;
+  char buf[256];
+  char tmp[256];
 
-  if (fIsFileOpen) {
+  if (isFileOpen()) {
 
-    fInputFile >> fScopeType;
-    fInputFile >> tmp;
-    fInputFile >> tmp;
+    fgets(buf, 256, fInputFile);
+    sscanf(buf, "%s %*s %*s", tmp);
 
-    fInputFile >> tmp;
-    fInputFile >> tmp;
-    fInputFile >> tmp;
-    fInputFile >> fSegmentSize;
+    fScopeType = tmp;
 
-    fInputFile >> tmp;
-    fInputFile >> tmp;
-    fInputFile >> tmp;
+    fgets(buf, 256, fInputFile);
+    sscanf(buf, "%*s %*s %*s %d", &fSegmentSize);
 
-    fInputFile >> tmp;
-    fInputFile >> fDate;
-    fInputFile >> fTime;
-    fInputFile >> tmp;
+    fgets(buf, 256, fInputFile);
+    //sscanf(buf, "%*s %*s %*s");
 
-    fInputFile >> tmp;
-    fInputFile >> tmp;
+    fgets(buf, 256, fInputFile);
+    sscanf(buf, "%*s %s %s %*s", tmp, tmp+128);
+
+    fDate = tmp;
+    fTime = tmp+128;
+
+    fgets(buf, 256, fInputFile);
+    //sscanf(buf, "%*s %*s");
 
     if (fPrintFile) {
       cout << "Scope type: " << fScopeType << endl;
@@ -103,6 +102,7 @@ JPetSignal* JPetScopeReader::readData() {
   JPetSignal* sig = new JPetSignal();
 
   float value, threshold;
+  int stat;
 
   if (fPrintFile) cout << "value:      " << "threshold:" << endl; 
 
@@ -110,13 +110,11 @@ JPetSignal* JPetScopeReader::readData() {
     
     JPetSigCh* sigCh = new JPetSigCh();
     
-    fInputFile >> value >> threshold;
+    stat = fscanf(fInputFile, "%f %f\n", &value, &threshold);
 
     if (fPrintFile) cout << value << " " << threshold << endl;;
 
-    if (fInputFile.fail()) {
-      fInputFile.clear();
-      fInputFile.ignore(255, '\n');
+    if (stat != 2) {
       ERROR(Form("Non-numerical symbol in file %s at line %d", fFilename.c_str(), i + 6));
     }
 
