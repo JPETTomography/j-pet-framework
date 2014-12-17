@@ -42,7 +42,7 @@ void JPetManager::Run()
   if (fCmdParser.IsFileTypeSet()) {
     if (fCmdParser.getFileType() == "scope") {
       JPetScopeModule* module = new JPetScopeModule("JPetScopeModule", "Process Oscilloscope ASCII data into JPetEvent structures.");
-      module->setFileName(getInputFileName());
+      module->setFileName(getInputFileName().c_str());
       fTasks.push_front(module);
     } else {
       UnpackFile();
@@ -54,8 +54,8 @@ void JPetManager::Run()
   // pseudo-input container
   long long  kNevent = 0;
   for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
-    (*taskIter)->createInputObjects( getInputFileName() ); /// readers
-    (*taskIter)->createOutputObjects( getInputFileName() ); /// writers + histograms
+    (*taskIter)->createInputObjects( getInputFileName().c_str() ); /// readers
+    (*taskIter)->createOutputObjects( getInputFileName().c_str() ); /// writers + histograms
     kNevent = (*taskIter)->getEventNb();
     for (long long i = 0; i < kNevent; i++) {
       (*taskIter)->exec();
@@ -102,7 +102,7 @@ JPetManager::~JPetManager()
  *
  * Example: if the file given on command line was ../file.phys.hit.root, this method will return ../file
  */
-const char* JPetManager::getInputFileName() const
+std::string JPetManager::getInputFileName() const
 {
   std::string name = fCmdParser.getFileName().c_str();
   // strip suffixes of type .tslot.* and .phys.*
@@ -119,7 +119,7 @@ const char* JPetManager::getInputFileName() const
   if ( pos != std::string::npos ) {
     name.erase( pos );
   }
-  return name.c_str();
+  return name;
 }
 
 /**
