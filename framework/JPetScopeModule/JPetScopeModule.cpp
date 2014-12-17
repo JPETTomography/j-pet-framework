@@ -169,7 +169,7 @@ void JPetScopeModule::createOutputObjects(const char* outputFilename) {
     fWriter = new JPetWriter(out_fn2.c_str());
 
     fHeader = new JPetTreeHeader(JPetManager::GetManager().getRunNumber());
-    fHeader->setBaseFileName(JPetManager::GetManager().getInputFileName());
+    fHeader->setBaseFileName(JPetManager::GetManager().getInputFileName().c_str());
     fHeader->addStageInfo(GetName(), GetTitle(), MODULE_VERSION, JPetManager::GetManager().GetTimeString());
     fHeader->setSourcePosition(fCurrentPosition);
 
