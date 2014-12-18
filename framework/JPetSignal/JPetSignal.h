@@ -25,7 +25,7 @@ class JPetSignal: public TNamed
 {
  public:
 
-  JPetSignal();
+  JPetSignal(const int points = 4);
 
   virtual ~JPetSignal();
 
@@ -87,7 +87,7 @@ class JPetSignal: public TNamed
    *
    * The JPetSigCh object is automatically added to the array of trailing-edge or leading-edge points depending on the type which was set in it. The array is sorted afterwards so that the JPetSigCh objects are sorted by ascending value of their threshold.
    */  
-  void addPoint(const JPetSigCh& sigch);
+  void addPoint(const JPetSigCh& sigch, bool sortData = true);
 
   /**
    * @brief Returns a reference to an array of trailing-edge or leading-edge points of this signal.

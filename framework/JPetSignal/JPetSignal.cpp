@@ -8,13 +8,13 @@
 
 ClassImp(JPetSignal);
 
-JPetSignal::JPetSignal() :
+JPetSignal::JPetSignal(const int points) :
   TNamed("JPetSignal", "Signal Structure"),
   fTime(0),
   fQualityOfTime(0),
   fLeft(true),
-  fLeadingPoints("JPetSigCh", 4),
-  fTrailingPoints("JPetSigCh", 4)
+  fLeadingPoints("JPetSigCh", points),
+  fTrailingPoints("JPetSigCh", points)
 { }
 
 
@@ -31,16 +31,16 @@ int JPetSignal::getNPoints(JPetSigCh::EdgeType edge) const
   }
 }
 
-void JPetSignal::addPoint(const JPetSigCh& sigch){
+void JPetSignal::addPoint(const JPetSigCh& sigch, bool sortData){
   
   assert((sigch.getType() == JPetSigCh::Trailing) || (sigch.getType() == JPetSigCh::Leading));
   
   if (sigch.getType() == JPetSigCh::Trailing) {
     new (fTrailingPoints[getNumberOfTrailingEdgePoints()]) JPetSigCh(sigch);
-    fTrailingPoints.Sort();
+    if (sortData) fTrailingPoints.Sort();
   } else {
     new (fLeadingPoints[getNumberOfLeadingEdgePoints()]) JPetSigCh(sigch);
-    fLeadingPoints.Sort();
+    if (sortData) fLeadingPoints.Sort();
   }
   
 }
