@@ -1,7 +1,7 @@
 ###################
 CC            =  g++
 LD            =  g++
-COPTS         =  `root-config --cflags` -fPIC
+COPTS         =  `root-config --cflags` -fPIC -O2
 LDOPTS        =  `root-config --glibs` -lboost_program_options
 #C++ Files
 SOURCES       =  JPetCmdParser.cpp
