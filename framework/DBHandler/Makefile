@@ -6,7 +6,7 @@
 OS = $(shell uname)
 CC=g++
 LD = $(CC)
-CFLAGS= -I/usr/local/include/ -std=c++0x -Wall -fPIC
+CFLAGS= -I/usr/local/include/ -std=c++0x -Wall -fPIC -O2
 LDFLAGS= -std=c++0x -lconfig++ -Wall -lpqxx -lpq 
 HDR_DIR = HeaderFiles
 SRC_DIR = SourceFiles
