@@ -99,7 +99,8 @@ void JPetScopeReader::readHeader() {
 
 JPetSignal* JPetScopeReader::readData() {
   
-  JPetSignal* sig = new JPetSignal();
+  JPetSigCh sigCh;
+  JPetSignal* sig = new JPetSignal(fSegmentSize);
 
   float value, threshold;
   int stat;
@@ -107,8 +108,6 @@ JPetSignal* JPetScopeReader::readData() {
   if (fPrintFile) cout << "value:      " << "threshold:" << endl; 
 
   for (int i = 0; i < fSegmentSize; ++i) {
-    
-    JPetSigCh* sigCh = new JPetSigCh();
     
     stat = fscanf(fInputFile, "%f %f\n", &value, &threshold);
 
@@ -120,12 +119,12 @@ JPetSignal* JPetScopeReader::readData() {
       fgets(tmp, 256, fInputFile);
     }
 
-    sigCh->setValue(value * 1000000000000); // file holds time in seconds, while SigCh requires it in picoseconds
-    sigCh->setThreshold(threshold * 1000);  // file holds thresholds in volts, while SigCh requires it in milivolts
-    sigCh->setPMID(fPMID);
-    sigCh->setType(JPetSigCh::Leading);
+    sigCh.setValue(value * 1000000000000); // file holds time in seconds, while SigCh requires it in picoseconds
+    sigCh.setThreshold(threshold * 1000);  // file holds thresholds in volts, while SigCh requires it in milivolts
+    sigCh.setPMID(fPMID);
+    sigCh.setType(JPetSigCh::Leading);
 
-    sig->addPoint(*sigCh);
+    sig->addPoint(sigCh, false);
   }
 
   return sig;
