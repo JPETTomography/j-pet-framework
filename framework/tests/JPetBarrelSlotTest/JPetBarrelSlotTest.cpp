@@ -39,4 +39,32 @@ BOOST_AUTO_TEST_CASE( constructor )
   BOOST_REQUIRE_CLOSE(slot.getSlotTheta(), 5.5, epsilon);
 }
 
+BOOST_AUTO_TEST_CASE( setMethodsTest )
+{
+  JPetBarrelSlot slot(1, 2, 3, 5.5);
+  slot.setSlotID(44);
+  slot.setLayerID(55);
+  slot.setLayerRad(77);
+  slot.setSlotTheta(8.7f);
+  
+  float epsilon = 0.0001;
+  BOOST_REQUIRE_EQUAL(slot.getSlotID(), 44);
+  BOOST_REQUIRE_EQUAL(slot.getLayerID(), 55);
+  BOOST_REQUIRE_EQUAL(slot.getLayerRad(), 77);
+  BOOST_REQUIRE_CLOSE(slot.getSlotTheta(), 8.7f, epsilon);
+}
+
+BOOST_AUTO_TEST_CASE( equalOperatorTest )
+{
+  JPetBarrelSlot slot(1,2,3,4.5f);
+  JPetBarrelSlot anotherSlot(1,5,6,7.5f);
+  
+  BOOST_REQUIRE_EQUAL(slot == anotherSlot, true);
+  BOOST_REQUIRE_EQUAL(slot != anotherSlot, false);
+  
+  slot.setSlotID(8);
+  anotherSlot.setSlotID(32);
+  BOOST_REQUIRE_EQUAL(slot != anotherSlot, true);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
