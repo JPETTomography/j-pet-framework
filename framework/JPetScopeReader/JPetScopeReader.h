@@ -14,43 +14,93 @@
 
 #include "../JPetSignal/JPetSignal.h"
 
+/** Oscilloscope ASCII data reader.
+ * JPetScopeReader class produce JPetSignal from single oscilloscope ASCII file.
+ */
 class JPetScopeReader {
   
   public:
 
+  /** @brief Default Constructor */
   JPetScopeReader();
-  JPetScopeReader(const char* filename);
 
+//  JPetScopeReader(const char* filename);
+
+  /** @brief Destructor */
   virtual ~JPetScopeReader();
 
+  /** @brief Produce JPetSignal from given file.
+   *
+   * If setPrintFile(true) method was called data is also printed on screen.
+   *
+   * @param filename address of an oscilloscope ASCII file.
+   * @return pointer to created JPetSignal
+   * @see setPrintFile()
+   */
   JPetSignal* generateSignal (const char* filename);
     
   //inline int getSegments() const {return fSegments;}
+
+  /** @brief Return number of data lines (JPetSigCh contained in output JPetSignal).
+   * @return fSegmentSize
+   */
   inline int getSegmentSize() const {return fSegmentSize;}
-  inline bool isFileOpen() const {if(fInputFile==0) return false; else return true;}
-  
+ 
+  /** @brief Debug function
+   * @param print if true generateSignal will print every data line read.
+   * @see generateSignal()
+   */
   inline void setPrintFile (bool print = true) {fPrintFile = print;}
+
+  /** @brief Set ID of photomultiplier used to gather signal.
+   * @param PMID id of photomultiplier
+   */
   inline void setPMID(int PMID) {fPMID = PMID;}
 
   private:
 
+  /** @brief Open file method.
+   * @param address of file to open.
+   */
   void openFile(const char* filename);
+  
+  /** @brief Check if file is opend
+   * @return ture if file is opend, flase if not.
+   */
+  inline bool isFileOpen() const {if(fInputFile==0) return false; else return true;}
+
+  /** @brief Close file method. */
   void closeFile();
+
+  /** @brief Reads header of oscilloscope ASCII file */
   void readHeader();
+
+  /** @brief Reads data from oscilloscope ASCII file and produces JPetSignal
+   *
+   * If setPrintFile(true) method was called data is also printed on screen.
+   *
+   * @return pointer to created JPetSignal
+   * @see setPrintFile()
+   */
   JPetSignal* readData();
 
-  FILE* fInputFile;
+  FILE* fInputFile; /**< @brief Pointer to oscilloscope ASCII file. */
 
-  std::string fScopeType;
-  std::string fDate;
-  std::string fTime;
-  std::string fFilename;
+  std::string fScopeType; /**< @brief Oscilloscope type read form file header. */
+  std::string fDate; /**< @brief Date, when signal was gathered. */
+  std::string fTime; /**< @brief Time, when signal was gathered. */
+  std::string fFilename; /** @brief Address of oscilloscope ASCII file. */
 
+  /** @brief Debug flag.
+   *
+   * If true data read will be printed on screen.
+   * @see setPrintFile()
+   */
   bool fPrintFile;
 
-  int fPMID;
+  int fPMID; /**< @brief ID of photomultiplier used to gather signal. */
   //int fSegments;
-  int fSegmentSize;
+  int fSegmentSize; /**< @brief Number of data lines in file. */
   
 };
 

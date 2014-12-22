@@ -23,51 +23,113 @@
 
 class JPetTreeHeader;
 
+/** @brief Analysis Module for oscilloscope ASCII files.
+ *
+ * This module reads oscilloscope ACSII data based on config file passed through command line.
+ * Example of usign this module is located in workdir/ScopeReaderExample/ .
+ */
 class JPetScopeModule: public JPetAnalysisModule {
 
   public:
-
+  
+  /** @brief Default Constructor */
   JPetScopeModule();
+
+  /** @brief Constructor, set name and title of module through TNamed(name, title).
+   *
+   * @param name name of module.
+   * @param title tilte of module.
+   */
   JPetScopeModule(const char* name, const char* title);
+
+  /** @brief Destructor */
   virtual ~JPetScopeModule();
+
+  /** @brief Create list of oscilloscope ASCII files to process.
+   *
+   * @param inputFilename address of config file
+   */
   virtual void createInputObjects(const char* inputFilename = 0);
+
+  /** @brief Create output root file.
+   * 
+   * @param outputFilename address of root file.
+   */
   virtual void createOutputObjects(const char* outputFilename = 0);
+
+  /** @brief Process next group of files from fFiles.
+   *
+   * This method produces JPetEvent from four oscilloscope ASCII files and writes it through JPetWriter to root file.
+   * @see fFiles()
+   */
   virtual void exec();
+
+  /** @brief Return number of events to be processed.
+   *
+   * @return number of events.
+   */
   virtual long long getEventNb() {return fFiles.size();}
+
+  /** @brief End analysis. */
   virtual void terminate();
+
+  /** @brief Additional method to set names of input and output files.
+   *
+   * @param name name of file
+   */
   void setFileName(const char* name);
 
-  // functions for debugging:
+  /** @brief Debug function.
+   *
+   * This function prints list of all collimator positions, that will be processed.
+   */
   virtual void printCollPositions ();
+
+  /** @brief Debug function.
+   *
+   * This function prints list of all files, that will be processed.
+   */
   virtual void printFiles();
 
+  /** @brief ROOT macro */
   ClassDef(JPetScopeModule, MODULE_VERSION );
 
   private:
+  
+  /** @brief Config file reader function.
+   *
+   * Read single config line using vsscanf function.
+   * @param fmt format passed to vsscanf.
+   */
+  int readFromConfig (const char* fmt, ...);
 
-  int readFromConfig (int to_erase, const char* fmt, ...);
+  int fCurrentPosition; /**< @brief Position of collimator. */
 
-  int fCurrentPosition;
-
+  /** Collection of system parameters read from config file. */
   typedef struct configStruct {
-    int pm1, pm2, pm3, pm4;
-    std::string file1, file2, file3, file4;
-    int scin1, scin2;
-    int collimator;
+    int pm1, pm2, pm3, pm4; /**< @brief ID's of photomultipliers. */
+    std::string file1, file2, file3, file4; /**< @brief Names (not locations) of data oscilloscope ASCII data files. */
+    int scin1, scin2; /**< @brief ID's of scintillators. */
+    int collimator; /**< @brief Collimator position. */
   } configStruct;
-  configStruct fConfig;
+  configStruct fConfig; /**< @brief Analysis system configuration. */
 
-  std::ifstream fConfigFile;
+  std::ifstream fConfigFile; /**< @brief Input stream from config file. */
   
+  /** @brief Locations of oscilloscope ASCII data files.
+   *
+   * To get full name of osc file, data from fConfig is required.
+   * @see fConfig()
+   */
   std::multimap <int, std::string> fFiles;
-  std::set <int> fCollPositions;
+  std::set <int> fCollPositions; /**< @brief Set of collimator positions. */
 
-  JPetWriter* fWriter;
-  JPetScopeReader fReader;
-  JPetTreeHeader* fHeader;
+  JPetWriter* fWriter; /**< @ref JPetWriter. */
+  JPetScopeReader fReader; /**< @ref JPetScopeReader. */
+  JPetTreeHeader* fHeader; /**< @ref JPetTreeHeader. */
   
-  TString fInFilename;
-  TString fOutFilename;
+  TString fInFilename; /**< @brief Location of config file. */
+  TString fOutFilename; /**< @brief Location of output root file. */
 
 };
 

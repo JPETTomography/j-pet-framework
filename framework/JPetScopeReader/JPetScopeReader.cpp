@@ -18,10 +18,10 @@ using namespace std;
 JPetScopeReader::JPetScopeReader(): fInputFile(0), fScopeType(), fDate(), fPrintFile(false), fPMID(0), fSegmentSize(0) {
 }
 
-JPetScopeReader::JPetScopeReader(const char* filename): fInputFile(0), fScopeType(), fDate(), fPrintFile(false), fPMID(0), fSegmentSize(0) {
-  openFile(filename);
-  readHeader();
-}
+//JPetScopeReader::JPetScopeReader(const char* filename): fInputFile(0), fScopeType(), fDate(), fPrintFile(false), fPMID(0), fSegmentSize(0) {
+//  openFile(filename);
+//  readHeader();
+//}
 
 JPetScopeReader::~JPetScopeReader() {
 }

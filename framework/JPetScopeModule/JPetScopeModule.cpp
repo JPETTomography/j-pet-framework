@@ -40,7 +40,7 @@ JPetScopeModule::~JPetScopeModule() {
   }
 }
 
-int JPetScopeModule::readFromConfig (int to_erase, const char* fmt, ...) {
+int JPetScopeModule::readFromConfig (const char* fmt, ...) {
 
   va_list args;
   va_start (args, fmt);
@@ -51,7 +51,7 @@ int JPetScopeModule::readFromConfig (int to_erase, const char* fmt, ...) {
   while (fConfigFile.good() && buf.size() < 2 ) getline(fConfigFile, buf);
   if (!fConfigFile.good()) {va_end(args); return -1;}
 
-  buf.erase(0, to_erase);
+  //buf.erase(0, to_erase);
   int ret = vsscanf(buf.c_str(), fmt, args);
 
   va_end(args);
@@ -79,30 +79,30 @@ void JPetScopeModule::createInputObjects(const char* inputFilename)
   // Read configuration data 
   for (int i = 0; i<1; ++i){  
 
-  if (readFromConfig(2, "%d %s", &(fConfig.pm1), cbuf) <= 0) break;
+  if (readFromConfig("%*2c %d %s", &(fConfig.pm1), cbuf) <= 0) break;
   fConfig.file1 = string(cbuf);
 
-  if (readFromConfig(2, "%d %s", &(fConfig.pm2), cbuf) <= 0) break;
+  if (readFromConfig("%*2c %d %s", &(fConfig.pm2), cbuf) <= 0) break;
   fConfig.file2 = string(cbuf);
 
-  if (readFromConfig(2, "%d %s", &(fConfig.pm3), cbuf) <= 0) break;
+  if (readFromConfig("%*2c %d %s", &(fConfig.pm3), cbuf) <= 0) break;
   fConfig.file3 = string(cbuf);
 
-  if (readFromConfig(2, "%d %s", &(fConfig.pm4), cbuf) <= 0) break;
+  if (readFromConfig("%*2c %d %s", &(fConfig.pm4), cbuf) <= 0) break;
   fConfig.file4 = string(cbuf);
 
-  if (readFromConfig(5, "%d", &(fConfig.scin1)) <= 0) break;
+  if (readFromConfig("%*5c %d", &(fConfig.scin1)) <= 0) break;
 
-  if (readFromConfig(5, "%d", &(fConfig.scin2)) <= 0) break;
+  if (readFromConfig("%*5c %d", &(fConfig.scin2)) <= 0) break;
 
-  if (readFromConfig(0, "%s", cbuf) <= 0) break;
+  if (readFromConfig("%s", cbuf) <= 0) break;
   data_dir = string(cbuf);
 
   while (true) {
     a = 0;
     b = 0;
     c = 0;
-    int d = readFromConfig(0, "%d %d %d", &a, &b, &c);
+    int d = readFromConfig("%d %d %d", &a, &b, &c);
     if (d <= 0) break;
     else if (d == 1) {
       // Add single position
