@@ -25,10 +25,11 @@ class JPetParamManager
   bool readParametersFromFile(JPetReader * reader);
   bool saveParametersToFile(JPetWriter * writer);
 
-  bool saveParametersToFile(const char* filename);
   bool readParametersFromFile(const char* filename);
-  const JPetParamBank& getParamBank() const { return *fBank;}
+  bool saveParametersToFile(const char* filename);
+  
   void clearParameters();
+  const JPetParamBank& getParamBank() const { return *fBank;}
 
  private:
   JPetParamManager(const JPetParamManager&);

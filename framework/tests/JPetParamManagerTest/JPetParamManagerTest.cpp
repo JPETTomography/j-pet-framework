@@ -7,97 +7,118 @@
 
 #include <cstddef>
 
-const char* gDefaultConfigFile ="DBConfig/configDB.cfg";
+const char* gDefaultConfigFile = "DBConfig/configDB.cfg";
 
-/// class JPetParamManager
-//  JPetParamManager();
-//  JPetParamManager(const char* dBConfigFile);
-//  void readFile(const char* file_name); /// @todo what file ???
-//  bool setWriter(JPetWriter* writer);
-//  // Scintillators
-//  inline void addScintillator(JPetScin& scintillator);
-//  inline const TClonesArray& getScintillators() const;
-//  inline JPetScin& getScintillator(int i) const; 
-//  inline int getScintillatorsSize() const; 
-//
-//  // PMs
-//  inline void addPM(JPetPM& pm); 
-//  inline const TClonesArray& getPMs() const
-//  inline JPetPM& getPM(int i) const
-//  int getPMsSize() const
-//
-//  // KBs
-//  inline void addKB(JPetFEB& kb)
-//  inline const TClonesArray& getKBs() const
-//  inline JPetFEB& getKB(int i) const
-//  inline int getKBsSize() const
-//
-//  // TRBs
-//  inline void addTRB(JPetTRB& trb)
-//  inline const TClonesArray& getTRBs() const
-//  inline JPetTRB& getTRB(int i) const
-//  inline int getTRBsSize() const
-//
-//  // TOMB
-//  inline void setTOMB(JPetTOMB& tomb)
-//  inline JPetTOMB& getTOMB() const 
-//  inline int getTOMBSize() const 
-//
-//  bool writerAllContainers   
-//
-//  void getParametersFromDatabase(const int run);
-//  void clearAllContainers();
+BOOST_AUTO_TEST_SUITE(JPetParamManagerTestSuite)
 
-
-BOOST_AUTO_TEST_SUITE(FirstSuite)
+void checkContainersSize(const JPetParamBank &bank)
+{
+  BOOST_REQUIRE_EQUAL(bank.getScintillatorsSize(), 2);
+  BOOST_REQUIRE_EQUAL(bank.getPMsSize(), 4);
+  BOOST_REQUIRE_EQUAL(bank.getPMCalibsSize(), 0);	// It is not 0 for e.g. run_id = 2
+  BOOST_REQUIRE_EQUAL(bank.getFEBsSize(), 1);
+  BOOST_REQUIRE_EQUAL(bank.getTRBsSize(), 1);
+  BOOST_REQUIRE_EQUAL(bank.getBarrelSlotsSize(), 0);
+  BOOST_REQUIRE_EQUAL(bank.getTOMBChannelsSize(), 4);
+}
 
 BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetParamManager paramMgr;
-  
 }  
 
-BOOST_AUTO_TEST_CASE(some_filling)
+BOOST_AUTO_TEST_CASE(constructor)
 {
   JPetParamManager paramMgr(gDefaultConfigFile);
+}
+
+BOOST_AUTO_TEST_CASE(generateParamBankTest)
+{
+  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+  l_paramManagerInstance.getParametersFromDatabase(1);
   
-}  
-BOOST_AUTO_TEST_CASE(fillContainersTest)
-{
-  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank != NULL, true);
+  
+  checkContainersSize(*l_paramManagerInstance.fBank);
 }
 
-BOOST_AUTO_TEST_CASE(fillContainersTRefsTest)
+BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByWriterAndReaderObjectsTest)
 {
   JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+  
+  l_paramManagerInstance.getParametersFromDatabase(1);
+
+  /*  
+  const char* testDatafile = "testDataFile.txt";
+  JPetWriter writer(testDatafile);
+  BOOST_CHECK(l_paramManagerInstance.saveParametersToFile(testDatafile) == true);
+
+  Error in <TFile::ReadBuffer>: error reading all requested bytes from file testDataFile.txt, got 228 of 300
+  Error in 	: testDataFile.txt failed to read the file type data.
+  Error in <TFile::WriteObject>: File testDataFile.txt is not writable
+  */
+  
+  /*
+  JPetReader reader(testDatafile);
+  BOOST_CHECK(l_paramManagerInstance.readParametersFromFile(&reader) == true);
+
+  // Errors after writing objects to file and start reading
+  Error in <TFile::ReadBuffer>: error reading all requested bytes from file testDataFile.txt, got 228 of 300
+  Error in <TFile::Init>: testDataFile.txt failed to read the file type data.
+  Error in <TFile::WriteObject>: File testDataFile.txt is not writable
+  Error in <TFile::ReadBuffer>: error reading all requested bytes from file testDataFile.txt, got 228 of 300
+  Error in <TFile::Init>: testDataFile.txt failed to read the file type data.
+  */
 }
 
-//BOOST_AUTO_TEST_CASE(fillWriteAndReadContainersTest)
-//{
-//  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
-//  l_paramManagerInstance.fillAllContainers(1);
-//  
-//  const char* l_fileName = "param_manager_test_file.txt";
-//  JPetWriter l_writerInstance(l_fileName);
-//  JPetReader l_readerInstance(l_fileName);
-//  
-//  l_paramManagerInstance.setWriter(&l_writerInstance);
-//  l_paramManagerInstance.setReader(&l_readerInstance);
-//  
-//  l_paramManagerInstance.writerAllContainers(l_fileName);
-//  l_paramManagerInstance.readAllContainers(l_fileName);
-//}
-//
-//BOOST_AUTO_TEST_CASE(containersIdTest)
-//{
-//  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
-//  l_paramManagerInstance.fillAllContainers(1);
-//  
-//  BOOST_REQUIRE(l_paramManagerInstance.getScintillator(0).getID() >= 0);
-//  BOOST_REQUIRE(l_paramManagerInstance.getPM(0).getID() >= 0);
-//  BOOST_REQUIRE(l_paramManagerInstance.getKB(0).id() >= 0);
-//  BOOST_REQUIRE(l_paramManagerInstance.getTRB(0).getID() >= 0);
-//  BOOST_REQUIRE(l_paramManagerInstance.getTOMB().id() >= 0);
-//}
+BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
+{
+  const char* testDatafile = "testDataFile.txt";
+  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+  
+  l_paramManagerInstance.getParametersFromDatabase(1);
+  
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank != NULL, true);
+  
+  BOOST_CHECK(l_paramManagerInstance.saveParametersToFile(testDatafile) == true);
+  
+  l_paramManagerInstance.fBank->clear();
+  
+  BOOST_CHECK(l_paramManagerInstance.readParametersFromFile(testDatafile) == true);
+  
+  checkContainersSize(*l_paramManagerInstance.fBank);
+}
+
+BOOST_AUTO_TEST_CASE(clearParametersTest)
+{
+  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+  
+  l_paramManagerInstance.getParametersFromDatabase(1);
+  
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank != NULL, true);
+  
+  checkContainersSize(*l_paramManagerInstance.fBank);
+  
+  l_paramManagerInstance.clearParameters();
+  
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getScintillatorsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getPMsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getPMCalibsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getFEBsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getTRBsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getBarrelSlotsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getTOMBChannelsSize(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(getParamBankTest)
+{
+  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+  
+  l_paramManagerInstance.getParametersFromDatabase(1);
+  
+  const JPetParamBank &bank = l_paramManagerInstance.getParamBank();
+  
+  checkContainersSize(bank);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
