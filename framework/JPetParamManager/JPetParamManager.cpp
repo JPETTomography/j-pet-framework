@@ -12,19 +12,19 @@ JPetParamManager::JPetParamManager():
   /* */
 }
 
+/// @param DBConfigFile configuration file with the database connection settings
+JPetParamManager::JPetParamManager(const char* dBConfigFile):
+  fDBParamGetter(dBConfigFile),
+  fBank(0)
+{
+}
+
 JPetParamManager::~JPetParamManager()
 {
   if (fBank) {
     delete fBank;
     fBank = 0;
   }
-}
-
-/// @param DBConfigFile configuration file with the database connection settings
-JPetParamManager::JPetParamManager(const char* dBConfigFile):
-  fDBParamGetter(dBConfigFile),
-  fBank(0)
-{
 }
 
 void JPetParamManager::getParametersFromDatabase(const int run)
@@ -36,15 +36,15 @@ void JPetParamManager::getParametersFromDatabase(const int run)
   fBank = fDBParamGetter.generateParamBank(run);
 }
 
-bool JPetParamManager::saveParametersToFile(const char* filename)
+bool JPetParamManager::readParametersFromFile(JPetReader * reader)
 {
-  TFile file(filename, "UPDATE");
-  if (!file.IsOpen()) {
-    ERROR("Could not write to file.");
+  if (!reader->isOpen()) {
+    ERROR("Cannot read parameters from file. The provided JPetReader is closed.");
     return false;
   }
-  file.cd();
-  file.WriteObject(fBank, "ParamBank");
+  fBank = static_cast<JPetParamBank*>(reader->getObject("ParamBank"));
+
+  if (!fBank) return false;
   return true;
 }
 
@@ -55,19 +55,6 @@ bool JPetParamManager::saveParametersToFile(JPetWriter * writer)
     return false;
   }
   writer->writeObject(fBank, "ParamBank");
-  return true;
-}
-
-
-bool JPetParamManager::readParametersFromFile(JPetReader * reader)
-{
-  if (!reader->isOpen()) {
-    ERROR("Cannot read parameters from file. The provided JPetReader is closed.");
-    return false;
-  }
-  fBank = static_cast<JPetParamBank*>(reader->getObject("ParamBank"));
-
-  if (!fBank) return false;
   return true;
 }
 
@@ -84,6 +71,17 @@ bool JPetParamManager::readParametersFromFile(const char* filename)
   return true;
 }
 
+bool JPetParamManager::saveParametersToFile(const char* filename)
+{
+  TFile file(filename, "UPDATE");
+  if (!file.IsOpen()) {
+    ERROR("Could not write to file.");
+    return false;
+  }
+  file.cd();
+  file.WriteObject(fBank, "ParamBank");
+  return true;
+}
 
 void JPetParamManager::clearParameters()
 {
