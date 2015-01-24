@@ -185,12 +185,16 @@ void JPetScopeModule::exec() {
     
     string osc_file = (*fIt).second;
     string filename;
+
+    int tslot_index;
+    sscanf(path(osc_file).filename().string().c_str(), "%*3s %d", &tslot_index);
     
     INFO (Form("Processing file: %s", osc_file.c_str()));
     fReader.setPMID(fConfig.pm1);
     JPetSignal* sig1 = fReader.generateSignal(osc_file.c_str());
     if(sig1 == 0) break;
     sig1->setPMID(fConfig.pm1);
+    sig1->setTSlotIndex(tslot_index);
     
     filename = path((*fIt).second).filename().string();
     filename[1] = (fConfig.file2)[1];
@@ -203,6 +207,7 @@ void JPetScopeModule::exec() {
     JPetSignal* sig2 = fReader.generateSignal(osc_file.c_str());
     if(sig2 == 0) break;
     sig2->setPMID(fConfig.pm2);
+    sig2->setTSlotIndex(tslot_index);
     
     filename = path((*fIt).second).filename().string();
     filename[1] = (fConfig.file3)[1];
@@ -215,6 +220,7 @@ void JPetScopeModule::exec() {
     JPetSignal* sig3 = fReader.generateSignal(osc_file.c_str());
     if(sig3 == 0) break;
     sig3->setPMID(fConfig.pm3);
+    sig3->setTSlotIndex(tslot_index);
     
     filename = path((*fIt).second).filename().string();
     filename[1] = (fConfig.file4)[1];
@@ -227,6 +233,7 @@ void JPetScopeModule::exec() {
     JPetSignal* sig4 = fReader.generateSignal(osc_file.c_str());
     if(sig4 == 0) break;
     sig4->setPMID(fConfig.pm4);
+    sig4->setTSlotIndex(tslot_index);
 
     JPetHit* hit1 = new JPetHit();
     JPetHit* hit2 = new JPetHit();
