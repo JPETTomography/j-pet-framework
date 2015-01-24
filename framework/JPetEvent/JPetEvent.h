@@ -91,7 +91,7 @@ public:
 
   JPetHit fFirstHit;
   JPetHit fSecondHit;
-  float fNhits;
+  unsigned short int fNhits;
 
 };
 
