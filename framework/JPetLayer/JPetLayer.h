@@ -2,11 +2,11 @@
 #ifndef JPET_LAYER_H
 #define JPET_LAYER_H
 
-#include "TNamed.h"
+#include <TRef.h>
 #include "../JPetFrame/JPetFrame.h"
+#include "TNamed.h"
 
-
-class JPetFrame;
+//class JPetFrame;
 
 /**
  * @brief Parametric class representing database information on a single cyllindrical layer of a JPetFrame.
@@ -16,27 +16,43 @@ class JPetFrame;
 class JPetLayer: public TNamed
 {
 protected:
-  int m_id;
-  std::string m_name;
-  float m_radius;
-  JPetFrame &m_JPetFrame;
+  int fId;
+  bool fIsActive;
+  std::string fName;
+  float fRadius;
+  int fFrameId;
+  TRef fTRefFrame;
+  
+  //friend class JPetParamManager;
   
 public:
-  JPetLayer(int p_id, std::string p_name, float p_thetaAngle, JPetFrame &p_JPetFrame);
-  virtual ~JPetLayer(void);
+  JPetLayer();
+  JPetLayer(int id, bool isActive, std::string name, float radius, int frameId);
+  ~JPetLayer();
   
-private:
+  inline bool operator==(const JPetLayer& layer) { return getId() == layer.getId(); }
+  inline bool operator!=(const JPetLayer& layer) { return getId() != layer.getId(); }
+  
+/*private:
   JPetLayer(const JPetLayer &layer);
-  JPetLayer& operator=(const JPetLayer &layer);
+  JPetLayer& operator=(const JPetLayer &layer);*/
   
-public:
+  int getId() const { return fId; }
+  bool getIsActive() const { return fIsActive; }
+  std::string getName() const { return fName; }
+  float getRadius() const { return fRadius; }
+  int getFrameId() const { return fFrameId; }
+  const JPetFrame& getFrame() { return (JPetFrame&)*(fTRefFrame.GetObject()); }
+  void setFrame(JPetFrame &frame)
+  {
+    fTRefFrame = &frame;
+  }
   
-  virtual int id(void) const;
-  virtual std::string name(void) const;
-  virtual float radius(void) const;
-
-  inline bool operator==(const JPetLayer& layer) { return id() == layer.id(); }
-  inline bool operator!=(const JPetLayer& layer) { return id() != layer.id(); }
+protected:
+  void clearTRefFrame()
+  {
+    fTRefFrame = NULL;
+  }
   
 private:
   ClassDef(JPetLayer, 1);

@@ -2,35 +2,28 @@
 #include "JPetLayer.h"
 
 
-ClassImp(JPetLayer);
-
-
-JPetLayer::JPetLayer(int p_id, 
-		     std::string p_name, 
-		     float p_radius, 
-		     JPetFrame &p_JPetFrame) : 
-					      m_id(p_id),
-					      m_name(p_name),
-					      m_radius(p_radius),
-					      m_JPetFrame(p_JPetFrame)
+JPetLayer::JPetLayer() : 
+  fId(0),
+  fIsActive(false),
+  fName(std::string("")),
+  fRadius(0.f),
+  fFrameId(0)
 {
+  SetName("JPetLayer");
+}
+
+JPetLayer::JPetLayer(int id, bool isActive, std::string name, float radius, int frameId) :
+  fId(id),
+  fIsActive(isActive),
+  fName(name),
+  fRadius(radius),
+  fFrameId(frameId)
+{
+  SetName("JPetLayer");
 }
 
 JPetLayer::~JPetLayer()
 {
 }
 
-int JPetLayer::id() const
-{
-  return m_id;
-}
-
-std::string JPetLayer::name() const
-{
-  return m_name;
-}
-
-float JPetLayer::radius() const
-{
-  return m_radius;
-}
+ClassImp(JPetLayer);

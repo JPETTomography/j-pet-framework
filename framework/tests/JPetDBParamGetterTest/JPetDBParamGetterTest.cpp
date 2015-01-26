@@ -55,13 +55,19 @@ BOOST_AUTO_TEST_CASE(dummyFillingTest)
   std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl;
   std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl;
   std::cout << "PMCalib numbers:" << bank->getPMCalibsSize() <<std::endl;
+  std::cout << "BarrelSlot numbers:" << bank->getBarrelSlotsSize() <<std::endl;
+  std::cout << "Layer numbers:" << bank->getLayersSize() <<std::endl;
+  std::cout << "Frame numbers:" << bank->getFramesSize() <<std::endl;
   std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl;
   std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl;
   std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl;
 
   BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank->getPMsSize() == 4);
-  BOOST_REQUIRE(bank->getPMCalibsSize() == 0); // 0 due to run id == 1  // TODO Check it with DB
+  BOOST_REQUIRE(bank->getPMCalibsSize() == 0); // 0 due to run id == 1  // TODO Check it with DB // RESOLVED sql function returns (0 rows) for run_id=1
+  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
+  BOOST_REQUIRE(bank->getLayersSize() == 1);
+  BOOST_REQUIRE(bank->getFramesSize() == 1);
   BOOST_REQUIRE(bank->getFEBsSize() == 1);
   BOOST_REQUIRE(bank->getTRBsSize() == 1);
   BOOST_REQUIRE(bank->getTOMBChannelsSize() == 4);
@@ -75,12 +81,18 @@ BOOST_AUTO_TEST_CASE(run26Test)
   std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl;
   std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl;
   std::cout << "PMCalib numbers:" << bank->getPMCalibsSize() <<std::endl;
+  std::cout << "BarrelSlot numbers:" << bank->getBarrelSlotsSize() <<std::endl;
+  std::cout << "Layer numbers:" << bank->getLayersSize() <<std::endl;
+  std::cout << "Frame numbers:" << bank->getFramesSize() <<std::endl;
   std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl;
   std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl;
   std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl;
   BOOST_REQUIRE(bank->getScintillatorsSize() > 0);
   BOOST_REQUIRE(bank->getPMsSize() > 0);
-  BOOST_REQUIRE(bank->getPMCalibsSize() == 0); // 0 due to run id == 26  // TODO Check it with DB
+  BOOST_REQUIRE(bank->getPMCalibsSize() == 0); // 0 due to run id == 26  // TODO Check it with DB // RESOLVED sql function returns (0 rows) for run_id=26
+  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
+  BOOST_REQUIRE(bank->getLayersSize() == 1);
+  BOOST_REQUIRE(bank->getFramesSize() == 1);
   BOOST_REQUIRE(bank->getFEBsSize() > 0);
   BOOST_REQUIRE(bank->getTRBsSize() > 0);
   BOOST_REQUIRE(bank->getTOMBChannelsSize() > 0);
@@ -208,6 +220,9 @@ BOOST_AUTO_TEST_CASE(fillContainersTest)
   std::cout << "Scintillators number:" << bank.getScintillatorsSize() <<std::endl;
   std::cout << "PM numbers:" << bank.getPMsSize() <<std::endl;
   std::cout << "PMCalib numbers:" << bank.getPMCalibsSize() <<std::endl;
+  std::cout << "BarrelSlot numbers:" << bank.getBarrelSlotsSize() <<std::endl;
+  std::cout << "Layer numbers:" << bank.getLayersSize() <<std::endl;
+  std::cout << "Frame numbers:" << bank.getFramesSize() <<std::endl;
   std::cout << "FEB numbers:" << bank.getFEBsSize() <<std::endl;
   std::cout << "TRB numbers:" << bank.getTRBsSize() <<std::endl;
   std::cout << "TOMB channel numbers:" << bank.getTOMBChannelsSize() <<std::endl;
@@ -215,6 +230,9 @@ BOOST_AUTO_TEST_CASE(fillContainersTest)
   BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
   BOOST_REQUIRE(bank.getPMsSize() == 0);
   BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
+  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 0);
+  BOOST_REQUIRE(bank.getLayersSize() == 0);
+  BOOST_REQUIRE(bank.getFramesSize() == 0);
   BOOST_REQUIRE(bank.getFEBsSize() == 0);
   BOOST_REQUIRE(bank.getTRBsSize() == 0);
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
@@ -222,13 +240,19 @@ BOOST_AUTO_TEST_CASE(fillContainersTest)
   paramGetter.fillScintillators(run, bank);
   paramGetter.fillPMs(run, bank);
   paramGetter.fillPMCalibs(run, bank);
+  paramGetter.fillBarrelSlot(run, bank);
+  paramGetter.fillLayer(run, bank);
+  paramGetter.fillFrame(run, bank);
   paramGetter.fillFEBs(run, bank);
   paramGetter.fillTRBs(run, bank);
   paramGetter.fillTOMBChannels(run, bank);
   
   BOOST_REQUIRE(bank.getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank.getPMsSize() == 4);
-  BOOST_REQUIRE(bank.getPMCalibsSize() == 0); // 0 due to run id == 1  // TODO Check it with DB
+  BOOST_REQUIRE(bank.getPMCalibsSize() == 0); // 0 due to run id == 1  // TODO Check it with DB // RESOLVED sql function returns (0 rows) for run_id=1
+  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 2);
+  BOOST_REQUIRE(bank.getLayersSize() == 1);
+  BOOST_REQUIRE(bank.getFramesSize() == 1);
   BOOST_REQUIRE(bank.getFEBsSize() == 1);
   BOOST_REQUIRE(bank.getTRBsSize() == 1);
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 4);
@@ -238,6 +262,9 @@ BOOST_AUTO_TEST_CASE(fillContainersTest)
   BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
   BOOST_REQUIRE(bank.getPMsSize() == 0);
   BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
+  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 0);
+  BOOST_REQUIRE(bank.getLayersSize() == 0);
+  BOOST_REQUIRE(bank.getFramesSize() == 0);
   BOOST_REQUIRE(bank.getFEBsSize() == 0);
   BOOST_REQUIRE(bank.getTRBsSize() == 0);
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
@@ -286,7 +313,7 @@ BOOST_AUTO_TEST_CASE(generatePMCalibTest)
   JPetDBParamGetter paramGetter(gDefaultConfigFile);
   JPetParamBank bank;
   
-  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromPhotoMultipliersCalibration", "2"); // TODO Check it with DB
+  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromPhotoMultipliersCalibration", "2"); // TODO Check it with DB // RESOLVED - correct
   size_t l_sizeResultQuerry = l_runDbResults.size();
   
   if(l_sizeResultQuerry) 
@@ -297,7 +324,64 @@ BOOST_AUTO_TEST_CASE(generatePMCalibTest)
       bank.addPMCalib(l_pmCalib);
     }
   }
-  BOOST_REQUIRE(bank.getPMCalibsSize() == 4); // TODO Check it with DB
+  BOOST_REQUIRE(bank.getPMCalibsSize() == 4); // TODO Check it with DB // RESOLVED sql function returns (1 rows) for run_id=2
+}
+
+BOOST_AUTO_TEST_CASE(generateBarrelSlotTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  JPetParamBank bank;
+  
+  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getBarrelSlot", "1");
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+  
+  if(l_sizeResultQuerry) 
+  {
+    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
+    { 
+      JPetBarrelSlot l_barrelSlot = paramGetter.generateBarrelSlot(row);
+      bank.addBarrelSlot(l_barrelSlot);
+    }
+  }
+  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 2);
+}
+
+BOOST_AUTO_TEST_CASE(generateLayerTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  JPetParamBank bank;
+  
+  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getLayer", "1");
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+  
+  if(l_sizeResultQuerry) 
+  {
+    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
+    { 
+      JPetLayer l_layer = paramGetter.generateLayer(row);
+      bank.addLayer(l_layer);
+    }
+  }
+  BOOST_REQUIRE(bank.getLayersSize() == 1);
+}
+
+BOOST_AUTO_TEST_CASE(generateFrameTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  JPetParamBank bank;
+  
+  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getFrame", "1");
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+  
+  if(l_sizeResultQuerry) 
+  {
+    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
+    {
+      JPetFrame l_frame = paramGetter.generateFrame(row);
+      bank.addFrame(l_frame);
+    }
+  }
+  BOOST_REQUIRE(bank.getFramesSize() == 1);
 }
 
 BOOST_AUTO_TEST_CASE(generateFEBTest)
@@ -369,7 +453,7 @@ BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
   
   paramGetter.fillPMCalibs(run, bank);
   
-  BOOST_REQUIRE(bank.getPMCalibsSize() == 4); // 0 due to run id == 1  // TODO Check it with DB
+  BOOST_REQUIRE(bank.getPMCalibsSize() == 4); // 0 due to run id == 1  // TODO Check it with DB // RESOLVED sql function returns (4 rows) for run_id=2
   
   BOOST_REQUIRE(bank.getPMCalib(0).GetId() == 1);
   BOOST_REQUIRE(bank.getPMCalib(0).GetNamePM() == "dummy");
@@ -378,8 +462,9 @@ BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
   BOOST_REQUIRE(bank.getPMCalib(0).GetECalConst2() == 0);
   BOOST_REQUIRE(bank.getPMCalib(0).GetGainalpha() == 0);
   BOOST_REQUIRE(bank.getPMCalib(0).GetGainbeta() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(0).GetPMCalibAssignment().id == 1);
-  BOOST_REQUIRE(bank.getPMCalib(0).GetPMCalibAssignment().photomultiplier_id == 1);
+  
+  BOOST_REQUIRE(bank.getPMCalib(0).GetPMCalibAssignment().id == 2);
+  BOOST_REQUIRE(bank.getPMCalib(0).GetPMCalibAssignment().photomultiplier_id == 3);
   
   BOOST_REQUIRE(bank.getPMCalib(1).GetId() == 1);
   BOOST_REQUIRE(bank.getPMCalib(1).GetNamePM() == "dummy");
@@ -388,8 +473,9 @@ BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
   BOOST_REQUIRE(bank.getPMCalib(1).GetECalConst2() == 0);
   BOOST_REQUIRE(bank.getPMCalib(1).GetGainalpha() == 0);
   BOOST_REQUIRE(bank.getPMCalib(1).GetGainbeta() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(1).GetPMCalibAssignment().id == 4);
-  BOOST_REQUIRE(bank.getPMCalib(1).GetPMCalibAssignment().photomultiplier_id == 4);
+  
+  BOOST_REQUIRE(bank.getPMCalib(1).GetPMCalibAssignment().id == 1);
+  BOOST_REQUIRE(bank.getPMCalib(1).GetPMCalibAssignment().photomultiplier_id == 1);
   
   BOOST_REQUIRE(bank.getPMCalib(2).GetId() == 1);
   BOOST_REQUIRE(bank.getPMCalib(2).GetNamePM() == "dummy");
@@ -398,8 +484,9 @@ BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
   BOOST_REQUIRE(bank.getPMCalib(2).GetECalConst2() == 0);
   BOOST_REQUIRE(bank.getPMCalib(2).GetGainalpha() == 0);
   BOOST_REQUIRE(bank.getPMCalib(2).GetGainbeta() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(2).GetPMCalibAssignment().id == 2);
-  BOOST_REQUIRE(bank.getPMCalib(2).GetPMCalibAssignment().photomultiplier_id == 3);
+  
+  BOOST_REQUIRE(bank.getPMCalib(2).GetPMCalibAssignment().id == 4);
+  BOOST_REQUIRE(bank.getPMCalib(2).GetPMCalibAssignment().photomultiplier_id == 4);
   
   BOOST_REQUIRE(bank.getPMCalib(3).GetId() == 1);
   BOOST_REQUIRE(bank.getPMCalib(3).GetNamePM() == "dummy");
@@ -408,6 +495,7 @@ BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
   BOOST_REQUIRE(bank.getPMCalib(3).GetECalConst2() == 0);
   BOOST_REQUIRE(bank.getPMCalib(3).GetGainalpha() == 0);
   BOOST_REQUIRE(bank.getPMCalib(3).GetGainbeta() == 0);
+  
   BOOST_REQUIRE(bank.getPMCalib(3).GetPMCalibAssignment().id == 3);
   BOOST_REQUIRE(bank.getPMCalib(3).GetPMCalibAssignment().photomultiplier_id == 7);
   

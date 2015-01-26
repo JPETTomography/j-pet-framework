@@ -2,12 +2,14 @@
 #ifndef JPET_FRAME_H
 #define JPET_FRAME_H
 
-#include "TNamed.h"
+/*#include "TNamed.h"
 #include "../JPetUser/JPetUser.h"
-#include "../JPetLayer/JPetLayer.h"
+#include "../JPetLayer/JPetLayer.h"*/
 
+#include <TRef.h>
+#include "TNamed.h"
 
-class JPetLayer;
+//class JPetLayer;
 
 
 /**
@@ -18,30 +20,34 @@ class JPetLayer;
 class JPetFrame: public TNamed
 {
 protected:
-  int m_id;
-  std::string m_status;
-  std::string m_description;
-  int m_version;
-  JPetUser &m_JPetUser;		//creatorId
-  JPetLayer &m_JPetLayer;
+  int fId;
+  bool fIsActive;
+  std::string fStatus;
+  std::string fDescription;
+  int fVersion;
+  int fCreator_id;
+  
+  //friend class JPetParamManager;
   
 public:
-  JPetFrame(int p_id, std::string p_status, std::string p_description, int p_version, JPetUser &p_JPetUser, JPetLayer &p_JPetLayer);
-  virtual ~JPetFrame(void);
-  
-private:
-  JPetFrame(const JPetFrame &frame);
-  JPetFrame& operator=(const JPetFrame &frame);
-  
-public:
-  virtual int id(void) const;
-  virtual std::string status(void) const;
-  virtual std::string description(void) const;
-  virtual int version(void) const;
+  JPetFrame(void);
+  JPetFrame(int id, bool isActive, std::string status, std::string description, int version, int creator_id);
+  ~JPetFrame(void);
 
-  inline bool operator==(const JPetFrame& frame) { return id() == frame.id(); }
-  inline bool operator!=(const JPetFrame& frame) { return id() != frame.id(); }
+  inline bool operator==(const JPetFrame& frame) { return getId() == frame.getId(); }
+  inline bool operator!=(const JPetFrame& frame) { return getId() != frame.getId(); }
   
+  int getId() const { return fId; }
+  bool getIsActive() const { return fIsActive; }
+  std::string getStatus() const { return fStatus; }
+  std::string getDescription() const { return fDescription; }
+  int getVersion() const { return fVersion; }
+  int getCreator() const { return fCreator_id; }
+  
+/*private:
+  JPetFrame(const JPetFrame &frame);
+  JPetFrame& operator=(const JPetFrame &frame);*/
+
 private:
   ClassDef(JPetFrame, 1);
 };

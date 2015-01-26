@@ -2,45 +2,30 @@
 #include "JPetFrame.h"
 
 
-ClassImp(JPetFrame);
-
-
-JPetFrame::JPetFrame(int p_id, 
-		     std::string p_status, 
-		     std::string p_description, 
-		     int p_version,
-		     JPetUser &p_JPetUser,
-		     JPetLayer &p_JPetLayer) :
-					    m_id(p_id),
-					    m_status(p_status),
-					    m_description(p_description),
-					    m_version(p_version),
-					    m_JPetUser(p_JPetUser),
-					    m_JPetLayer(p_JPetLayer)
-					    
+JPetFrame::JPetFrame() :
+  fId(0),
+  fIsActive(false),
+  fStatus(std::string("")),
+  fDescription(std::string("")),
+  fVersion(0),
+  fCreator_id(0)
 {
+  SetName("JPetFrame");
+}
+  
+JPetFrame::JPetFrame(int id, bool isActive, std::string status, std::string description, int version, int creator_id) :
+  fId(id),
+  fIsActive(isActive),
+  fStatus(status),
+  fDescription(description),
+  fVersion(version),
+  fCreator_id(creator_id)
+{
+  SetName("JPetFrame");
 }
 
 JPetFrame::~JPetFrame()
 {
 }
 
-int JPetFrame::id() const
-{
-  return m_id;
-}
-
-std::string JPetFrame::status() const
-{
-  return m_status;
-}
-
-std::string JPetFrame::description() const
-{
-  return m_description;
-}
-
-int JPetFrame::version() const
-{
-  return m_version;
-}
+ClassImp(JPetFrame);

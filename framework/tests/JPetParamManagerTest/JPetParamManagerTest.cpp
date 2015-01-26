@@ -15,10 +15,10 @@ void checkContainersSize(const JPetParamBank &bank)
 {
   BOOST_REQUIRE_EQUAL(bank.getScintillatorsSize(), 2);
   BOOST_REQUIRE_EQUAL(bank.getPMsSize(), 4);
-  BOOST_REQUIRE_EQUAL(bank.getPMCalibsSize(), 0);	// It is not 0 for e.g. run_id = 2
+  BOOST_REQUIRE_EQUAL(bank.getPMCalibsSize(), 0);	// It is not 0 for e.g. run_id = 2 - FOR run_id=2 NOT for run_id=1 YES. In test run_id is set to 1 so the size=0
   BOOST_REQUIRE_EQUAL(bank.getFEBsSize(), 1);
   BOOST_REQUIRE_EQUAL(bank.getTRBsSize(), 1);
-  BOOST_REQUIRE_EQUAL(bank.getBarrelSlotsSize(), 0);
+  BOOST_REQUIRE_EQUAL(bank.getBarrelSlotsSize(), 2);
   BOOST_REQUIRE_EQUAL(bank.getTOMBChannelsSize(), 4);
 }
 
