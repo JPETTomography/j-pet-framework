@@ -113,7 +113,7 @@ void JPetDBParamGetter::fillPMCalibs(const int p_run_id, JPetParamBank& paramBan
   INFO("Start filling PMCalibs container.");
 
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-  pqxx::result l_runDbResults = getDataFromDB("getDataFromPhotoMultipliersCalibration",l_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getPmCalibration",l_run_id);
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -123,7 +123,7 @@ void JPetDBParamGetter::fillPMCalibs(const int p_run_id, JPetParamBank& paramBan
       paramBank.addPMCalib(l_pmCalib);
     }
   } else {
-    printErrorMessageDB("getDataFromPhotoMultipliersCalibration", p_run_id);
+    printErrorMessageDB("getPmCalibration", p_run_id);
   }
 }
 

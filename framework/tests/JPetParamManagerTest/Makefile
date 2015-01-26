@@ -1,9 +1,9 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetParamManager
-EXTRA_MODULES = JPetScin JPetFEB JPetTRB JPetPM JPetTreeHeader JPetReader JPetWriter JPetLogger JPetParamBank JPetDBParamGetter JPetBarrelSlot JPetTOMBChannel JPetPMCalib
+EXTRA_MODULES = JPetScin JPetFEB JPetTRB JPetPM JPetTreeHeader JPetReader JPetWriter JPetLogger JPetParamBank JPetDBParamGetter JPetBarrelSlot JPetTOMBChannel JPetPMCalib JPetLayer JPetFrame
 #classes that need Dictionnaries 
-DICTS = JPetScin JPetFEB JPetTRB JPetPM JPetTreeHeader JPetParamBank JPetBarrelSlot JPetTOMBChannel JPetPMCalib
+DICTS = JPetScin JPetFEB JPetTRB JPetPM JPetTreeHeader JPetParamBank JPetBarrelSlot JPetTOMBChannel JPetPMCalib JPetLayer JPetFrame
 PQXX_LIB_SET = YES
 DBHANDLER_LIB_SET = YES
 UNPACKER_LIB_SET = 
