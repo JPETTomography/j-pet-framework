@@ -32,6 +32,9 @@ JPetParamBank* JPetDBParamGetter::generateParamBank(const int p_run_id)
   fillScintillators(p_run_id, *pParamBank);
   fillPMs(p_run_id, *pParamBank);
   fillPMCalibs(p_run_id, *pParamBank);
+  fillBarrelSlot(p_run_id, *pParamBank);
+  fillLayer(p_run_id, *pParamBank);
+fillFrame(p_run_id, *pParamBank);
   fillFEBs(p_run_id, *pParamBank);
   fillTRBs(p_run_id, *pParamBank);
   fillTOMBChannels(p_run_id, *pParamBank);
@@ -121,6 +124,63 @@ void JPetDBParamGetter::fillPMCalibs(const int p_run_id, JPetParamBank& paramBan
     }
   } else {
     printErrorMessageDB("getDataFromPhotoMultipliersCalibration", p_run_id);
+  }
+}
+
+void JPetDBParamGetter::fillBarrelSlot(const int p_run_id, JPetParamBank& paramBank)
+{
+  INFO("Start filling BarrelSlot container.");
+
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getBarrelSlot", l_run_id);
+
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+
+  if (l_sizeResultQuerry) {
+    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+      JPetBarrelSlot l_barrelSlot = generateBarrelSlot(row);
+      paramBank.addBarrelSlot(l_barrelSlot);
+    }
+  } else {
+    printErrorMessageDB("getBarrelSlot", p_run_id);
+  }
+}
+
+void JPetDBParamGetter::fillLayer(const int p_run_id, JPetParamBank& paramBank)
+{
+  INFO("Start filling Layer container.");
+
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getLayer", l_run_id);
+
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+
+  if (l_sizeResultQuerry) {
+    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+      JPetLayer l_layer = generateLayer(row);
+      paramBank.addLayer(l_layer);
+    }
+  } else {
+    printErrorMessageDB("getLayer", p_run_id);
+  }
+}
+
+void JPetDBParamGetter::fillFrame(const int p_run_id, JPetParamBank& paramBank)
+{
+  INFO("Start filling Frame container.");
+
+  std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getFrame", l_run_id);
+
+  size_t l_sizeResultQuerry = l_runDbResults.size();
+
+  if (l_sizeResultQuerry) {
+    for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
+      JPetFrame l_frame = generateFrame(row);
+      paramBank.addFrame(l_frame);
+    }
+  } else {
+    printErrorMessageDB("getFrame", p_run_id);
   }
 }
 
@@ -251,6 +311,61 @@ JPetPMCalib JPetDBParamGetter::generatePMCalib(pqxx::result::const_iterator row)
 			l_pm_calibration_assignment_photomuliplier_id);
   
   return l_PMCalib;
+}
+
+JPetBarrelSlot JPetDBParamGetter::generateBarrelSlot(pqxx::result::const_iterator row)
+{
+  int l_slot_id = row["slot_id"].as<int>();
+  bool l_slot_isActive = row["slot_isActive"].as<bool>();
+  std::string l_slot_name = row["slot_name"].as<std::string>();
+  double l_slot_theta1 = row["slot_theta1"].as<double>();
+  int l_slot_inFrameId = row["slot_inFrameId"].as<int>();
+  int l_layer_id = row["layer_id"].as<int>();
+
+  JPetBarrelSlot l_barrelSlot(l_slot_id,
+			      l_slot_isActive,
+			      l_slot_name,
+			      l_slot_theta1,
+			      l_slot_inFrameId,
+			      l_layer_id);
+  
+  return l_barrelSlot;
+}
+
+JPetLayer JPetDBParamGetter::generateLayer(pqxx::result::const_iterator row)
+{
+  int l_layer_id = row["layer_id"].as<int>();
+  bool l_layer_isActive = row["layer_isActive"].as<bool>();
+  std::string l_layer_name = row["layer_name"].as<std::string>();
+  double l_layer_radius = row["layer_radius"].as<double>();
+  int l_frame_id = row["frame_id"].as<int>();
+
+  JPetLayer l_layer(l_layer_id,
+		    l_layer_isActive,
+		    l_layer_name,
+		    l_layer_radius,
+		    l_frame_id);
+  
+  return l_layer;
+}
+
+JPetFrame JPetDBParamGetter::generateFrame(pqxx::result::const_iterator row)
+{
+  int l_frame_id = row["frame_id"].as<int>();
+  bool l_frame_isActive = row["frame_isActive"].as<bool>();
+  std::string l_frame_status = row["frame_status"].as<std::string>();
+  std::string l_frame_description = row["frame_description"].as<std::string>();
+  int l_frame_version = row["frame_version"].as<int>();
+  int l_frame_creator_id = row["frame_creator_id"].as<int>();
+
+  JPetFrame l_frame(l_frame_id,
+		    l_frame_isActive,
+		    l_frame_status,
+		    l_frame_description,
+		    l_frame_version,
+		    l_frame_creator_id);
+  
+  return l_frame;
 }
 
 JPetFEB JPetDBParamGetter::generateFEB(pqxx::result::const_iterator row) {

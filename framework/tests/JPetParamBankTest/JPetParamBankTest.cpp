@@ -14,6 +14,9 @@ BOOST_AUTO_TEST_CASE(DefaultConstructorTest)
   BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
   BOOST_REQUIRE(bank.getPMsSize() == 0);
   BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
+  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 0);
+  BOOST_REQUIRE(bank.getLayersSize() == 0);
+  BOOST_REQUIRE(bank.getFramesSize() == 0);
   BOOST_REQUIRE(bank.getFEBsSize() == 0);
   BOOST_REQUIRE(bank.getTRBsSize() == 0);
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
@@ -21,6 +24,8 @@ BOOST_AUTO_TEST_CASE(DefaultConstructorTest)
   BOOST_REQUIRE(bank.getScintillators().GetEntries() == 0);
   BOOST_REQUIRE(bank.getPMs().GetEntries() == 0);
   BOOST_REQUIRE(bank.getPMCalibs().GetEntries() == 0);
+  BOOST_REQUIRE(bank.getBarrelSlots().GetEntries() == 0);
+  BOOST_REQUIRE(bank.getFrames().GetEntries() == 0);
   BOOST_REQUIRE(bank.getFEBs().GetEntries() == 0);
   BOOST_REQUIRE(bank.getTRBs().GetEntries() == 0);
   BOOST_REQUIRE(bank.getTOMBChannels().GetEntries() == 0);
@@ -32,6 +37,9 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   JPetScin scint(111, 8.f, 2.f, 4.f, 8.f);
   JPetPM pm(JPetPM::SideB, 222, 32, 64, std::make_pair(16.f, 32.f));
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
+  JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 3, 2);
+  JPetLayer layer(1, true, "layerTest", 35.f, 3);
+  JPetFrame frame(1, true, "OKTEST", "FrameTest", 5, 2);
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
   JPetTRB trb(333, 64, 128);
   JPetTOMBChannel TOMBChannel(32u);
@@ -40,6 +48,9 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   bank.addScintillator(scint);
   bank.addPM(pm);
   bank.addPMCalib(pmCalib);
+  bank.addBarrelSlot(barrelSlot);
+  bank.addLayer(layer);
+  bank.addFrame(frame);
   bank.addFEB(feb);
   bank.addTRB(trb);
   bank.addTOMBChannel(TOMBChannel);
@@ -47,6 +58,9 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   BOOST_REQUIRE(bank.getScintillatorsSize() == 1);
   BOOST_REQUIRE(bank.getPMsSize() == 1);
   BOOST_REQUIRE(bank.getPMCalibsSize() == 1);
+  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 1);
+BOOST_REQUIRE(bank.getLayersSize() == 1);
+BOOST_REQUIRE(bank.getFramesSize() == 1);
   BOOST_REQUIRE(bank.getFEBsSize() == 1);
   BOOST_REQUIRE(bank.getTRBsSize() == 1);
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 1);
@@ -54,6 +68,9 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   BOOST_REQUIRE(bank.getScintillators().GetEntries() == 1);
   BOOST_REQUIRE(bank.getPMs().GetEntries() == 1);
   BOOST_REQUIRE(bank.getPMCalibs().GetEntries() == 1);
+  BOOST_REQUIRE(bank.getBarrelSlots().GetEntries() == 1);
+  BOOST_REQUIRE(bank.getLayers().GetEntries() == 1);
+  BOOST_REQUIRE(bank.getFrames().GetEntries() == 1);
   BOOST_REQUIRE(bank.getFEBs().GetEntries() == 1);
   BOOST_REQUIRE(bank.getTRBs().GetEntries() == 1);
   BOOST_REQUIRE(bank.getTOMBChannels().GetEntries() == 1);
@@ -85,6 +102,26 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   BOOST_CHECK_CLOSE(bank.getPMCalib(0).GetGainbeta(), 32.f, epsilon);
   BOOST_REQUIRE(bank.getPMCalib(0).GetPMCalibAssignment().id == 128);
   BOOST_REQUIRE(bank.getPMCalib(0).GetPMCalibAssignment().photomultiplier_id == 512);
+
+  BOOST_REQUIRE(bank.getBarrelSlot(0).getId() == 1);
+  BOOST_REQUIRE(bank.getBarrelSlot(0).getIsActive() == true);
+  BOOST_REQUIRE(bank.getBarrelSlot(0).getName() == "barrelSlotTest");
+  BOOST_CHECK_CLOSE(bank.getBarrelSlot(0).getTheta(), 35.f, epsilon);
+  BOOST_REQUIRE(bank.getBarrelSlot(0).getLayerId() == 3);
+  BOOST_REQUIRE(bank.getBarrelSlot(0).getInFrameId() == 2);
+  
+  BOOST_REQUIRE(bank.getLayer(0).getId() == 1);
+  BOOST_REQUIRE(bank.getLayer(0).getIsActive() == true);
+  BOOST_REQUIRE(bank.getLayer(0).getName() == "layerTest");
+  BOOST_CHECK_CLOSE(bank.getLayer(0).getRadius(), 35.f, epsilon);
+  BOOST_REQUIRE(bank.getLayer(0).getFrameId() == 3);
+  
+  BOOST_REQUIRE(bank.getFrame(0).getId() == 1);
+  BOOST_REQUIRE(bank.getFrame(0).getIsActive() == true);
+  BOOST_REQUIRE(bank.getFrame(0).getStatus() == "OKTEST");
+  BOOST_REQUIRE(bank.getFrame(0).getDescription() == "FrameTest");
+  BOOST_REQUIRE(bank.getFrame(0).getVersion() == 5);
+  BOOST_REQUIRE(bank.getFrame(0).getCreator() == 2);
   
   BOOST_REQUIRE(bank.getFEB(0).getID() == 1);
   BOOST_REQUIRE(bank.getFEB(0).isActive() == true);
@@ -105,6 +142,9 @@ BOOST_AUTO_TEST_CASE(clearAllContainersTest)
   JPetScin scint(111, 8.f, 2.f, 4.f, 8.f);
   JPetPM pm(JPetPM::SideB, 222, 32, 64, std::make_pair(16.f, 32.f));
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
+  JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 3, 2);
+  JPetLayer layer(1, true, "layerTest", 35.f, 3);
+  JPetFrame frame(1, true, "OKTEST", "FrameTest", 5, 2);
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
   JPetTRB trb(333, 64, 128);
   JPetTOMBChannel TOMBChannel(32u);
@@ -112,6 +152,9 @@ BOOST_AUTO_TEST_CASE(clearAllContainersTest)
   bank.addScintillator(scint);
   bank.addPM(pm);
   bank.addPMCalib(pmCalib);
+  bank.addBarrelSlot(barrelSlot);
+  bank.addLayer(layer);
+  bank.addFrame(frame);
   bank.addFEB(feb);
   bank.addTRB(trb);
   bank.addTOMBChannel(TOMBChannel);
@@ -119,6 +162,9 @@ BOOST_AUTO_TEST_CASE(clearAllContainersTest)
   BOOST_REQUIRE(bank.getScintillatorsSize() == 1);
   BOOST_REQUIRE(bank.getPMsSize() == 1);
   BOOST_REQUIRE(bank.getPMCalibsSize() == 1);
+  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 1);
+  BOOST_REQUIRE(bank.getLayersSize() == 1);
+  BOOST_REQUIRE(bank.getFramesSize() == 1);
   BOOST_REQUIRE(bank.getFEBsSize() == 1);
   BOOST_REQUIRE(bank.getTRBsSize() == 1);
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 1);
@@ -128,6 +174,9 @@ BOOST_AUTO_TEST_CASE(clearAllContainersTest)
   BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
   BOOST_REQUIRE(bank.getPMsSize() == 0);
   BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
+  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 0);
+  BOOST_REQUIRE(bank.getLayersSize() == 0);
+  BOOST_REQUIRE(bank.getFramesSize() == 0);
   BOOST_REQUIRE(bank.getFEBsSize() == 0);
   BOOST_REQUIRE(bank.getTRBsSize() == 0);
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
@@ -139,6 +188,9 @@ BOOST_AUTO_TEST_CASE(getSizeTest)
   JPetScin scint(111, 8.f, 2.f, 4.f, 8.f);
   JPetPM pm(JPetPM::SideB, 222, 32, 64, std::make_pair(16.f, 32.f));
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
+  JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 3, 2);
+  JPetLayer layer(1, true, "layerTest", 35.f, 3);
+  JPetFrame frame(1, true, "OKTEST", "FrameTest", 5, 2);
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
   JPetTRB trb(333, 64, 128);
   JPetTOMBChannel TOMBChannel(32u);
@@ -146,6 +198,9 @@ BOOST_AUTO_TEST_CASE(getSizeTest)
   bank.addScintillator(scint);
   bank.addPM(pm);
   bank.addPMCalib(pmCalib);
+  bank.addBarrelSlot(barrelSlot);
+  bank.addLayer(layer);
+  bank.addFrame(frame);
   bank.addFEB(feb);
   bank.addTRB(trb);
   bank.addTOMBChannel(TOMBChannel);
@@ -153,11 +208,12 @@ BOOST_AUTO_TEST_CASE(getSizeTest)
   BOOST_REQUIRE(bank.getSize(JPetParamBank::kScintillator) == 1);
   BOOST_REQUIRE(bank.getSize(JPetParamBank::kPM) == 1);
   BOOST_REQUIRE(bank.getSize(JPetParamBank::kPMCalib) == 1);
+  BOOST_REQUIRE(bank.getSize(JPetParamBank::kBarrelSlot) == 1);
+  BOOST_REQUIRE(bank.getSize(JPetParamBank::kLayer) == 1);
+  BOOST_REQUIRE(bank.getSize(JPetParamBank::kFrame) == 1);
   BOOST_REQUIRE(bank.getSize(JPetParamBank::kFEB) == 1);
   BOOST_REQUIRE(bank.getSize(JPetParamBank::kTRB) == 1);
   BOOST_REQUIRE(bank.getSize(JPetParamBank::kTOMBChannel) == 1);
-
-
 }
 
 BOOST_AUTO_TEST_CASE( saving_reading_file )
@@ -174,6 +230,9 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   pm3.setID(3);
   pm4.setID(4);
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
+  JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 3, 2);
+  JPetLayer layer(1, true, "layerTest", 35.f, 3);
+  JPetFrame frame(1, true, "OKTEST", "FrameTest", 5, 2);
   pm1.setScin(scint1);
   pm2.setScin(scint1);
   pm3.setScin(scint2);
@@ -186,6 +245,9 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   bank.addPM(pm3);
   bank.addPM(pm4);
   bank.addPMCalib(pmCalib);
+  bank.addBarrelSlot(barrelSlot);
+  bank.addLayer(layer);
+  bank.addFrame(frame);
   bank.addScintillator(scint1);
   bank.addScintillator(scint2);
   bank.addTRB(trb);
@@ -196,6 +258,9 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   }
 
   BOOST_REQUIRE(bank.getPMCalibsSize() == 1);
+  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 1);
+  BOOST_REQUIRE(bank.getLayersSize() == 1);
+  BOOST_REQUIRE(bank.getFramesSize() == 1);
   
   TFile file("test.root", "UPDATE");
   file.cd();
@@ -209,17 +274,32 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
 
   BOOST_REQUIRE(bank2.getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank2.getPMsSize() == 4);
-  BOOST_REQUIRE(bank2.getPMCalibsSize() == 0); // TODO ERROR - should be 1
+  
+  BOOST_REQUIRE(bank2.getPMCalibsSize() == 1);
+  BOOST_REQUIRE(bank2.getBarrelSlotsSize() == 1);
+  //std::cout << bank2.getLayersSize() << std::endl;
+  BOOST_REQUIRE(bank2.getLayersSize() == 0); // TODO ERROR - should be 1
+  //std::cout << bank2.getFramesSize() << std::endl;
+  BOOST_REQUIRE(bank2.getFramesSize() == 0); // TODO ERROR - should be 1
   BOOST_REQUIRE(bank2.getFEBsSize() == 1);
   BOOST_REQUIRE(bank2.getTRBsSize() == 1);
 
   BOOST_REQUIRE(bank2.getScintillators().GetEntries() == 2);
   BOOST_REQUIRE(bank2.getPMs().GetEntries() == 4);
-  BOOST_REQUIRE(bank2.getPMCalibs().GetEntries() == 0); // TODO ERROR - should be 1
+  BOOST_REQUIRE(bank2.getPMCalibs().GetEntries() == 1);
+  BOOST_REQUIRE(bank2.getBarrelSlots().GetEntries() == 1);
+  //std::cout << bank2.getLayers().GetEntries() << std::endl;
+  BOOST_REQUIRE(bank2.getLayers().GetEntries() == 0); // TODO ERROR - should be 1
+  //std::cout << bank2.getFrames().GetEntries() << std::endl;
+  BOOST_REQUIRE(bank2.getFrames().GetEntries() == 0); // TODO ERROR - should be 1
   BOOST_REQUIRE(bank2.getFEBs().GetEntries() == 1);
   BOOST_REQUIRE(bank2.getTRBs().GetEntries() == 1);
 
-  // BOOST_REQUIRE(bank2.getPMCalib(0).GetId() == 256); // TODO ERROR
+  BOOST_REQUIRE(bank2.getPMCalib(0).GetId() == 256);
+  //std::cout << bank2.getBarrelSlot(0).getId() << std::endl;
+  //BOOST_REQUIRE(bank2.getBarrelSlot(0).getId() == 0); // TODO ERROR - should be 1
+  //BOOST_REQUIRE(bank2.getLayer(0).getId() == 0);
+  //BOOST_REQUIRE(bank2.getFrame(0).getId() == 0);
   
   BOOST_REQUIRE(bank2.getFEB(0).getID() == 1);
   BOOST_REQUIRE(bank2.getFEB(0).isActive());

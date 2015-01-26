@@ -15,6 +15,8 @@ JPetParamBank::JPetParamBank():
   fFEBs("JPetFEB", 100),
   fTRBs("JPetTRB", 100),
   fBarrelSlots("JPetBarrelSlot", 100),
+  fLayers("JPetLayer", 100),
+  fFrames("JPetFrame", 100),
   fTOMBChannels("JPetTOMBChannel", 500)
 {
   /* */
@@ -32,6 +34,8 @@ void JPetParamBank::clear()
   fFEBs.Clear();
   fTRBs.Clear();
   fBarrelSlots.Clear();
+  fLayers.Clear();
+  fFrames.Clear();
   fTOMBChannels.Clear();
 }
 
@@ -48,6 +52,15 @@ int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const
       break;
     case kPMCalib:
       size = getPMCalibsSize();
+      break;
+    case kBarrelSlot:
+      size = getBarrelSlotsSize();
+      break;
+    case kLayer:
+      size = getLayersSize();
+      break;
+    case kFrame:
+      size = getFramesSize();
       break;
     case kFEB:
       size = getFEBsSize();

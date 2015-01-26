@@ -13,6 +13,7 @@
 #include "../JPetFEB/JPetFEB.h"
 #include "../JPetPM/JPetPM.h"
 #include "../JPetPMCalib/JPetPMCalib.h"
+#include "../JPetLayer/JPetLayer.h"
 
 #include "../JPetTOMBChannel/JPetTOMBChannel.h"
 #include "../../JPetLoggerInclude.h"
@@ -22,7 +23,7 @@
 class JPetParamBank: public TObject
 {
  public:
-  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, SIZE};
+  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, kLayer, kFrame, SIZE};
 
   JPetParamBank();
   ~JPetParamBank();
@@ -114,6 +115,34 @@ class JPetParamBank: public TObject
     return fBarrelSlots.GetEntries();
   }
 
+  // Layer
+  inline void addLayer(JPetLayer& layer) {
+    new (fLayers[getLayersSize()]) JPetLayer(layer);
+  }
+  inline const TClonesArray& getLayers() const {
+    return fLayers;
+  }
+  inline JPetLayer& getLayer(int i) const {
+    return *((JPetLayer*)fLayers[i]);
+  }
+  inline int getLayersSize() const {
+    return fLayers.GetEntries();
+  }
+  
+  // Frame
+  inline void addFrame(JPetFrame& frame) {
+    new (fFrames[getFramesSize()]) JPetFrame(frame);
+  }
+  inline const TClonesArray& getFrames() const {
+    return fFrames;
+  }
+  inline JPetFrame& getFrame(int i) const {
+    return *((JPetFrame*)fFrames[i]);
+  }
+  inline int getFramesSize() const {
+    return fFrames.GetEntries();
+  }
+  
   // TOMB Channels
   inline void addTOMBChannel(JPetTOMBChannel& tombchannel) {
     new (fTOMBChannels[getTOMBChannelsSize()]) JPetTOMBChannel(tombchannel);
@@ -137,7 +166,9 @@ class JPetParamBank: public TObject
   TClonesArray fPMCalibs;
   TClonesArray fFEBs;
   TClonesArray fTRBs;
-  TClonesArray fBarrelSlots;;
+  TClonesArray fBarrelSlots;
+  TClonesArray fLayers;
+  TClonesArray fFrames;
   TClonesArray fTOMBChannels;
   ClassDef (JPetParamBank, 2);
 };

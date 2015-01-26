@@ -37,6 +37,9 @@ private:
   JPetScin generateScintillator(pqxx::result::const_iterator row);
   JPetPM generatePM(pqxx::result::const_iterator row);
   JPetPMCalib generatePMCalib(pqxx::result::const_iterator row);
+  JPetBarrelSlot generateBarrelSlot(pqxx::result::const_iterator row);
+JPetLayer generateLayer(pqxx::result::const_iterator row);
+JPetFrame generateFrame(pqxx::result::const_iterator row);
   JPetFEB generateFEB(pqxx::result::const_iterator row);
   JPetTRB generateTRB(pqxx::result::const_iterator row);
   JPetTOMBChannel generateTOMBChannel(pqxx::result::const_iterator row);
@@ -46,6 +49,9 @@ private:
 
   void fillPMs(const int p_run_id, JPetParamBank& paramBank);
   void fillPMCalibs(const int p_run_id, JPetParamBank& paramBank);
+  void fillBarrelSlot(const int p_run_id, JPetParamBank& paramBank);
+void fillLayer(const int p_run_id, JPetParamBank& paramBank);
+void fillFrame(const int p_run_id, JPetParamBank& paramBank);
   void fillFEBs(const int p_run_id, JPetParamBank& paramBank);
   void fillTOMBChannels(const int p_run_id, JPetParamBank& paramBank);
   void fillTRBs(const int p_run_id, JPetParamBank& paramBank);
