@@ -313,7 +313,7 @@ BOOST_AUTO_TEST_CASE(generatePMCalibTest)
   JPetDBParamGetter paramGetter(gDefaultConfigFile);
   JPetParamBank bank;
   
-  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromPhotoMultipliersCalibration", "2"); // TODO Check it with DB // RESOLVED - correct
+  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getPmCalibration", "2"); // TODO Check it with DB // RESOLVED - correct
   size_t l_sizeResultQuerry = l_runDbResults.size();
   
   if(l_sizeResultQuerry) 
