@@ -23,6 +23,7 @@ JPetCmdParser::JPetCmdParser()
   ("range,r", po::value< vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process.")
   ("param,p", po::value<string>(), "File with TRB numbers.")
   ("runId,i", po::value<int>(), "Run id.")
+  ("progressBar,b", po::value<int>(), "Progress bar.")
   ;
 }
 
@@ -85,6 +86,17 @@ void JPetCmdParser::parse(int argc, const char** argv)
       if(l_runId <= 0)
       {
 	cerr << "Wrong number of run id: " << l_runId << endl;
+	exit(-1);
+      }
+    }
+    
+    if(fVariablesMap.count("progressBar"))
+    {
+      int l_progressBar = fVariablesMap["progressBar"].as<int>();
+      
+      if(l_progressBar != 0 || l_progressBar != 1)
+      {
+	cerr << "Wrong parameter of progressbar: " << l_progressBar << endl;
 	exit(-1);
       }
     }

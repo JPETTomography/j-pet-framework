@@ -47,10 +47,13 @@ class JPetManager: public TNamed {
   JPetManager();
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&); 
+  
+  float setProgressBar(int currentEventNumber, int numberOfEvents);
 
   JPetCmdParser fCmdParser;
   JPetParamManager fParamManager;
   JPetUnpacker fUnpacker;
   std::list<JPetAnalysisModule*> fTasks;
+  bool fIsProgressBarEnabled;
 };
 #endif /*  !JPETMANAGER_H */
