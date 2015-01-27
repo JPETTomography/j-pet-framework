@@ -21,7 +21,7 @@ JPetManager& JPetManager::GetManager()
   return instance;
 }
 
-JPetManager::JPetManager(): TNamed("JPetMainManager", "JPetMainManager")
+JPetManager::JPetManager(): TNamed("JPetMainManager", "JPetMainManager"), fIsProgressBarEnabled(false)
 {
 
 }
@@ -58,6 +58,10 @@ void JPetManager::Run()
     (*taskIter)->createOutputObjects( getInputFileName().c_str() ); /// writers + histograms
     kNevent = (*taskIter)->getEventNb();
     for (long long i = 0; i < kNevent; i++) {
+      if(fIsProgressBarEnabled)
+      {
+	std::cout << "Progressbar: " << setProgressBar(i, kNevent) << " %" << std::endl;
+      }
       (*taskIter)->exec();
     }
     (*taskIter)->terminate();
@@ -77,6 +81,9 @@ void JPetManager::ParseCmdLine(int argc, char** argv)
     if (fCmdParser.getFileType() == "hld") {
       fUnpacker.setParams(fCmdParser.getFileName().c_str());
     }
+  }
+  if (fCmdParser.isProgressBarSet()) {
+    fIsProgressBarEnabled = true;
   }
 }
 
@@ -133,4 +140,9 @@ TString JPetManager::GetTimeString() const
   strftime( buf, 100, "%m.%d.%Y %R", curtime);
 
   return TString( buf );
+}
+
+float JPetManager::setProgressBar(int currentEventNumber, int numberOfEvents)
+{
+  return ( ((float)currentEventNumber) / numberOfEvents ) * 100;
 }
