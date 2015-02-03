@@ -25,7 +25,7 @@ class JPetUnpacker: public TObject
   inline int getEventsToProcess() const { return fEventsToProcess; }
   inline std::string getHldFile() const { return fHldFile; }
   inline std::string getCfgFile() const { return fCfgFile; }
-  void setParams(const std::string& hldFile, int numOfEvents = 100000, const std::string& cfgFile = "conf_trb3.xml");
+  void setParams(const std::string& hldFile, int numOfEvents = 100000000, const std::string& cfgFile = "conf_trb3.xml");
 
   ClassDef(JPetUnpacker, 1);
 
