@@ -6,7 +6,7 @@ JPetLayer::JPetLayer() :
   fId(-1),
   fIsActive(false),
   fName(std::string("")),
-  fRadius(0.f)
+  fRadius(-1.f)
 {
   SetName("JPetLayer");
 }
@@ -18,10 +18,6 @@ JPetLayer::JPetLayer(int id, bool isActive, std::string name, float radius) :
   fRadius(radius)
 {
   SetName("JPetLayer");
-}
-
-JPetLayer::~JPetLayer()
-{
 }
 
 ClassImp(JPetLayer);
