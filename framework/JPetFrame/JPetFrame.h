@@ -1,8 +1,7 @@
 /**
  *  @copyright Copyright (c) 2015, The J-Pet Framework Authors.
- *  @file JPetParamUtils.h
+ *  @file JPetFrame.h
  *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
- *  @brief @brief Parametric class representing database information on a whole mechanical structure frame of the PET setup.
  */
 
 #ifndef JPET_FRAME_H
