@@ -10,7 +10,7 @@
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetSignal/JPetSignal.h"
 #include "../JPetHit/JPetHit.h"
-#include "../JPetEvent/JPetEvent.h"
+#include "../JPetLOR/JPetLOR.h"
 
 #include "../JPetParamBank/JPetParamBank.h"
 

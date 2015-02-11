@@ -3,7 +3,7 @@
  * @author Damian Trybek, damian.trybek@uj.edu.pl
  * @copyright Copyright (c) 2014, Damian Trybek
  * @brief Module for oscilloscope data
- * Reads oscilloscope ASCII data and procudes JPetEvent structures
+ * Reads oscilloscope ASCII data and procudes JPetLOR structures
  */
 
 #ifndef _SCOPE_READER_MODULE_H_
@@ -59,7 +59,7 @@ class JPetScopeModule: public JPetAnalysisModule {
 
   /** @brief Process next group of files from fFiles.
    *
-   * This method produces JPetEvent from four oscilloscope ASCII files and writes it through JPetWriter to root file.
+   * This method produces JPetLOR from four oscilloscope ASCII files and writes it through JPetWriter to root file.
    * @see fFiles()
    */
   virtual void exec();

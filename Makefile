@@ -13,7 +13,7 @@ UNPACKER_LIB = Unpacker2
 ################
 SRC_DIR = $(PWD)/framework
 #Modules that should have ROOT dictionnaries
-DMODULES = JPetAnalysisModule JPetBarrelSlot JPetEvent JPetHit JPetMacroLoader JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot JPetUnpacker JPetFEB JPetSetup  JPetTOMBChannel JPetUser JPetTreeHeader JPetParamBank JPetPMCalib JPetLayer JPetFrame JPetScopeModule JPetCommonAnalysisModule 
+DMODULES = JPetAnalysisModule JPetBarrelSlot JPetLOR JPetHit JPetMacroLoader JPetPM JPetScin JPetSigCh JPetSignal JPetTRB JPetTSlot JPetUnpacker JPetFEB JPetSetup  JPetTOMBChannel JPetUser JPetTreeHeader JPetParamBank JPetPMCalib JPetLayer JPetFrame JPetScopeModule JPetCommonAnalysisModule 
 DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader JPetScopeReader
 WRITERS = JPetWriter
@@ -30,7 +30,7 @@ WORK_DIR = workdir/FrameworkExamples
 EXAMPLE_DIRS = $(sort $(dir $(wildcard $(WORK_DIR)/*/)))
 ################
 SOURCES = $(SRC_MODULES)
-HEADERS = JPetLoggerInclude.h #Event.h TDCHit.h ADCHit.h Sig.h
+HEADERS = JPetLoggerInclude.h
 HEADERS += $(SRC_HEADERS)
 HEADERS += linkdef.h
 OBJECTS = $(SOURCES:.cpp=.o)

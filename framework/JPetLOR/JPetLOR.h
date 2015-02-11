@@ -1,12 +1,12 @@
 /**
- * @file JPetEvent.h
+ * @file JPetLOR.h
  * @author Damian Trybek, damian.trybek@uj.edu.pl
  * @copyright Copyright (c) 2013, Damian Trybek
- * @brief Event Class
+ * @brief Line of Response Class
  */
 
-#ifndef _JPETEVENT_H_
-#define _JPETEVENT_H_
+#ifndef _JPETLOR_H_
+#define _JPETLOR_H_
 
 #include "../JPetHit/JPetHit.h"
 
@@ -21,12 +21,12 @@ class JPetHit;
  * An event consists of two hits (JPetHit objects) in two barel slots.
  * Please note that the order of the hits in an event is random.
  */
-class JPetEvent: public TNamed 
+class JPetLOR: public TNamed 
 {  
 public:
-  JPetEvent();
-  JPetEvent(float Time, float QualityOfTime, JPetHit& firstHit, JPetHit& secondHit);
-  virtual ~JPetEvent();
+  JPetLOR();
+  JPetLOR(float Time, float QualityOfTime, JPetHit& firstHit, JPetHit& secondHit);
+  virtual ~JPetLOR();
   
 public:
   /// Get the reconstructed absolute time of the event wrt beginning of the run [ps]
@@ -79,7 +79,7 @@ public:
   inline void setQualityOfTimeDiff(float qtd) {fQualityOfTime = qtd;}
   inline float getTimeDiff() const { return fTimeDiff; }
 
-  ClassDef(JPetEvent,1);
+  ClassDef(JPetLOR,1);
 
   private:
   

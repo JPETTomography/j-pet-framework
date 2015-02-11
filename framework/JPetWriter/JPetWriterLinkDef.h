@@ -2,8 +2,8 @@
 
  #pragma link C++ function JPetWriter::Write(JPetBarrelSlot&);
  #pragma link C++ function JPetWriter::Write(vector<JPetBarrelSlot>&);
- #pragma link C++ function JPetWriter::Write(JPetEvent&);
- #pragma link C++ function JPetWriter::Write(vector<JPetEvent>&);
+ #pragma link C++ function JPetWriter::Write(JPetLOR&);
+ #pragma link C++ function JPetWriter::Write(vector<JPetLOR>&);
  #pragma link C++ function JPetWriter::Write(JPetHit&);
  #pragma link C++ function JPetWriter::Write(vector<JPetHit>&);
  #pragma link C++ function JPetWriter::Write(JPetPM&);

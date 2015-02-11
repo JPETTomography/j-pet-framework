@@ -18,7 +18,7 @@ class boost::noncopyable;
 #include "../../JPetLoggerInclude.h"
 
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetEvent/JPetEvent.h"
+#include "../JPetLOR/JPetLOR.h"
 #include "../JPetHit/JPetHit.h"
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetSignal/JPetSignal.h"

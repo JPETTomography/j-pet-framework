@@ -244,7 +244,7 @@ void JPetScopeModule::exec() {
     hit2->setSignals(*sig3, *sig4);
     hit2->setScinID(fConfig.scin2);
 
-    JPetEvent* event = new JPetEvent();
+    JPetLOR* event = new JPetLOR();
 
     event->setHits(*hit1, *hit2);
 
