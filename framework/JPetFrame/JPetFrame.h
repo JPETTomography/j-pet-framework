@@ -1,7 +1,6 @@
 /**
  *  @copyright Copyright (c) 2015, The J-Pet Framework Authors.
  *  @file JPetFrame.h
- *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
  */
 
 #ifndef JPET_FRAME_H
