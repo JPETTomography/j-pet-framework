@@ -1,15 +1,15 @@
-// JPet Frame - JPetFrame.h
+/**
+ *  @copyright Copyright (c) 2015, The J-Pet Framework Authors.
+ *  @file JPetParamUtils.h
+ *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
+ *  @brief @brief Parametric class representing database information on a whole mechanical structure frame of the PET setup.
+ */
+
 #ifndef JPET_FRAME_H
 #define JPET_FRAME_H
 
-/*#include "TNamed.h"
-#include "../JPetUser/JPetUser.h"
-#include "../JPetLayer/JPetLayer.h"*/
-
 #include <TRef.h>
 #include "TNamed.h"
-
-//class JPetLayer;
 
 
 /**
