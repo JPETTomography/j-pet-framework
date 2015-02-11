@@ -19,7 +19,7 @@
  */
 class JPetFrame: public TNamed
 {
-protected:
+ protected:
   int fId;
   bool fIsActive;
   std::string fStatus;
@@ -27,28 +27,22 @@ protected:
   int fVersion;
   int fCreator_id;
   
-  //friend class JPetParamManager;
-  
-public:
-  JPetFrame(void);
+ public:
+
+  /// The default constructor sets fId, fVersion, fCreator_id to -1.  
+  JPetFrame();
   JPetFrame(int id, bool isActive, std::string status, std::string description, int version, int creator_id);
-  ~JPetFrame(void);
 
   inline bool operator==(const JPetFrame& frame) { return getId() == frame.getId(); }
   inline bool operator!=(const JPetFrame& frame) { return getId() != frame.getId(); }
-  
   int getId() const { return fId; }
   bool getIsActive() const { return fIsActive; }
   std::string getStatus() const { return fStatus; }
   std::string getDescription() const { return fDescription; }
   int getVersion() const { return fVersion; }
   int getCreator() const { return fCreator_id; }
-  
-/*private:
-  JPetFrame(const JPetFrame &frame);
-  JPetFrame& operator=(const JPetFrame &frame);*/
 
-private:
+ private:
   ClassDef(JPetFrame, 1);
 };
 

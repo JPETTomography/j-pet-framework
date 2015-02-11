@@ -20,29 +20,21 @@ protected:
   bool fIsActive;
   std::string fName;
   float fRadius;
-  int fFrameId;
   TRef fTRefFrame;
-  
-  //friend class JPetParamManager;
-  
+
 public:
   JPetLayer();
-  JPetLayer(int id, bool isActive, std::string name, float radius, int frameId);
+  JPetLayer(int id, bool isActive, std::string name, float radius);
   ~JPetLayer();
   
   inline bool operator==(const JPetLayer& layer) { return getId() == layer.getId(); }
   inline bool operator!=(const JPetLayer& layer) { return getId() != layer.getId(); }
   
-/*private:
-  JPetLayer(const JPetLayer &layer);
-  JPetLayer& operator=(const JPetLayer &layer);*/
-  
   int getId() const { return fId; }
   bool getIsActive() const { return fIsActive; }
   std::string getName() const { return fName; }
   float getRadius() const { return fRadius; }
-  int getFrameId() const { return fFrameId; }
-  const JPetFrame& getFrame() { return (JPetFrame&)*(fTRefFrame.GetObject()); }
+  const JPetFrame& getFrame() { return static_cast<JPetFrame&>(*(fTRefFrame.GetObject())); }
   void setFrame(JPetFrame &frame)
   {
     fTRefFrame = &frame;

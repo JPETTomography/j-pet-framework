@@ -3,12 +3,12 @@
 
 
 JPetFrame::JPetFrame() :
-  fId(0),
+  fId(-1),
   fIsActive(false),
   fStatus(std::string("")),
   fDescription(std::string("")),
-  fVersion(0),
-  fCreator_id(0)
+  fVersion(-1),
+  fCreator_id(-1)
 {
   SetName("JPetFrame");
 }
@@ -22,10 +22,6 @@ JPetFrame::JPetFrame(int id, bool isActive, std::string status, std::string desc
   fCreator_id(creator_id)
 {
   SetName("JPetFrame");
-}
-
-JPetFrame::~JPetFrame()
-{
 }
 
 ClassImp(JPetFrame);
