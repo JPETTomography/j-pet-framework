@@ -67,7 +67,7 @@ class JPetScopeReader {
   /** @brief Check if file is opend
    * @return ture if file is opend, flase if not.
    */
-  inline bool isFileOpen() const {if(fInputFile==0) return false; else return true;}
+  inline bool isFileOpen() const {return fInputFile;}
 
   /** @brief Close file method. */
   void closeFile();
