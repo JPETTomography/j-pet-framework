@@ -11,15 +11,12 @@ The Latest Version
 
 The latest stable version can be downloaded from the git repository. You must have git client istalled and have rights to access the subversion. If it is the case you can just:
 
-mkdir myFramework 
+git clone ssh://yourUser@koza.if.uj.edu.pl/srv/git/j-pet-framework.git myFramework
 cd myFramework 
-git init
-git remote add origin ssh://yourUser@koza.if.uj.edu.pl/srv/git/j-pet-framework.git
-git pull origin master
 
 If you have already a directory with the code and you want to update it, just write:
 
-git pull origin master
+git pull 
 
 If you dont have the access to the repository server, please contact:wojciech.krzemien@if.uj.edu.pl
 
