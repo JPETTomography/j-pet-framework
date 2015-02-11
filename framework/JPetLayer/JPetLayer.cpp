@@ -3,21 +3,19 @@
 
 
 JPetLayer::JPetLayer() : 
-  fId(0),
+  fId(-1),
   fIsActive(false),
   fName(std::string("")),
-  fRadius(0.f),
-  fFrameId(0)
+  fRadius(0.f)
 {
   SetName("JPetLayer");
 }
 
-JPetLayer::JPetLayer(int id, bool isActive, std::string name, float radius, int frameId) :
+JPetLayer::JPetLayer(int id, bool isActive, std::string name, float radius) :
   fId(id),
   fIsActive(isActive),
   fName(name),
-  fRadius(radius),
-  fFrameId(frameId)
+  fRadius(radius)
 {
   SetName("JPetLayer");
 }

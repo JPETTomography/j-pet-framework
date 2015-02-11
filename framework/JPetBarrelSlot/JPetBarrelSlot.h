@@ -19,7 +19,6 @@ public:
   ~JPetBarrelSlot();
   
   inline int getSlotID() const { return fSlotID; }
-  inline int getLayerID() const { return fLayerID; }
   inline int getLayerRad() const { return fLayerRad; }
   inline float getSlotTheta() const { return fSlotTheta; }
 
