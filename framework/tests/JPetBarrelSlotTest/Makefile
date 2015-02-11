@@ -3,7 +3,7 @@
 PROJECT=JPetBarrelSlot
 EXTRA_MODULES =
 #classes that need Dictionnaries 
-DICTS = JPetBarrelSlot
+DICTS =JPetBarrelSlot
 PQXX_LIB_SET = 
 DBHANDLER_LIB_SET = 
 UNPACKER_LIB_SET = 
