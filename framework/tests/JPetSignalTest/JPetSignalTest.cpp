@@ -76,8 +76,8 @@ BOOST_AUTO_TEST_CASE(AddTrailingPointTest)
 BOOST_AUTO_TEST_CASE(GetNullPointsTest)
 {
   JPetSignal signal;
-  BOOST_CHECK(signal.getPoints(JPetSigCh::Trailing)[0] == NULL);
-  BOOST_CHECK(signal.getPoints(JPetSigCh::Leading)[0] == NULL);
+  BOOST_REQUIRE(signal.getPoints(JPetSigCh::Trailing)[0] == NULL);
+  BOOST_REQUIRE(signal.getPoints(JPetSigCh::Leading)[0] == NULL);
 }
 
 BOOST_AUTO_TEST_CASE(GetTrailingAndLeadingPointsTest)
@@ -86,13 +86,13 @@ BOOST_AUTO_TEST_CASE(GetTrailingAndLeadingPointsTest)
   JPetSigCh  sigCh(JPetSigCh::Trailing, 8.f);
 
   signal.addPoint(sigCh);
-  BOOST_CHECK( ( (JPetSigCh*)signal.getPoints(JPetSigCh::Trailing)[0] )->getType() == JPetSigCh::Trailing);
-  BOOST_CHECK(signal.getPoints(JPetSigCh::Trailing)[1] == NULL);
-  BOOST_CHECK(signal.getNumberOfTrailingEdgePoints() == 1);
+  BOOST_REQUIRE( ( (JPetSigCh*)signal.getPoints(JPetSigCh::Trailing)[0] )->getType() == JPetSigCh::Trailing);
+  BOOST_REQUIRE(signal.getPoints(JPetSigCh::Trailing)[1] == NULL);
+  BOOST_REQUIRE(signal.getNumberOfTrailingEdgePoints() == 1);
   
   sigCh.setType(JPetSigCh::Leading);
   signal.addPoint(sigCh);
-  BOOST_CHECK( ( (JPetSigCh*)signal.getPoints(JPetSigCh::Leading)[0] )->getType() == JPetSigCh::Leading);
+  BOOST_REQUIRE( ( (JPetSigCh*)signal.getPoints(JPetSigCh::Leading)[0] )->getType() == JPetSigCh::Leading);
 }
 
 BOOST_AUTO_TEST_CASE(GetTrailingAndLeadingPointTest)
@@ -105,21 +105,21 @@ BOOST_AUTO_TEST_CASE(GetTrailingAndLeadingPointTest)
   sigCh.setType(JPetSigCh::Leading);
   signal.addPoint(sigCh);
   signal.addPoint(sigCh);
-  BOOST_CHECK(signal.getNumberOfTrailingEdgePoints() == 2);
-  BOOST_CHECK(signal.getNumberOfLeadingEdgePoints() == 2);
+  BOOST_REQUIRE(signal.getNumberOfTrailingEdgePoints() == 2);
+  BOOST_REQUIRE(signal.getNumberOfLeadingEdgePoints() == 2);
   
   sigCh = signal.getPoint(0, JPetSigCh::Trailing);
-  BOOST_CHECK(sigCh.getType() == JPetSigCh::Trailing);
+  BOOST_REQUIRE(sigCh.getType() == JPetSigCh::Trailing);
   
   sigCh = signal.getPoint(1, JPetSigCh::Leading);
-  BOOST_CHECK(sigCh.getType() == JPetSigCh::Leading);
+  BOOST_REQUIRE(sigCh.getType() == JPetSigCh::Leading);
 }
 
 BOOST_AUTO_TEST_CASE(SetAndGetTSlotIndexTest)
 {
   JPetSignal signal;
   signal.setTSlotIndex(8);
-  BOOST_CHECK(signal.getTSlotIndex() == 8);
+  BOOST_REQUIRE(signal.getTSlotIndex() == 8);
 }
 
 
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(SetAndGetTRefPMObjectTest)
   signal.setPM(PM);
   PM = signal.getPM();
   
-  BOOST_CHECK(PM.getSide() == JPetPM::SideA);
+  BOOST_REQUIRE(PM.getSide() == JPetPM::SideA);
   
 }
 
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(SetAndGetTRefBarrelSlotObjectTest)
   signal.setBarrelSlot(barrelSlot);
   barrelSlot = signal.getBarrelSlot();
   
-  BOOST_CHECK(barrelSlot.getSlotID() == 0);
+  BOOST_REQUIRE(barrelSlot.getID() == 0);
   
 }
 

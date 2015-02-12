@@ -46,7 +46,7 @@ protected:
   }
   
 private:
-  ClassDef(JPetLayer, 1);
+  ClassDef(JPetLayer, 2);
 };
 
 #endif // JPET_LAYER_H
