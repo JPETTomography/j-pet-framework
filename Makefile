@@ -51,7 +51,7 @@ LIB_LDOPTS += -L$(UNPACKER_PATH) -l$(UNPACKER_LIB)
 .cpp.o:
 	$(CC) -o $@ $^ -c $(COPTS)
 ################
-all: modules dbhandler
+all: modules dbhandler sharedlib
 #Dictionary for ROOT classes
 Dict.cpp: 
 	@echo "Generating dictionary ..."
