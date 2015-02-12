@@ -1692,16 +1692,16 @@ BEGIN
 END
 $BODY$ LANGUAGE plpgsql STABLE;
 
-CREATE OR REPLACE FUNCTION KBinPortsFromOutPorts(IN p_kb_id INTEGER)
-RETURNS TABLE
-(
-  in_portnumber INTEGER,
-  out_portnumber INTEGER
-) AS
+
+--- Associate KB output port number groups with input ports for a certain KB ---
+
+CREATE OR REPLACE FUNCTION kbinportsfromoutports(IN p_kb_id integer)
+  RETURNS TABLE(in_portnumber integer, local_portnumber_for_input integer, out_portnumber integer) AS
 $BODY$
 BEGIN
   FOR
     in_portnumber,
+    local_portnumber_for_input,
     out_portnumber
   IN
     SELECT
@@ -1709,6 +1709,10 @@ BEGIN
 	(SELECT count(*) FROM "KonradBoardInput" WHERE "KonradBoardInput".konradboard_id=p_kb_id) /
 	(SELECT count(*) FROM "KonradBoardOutput" WHERE "KonradBoardOutput".konradboard_id=p_kb_id ) +1
 	AS in_portnumber,
+	("KonradBoardOutput".portnumber-1)%
+	((SELECT count(*) FROM "KonradBoardOutput" WHERE "KonradBoardOutput".konradboard_id=p_kb_id ) /
+	(SELECT count(*) FROM "KonradBoardInput" WHERE "KonradBoardInput".konradboard_id=p_kb_id)) +1
+	AS local_portnumber_for_input,
 	"KonradBoardOutput".portnumber AS out_portnumber
     FROM "KonradBoardOutput"
       WHERE
@@ -1718,24 +1722,19 @@ BEGIN
     RETURN NEXT;
   END LOOP;
 END
-$BODY$ LANGUAGE plpgsql STABLE;
+$BODY$
+  LANGUAGE plpgsql STABLE;
+
+--- A helper view which maps results of kbinportsfromoutports to all existing KBs ---
+CREATE OR REPLACE VIEW LocalThrNumsKB AS
+	SELECT id, (kbinportsfromoutports(id)).out_portnumber, (kbinportsfromoutports(id)).local_portnumber_for_input 
+	FROM "KonradBoard";
+
 
 
 --- Get everything based in TRBOutput portnumber (in future basen on TOMB) ---
-
-
-
-CREATE OR REPLACE FUNCTION getEverythingVsTOMB(p_run_id INTEGER)
-RETURNS TABLE
-(
-  tomb CHARACTER VARYING(255),
-  trb_portnumber INTEGER,
-  trb_id INTEGER,
-  konradboard_id INTEGER,
-  photomultiplier_id INTEGER,
-  threshold INTEGER,
-  slot_id INTEGER
-) AS
+CREATE OR REPLACE FUNCTION geteverythingvstomb(IN p_run_id integer)
+  RETURNS TABLE(tomb character varying, trb_portnumber integer, trb_id integer, konradboard_id integer, photomultiplier_id integer, threshold integer, slot_id integer, thr_num integer) AS
 $BODY$
 BEGIN
   FOR
@@ -1745,7 +1744,8 @@ BEGIN
     konradboard_id,
     photomultiplier_id,
     threshold,
-    slot_id
+    slot_id,
+    thr_num
   IN
        SELECT
 		"TOMBInput".description AS tomb,
@@ -1754,10 +1754,12 @@ BEGIN
                 "KonradBoard".id AS konradboard_id,
                 "PhotoMultiplier".id AS photomultiplier_id,
                 "TRBConfigEntry".threshold AS threshold,
-                "HVPMConnection".slot_id AS slot_id
+                "HVPMConnection".slot_id AS slot_id,
+                LocalThrNumsKB.local_portnumber_for_input AS thr_num
         FROM "Run", "TRBInput", "KBTRBConnection", "TRB", "TRBOutput",
         "KonradBoardOutput", "KonradBoard", "KonradBoardInput",
-        "PMKBConnection", "PhotoMultiplier", "TRBConfigEntry", "HVPMConnection", "TRBTOMBConnection", "TOMBInput"
+        "PMKBConnection", "PhotoMultiplier", "TRBConfigEntry", "HVPMConnection", "TRBTOMBConnection", "TOMBInput",
+        LocalThrNumsKB
         WHERE
                 "Run".id = p_run_id
                 AND
@@ -1776,6 +1778,10 @@ BEGIN
                 "KonradBoardOutput".konradboard_id = "KonradBoard".id
                 AND
                 "KonradBoard".id = "KonradBoardInput".konradboard_id
+                AND
+                "KonradBoard".id = LocalThrNumsKB.id
+		AND
+                "KonradBoardOutput".portnumber = LocalThrNumsKB.out_portnumber
 		AND
                 "KonradBoardInput".portnumber = (SELECT in_portnumber from KBinPortsFromOutPorts("KonradBoard".id) WHERE out_portnumber="KonradBoardOutput".portnumber )
                 AND
@@ -1802,5 +1808,7 @@ BEGIN
     RETURN NEXT;
   END LOOP;
 END
-$BODY$ LANGUAGE plpgsql STABLE;
+$BODY$
+  LANGUAGE plpgsql STABLE;
+
 
