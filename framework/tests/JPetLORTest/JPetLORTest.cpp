@@ -31,7 +31,8 @@ BOOST_AUTO_TEST_CASE(constructor)
   
   BOOST_REQUIRE_EQUAL(event.fTimeDiff, 0.f);
   BOOST_REQUIRE_EQUAL(event.fQualityOfTimeDiff, 0.f);
-  BOOST_REQUIRE_EQUAL(event.fNhits, 2.f);
+  BOOST_REQUIRE_EQUAL(event.fIsHitSet[0], 1);
+  BOOST_REQUIRE_EQUAL(event.fIsHitSet[1], 1);
 }
 
 BOOST_AUTO_TEST_CASE(hitTest)
@@ -43,9 +44,6 @@ BOOST_AUTO_TEST_CASE(hitTest)
   BOOST_REQUIRE(event.getFirstHit().getEnergy() == firstHit.getEnergy());
   BOOST_REQUIRE(event.getSecondHit().getEnergy() == firstHit.getEnergy());
   
-  BOOST_REQUIRE(event[1].getEnergy() == firstHit.getEnergy());
-  //BOOST_REQUIRE(event[2].getEnergy() == secondHit.getEnergy()); // BUG JPetLOR::operator[](int i)
-
   JPetHit fh;
   JPetHit sh;  
   fh.setScinID(8);
