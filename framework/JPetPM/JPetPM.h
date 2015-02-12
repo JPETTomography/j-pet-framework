@@ -40,7 +40,7 @@ class JPetPM: public TNamed
   inline void setHVgain(float g1, float g2) { fHVgain.first = g1; fHVgain.second = g2; }
   inline void setHVgain(const std::pair<float,float>& gain) { fHVgain = gain; }
 
-  const JPetFEB & getFEB() { return (JPetFEB&)*(fTRefFEB.GetObject()); }
+  const JPetFEB& getFEB() { return (JPetFEB&)*(fTRefFEB.GetObject()); }
   
   void setScin(JPetScin &p_scin){ fTRefScin = &p_scin; }
   JPetScin & getScin() const { return (JPetScin&)*(fTRefScin.GetObject()); }

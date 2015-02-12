@@ -49,7 +49,7 @@ protected:
     fTRefLayer = NULL;
   }
 
-  ClassDef(JPetBarrelSlot, 1);
+  ClassDef(JPetBarrelSlot, 2);
 };
 
 #endif

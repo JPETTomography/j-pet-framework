@@ -325,10 +325,14 @@ JPetBarrelSlot JPetDBParamGetter::generateBarrelSlot(pqxx::result::const_iterato
   JPetBarrelSlot l_barrelSlot(l_slot_id,
 			      l_slot_isActive,
 			      l_slot_name,
-			      l_slot_theta1,
-			      l_slot_inFrameId,
-			      l_layer_id);
-  
+			      l_slot_theta1);
+//  JPetBarrelSlot l_barrelSlot(l_slot_id,
+//			      l_slot_isActive,
+//			      l_slot_name,
+//			      l_slot_theta1,
+//			      l_slot_inFrameId,
+//			      l_layer_id);
+//  
   return l_barrelSlot;
 }
 
@@ -339,13 +343,18 @@ JPetLayer JPetDBParamGetter::generateLayer(pqxx::result::const_iterator row)
   std::string l_layer_name = row["layer_name"].as<std::string>();
   double l_layer_radius = row["layer_radius"].as<double>();
   int l_frame_id = row["frame_id"].as<int>();
-
-  JPetLayer l_layer(l_layer_id,
-		    l_layer_isActive,
-		    l_layer_name,
-		    l_layer_radius,
-		    l_frame_id);
   
+  JPetLayer l_layer(l_layer_id,
+        	    l_layer_isActive,
+        	    l_layer_name,
+        	    l_layer_radius);
+
+  //JPetLayer l_layer(l_layer_id,
+  //      	    l_layer_isActive,
+  //      	    l_layer_name,
+  //      	    l_layer_radius,
+  //      	    l_frame_id);
+  //
   return l_layer;
 }
 
