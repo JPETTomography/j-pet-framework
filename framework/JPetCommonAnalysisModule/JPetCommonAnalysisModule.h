@@ -8,7 +8,7 @@
 
 #include "../JPetTSlot/JPetTSlot.h"
 #include "../JPetSigCh/JPetSigCh.h"
-#include "../JPetSignal/JPetSignal.h"
+#include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetHit/JPetHit.h"
 #include "../JPetLOR/JPetLOR.h"
 

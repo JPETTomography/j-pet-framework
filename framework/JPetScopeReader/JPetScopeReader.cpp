@@ -10,7 +10,7 @@
 #include <iostream>
 #include <TString.h>
 
-#include "../JPetSignal/JPetSignal.h"
+#include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../../JPetLoggerInclude.h"
 
 using namespace std;
@@ -26,10 +26,10 @@ JPetScopeReader::JPetScopeReader(): fInputFile(0), fScopeType(), fDate(), fPrint
 JPetScopeReader::~JPetScopeReader() {
 }
 
-JPetSignal* JPetScopeReader::generateSignal(const char* filename) {
+JPetPhysSignal* JPetScopeReader::generateSignal(const char* filename) {
   openFile(filename);
   readHeader();
-  JPetSignal* sig;
+  JPetPhysSignal* sig;
 
   if (isFileOpen()) sig = readData();
   else sig = 0;
@@ -97,10 +97,10 @@ void JPetScopeReader::readHeader() {
   
 }
 
-JPetSignal* JPetScopeReader::readData() {
+JPetPhysSignal* JPetScopeReader::readData() {
   
-  JPetSigCh sigCh;
-  JPetSignal* sig = new JPetSignal(fSegmentSize);
+  JPetPhysSignal* sig = new JPetPhysSignal();
+  JPetRecoSignal recoSig(fSegmentSize);
 
   float value, threshold;
   int stat;
@@ -119,13 +119,14 @@ JPetSignal* JPetScopeReader::readData() {
       fgets(tmp, 256, fInputFile);
     }
 
-    sigCh.setValue(value * 1000000000000); // file holds time in seconds, while SigCh requires it in picoseconds
-    sigCh.setThreshold(threshold * 1000);  // file holds thresholds in volts, while SigCh requires it in milivolts
-    sigCh.setPMID(fPMID);
-    sigCh.setType(JPetSigCh::Leading);
+    float time = value * 1000000000000; // file holds time in seconds, while SigCh requires it in picoseconds
+    float amplitude = threshold * 1000;  // file holds thresholds in volts, while SigCh requires it in milivolts
+    //sigCh.setPMID(fPMID);
 
-    sig->addPoint(sigCh, false);
+    recoSig.setShapePoint(time, amplitude);
   }
+
+  sig->setRecoSignal( recoSig );
 
   return sig;
 }
