@@ -12,7 +12,7 @@
 #include <fstream>
 #include <string>
 
-#include "../JPetSignal/JPetSignal.h"
+#include "../JPetPhysSignal/JPetPhysSignal.h"
 
 /** Oscilloscope ASCII data reader.
  * JPetScopeReader class produce JPetSignal from single oscilloscope ASCII file.
@@ -37,7 +37,7 @@ class JPetScopeReader {
    * @return pointer to created JPetSignal
    * @see setPrintFile()
    */
-  JPetSignal* generateSignal (const char* filename);
+  JPetPhysSignal* generateSignal (const char* filename);
     
   //inline int getSegments() const {return fSegments;}
 
@@ -82,7 +82,7 @@ class JPetScopeReader {
    * @return pointer to created JPetSignal
    * @see setPrintFile()
    */
-  JPetSignal* readData();
+  JPetPhysSignal* readData();
 
   FILE* fInputFile; /**< @brief Pointer to oscilloscope ASCII file. */
 
