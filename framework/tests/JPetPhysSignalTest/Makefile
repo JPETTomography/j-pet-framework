@@ -1,9 +1,9 @@
 ###################
 #THIS PART CAN BE MODIFIED
-PROJECT=JPetSignal
-EXTRA_MODULES = JPetSigCh JPetPM JPetBarrelSlot
+PROJECT= JPetPhysSignal
+EXTRA_MODULES = JPetBaseSignal JPetRecoSignal JPetRawSignal JPetSigCh JPetWriter JPetReader JPetLogger JPetTreeHeader
 #classes that need Dictionnaries 
-DICTS = JPetSignal JPetSigCh JPetPM JPetBarrelSlot
+DICTS = JPetPhysSignal JPetBaseSignal JPetRecoSignal JPetRawSignal JPetSigCh JPetTreeHeader
 PQXX_LIB_SET = 
 DBHANDLER_LIB_SET = 
 UNPACKER_LIB_SET = 
@@ -13,7 +13,7 @@ CO = g++
 CFLAGS = -Wall `root-config --cflags`
 ###################
 LDFLAGS = -Wall `root-config --glibs --ldflags` 
-LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system -lboost_program_options
+LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system -lboost_program_options -lboost_regex
 LDFLAGS += ${LD_BOOST_FLAGS}
 ###################
 TEST_EXEC = $(PROJECT)Test.exe 

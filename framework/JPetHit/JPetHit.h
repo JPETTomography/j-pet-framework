@@ -10,7 +10,7 @@
 
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
 #include "../JPetScin/JPetScin.h"
-#include "../JPetSignal/JPetSignal.h"
+#include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetTSlot/JPetTSlot.h"
 
 #include "TNamed.h"
@@ -22,13 +22,13 @@
 
 class JPetBarrelSlot;
 class JPetScin;
-class JPetSignal;
+class JPetPhysSignal;
 class JPetTSlot;
 
 /**
  * @brief Data class representing a reconstructed hit of a photon in the scintillator strip.
  *
- * It contains two objects of type JPetSignal (from "Side A" and "Side B" of the Barrel) which represent signals at two ends of a scintillator strip, from which the hit was reconstructed.
+ * It contains two objects of type JPetPhysSignal (from "Side A" and "Side B" of the Barrel) which represent signals at two ends of a scintillator strip, from which the hit was reconstructed.
  */
 class JPetHit : public TNamed {
 
@@ -38,7 +38,7 @@ class JPetHit : public TNamed {
   
   JPetHit();
   JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime, TVector3& Position, 
-          JPetSignal& SignalA, JPetSignal& SignalB, JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator);
+          JPetPhysSignal& SignalA, JPetPhysSignal& SignalB, JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator);
   virtual ~JPetHit();
   /// Returns the reconstructed energy of this hit [keV]
   inline const float getEnergy() const {return fEnergy;}
@@ -62,11 +62,11 @@ class JPetHit : public TNamed {
   inline const float getPosZ() const  {return fPos.Z();}
   inline const float getPos(int index) const {return fPos(index);}
   inline const TVector3& getPos() const {return fPos;}
-  inline const JPetSignal& getSignal(Signal pos) const {
+  inline const JPetPhysSignal& getSignal(Signal pos) const {
                      if(pos==SideA) return fSignalA;
 		     else return fSignalB;}
-  inline const JPetSignal& getSignalA() const {return fSignalA;}
-  inline const JPetSignal& getSignalB() const {return fSignalB;}
+  inline const JPetPhysSignal& getSignalA() const {return fSignalA;}
+  inline const JPetPhysSignal& getSignalB() const {return fSignalB;}
 
   inline const JPetScin& getScintillator() const {return (JPetScin&)*fScintillator.GetObject();}
   inline const JPetBarrelSlot& getBarrelSlot() const {return (JPetBarrelSlot&)*fBarrelSlot.GetObject();}
@@ -90,11 +90,11 @@ class JPetHit : public TNamed {
   inline void setPosY(float y) {fPos.SetY(y);}
   inline void setPosZ(float z) {fPos.SetZ(z);}
   inline void setPos (float x,float y,float z) {fPos.SetXYZ(x,y,z);}
-  inline void setSignals (JPetSignal & p_sigA, JPetSignal & p_sigB) {
+  inline void setSignals (JPetPhysSignal & p_sigA, JPetPhysSignal & p_sigB) {
               fSignalA = p_sigA;
 	      fSignalB = p_sigB;}
-  inline void setSignalA(JPetSignal & p_sig) {fSignalA=p_sig;}
-  inline void setSignalB(JPetSignal & p_sig) {fSignalB=p_sig;}
+  inline void setSignalA(JPetPhysSignal & p_sig) {fSignalA=p_sig;}
+  inline void setSignalB(JPetPhysSignal & p_sig) {fSignalB=p_sig;}
   inline void setBarrelSlot(JPetBarrelSlot& bs) {fBarrelSlot = &bs;}
   inline void setScintillator(JPetScin& sc) {fScintillator = &sc;}
 
@@ -113,8 +113,8 @@ class JPetHit : public TNamed {
   float fQualityOfTimeDiff;
   float fPosAlongStrip; ///< reconstructed position along scintillator strip (from "Side A" to "Side B") [cm]
   TVector3 fPos;
-  JPetSignal fSignalA;
-  JPetSignal fSignalB;
+  JPetPhysSignal fSignalA;
+  JPetPhysSignal fSignalB;
 
   int fScinID; ///< For simple reconstruction
 

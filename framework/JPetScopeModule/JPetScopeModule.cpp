@@ -14,7 +14,8 @@
 #include <TCanvas.h>
 
 #include "../JPetSigCh/JPetSigCh.h"
-#include "../JPetSignal/JPetSignal.h"
+#include "../JPetRecoSignal/JPetRecoSignal.h"
+#include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetManager/JPetManager.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 

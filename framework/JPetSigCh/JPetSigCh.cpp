@@ -6,55 +6,50 @@ ClassImp(JPetSigCh);
 
 const float JPetSigCh::kUnset = std::numeric_limits<float>::infinity();
 
-void JPetSigCh::Init()
-{
+void JPetSigCh::Init() {
   SetNameTitle("JPetSigCh", "Signal Channel Structure");
   fValue = kUnset;
   fType = Leading;
   fThreshold = kUnset;
+  fThresholdNumber = 0;
 }
 
-
-JPetSigCh::JPetSigCh(EdgeType Edge, float EdgeTime)
-{
+JPetSigCh::JPetSigCh(EdgeType Edge, float EdgeTime) {
   Init();
   /// @todo: perform some sanity checks of the given values
-  assert( EdgeTime > 0. );
+  assert(EdgeTime > 0.);
 
   fType = Edge;
   fValue = EdgeTime;
 
 }
 
-bool JPetSigCh::isCharge() const{
-  if( fType == Charge ){
+bool JPetSigCh::isCharge() const {
+  if (fType == Charge) {
     return true;
   }
   return false;
 }
 
-bool JPetSigCh::isTime() const{
-  if( fType == Trailing || fType == Leading ){
+bool JPetSigCh::isTime() const {
+  if (fType == Trailing || fType == Leading) {
     return true;
   }
   return false;
 }
 
-Int_t JPetSigCh::Compare(const TObject* obj) const{
-
-  if( strcmp( obj->GetName(), this->GetName()) != 0 ){
-    return 0;
+bool JPetSigCh::compareByThresholdValue(const JPetSigCh& A,
+                                        const JPetSigCh& B) {
+  if (A.getThreshold() < B.getThreshold()) {
+    return true;
   }
+  return false;
+}
 
-  JPetSigCh * that = (JPetSigCh*)obj;
-
-  if( that->getThreshold() > this->getThreshold() ){
-    //  if( that->GetValue() > this->GetValue() ){
-    return -1;
-  }else if( that->getThreshold() < this->getThreshold() ){
-    //}else if( that->GetValue() < this->GetValue() ){
-    return 1;
+bool JPetSigCh::compareByThresholdNumber(const JPetSigCh& A,
+                                         const JPetSigCh& B) {
+  if (A.getThresholdNumber() < B.getThresholdNumber()) {
+    return true;
   }
-  
-  return 0;
+  return false;
 }

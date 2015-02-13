@@ -95,6 +95,7 @@ BOOST_AUTO_TEST_CASE (read_and_write_objects )
   file.Close("R");
   
   JPetReader reader("test2.root");
+  reader.readData();
   BOOST_REQUIRE_EQUAL(reader.getEntries(), 1);
   reader.getEntry(0);
   JPetSignal & signal2 = (JPetSignal&)reader.getData();

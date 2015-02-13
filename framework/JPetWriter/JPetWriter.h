@@ -21,7 +21,7 @@ class boost::noncopyable;
 #include "../JPetLOR/JPetLOR.h"
 #include "../JPetHit/JPetHit.h"
 #include "../JPetSigCh/JPetSigCh.h"
-#include "../JPetSignal/JPetSignal.h"
+#include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetTSlot/JPetTSlot.h"
 
 #include "../JPetScin/JPetScin.h"
