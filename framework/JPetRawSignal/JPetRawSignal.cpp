@@ -1,62 +1,91 @@
 /**
-  *  @copyright Copyright (c) 2013, Wojciech Krzemien
-  *  @file JPetSignal.cc
-  *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
-  */
+ *  @copyright Copyright (c) 2014, Aleksander Gajos
+ *  @file JPetRawSignal.cpp
+ *  @author Aleksander Gajos, alek.gajos@gmail.com
+ */
+#include "./JPetRawSignal.h"
 
-#include "./JPetSignal.h"
+ClassImp(JPetRawSignal);
 
-ClassImp(JPetSignal);
+JPetRawSignal::JPetRawSignal(const int points){
 
-JPetSignal::JPetSignal(const int points) :
-  TNamed("JPetSignal", "Signal Structure"),
-  fTime(0),
-  fQualityOfTime(0),
-  fLeft(true),
-  fLeadingPoints("JPetSigCh", points),
-  fTrailingPoints("JPetSigCh", points)
-{ }
+  SetNameTitle("JPetRawSignal", "Raw signal (from Front-End electronics) structure");
 
+  fLeadingPoints.reserve(points);
+  fTrailingPoints.reserve(points);
 
-JPetSignal::~JPetSignal()
-{ }
-
-int JPetSignal::getNPoints(JPetSigCh::EdgeType edge) const
-{
-  assert((edge == JPetSigCh::Trailing) || (edge == JPetSigCh::Leading));
-  if (edge == JPetSigCh::Trailing) {
-    return fTrailingPoints.GetEntries();
-  } else {
-    return fLeadingPoints.GetEntries();
-  }
 }
 
-void JPetSignal::addPoint(const JPetSigCh& sigch, bool sortData){
-  
-  assert((sigch.getType() == JPetSigCh::Trailing) || (sigch.getType() == JPetSigCh::Leading));
-  
+JPetRawSignal::~JPetRawSignal() {
+}
+
+int JPetRawSignal::getNPoints(JPetSigCh::EdgeType edge) const {
+  if (edge == JPetSigCh::Trailing) {
+    return fTrailingPoints.size();
+  } else if (edge == JPetSigCh::Leading) {
+    return fLeadingPoints.size();
+  }
+  return 0;
+}
+
+void JPetRawSignal::addPoint(const JPetSigCh& sigch) {
+
   if (sigch.getType() == JPetSigCh::Trailing) {
-    new (fTrailingPoints[getNumberOfTrailingEdgePoints()]) JPetSigCh(sigch);
-    if (sortData) fTrailingPoints.Sort();
-  } else {
-    new (fLeadingPoints[getNumberOfLeadingEdgePoints()]) JPetSigCh(sigch);
-    if (sortData) fLeadingPoints.Sort();
-  }
-  
-}
-
-const TClonesArray & JPetSignal::getPoints(JPetSigCh::EdgeType edge) const{
-  assert((edge == JPetSigCh::Trailing) || (edge == JPetSigCh::Leading));
-  if (edge == JPetSigCh::Trailing) {
-    return fTrailingPoints;
-  } else {
-    return fLeadingPoints;
+    fTrailingPoints.push_back(sigch);
+  } else if (sigch.getType() == JPetSigCh::Leading) {
+    fLeadingPoints.push_back(sigch);
+  } else if (sigch.getType() == JPetSigCh::Charge) {
+    fTOTPoint = sigch;
   }
 }
 
-const JPetSigCh & JPetSignal::getPoint(int i, JPetSigCh::EdgeType edge) const{
-  assert( i >= 0 && i < getNPoints( edge ) );
-  
-  JPetSigCh * sc = (JPetSigCh*)(getPoints( edge )[i]);
-  return *sc;
+std::vector<JPetSigCh> JPetRawSignal::getPoints(
+    JPetSigCh::EdgeType edge, JPetRawSignal::PointsSortOrder order) const {
+
+  std::vector<JPetSigCh> sorted = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
+
+  if ( order == JPetRawSignal::ByThrNum ){
+    std::sort(sorted.begin(), sorted.end(), JPetSigCh::compareByThresholdNumber);
+  }else{
+    std::sort(sorted.begin(), sorted.end(), JPetSigCh::compareByThresholdValue);
+  }
+
+  return sorted;
+}
+
+
+const JPetSigCh& JPetRawSignal::getTOTPoint() const {
+  return fTOTPoint;
+}
+
+void JPetRawSignal::setTOTPoint(const JPetSigCh & totSigCh) {
+  if (totSigCh.getType() == JPetSigCh::Charge) {
+    fTOTPoint = totSigCh;
+  }
+}
+
+std::map<int, double> JPetRawSignal::getTimesVsThresholdNumber(JPetSigCh::EdgeType edge) const {
+  std::map<int, double> map;
+  const std::vector<JPetSigCh> & vec = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
+
+  for( std::vector<JPetSigCh>::const_iterator it = vec.begin(); it!=vec.end(); ++it){
+     map[ it->getThresholdNumber() ] = it->getValue();
+  }
+  return map;
+}
+
+std::map<int, double> JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const {
+  std::map<int, double> map;
+
+  const std::vector<JPetSigCh> & vec = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
+
+  for( std::vector<JPetSigCh>::const_iterator it = vec.begin(); it!=vec.end(); ++it){
+    map[ it->getThreshold() ] = it->getValue();
+  }
+  return map;
+}
+
+double JPetRawSignal::getTOT() const {
+  /// @todo check whether fTOTPoint is not a null object and return -1000000 in such a case.
+  return fTOTPoint.getValue();
 }
