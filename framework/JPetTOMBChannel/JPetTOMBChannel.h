@@ -41,6 +41,15 @@ public:
   inline bool operator==(const JPetTOMBChannel& channel) { return getChannel() == channel.getChannel(); }
   inline bool operator!=(const JPetTOMBChannel& channel) { return getChannel() != channel.getChannel(); }
 
+  /**
+   * @brief Get a local number of the channel corresponding to this TOMBChannel, w.r.t. a single PM.
+   *
+   * All thresholds (together on leading and trailing edge) applied to a single PM signal can be ordered starting from 1, with an order corresponding to ascending order of DAQ channels assigned to the thresholds.
+   * Therefore, if there are 4 thresholds applied to each signal edge, the local channel number should be between 1 and 8.
+   */
+  unsigned int getLocalChannelNumber() const { return fLocalChannelNumber; }
+  void setLocalChannelNumber(unsigned int lcn) { fLocalChannelNumber = lcn; }
+
 private:
   unsigned int fChannel;
   TRef fFEB;
@@ -49,8 +58,9 @@ private:
   TRef fScin; // @todo: add setters && getters for scin and slot
   TRef fBarrelSlot;
   float fThreshold;
+  unsigned int fLocalChannelNumber; ///< number of the threshold
 
-  ClassDef(JPetTOMBChannel, 1);
+  ClassDef(JPetTOMBChannel, 2);
 };
 
 #endif // JPET_TOMB_CHANNEL_H

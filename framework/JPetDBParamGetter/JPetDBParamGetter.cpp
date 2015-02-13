@@ -429,6 +429,7 @@ JPetTOMBChannel JPetDBParamGetter::generateTOMBChannel(pqxx::result::const_itera
      int l_TOMB_no = getTOMBChannelFromDescription( l_TOMB_description );
 
      JPetTOMBChannel l_TOMBChannel(l_TOMB_no);
+     l_TOMBChannel.setThrNum(row["thr_num"].as<int>());
     return l_TOMBChannel;
 }
 
