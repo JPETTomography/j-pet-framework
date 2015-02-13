@@ -11,11 +11,10 @@
 #include "../JPetFEB/JPetFEB.h"
 #include "../../JPetLoggerInclude.h"
 
-
 /**
- * @brief Data class respresenting a SIGnal from a single tdc CHannel.
+ * @brief Data class representing a SIGnal from a single tdc CHannel.
  *
- * Contains either time corresponding to a single threshold and slpe type of a frontend board or charge from a single PM (if available in a given setup). 
+ * Contains either time corresponding to a single threshold and slope type of a front-end board or charge from a single PM (if available in a given setup).
  */
 class JPetSigCh: public TNamed
 {
@@ -62,13 +61,28 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
   inline void setValue( float val ) { fValue = val; }
   inline void setType( EdgeType type ) { fType = type; }
   
-  inline void setPMID (Int_t PMID) { fPMID = PMID; }
   inline void setThreshold( float thr ) { fThreshold = thr; }
   inline void setDAQch( Int_t daqch ) { fDAQch = daqch; }
 
-  inline Int_t getPMID() const { return fPMID; }
   inline float getThreshold() const { return fThreshold; }
   inline Int_t getDAQch() const { return fDAQch; }
+
+  /**
+   * @brief Get the number of this threshold on a certain edge.
+   *
+   * The thresholds are numbered starting from 1 according to ascending order of their corresponding DAQ channels.
+   */
+  inline unsigned int getThresholdNumber() const { return fThresholdNumber; }
+
+  /**
+   * @brief Set the number of this threshold on a certain edge.
+   *
+   * The thresholds are numbered starting from 1 according to ascending order of their corresponding DAQ channels.
+   */
+
+  inline void setThresholdNumber(unsigned int threshold_number) {
+    fThresholdNumber = threshold_number;
+  };
 
   /**
    * @brief Compares this SigCh with another by their threshold value
@@ -78,27 +92,20 @@ JPetSigCh(EdgeType Edge, float EdgeTime);
   Int_t Compare(const TObject* obj) const;
   inline Bool_t IsSortable() const { return true; }
   
-
-  ClassDef(JPetSigCh, 1);
+  ClassDef(JPetSigCh, 2);
 
  protected:
   EdgeType fType; ///< type of the SigCh: Leading, Trailing (time) or Charge (charge)
   float fValue; ///< main value of the SigCh; either time [ps] (if fType is kRiging or Leading) or charge (if fType is Charge)
 
-  // these members can be used for simple analysis
-  // if no parametric objects are available
-  Int_t fPMID; ///< ID of Photomultiplier
+  unsigned int fThresholdNumber;
   float fThreshold; ///< value of threshold [mV]
-  int fDAQch; ///< Number of DAQ channer from the raw HLD file
+  int fDAQch; ///< Number of DAQ channel from the raw HLD file
 
-  // if parametric objects are available, these references should be used
-  // rather than the above members
   TRef fPM;
   TRef fFEB;
   TRef fTRB;
   
-
-  /* template <class T> void set(T** dest, const T& source) throw(std::bad_alloc); */
   void Init();
 };
 
