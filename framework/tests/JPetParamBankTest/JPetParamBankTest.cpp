@@ -274,10 +274,8 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   
   BOOST_REQUIRE(bank2.getPMCalibsSize() == 1);
   BOOST_REQUIRE(bank2.getBarrelSlotsSize() == 1);
-  //std::cout << bank2.getLayersSize() << std::endl;
-  BOOST_REQUIRE(bank2.getLayersSize() == 0); // TODO ERROR - should be 1
-  //std::cout << bank2.getFramesSize() << std::endl;
-  BOOST_REQUIRE(bank2.getFramesSize() == 0); // TODO ERROR - should be 1
+  BOOST_REQUIRE(bank2.getLayersSize() == 1);
+  BOOST_REQUIRE(bank2.getFramesSize() == 1);
   BOOST_REQUIRE(bank2.getFEBsSize() == 1);
   BOOST_REQUIRE(bank2.getTRBsSize() == 1);
 
@@ -285,18 +283,15 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   BOOST_REQUIRE(bank2.getPMs().GetEntries() == 4);
   BOOST_REQUIRE(bank2.getPMCalibs().GetEntries() == 1);
   BOOST_REQUIRE(bank2.getBarrelSlots().GetEntries() == 1);
-  //std::cout << bank2.getLayers().GetEntries() << std::endl;
-  BOOST_REQUIRE(bank2.getLayers().GetEntries() == 0); // TODO ERROR - should be 1
-  //std::cout << bank2.getFrames().GetEntries() << std::endl;
-  BOOST_REQUIRE(bank2.getFrames().GetEntries() == 0); // TODO ERROR - should be 1
+  BOOST_REQUIRE(bank2.getLayers().GetEntries() == 1);
+  BOOST_REQUIRE(bank2.getFrames().GetEntries() == 1);
   BOOST_REQUIRE(bank2.getFEBs().GetEntries() == 1);
   BOOST_REQUIRE(bank2.getTRBs().GetEntries() == 1);
 
   BOOST_REQUIRE(bank2.getPMCalib(0).GetId() == 256);
-  //std::cout << bank2.getBarrelSlot(0).getId() << std::endl;
-  //BOOST_REQUIRE(bank2.getBarrelSlot(0).getId() == 0); // TODO ERROR - should be 1
-  //BOOST_REQUIRE(bank2.getLayer(0).getId() == 0);
-  //BOOST_REQUIRE(bank2.getFrame(0).getId() == 0);
+  BOOST_REQUIRE(bank2.getBarrelSlot(0).getID() == 1);
+  BOOST_REQUIRE(bank2.getLayer(0).getId() == 1);
+  BOOST_REQUIRE(bank2.getFrame(0).getId() == 1);
   
   BOOST_REQUIRE(bank2.getFEB(0).getID() == 1);
   BOOST_REQUIRE(bank2.getFEB(0).isActive());
