@@ -42,7 +42,7 @@ public:
   ClassDef(JPetCommonAnalysisModule, MODULE_VERSION );
 
 protected:
-  int fRunNb;
+  const int fRunNb;
   int fEventNb;
   int fEvent;
   JPetWriter* fWriter;

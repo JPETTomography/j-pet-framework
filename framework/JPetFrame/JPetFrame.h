@@ -18,12 +18,12 @@
 class JPetFrame: public TNamed
 {
  protected:
-  int fId;
+  const int fId;
   bool fIsActive;
   std::string fStatus;
   std::string fDescription;
-  int fVersion;
-  int fCreator_id;
+  const int fVersion;
+  const int fCreator_id;
   
  public:
 
