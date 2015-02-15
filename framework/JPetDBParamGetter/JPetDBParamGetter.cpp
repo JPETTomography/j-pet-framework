@@ -8,6 +8,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
 #include "../DBHandler/HeaderFiles/DBHandler.h"
+#include <cstdint>
 
 JPetDBParamGetter::JPetDBParamGetter()
 {
@@ -644,19 +645,134 @@ void JPetDBParamGetter::fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank&
   }
 }
 
+void JPetDBParamGetter::fillBarrelSlotTRefs(const int p_run_id, JPetParamBank& paramBank)
+{
+  INFO("Start filling slot TRefs.");
+  
+  std::uint_fast32_t l_barrelSlotsSize = paramBank.getBarrelSlotsSize();
+  std::uint_fast32_t l_layersSize = paramBank.getLayersSize();
+
+  if(l_barrelSlotsSize > 0 && l_layersSize > 0)
+  {
+    for(std::uint_fast32_t l_barrelSlotIndex = 0u; l_barrelSlotIndex < l_barrelSlotsSize; ++l_barrelSlotIndex)
+    {
+      std::string l_barrelSlot_id = boost::lexical_cast<std::string>(paramBank.getBarrelSlot(l_barrelSlotIndex).getID());
+      std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+      std::string args = l_barrelSlot_id + ", " + l_run_id;
+      
+      pqxx::result l_runDbResults = getDataFromDB("getLayerForBarrelSlot", args);
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry) 
+      {
+        for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  std::uint_fast32_t l_layer_id_from_db = row["layer_id"].as<int>();
+	  
+	  for(std::uint_fast32_t l_layerIndex = 0u; l_layerIndex < l_layersSize; ++l_layerIndex)
+	  {
+	    std::uint_fast32_t l_layer_id_from_paramBankContainer = paramBank.getLayer(l_layerIndex).getId();
+	    
+	    if(l_layer_id_from_db == l_layer_id_from_paramBankContainer)
+	    {
+	      paramBank.getBarrelSlot(l_barrelSlotIndex).setLayer(paramBank.getLayer(l_layerIndex));
+	    }
+	  }
+	}
+      }
+      else
+      {
+	std::string querry = "getLayerForBarrelSlot(" + args + ")";
+	ERROR("0 result from querry = " + querry);
+      }
+    }
+  }
+  else
+  {
+    if(l_barrelSlotsSize == 0)
+    {
+      ERROR("BarrelSlot container is empty.");
+    }
+    if(l_layersSize == 0)
+    {
+      ERROR("Layer container is empty.");
+    }
+  }
+}
+
+void JPetDBParamGetter::fillLayerTRefs(const int p_run_id, JPetParamBank& paramBank)
+{
+  INFO("Start filling layer TRefs.");
+  
+  std::uint_fast32_t l_layersSize = paramBank.getLayersSize();
+  std::uint_fast32_t l_framesSize = paramBank.getFramesSize();
+  
+  if(l_layersSize > 0 && l_framesSize > 0)
+  {
+    for(std::uint_fast32_t l_layerIndex = 0u; l_layerIndex < l_layersSize; ++l_layerIndex)
+    {
+      std::string l_layer_id = boost::lexical_cast<std::string>(paramBank.getLayer(l_layerIndex).getId());
+      std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+      std::string args = l_layer_id + ", " + l_run_id;
+      
+      pqxx::result l_runDbResults = getDataFromDB("getFrameForLayer", args);
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+      
+      if(l_sizeResultQuerry) 
+      {
+        for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row)
+	{
+	  std::uint_fast32_t l_frame_id_from_db = row["frame_id"].as<int>();
+	  
+	  for(std::uint_fast32_t l_frameIndex = 0u; l_frameIndex < l_framesSize; ++l_frameIndex)
+	  {
+	    std::uint_fast32_t l_frame_id_from_paramBankContainer = paramBank.getFrame(l_frameIndex).getId();
+	    
+	    if(l_frame_id_from_db == l_frame_id_from_paramBankContainer)
+	    {
+	      paramBank.getLayer(l_layerIndex).setFrame(paramBank.getFrame(l_frameIndex));
+	    }
+	  }
+	}
+      }
+      else
+      {
+	std::string querry = "getFrameForLayer(" + args + ")";
+	ERROR("0 result from querry = " + querry);
+      }
+    }
+  }
+  else
+  {
+    if(l_layersSize == 0)
+    {
+      ERROR("Layer container is empty.");
+    }
+    if(l_framesSize == 0)
+    {
+      ERROR("Frame container is empty.");
+    }
+  }
+}
+
 void JPetDBParamGetter::fillAllTRefs(const int p_run_id, JPetParamBank& paramBank)
 {
   if (paramBank.getScintillatorsSize() > 0
       && paramBank.getPMsSize() > 0
       && paramBank.getFEBsSize() > 0
       && paramBank.getTRBsSize() > 0
+      && paramBank.getBarrelSlotsSize() > 0
+      && paramBank.getLayersSize() > 0
+      && paramBank.getFramesSize() > 0
      ) {
     fillPMsTRefs(p_run_id, paramBank);
     fillFEBsTRefs(p_run_id, paramBank);
     //fillTRBsTRefs(p_run_id, paramBank);
     fillTOMBChannelsTRefs(p_run_id, paramBank);
+    
+    fillBarrelSlotTRefs(p_run_id, paramBank);
+    fillLayerTRefs(p_run_id, paramBank);
   } else {
     ERROR("Containers are empty.");
   }
 }
-

@@ -58,6 +58,8 @@ void fillFrame(const int p_run_id, JPetParamBank& paramBank);
   void fillPMsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank& paramBank);
+void fillBarrelSlotTRefs(const int p_run_id, JPetParamBank& paramBank);
+void fillLayerTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillAllTRefs(const int p_run_id, JPetParamBank& paramBank);
 
   int getTOMBChannelFromDescription(std::string p_desc) const;
