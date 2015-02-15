@@ -19,7 +19,7 @@
 class JPetLayer: public TNamed
 {
 protected:
-  int fId;
+  const int fId;
   bool fIsActive;
   std::string fName;
   float fRadius;

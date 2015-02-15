@@ -8,12 +8,12 @@
 class JPetUser: public TNamed
 {
 protected:
-  int m_id;
+  const int m_id;
   std::string m_name;
   std::string m_lastName;
   std::string m_login;
   std::string m_password;
-  bool m_isRoot;
+  const bool m_isRoot;
   std::string m_creationDate;
   std::string m_lastLoginDate;
   
