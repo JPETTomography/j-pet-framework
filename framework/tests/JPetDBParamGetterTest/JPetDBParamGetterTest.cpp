@@ -195,6 +195,64 @@ BOOST_AUTO_TEST_CASE(fillTRefsTest)
   */
 }  
 
+BOOST_AUTO_TEST_CASE(fillBarrelSlotTRefTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  int run  = 1;
+  JPetParamBank* bank = paramGetter.generateParamBank(run);
+  
+  std::cout << "Scintillators size:" << bank->getScintillatorsSize() <<std::endl;
+  std::cout << "PM size:" << bank->getPMsSize() <<std::endl;
+  std::cout << "FEB size:" << bank->getFEBsSize() <<std::endl;
+  std::cout << "TRB size:" << bank->getTRBsSize() <<std::endl;
+  std::cout << "TOMB channel size:" << bank->getTOMBChannelsSize() <<std::endl;
+  std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl;
+  std::cout << "Layer size:" << bank->getLayersSize() <<std::endl;
+
+  BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
+  BOOST_REQUIRE(bank->getPMsSize() == 4);
+  BOOST_REQUIRE(bank->getFEBsSize() == 1);
+  BOOST_REQUIRE(bank->getTRBsSize() == 1);
+  BOOST_REQUIRE(bank->getTOMBChannelsSize() == 4);
+  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
+  BOOST_REQUIRE(bank->getLayersSize() == 1);
+  
+  paramGetter.fillBarrelSlotTRefs(run, *bank);
+  
+  // BarrelSlot TRef for Layer
+  JPetBarrelSlot& barrelSlot = bank->getBarrelSlot(0);
+  BOOST_REQUIRE(barrelSlot.getLayer().getId() == 1);
+}
+
+BOOST_AUTO_TEST_CASE(fillLayerTRefTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  int run  = 1;
+  JPetParamBank* bank = paramGetter.generateParamBank(run);
+  
+  std::cout << "Scintillators size:" << bank->getScintillatorsSize() <<std::endl;
+  std::cout << "PM size:" << bank->getPMsSize() <<std::endl;
+  std::cout << "FEB size:" << bank->getFEBsSize() <<std::endl;
+  std::cout << "TRB size:" << bank->getTRBsSize() <<std::endl;
+  std::cout << "TOMB channel size:" << bank->getTOMBChannelsSize() <<std::endl;
+  std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl;
+  std::cout << "Layer size:" << bank->getLayersSize() <<std::endl;
+
+  BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
+  BOOST_REQUIRE(bank->getPMsSize() == 4);
+  BOOST_REQUIRE(bank->getFEBsSize() == 1);
+  BOOST_REQUIRE(bank->getTRBsSize() == 1);
+  BOOST_REQUIRE(bank->getTOMBChannelsSize() == 4);
+  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
+  BOOST_REQUIRE(bank->getLayersSize() == 1);
+  
+  paramGetter.fillLayerTRefs(run, *bank);
+  
+  // Layer TRef for Frame
+  JPetLayer& layer = bank->getLayer(0);
+  BOOST_REQUIRE(layer.getFrame().getId() == 1);
+}
+
 BOOST_AUTO_TEST_CASE(getDataFromDBTest)
 {
   JPetDBParamGetter paramGetter(gDefaultConfigFile);
