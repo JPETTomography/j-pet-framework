@@ -44,6 +44,10 @@ public:
     fTime = time;
   }
 
+  inline void setQualityOfTime(float qualityOfTime){
+    fQualityOfTime = qualityOfTime;
+  }
+
   /// Returns a quantitative measure of the time reconstruction quality (scale is yet to be decided)
   inline float getQualityOfTime() const {
     assert(fQualityOfTime >= 0);
@@ -71,9 +75,7 @@ public:
     return fRecoSignal;
   }
 
-  void setRecoSignal(const JPetRecoSignal& recoSignal) {
-    fRecoSignal = recoSignal;
-  }
+  void setRecoSignal(const JPetRecoSignal& recoSignal);
 
 private:
   double fTime; ///< one time reconstructed for the whole signal [ps]
