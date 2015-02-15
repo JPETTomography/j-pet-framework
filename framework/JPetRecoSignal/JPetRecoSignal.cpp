@@ -48,3 +48,9 @@ bool JPetRecoSignal::compareShapePointsAmpl(const shapePoint& A,
   return false;
 }
 
+void JPetRecoSignal::setRawSignal(const JPetRawSignal& rawSignal){
+   fRawSignal = rawSignal;
+   setPM( rawSignal.getPM() );
+   setBarrelSlot( rawSignal.getBarrelSlot() );
+   setTSlotIndex( rawSignal.getTSlotIndex() );
+}

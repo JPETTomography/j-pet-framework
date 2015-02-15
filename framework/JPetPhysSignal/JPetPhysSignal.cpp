@@ -21,3 +21,10 @@ JPetPhysSignal::JPetPhysSignal() :
 
 JPetPhysSignal::~JPetPhysSignal()
 { }
+
+void JPetPhysSignal::setRecoSignal(const JPetRecoSignal& recoSignal){
+   fRecoSignal = recoSignal;
+   setPM( recoSignal.getPM() );
+   setBarrelSlot( recoSignal.getBarrelSlot() );
+   setTSlotIndex( recoSignal.getTSlotIndex() );
+}

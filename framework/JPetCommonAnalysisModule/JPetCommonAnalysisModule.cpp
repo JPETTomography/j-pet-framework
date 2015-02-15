@@ -18,6 +18,7 @@ JPetCommonAnalysisModule::JPetCommonAnalysisModule(const char* name, const char*
 				       const char * in_file_suffix,
 				       const char * out_file_suffix):
   JPetAnalysisModule(name, title),
+  fVersion(0),
   fRunNb(0),
   fEventNb(0),
   fEvent(0),
@@ -63,7 +64,7 @@ void JPetCommonAnalysisModule::createInputObjects(const char* inputFilename)
   // read the header from the previous analysis stage
   fHeader = fReader->getHeaderClone();
   // add info about this module to the processing stages' history in Tree header
-  fHeader->addStageInfo( this->GetName(), this->GetTitle(), MODULE_VERSION, 
+  fHeader->addStageInfo( this->GetName(), this->GetTitle(), getVersion(),
 			 JPetManager::GetManager().GetTimeString() );
 
   

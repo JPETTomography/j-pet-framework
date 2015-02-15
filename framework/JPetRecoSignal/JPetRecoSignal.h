@@ -150,9 +150,7 @@ class JPetRecoSignal: public JPetBaseSignal
   /**
    * @brief Set the JPetRawSignal object from which this RecoSignal was created
    */
-  void setRawSignal(const JPetRawSignal& rawSignal) {
-    fRawSignal = rawSignal;
-  }
+  void setRawSignal(const JPetRawSignal& rawSignal);
 
 private:
 

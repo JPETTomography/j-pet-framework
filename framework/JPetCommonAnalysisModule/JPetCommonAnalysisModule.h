@@ -21,27 +21,38 @@
 #include "TH1F.h"
 #include "TH2F.h"
 
-#define MODULE_VERSION 0.1
-
 class JPetCommonAnalysisModule: public JPetAnalysisModule
 {
 
 public:
 
   JPetCommonAnalysisModule(const char* name, const char* title,
-		     const char *in_file_suffix, const char * out_file_suffix);
+                           const char *in_file_suffix,
+                           const char * out_file_suffix);
   virtual ~JPetCommonAnalysisModule();
   virtual void createInputObjects(const char* inputFilename = 0);
   virtual void createOutputObjects(const char* outputFilename = 0);
   virtual void exec() = 0;
   virtual void begin() = 0;
   virtual void end() = 0;
-  virtual long long getEventNb() { return fEventNb; }
+  virtual long long getEventNb() {
+    return fEventNb;
+  }
   virtual void terminate();
 
-  ClassDef(JPetCommonAnalysisModule, MODULE_VERSION );
+  int getVersion() const {
+    return fVersion;
+  }
+
+  void setVersion(int version) {
+    fVersion = version;
+  }
+
+ClassDef(JPetCommonAnalysisModule, 0 )
+  ;
 
 protected:
+  int fVersion; ///< version of the analysis module
   int fRunNb;
   int fEventNb;
   int fEvent;
@@ -49,11 +60,6 @@ protected:
   JPetReader* fReader;
   JPetTreeHeader* fHeader;
   //  JPetParamManager & fParamManager; 
-
-  /* TString fInFileName; */
-  /* TString fOutFileName; */
-  /* TString fInFileSuffix; */
-  /* TString fOutFileSuffix; */
 
   std::string fInFileName;
   std::string fOutFileName;
