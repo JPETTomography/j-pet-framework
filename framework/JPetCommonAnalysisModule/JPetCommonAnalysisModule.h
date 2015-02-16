@@ -27,17 +27,14 @@ class JPetCommonAnalysisModule: public JPetAnalysisModule
 public:
 
   JPetCommonAnalysisModule(const char* name, const char* title,
-                           const char *in_file_suffix,
-                           const char * out_file_suffix);
+		     const char *in_file_suffix, const char * out_file_suffix);
   virtual ~JPetCommonAnalysisModule();
   virtual void createInputObjects(const char* inputFilename = 0);
   virtual void createOutputObjects(const char* outputFilename = 0);
   virtual void exec() = 0;
   virtual void begin() = 0;
   virtual void end() = 0;
-  virtual long long getEventNb() {
-    return fEventNb;
-  }
+  virtual long long getEventNb() { return fEventNb; }
   virtual void terminate();
 
   int getVersion() const {
@@ -52,8 +49,7 @@ ClassDef(JPetCommonAnalysisModule, 0 )
   ;
 
 protected:
-  int fVersion; ///< version of the analysis module
-  int fRunNb;
+  const int fRunNb;
   int fEventNb;
   int fEvent;
   JPetWriter* fWriter;

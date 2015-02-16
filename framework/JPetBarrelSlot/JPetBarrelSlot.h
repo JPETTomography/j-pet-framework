@@ -1,3 +1,8 @@
+/**
+ *  @copyright Copyright (c) 2015, The J-Pet Framework Authors.
+ *  @file JPetBarrelSlot.h
+ */
+
 #ifndef _JPETBARRELSLOT_H_
 #define	_JPETBARRELSLOT_H_
 
@@ -13,31 +18,18 @@
 class JPetBarrelSlot: public TNamed
 {
 public:
+  /// Default constructor sets fId, fTheta to -1. 
   JPetBarrelSlot();
-  JPetBarrelSlot(int slotId, int layerID, int layerRad, float slotTheta);
-  JPetBarrelSlot(int id, bool isActive, std::string name, float theta, int layerId, int inFrameId);
-  ~JPetBarrelSlot();
+  JPetBarrelSlot(int id, bool isActive, std::string name, float theta);
   
-  inline int getSlotID() const { return fSlotID; }
-  inline int getLayerID() const { return fLayerID; }
-  inline int getLayerRad() const { return fLayerRad; }
-  inline float getSlotTheta() const { return fSlotTheta; }
+  inline bool operator==(const JPetBarrelSlot& bslot) { return getID() == bslot.getID(); }
+  inline bool operator!=(const JPetBarrelSlot& bslot) { return getID() != bslot.getID(); }
 
-  inline bool operator==(const JPetBarrelSlot& bslot) { return getSlotID() == bslot.getSlotID(); }
-  inline bool operator!=(const JPetBarrelSlot& bslot) { return getSlotID() != bslot.getSlotID(); }
-
-  inline void setSlotID(int id) { fSlotID = id; }
-  inline void setLayerID(int id) { fLayerID = id; }
-  inline void setLayerRad(int layerRad) { fLayerRad = layerRad; }
-  inline void setSlotTheta(float slotTheta) { fSlotTheta = slotTheta;}
-  
-  int getId() const { return fId; }
-  bool getIsActive() const { return fIsActive; }
-  std::string getName() const { return fName; }
-  float getTheta() const { return fTheta; }
-  int getLayerId() const { return fLayerId; }
-  int getInFrameId() const { return fInFrameId; }
-  const JPetLayer & getLayer() { return (JPetLayer&)*(fTRefLayer.GetObject()); }
+  inline int getID() const { return fId; }
+  inline float getTheta() const { return fTheta; }
+  inline bool isActive() const { return fIsActive; }
+  inline std::string getName() const { return fName; }
+  inline const JPetLayer & getLayer() { return static_cast<JPetLayer&>(*(fTRefLayer.GetObject())); }
   
   void setLayer(JPetLayer &p_layer)
   {
@@ -49,8 +41,6 @@ private:
   bool fIsActive;
   std::string fName;
   float fTheta;
-  int fLayerId;
-  int fInFrameId;
   TRef fTRefLayer;
   
 protected:
@@ -58,14 +48,8 @@ protected:
   {
     fTRefLayer = NULL;
   }
-  
-private:
-  int fSlotID;
-  int fLayerID;
-  int fLayerRad;
-  float fSlotTheta;
-  
-  ClassDef(JPetBarrelSlot, 1);
+
+  ClassDef(JPetBarrelSlot, 2);
 };
 
 #endif

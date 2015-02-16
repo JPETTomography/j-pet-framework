@@ -12,7 +12,7 @@
 class JPetSetup: public TNamed
 {
 protected:
-  int m_id;
+  const int m_id;
   std::string m_name;
   std::string m_description;
   std::string m_creationDate;
