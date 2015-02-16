@@ -12,16 +12,20 @@
 
 #include <vector>
 
-
 ///< stores a (time[ps], alplitude[mV]) pair
-  struct shapePoint
-  {
-    shapePoint(): time(0), amplitude(0){};
-    shapePoint(double t, double a): time(t), amplitude(a){};
-    double time;
-    double amplitude;
-  };
-
+struct shapePoint
+{
+  shapePoint() :
+      time(0), amplitude(0) {
+  }
+  ;
+  shapePoint(double t, double a) :
+      time(t), amplitude(a) {
+  }
+  ;
+  double time;
+  double amplitude;
+};
 
 /**
  * @brief Data class representing a signal during its physical reconstruction
@@ -37,15 +41,12 @@
  */
 class JPetRecoSignal: public JPetBaseSignal
 {
-  public:
-
-
+public:
 
   enum PointsSortOrder
-    {
-      ByTime,
-      ByAmplitude
-    };
+  {
+    ByTime, ByAmplitude
+  };
 
   /**
    * @brief Constructor
@@ -152,10 +153,66 @@ class JPetRecoSignal: public JPetBaseSignal
    */
   void setRawSignal(const JPetRawSignal& rawSignal);
 
+  /**
+   * @brief Get a map of (threshold[mV], time[ps]) pairs for reconstructed times at arbitrary thresholds
+   *
+   * The times at arbitrary thresholds reconstructed by the user (e.g. by interpolation
+   * of the points measured by from FEE boards) are stored in an STL map, with threshold values
+   * as keys.
+   *
+   * Convention:
+   * if threshold < 1, it means a fraction of the signal (in the constant-fraction sense)
+   * if threshold > 1, it means an absolute value of the threshold in miliVolts
+   *
+   * User can set times at thresholds either by the setRecoTimeAtThreshold method or by using
+   * direclty the map returned by this metho (not that the retirned reference to the map
+   * is not constant).
+   *
+   * @return map of (threshold[mV], time[ps]) pairs for reconstructed times at arbitrary thresholds
+   */
+  std::map<float, float>& getRecoTimesAtThreshold() {
+    return fRecoTimesAtThreshold;
+  }
+
+  /**
+   * @brief Set the reconstructed time at an arbitrary threshold
+   *
+   * @param threshold arbitrary threshold for which the time is given; either in mV or without unit if constant-fraction
+   * @param time time at which signal crossed the arbitrary threshold
+   *
+   * The times at arbitrary thresholds reconstructed by the user (e.g. by interpolation
+   * of the points measured by from FEE boards) are stored in an STL map, with threshold values
+   * as keys.
+   *
+   * Convention:
+   * if threshold < 1, it means a fraction of the signal (in the constant-fraction sense)
+   * if threshold > 1, it means an absolute value of the threshold in miliVolts
+   */
+  void setRecoTimeAtThreshold(float threshold, float time) {
+    fRecoTimesAtThreshold[threshold] = time;
+  }
+
+  /**
+   * @brief Get the reconstructed time at an arbitrary threshold
+   *
+   * @param threshold arbitrary threshold for which the time is given; either in mV or without unit if constant-fraction
+   *
+   * Convention for threshold values:
+   * if threshold < 1, it means a fraction of the signal (in the constant-fraction sense)
+   * if threshold > 1, it means an absolute value of the threshold in miliVolts
+   *
+   * @return time at threshold in [ps], or 0 if time for the given threshold was not set.
+   */
+  float getRecoTimeAtThreshold(float threshold) const {
+    return const_cast<std::map<float, float> & > (fRecoTimesAtThreshold)[threshold];
+  }
+
 private:
 
-  static bool compareShapePointsTime(const shapePoint & A, const shapePoint & B);
-  static bool compareShapePointsAmpl(const shapePoint & A, const shapePoint & B);
+  static bool compareShapePointsTime(const shapePoint & A,
+                                     const shapePoint & B);
+  static bool compareShapePointsAmpl(const shapePoint & A,
+                                     const shapePoint & B);
 
   std::vector<shapePoint> fShape; ///< Signal shape represented as (time, amplitude) pairs
   double fDelay;
@@ -165,7 +222,10 @@ private:
 
   JPetRawSignal fRawSignal;
 
-ClassDef(JPetRecoSignal, 1);
+  std::map<float, float> fRecoTimesAtThreshold;
+
+ClassDef(JPetRecoSignal, 1)
+  ;
 };
 
 #endif /*  !JPETRECOSIGNAL_H */

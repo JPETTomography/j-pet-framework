@@ -92,7 +92,7 @@ public:
   /**
    * @brief Get the Time Over Threshold value in [ps]
    *
-   * @return Time Over Threshold value in [ps] or -1000000 if TOT was not registered for this signal.
+   * @return Time Over Threshold value in [ps] or JpetSigCh::kUnset if TOT was not registered for this signal.
    */
   double getTOT() const;
 
