@@ -86,7 +86,7 @@ void JPetCommonAnalysisModule::createInputObjects(const char* inputFilename)
 
  void JPetCommonAnalysisModule::terminate()
  {
-   // cal user function before terminating processing
+   // call user function before terminating processing
    end();
 
    INFO( Form("Finished processing %s.", GetName() ) );

@@ -50,6 +50,7 @@ ClassDef(JPetCommonAnalysisModule, 0 )
 
 protected:
   const int fRunNb;
+  int fVersion;
   int fEventNb;
   int fEvent;
   JPetWriter* fWriter;
