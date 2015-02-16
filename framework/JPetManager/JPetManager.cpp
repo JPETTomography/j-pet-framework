@@ -44,7 +44,7 @@ void JPetManager::Run()
       JPetScopeModule* module = new JPetScopeModule("JPetScopeModule", "Process Oscilloscope ASCII data into JPetLOR structures.");
       module->setFileName(getInputFileName().c_str());
       fTasks.push_front(module);
-    } else {
+    } else if (fCmdParser.getFileType() == "hld"){
       UnpackFile();
     }
   }
@@ -154,7 +154,7 @@ TString JPetManager::GetTimeString() const
   time_t _tm = time(NULL );
   struct tm* curtime = localtime ( &_tm );
   char buf[100];
-  strftime( buf, 100, "%m.%d.%Y %R", curtime);
+  strftime( buf, 100, "%d.%m.%Y %R", curtime);
 
   return TString( buf );
 }
