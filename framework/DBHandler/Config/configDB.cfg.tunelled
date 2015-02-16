@@ -1,0 +1,19 @@
+
+# Database handler configuration file
+
+# File name
+configFileName = "configDB.cfg";
+
+DBHandler = 
+{
+  Configuration =  
+  (
+    {
+      db_name = "test_db2";
+      db_username = "postgres";
+      db_password = "postgres";      
+      db_hostname = "localhost";
+      db_port = "9001";
+    }
+  );
+};
