@@ -45,9 +45,9 @@ protected:
   bool m_isActive;
   std::string m_status;
   std::string m_description;
-  int m_version;
+  const int m_version;
   //JPetUser &m_JPetUser;		//creatorId
-  int m_userId;		// creatorId 
+  const int m_userId;		// creatorId 
   /// @todo userId is inaccesible!!!
 
 public:

@@ -45,7 +45,7 @@ public:
   inline bool operator!=(const JPetPMCalib& calib) { return GetId() != calib.GetId(); }
   
 protected:
-  int id;
+  const int id;
   std::string name;
   float opthv;
   float ECalConst1;
