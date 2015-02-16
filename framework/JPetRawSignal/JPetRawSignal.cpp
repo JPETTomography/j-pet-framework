@@ -86,6 +86,5 @@ std::map<int, double> JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeTyp
 }
 
 double JPetRawSignal::getTOT() const {
-  /// @todo check whether fTOTPoint is not a null object and return -1000000 in such a case.
   return fTOTPoint.getValue();
 }

@@ -31,7 +31,6 @@ public:
    * The time is in picoseconds and is the time w.r.t. beginning of a time slot.
    */
   inline float getTime() const {
-    assert(fTime >= 0);
     return fTime;
   }
 
@@ -50,7 +49,6 @@ public:
 
   /// Returns a quantitative measure of the time reconstruction quality (scale is yet to be decided)
   inline float getQualityOfTime() const {
-    assert(fQualityOfTime >= 0);
     return fQualityOfTime;
   }
 

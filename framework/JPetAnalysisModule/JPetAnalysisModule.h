@@ -11,7 +11,9 @@
 #include <vector>
 #include <TNamed.h>
 #include <TTree.h>
-#include <TList.h>
+#include <THashTable.h>
+#include <TH1F.h>
+#include <TH2F.h>
 
 /**
  * @brief Template of a single module of the analysis representing one stage of the processing.
@@ -45,7 +47,15 @@ public:
   virtual void terminate()=0; // called once when analysis terminates
 
   int addStatsObject(TObject * statObj);
-  const TList * getStatsObjects() const; 
+  const THashTable * getStatsObjects() const;
+
+  // more convenient methods to access histograms from the statsObjects list
+  TH1F * getHisto1D(const char * name);
+
+  TH2F * getHisto2D(const char * name);
+
+  TObject * getStatsObject(const char * name);
+
 
   ClassDef(JPetAnalysisModule,1);
 
@@ -54,6 +64,7 @@ protected:
   TTree fSubmoduleSharedTree;
   TTree* fSuperSharedTree;
   std::vector< JPetAnalysisModule* > fSubmodules;
-  TList fStats; ///< a list to store all objects for statistics of the processing, i.e. histograms
+  THashTable fStats; ///< a hash table to store all objects for statistics of the processing, i.e. histograms
+
 };
 #endif /*  !JPETANALYSISMODULE_H */
