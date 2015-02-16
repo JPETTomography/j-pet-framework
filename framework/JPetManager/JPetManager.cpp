@@ -53,11 +53,28 @@ void JPetManager::Run()
   std::list<JPetAnalysisModule*>::iterator taskIter;
   // pseudo-input container
   long long  kNevent = 0;
+  long long kFirstEvent = 0;
+  long long kLastEvent = 0;
   for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
     (*taskIter)->createInputObjects( getInputFileName().c_str() ); /// readers
     (*taskIter)->createOutputObjects( getInputFileName().c_str() ); /// writers + histograms
     kNevent = (*taskIter)->getEventNb();
-    for (long long i = 0; i < kNevent; i++) {
+    kFirstEvent = 0;
+    kLastEvent = kNevent-1;
+
+    // handle the user-provided range of events to process,
+    // but only for the first module to process
+    if( taskIter==fTasks.begin() ){// only for first module
+      if( fCmdParser.getLowerEventBound() != -1 &&
+          fCmdParser.getHigherEventBound() != -1 &&
+          fCmdParser.getHigherEventBound() < kNevent){ // only if user provided reasonable bounds
+        kFirstEvent = fCmdParser.getLowerEventBound();
+        kLastEvent = fCmdParser.getHigherEventBound();
+        kNevent = kLastEvent - kFirstEvent + 1;
+      }
+    }
+
+    for (long long i = 0; i <= kLastEvent; i++) {
       if(fIsProgressBarEnabled)
       {
 	std::cout << "Progressbar: " << setProgressBar(i, kNevent) << " %" << std::endl;
