@@ -94,7 +94,7 @@ void JPetCmdParser::parse(int argc, const char** argv)
     {
       int l_progressBar = fVariablesMap["progressBar"].as<int>();
       
-      if(l_progressBar != 0 || l_progressBar != 1)
+      if(l_progressBar != 0 && l_progressBar != 1)
       {
 	cerr << "Wrong parameter of progressbar: " << l_progressBar << endl;
 	exit(-1);
