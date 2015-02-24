@@ -130,7 +130,8 @@ void JPetScopeModule::createInputObjects(const char* inputFilename)
 
     path current_dir(starting_loc);
     boost::regex pattern(Form("%s_\\d*.txt", fConfig.file1.c_str()));
-
+    
+    if (exists(current_dir))
     for (recursive_directory_iterator iter(current_dir), end; iter != end; ++iter) {
       string name = iter->path().leaf().string();
       string dir;
@@ -142,6 +143,12 @@ void JPetScopeModule::createInputObjects(const char* inputFilename)
 	int tpos = *it;
         fFiles.insert(pair<int, string> (tpos, dir));
       }
+    }
+    else {
+      string msg  = "Directory: \"";
+             msg += current_dir.string();
+             msg += "\" does not exist.";
+      ERROR(msg.c_str());
     }
   }
   fIt = fFiles.begin();
