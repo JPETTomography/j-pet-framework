@@ -522,7 +522,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
   // BarrelSlot for Photomultiplier`TRef
   if(l_PMsSize > 0 && l_BarrelSlotSize > 0)
   {
-    for(unsigned int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index)
+    for(std::uint_fast32_t l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index)
     {
       std::string pm_id = boost::lexical_cast<std::string>(paramBank.getPM(l_PM_index).getID());
       std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
@@ -535,11 +535,11 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
       {
         for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
 	{
-          int l_barrelSlot_id_from_db = row["slot_id"].as<int>();
+          std::uint_fast32_t l_barrelSlot_id_from_db = row["slot_id"].as<std::uint_fast32_t>();
 	  
-          for(unsigned int l_barrelSlot_index = 0u; l_barrelSlot_index < l_BarrelSlotSize; ++l_barrelSlot_index)
+          for(std::uint_fast32_t l_barrelSlot_index = 0u; l_barrelSlot_index < l_BarrelSlotSize; ++l_barrelSlot_index)
 	  {
-            int l_barrelSlot_id_from_paramBankContainer = paramBank.getBarrelSlot(l_barrelSlot_index).getID();
+            std::uint_fast32_t l_barrelSlot_id_from_paramBankContainer = paramBank.getBarrelSlot(l_barrelSlot_index).getID();
 
             if(l_barrelSlot_id_from_db == l_barrelSlot_id_from_paramBankContainer) 
 	    {
@@ -806,7 +806,7 @@ void JPetDBParamGetter::fillScinTRef(const int p_run_id, JPetParamBank& paramBan
   
   if(l_scintillatorSize > 0 && l_barrelSlotSize > 0)
   {
-    for(unsigned int l_scintillator_index = 0u; l_scintillator_index < l_scintillatorSize; ++l_scintillator_index)
+    for(std::uint_fast32_t l_scintillator_index = 0u; l_scintillator_index < l_scintillatorSize; ++l_scintillator_index)
     {
       std::string scintillator_id = boost::lexical_cast<std::string>(paramBank.getScintillator(l_scintillator_index).getID());
       std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
@@ -819,11 +819,11 @@ void JPetDBParamGetter::fillScinTRef(const int p_run_id, JPetParamBank& paramBan
       {
         for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
 	{
-          int l_barrelSlot_id_from_db = row["slot_id"].as<int>();
+          std::uint_fast32_t l_barrelSlot_id_from_db = row["slot_id"].as<std::uint_fast32_t>();
 	  
-          for(unsigned int l_barrelSlot_index = 0u; l_barrelSlot_index < l_barrelSlotSize; ++l_barrelSlot_index)
+          for(std::uint_fast32_t l_barrelSlot_index = 0u; l_barrelSlot_index < l_barrelSlotSize; ++l_barrelSlot_index)
 	  {
-            int l_barrelSlot_id_from_paramBankContainer = paramBank.getBarrelSlot(l_barrelSlot_index).getID();
+            std::uint_fast32_t l_barrelSlot_id_from_paramBankContainer = paramBank.getBarrelSlot(l_barrelSlot_index).getID();
 
             if(l_barrelSlot_id_from_db == l_barrelSlot_id_from_paramBankContainer) 
 	    {
