@@ -3,6 +3,7 @@
 
 #include "TNamed.h"
 #include <TRef.h>
+#include "../JPetBarrelSlot/JPetBarrelSlot.h"
 //#include "../JPetPM/JPetPM.h"
 
 
@@ -36,6 +37,9 @@ class JPetScin: public TNamed
   inline void setScinSize(ScinDimensions size) { fScinSize = size; }
   void setScinSize(Dimension dim, float value);
 
+  void setBarrelSlot(JPetBarrelSlot &p_barrelSlot){ fTRefBarrelSlot = &p_barrelSlot; }
+  JPetBarrelSlot& getBarrelSlot() const { return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject()); }	
+  
   inline bool operator==(const JPetScin& scin) const { return getID() == scin.getID(); }
   inline bool operator!=(const JPetScin& scin) const { return getID() != scin.getID(); }
 
@@ -64,6 +68,9 @@ class JPetScin: public TNamed
   ClassDef(JPetScin, 2);
   
 protected:
+  TRef fTRefBarrelSlot;
+  
+  void clearTRefBarrelSlot() { fTRefBarrelSlot = NULL; }
   /*
   TRef fTRefPMLeft;
   TRef fTRefPMRight;

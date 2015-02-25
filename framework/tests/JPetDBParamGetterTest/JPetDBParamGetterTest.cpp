@@ -252,7 +252,41 @@ BOOST_AUTO_TEST_CASE(fillLayerTRefTest)
   JPetLayer& layer = bank->getLayer(0);
   BOOST_REQUIRE(layer.getFrame().getId() == 1);
 }
+/*
+BOOST_AUTO_TEST_CASE(fillPMTRefsWithBarrelSlotTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  int run  = 1;
+  JPetParamBank* bank = paramGetter.generateParamBank(run);
+  
+  std::cout << "PM size:" << bank->getPMsSize() <<std::endl;
+  std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl;
 
+  BOOST_REQUIRE(bank->getPMsSize() == 4);
+  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
+  
+  // PM TRef for BarrelSlot
+  JPetPM& l_PM = bank->getPM(0);
+  std::cout << l_PM.getBarrelSlot().getID() << std::endl;
+}
+
+BOOST_AUTO_TEST_CASE(fillScintillatorTRefsWithBarrelSlotTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  int run  = 1;
+  JPetParamBank* bank = paramGetter.generateParamBank(run);
+  
+  std::cout << "Scintillators size:" << bank->getScintillatorsSize() <<std::endl;
+  std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl;
+
+  BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
+  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
+  
+  // Scintillator TRef for BarrelSlot
+  JPetScin& l_scintillator = bank->getScintillator(0);
+  std::cout << l_scintillator.getBarrelSlot().getID() << std::endl;
+}
+*/
 BOOST_AUTO_TEST_CASE(getDataFromDBTest)
 {
   JPetDBParamGetter paramGetter(gDefaultConfigFile);
