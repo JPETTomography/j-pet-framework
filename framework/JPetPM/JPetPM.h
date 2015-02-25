@@ -6,6 +6,7 @@
 #include <TRef.h>
 #include "../JPetFEB/JPetFEB.h"
 #include "../JPetScin/JPetScin.h"
+#include "../JPetBarrelSlot/JPetBarrelSlot.h"
 
 class JPetScin;
 
@@ -40,16 +41,15 @@ class JPetPM: public TNamed
   inline void setHVgain(float g1, float g2) { fHVgain.first = g1; fHVgain.second = g2; }
   inline void setHVgain(const std::pair<float,float>& gain) { fHVgain = gain; }
 
+  void setFEB(JPetFEB &p_FEB) { fTRefFEB = &p_FEB; }
   const JPetFEB& getFEB() { return (JPetFEB&)*(fTRefFEB.GetObject()); }
   
-  void setScin(JPetScin &p_scin){ fTRefScin = &p_scin; }
+  void setScin(JPetScin &p_scin) { fTRefScin = &p_scin; }
   JPetScin & getScin() const { return (JPetScin&)*(fTRefScin.GetObject()); }
 
-  void setFEB(JPetFEB &p_FEB)
-  {
-    fTRefFEB = &p_FEB;
-  }
-
+  void setBarrelSlot(JPetBarrelSlot &p_barrelSlot){ fTRefBarrelSlot = &p_barrelSlot; }
+  JPetBarrelSlot& getBarrelSlot() const { return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject()); }	
+  
   inline bool operator==(const JPetPM& pm) { return getID() == pm.getID(); }
   inline bool operator!=(const JPetPM& pm) { return getID() != pm.getID(); }
   
@@ -86,11 +86,11 @@ class JPetPM: public TNamed
 protected:
   TRef fTRefFEB;
   TRef fTRefScin;
+  TRef fTRefBarrelSlot;
 
-  void clearTRefFEBs()
-  {
-    fTRefFEB = NULL;
-  }
+  void clearTRefFEBs() { fTRefFEB = NULL; }
+  void clearTRefScin() { fTRefScin = NULL; }
+  void clearTRefBarrelSlot() { fTRefBarrelSlot = NULL; }
   
   /*std::vector<TRef> fTRefKBs;
   

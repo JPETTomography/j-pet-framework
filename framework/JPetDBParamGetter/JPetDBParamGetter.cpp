@@ -453,6 +453,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
   int l_PMsSize = paramBank.getPMsSize();
   int l_FEBsSize = paramBank.getFEBsSize();
   int l_ScinsSize = paramBank.getScintillatorsSize();
+  int l_BarrelSlotSize = paramBank.getBarrelSlotsSize();
 
   if (l_PMsSize > 0 && l_FEBsSize > 0) {
 
@@ -518,7 +519,47 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
       ERROR("Scintillators container is empty.");
   }
 
+  // BarrelSlot for Photomultiplier`TRef
+  if(l_PMsSize > 0 && l_BarrelSlotSize > 0)
+  {
+    for(unsigned int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index)
+    {
+      std::string pm_id = boost::lexical_cast<std::string>(paramBank.getPM(l_PM_index).getID());
+      std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+      std::string args = pm_id + ", " + l_run_id;
 
+      pqxx::result l_runDbResults = getDataFromDB("getbarrelslotforphotomultiplier", args);
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+
+      if(l_sizeResultQuerry) 
+      {
+        for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
+	{
+          int l_barrelSlot_id_from_db = row["slot_id"].as<int>();
+	  
+          for(unsigned int l_barrelSlot_index = 0u; l_barrelSlot_index < l_BarrelSlotSize; ++l_barrelSlot_index)
+	  {
+            int l_barrelSlot_id_from_paramBankContainer = paramBank.getBarrelSlot(l_barrelSlot_index).getID();
+
+            if(l_barrelSlot_id_from_db == l_barrelSlot_id_from_paramBankContainer) 
+	    {
+              paramBank.getPM(l_PM_index).setBarrelSlot(paramBank.getBarrelSlot(l_barrelSlot_index));
+            }
+          }
+        }
+      }
+      else
+      {
+	std::string querry = "getbarrelslotforphotomultiplier(" + args + ")";
+	ERROR("0 result from querry = " + querry);
+      }
+    }
+  } 
+  else
+  {
+    if(l_PMsSize == 0) ERROR("PM container is empty.");
+    if(l_BarrelSlotSize == 0) ERROR("Barrelslot container is empty.");
+  }
 }
 
 void JPetDBParamGetter::fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank)
@@ -756,6 +797,55 @@ void JPetDBParamGetter::fillLayerTRefs(const int p_run_id, JPetParamBank& paramB
   }
 }
 
+void JPetDBParamGetter::fillScinTRef(const int p_run_id, JPetParamBank& paramBank)
+{
+  INFO("Start filling Scintillator TRef.");
+  
+  std::uint_fast32_t l_scintillatorSize = paramBank.getScintillatorsSize();
+  std::uint_fast32_t l_barrelSlotSize = paramBank.getBarrelSlotsSize();
+  
+  if(l_scintillatorSize > 0 && l_barrelSlotSize > 0)
+  {
+    for(unsigned int l_scintillator_index = 0u; l_scintillator_index < l_scintillatorSize; ++l_scintillator_index)
+    {
+      std::string scintillator_id = boost::lexical_cast<std::string>(paramBank.getScintillator(l_scintillator_index).getID());
+      std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
+      std::string args = scintillator_id + ", " + l_run_id;
+
+      pqxx::result l_runDbResults = getDataFromDB("getbarrelslotforscintillator", args);
+      size_t l_sizeResultQuerry = l_runDbResults.size();
+
+      if(l_sizeResultQuerry) 
+      {
+        for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
+	{
+          int l_barrelSlot_id_from_db = row["slot_id"].as<int>();
+	  
+          for(unsigned int l_barrelSlot_index = 0u; l_barrelSlot_index < l_barrelSlotSize; ++l_barrelSlot_index)
+	  {
+            int l_barrelSlot_id_from_paramBankContainer = paramBank.getBarrelSlot(l_barrelSlot_index).getID();
+
+            if(l_barrelSlot_id_from_db == l_barrelSlot_id_from_paramBankContainer) 
+	    {
+              paramBank.getScintillator(l_scintillator_index).setBarrelSlot(paramBank.getBarrelSlot(l_barrelSlot_index));
+            }
+          }
+        }
+      }
+      else
+      {
+	std::string querry = "getbarrelslotforscintillator(" + args + ")";
+	ERROR("0 result from querry = " + querry);
+      }
+    }
+  } 
+  else
+  {
+    if(l_scintillatorSize == 0) ERROR("Scintillator container is empty.");
+    if(l_barrelSlotSize == 0) ERROR("Barrelslot container is empty.");
+  }
+}
+
 void JPetDBParamGetter::fillAllTRefs(const int p_run_id, JPetParamBank& paramBank)
 {
   if (paramBank.getScintillatorsSize() > 0
@@ -773,6 +863,7 @@ void JPetDBParamGetter::fillAllTRefs(const int p_run_id, JPetParamBank& paramBan
     
     fillBarrelSlotTRefs(p_run_id, paramBank);
     fillLayerTRefs(p_run_id, paramBank);
+    fillScinTRef(p_run_id, paramBank);
   } else {
     ERROR("Containers are empty.");
   }
