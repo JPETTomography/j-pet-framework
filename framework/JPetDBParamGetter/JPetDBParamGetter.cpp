@@ -535,7 +535,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
       {
         for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
 	{
-          std::uint_fast32_t l_barrelSlot_id_from_db = row["slot_id"].as<std::uint_fast32_t>();
+          std::uint_fast32_t l_barrelSlot_id_from_db = row["hvpmconnection_slot_id"].as<std::uint_fast32_t>();
 	  
           for(std::uint_fast32_t l_barrelSlot_index = 0u; l_barrelSlot_index < l_BarrelSlotSize; ++l_barrelSlot_index)
 	  {
@@ -819,7 +819,7 @@ void JPetDBParamGetter::fillScinTRef(const int p_run_id, JPetParamBank& paramBan
       {
         for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
 	{
-          std::uint_fast32_t l_barrelSlot_id_from_db = row["slot_id"].as<std::uint_fast32_t>();
+          std::uint_fast32_t l_barrelSlot_id_from_db = row["slscconnection_slot_id"].as<std::uint_fast32_t>();
 	  
           for(std::uint_fast32_t l_barrelSlot_index = 0u; l_barrelSlot_index < l_barrelSlotSize; ++l_barrelSlot_index)
 	  {
