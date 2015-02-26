@@ -1,9 +1,9 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetLOR
-EXTRA_MODULES =JPetHit JPetSignal JPetSigCh
+EXTRA_MODULES =JPetHit JPetPhysSignal JPetRawSignal JPetRecoSignal JPetBaseSignal JPetSigCh
 #classes that need Dictionnaries 
-DICTS =JPetLOR JPetHit JPetSignal JPetSigCh
+DICTS =JPetLOR JPetPhysSignal JPetRawSignal JPetRecoSignal JPetBaseSignal JPetHit JPetSigCh
 PQXX_LIB_SET = 
 DBHANDLER_LIB_SET = 
 UNPACKER_LIB_SET = 
