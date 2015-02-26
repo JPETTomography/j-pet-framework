@@ -32,8 +32,8 @@ BOOST_AUTO_TEST_CASE(init_constructor )
 {
   // Create requied data
   TVector3 position(1.0f,2.0f,3.0f);
-  JPetSignal leftSignal;
-  JPetSignal rightSignal;
+  JPetPhysSignal leftSignal;
+  JPetPhysSignal rightSignal;
   /*JPetHit::JPetSignals bothSignals = std::make_pair(&leftSignal,&rightSignal);
   JPetBarrelSlot barrelSlot;
   JPetScin scintillator;
@@ -94,8 +94,8 @@ BOOST_AUTO_TEST_CASE(set_get_objects_test)
   // Create requied data
   
   TVector3 position(1.0f,2.0f,3.0f);
-  JPetSignal leftSignal;
-  JPetSignal rightSignal;
+  JPetPhysSignal leftSignal;
+  JPetPhysSignal rightSignal;
 
   float timeA = 123.0;
   float timeB = 456.0;
