@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_CASE(SetAndGetTRefBarrelSlotObjectTest) {
   signal.setBarrelSlot(barrelSlot);
   barrelSlot = signal.getBarrelSlot();
 
-  BOOST_CHECK(barrelSlot.getSlotID() == 0);
+  BOOST_CHECK(barrelSlot.getID() == 0);
 
 }
 
