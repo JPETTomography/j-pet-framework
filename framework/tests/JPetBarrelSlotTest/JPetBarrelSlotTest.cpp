@@ -33,16 +33,18 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_REQUIRE_CLOSE(slot.getTheta(), -1., epsilon);
   BOOST_REQUIRE(!slot.isActive());
   BOOST_REQUIRE(slot.getName().empty());
+  BOOST_REQUIRE(slot.getInFrameID()==-1);
 }
 
 BOOST_AUTO_TEST_CASE( constructor )
 {
-  JPetBarrelSlot slot(1, true, "pepe", 5.5);
+  JPetBarrelSlot slot(1, true, "pepe", 5.5, 6);
   float epsilon = 0.0001;
   BOOST_REQUIRE_EQUAL(slot.getID(), 1);
   BOOST_REQUIRE_CLOSE(slot.getTheta(), 5.5, epsilon);
   BOOST_REQUIRE(slot.isActive());
   BOOST_REQUIRE(slot.getName()=="pepe");
+  BOOST_REQUIRE(slot.getInFrameID()==6);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
