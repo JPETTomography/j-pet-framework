@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   JPetScin scint(111, 8.f, 2.f, 4.f, 8.f);
   JPetPM pm(JPetPM::SideB, 222, 32, 64, std::make_pair(16.f, 32.f));
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
-  JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f);
+  JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 6);
   JPetLayer layer(1, true, "layerTest", 35.f);
   JPetFrame frame(1, true, "OKTEST", "FrameTest", 5, 2);
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
@@ -107,6 +107,7 @@ BOOST_REQUIRE(bank.getFramesSize() == 1);
   BOOST_REQUIRE(bank.getBarrelSlot(0).isActive() == true);
   BOOST_REQUIRE(bank.getBarrelSlot(0).getName() == "barrelSlotTest");
   BOOST_CHECK_CLOSE(bank.getBarrelSlot(0).getTheta(), 35.f, epsilon);
+  BOOST_REQUIRE(bank.getBarrelSlot(0).getInFrameID()==6);
   
   BOOST_REQUIRE(bank.getLayer(0).getId() == 1);
   BOOST_REQUIRE(bank.getLayer(0).getIsActive() == true);
@@ -139,7 +140,7 @@ BOOST_AUTO_TEST_CASE(clearAllContainersTest)
   JPetScin scint(111, 8.f, 2.f, 4.f, 8.f);
   JPetPM pm(JPetPM::SideB, 222, 32, 64, std::make_pair(16.f, 32.f));
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
-  JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f);
+  JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 6);
   JPetLayer layer(1, true, "layerTest", 35.f);
   JPetFrame frame(1, true, "OKTEST", "FrameTest", 5, 2);
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
@@ -185,7 +186,7 @@ BOOST_AUTO_TEST_CASE(getSizeTest)
   JPetScin scint(111, 8.f, 2.f, 4.f, 8.f);
   JPetPM pm(JPetPM::SideB, 222, 32, 64, std::make_pair(16.f, 32.f));
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
-  JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f);
+  JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 6);
   JPetLayer layer(1, true, "layerTest", 35.f);
   JPetFrame frame(1, true, "OKTEST", "FrameTest", 5, 2);
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
@@ -227,7 +228,7 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   pm3.setID(3);
   pm4.setID(4);
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
-  JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f);
+  JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 6);
   JPetLayer layer(1, true, "layerTest", 35.f);
   JPetFrame frame(1, true, "OKTEST", "FrameTest", 5, 2);
   pm1.setScin(scint1);
