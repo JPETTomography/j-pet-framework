@@ -326,7 +326,8 @@ JPetBarrelSlot JPetDBParamGetter::generateBarrelSlot(pqxx::result::const_iterato
   JPetBarrelSlot l_barrelSlot(l_slot_id,
 			      l_slot_isActive,
 			      l_slot_name,
-			      l_slot_theta1);
+			      l_slot_theta1,
+			      l_slot_inFrameId);
 //  JPetBarrelSlot l_barrelSlot(l_slot_id,
 //			      l_slot_isActive,
 //			      l_slot_name,
