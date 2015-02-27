@@ -73,10 +73,10 @@ BOOST_AUTO_TEST_CASE(dummyFillingTest)
   BOOST_REQUIRE(bank->getTOMBChannelsSize() == 4);
 }
 
-BOOST_AUTO_TEST_CASE(run26Test)
+BOOST_AUTO_TEST_CASE(run28Test)
 {
   JPetDBParamGetter paramGetter(gDefaultConfigFile);
-  int run  = 26;
+  int run  = 28;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
   std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl;
   std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl;
