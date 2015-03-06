@@ -30,7 +30,7 @@ public:
   inline bool isActive() const { return fIsActive; }
   inline std::string getName() const { return fName; }
   inline int getInFrameID() const {return fInFrameID; }
-  inline const JPetLayer & getLayer() { return static_cast<JPetLayer&>(*(fTRefLayer.GetObject())); }
+  inline const JPetLayer & getLayer() const { return static_cast<JPetLayer&>(*(fTRefLayer.GetObject())); }
   
   void setLayer(JPetLayer &p_layer)
   {
