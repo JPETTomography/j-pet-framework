@@ -13,11 +13,14 @@
     return dist;
   }
   else{
-    WARNING(Form("For PMTs with different radius distance() never tested"));
+    WARNING(Form("For PMTs with different radius distanceXY() never tested"));
     double dist1 = radius1*TMath::Sin(0.5*angle*radUnit);
     double dist2 = radius2*TMath::Sin(0.5*angle*radUnit);
     double xDist = dist1+dist2;
-    double dist = TMath::Sqrt(xDist*xDist + radiusDiff*radiusDiff);
+    double y1 = radius1*TMath::Cos(0.5*angle*radUnit);
+    double y2 = radius2*TMath::Cos(0.5*angle*radUnit);
+    double deltaY = TMath::Abs(y2 - y1);
+    double dist = TMath::Sqrt(xDist*xDist + deltaY*deltaY);
     return dist;
   }
 }
