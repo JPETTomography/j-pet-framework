@@ -14,7 +14,7 @@
 
 #include "../JPetPhysSignal/JPetPhysSignal.h"
 
-/** Oscilloscope ASCII data reader.
+/** @brief Oscilloscope ASCII data reader.
  * JPetScopeReader class produce JPetSignal from single oscilloscope ASCII file.
  */
 class JPetScopeReader {
@@ -38,6 +38,11 @@ class JPetScopeReader {
    * @see setPrintFile()
    */
   JPetPhysSignal* generateSignal (const char* filename);
+
+  /** @brief Return id of photomultiplier set by JPetScopeModule
+   * @return fPMID
+   */
+  inline int getPMID() const {return fPMID;}
     
   //inline int getSegments() const {return fSegments;}
 

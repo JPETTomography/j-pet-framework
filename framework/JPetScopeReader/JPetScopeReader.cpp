@@ -15,6 +15,10 @@
 
 using namespace std;
 
+const double ks2ps = 1.0e+12;
+const double kV2mV = 1.0e+3;
+const int kbuflen = 256;
+
 JPetScopeReader::JPetScopeReader(): fInputFile(0), fScopeType(), fDate(), fPrintFile(false), fPMID(0), fSegmentSize(0) {
 }
 
@@ -62,29 +66,29 @@ void JPetScopeReader::closeFile() {
 void JPetScopeReader::readHeader() {
 
 //  std::stringstream buf;
-  char buf[256];
-  char tmp[256];
+  char buf[kbuflen];
+  char tmp[kbuflen];
 
   if (isFileOpen()) {
 
-    fgets(buf, 256, fInputFile);
+    fgets(buf, kbuflen, fInputFile);
     sscanf(buf, "%s %*s %*s", tmp);
 
     fScopeType = tmp;
 
-    fgets(buf, 256, fInputFile);
+    fgets(buf, kbuflen, fInputFile);
     sscanf(buf, "%*s %*s %*s %d", &fSegmentSize);
 
-    fgets(buf, 256, fInputFile);
+    fgets(buf, kbuflen, fInputFile);
     //sscanf(buf, "%*s %*s %*s");
 
-    fgets(buf, 256, fInputFile);
-    sscanf(buf, "%*s %s %s %*s", tmp, tmp+128);
+    fgets(buf, kbuflen, fInputFile);
+    sscanf(buf, "%*s %s %s %*s", tmp, tmp + kbuflen/2);
 
     fDate = tmp;
-    fTime = tmp+128;
+    fTime = tmp + kbuflen/2;
 
-    fgets(buf, 256, fInputFile);
+    fgets(buf, kbuflen, fInputFile);
     //sscanf(buf, "%*s %*s");
 
     if (fPrintFile) {
@@ -115,12 +119,12 @@ JPetPhysSignal* JPetScopeReader::readData() {
 
     if (stat != 2) {
       ERROR(Form("Non-numerical symbol in file %s at line %d", fFilename.c_str(), i + 6));
-      char tmp[256];
-      fgets(tmp, 256, fInputFile);
+      char tmp[kbuflen];
+      fgets(tmp, kbuflen, fInputFile);
     }
 
-    float time = value * 1000000000000; // file holds time in seconds, while SigCh requires it in picoseconds
-    float amplitude = threshold * 1000;  // file holds thresholds in volts, while SigCh requires it in milivolts
+    float time = value * ks2ps; // file holds time in seconds, while SigCh requires it in picoseconds
+    float amplitude = threshold * kV2mV;  // file holds thresholds in volts, while SigCh requires it in milivolts
     //sigCh.setPMID(fPMID);
 
     recoSig.setShapePoint(time, amplitude);

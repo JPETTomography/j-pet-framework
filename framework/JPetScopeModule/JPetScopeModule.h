@@ -22,6 +22,7 @@
 #define MODULE_VERSION 0.1
 
 class JPetTreeHeader;
+class JPetParamBank;
 
 /** @brief Analysis Module for oscilloscope ASCII files.
  *
@@ -108,6 +109,8 @@ class JPetScopeModule: public JPetAnalysisModule {
   /** Collection of system parameters read from config file. */
   typedef struct configStruct {
     int pm1, pm2, pm3, pm4; /**< @brief ID's of photomultipliers. */
+    JPetPM *ppm1, *ppm2, *ppm3, *ppm4; /**< @ref JPetPM. */
+    JPetScin *pscin1, *pscin2; /**< @ref JPetScin. */
     std::string file1, file2, file3, file4; /**< @brief Names (not locations) of data oscilloscope ASCII data files. */
     int scin1, scin2; /**< @brief ID's of scintillators. */
     int collimator; /**< @brief Collimator position. */
@@ -127,6 +130,8 @@ class JPetScopeModule: public JPetAnalysisModule {
   JPetWriter* fWriter; /**< @ref JPetWriter. */
   JPetScopeReader fReader; /**< @ref JPetScopeReader. */
   JPetTreeHeader* fHeader; /**< @ref JPetTreeHeader. */
+
+  JPetParamBank* fParamBank; /**< @ref JPetParamBank. */
   
   TString fInFilename; /**< @brief Location of config file. */
   TString fOutFilename; /**< @brief Location of output root file. */

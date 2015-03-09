@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "../../JPetScopeReader/JPetScopeReader.h"
-#include "../../JPetSignal/JPetSignal.h"
+#include "../../JPetPhysSignal/JPetPhysSignal.h"
 #include "../../JPetSigCh/JPetSigCh.h"
 
 BOOST_AUTO_TEST_SUITE (FirstSuite)
@@ -41,9 +41,9 @@ BOOST_AUTO_TEST_CASE (open_file)
 //  BOOST_CHECK_EQUAL(reader.fSegments, 1);
   BOOST_CHECK_EQUAL(reader.fSegmentSize, 502);
 
-  JPetSignal* sig = reader.readData();
-  int points  = sig->getNumberOfLeadingEdgePoints();
-      points += sig->getNumberOfTrailingEdgePoints();
+  JPetPhysSignal* psig = reader.readData();
+  const JPetRecoSignal& rsig = psig->getRecoSignal();
+  int points = rsig.getShape().size();
 
   BOOST_CHECK_EQUAL(points, 502);
 
