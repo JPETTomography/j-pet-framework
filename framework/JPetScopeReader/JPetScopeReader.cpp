@@ -71,24 +71,24 @@ void JPetScopeReader::readHeader() {
 
   if (isFileOpen()) {
 
-    fgets(buf, kbuflen, fInputFile);
+    if (fgets(buf, kbuflen, fInputFile) != 0)
     sscanf(buf, "%s %*s %*s", tmp);
 
     fScopeType = tmp;
 
-    fgets(buf, kbuflen, fInputFile);
+    if (fgets(buf, kbuflen, fInputFile) != 0)
     sscanf(buf, "%*s %*s %*s %d", &fSegmentSize);
 
-    fgets(buf, kbuflen, fInputFile);
+    if (fgets(buf, kbuflen, fInputFile) != 0);
     //sscanf(buf, "%*s %*s %*s");
 
-    fgets(buf, kbuflen, fInputFile);
+    if (fgets(buf, kbuflen, fInputFile) != 0)
     sscanf(buf, "%*s %s %s %*s", tmp, tmp + kbuflen/2);
 
     fDate = tmp;
     fTime = tmp + kbuflen/2;
 
-    fgets(buf, kbuflen, fInputFile);
+    if (fgets(buf, kbuflen, fInputFile) != 0);
     //sscanf(buf, "%*s %*s");
 
     if (fPrintFile) {
@@ -120,7 +120,7 @@ JPetPhysSignal* JPetScopeReader::readData() {
     if (stat != 2) {
       ERROR(Form("Non-numerical symbol in file %s at line %d", fFilename.c_str(), i + 6));
       char tmp[kbuflen];
-      fgets(tmp, kbuflen, fInputFile);
+      if (fgets(tmp, kbuflen, fInputFile) != 0);
     }
 
     float time = value * ks2ps; // file holds time in seconds, while SigCh requires it in picoseconds
