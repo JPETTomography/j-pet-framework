@@ -17,6 +17,7 @@
 #include "../JPetRecoSignal/JPetRecoSignal.h"
 #include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetManager/JPetManager.h"
+#include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 
 using namespace std;
@@ -120,6 +121,42 @@ void JPetScopeModule::createInputObjects(const char* inputFilename)
 
   }
 
+  //Create ParamBank
+  JPetPM pm1;
+  JPetPM pm2;
+  JPetPM pm3;
+  JPetPM pm4;
+  pm1.setID(fConfig.pm1);
+  pm2.setID(fConfig.pm2);
+  pm3.setID(fConfig.pm3);
+  pm4.setID(fConfig.pm4);
+
+  JPetScin scin1;
+  JPetScin scin2;
+  scin1.setID(fConfig.scin1);
+  scin2.setID(fConfig.scin2);
+
+  fParamBank = new JPetParamBank();
+  fParamBank->addPM(pm1);
+  fParamBank->addPM(pm2);
+  fParamBank->addPM(pm3);
+  fParamBank->addPM(pm4);
+  fParamBank->addScintillator(scin1);
+  fParamBank->addScintillator(scin2);
+
+  fConfig.ppm1   = &(fParamBank->getPM(0));
+  fConfig.ppm2   = &(fParamBank->getPM(1));
+  fConfig.ppm3   = &(fParamBank->getPM(2));
+  fConfig.ppm4   = &(fParamBank->getPM(3));
+  fConfig.pscin1 = &(fParamBank->getScintillator(0));
+  fConfig.pscin2 = &(fParamBank->getScintillator(1));
+
+  fConfig.ppm1->setScin(*(fConfig.pscin1));
+  fConfig.ppm2->setScin(*(fConfig.pscin1));
+  fConfig.ppm3->setScin(*(fConfig.pscin2));
+  fConfig.ppm4->setScin(*(fConfig.pscin2));
+
+
   // Add oscilloscope files
   for (set<int>::iterator it = fCollPositions.begin(); it != fCollPositions.end(); ++it) {
     string starting_loc  = cfg_dir;
@@ -182,6 +219,7 @@ void JPetScopeModule::createOutputObjects(const char* outputFilename) {
     fHeader->setSourcePosition(fCurrentPosition);
 
     fWriter->writeHeader(fHeader);
+    fWriter->writeObject(fParamBank, "ParamBank");
   }
 }
 
@@ -198,10 +236,10 @@ void JPetScopeModule::exec() {
     sscanf(path(osc_file).filename().string().c_str(), "%*3s %d", &tslot_index);
     
     INFO (Form("Processing file: %s", osc_file.c_str()));
-    fReader.setPMID(fConfig.pm1);
+    //fReader.setPMID(fConfig.pm1);
     JPetPhysSignal* sig1 = fReader.generateSignal(osc_file.c_str());
     if(sig1 == 0) break;
-    //sig1->setPMID(fConfig.pm1);
+    sig1->setPM(*(fConfig.ppm1));
     sig1->setTSlotIndex(tslot_index);
     
     filename = path((*fIt).second).filename().string();
@@ -211,10 +249,10 @@ void JPetScopeModule::exec() {
     osc_file+= filename;
 
     INFO (Form("Processing file: %s", osc_file.c_str()));   
-    fReader.setPMID(fConfig.pm2);
+    //fReader.setPMID(fConfig.pm2);
     JPetPhysSignal* sig2 = fReader.generateSignal(osc_file.c_str());
     if(sig2 == 0) break;
-    //sig2->setPMID(fConfig.pm2);
+    sig2->setPM(*(fConfig.ppm2));
     sig2->setTSlotIndex(tslot_index);
     
     filename = path((*fIt).second).filename().string();
@@ -224,10 +262,10 @@ void JPetScopeModule::exec() {
     osc_file+= filename;
 
     INFO (Form("Processing file: %s", osc_file.c_str()));   
-    fReader.setPMID(fConfig.pm3);
+    //fReader.setPMID(fConfig.pm3);
     JPetPhysSignal* sig3 = fReader.generateSignal(osc_file.c_str());
     if(sig3 == 0) break;
-    //sig3->setPMID(fConfig.pm3);
+    sig3->setPM(*(fConfig.ppm3));
     sig3->setTSlotIndex(tslot_index);
     
     filename = path((*fIt).second).filename().string();
@@ -237,10 +275,10 @@ void JPetScopeModule::exec() {
     osc_file += filename;
 
     INFO (Form("Processing file: %s", osc_file.c_str())); 
-    fReader.setPMID(fConfig.pm4);
+    //fReader.setPMID(fConfig.pm4);
     JPetPhysSignal* sig4 = fReader.generateSignal(osc_file.c_str());
     if(sig4 == 0) break;
-    //sig4->setPMID(fConfig.pm4);
+    sig4->setPM(*(fConfig.ppm4));
     sig4->setTSlotIndex(tslot_index);
 
     JPetHit* hit1 = new JPetHit();
