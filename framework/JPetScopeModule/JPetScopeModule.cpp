@@ -228,6 +228,9 @@ void JPetScopeModule::exec() {
   while (fIt != fFiles.end()) {
     
     if ((*fIt).first != fCurrentPosition) createOutputObjects();
+
+    JPetPhysSignal psig1, psig2, psig3, psig4;
+    JPetHit hit1, hit2;
     
     string osc_file = (*fIt).second;
     string filename;
@@ -236,11 +239,10 @@ void JPetScopeModule::exec() {
     sscanf(path(osc_file).filename().string().c_str(), "%*3s %d", &tslot_index);
     
     INFO (Form("Processing file: %s", osc_file.c_str()));
-    //fReader.setPMID(fConfig.pm1);
-    JPetPhysSignal* sig1 = fReader.generateSignal(osc_file.c_str());
-    if(sig1 == 0) break;
-    sig1->setPM(*(fConfig.ppm1));
-    sig1->setTSlotIndex(tslot_index);
+    JPetRecoSignal& rsig1 = fReader.generateSignal(osc_file.c_str());
+    rsig1.setPM(*(fConfig.ppm1));
+    rsig1.setTSlotIndex(tslot_index);
+    psig1.setRecoSignal(rsig1);
     
     filename = path((*fIt).second).filename().string();
     filename[1] = (fConfig.file2)[1];
@@ -249,11 +251,10 @@ void JPetScopeModule::exec() {
     osc_file+= filename;
 
     INFO (Form("Processing file: %s", osc_file.c_str()));   
-    //fReader.setPMID(fConfig.pm2);
-    JPetPhysSignal* sig2 = fReader.generateSignal(osc_file.c_str());
-    if(sig2 == 0) break;
-    sig2->setPM(*(fConfig.ppm2));
-    sig2->setTSlotIndex(tslot_index);
+    JPetRecoSignal& rsig2 = fReader.generateSignal(osc_file.c_str());
+    rsig2.setPM(*(fConfig.ppm2));
+    rsig2.setTSlotIndex(tslot_index);
+    psig2.setRecoSignal(rsig2);
     
     filename = path((*fIt).second).filename().string();
     filename[1] = (fConfig.file3)[1];
@@ -262,11 +263,11 @@ void JPetScopeModule::exec() {
     osc_file+= filename;
 
     INFO (Form("Processing file: %s", osc_file.c_str()));   
-    //fReader.setPMID(fConfig.pm3);
-    JPetPhysSignal* sig3 = fReader.generateSignal(osc_file.c_str());
-    if(sig3 == 0) break;
-    sig3->setPM(*(fConfig.ppm3));
-    sig3->setTSlotIndex(tslot_index);
+    JPetRecoSignal& rsig3 = fReader.generateSignal(osc_file.c_str());
+    rsig3.setPM(*(fConfig.ppm3));
+    rsig3.setTSlotIndex(tslot_index);
+    psig3.setRecoSignal(rsig3);
+
     
     filename = path((*fIt).second).filename().string();
     filename[1] = (fConfig.file4)[1];
@@ -275,34 +276,22 @@ void JPetScopeModule::exec() {
     osc_file += filename;
 
     INFO (Form("Processing file: %s", osc_file.c_str())); 
-    //fReader.setPMID(fConfig.pm4);
-    JPetPhysSignal* sig4 = fReader.generateSignal(osc_file.c_str());
-    if(sig4 == 0) break;
-    sig4->setPM(*(fConfig.ppm4));
-    sig4->setTSlotIndex(tslot_index);
+    JPetRecoSignal& rsig4 = fReader.generateSignal(osc_file.c_str());
+    rsig4.setPM(*(fConfig.ppm4));
+    rsig4.setTSlotIndex(tslot_index);
+    psig4.setRecoSignal(rsig4);
+    
+    hit1.setSignals(psig1, psig2);
+    hit1.setScinID(fConfig.scin1);
 
-    JPetHit* hit1 = new JPetHit();
-    JPetHit* hit2 = new JPetHit();
+    hit2.setSignals(psig3, psig4);
+    hit2.setScinID(fConfig.scin2);
 
-    hit1->setSignals(*sig1, *sig2);
-    hit1->setScinID(fConfig.scin1);
+    JPetLOR event;
 
-    hit2->setSignals(*sig3, *sig4);
-    hit2->setScinID(fConfig.scin2);
+    event.setHits(hit1, hit2);
 
-    JPetLOR* event = new JPetLOR();
-
-    event->setHits(*hit1, *hit2);
-
-    fWriter->write(*event);
-
-    delete sig1;
-    delete sig2;
-    delete sig3;
-    delete sig4;
-    delete hit1;
-    delete hit2;
-    delete event;
+    fWriter->write(event);
 
     break;
   }

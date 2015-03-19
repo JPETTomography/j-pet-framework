@@ -12,7 +12,7 @@
 #include <fstream>
 #include <string>
 
-#include "../JPetPhysSignal/JPetPhysSignal.h"
+#include "../JPetRecoSignal/JPetRecoSignal.h"
 
 /** @brief Oscilloscope ASCII data reader.
  * JPetScopeReader class produce JPetSignal from single oscilloscope ASCII file.
@@ -34,10 +34,10 @@ class JPetScopeReader {
    * If setPrintFile(true) method was called data is also printed on screen.
    *
    * @param filename address of an oscilloscope ASCII file.
-   * @return pointer to created JPetSignal
+   * @return reference to created JPetRecoSignal
    * @see setPrintFile()
    */
-  JPetPhysSignal* generateSignal (const char* filename);
+  JPetRecoSignal& generateSignal (const char* filename);
 
   /** @brief Return id of photomultiplier set by JPetScopeModule
    * @return fPMID
@@ -84,10 +84,10 @@ class JPetScopeReader {
    *
    * If setPrintFile(true) method was called data is also printed on screen.
    *
-   * @return pointer to created JPetSignal
+   * @return reference to JPetRecoSignal.
    * @see setPrintFile()
    */
-  JPetPhysSignal* readData();
+  JPetRecoSignal& readData();
 
   FILE* fInputFile; /**< @brief Pointer to oscilloscope ASCII file. */
 
@@ -106,6 +106,8 @@ class JPetScopeReader {
   int fPMID; /**< @brief ID of photomultiplier used to gather signal. */
   //int fSegments;
   int fSegmentSize; /**< @brief Number of data lines in file. */
+
+  JPetRecoSignal fRecoSignal; /**< @brief Last created JPetRecoSignal. */
   
 };
 

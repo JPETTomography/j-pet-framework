@@ -30,16 +30,14 @@ JPetScopeReader::JPetScopeReader(): fInputFile(0), fScopeType(), fDate(), fPrint
 JPetScopeReader::~JPetScopeReader() {
 }
 
-JPetPhysSignal* JPetScopeReader::generateSignal(const char* filename) {
+JPetRecoSignal& JPetScopeReader::generateSignal(const char* filename) {
   openFile(filename);
   readHeader();
-  JPetPhysSignal* sig;
 
-  if (isFileOpen()) sig = readData();
-  else sig = 0;
+  if (isFileOpen()) readData();
 
   closeFile();
-  return sig;
+  return fRecoSignal;
 }
 
 void JPetScopeReader::openFile(const char* filename) {
@@ -101,10 +99,9 @@ void JPetScopeReader::readHeader() {
   
 }
 
-JPetPhysSignal* JPetScopeReader::readData() {
+JPetRecoSignal& JPetScopeReader::readData() {
   
-  JPetPhysSignal* sig = new JPetPhysSignal();
-  JPetRecoSignal recoSig(fSegmentSize);
+  fRecoSignal = JPetRecoSignal(fSegmentSize);
 
   float value, threshold;
   int stat;
@@ -127,10 +124,8 @@ JPetPhysSignal* JPetScopeReader::readData() {
     float amplitude = threshold * kV2mV;  // file holds thresholds in volts, while SigCh requires it in milivolts
     //sigCh.setPMID(fPMID);
 
-    recoSig.setShapePoint(time, amplitude);
+    fRecoSignal.setShapePoint(time, amplitude);
   }
 
-  sig->setRecoSignal( recoSig );
-
-  return sig;
+  return fRecoSignal;
 }
