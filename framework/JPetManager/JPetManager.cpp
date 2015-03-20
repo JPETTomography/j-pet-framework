@@ -77,7 +77,7 @@ void JPetManager::Run()
     for (long long i = kFirstEvent; i <= kLastEvent; i++) {
       if(fIsProgressBarEnabled)
       {
-	std::cout << "Progressbar: " << setProgressBar(i, kNevent) << " %" << std::endl;
+          printf("\r[%6.4f% %]", setProgressBar(i, kNevent));
       }
       (*taskIter)->exec();
     }
