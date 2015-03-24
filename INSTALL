@@ -46,6 +46,12 @@ Tested Platforms
      gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3
      ROOT v5.34/18
 
+  3. Debian GNU/Linux Sid
+     gcc-4.9.real (Debian 4.9.2-10) 4.9.2
+     5.34/26
+
+  4. Fedora 20
+
 Annotation
 ----------------
 
@@ -66,7 +72,12 @@ Annotation
 Requirements installation
 ----------------
 
+For Ubuntu:
+
 sudo apt-get install libboost-all-dev
 sudo apt-get install libpqxx-3.1
 sudo apt-get install libpqxx3-dev
 sudo apt-get install libconfig++
+
+For Fedora 20:
+sudo yum install boost-devel libpqxx libpqxx-devel libconfig libconfig-devel
