@@ -189,7 +189,7 @@ void JPetScopeModule::createInputObjects(const char* inputFilename)
     }
   }
   fIt = fFiles.begin();
-  printFiles();
+  //printFiles();
   fWriter = 0;
 }
 
@@ -238,7 +238,7 @@ void JPetScopeModule::exec() {
     int tslot_index;
     sscanf(path(osc_file).filename().string().c_str(), "%*3s %d", &tslot_index);
     
-    INFO (Form("Processing file: %s", osc_file.c_str()));
+    //INFO (Form("Processing file: %s", osc_file.c_str()));
     JPetRecoSignal& rsig1 = fReader.generateSignal(osc_file.c_str());
     rsig1.setPM(*(fConfig.ppm1));
     rsig1.setTSlotIndex(tslot_index);
@@ -250,7 +250,7 @@ void JPetScopeModule::exec() {
     osc_file+= "/";
     osc_file+= filename;
 
-    INFO (Form("Processing file: %s", osc_file.c_str()));   
+    //INFO (Form("Processing file: %s", osc_file.c_str()));   
     JPetRecoSignal& rsig2 = fReader.generateSignal(osc_file.c_str());
     rsig2.setPM(*(fConfig.ppm2));
     rsig2.setTSlotIndex(tslot_index);
@@ -262,7 +262,7 @@ void JPetScopeModule::exec() {
     osc_file+= "/";
     osc_file+= filename;
 
-    INFO (Form("Processing file: %s", osc_file.c_str()));   
+    //INFO (Form("Processing file: %s", osc_file.c_str()));   
     JPetRecoSignal& rsig3 = fReader.generateSignal(osc_file.c_str());
     rsig3.setPM(*(fConfig.ppm3));
     rsig3.setTSlotIndex(tslot_index);
@@ -275,7 +275,7 @@ void JPetScopeModule::exec() {
     osc_file += "/";
     osc_file += filename;
 
-    INFO (Form("Processing file: %s", osc_file.c_str())); 
+    //INFO (Form("Processing file: %s", osc_file.c_str())); 
     JPetRecoSignal& rsig4 = fReader.generateSignal(osc_file.c_str());
     rsig4.setPM(*(fConfig.ppm4));
     rsig4.setTSlotIndex(tslot_index);
