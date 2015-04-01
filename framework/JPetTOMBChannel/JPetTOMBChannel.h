@@ -50,6 +50,17 @@ public:
   unsigned int getLocalChannelNumber() const { return fLocalChannelNumber; }
   void setLocalChannelNumber(unsigned int lcn) { fLocalChannelNumber = lcn; }
 
+  /**
+   * @brief Get the number of input channel (Numbering starts from 1) of the FEB which corresponds to this TOMB channel
+   */
+  unsigned int getFEBInputNumber() const { return fFEBInputNumber; }
+
+  /**
+   * @brief Set the number of input channel (Numbering starts from 1) of the FEB which corresponds to this TOMB channel
+   */
+  void setFEBInputNumber(unsigned int fin) { fFEBInputNumber = fin; }
+
+  
 private:
   unsigned int fChannel;
   TRef fFEB;
@@ -59,7 +70,8 @@ private:
   TRef fBarrelSlot;
   float fThreshold;
   unsigned int fLocalChannelNumber; ///< number of the threshold
-
+  unsigned int fFEBInputNumber; ///< number of input of the FEB from which this channel comes
+  
   ClassDef(JPetTOMBChannel, 2);
 };
 

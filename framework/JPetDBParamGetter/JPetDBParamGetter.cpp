@@ -386,7 +386,9 @@ JPetFEB JPetDBParamGetter::generateFEB(pqxx::result::const_iterator row) {
       std::string l_konradboard_description = row["konradboard_description"].as<std::string>();
       int l_konradboard_version = row["konradboard_version"].as<int>();
       int l_konradboard_creator_id = row["konradboard_creator_id"].as<int>();
-
+      int l_time_outputs_per_input = row["time_outputs_per_input"].as<int>();
+      int l_notime_outputs_per_input = row["notime_outputs_per_input"].as<int>();
+      
       int l_setup_id = row["setup_id"].as<int>();
       int l_run_id = row["run_id"].as<int>();
 
@@ -395,7 +397,9 @@ JPetFEB JPetDBParamGetter::generateFEB(pqxx::result::const_iterator row) {
                     l_konradboard_status,
                     l_konradboard_description,
                     l_konradboard_version,
-                    l_konradboard_creator_id);
+                    l_konradboard_creator_id,
+		    l_time_outputs_per_input,
+		    l_notime_outputs_per_input);
     return l_FEB;
 }
 
@@ -441,7 +445,8 @@ JPetTOMBChannel JPetDBParamGetter::generateTOMBChannel(pqxx::result::const_itera
 
      JPetTOMBChannel l_TOMBChannel(l_TOMB_no);
      l_TOMBChannel.setLocalChannelNumber(row["thr_num"].as<int>());
-    return l_TOMBChannel;
+     l_TOMBChannel.setFEBInputNumber(row["feb_input"].as<int>());
+     return l_TOMBChannel;
 }
 
 

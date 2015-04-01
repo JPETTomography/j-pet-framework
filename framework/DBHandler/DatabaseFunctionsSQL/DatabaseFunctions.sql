@@ -1352,19 +1352,11 @@ SELECT * FROM getDataFromPhotoMultipliers(1);
 
 /***********KBs************/
 
-CREATE OR REPLACE FUNCTION getDataFromKonradBoards(IN p_run_id INTEGER)
-RETURNS TABLE
-(
-  konradboard_id INTEGER,
-  konradboard_isactive BOOLEAN,
-  konradboard_status CHARACTER VARYING(255),
-  konradboard_description CHARACTER VARYING(255),
-  konradboard_version INTEGER,
-  konradboard_creator_id INTEGER,
-
-  setup_id INTEGER,
-  run_id INTEGER  
-) AS
+CREATE OR REPLACE FUNCTION getdatafromkonradboards(IN p_run_id integer)
+  RETURNS TABLE(konradboard_id integer, konradboard_isactive boolean, konradboard_status character varying, konradboard_description character varying,
+  konradboard_version integer, konradboard_creator_id integer, setup_id integer, run_id integer,
+  time_outputs_per_input integer, notime_outputs_per_input integer
+  ) AS
 $BODY$
 BEGIN
   FOR 
@@ -1374,7 +1366,8 @@ BEGIN
     konradboard_description,
     konradboard_version,
     konradboard_creator_id,
-
+    time_outputs_per_input,
+    notime_outputs_per_input,
     setup_id,
     run_id
 
@@ -1387,11 +1380,12 @@ BEGIN
 	"KonradBoard".description AS konradboard_description,
 	"KonradBoard".version AS konradboard_version,
 	"KonradBoard".creator_id AS konradboard_creator_id,
-
+	"kboutputsperinput".outs_time AS time_outputs_per_input,
+	"kboutputsperinput".outs_notime AS notime_outputs_per_input,
 	"Setup".id AS setup_id,
 	"Run".id AS run_id
 
-      FROM "KonradBoard", "KonradBoardOutput", "KBTRBConnection", "Setup", "Run"
+      FROM "KonradBoard", "KonradBoardOutput", "KBTRBConnection", "Setup", "Run", "kboutputsperinput"
 	WHERE
 	  "KonradBoard".id = "KonradBoardOutput".konradboard_id
 	  AND
@@ -1401,14 +1395,15 @@ BEGIN
 	  AND
 	  "Run".setup_id = "Setup".id
 	  AND
-	  "Run".id = p_run_id     
+	  "Run".id = p_run_id
+	  AND
+	  kboutputsperinput.konradboard_id = "KonradBoard".id
   LOOP
     RETURN NEXT;
   END LOOP;
 END
-$BODY$ LANGUAGE plpgsql STABLE;
-
-SELECT * FROM getDataFromKonradBoards(1);
+$BODY$
+  LANGUAGE plpgsql STABLE;
 
 /***********TRBs************/
 
@@ -1734,7 +1729,7 @@ CREATE OR REPLACE VIEW LocalThrNumsKB AS
 
 --- Get everything based in TRBOutput portnumber (in future basen on TOMB) ---
 CREATE OR REPLACE FUNCTION geteverythingvstomb(IN p_run_id integer)
-  RETURNS TABLE(tomb character varying, trb_portnumber integer, trb_id integer, konradboard_id integer, photomultiplier_id integer, threshold integer, slot_id integer, thr_num integer) AS
+  RETURNS TABLE(tomb character varying, trb_portnumber integer, trb_id integer, konradboard_id integer, photomultiplier_id integer, threshold integer, slot_id integer, thr_num integer, feb_input integer) AS
 $BODY$
 BEGIN
   FOR
@@ -1745,7 +1740,8 @@ BEGIN
     photomultiplier_id,
     threshold,
     slot_id,
-    thr_num
+    thr_num,
+    feb_input
   IN
        SELECT
 		"TOMBInput".description AS tomb,
@@ -1755,7 +1751,8 @@ BEGIN
                 "PhotoMultiplier".id AS photomultiplier_id,
                 "TRBConfigEntry".threshold AS threshold,
                 "HVPMConnection".slot_id AS slot_id,
-                LocalThrNumsKB.local_portnumber_for_input AS thr_num
+                LocalThrNumsKB.local_portnumber_for_input AS thr_num,
+                "KonradBoardInput".portnumber AS feb_input
         FROM "Run", "TRBInput", "KBTRBConnection", "TRB", "TRBOutput",
         "KonradBoardOutput", "KonradBoard", "KonradBoardInput",
         "PMKBConnection", "PhotoMultiplier", "TRBConfigEntry", "HVPMConnection", "TRBTOMBConnection", "TOMBInput",
@@ -1809,6 +1806,25 @@ BEGIN
   END LOOP;
 END
 $BODY$
-  LANGUAGE plpgsql STABLE;
+  LANGUAGE plpgsql STABLE
+  COST 100
+  ROWS 1000;
+ALTER FUNCTION geteverythingvstomb(integer)
+  OWNER TO postgres;
 
+
+
+--- A helper view which maps numbers of time and no-time outputs per one FEB input to FEB(Konradboard) IDs ---
+CREATE OR REPLACE VIEW kboutputsperinput AS 
+SELECT konradboard_id, (outputs_time/inputs) AS outs_time, (outputs_notime/inputs) AS outs_notime
+FROM
+(SELECT * FROM 
+(SELECT konradboard_id,COUNT(*) AS inputs FROM "KonradBoardInput" GROUP BY konradboard_id) AS ins, 
+(SELECT konradboard_id AS kbid, COUNT(*) AS outputs_time FROM "KonradBoardOutput" WHERE passedinformationistime='t' GROUP BY konradboard_id) AS outs_time,
+(SELECT konradboard_id AS kbid, COUNT(*) AS outputs_notime FROM "KonradBoardOutput" WHERE passedinformationistime='f' GROUP BY konradboard_id) AS outs_notime
+WHERE
+ins.konradboard_id = outs_time.kbid
+AND
+ins.konradboard_id = outs_notime.kbid
+ ORDER BY ins.konradboard_id) AS whatever;
 
