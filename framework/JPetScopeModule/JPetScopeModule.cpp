@@ -6,8 +6,14 @@
 #include <string>
 #include <utility>
 
-#include "boost/regex.hpp"
-#include "boost/filesystem.hpp"
+#include <boost/regex.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+#include <boost/property_tree/info_parser.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 
 #include <TSystem.h>
 #include <TApplication.h>
@@ -20,18 +26,19 @@
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 
+#include <iostream>
+
 using namespace std;
 using namespace boost::filesystem;
+using boost::property_tree::ptree;
 
-ClassImp(JPetScopeModule);
+//ClassImp(JPetScopeModule);
 
-static multimap <int, string> :: iterator fIt;
-
-JPetScopeModule::JPetScopeModule(): JPetAnalysisModule() {
+JPetScopeModule::JPetScopeModule(): JPetAnalysisModule(), fSize(0) {
   gSystem->Load("libTree");
 }
 
-JPetScopeModule::JPetScopeModule(const char* name, const char* title): JPetAnalysisModule(name, title) {
+JPetScopeModule::JPetScopeModule(const char* name, const char* title): JPetAnalysisModule(name, title), fSize(0) {
   gSystem->Load("libTree");
 }
 
@@ -42,172 +49,183 @@ JPetScopeModule::~JPetScopeModule() {
   }
 }
 
-int JPetScopeModule::readFromConfig (const char* fmt, ...) {
-
-  va_list args;
-  va_start (args, fmt);
-
-  string buf;
-
-  getline (fConfigFile, buf);
-  while (fConfigFile.good() && buf.size() < 2 ) getline(fConfigFile, buf);
-  if (!fConfigFile.good()) {va_end(args); return -1;}
-
-  //buf.erase(0, to_erase);
-  int ret = vsscanf(buf.c_str(), fmt, args);
-
-  va_end(args);
-
-  return ret;
-}
-
 void JPetScopeModule::createInputObjects(const char* inputFilename)
 {
   INFO( Form("Starting %s.", GetName() ) );
+
+  // Create property tree
+
+  ptree prop_tree;
+
+  // Check file type
   
-  fConfigFile.open(fInFilename);
-  if (!fConfigFile.is_open()) {
+  string ext = path(fInFilename).extension().string();
+
+  // Read configuration data to property tree
+  
+  if (ext.compare(".ini") == 0) {
+    read_ini(fInFilename.Data(), prop_tree);
+  } else if (ext.compare(".info") == 0) {
+    read_info(fInFilename.Data(), prop_tree);
+  } else if (ext.compare(".json") == 0) {
+    read_json(fInFilename.Data(), prop_tree);
+  } else if (ext.compare(".xml") == 0) {
+    read_xml(fInFilename.Data(), prop_tree);
+  } else {
     ERROR("Cannot open config file. Exiting");
-    exit(-1);
+    exit(-1); 
   }
+
+  // Fill fConfigs
   
-  string buf;
-  string cfg_dir = path(fInFilename).parent_path().string();
-  string data_dir;
-  char cbuf[256];
-  int a, b, c;
-  //int p1, p2, p3, p4, s1, s2, coll;
+  for (ptree::const_iterator it = prop_tree.begin(); it != prop_tree.end(); ++it) {
 
-  // Read configuration data 
-  for (int i = 0; i<1; ++i){  
+    int pmid1, pmid2, pmid3, pmid4;
+    int scinid1, scinid2;
 
-  if (readFromConfig("%*2c %d %s", &(fConfig.pm1), cbuf) <= 0) break;
-  fConfig.file1 = string(cbuf);
-
-  if (readFromConfig("%*2c %d %s", &(fConfig.pm2), cbuf) <= 0) break;
-  fConfig.file2 = string(cbuf);
-
-  if (readFromConfig("%*2c %d %s", &(fConfig.pm3), cbuf) <= 0) break;
-  fConfig.file3 = string(cbuf);
-
-  if (readFromConfig("%*2c %d %s", &(fConfig.pm4), cbuf) <= 0) break;
-  fConfig.file4 = string(cbuf);
-
-  if (readFromConfig("%*5c %d", &(fConfig.scin1)) <= 0) break;
-
-  if (readFromConfig("%*5c %d", &(fConfig.scin2)) <= 0) break;
-
-  if (readFromConfig("%s", cbuf) <= 0) break;
-  data_dir = string(cbuf);
-
-  while (true) {
-    a = 0;
-    b = 0;
-    c = 0;
-    int d = readFromConfig("%d %d %d", &a, &b, &c);
-    if (d <= 0) break;
-    else if (d == 1) {
-      // Add single position
-      fCollPositions.insert(a);
-    }
-    else {
-      if (d == 2) {c = 1;}
-      // Add multiple positions
-      for (int j = a; j <= b; j += c) {
-        fCollPositions.insert(j);
-      }
-    }
-  }
-
-  }
-
-  //Create ParamBank
-  JPetPM pm1;
-  JPetPM pm2;
-  JPetPM pm3;
-  JPetPM pm4;
-  pm1.setID(fConfig.pm1);
-  pm2.setID(fConfig.pm2);
-  pm3.setID(fConfig.pm3);
-  pm4.setID(fConfig.pm4);
-
-  JPetScin scin1;
-  JPetScin scin2;
-  scin1.setID(fConfig.scin1);
-  scin2.setID(fConfig.scin2);
-
-  fParamBank = new JPetParamBank();
-  fParamBank->addPM(pm1);
-  fParamBank->addPM(pm2);
-  fParamBank->addPM(pm3);
-  fParamBank->addPM(pm4);
-  fParamBank->addScintillator(scin1);
-  fParamBank->addScintillator(scin2);
-
-  fConfig.ppm1   = &(fParamBank->getPM(0));
-  fConfig.ppm2   = &(fParamBank->getPM(1));
-  fConfig.ppm3   = &(fParamBank->getPM(2));
-  fConfig.ppm4   = &(fParamBank->getPM(3));
-  fConfig.pscin1 = &(fParamBank->getScintillator(0));
-  fConfig.pscin2 = &(fParamBank->getScintillator(1));
-
-  fConfig.ppm1->setScin(*(fConfig.pscin1));
-  fConfig.ppm2->setScin(*(fConfig.pscin1));
-  fConfig.ppm3->setScin(*(fConfig.pscin2));
-  fConfig.ppm4->setScin(*(fConfig.pscin2));
-
-
-  // Add oscilloscope files
-  for (set<int>::iterator it = fCollPositions.begin(); it != fCollPositions.end(); ++it) {
-    string starting_loc  = cfg_dir;
-           starting_loc += "/";
-           starting_loc += data_dir;
-	   starting_loc += "/";
-	   starting_loc += to_string (*it);
-
-    path current_dir(starting_loc);
-    boost::regex pattern(Form("%s_\\d*.txt", fConfig.file1.c_str()));
+    string files_location;
     
-    if (exists(current_dir))
-    for (recursive_directory_iterator iter(current_dir), end; iter != end; ++iter) {
-      string name = iter->path().leaf().string();
-      string dir;
-      if (regex_match(name, pattern)) {
-        name[1] = (fConfig.file1)[1];
-        dir = iter->path().parent_path().string();
-        dir += "/";
-        dir += name;
-	int tpos = *it;
-        fFiles.insert(pair<int, string> (tpos, dir));
+    configStruct* conf = new configStruct();
+    conf->pname = it->first;
+
+    const ptree& conf_data = it->second;
+
+    pmid1 = conf_data.get("pm1.id", 0);
+    pmid2 = conf_data.get("pm2.id", 0);
+    pmid3 = conf_data.get("pm3.id", 0);
+    pmid4 = conf_data.get("pm4.id", 0);
+
+    scinid1 = conf_data.get("scin1.id", 0);
+    scinid2 = conf_data.get("scin2.id", 0);
+
+    files_location = conf_data.get<string>("location");
+
+    string collimator_function;
+    set <int> collimator_positions;
+    int a, b, c, n;
+    BOOST_FOREACH(const ptree::value_type& v, conf_data.get_child("collimator")) {
+      collimator_function = v.second.get<string>("positions");
+      n = sscanf(collimator_function.c_str(), "%d %d %d", &a, &b, &c);
+      
+      if (n == 1) {
+        // Add single position
+        collimator_positions.insert(a);
+      }
+      else {
+        if (n == 2) {c = 1;}
+        // Add multiple positions
+        for (int j = a; j <= b; j += c) {
+          collimator_positions.insert(j);
+        }
       }
     }
-    else {
-      string msg  = "Directory: \"";
-             msg += current_dir.string();
-             msg += "\" does not exist.";
-      ERROR(msg.c_str());
+
+    // Create ParamBank
+
+    JPetPM pm1;
+    JPetPM pm2;
+    JPetPM pm3;
+    JPetPM pm4;
+
+    JPetScin scin1;
+    JPetScin scin2;
+
+    pm1.setID(pmid1);
+    pm2.setID(pmid2);
+    pm3.setID(pmid3);
+    pm4.setID(pmid4);
+
+    scin1.setID(scinid1);
+    scin2.setID(scinid2);
+
+    conf->pparambank = new JPetParamBank();
+    conf->pparambank->addPM(pm1);
+    conf->pparambank->addPM(pm2);
+    conf->pparambank->addPM(pm3);
+    conf->pparambank->addPM(pm4);
+    conf->pparambank->addScintillator(scin1);
+    conf->pparambank->addScintillator(scin2);
+
+    conf->ppm1   = &(conf->pparambank->getPM(0));
+    conf->ppm2   = &(conf->pparambank->getPM(1));
+    conf->ppm3   = &(conf->pparambank->getPM(2));
+    conf->ppm4   = &(conf->pparambank->getPM(3));
+    conf->pscin1 = &(conf->pparambank->getScintillator(0));
+    conf->pscin2 = &(conf->pparambank->getScintillator(1));
+
+    conf->ppm1->setScin(*(conf->pscin1));
+    conf->ppm2->setScin(*(conf->pscin1));
+    conf->ppm3->setScin(*(conf->pscin2));
+    conf->ppm4->setScin(*(conf->pscin2));
+
+    // Add filename prefixes
+    
+    conf->ppref1 = conf_data.get<string>("pm1.prefix");
+    conf->ppref2 = conf_data.get<string>("pm2.prefix");
+    conf->ppref3 = conf_data.get<string>("pm3.prefix");
+    conf->ppref4 = conf_data.get<string>("pm4.prefix");
+  
+    // Add oscilloscope files
+    for (set<int>::iterator it = collimator_positions.begin(); it != collimator_positions.end(); ++it) {
+      string starting_loc  = path(fInFilename).parent_path().string();
+             starting_loc += "/";
+             starting_loc += files_location;
+	     starting_loc += "/";
+	     starting_loc += to_string (*it);
+
+      path current_dir(starting_loc);
+      boost::regex pattern(Form("%s_\\d*.txt", conf->ppref1.c_str()));
+    
+      if (exists(current_dir))
+      for (recursive_directory_iterator iter(current_dir), end; iter != end; ++iter) {
+        string name = iter->path().leaf().string();
+        string dir;
+        if (regex_match(name, pattern)) {
+          name[1] = (conf->ppref1)[1];
+          dir = iter->path().parent_path().string();
+          dir += "/";
+          dir += name;
+	  int tpos = *it;
+          conf->pfiles.insert(pair<int, string> (tpos, dir));
+        }
+      }
+      else {
+        string msg  = "Directory: \"";
+               msg += current_dir.string();
+               msg += "\" does not exist.";
+        ERROR(msg.c_str());
+      }
     }
+    conf->pit = conf->pfiles.begin();
+    fConfigs.push_back(conf);
+
   }
-  fIt = fFiles.begin();
-  //printFiles();
+  fIt = fConfigs.begin();
   fWriter = 0;
+  
+  fSize = 0;
+  for (vector <configStruct*> :: iterator it = fConfigs.begin(); it != fConfigs.end(); ++it) {
+    fSize += (*it)->pfiles.size();
+  }
 }
 
 void JPetScopeModule::createOutputObjects(const char* outputFilename) {
-  
-  if (fFiles.empty()) {
+  cout << "calling this fancy method." << endl;
+  if (fConfigs.empty()) {
     ERROR("No files for processing.");
   }
   else {
-    fCurrentPosition = (*fIt).first;
+    fCurrentPosition = (*((*fIt)->pit)).first;
     terminate();
 
-    INFO (Form("Creating root file for position %d", fCurrentPosition));
+    INFO (Form("Creating root file for configuration %s and position %d", ((*fIt)->pname).c_str(), fCurrentPosition));
 
     string out_fn(fOutFilename.Data());
     int last_dot = out_fn.find_last_of(".");
 
     string out_fn2  = out_fn.substr(0,last_dot+1);
+           out_fn2 += (*fIt)->pname;
+	   out_fn2 += ".";
            out_fn2 += to_string(fCurrentPosition);
            out_fn2 += out_fn.substr(last_dot);
 
@@ -219,20 +237,21 @@ void JPetScopeModule::createOutputObjects(const char* outputFilename) {
     fHeader->setSourcePosition(fCurrentPosition);
 
     fWriter->writeHeader(fHeader);
-    fWriter->writeObject(fParamBank, "ParamBank");
+    fWriter->writeObject((*fIt)->pparambank, "ParamBank");
   }
 }
 
 void JPetScopeModule::exec() {  
   
-  while (fIt != fFiles.end()) {
+  while (fIt != fConfigs.end()) {
+  while ((*fIt)->pit != (*fIt)->pfiles.end()) {
     
-    if ((*fIt).first != fCurrentPosition) createOutputObjects();
+    if ( (*((*fIt)->pit)).first != fCurrentPosition ) createOutputObjects();
 
     JPetPhysSignal psig1, psig2, psig3, psig4;
     JPetHit hit1, hit2;
     
-    string osc_file = (*fIt).second;
+    string osc_file = (*((*fIt)->pit)).second;
     string filename;
 
     int tslot_index;
@@ -240,52 +259,52 @@ void JPetScopeModule::exec() {
     
     //INFO (Form("Processing file: %s", osc_file.c_str()));
     JPetRecoSignal& rsig1 = fReader.generateSignal(osc_file.c_str());
-    rsig1.setPM(*(fConfig.ppm1));
+    rsig1.setPM(*((*fIt)->ppm1));
     rsig1.setTSlotIndex(tslot_index);
     psig1.setRecoSignal(rsig1);
     
-    filename = path((*fIt).second).filename().string();
-    filename[1] = (fConfig.file2)[1];
-    osc_file = path((*fIt).second).parent_path().string();
+    filename = path((*((*fIt)->pit)).second).filename().string();
+    filename[1] = ((*fIt)->ppref2)[1];
+    osc_file = path((*((*fIt)->pit)).second).parent_path().string();
     osc_file+= "/";
     osc_file+= filename;
 
     //INFO (Form("Processing file: %s", osc_file.c_str()));   
     JPetRecoSignal& rsig2 = fReader.generateSignal(osc_file.c_str());
-    rsig2.setPM(*(fConfig.ppm2));
+    rsig2.setPM(*((*fIt)->ppm2));
     rsig2.setTSlotIndex(tslot_index);
     psig2.setRecoSignal(rsig2);
     
-    filename = path((*fIt).second).filename().string();
-    filename[1] = (fConfig.file3)[1];
-    osc_file = path((*fIt).second).parent_path().string();
+    filename = path((*((*fIt)->pit)).second).filename().string();
+    filename[1] = ((*fIt)->ppref3)[1];
+    osc_file = path((*((*fIt)->pit)).second).parent_path().string();
     osc_file+= "/";
     osc_file+= filename;
 
     //INFO (Form("Processing file: %s", osc_file.c_str()));   
     JPetRecoSignal& rsig3 = fReader.generateSignal(osc_file.c_str());
-    rsig3.setPM(*(fConfig.ppm3));
+    rsig3.setPM(*((*fIt)->ppm3));
     rsig3.setTSlotIndex(tslot_index);
     psig3.setRecoSignal(rsig3);
 
     
-    filename = path((*fIt).second).filename().string();
-    filename[1] = (fConfig.file4)[1];
-    osc_file  = path((*fIt).second).parent_path().string();
+    filename = path((*((*fIt)->pit)).second).filename().string();
+    filename[1] = ((*fIt)->ppref4)[1];
+    osc_file  = path((*((*fIt)->pit)).second).parent_path().string();
     osc_file += "/";
     osc_file += filename;
 
     //INFO (Form("Processing file: %s", osc_file.c_str())); 
     JPetRecoSignal& rsig4 = fReader.generateSignal(osc_file.c_str());
-    rsig4.setPM(*(fConfig.ppm4));
+    rsig4.setPM(*((*fIt)->ppm4));
     rsig4.setTSlotIndex(tslot_index);
     psig4.setRecoSignal(rsig4);
     
     hit1.setSignals(psig1, psig2);
-    hit1.setScinID(fConfig.scin1);
+    hit1.setScinID((*fIt)->pscin1->getID());
 
     hit2.setSignals(psig3, psig4);
-    hit2.setScinID(fConfig.scin2);
+    hit2.setScinID((*fIt)->pscin2->getID());
 
     JPetLOR event;
 
@@ -295,7 +314,10 @@ void JPetScopeModule::exec() {
 
     break;
   }
-  fIt++;
+  ((*fIt)->pit)++;
+  break;
+  }
+  if((*fIt)->pit == (*fIt)->pfiles.end()) fIt++;
 }
 
 void JPetScopeModule::terminate() {
@@ -306,20 +328,6 @@ void JPetScopeModule::terminate() {
     fWriter->closeFile();
     delete fWriter;
     fWriter = 0;
-  }
-}
-
-void JPetScopeModule::printCollPositions () {
-  INFO ("Printing all collimator positions:");
-  for (set<int>::iterator iter = fCollPositions.begin(); iter != fCollPositions.end(); ++iter) {
-    INFO (Form("collimator position: %d", *iter));
-  }
-}
-
-void JPetScopeModule::printFiles () {
-  INFO ("Printing all files:");
-  for (map<int, string>::iterator iter = fFiles.begin(); iter != fFiles.end(); ++iter) {
-    INFO (Form("%3d %s", (*iter).first, (*iter).second.c_str()));
   }
 }
 
