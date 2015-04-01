@@ -12,7 +12,7 @@ JPetFEB::JPetFEBOutput::JPetFEBOutput(bool p_passedInformationIsTime,
 				    std::string p_passedInformation, 
 				    int p_FEBId, 
 				    int p_inputId, 
-				    int p_FEBInputId) : 
+				    int p_FEBInputId ) : 
 						      JPetFEBChannel(),
 						      m_passedInformationIsTime(p_passedInformationIsTime),
 						      m_passedInformation(p_passedInformation),
@@ -28,7 +28,9 @@ JPetFEB::JPetFEB() :
 				      m_status(""),
 				      m_description(""),
 				      m_version(0),
-				      m_userId(0) 
+				      m_userId(0),
+				      m_n_time_outputs_per_input(0),
+				      m_n_notime_outputs_per_input(0)
 {
   SetName("JPetFEB");
 }
@@ -39,13 +41,17 @@ JPetFEB::JPetFEB(int p_id,
 	       std::string p_status, 
 	       std::string p_description, 
 	       int p_version, 
-	       int p_userId) :
+	       int p_userId,
+	       int p_n_time_outputs_per_input,
+	       int p_n_notime_outputs_per_input) :
 				      m_id(p_id),
 				      m_isActive(p_isActive),
 				      m_status(p_status),
 				      m_description(p_description),
 				      m_version(p_version),
-				      m_userId(p_userId) 
+				      m_userId(p_userId),
+				      m_n_time_outputs_per_input(p_n_time_outputs_per_input),
+				      m_n_notime_outputs_per_input(p_n_notime_outputs_per_input) 
 {
   SetName("JPetFEB");
 }
@@ -82,4 +88,22 @@ std::string JPetFEB::description() const
 int JPetFEB::version() const
 {
   return m_version;
+}
+
+/**
+ * @brief Get number of output time channels per one FEB input channel
+ *
+ */
+int JPetFEB::getNtimeOutsPerInput(void) const
+{
+  return m_n_time_outputs_per_input;
+}
+
+/**
+ * @brief Get number of output non-time (e.g. TOT or charge) channels per one FEB input channel
+ *
+ */
+int JPetFEB::getNnotimeOutsPerInput(void) const
+{
+  return m_n_notime_outputs_per_input;
 }

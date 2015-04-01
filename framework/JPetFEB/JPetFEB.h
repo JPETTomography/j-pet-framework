@@ -49,10 +49,15 @@ protected:
   //JPetUser &m_JPetUser;		//creatorId
   const int m_userId;		// creatorId 
   /// @todo userId is inaccesible!!!
-
+  int m_n_time_outputs_per_input;
+  int m_n_notime_outputs_per_input;
+  
+  
 public:
   JPetFEB();
-  JPetFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId);
+  JPetFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description,
+	  int p_version, int p_userId, int p_n_time_outputs_per_input,
+	  int p_n_notime_outputs_per_input);
   virtual ~JPetFEB(void);
   
   virtual int getID(void) const;
@@ -61,6 +66,8 @@ public:
   virtual std::string status(void) const;
   virtual std::string description(void) const;
   virtual int version(void) const;
+  virtual int getNtimeOutsPerInput(void) const;
+  virtual int getNnotimeOutsPerInput(void) const;
   
   const JPetTRB & getTRB() 
   { 

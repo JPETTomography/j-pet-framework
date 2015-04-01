@@ -9,6 +9,7 @@
 #include "../JPetPM/JPetPM.h"
 #include "../JPetTRB/JPetTRB.h"
 #include "../JPetFEB/JPetFEB.h"
+#include "../JPetTOMBChannel/JPetTOMBChannel.h"
 #include "../../JPetLoggerInclude.h"
 
 /**
@@ -59,6 +60,9 @@ public:
   inline const JPetFEB & getFEB() const {
     return (JPetFEB&) *fFEB.GetObject();
   }
+  inline const JPetTOMBChannel & getTOMBChannel() const {
+    return (JPetTOMBChannel&) *fTOMBChannel.GetObject();
+  }
 
   /**
    * Returns true if the value of the signal represents charge information (integral of the signal calculated by front-end board)
@@ -79,6 +83,10 @@ public:
   inline void setFEB(const JPetFEB & feb) {
     fFEB = const_cast<JPetFEB*>(&feb);
   }
+  inline void setTOMBChannel(const JPetTOMBChannel & channel) {
+    fTOMBChannel = const_cast<JPetTOMBChannel*>(&channel);
+  }
+
   // Set time wrt beginning of TSlot [ps] or charge
   inline void setValue(float val) {
     fValue = val;
@@ -153,7 +161,8 @@ protected:
   TRef fPM;
   TRef fFEB;
   TRef fTRB;
-
+  TRef fTOMBChannel;
+  
   void Init();
 };
 
