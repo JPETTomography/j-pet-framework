@@ -14,12 +14,13 @@
 #include <map>
 #include <string>
 #include <set>
+#include <vector>
 
 #include "../JPetAnalysisModule/JPetAnalysisModule.h"
 #include "../JPetScopeReader/JPetScopeReader.h"
 #include "../JPetWriter/JPetWriter.h"
 
-#define MODULE_VERSION 0.1
+#define MODULE_VERSION 0.2
 
 class JPetTreeHeader;
 class JPetParamBank;
@@ -69,7 +70,7 @@ class JPetScopeModule: public JPetAnalysisModule {
    *
    * @return number of events.
    */
-  virtual long long getEventNb() {return fFiles.size();}
+  virtual long long getEventNb() {return fSize;}
 
   /** @brief End analysis. */
   virtual void terminate();
@@ -80,42 +81,34 @@ class JPetScopeModule: public JPetAnalysisModule {
    */
   void setFileName(const char* name);
 
-  /** @brief Debug function.
-   *
-   * This function prints list of all collimator positions, that will be processed.
-   */
-  virtual void printCollPositions ();
-
-  /** @brief Debug function.
-   *
-   * This function prints list of all files, that will be processed.
-   */
-  virtual void printFiles();
-
   /** @brief ROOT macro */
-  ClassDef(JPetScopeModule, MODULE_VERSION );
+  //ClassDef(JPetScopeModule, MODULE_VERSION );
 
   private:
   
-  /** @brief Config file reader function.
-   *
-   * Read single config line using vsscanf function.
-   * @param fmt format passed to vsscanf.
-   */
-  int readFromConfig (const char* fmt, ...);
-
+  long long fSize; /**< @brief Number of events to process. */
+  
   int fCurrentPosition; /**< @brief Position of collimator. */
 
-  /** Collection of system parameters read from config file. */
+  /** @brief Collection of system parameters read from config file. */
   typedef struct configStruct {
-    int pm1, pm2, pm3, pm4; /**< @brief ID's of photomultipliers. */
+    std::string pname; /**< @brief config name */
+
     JPetPM *ppm1, *ppm2, *ppm3, *ppm4; /**< @ref JPetPM. */
     JPetScin *pscin1, *pscin2; /**< @ref JPetScin. */
-    std::string file1, file2, file3, file4; /**< @brief Names (not locations) of data oscilloscope ASCII data files. */
-    int scin1, scin2; /**< @brief ID's of scintillators. */
-    int collimator; /**< @brief Collimator position. */
+
+    JPetParamBank* pparambank; /**< @ref JPetParamBank. */
+
+    std::string ppref1, ppref2, ppref3, ppref4; /**< @brief files prefixes. */
+    std::multimap <int, std::string> pfiles; /**< @brief keys - collimator positions, values - files locations*/
+    #ifndef __CINT__
+    std::multimap <int, std::string> :: iterator pit; /**< @brief Iterator for pfiles. */
+    #endif
   } configStruct;
-  configStruct fConfig; /**< @brief Analysis system configuration. */
+  std::vector <configStruct*> fConfigs; /**< @brief Analysis system configuration. */
+  #ifndef __CINT__
+  std::vector <configStruct*> :: iterator fIt; /**< @brief Iterator for fConfigs. */
+  #endif
 
   std::ifstream fConfigFile; /**< @brief Input stream from config file. */
   
@@ -124,14 +117,10 @@ class JPetScopeModule: public JPetAnalysisModule {
    * To get full name of osc file, data from fConfig is required.
    * @see fConfig()
    */
-  std::multimap <int, std::string> fFiles;
-  std::set <int> fCollPositions; /**< @brief Set of collimator positions. */
 
   JPetWriter* fWriter; /**< @ref JPetWriter. */
   JPetScopeReader fReader; /**< @ref JPetScopeReader. */
   JPetTreeHeader* fHeader; /**< @ref JPetTreeHeader. */
-
-  JPetParamBank* fParamBank; /**< @ref JPetParamBank. */
   
   TString fInFilename; /**< @brief Location of config file. */
   TString fOutFilename; /**< @brief Location of output root file. */

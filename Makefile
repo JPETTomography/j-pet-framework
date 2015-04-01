@@ -13,12 +13,12 @@ UNPACKER_LIB = Unpacker2
 ################
 SRC_DIR = $(PWD)/framework
 #Modules that should have ROOT dictionnaries
-DMODULES = JPetAnalysisModule JPetBarrelSlot JPetLOR JPetHit JPetMacroLoader JPetPM JPetScin JPetSigCh JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetTRB JPetTSlot JPetUnpacker JPetFEB JPetSetup  JPetTOMBChannel JPetUser JPetTreeHeader JPetParamBank JPetPMCalib JPetLayer JPetFrame JPetScopeModule JPetCommonAnalysisModule 
+DMODULES = JPetAnalysisModule JPetBarrelSlot JPetLOR JPetHit JPetMacroLoader JPetPM JPetScin JPetSigCh JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetTRB JPetTSlot JPetUnpacker JPetFEB JPetSetup  JPetTOMBChannel JPetUser JPetTreeHeader JPetParamBank JPetPMCalib JPetLayer JPetFrame JPetCommonAnalysisModule 
 DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader JPetScopeReader
 WRITERS = JPetWriter
 #Modules without ROOT dictionnaries
-NONDMODULES = DummyClass JPetLogger JPetCmdParser JPetParamManager JPetManager $(READERS) $(WRITERS) JPetDBParamGetter JPetParamUtils
+NONDMODULES = DummyClass JPetLogger JPetCmdParser JPetParamManager JPetManager $(READERS) $(WRITERS) JPetDBParamGetter JPetParamUtils JPetScopeModule
 MODULES = $(DMODULES) $(NONDMODULES)
 ################
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
