@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 6);
   JPetLayer layer(1, true, "layerTest", 35.f);
   JPetFrame frame(1, true, "OKTEST", "FrameTest", 5, 2);
-  JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
+  JPetFEB feb(1, true, "testStatus", "descr", 1, 1, 8, 1);
   JPetTRB trb(333, 64, 128);
   JPetTOMBChannel TOMBChannel(32u);
   float epsilon = 0.0001f;
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE(clearAllContainersTest)
   JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 6);
   JPetLayer layer(1, true, "layerTest", 35.f);
   JPetFrame frame(1, true, "OKTEST", "FrameTest", 5, 2);
-  JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
+  JPetFEB feb(1, true, "testStatus", "descr", 1, 1, 8, 1);
   JPetTRB trb(333, 64, 128);
   JPetTOMBChannel TOMBChannel(32u);
   
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE(getSizeTest)
   JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 6);
   JPetLayer layer(1, true, "layerTest", 35.f);
   JPetFrame frame(1, true, "OKTEST", "FrameTest", 5, 2);
-  JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
+  JPetFEB feb(1, true, "testStatus", "descr", 1, 1, 8, 1);
   JPetTRB trb(333, 64, 128);
   JPetTOMBChannel TOMBChannel(32u);
   
@@ -236,7 +236,7 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   pm3.setScin(scint2);
   pm4.setScin(scint2);
 
-  JPetFEB feb(1, true, "testStatus", "descr", 1, 1);
+  JPetFEB feb(1, true, "testStatus", "descr", 1, 1, 8, 1);
   JPetTRB trb;
   bank.addPM(pm1);
   bank.addPM(pm2);

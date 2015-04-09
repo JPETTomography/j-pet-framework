@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE( second )
   float epsilon = 0.001;
   JPetSigCh test;
   JPetPM pm_test;
-  JPetFEB feb_test(43, true, "", "", 1, 1);
+  JPetFEB feb_test(43, true, "", "", 1, 1, 8, 1);
   JPetTRB trb_test;
   float thr_test = 210.043;
   float time_test = 1.2345;
@@ -72,22 +72,5 @@ BOOST_AUTO_TEST_CASE( second )
   BOOST_REQUIRE_CLOSE(test.getThreshold(), test2.getThreshold(), epsilon);
 }
 
-BOOST_AUTO_TEST_CASE( third )
-{
-  JPetSigCh test;
-  JPetSigCh test2;
- 
-  test.setThreshold(  1.2345 );
-  test2.setThreshold( 2.3456 );
-  
-  BOOST_REQUIRE_EQUAL(test.IsSortable(), 1);
-  BOOST_REQUIRE_EQUAL(test2.IsSortable(), 1);
-
-  BOOST_REQUIRE_EQUAL( test.Compare(&test2), -1 );
-  BOOST_REQUIRE_EQUAL( test2.Compare(&test), 1 );
-
-  test2 = test;
-  BOOST_REQUIRE_EQUAL( test2.Compare(&test), 0 );
-}
 
 BOOST_AUTO_TEST_SUITE_END()
