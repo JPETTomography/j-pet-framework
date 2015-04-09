@@ -6,6 +6,7 @@
 
 #include "JPetCmdParser.h"
 #include "../CommonTools/CommonTools.h"
+#include <iostream>
 
 using namespace std;
 
