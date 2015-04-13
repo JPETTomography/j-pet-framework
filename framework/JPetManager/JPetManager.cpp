@@ -38,18 +38,8 @@ void JPetManager::Run()
 {
   // write to log about starting
   INFO( "========== Starting processing tasks: " + GetTimeString() + " ==========" );
-
-  if (fCmdParser.IsFileTypeSet()) {
-    if (fCmdParser.getFileType() == "scope") {
-      JPetScopeModule* module = new JPetScopeModule("JPetScopeModule", "Process Oscilloscope ASCII data into JPetLOR structures.");
-      module->setFileName(getInputFileName().c_str());
-      fTasks.push_front(module);
-    } else if (fCmdParser.getFileType() == "hld"){
-      UnpackFile();
-    }
-  }
-
-  JPetWriter* currentWriter = 0;
+  ProcessFromCmdLineArgs();
+    JPetWriter* currentWriter = 0;
   std::list<JPetAnalysisModule*>::iterator taskIter;
   // pseudo-input container
   long long  kNevent = 0;
@@ -60,14 +50,14 @@ void JPetManager::Run()
     (*taskIter)->createOutputObjects( getInputFileName().c_str() ); /// writers + histograms
     kNevent = (*taskIter)->getEventNb();
     kFirstEvent = 0;
-    kLastEvent = kNevent-1;
+    kLastEvent = kNevent - 1;
 
     // handle the user-provided range of events to process,
     // but only for the first module to process
-    if( taskIter==fTasks.begin() ){// only for first module
-      if( fCmdParser.getLowerEventBound() != -1 &&
-          fCmdParser.getHigherEventBound() != -1 &&
-          fCmdParser.getHigherEventBound() < kNevent){ // only if user provided reasonable bounds
+    if ( taskIter == fTasks.begin() ) { // only for first module
+      if ( fCmdParser.getLowerEventBound() != -1 &&
+           fCmdParser.getHigherEventBound() != -1 &&
+           fCmdParser.getHigherEventBound() < kNevent) { // only if user provided reasonable bounds
         kFirstEvent = fCmdParser.getLowerEventBound();
         kLastEvent = fCmdParser.getHigherEventBound();
         kNevent = kLastEvent - kFirstEvent + 1;
@@ -75,9 +65,8 @@ void JPetManager::Run()
     }
 
     for (long long i = kFirstEvent; i <= kLastEvent; i++) {
-      if(fIsProgressBarEnabled)
-      {
-          printf("\r[%6.4f% %]", setProgressBar(i, kNevent));
+      if (fIsProgressBarEnabled) {
+        printf("\r[%6.4f% %]", setProgressBar(i, kNevent));
       }
       (*taskIter)->exec();
     }
@@ -87,21 +76,34 @@ void JPetManager::Run()
   INFO( "======== Finished processing all tasks: " + GetTimeString() + " ========\n" );
 }
 
+///> Initialize and process things based on the command line arguments.
+void JPetManager::ProcessFromCmdLineArgs()
+{
+  if (fCmdParser.isRunNumberSet()) { /// we should connect to the database
+      fParamManager.getParametersFromDatabase(fCmdParser.getRunNumber()); /// @todo some error handling
+    }
+        
+    if (fCmdParser.isProgressBarSet()) {
+      fIsProgressBarEnabled = true;
+    }
+    if (fCmdParser.IsFileTypeSet()) {
+      if (fCmdParser.getFileType() == "scope") {
+        JPetScopeModule* module = new JPetScopeModule("JPetScopeModule", "Process Oscilloscope ASCII data into JPetLOR structures.");
+        module->setFileName(getInputFileName().c_str());
+        fTasks.push_front(module);
+      } else if (fCmdParser.getFileType() == "hld") {
+       fUnpacker.setParams(fCmdParser.getFileName().c_str());
+       UnpackFile();
+      }
+    }
+
+
+}
+
 void JPetManager::ParseCmdLine(int argc, char** argv)
 {
   fCmdParser.parse(argc, (const char**)argv);
 
-  if (fCmdParser.isRunNumberSet()) { /// we should connect to the database
-    fParamManager.getParametersFromDatabase(fCmdParser.getRunNumber()); /// @todo some error handling
-  }
-  if (fCmdParser.IsFileTypeSet()) {
-    if (fCmdParser.getFileType() == "hld") {
-      fUnpacker.setParams(fCmdParser.getFileName().c_str());
-    }
-  }
-  if (fCmdParser.isProgressBarSet()) {
-    fIsProgressBarEnabled = true;
-  }
 }
 
 int JPetManager::getRunNumber() const
