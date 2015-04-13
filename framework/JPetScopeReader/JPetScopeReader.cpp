@@ -122,7 +122,6 @@ JPetRecoSignal& JPetScopeReader::readData() {
 
     float time = value * ks2ps; // file holds time in seconds, while SigCh requires it in picoseconds
     float amplitude = threshold * kV2mV;  // file holds thresholds in volts, while SigCh requires it in milivolts
-    //sigCh.setPMID(fPMID);
 
     fRecoSignal.setShapePoint(time, amplitude);
   }
