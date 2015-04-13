@@ -1821,7 +1821,8 @@ FROM
 (SELECT * FROM 
 (SELECT konradboard_id,COUNT(*) AS inputs FROM "KonradBoardInput" GROUP BY konradboard_id) AS ins, 
 (SELECT konradboard_id AS kbid, COUNT(*) AS outputs_time FROM "KonradBoardOutput" WHERE passedinformationistime='t' GROUP BY konradboard_id) AS outs_time,
-(SELECT konradboard_id AS kbid, COUNT(*) AS outputs_notime FROM "KonradBoardOutput" WHERE passedinformationistime='f' GROUP BY konradboard_id) AS outs_notime
+(SELECT "KonradBoard".id AS kbid, count("KonradBoard".id) AS outputs_notime FROM "KonradBoard" LEFT OUTER JOIN (SELECT * FROM "KonradBoardOutput" WHERE passedinformationistime = false) AS notimes ON (notimes.konradboard_id = "KonradBoard".id) 
+		 GROUP BY "KonradBoard".id) AS outs_notime
 WHERE
 ins.konradboard_id = outs_time.kbid
 AND
