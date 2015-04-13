@@ -61,50 +61,39 @@ void JPetCmdParser::parse(int argc, const char** argv)
         exit(-1);
       }
       if (
-          fVariablesMap["range"].as< vector<int> >()[0]
-          > fVariablesMap["range"].as< vector<int> >()[1]) {
+        fVariablesMap["range"].as< vector<int> >()[0]
+        > fVariablesMap["range"].as< vector<int> >()[1]) {
         cerr << "Wrong range of events." << endl;
         exit(-1);
       }
     }
 
-    /* check if correct file type was provided */
-
-    if (
-        fVariablesMap["type"].as <string>().compare("hld")
-        && fVariablesMap["type"].as <string>().compare("root")
-        && fVariablesMap["type"].as <string>().compare("scope")
-    ) {
-      cerr << "Wrong type of file: " << fVariablesMap["type"].as< string >() << endl;
-      cerr << "Possible options: hld or root" << endl;
+    if (!isCorrectFileType(getFileType())) {
+      cerr << "Wrong type of file: " << getFileType() << endl;
+      cerr << "Possible options: hld, root or scope" << endl;
       exit(-1);
     }
-    
-    if(fVariablesMap.count("runId"))
-    {
+
+    if (fVariablesMap.count("runId")) {
       int l_runId = fVariablesMap["runId"].as<int>();
-      
-      if(l_runId <= 0)
-      {
-	cerr << "Wrong number of run id: " << l_runId << endl;
-	exit(-1);
+
+      if (l_runId <= 0) {
+        cerr << "Wrong number of run id: " << l_runId << endl;
+        exit(-1);
       }
     }
-    
-    if(fVariablesMap.count("progressBar"))
-    {
+
+    if (fVariablesMap.count("progressBar")) {
       int l_progressBar = fVariablesMap["progressBar"].as<int>();
-      
-      if(l_progressBar != 0 && l_progressBar != 1)
-      {
-	cerr << "Wrong parameter of progressbar: " << l_progressBar << endl;
-	exit(-1);
+
+      if (l_progressBar != 0 && l_progressBar != 1) {
+        cerr << "Wrong parameter of progressbar: " << l_progressBar << endl;
+        exit(-1);
       }
     }
-    
+
     string fileName(fVariablesMap["file"].as<string>());
-    if( ! CommonTools::ifFileExisting(fileName) )
-    {
+    if ( ! CommonTools::ifFileExisting(fileName) ) {
       cerr << "File : " << fileName << " does not exist" << endl;
       exit(-1);
     }
@@ -115,6 +104,14 @@ void JPetCmdParser::parse(int argc, const char** argv)
   } catch (...) {
     cerr << "Exception of unknown type!\n";
   }
+}
+
+bool JPetCmdParser::isCorrectFileType(const std::string& type) const
+{
+  if (type == "hld" || type == "root" || "scope") {
+    return true;
+  }
+  return false;
 }
 
 //#endif /* __CINT__ */
