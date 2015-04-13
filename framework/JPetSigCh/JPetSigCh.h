@@ -147,7 +147,7 @@ public:
   static bool compareByThresholdNumber(const JPetSigCh & A,
                                        const JPetSigCh & B);
 
-ClassDef(JPetSigCh, 2)
+ClassDef(JPetSigCh, 3)
   ;
 
 protected:

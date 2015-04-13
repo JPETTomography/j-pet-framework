@@ -65,7 +65,7 @@ class JPetScin: public TNamed
   int fID;
   float fAttenLen;  /// attenuation length
   ScinDimensions fScinSize; /// @todo check if there is no problem with the ROOT dictionnary
-  ClassDef(JPetScin, 2);
+  ClassDef(JPetScin, 3);
   
 protected:
   TRef fTRefBarrelSlot;
