@@ -219,7 +219,6 @@ void JPetScopeModule::createOutputObjects(const char* outputFilename) {
     fHeader->setSourcePosition(fCurrentPosition);
 
     fWriter->writeHeader(fHeader);
-    fWriter->writeObject(fParamBank, "ParamBank");
   }
 }
 
@@ -228,6 +227,7 @@ void JPetScopeModule::exec() {
   while (fIt != fFiles.end()) {
     
     if ((*fIt).first != fCurrentPosition) createOutputObjects();
+    fWriter->writeObject(fParamBank, "ParamBank");
 
     JPetPhysSignal psig1, psig2, psig3, psig4;
     JPetHit hit1, hit2;
