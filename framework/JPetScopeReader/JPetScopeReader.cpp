@@ -223,6 +223,7 @@ void JPetScopeReader::createInputObjects(const char* inputFilename)
 }
 
 void JPetScopeReader::createOutputObjects(const char* outputFilename) {
+  fIter = fConfigs.begin();
 }
 
 void JPetScopeReader::createNewWriter(const char* outputFilename) {
@@ -252,7 +253,6 @@ void JPetScopeReader::createNewWriter(const char* outputFilename) {
     fHeader->setSourcePosition((*fIter).pCollPosition);
 
     fWriter->writeHeader(fHeader);
-    fWriter->writeObject((*fIter).pParamBank, "ParamBank");
   }
 }
 
@@ -325,6 +325,7 @@ void JPetScopeReader::exec() {
     ((*fIter).pIter)++;
 
     if((*fIter).pIter == (*fIter).pFiles.end()) {
+      fWriter->writeObject((*fIter).pParamBank, "ParamBank");
       fIter++;
     }
   }
