@@ -40,20 +40,15 @@ const int kbuflen = 256;
 
 ClassImp(JPetScopeReader);
 
-JPetScopeReader::JPetScopeReader(): JPetAnalysisModule(), fEventNb(0), fReader(new JPetScopeReader()), fWriter(nullptr) {
+JPetScopeReader::JPetScopeReader(): JPetAnalysisModule(), fEventNb(0), fWriter(nullptr) {
   gSystem->Load("libTree");
 }
 
-JPetScopeReader::JPetScopeReader(const char* name, const char* title): JPetAnalysisModule(name, title), fEventNb(0), fReader(new JPetScopeReader()), fWriter(nullptr)  {
+JPetScopeReader::JPetScopeReader(const char* name, const char* title): JPetAnalysisModule(name, title), fEventNb(0), fWriter(nullptr)  {
   gSystem->Load("libTree");
 }
 
 JPetScopeReader::~JPetScopeReader() {
-
-  if (fReader != nullptr) {
-    delete fReader;
-    fReader = nullptr;
-  }
 
   if (fWriter != nullptr) {
     delete fWriter;
@@ -228,6 +223,9 @@ void JPetScopeReader::createInputObjects(const char* inputFilename)
 }
 
 void JPetScopeReader::createOutputObjects(const char* outputFilename) {
+}
+
+void JPetScopeReader::createNewWriter(const char* outputFilename) {
   
   if (fConfigs.empty()) {
     ERROR("No files for processing.");
@@ -258,82 +256,77 @@ void JPetScopeReader::createOutputObjects(const char* outputFilename) {
   }
 }
 
-void JPetScopeReader::exec() {  
+void JPetScopeReader::exec() {
+
+  if (fIter != fConfigs.end()) {  
   
-  while (fIter != fConfigs.end()) {
-  while ((*fIter).pIter != (*fIter).pFiles.end()) {
+    if((*fIter).pIter == (*fIter).pFiles.begin()) {
+      createNewWriter();
+    }
 
-    JPetPhysSignal psig1, psig2, psig3, psig4;
-    JPetHit hit1, hit2;
+    if ((*fIter).pIter != (*fIter).pFiles.end()) {
+
+      //JPetPhysSignal psig1, psig2, psig3, psig4;
     
-    string osc_file = *((*fIter).pIter);
-    string filename;
+      string osc_file = *((*fIter).pIter);
+      string filename;
 
-    int tslot_index;
-    sscanf(path(osc_file).filename().string().c_str(), "%*3s %d", &tslot_index);
+      int tslot_index;
+      sscanf(path(osc_file).filename().string().c_str(), "%*3s %d", &tslot_index);
     
-    //INFO (Form("Processing file: %s", osc_file.c_str()));
-    JPetRecoSignal rsig1 = generateSignal(osc_file.c_str());
-    rsig1.setPM(*((*fIter).pPM1));
-    rsig1.setTSlotIndex(tslot_index);
-    psig1.setRecoSignal(rsig1);
+      //INFO (Form("Processing file: %s", osc_file.c_str()));
+      JPetRecoSignal rsig1 = generateSignal(osc_file.c_str());
+      rsig1.setPM(*((*fIter).pPM1));
+      rsig1.setTSlotIndex(tslot_index);
+      //psig1.setRecoSignal(rsig1);
     
-    filename = path(*((*fIter).pIter)).filename().string();
-    filename[1] = ((*fIter).pPrefix2)[1];
-    osc_file = path(*((*fIter).pIter)).parent_path().string();
-    osc_file+= "/";
-    osc_file+= filename;
+      filename = path(*((*fIter).pIter)).filename().string();
+      filename[1] = ((*fIter).pPrefix2)[1];
+      osc_file = path(*((*fIter).pIter)).parent_path().string();
+      osc_file+= "/";
+      osc_file+= filename;
 
-    //INFO (Form("Processing file: %s", osc_file.c_str()));   
-    JPetRecoSignal rsig2 = generateSignal(osc_file.c_str());
-    rsig2.setPM(*((*fIter).pPM2));
-    rsig2.setTSlotIndex(tslot_index);
-    psig2.setRecoSignal(rsig2);
+      //INFO (Form("Processing file: %s", osc_file.c_str()));   
+      JPetRecoSignal rsig2 = generateSignal(osc_file.c_str());
+      rsig2.setPM(*((*fIter).pPM2));
+      rsig2.setTSlotIndex(tslot_index);
+      //psig2.setRecoSignal(rsig2);
+     
+      filename = path(*((*fIter).pIter)).filename().string();
+      filename[1] = ((*fIter).pPrefix3)[1];
+      osc_file = path(*((*fIter).pIter)).parent_path().string();
+      osc_file+= "/";
+      osc_file+= filename;
+
+      //INFO (Form("Processing file: %s", osc_file.c_str()));   
+      JPetRecoSignal rsig3 = generateSignal(osc_file.c_str());
+      rsig3.setPM(*((*fIter).pPM3));
+      rsig3.setTSlotIndex(tslot_index);
+      //psig3.setRecoSignal(rsig3);
     
-    filename = path(*((*fIter).pIter)).filename().string();
-    filename[1] = ((*fIter).pPrefix3)[1];
-    osc_file = path(*((*fIter).pIter)).parent_path().string();
-    osc_file+= "/";
-    osc_file+= filename;
+      filename = path(*((*fIter).pIter)).filename().string();
+      filename[1] = ((*fIter).pPrefix4)[1];
+      osc_file = path(*((*fIter).pIter)).parent_path().string();
+      osc_file+= "/";
+      osc_file+= filename;
 
-    //INFO (Form("Processing file: %s", osc_file.c_str()));   
-    JPetRecoSignal rsig3 = generateSignal(osc_file.c_str());
-    rsig3.setPM(*((*fIter).pPM3));
-    rsig3.setTSlotIndex(tslot_index);
-    psig3.setRecoSignal(rsig3);
+      //INFO (Form("Processing file: %s", osc_file.c_str())); 
+      JPetRecoSignal rsig4 = generateSignal(osc_file.c_str());
+      rsig4.setPM(*((*fIter).pPM4));
+      rsig4.setTSlotIndex(tslot_index);
+      //psig4.setRecoSignal(rsig4);
     
-    filename = path(*((*fIter).pIter)).filename().string();
-    filename[1] = ((*fIter).pPrefix4)[1];
-    osc_file = path(*((*fIter).pIter)).parent_path().string();
-    osc_file+= "/";
-    osc_file+= filename;
+      fWriter->write(rsig1);
+      fWriter->write(rsig2);
+      fWriter->write(rsig3);
+      fWriter->write(rsig4);
+    }
 
-    //INFO (Form("Processing file: %s", osc_file.c_str())); 
-    JPetRecoSignal rsig4 = generateSignal(osc_file.c_str());
-    rsig4.setPM(*((*fIter).pPM4));
-    rsig4.setTSlotIndex(tslot_index);
-    psig4.setRecoSignal(rsig4);
-    
-    hit1.setSignals(psig1, psig2);
-    hit1.setScinID((*fIter).pScin1->getID());
+    ((*fIter).pIter)++;
 
-    hit2.setSignals(psig3, psig4);
-    hit2.setScinID((*fIter).pScin2->getID());
-
-    JPetLOR event;
-
-    event.setHits(hit1, hit2);
-
-    fWriter->write(event);
-
-    break;
-  }
-  ((*fIter).pIter)++;
-  break;
-  }
-  if((*fIter).pIter == (*fIter).pFiles.end()) {
-    fIter++;
-    createOutputObjects();
+    if((*fIter).pIter == (*fIter).pFiles.end()) {
+      fIter++;
+    }
   }
 }
 
