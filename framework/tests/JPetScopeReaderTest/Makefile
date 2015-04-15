@@ -1,62 +1,48 @@
-###################
-#THIS PART CAN BE MODIFIED
-PROJECT=JPetScopeReader
-EXTRA_MODULES = JPetPhysSignal JPetRecoSignal JPetRawSignal JPetBaseSignal JPetSigCh JPetTSlot JPetTreeHeader JPetLogger
-#classes that need Dictionnaries 
-DICTS = JPetPhysSignal JPetRecoSignal JPetRawSignal JPetBaseSignal JPetSigCh JPetTSlot JPetTreeHeader
-PQXX_LIB_SET = 
-DBHANDLER_LIB_SET = 
-UNPACKER_LIB_SET =
-###################
 OS = $(shell uname)
-CO = g++
-CFLAGS = -Wall `root-config --cflags`
-###################
-LDFLAGS = -Wall `root-config --glibs --ldflags`
-LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system -lboost_program_options
-LDFLAGS += ${LD_BOOST_FLAGS}
-###################
-TEST_EXEC = $(PROJECT)Test.exe 
-SRC_DIR = $(PWD)/../..
-SRC_MODULE =  $(SRC_DIR)/$(PROJECT)/$(PROJECT).cpp 
-OBJ_MODULE = $(SRC_MODULE:.cpp=.o) 
-SRC_EXTRA = $(foreach MODULE, $(EXTRA_MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
-OBJ_EXTRA= $(SRC_EXTRA:.cpp=.o) 
-OBJ_ALL = $(OBJ_MODULE)
-OBJ_ALL += $(OBJ_EXTRA)
-###################
-#ROOT DICTIONNARIES
-OBJ_DICT =$(foreach DICT, $(DICTS), $(SRC_DIR)/$(DICT)/$(DICT)Dict.o) 
-OBJ_ALL += $(OBJ_DICT)
-###################
+CC = g++
+LD = $(CC) 
+DEBUG_FLAG = -ggdb
+#######################
+COPTS = -Wall `root-config --cflags` $(DEBUG_FLAG) -O2
+LDOPTS = -Wall `root-config --glibs` $(DEBUG_FLAG) -lboost_program_options -lboost_system -lboost_unit_test_framework
+#######################
+SRC_MODULE = # ModuleName.cpp
+HDR_MODULE = $(SRC_MODULE:.cpp=.h)
+OBJ_MODULE = $(SRC_MODULE:.cpp=.o)
+SRC_MAIN = JPetScopeReaderTest.cpp
+OBJ_MAIN = $(SRC_MAIN:.cpp=.o)
+#######################
+EXECUTABLE = $(SRC_MAIN:.cpp=.x)
 LOG = JPet.log
-###################
-ifeq (${PQXX_LIB_SET}, YES)
- LD_PQXX_FLAGS = -lpqxx -lpq
- LDFLAGS += ${LD_PQXX_FLAGS}
+#######################
+SRC_DICT = # moduleDict.cpp
+HDR_DICT = $(SRC_DICT:.cpp=.h)
+OBJ_DICT = $(SRC_DICT:.cpp=.o)
+#######################
+SOURCES = $(SRC_MAIN) $(SRC_MODULE) $(SRC_DICT) 
+OBJECTS = $(OBJ_MAIN) $(OBJ_MODULE) $(OBJ_DICT)
+SHAREDLIB_DIR = ../../..
+SHAREDLIBS = $(SHAREDLIB_DIR)/libJPetFramework.so #$(SHAREDLIB_DIR)/framework/JPetTreeHeader/libJPetTreeHeader.so 
+SHAREDLIBS += $(SHAREDLIB_DIR)/framework/DBHandler/libdbhandler.so
+ifeq ($(OS), Darwin)
+	LDOPTS += -rpath @loader_path/$(SHAREDLIB_DIR)
 endif
-###################
-ifeq ($(DBHANDLER_LIB_SET), YES)
- LIBDBHANDLER = $(SRC_DIR)/DBHandler/libdbhandler.so
- LDFLAGS += ${LIBDBHANDLER}
-endif
-###################
-ifeq ($(UNPACKER_LIB_SET), YES)
- UNPACKER_DIR = $(PWD)/../../JPetUnpacker
- OBJ_ALL += $(UNPACKER_DIR)/libUnpacker2.so
- ifeq ($(OS),Darwin)
-   LDFLAGS += -rpath @loader_path/$(UNPACKER_DIR)
- endif
-endif
+#######################
 %.o: %.cpp
-	$(CO) -o $@ $(CFLAGS) -c $<
-%.exe: %.o
-	$(CO) -o $@ $< $(OBJ_ALL) $(LDFLAGS)
-
-###################
-%Test.o: %Test.cpp
-%Test.exe: %Test.o
-###################
-all: $(TEST_EXEC) 
+	$(CC) $^ -o $@ -c $(COPTS)
+#######################
+# ifndef ROOTSYS
+# $(error ROOTSYS is not set)
+# endif
+#######################
+all: $(EXECUTABLE)
+$(EXECUTABLE): $(OBJECTS) $(SHAREDLIBS)
+	$(LD) -o $@ $^ $(LDOPTS)
+# $(OBJ_MODULE): $(SRC_MODULE)
+# $(OBJ_MAIN): $(SRC_MAIN)
+$(SHAREDLIBS): 
+	cd ../..; $(MAKE) modules sharedlib;
+$(SRC_DICT):
+	rootcint -f $@ -c -P -I$(ROOTSYS) $(HDR_MODULE) 
 clean:
-	rm -f *.exe *.o $(LOG) 
+	rm -f $(OBJECTS) $(EXECUTABLE) $(SRC_DICT) $(HDR_DICT) $(LOG) *.o

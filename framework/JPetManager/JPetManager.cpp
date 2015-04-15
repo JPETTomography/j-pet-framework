@@ -11,7 +11,7 @@
 #include <string>
 
 #include "../../JPetLoggerInclude.h"
-#include "../JPetScopeModule/JPetScopeModule.h"
+#include "../JPetScopeReader/JPetScopeReader.h"
 
 //ClassImp(JPetManager);
 
@@ -41,7 +41,7 @@ void JPetManager::Run()
 
   if (fCmdParser.IsFileTypeSet()) {
     if (fCmdParser.getFileType() == "scope") {
-      JPetScopeModule* module = new JPetScopeModule("JPetScopeModule", "Process Oscilloscope ASCII data into JPetLOR structures.");
+      JPetScopeReader* module = new JPetScopeReader("JPetScopeReader", "Process Oscilloscope ASCII data into JPetLOR structures.");
       module->setFileName(getInputFileName().c_str());
       fTasks.push_front(module);
     } else if (fCmdParser.getFileType() == "hld"){
