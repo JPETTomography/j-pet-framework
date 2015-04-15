@@ -57,6 +57,8 @@ class JPetScopeModule: public JPetAnalysisModule {
    * @param outputFilename address of root file.
    */
   virtual void createOutputObjects(const char* outputFilename = 0);
+  void saveNewTreeFile();
+  void createNewWriter(int position);
 
   /** @brief Process next group of files from fFiles.
    *
