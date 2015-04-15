@@ -50,6 +50,7 @@ class JPetScopeReader: public JPetAnalysisModule {
 
   virtual void createInputObjects(const char* inputFilename = 0);
   virtual void createOutputObjects(const char* outputFilename = 0);
+  virtual void createNewWriter(const char* outputFilename = 0);
 
   virtual void exec();
 
@@ -60,8 +61,6 @@ class JPetScopeReader: public JPetAnalysisModule {
   void setFileName(const char* name);
 
   ClassDef(JPetScopeReader, MODULE_VERSION);
-
-  static JPetRecoSignal generateSignal (const char* filename);
 
   private:
 
@@ -79,7 +78,13 @@ class JPetScopeReader: public JPetAnalysisModule {
   std::vector <ScopeConfig> fConfigs;
 
   #ifndef __CINT__
+
   std::vector <ScopeConfig> :: iterator fIter;
+
+  public:
+
+  static JPetRecoSignal generateSignal (const char* filename);
+
   #endif /* __CINT__ */
 
 };
