@@ -68,7 +68,6 @@ class JPetScopeReader: public JPetAnalysisModule {
 
   std::ifstream fConfigFile;
   
-  JPetScopeReader* fReader; /**< @ref JPetScopeReader. */
   JPetTreeHeader* fHeader; /**< @ref JPetTreeHeader. */ 
   JPetWriter* fWriter; /**< @ref JPetWriter. */
 

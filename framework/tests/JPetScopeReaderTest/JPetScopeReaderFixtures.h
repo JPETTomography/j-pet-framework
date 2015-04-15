@@ -3,21 +3,23 @@
 #include <cstddef>
 #include <cstdio>
 
+#include "../../JPetParamBank/JPetParamBank.h"
+#include "../../JPetParamManager/JPetParamManager.h"
+#include "../../JPetReader/JPetReader.h"
 #include "../../JPetRecoSignal/JPetRecoSignal.h"
+#include "../../JPetTreeHeader/JPetTreeHeader.h"
 
 // *********************************************************************** //
 // ********            Generate Single JPetRecoSignal             ******** //
 // *********************************************************************** //
 
-const char* filename = "test_signal.txt";
+const char* test_signal_filename = "test_signal.txt";
 
 struct generate_reco_signal {
   
   public:
   
   generate_reco_signal ();
-  generate_reco_signal (const char*);
-
   ~generate_reco_signal ();
 
   int setup (const char*);
@@ -40,11 +42,6 @@ struct generate_reco_signal {
 // *********************************************************************** //
 
 generate_reco_signal::generate_reco_signal () : m_file(nullptr) {
-}
-
-// *********************************************************************** //
-
-generate_reco_signal::generate_reco_signal (const char*) : m_file(nullptr) {
 }
 
 // *********************************************************************** //
@@ -126,25 +123,136 @@ int generate_reco_signal::check_data (void (*unit_test_function) (float, float, 
 // ********               Signal Generation Fixture               ******** //
 // *********************************************************************** //
 
-struct signal_generate_fixture : public generate_reco_signal {
+struct signal_generation_fixture : public generate_reco_signal {
   
   public:
 
-  signal_generate_fixture ();
-  ~signal_generate_fixture ();
+  signal_generation_fixture ();
+  ~signal_generation_fixture ();
 
 };
 
 // *********************************************************************** //
 
-signal_generate_fixture::signal_generate_fixture () : generate_reco_signal() {
-  generate_reco_signal::setup(filename);
+signal_generation_fixture::signal_generation_fixture () : generate_reco_signal() {
+  generate_reco_signal::setup(test_signal_filename);
 }
 
 // *********************************************************************** //
 
-signal_generate_fixture::~signal_generate_fixture () {
+signal_generation_fixture::~signal_generation_fixture () {
 }
+
+// *********************************************************************** //
+// ********                 Open Single ROOT file                 ******** //
+// *********************************************************************** //
+
+const char* test_root_filename = "test_root.root";
+
+struct open_root_file {
+  
+  public:
+
+  open_root_file ();
+  ~open_root_file ();
+
+  int setup (const char*);
+
+  public:
+
+  void check_tref_simple (void (*unit_test_function) (const void*) = nullptr);
+
+  private:
+
+  JPetReader m_reader;
+  JPetTreeHeader* m_header;
+  JPetParamBank const* m_bank;
+  JPetParamManager m_manager;
+
+};
+
+// *********************************************************************** //
+
+open_root_file::open_root_file () : m_reader(), m_header(nullptr), m_bank(nullptr), m_manager() {
+}
+
+// *********************************************************************** //
+
+open_root_file::~open_root_file () {
+
+  m_reader.closeFile();
+
+  if (m_header != nullptr) {
+    delete m_header;
+    m_header = nullptr;
+  }
+
+  m_bank = nullptr;
+
+}
+
+// *********************************************************************** //
+
+int open_root_file::setup (const char* filename) {
+  
+  m_reader.openFile(filename);
+  m_reader.readData("tree");
+
+  if (m_reader.isOpen()) {
+
+    m_header = m_reader.getHeaderClone();
+
+    m_manager.readParametersFromFile(&m_reader);
+    m_bank = & m_manager.getParamBank();
+
+  }
+  else return -1;
+  
+  return 0;
+}
+
+// *********************************************************************** //
+
+void open_root_file::check_tref_simple (void (*unit_test_function) (const void*)) {
+  
+  JPetRecoSignal& sig = reinterpret_cast <JPetRecoSignal&> (m_reader.getData());
+
+  for (int i = 0; i < m_reader.getEntries(); ++i) {
+    
+    m_reader.getEntry(i);
+
+    if (unit_test_function != nullptr) {
+      (*unit_test_function) (&(sig.getPM()));
+    }
+  }
+
+}
+
+// *********************************************************************** //
+// ********               TRef Correctness Fixture                ******** //
+// *********************************************************************** //
+
+struct tref_correctness_fixture : public open_root_file {
+
+  public:
+
+  tref_correctness_fixture();
+  ~tref_correctness_fixture();
+
+};
+
+// *********************************************************************** //
+
+tref_correctness_fixture::tref_correctness_fixture () : open_root_file() {
+  open_root_file::setup(test_root_filename);
+}
+
+// *********************************************************************** //
+
+tref_correctness_fixture::~tref_correctness_fixture () {
+}
+
+// *********************************************************************** //
 
 /*#include <boost/property_tree/ptree.h>
 
