@@ -134,59 +134,15 @@ BOOST_AUTO_TEST_CASE(fillTRefsTest)
   BOOST_REQUIRE(bank->getPM(1).getFEB().isActive());
   BOOST_REQUIRE(bank->getPM(2).getFEB().isActive());
   BOOST_REQUIRE(bank->getPM(3).getFEB().isActive());
-  
-  // TOMBChannels  1
-  JPetTOMBChannel& TOMBChannel_ref = bank->getTOMBChannel(0);
-  BOOST_REQUIRE(TOMBChannel_ref.getFEB().isActive());
-  
-  JPetFEB& FEB_ref = bank->getFEB(0);
-  const JPetFEB& FEB_ref2 = TOMBChannel_ref.getFEB();
-  BOOST_REQUIRE(FEB_ref.getID() == FEB_ref2.getID());
-  JPetTRB& TRB_ref = bank->getTRB(0);
-  const JPetTRB& TRB_ref2 = TOMBChannel_ref.getTRB();
-  BOOST_REQUIRE(TRB_ref.getID() == TRB_ref2.getID());
-  JPetPM& PM_ref = bank->getPM(0);
-  const JPetPM& PM_ref2 =TOMBChannel_ref.getPM();
-  BOOST_REQUIRE(PM_ref.getID() == PM_ref2.getID());
 
-
+  // Consistency of TRefs from TOMBChannels
+  for(int i=0;i<bank->getTOMBChannelsSize();++i){
+    JPetTOMBChannel& TOMBChannel_ref = bank->getTOMBChannel(i);
+    BOOST_REQUIRE(TOMBChannel_ref.getFEB().isActive());
+    BOOST_REQUIRE_EQUAL(TOMBChannel_ref.getFEB().getID() ,TOMBChannel_ref.getPM().getFEB().getID());
+    BOOST_REQUIRE_EQUAL(TOMBChannel_ref.getTRB().getID() ,TOMBChannel_ref.getFEB().getTRB().getID());
+  }
   
-//  // TOMBChannels 2 
-//  TOMBChannel_ref = bank->getTOMBChannel(1);
-//  BOOST_REQUIRE(TOMBChannel_ref.getFEB().isActive());
-//  FEB_ref = bank->getFEB(0);
-//  FEB_ref2 = TOMBChannel_ref.getFEB();
-//  BOOST_REQUIRE(FEB_ref.getID() == FEB_ref2.getID());
-//  TRB_ref = bank->getTRB(0);
-//  TRB_ref2 = TOMBChannel_ref.getTRB();
-//  BOOST_REQUIRE(TRB_ref.getID() == TRB_ref2.getID());
-//  PM_ref = bank->getPM(0);
-//  PM_ref2 =TOMBChannel_ref.getPM();
-//  BOOST_REQUIRE(PM_ref.getID() == PM_ref2.getID());
-//  
-//  TOMBChannel_ref = bank->getTOMBChannel(2);
-//  BOOST_REQUIRE(TOMBChannel_ref.getFEB().isActive());
-//  FEB_ref = bank->getFEB(0);
-//  FEB_ref2 = TOMBChannel_ref.getFEB();
-//  BOOST_REQUIRE(FEB_ref.getID() == FEB_ref2.getID());
-//  TRB_ref = bank->getTRB(0);
-//  TRB_ref2 = TOMBChannel_ref.getTRB();
-//  BOOST_REQUIRE(TRB_ref.getID() == TRB_ref2.getID());
-//  PM_ref = bank->getPM(0);
-//  PM_ref2 =TOMBChannel_ref.getPM();
-//  BOOST_REQUIRE(PM_ref.getID() == PM_ref2.getID());
-//
-//  TOMBChannel_ref = bank->getTOMBChannel(3);
-//  BOOST_REQUIRE(TOMBChannel_ref.getFEB().isActive());
-//  FEB_ref = bank->getFEB(0);
-//  FEB_ref2 = TOMBChannel_ref.getFEB();
-//  BOOST_REQUIRE(FEB_ref.getID() == FEB_ref2.getID());
-//  TRB_ref = bank->getTRB(0);
-//  TRB_ref2 = TOMBChannel_ref.getTRB();
-//  BOOST_REQUIRE(TRB_ref.getID() == TRB_ref2.getID());
-//  PM_ref = bank->getPM(0);
-//  PM_ref2 =TOMBChannel_ref.getPM();
-//  BOOST_REQUIRE(PM_ref.getID() == PM_ref2.getID());
 
   /* 
    * Possible bug in implementation - for the same TOMBChannel two PMs are possible?
