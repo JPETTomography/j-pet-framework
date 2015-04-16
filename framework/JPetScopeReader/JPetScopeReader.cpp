@@ -141,7 +141,10 @@ void JPetScopeReader::createInputObjects(const char* inputFilename)
     string collimator_function;
     int a, b, c, n;
     BOOST_FOREACH(const ptree::value_type& v, conf_data.get_child("collimator")) {
-      collimator_function = v.second.get<string>("positions");
+
+      if (ext.compare(".json") == 0) collimator_function = v.second.get<string>("positions");
+      else collimator_function = v.second.data();
+
       n = sscanf(collimator_function.c_str(), "%d %d %d", &a, &b, &c);
 
       if (n > 0) {
