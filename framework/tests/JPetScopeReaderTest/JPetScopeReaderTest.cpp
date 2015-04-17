@@ -1,56 +1,40 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE JPetReaderTest
+#define BOOST_TEST_MODULE ScopeReader
+#define BOOST_TEST_LOG_LEVEL message
+
 #include <boost/test/unit_test.hpp>
 
-#define private public
-#define protected public
+#include "JPetScopeReaderFixtures.h"
 
 #include <cstddef>
-#include <iostream>
-#include <vector>
-
-#include "../../JPetScopeReader/JPetScopeReader.h"
-#include "../../JPetPhysSignal/JPetPhysSignal.h"
-#include "../../JPetSigCh/JPetSigCh.h"
+#include <functional>
 
 BOOST_AUTO_TEST_SUITE (FirstSuite)
 
+BOOST_FIXTURE_TEST_CASE (signal_generation_test, signal_generation_fixture) {
 
-BOOST_AUTO_TEST_CASE (default_constructor)
-{
-  JPetScopeReader reader;
+  check_header(
+    [] (int osc_file_size, int reco_signal_size) -> void {
+      BOOST_REQUIRE_EQUAL(osc_file_size, reco_signal_size);
+    }
+  );
 
-  BOOST_REQUIRE(reader.isFileOpen() == false);
-
-//  BOOST_REQUIRE_EQUAL(reader.fSegments, 0);
-  BOOST_REQUIRE_EQUAL(reader.fSegmentSize, 0);
+  check_data(
+    [] (float osc_file_time, float reco_signal_time, float osc_file_ampl, float reco_signal_ampl) -> void {
+      BOOST_CHECK_CLOSE_FRACTION(osc_file_time, reco_signal_time, 1.f / 131072.f);
+      BOOST_CHECK_CLOSE_FRACTION(osc_file_ampl, reco_signal_ampl, 1.f / 131072.f);
+    }
+  );
 }
 
-BOOST_AUTO_TEST_CASE (open_file)
-{
-  JPetScopeReader reader;
-  reader.openFile("C1_00000.txt");
-
-  BOOST_REQUIRE(reader.isFileOpen());
-
-//  BOOST_REQUIRE_EQUAL(reader.fSegments, 0);
-  BOOST_REQUIRE_EQUAL(reader.fSegmentSize, 0);
-
-  reader.readHeader();
-
-//  BOOST_CHECK_EQUAL(reader.fSegments, 1);
-  BOOST_CHECK_EQUAL(reader.fSegmentSize, 502);
-
-  JPetRecoSignal rsig = reader.readData();
-  //  const JPetRecoSignal& rsig = psig->getRecoSignal();
-  int points = rsig.getShape().size();
-
-  BOOST_CHECK_EQUAL(points, 502);
-
-  reader.closeFile();
-
-  BOOST_REQUIRE(reader.isFileOpen() == false);
-
+BOOST_FIXTURE_TEST_CASE (tref_correctness_test, tref_correctness_fixture) {
+  
+  check_tref_simple(
+    [] (const void* tref_pointer) -> void {
+      BOOST_CHECK_PREDICATE(std::not_equal_to <size_t> (), ((size_t) tref_pointer)((size_t) nullptr));
+    }
+  );
+  //check_tref_simple(nullptr);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

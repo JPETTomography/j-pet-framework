@@ -1,107 +1,84 @@
-/**
- * @file JPetScopeReader.h
- * @author Damian Trybek, damian.trybek@uj.edu.pl
- * @copyright Copyright (c) 2014, Damian Trybek
- * @brief Class for reading ASCII Oscilloscope data into JPetScopeReader structure.
- */
+#ifndef _SCOPE_READER_MODULE_H_
+#define _SCOPE_READER_MODULE_H_
 
-#ifndef _JPETSCOPEREADER_H_
-#define _JPETSCOPEREADER_H_
+#define MODULE_VERSION 0.4
 
-#include <cstdio>
+#include "../JPetAnalysisModule/JPetAnalysisModule.h"
+
+#include <cstddef>
 #include <fstream>
 #include <string>
+#include <set>
+#include <vector>
 
-#include "../JPetRecoSignal/JPetRecoSignal.h"
+#include <boost/property_tree/ptree.hpp>
 
-/** @brief Oscilloscope ASCII data reader.
- * JPetScopeReader class produce JPetSignal from single oscilloscope ASCII file.
- */
-class JPetScopeReader {
+class JPetParamBank;
+class JPetPM;
+class JPetRecoSignal;
+class JPetScin;
+class JPetTreeHeader;
+class JPetWriter;
+
+class JPetScopeReader: public JPetAnalysisModule {
   
-  public:
+  private:
 
+  typedef struct ScopeConfig {
+    
+    std::string pName;
+    int pCollPosition;
+
+    JPetParamBank const* pParamBank;
+    
+    JPetPM *pPM1, *pPM2, *pPM3, *pPM4;
+    JPetScin *pScin1, *pScin2;
+
+    std::string pPrefix1, pPrefix2, pPrefix3, pPrefix4;
+
+    std::set <std::string> pFiles;
+    std::set <std::string> :: iterator pIter;
+
+  } ScopeConfig;
+
+  public:
+  
   JPetScopeReader();
+  JPetScopeReader(const char* name, const char* title);
+
   virtual ~JPetScopeReader();
 
-  /** @brief Produce JPetSignal from given file.
-   *
-   * If setPrintFile(true) method was called data is also printed on screen.
-   *
-   * @param filename address of an oscilloscope ASCII file.
-   * @return reference to created JPetRecoSignal
-   * @see setPrintFile()
-   */
-  JPetRecoSignal& generateSignal (const char* filename);
+  virtual void createInputObjects(const char* inputFilename = 0);
+  virtual void createOutputObjects(const char* outputFilename = 0);
 
-  /** @brief Return id of photomultiplier set by JPetScopeModule
-   * @return fPMID
-   */
-  inline int getPMID() const {return fPMID;}
-    
-  /** @brief Return number of data lines (JPetSigCh contained in output JPetSignal).
-   * @return fSegmentSize
-   */
-  inline int getSegmentSize() const {return fSegmentSize;}
- 
-  /** @brief Debug function
-   * @param print if true generateSignal will print every data line read.
-   * @see generateSignal()
-   */
-  inline void setPrintFile (bool print = true) {fPrintFile = print;}
+  virtual void exec();
 
-  /** @brief Set ID of photomultiplier used to gather signal.
-   * @param PMID id of photomultiplier
-   */
-  inline void setPMID(int PMID) {fPMID = PMID;}
+  virtual long long getEventNb() {return fEventNb;}
+
+  virtual void terminate();
+
+  void setFileName(const char* name);
+
+  void createNewWriter(const char* outputFilename = 0);
+  JPetParamBank const& createParamBank (boost::property_tree::ptree const& conf_data);
+
+  static JPetRecoSignal generateSignal (const char* filename);
 
   private:
 
-  /** @brief Open file method.
-   * @param address of file to open.
-   */
-  void openFile(const char* filename);
+  long long fEventNb;
+
+  std::ifstream fConfigFile;
   
-  /** @brief Check if file is opend
-   * @return ture if file is opend, flase if not.
-   */
-  inline bool isFileOpen() const {return fInputFile;}
+  JPetTreeHeader* fHeader; /**< @ref JPetTreeHeader. */ 
+  JPetWriter* fWriter; /**< @ref JPetWriter. */
 
-  /** @brief Close file method. */
-  void closeFile();
+  TString fInFilename; /**< @brief Location of config file. */
+  TString fOutFilename; /**< @brief Location of output root file. */
 
-  /** @brief Reads header of oscilloscope ASCII file */
-  void readHeader();
+  std::vector <ScopeConfig> fConfigs;
+  std::vector <ScopeConfig> :: iterator fIter;
 
-  /** @brief Reads data from oscilloscope ASCII file and produces JPetSignal
-   *
-   * If setPrintFile(true) method was called data is also printed on screen.
-   *
-   * @return reference to JPetRecoSignal.
-   * @see setPrintFile()
-   */
-  JPetRecoSignal& readData();
-
-  FILE* fInputFile; /**< @brief Pointer to oscilloscope ASCII file. */
-
-  std::string fScopeType; /**< @brief Oscilloscope type read form file header. */
-  std::string fDate; /**< @brief Date, when signal was gathered. */
-  std::string fTime; /**< @brief Time, when signal was gathered. */
-  std::string fFilename; /** @brief Address of oscilloscope ASCII file. */
-
-  /** @brief Debug flag.
-   *
-   * If true data read will be printed on screen.
-   * @see setPrintFile()
-   */
-  bool fPrintFile;
-
-  int fPMID; /**< @brief ID of photomultiplier used to gather signal. */
-  //int fSegments;
-  int fSegmentSize; /**< @brief Number of data lines in file. */
-
-  JPetRecoSignal fRecoSignal; /**< @brief Last created JPetRecoSignal. */
-  
 };
 
 #endif
