@@ -18,6 +18,7 @@
 #include <TSystem.h>
 #include <TApplication.h>
 
+#include "../JPetBarrelSlot/JPetBarrelSlot.h"
 #include "../JPetManager/JPetManager.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetPhysSignal/JPetPhysSignal.h"
@@ -38,8 +39,6 @@ const double ks2ps = 1.0e+12;
 const double kV2mV = 1.0e+3;
 const int kbuflen = 256;
 
-ClassImp(JPetScopeReader);
-
 JPetScopeReader::JPetScopeReader(): JPetAnalysisModule(), fEventNb(0), fWriter(nullptr) {
   gSystem->Load("libTree");
 }
@@ -57,8 +56,95 @@ JPetScopeReader::~JPetScopeReader() {
 
 }
 
-void JPetScopeReader::createInputObjects(const char* inputFilename)
-{
+JPetParamBank const& JPetScopeReader::createParamBank(ptree const& conf_data) {
+    
+    // Read Data from config tree
+
+    int bslotid1, bslotid2;
+    bool bslotactive1, bslotactive2;
+    string bslotname1, bslotname2;
+    float bslottheta1, bslottheta2;
+    int bslotframe1, bslotframe2;
+
+    bslotid1 = conf_data.get("bslot1.id", -1);
+    bslotid2 = conf_data.get("bslot2.id", -1);
+
+    bslotactive1 = conf_data.get("bslot1.active", false);
+    bslotactive2 = conf_data.get("bslot2.active", false);
+
+    bslotname1 = conf_data.get("bslot1.name", string(""));
+    bslotname2 = conf_data.get("bslot2.name", string(""));
+
+    bslottheta1 = conf_data.get("bslot1.theta", -1.f);
+    bslottheta2 = conf_data.get("bslot2.theta", -1.f);
+
+    bslotframe1 = conf_data.get("bslot1.frame", -1);
+    bslotframe2 = conf_data.get("bslot2.frame", -1);
+
+    int pmid1, pmid2, pmid3, pmid4;
+
+    pmid1 = conf_data.get("pm1.id", 0);
+    pmid2 = conf_data.get("pm2.id", 0);
+    pmid3 = conf_data.get("pm3.id", 0);
+    pmid4 = conf_data.get("pm4.id", 0);
+
+    int scinid1, scinid2;
+
+    scinid1 = conf_data.get("scin1.id", 0);
+    scinid2 = conf_data.get("scin2.id", 0);
+
+    // Create Parametric objects
+    
+    JPetBarrelSlot bslot1 (bslotid1, bslotactive1, bslotname1, bslottheta1, bslotframe1);
+    JPetBarrelSlot bslot2 (bslotid2, bslotactive2, bslotname2, bslottheta2, bslotframe2);
+
+    JPetPM pm1;
+    JPetPM pm2;
+    JPetPM pm3;
+    JPetPM pm4;
+
+    JPetScin scin1;
+    JPetScin scin2;
+
+    pm1.setID(pmid1);
+    pm2.setID(pmid2);
+    pm3.setID(pmid3);
+    pm4.setID(pmid4);
+
+    scin1.setID(scinid1);
+    scin2.setID(scinid2);
+
+    JPetParamBank* param_bank = new JPetParamBank();
+
+    param_bank->addBarrelSlot(bslot1);
+    param_bank->addBarrelSlot(bslot2);
+
+    param_bank->addPM(pm1);
+    param_bank->addPM(pm2);
+    param_bank->addPM(pm3);
+    param_bank->addPM(pm4);
+
+    param_bank->addScintillator(scin1);
+    param_bank->addScintillator(scin2);
+
+    (param_bank->getPM(0)).setScin(param_bank->getScintillator(0));
+    (param_bank->getPM(1)).setScin(param_bank->getScintillator(0));
+    (param_bank->getPM(2)).setScin(param_bank->getScintillator(1));
+    (param_bank->getPM(3)).setScin(param_bank->getScintillator(1));
+
+    (param_bank->getPM(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
+    (param_bank->getPM(1)).setBarrelSlot(param_bank->getBarrelSlot(0));
+    (param_bank->getPM(2)).setBarrelSlot(param_bank->getBarrelSlot(1));
+    (param_bank->getPM(3)).setBarrelSlot(param_bank->getBarrelSlot(1));
+
+    (param_bank->getScintillator(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
+    (param_bank->getScintillator(1)).setBarrelSlot(param_bank->getBarrelSlot(1));
+
+    return *param_bank;
+}
+
+void JPetScopeReader::createInputObjects(const char* inputFilename) {
+
   INFO( Form("Starting %s.", GetName() ) );
 
   // Create property tree
@@ -88,53 +174,13 @@ void JPetScopeReader::createInputObjects(const char* inputFilename)
   
   for (ptree::const_iterator it = prop_tree.begin(); it != prop_tree.end(); ++it) {
 
-    int pmid1, pmid2, pmid3, pmid4;
-    int scinid1, scinid2;
-
     string files_location;
 
     const ptree& conf_data = it->second;
 
-    pmid1 = conf_data.get("pm1.id", 0);
-    pmid2 = conf_data.get("pm2.id", 0);
-    pmid3 = conf_data.get("pm3.id", 0);
-    pmid4 = conf_data.get("pm4.id", 0);
-
-    scinid1 = conf_data.get("scin1.id", 0);
-    scinid2 = conf_data.get("scin2.id", 0);
-
     files_location = conf_data.get<string>("location");
 
-    // Create ParamBank
-
-    JPetPM pm1;
-    JPetPM pm2;
-    JPetPM pm3;
-    JPetPM pm4;
-
-    JPetScin scin1;
-    JPetScin scin2;
-
-    pm1.setID(pmid1);
-    pm2.setID(pmid2);
-    pm3.setID(pmid3);
-    pm4.setID(pmid4);
-
-    scin1.setID(scinid1);
-    scin2.setID(scinid2);
-
-    JPetParamBank* param_bank = new JPetParamBank();
-    param_bank->addPM(pm1);
-    param_bank->addPM(pm2);
-    param_bank->addPM(pm3);
-    param_bank->addPM(pm4);
-    param_bank->addScintillator(scin1);
-    param_bank->addScintillator(scin2);
-
-    (param_bank->getPM(0)).setScin(param_bank->getScintillator(0));
-    (param_bank->getPM(1)).setScin(param_bank->getScintillator(0));
-    (param_bank->getPM(2)).setScin(param_bank->getScintillator(1));
-    (param_bank->getPM(3)).setScin(param_bank->getScintillator(1));
+    JPetParamBank const& param_bank = createParamBank (conf_data);
 
     // Fill Configs
 
@@ -163,17 +209,17 @@ void JPetScopeReader::createInputObjects(const char* inputFilename)
 	  (*current_config).pCollPosition = j;
 
 	  // Add param bank
-	  (*current_config).pParamBank    = param_bank;
+	  (*current_config).pParamBank    = &param_bank;
 
 	  // Add PMs
-	  (*current_config).pPM1          = &(param_bank->getPM(0));
-	  (*current_config).pPM2          = &(param_bank->getPM(1));
-	  (*current_config).pPM3          = &(param_bank->getPM(2));
-	  (*current_config).pPM4          = &(param_bank->getPM(3));
+	  (*current_config).pPM1          = &(param_bank.getPM(0));
+	  (*current_config).pPM2          = &(param_bank.getPM(1));
+	  (*current_config).pPM3          = &(param_bank.getPM(2));
+	  (*current_config).pPM4          = &(param_bank.getPM(3));
 
 	  // Add Scintillators
-	  (*current_config).pScin1        = &(param_bank->getScintillator(0));
-	  (*current_config).pScin2        = &(param_bank->getScintillator(1));
+	  (*current_config).pScin1        = &(param_bank.getScintillator(0));
+	  (*current_config).pScin2        = &(param_bank.getScintillator(1));
 
 	  // Add filename prefixes
 	  (*current_config).pPrefix1      = conf_data.get<string>("pm1.prefix");
@@ -268,8 +314,6 @@ void JPetScopeReader::exec() {
     }
 
     if ((*fIter).pIter != (*fIter).pFiles.end()) {
-
-      //JPetPhysSignal psig1, psig2, psig3, psig4;
     
       string osc_file = *((*fIter).pIter);
       string filename;
@@ -277,47 +321,39 @@ void JPetScopeReader::exec() {
       int tslot_index;
       sscanf(path(osc_file).filename().string().c_str(), "%*3s %d", &tslot_index);
     
-      //INFO (Form("Processing file: %s", osc_file.c_str()));
       JPetRecoSignal rsig1 = generateSignal(osc_file.c_str());
       rsig1.setPM(*((*fIter).pPM1));
       rsig1.setTSlotIndex(tslot_index);
-      //psig1.setRecoSignal(rsig1);
     
       filename = path(*((*fIter).pIter)).filename().string();
       filename[1] = ((*fIter).pPrefix2)[1];
       osc_file = path(*((*fIter).pIter)).parent_path().string();
       osc_file+= "/";
       osc_file+= filename;
-
-      //INFO (Form("Processing file: %s", osc_file.c_str()));   
+  
       JPetRecoSignal rsig2 = generateSignal(osc_file.c_str());
       rsig2.setPM(*((*fIter).pPM2));
       rsig2.setTSlotIndex(tslot_index);
-      //psig2.setRecoSignal(rsig2);
      
       filename = path(*((*fIter).pIter)).filename().string();
       filename[1] = ((*fIter).pPrefix3)[1];
       osc_file = path(*((*fIter).pIter)).parent_path().string();
       osc_file+= "/";
       osc_file+= filename;
-
-      //INFO (Form("Processing file: %s", osc_file.c_str()));   
+   
       JPetRecoSignal rsig3 = generateSignal(osc_file.c_str());
       rsig3.setPM(*((*fIter).pPM3));
       rsig3.setTSlotIndex(tslot_index);
-      //psig3.setRecoSignal(rsig3);
     
       filename = path(*((*fIter).pIter)).filename().string();
       filename[1] = ((*fIter).pPrefix4)[1];
       osc_file = path(*((*fIter).pIter)).parent_path().string();
       osc_file+= "/";
       osc_file+= filename;
-
-      //INFO (Form("Processing file: %s", osc_file.c_str())); 
+ 
       JPetRecoSignal rsig4 = generateSignal(osc_file.c_str());
       rsig4.setPM(*((*fIter).pPM4));
       rsig4.setTSlotIndex(tslot_index);
-      //psig4.setRecoSignal(rsig4);
     
       fWriter->write(rsig1);
       fWriter->write(rsig2);
@@ -335,7 +371,7 @@ void JPetScopeReader::exec() {
 }
 
 void JPetScopeReader::terminate() {
-//  assert(fWriter);
+
   if(fWriter)
   if(fWriter->isOpen()) {
     fWriter->closeFile();
@@ -414,7 +450,6 @@ JPetRecoSignal JPetScopeReader::generateSignal(const char* filename) {
 
     float time = value * ks2ps; // file holds time in seconds, while SigCh requires it in picoseconds
     float amplitude = threshold * kV2mV;  // file holds thresholds in volts, while SigCh requires it in milivolts
-    //sigCh.setPMID(fPMID);
 
     reco_signal.setShapePoint(time, amplitude);
   }

@@ -1,15 +1,17 @@
 #ifndef _SCOPE_READER_MODULE_H_
 #define _SCOPE_READER_MODULE_H_
 
+#define MODULE_VERSION 0.4
+
+#include "../JPetAnalysisModule/JPetAnalysisModule.h"
+
 #include <cstddef>
 #include <fstream>
 #include <string>
 #include <set>
 #include <vector>
 
-#include "../JPetAnalysisModule/JPetAnalysisModule.h"
-
-#define MODULE_VERSION 0.1
+#include <boost/property_tree/ptree.hpp>
 
 class JPetParamBank;
 class JPetPM;
@@ -27,17 +29,15 @@ class JPetScopeReader: public JPetAnalysisModule {
     std::string pName;
     int pCollPosition;
 
-    JPetParamBank* pParamBank;
-
+    JPetParamBank const* pParamBank;
+    
     JPetPM *pPM1, *pPM2, *pPM3, *pPM4;
     JPetScin *pScin1, *pScin2;
 
     std::string pPrefix1, pPrefix2, pPrefix3, pPrefix4;
-    std::set <std::string> pFiles;
 
-    #ifndef __CINT__
+    std::set <std::string> pFiles;
     std::set <std::string> :: iterator pIter;
-    #endif /* __CINT__ */
 
   } ScopeConfig;
 
@@ -50,7 +50,6 @@ class JPetScopeReader: public JPetAnalysisModule {
 
   virtual void createInputObjects(const char* inputFilename = 0);
   virtual void createOutputObjects(const char* outputFilename = 0);
-  virtual void createNewWriter(const char* outputFilename = 0);
 
   virtual void exec();
 
@@ -60,7 +59,10 @@ class JPetScopeReader: public JPetAnalysisModule {
 
   void setFileName(const char* name);
 
-  ClassDef(JPetScopeReader, MODULE_VERSION);
+  void createNewWriter(const char* outputFilename = 0);
+  JPetParamBank const& createParamBank (boost::property_tree::ptree const& conf_data);
+
+  static JPetRecoSignal generateSignal (const char* filename);
 
   private:
 
@@ -75,16 +77,7 @@ class JPetScopeReader: public JPetAnalysisModule {
   TString fOutFilename; /**< @brief Location of output root file. */
 
   std::vector <ScopeConfig> fConfigs;
-
-  #ifndef __CINT__
-
   std::vector <ScopeConfig> :: iterator fIter;
-
-  public:
-
-  static JPetRecoSignal generateSignal (const char* filename);
-
-  #endif /* __CINT__ */
 
 };
 
