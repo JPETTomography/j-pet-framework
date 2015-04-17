@@ -38,13 +38,8 @@ void JPetManager::Run()
 {
   // write to log about starting
   INFO( "========== Starting processing tasks: " + GetTimeString() + " ==========" );
-
-  if (fCmdParser.IsFileTypeSet()) {
-    if (fCmdParser.getFileType() == "scope") {
-      JPetScopeReader* module = new JPetScopeReader("JPetScopeReader", "Process Oscilloscope ASCII data into JPetLOR structures.");
-      module->setFileName(getInputFileName().c_str());
-      fTasks.push_front(module);
-    } else if (fCmdParser.getFileType() == "hld"){
+  ProcessFromCmdLineArgs();
+  JPetWriter* currentWriter = 0;
   std::list<JPetAnalysisModule*>::iterator taskIter;
   // pseudo-input container
   long long  kNevent = 0;
@@ -93,7 +88,7 @@ void JPetManager::ProcessFromCmdLineArgs()
     }
     if (fCmdParser.IsFileTypeSet()) {
       if (fCmdParser.getFileType() == "scope") {
-        JPetScopeModule* module = new JPetScopeModule("JPetScopeModule", "Process Oscilloscope ASCII data into JPetLOR structures.");
+        JPetScopeReader* module = new JPetScopeReader("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures.");
         module->setFileName(getInputFileName().c_str());
         fTasks.push_front(module);
       } else if (fCmdParser.getFileType() == "hld") {
