@@ -41,8 +41,8 @@ BOOST_AUTO_TEST_CASE (open_file)
 //  BOOST_CHECK_EQUAL(reader.fSegments, 1);
   BOOST_CHECK_EQUAL(reader.fSegmentSize, 502);
 
-  JPetPhysSignal* psig = reader.readData();
-  const JPetRecoSignal& rsig = psig->getRecoSignal();
+  JPetRecoSignal rsig = reader.readData();
+  //  const JPetRecoSignal& rsig = psig->getRecoSignal();
   int points = rsig.getShape().size();
 
   BOOST_CHECK_EQUAL(points, 502);

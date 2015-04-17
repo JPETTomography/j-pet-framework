@@ -21,12 +21,7 @@ class JPetScopeReader {
   
   public:
 
-  /** @brief Default Constructor */
   JPetScopeReader();
-
-//  JPetScopeReader(const char* filename);
-
-  /** @brief Destructor */
   virtual ~JPetScopeReader();
 
   /** @brief Produce JPetSignal from given file.
@@ -44,8 +39,6 @@ class JPetScopeReader {
    */
   inline int getPMID() const {return fPMID;}
     
-  //inline int getSegments() const {return fSegments;}
-
   /** @brief Return number of data lines (JPetSigCh contained in output JPetSignal).
    * @return fSegmentSize
    */

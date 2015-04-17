@@ -6,6 +6,7 @@
 #include <utility>
 #include <string>
 #include <fstream>
+#include <iostream>
 #ifndef __CINT__
 #include <boost/noncopyable.hpp>
 #include <boost/optional.hpp>
