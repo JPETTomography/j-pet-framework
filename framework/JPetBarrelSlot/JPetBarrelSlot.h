@@ -51,7 +51,7 @@ protected:
     fTRefLayer = NULL;
   }
 
-  ClassDef(JPetBarrelSlot, 2);
+  ClassDef(JPetBarrelSlot, 3);
 };
 
 #endif

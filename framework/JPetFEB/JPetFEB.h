@@ -69,7 +69,7 @@ public:
   virtual int getNtimeOutsPerInput(void) const;
   virtual int getNnotimeOutsPerInput(void) const;
   
-  const JPetTRB & getTRB() 
+  const JPetTRB & getTRB() const 
   { 
     return (JPetTRB&)*fTRefTRBs.GetObject(); 
   }

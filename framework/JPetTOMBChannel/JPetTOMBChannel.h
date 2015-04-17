@@ -72,7 +72,7 @@ private:
   unsigned int fLocalChannelNumber; ///< number of the threshold
   unsigned int fFEBInputNumber; ///< number of input of the FEB from which this channel comes
   
-  ClassDef(JPetTOMBChannel, 2);
+  ClassDef(JPetTOMBChannel, 3);
 };
 
 #endif // JPET_TOMB_CHANNEL_H

@@ -27,6 +27,7 @@ private:
 public:
   void parse(int argc, const char** argv);
   inline const std::string& getFileName() const { return fVariablesMap["file"].as<std::string>();}
+  bool isCorrectFileType(const std::string& type) const;
   inline const std::string& getFileType() const { return fVariablesMap["type"].as<std::string>();}
   inline bool IsFileTypeSet() const { return (bool)fVariablesMap.count("type"); }
       /**

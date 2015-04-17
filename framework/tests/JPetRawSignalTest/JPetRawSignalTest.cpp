@@ -162,11 +162,11 @@ BOOST_AUTO_TEST_CASE(SetAndGetTRefPMObjectTest) {
 
 BOOST_AUTO_TEST_CASE(SetAndGetTRefBarrelSlotObjectTest) {
   JPetRawSignal signal;
-  JPetBarrelSlot barrelSlot;
+  JPetBarrelSlot barrelSlot(2, true, "bs2", 30., 2);
   signal.setBarrelSlot(barrelSlot);
   barrelSlot = signal.getBarrelSlot();
 
-  BOOST_CHECK(barrelSlot.getID() == 0);
+  BOOST_CHECK(barrelSlot.getID() == 2);
 
 }
 
