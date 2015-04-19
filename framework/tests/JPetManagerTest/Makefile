@@ -1,9 +1,9 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetManager
-EXTRA_MODULES = JPetCmdParser JPetParamManager JPetScin JPetFEB JPetTRB JPetPM JPetBarrelSlot JPetUnpacker JPetLogger JPetParamBank JPetDBParamGetter JPetTOMBChannel JPetPMCalib JPetLayer JPetFrame JPetScopeModule JPetAnalysisModule JPetScopeReader JPetHit JPetLOR JPetWriter JPetSigCh JPetPhysSignal JPetRawSignal JPetRecoSignal JPetBaseSignal JPetTreeHeader
+EXTRA_MODULES = JPetCmdParser JPetParamManager JPetScin JPetFEB JPetTRB JPetPM JPetBarrelSlot JPetUnpacker JPetLogger JPetParamBank JPetDBParamGetter JPetTOMBChannel JPetPMCalib JPetLayer JPetFrame JPetAnalysisModule JPetScopeReader JPetHit JPetLOR JPetWriter JPetSigCh JPetPhysSignal JPetRawSignal JPetRecoSignal JPetBaseSignal JPetTreeHeader
 #classes that need Dictionnaries 
-DICTS = JPetScin JPetFEB JPetTRB JPetPM JPetUnpacker JPetParamBank JPetBarrelSlot JPetTOMBChannel JPetPMCalib JPetLayer JPetFrame JPetScopeModule JPetHit JPetLOR JPetSigCh JPetPhysSignal JPetRawSignal JPetRecoSignal JPetBaseSignal JPetAnalysisModule JPetTreeHeader
+DICTS = JPetScin JPetFEB JPetTRB JPetPM JPetUnpacker JPetParamBank JPetBarrelSlot JPetTOMBChannel JPetPMCalib JPetLayer JPetFrame JPetHit JPetLOR JPetSigCh JPetPhysSignal JPetRawSignal JPetRecoSignal JPetBaseSignal JPetAnalysisModule JPetTreeHeader
 PQXX_LIB_SET = YES
 DBHANDLER_LIB_SET = YES
 UNPACKER_LIB_SET = YES

@@ -36,68 +36,47 @@ void JPetManager::AddTask(JPetAnalysisModule* mod)
 
 void JPetManager::Run()
 {
-  // write to log about starting
-  INFO( "========== Starting processing tasks: " + GetTimeString() + " ==========" );
-  ProcessFromCmdLineArgs();
-  JPetWriter* currentWriter = 0;
-  std::list<JPetAnalysisModule*>::iterator taskIter;
-  // pseudo-input container
-  long long  kNevent = 0;
-  long long kFirstEvent = 0;
-  long long kLastEvent = 0;
-  for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
-    (*taskIter)->createInputObjects( getInputFileNames()[0].c_str() ); /// readers
-    (*taskIter)->createOutputObjects( getInputFileNames()[0].c_str() ); /// writers + histograms
-    kNevent = (*taskIter)->getEventNb();
-    kFirstEvent = 0;
-    kLastEvent = kNevent - 1;
+	INFO( "========== Starting processing tasks: " + GetTimeString() + " ==========" );
+	ProcessFromCmdLineArgs();
+	currentTask = fTasks.begin();
+	long long  kNevent = (*currentTask)->getEventNb();
+	long long kFirstEvent = 0;
+	long long kLastEvent = 0;
+	vector<string> fileNames = getInputFileNames();
 
-    // handle the user-provided range of events to process,
-    // but only for the first module to process
-    if ( taskIter == fTasks.begin() ) { // only for first module
-      if ( fCmdParser.getLowerEventBound() != -1 &&
-           fCmdParser.getHigherEventBound() != -1 &&
-           fCmdParser.getHigherEventBound() < kNevent) { // only if user provided reasonable bounds
-        kFirstEvent = fCmdParser.getLowerEventBound();
-        kLastEvent = fCmdParser.getHigherEventBound();
-        kNevent = kLastEvent - kFirstEvent + 1;
-      }
-    }
+	for(int i = 0; i < fileNames.size(); i++)
+	{
+		for (currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
+			prepareCurrentTaskForFile(fileNames[i]);
+			setEventBounds(kFirstEvent, kLastEvent, kNevent);
+			processEventsInRange(kFirstEvent, kLastEvent);
+			(*currentTask)->terminate();
+		}
+	}
 
-    for (long long i = kFirstEvent; i <= kLastEvent; i++) {
-      if (fIsProgressBarEnabled) {
-        printf("\r[%6.4f% %]", setProgressBar(i, kNevent));
-      }
-      (*taskIter)->exec();
-    }
-    (*taskIter)->terminate();
-  }
-
-  INFO( "======== Finished processing all tasks: " + GetTimeString() + " ========\n" );
+	INFO( "======== Finished processing all tasks: " + GetTimeString() + " ========\n" );
 }
 
 ///> Initialize and process things based on the command line arguments.
 void JPetManager::ProcessFromCmdLineArgs()
 {
-  if (fCmdParser.isRunNumberSet()) { /// we should connect to the database
-      fParamManager.getParametersFromDatabase(fCmdParser.getRunNumber()); /// @todo some error handling
-    }
+	if (fCmdParser.isRunNumberSet()) { /// we should connect to the database
+		fParamManager.getParametersFromDatabase(fCmdParser.getRunNumber()); /// @todo some error handling
+	}
         
-    if (fCmdParser.isProgressBarSet()) {
-      fIsProgressBarEnabled = true;
-    }
-    if (fCmdParser.IsFileTypeSet()) {
-      if (fCmdParser.getFileType() == "scope") {
-        JPetScopeReader* module = new JPetScopeReader("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures.");
-        module->setFileName(getInputFileNames()[0].c_str());
-        fTasks.push_front(module);
-      } else if (fCmdParser.getFileType() == "hld") {
-       fUnpacker.setParams(fCmdParser.getFileNames()[0].c_str());
-       UnpackFile();
-      }
-    }
-
-
+	if (fCmdParser.isProgressBarSet()) {
+		fIsProgressBarEnabled = true;
+	}
+	if (fCmdParser.IsFileTypeSet()) {
+		if (fCmdParser.getFileType() == "scope") {
+			JPetScopeReader* module = new JPetScopeReader("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures.");
+			module->setFileName(getInputFileNames()[0].c_str());
+			fTasks.push_front(module);
+		} else if (fCmdParser.getFileType() == "hld") {
+			fUnpacker.setParams(fCmdParser.getFileNames()[0].c_str());
+			UnpackFile();
+		}
+	}
 }
 
 void JPetManager::ParseCmdLine(int argc, char** argv)
@@ -131,6 +110,7 @@ JPetManager::~JPetManager()
 std::vector<std::string> JPetManager::getInputFileNames() const
 {
 	std::vector<std::string> fileNames = fCmdParser.getFileNames();
+	std::cout << "### " << fileNames.size() << std::endl;
 	std::vector<std::string> parsedNames;
 	for(int i = 0; i < fileNames.size(); i++){
 		std::string name = fileNames[i].c_str();
@@ -169,4 +149,49 @@ TString JPetManager::GetTimeString() const
 float JPetManager::setProgressBar(int currentEventNumber, int numberOfEvents)
 {
   return ( ((float)currentEventNumber) / numberOfEvents ) * 100;
+}
+
+bool JPetManager::userBoundsAreCorrect(long long numberOfEvents)
+{
+	return fCmdParser.getLowerEventBound() != -1 &&
+			fCmdParser.getHigherEventBound() != -1 &&
+			fCmdParser.getHigherEventBound() < numberOfEvents;
+}
+
+void JPetManager::manageProgressBar(long long done, long long end)
+{
+	if (fIsProgressBarEnabled) {
+		printf("\r[%6.4f% %]", setProgressBar(done, end));
+	}
+}
+
+void JPetManager::processEventsInRange(long long begin, long long end)
+{
+	for (long long i = begin; i <= end; i++)
+	{
+		manageProgressBar(i, end);
+		(*currentTask)->exec();
+	}
+}
+
+void JPetManager::prepareCurrentTaskForFile(const string& file)
+{
+	(*currentTask)->createInputObjects( file.c_str() ); /// readers
+	(*currentTask)->createOutputObjects( file.c_str() ); /// writers + histograms
+}
+
+void JPetManager::setEventBounds(long long& begin, long long& end, long long& eventCount)
+{
+	if (userBoundsAreCorrect(eventCount) && currentTask == fTasks.begin())
+	{
+		begin = fCmdParser.getLowerEventBound();
+		end = fCmdParser.getHigherEventBound();
+		eventCount = end - begin + 1;
+	}
+	else
+	{
+		eventCount = (*currentTask)->getEventNb();
+		begin = 0;
+		end = eventCount - 1;
+	}
 }
