@@ -14,7 +14,7 @@
 
   BOOST_AUTO_TEST_CASE( parsing_correct )
   {
-    const int argc = 10;
+    const int argc = 11;
     const char * argv[argc];
     argv[0] = "test";
     argv[1] = "-t";
@@ -24,18 +24,20 @@
     argv[5] = "180";
     argv[6] = "-f";
     argv[7] = "testfile.hld";
-    argv[8] = "-p";
-    argv[9] = "trbnumbers.blahblah";
+    argv[8] = "testfile.hld";
+    argv[9] = "-p";
+    argv[10] = "trbnumbers.blahblah";
     
     JPetCmdParser parser;
     parser.parse(argc, argv);
     BOOST_REQUIRE( parser.IsFileTypeSet() );
     BOOST_REQUIRE_EQUAL( (std::string)argv[2], parser.getFileType() );
-    BOOST_REQUIRE_EQUAL( (std::string)argv[7], parser.getFileNames() );
+    BOOST_REQUIRE_EQUAL( (std::string)argv[7], parser.getFileNames()[0] );
+    BOOST_REQUIRE_EQUAL( (std::string)argv[8], parser.getFileNames()[1] );
     BOOST_REQUIRE_EQUAL( atoi(argv[4]), parser.getLowerEventBound() );
     BOOST_REQUIRE_EQUAL( atoi(argv[5]), parser.getHigherEventBound() );
     BOOST_REQUIRE( parser.isParamSet() );
-    BOOST_REQUIRE_EQUAL( (std::string)argv[9], parser.getParam() );
+    BOOST_REQUIRE_EQUAL( (std::string)argv[10], parser.getParam() );
   }
 
   BOOST_AUTO_TEST_SUITE_END()

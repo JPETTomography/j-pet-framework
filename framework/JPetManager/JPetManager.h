@@ -50,11 +50,17 @@ class JPetManager: public TNamed {
   
   float setProgressBar(int currentEventNumber, int numberOfEvents);
   void ProcessFromCmdLineArgs();
+  bool userBoundsAreCorrect(long long checkedEvent);
+  void manageProgressBar(long long done, long long end);
+  void processEventsInRange(long long begin, long long end);
+  void prepareCurrentTaskForFile(const string& file);
+  void setEventBounds(long long& begin, long long& end, long long& eventCount);
 
   JPetCmdParser fCmdParser;
   JPetParamManager fParamManager;
   JPetUnpacker fUnpacker;
   std::list<JPetAnalysisModule*> fTasks;
+  std::list<JPetAnalysisModule*>::iterator currentTask;
   bool fIsProgressBarEnabled;
 };
 #endif /*  !JPETMANAGER_H */
