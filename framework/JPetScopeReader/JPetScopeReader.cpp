@@ -297,10 +297,9 @@ void JPetScopeReader::createNewWriter(const char* outputFilename) {
     fWriter = new JPetWriter(out_fn2.c_str());
 
     fHeader = new JPetTreeHeader(JPetManager::GetManager().getRunNumber());
-    fHeader->setBaseFileName(JPetManager::GetManager().getInputFileName().c_str());
+    fHeader->setBaseFileName(JPetManager::GetManager().getInputFileNames()[0].c_str());
     fHeader->addStageInfo(GetName(), GetTitle(), MODULE_VERSION, JPetManager::GetManager().GetTimeString());
     fHeader->setSourcePosition((*fIter).pCollPosition);
-
     fWriter->writeHeader(fHeader);
   }
 }
