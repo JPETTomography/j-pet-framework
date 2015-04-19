@@ -31,7 +31,7 @@
     parser.parse(argc, argv);
     BOOST_REQUIRE( parser.IsFileTypeSet() );
     BOOST_REQUIRE_EQUAL( (std::string)argv[2], parser.getFileType() );
-    BOOST_REQUIRE_EQUAL( (std::string)argv[7], parser.getFileName() );
+    BOOST_REQUIRE_EQUAL( (std::string)argv[7], parser.getFileNames() );
     BOOST_REQUIRE_EQUAL( atoi(argv[4]), parser.getLowerEventBound() );
     BOOST_REQUIRE_EQUAL( atoi(argv[5]), parser.getHigherEventBound() );
     BOOST_REQUIRE( parser.isParamSet() );

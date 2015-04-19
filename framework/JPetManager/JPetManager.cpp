@@ -46,8 +46,8 @@ void JPetManager::Run()
   long long kFirstEvent = 0;
   long long kLastEvent = 0;
   for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
-    (*taskIter)->createInputObjects( getInputFileName().c_str() ); /// readers
-    (*taskIter)->createOutputObjects( getInputFileName().c_str() ); /// writers + histograms
+    (*taskIter)->createInputObjects( getInputFileNames()[0].c_str() ); /// readers
+    (*taskIter)->createOutputObjects( getInputFileNames()[0].c_str() ); /// writers + histograms
     kNevent = (*taskIter)->getEventNb();
     kFirstEvent = 0;
     kLastEvent = kNevent - 1;
@@ -89,10 +89,10 @@ void JPetManager::ProcessFromCmdLineArgs()
     if (fCmdParser.IsFileTypeSet()) {
       if (fCmdParser.getFileType() == "scope") {
         JPetScopeReader* module = new JPetScopeReader("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures.");
-        module->setFileName(getInputFileName().c_str());
+        module->setFileName(getInputFileNames()[0].c_str());
         fTasks.push_front(module);
       } else if (fCmdParser.getFileType() == "hld") {
-       fUnpacker.setParams(fCmdParser.getFileName().c_str());
+       fUnpacker.setParams(fCmdParser.getFileNames()[0].c_str());
        UnpackFile();
       }
     }
@@ -128,24 +128,29 @@ JPetManager::~JPetManager()
  *
  * Example: if the file given on command line was ../file.phys.hit.root, this method will return ../file
  */
-std::string JPetManager::getInputFileName() const
+std::vector<std::string> JPetManager::getInputFileNames() const
 {
-  std::string name = fCmdParser.getFileName().c_str();
-  // strip suffixes of type .tslot.* and .phys.*
-  int pos = name.find(".tslot");
-  if ( pos == std::string::npos ) {
-    pos = name.find(".phys");
-  }
-  if ( pos == std::string::npos ) {
-    pos = name.find(".hld");
-  }
-  if ( pos == std::string::npos ) {
-    pos = name.find(".root");
-  }
-  if ( pos != std::string::npos ) {
-    name.erase( pos );
-  }
-  return name;
+	std::vector<std::string> fileNames = fCmdParser.getFileNames();
+	std::vector<std::string> parsedNames;
+	for(int i = 0; i < fileNames.size(); i++){
+		std::string name = fileNames[i].c_str();
+		// strip suffixes of type .tslot.* and .phys.*
+		int pos = name.find(".tslot");
+		if ( pos == std::string::npos ) {
+			pos = name.find(".phys");
+		}
+		if ( pos == std::string::npos ) {
+			pos = name.find(".hld");
+		}
+		if ( pos == std::string::npos ) {
+			pos = name.find(".root");
+		}
+		if ( pos != std::string::npos ) {
+			name.erase( pos );
+		}
+		parsedNames.push_back(name);
+	}
+	return parsedNames;
 }
 
 /**

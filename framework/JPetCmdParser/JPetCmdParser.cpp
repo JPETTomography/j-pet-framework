@@ -20,7 +20,7 @@ JPetCmdParser::JPetCmdParser()
   fOptDescriptions.add_options()
   ("help,h", "produce help message")
   ("type,t", po::value<string>()->required(), "type of file: hld, root or scope")
-  ("file,f", po::value<string>()->required(), "File to open")
+  ("file,f", po::value< vector<string> >()->required(), "File to open")
   ("range,r", po::value< vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process.")
   ("param,p", po::value<string>(), "File with TRB numbers.")
   ("runId,i", po::value<int>(), "Run id.")
@@ -92,12 +92,14 @@ void JPetCmdParser::parse(int argc, const char** argv)
       }
     }
 
-    string fileName(fVariablesMap["file"].as<string>());
-    if ( ! CommonTools::ifFileExisting(fileName) ) {
-      cerr << "File : " << fileName << " does not exist" << endl;
-      exit(-1);
+    vector<string> fileNames(fVariablesMap["file"].as< vector<string> >());
+    for(int i = 0; i < fileNames.size(); i++)
+    {
+    	if ( ! CommonTools::ifFileExisting(fileNames[i]) ) {
+    		cerr << "File : " << fileNames[i] << " does not exist" << endl;
+    		exit(-1);
+    	}
     }
-
   } catch (exception& e) {
     cerr << "error: " << e.what() << "\n";
     return;
