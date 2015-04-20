@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE( my_test1 )
   BOOST_REQUIRE(paramObj.getId() == 1);
   TestEvent* pEvent = dataObj.getRefEvent();
   BOOST_REQUIRE(paramObj.getId() == pEvent->getId());
-  printIds(dataObj);
+  //printIds(dataObj);
 }
 
 BOOST_AUTO_TEST_CASE( my_vectors_N_to_M )
@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE( my_TList_TTree )
     dataTree->GetEvent(i);
     BOOST_REQUIRE(b_eve->getRefEvent()->getId() == paramIndex);
     paramIndex = (paramIndex + 1) % kParamSize;
-    printIds(*b_eve);
+    //printIds(*b_eve);
   }
 }
 
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE( my_TList_TTree_saving_to_TFile)
   for (int i = 0; i < kDataSize; i++) {
     tree->GetEvent(i);
     BOOST_REQUIRE(b_eve->getId() == kParamSize + i);
-    printIds(*b_eve);
+    //printIds(*b_eve);
   }
   paramIndex = 0;
   for (int i = 0; i < kDataSize; i++) {
@@ -401,7 +401,7 @@ BOOST_AUTO_TEST_CASE( my_stlvector_subevents_TTree_TFile)
   for (int i = 0; i < kDataSize; i++) {
     tree->GetEvent(i);
     BOOST_REQUIRE(b_eve->getRefEvent()->getId() == paramIndex);
-    printIds(*b_eve);
+    //printIds(*b_eve);
     int subParamIndex = 0; // params for subevents
     for (int k = 0; k < kSubEventSize; k++) {
       TestEvent subEvent =  b_eve->getSubEvent(k);
