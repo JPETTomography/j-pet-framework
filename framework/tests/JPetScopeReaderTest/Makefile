@@ -12,7 +12,7 @@ OBJ_MODULE = $(SRC_MODULE:.cpp=.o)
 SRC_MAIN = JPetScopeReaderTest.cpp
 OBJ_MAIN = $(SRC_MAIN:.cpp=.o)
 #######################
-EXECUTABLE = $(SRC_MAIN:.cpp=.x)
+EXECUTABLE = $(SRC_MAIN:.cpp=.exe)
 LOG = JPet.log
 #######################
 SRC_DICT = # moduleDict.cpp
