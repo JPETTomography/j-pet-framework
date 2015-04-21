@@ -49,7 +49,7 @@ class JPetManager: public TNamed {
   void operator=(const JPetManager&); 
   
   float setProgressBar(int currentEventNumber, int numberOfEvents);
-  void ProcessFromCmdLineArgs();
+  void ProcessFromCmdLineArgs(int fileIndex);
   bool userBoundsAreCorrect(long long checkedEvent);
   void manageProgressBar(long long done, long long end);
   void processEventsInRange(long long begin, long long end);

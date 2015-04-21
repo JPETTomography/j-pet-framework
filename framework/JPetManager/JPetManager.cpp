@@ -37,15 +37,16 @@ void JPetManager::AddTask(JPetAnalysisModule* mod)
 void JPetManager::Run()
 {
 	INFO( "========== Starting processing tasks: " + GetTimeString() + " ==========" );
-	ProcessFromCmdLineArgs();
-	currentTask = fTasks.begin();
-	long long  kNevent = (*currentTask)->getEventNb();
-	long long kFirstEvent = 0;
-	long long kLastEvent = 0;
+
 	vector<string> fileNames = getInputFileNames();
 
 	for(int i = 0; i < fileNames.size(); i++)
 	{
+		ProcessFromCmdLineArgs(i);
+		currentTask = fTasks.begin();
+		long long  kNevent = (*currentTask)->getEventNb();
+		long long kFirstEvent = 0;
+		long long kLastEvent = 0;
 		for (currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
 			prepareCurrentTaskForFile(fileNames[i]);
 			setEventBounds(kFirstEvent, kLastEvent, kNevent);
@@ -58,7 +59,7 @@ void JPetManager::Run()
 }
 
 ///> Initialize and process things based on the command line arguments.
-void JPetManager::ProcessFromCmdLineArgs()
+void JPetManager::ProcessFromCmdLineArgs(int fileIndex)
 {
 	if (fCmdParser.isRunNumberSet()) { /// we should connect to the database
 		fParamManager.getParametersFromDatabase(fCmdParser.getRunNumber()); /// @todo some error handling
@@ -70,10 +71,10 @@ void JPetManager::ProcessFromCmdLineArgs()
 	if (fCmdParser.IsFileTypeSet()) {
 		if (fCmdParser.getFileType() == "scope") {
 			JPetScopeReader* module = new JPetScopeReader("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures.");
-			module->setFileName(getInputFileNames()[0].c_str());
+			module->setFileName(getInputFileNames()[fileIndex].c_str());
 			fTasks.push_front(module);
 		} else if (fCmdParser.getFileType() == "hld") {
-			fUnpacker.setParams(fCmdParser.getFileNames()[0].c_str());
+			fUnpacker.setParams(fCmdParser.getFileNames()[fileIndex].c_str());
 			UnpackFile();
 		}
 	}
