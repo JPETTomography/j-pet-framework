@@ -110,7 +110,6 @@ JPetManager::~JPetManager()
 std::vector<std::string> JPetManager::getInputFileNames() const
 {
 	std::vector<std::string> fileNames = fCmdParser.getFileNames();
-	std::cout << "### " << fileNames.size() << std::endl;
 	std::vector<std::string> parsedNames;
 	for(int i = 0; i < fileNames.size(); i++){
 		std::string name = fileNames[i].c_str();
