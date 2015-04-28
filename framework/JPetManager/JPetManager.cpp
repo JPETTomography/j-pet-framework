@@ -66,7 +66,7 @@ void JPetManager::Run()
 
     for (long long i = kFirstEvent; i <= kLastEvent; i++) {
       if (fIsProgressBarEnabled) {
-        printf("\r[%6.4f% %]", setProgressBar(i, kNevent));
+        printf("\r[%6.4f%% %%]", setProgressBar(i, kNevent));
       }
       (*taskIter)->exec();
     }
