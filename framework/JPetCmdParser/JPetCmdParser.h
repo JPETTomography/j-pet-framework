@@ -45,7 +45,6 @@ public:
   inline const int getRunNumber() const { return fVariablesMap["runId"].as<int>();}
   
   inline bool isProgressBarSet() const { return (bool)fVariablesMap.count("progressBar"); }
-  inline const int getProgressBar() const { return fVariablesMap["progressBar"].as<int>();}
 
 private:
       po::options_description fOptDescriptions;
