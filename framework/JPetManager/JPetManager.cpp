@@ -161,7 +161,7 @@ bool JPetManager::userBoundsAreCorrect(long long numberOfEvents)
 void JPetManager::manageProgressBar(long long done, long long end)
 {
 	if (fIsProgressBarEnabled) {
-		printf("\r[%6.4f% %]", setProgressBar(done, end));
+		printf("\r[%6.4f%% %%]", setProgressBar(done, end));
 	}
 }
 

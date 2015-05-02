@@ -533,8 +533,8 @@ BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
   BOOST_REQUIRE(bank.getPMCalib(2).GetGainalpha() == 0);
   BOOST_REQUIRE(bank.getPMCalib(2).GetGainbeta() == 0);
   
-  BOOST_REQUIRE(bank.getPMCalib(2).GetPMCalibAssignment().id == 4);
-  BOOST_REQUIRE(bank.getPMCalib(2).GetPMCalibAssignment().photomultiplier_id == 4);
+  BOOST_REQUIRE(bank.getPMCalib(2).GetPMCalibAssignment().id == 3);
+  BOOST_REQUIRE(bank.getPMCalib(2).GetPMCalibAssignment().photomultiplier_id == 7);
   
   BOOST_REQUIRE(bank.getPMCalib(3).GetId() == 1);
   BOOST_REQUIRE(bank.getPMCalib(3).GetNamePM() == "dummy");
@@ -544,8 +544,8 @@ BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
   BOOST_REQUIRE(bank.getPMCalib(3).GetGainalpha() == 0);
   BOOST_REQUIRE(bank.getPMCalib(3).GetGainbeta() == 0);
   
-  BOOST_REQUIRE(bank.getPMCalib(3).GetPMCalibAssignment().id == 3);
-  BOOST_REQUIRE(bank.getPMCalib(3).GetPMCalibAssignment().photomultiplier_id == 7);
+  BOOST_REQUIRE(bank.getPMCalib(3).GetPMCalibAssignment().id == 4);
+  BOOST_REQUIRE(bank.getPMCalib(3).GetPMCalibAssignment().photomultiplier_id == 4);
   
   bank.clear();
 

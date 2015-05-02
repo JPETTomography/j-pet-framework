@@ -24,7 +24,7 @@ JPetCmdParser::JPetCmdParser()
   ("range,r", po::value< vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process.")
   ("param,p", po::value<string>(), "File with TRB numbers.")
   ("runId,i", po::value<int>(), "Run id.")
-  ("progressBar,b", po::value<int>(), "Progress bar.")
+  ("progressBar,b", "Progress bar.")
   ;
 }
 
