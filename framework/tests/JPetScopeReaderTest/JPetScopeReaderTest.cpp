@@ -3,13 +3,34 @@
 #define BOOST_TEST_LOG_LEVEL message
 
 #include <boost/test/unit_test.hpp>
+#include <boost/filesystem.hpp>
 
 #include "JPetScopeReaderFixtures.h"
 
 #include <cstddef>
 #include <functional>
 
+#include "../../JPetManager/JPetManager.h"
+
 BOOST_AUTO_TEST_SUITE (FirstSuite)
+
+BOOST_AUTO_TEST_CASE (generate_root_file) {
+
+  int   _argc    = 5;
+  char* _argv[6];
+        _argv[0] = const_cast<char*>("JPetScopeReaderTest.exe");
+        _argv[1] = const_cast<char*>("-t");
+        _argv[2] = const_cast<char*>("scope");
+        _argv[3] = const_cast<char*>("-f");
+        _argv[4] = const_cast<char*>("./test_file.info");
+	_argv[5] = (char*)(NULL);
+
+  JPetManager& manager = JPetManager::GetManager();
+  manager.ParseCmdLine(_argc, _argv);
+  manager.Run();
+
+  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " does not exitst.");
+}
 
 BOOST_FIXTURE_TEST_CASE (signal_generation_test, signal_generation_fixture) {
 
