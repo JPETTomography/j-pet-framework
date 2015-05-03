@@ -7,7 +7,7 @@
 PROCESSOR = pandoc
 OPTS = -t markdown
 
-SOURCE = JPetManual.md
+SOURCE = JPetManual.md JPetScopeReaderManula.md
 SOURCE_UPDATED_DATE = $(SOURCE:.md=.md.updated)
 PDF =  $(SOURCE:.md=.pdf)
 HTML = $(SOURCE:.md=.html)

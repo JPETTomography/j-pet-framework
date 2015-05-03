@@ -13,14 +13,14 @@
 // ********            Generate Single JPetRecoSignal             ******** //
 // *********************************************************************** //
 
-const char* test_signal_filename = "test_signal.txt";
+const char* test_signal_filename = "scope_files/0/C1_00003.txt";
 
-struct generate_reco_signal {
+struct reco_signal_generator {
   
   public:
   
-  generate_reco_signal ();
-  ~generate_reco_signal ();
+  reco_signal_generator ();
+  ~reco_signal_generator ();
 
   int setup (const char*);
 
@@ -41,19 +41,19 @@ struct generate_reco_signal {
 
 // *********************************************************************** //
 
-generate_reco_signal::generate_reco_signal () : m_file(nullptr) {
+reco_signal_generator::reco_signal_generator () : m_file(nullptr) {
 }
 
 // *********************************************************************** //
 
-generate_reco_signal::~generate_reco_signal () {
+reco_signal_generator::~reco_signal_generator () {
 
   if (m_file != nullptr) fclose (m_file);
 }
 
 // *********************************************************************** //
 
-int generate_reco_signal::setup (const char* filename) {
+int reco_signal_generator::setup (const char* filename) {
   
   m_reco_signal = JPetScopeReader::generateSignal (filename);
   m_file = fopen(filename, "r");
@@ -63,7 +63,7 @@ int generate_reco_signal::setup (const char* filename) {
 
 // *********************************************************************** //
 
-int generate_reco_signal::check_header (void (*unit_test_function) (int, int)) {
+int reco_signal_generator::check_header (void (*unit_test_function) (int, int)) {
   
   rewind (m_file);
   
@@ -87,7 +87,7 @@ int generate_reco_signal::check_header (void (*unit_test_function) (int, int)) {
 
 // *********************************************************************** //
 
-int generate_reco_signal::check_data (void (*unit_test_function) (float, float, float, float)) {
+int reco_signal_generator::check_data (void (*unit_test_function) (float, float, float, float)) {
   
   check_header(nullptr);
 
@@ -123,7 +123,7 @@ int generate_reco_signal::check_data (void (*unit_test_function) (float, float, 
 // ********               Signal Generation Fixture               ******** //
 // *********************************************************************** //
 
-struct signal_generation_fixture : public generate_reco_signal {
+struct signal_generation_fixture : public reco_signal_generator {
   
   public:
 
@@ -134,8 +134,8 @@ struct signal_generation_fixture : public generate_reco_signal {
 
 // *********************************************************************** //
 
-signal_generation_fixture::signal_generation_fixture () : generate_reco_signal() {
-  generate_reco_signal::setup(test_signal_filename);
+signal_generation_fixture::signal_generation_fixture () : reco_signal_generator() {
+  reco_signal_generator::setup(test_signal_filename);
 }
 
 // *********************************************************************** //
@@ -147,14 +147,14 @@ signal_generation_fixture::~signal_generation_fixture () {
 // ********                 Open Single ROOT file                 ******** //
 // *********************************************************************** //
 
-const char* test_root_filename = "test_root.root";
+const char* test_root_filename = "test_file.reco.sig.test.0.root";
 
-struct open_root_file {
+struct root_file_reader {
   
   public:
 
-  open_root_file ();
-  ~open_root_file ();
+  root_file_reader ();
+  ~root_file_reader ();
 
   int setup (const char*);
 
@@ -173,12 +173,12 @@ struct open_root_file {
 
 // *********************************************************************** //
 
-open_root_file::open_root_file () : m_reader(), m_header(nullptr), m_bank(nullptr), m_manager() {
+root_file_reader::root_file_reader () : m_reader(), m_header(nullptr), m_bank(nullptr), m_manager() {
 }
 
 // *********************************************************************** //
 
-open_root_file::~open_root_file () {
+root_file_reader::~root_file_reader () {
 
   m_reader.closeFile();
 
@@ -193,7 +193,7 @@ open_root_file::~open_root_file () {
 
 // *********************************************************************** //
 
-int open_root_file::setup (const char* filename) {
+int root_file_reader::setup (const char* filename) {
   
   m_reader.openFile(filename);
   m_reader.readData("tree");
@@ -213,7 +213,7 @@ int open_root_file::setup (const char* filename) {
 
 // *********************************************************************** //
 
-void open_root_file::check_tref_simple (void (*unit_test_function) (const void*)) {
+void root_file_reader::check_tref_simple (void (*unit_test_function) (const void*)) {
   
   JPetRecoSignal& sig = reinterpret_cast <JPetRecoSignal&> (m_reader.getData());
 
@@ -232,7 +232,7 @@ void open_root_file::check_tref_simple (void (*unit_test_function) (const void*)
 // ********               TRef Correctness Fixture                ******** //
 // *********************************************************************** //
 
-struct tref_correctness_fixture : public open_root_file {
+struct tref_correctness_fixture : public root_file_reader {
 
   public:
 
@@ -243,8 +243,8 @@ struct tref_correctness_fixture : public open_root_file {
 
 // *********************************************************************** //
 
-tref_correctness_fixture::tref_correctness_fixture () : open_root_file() {
-  open_root_file::setup(test_root_filename);
+tref_correctness_fixture::tref_correctness_fixture () : root_file_reader() {
+  root_file_reader::setup(test_root_filename);
 }
 
 // *********************************************************************** //
