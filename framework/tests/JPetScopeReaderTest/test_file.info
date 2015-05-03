@@ -1,0 +1,52 @@
+test
+{
+    bslot1
+    {
+        id -1
+        active false
+        name ""
+        theta -1.0
+        frame -1
+    }
+    bslot2
+    {
+        id -1
+        active false
+        name ""
+        theta -1.0
+        frame -1
+    }
+    pm1
+    {
+        id 3
+        prefix C2
+    }
+    pm2
+    {
+        id 98
+        prefix C4
+    }
+    pm3
+    {
+        id 32
+        prefix C1
+    }
+    pm4
+    {
+        id 42
+        prefix C3
+    }
+    scin1
+    {
+        id 32
+    }
+    scin2
+    {
+        id 12
+    }
+    location scope_files
+    collimator
+    {
+        positions 0
+    }
+}
