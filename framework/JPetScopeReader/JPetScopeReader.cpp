@@ -388,7 +388,7 @@ void JPetScopeReader::setFileName(const char* name)
   fOutFilename.ReplaceAll(".info", "");
   fOutFilename.ReplaceAll(".json", "");
   fOutFilename.ReplaceAll(".xml", "");
-  fOutFilename.Append(".scope.eve.root");
+  fOutFilename.Append(".reco.sig.root");
 }
 
 
