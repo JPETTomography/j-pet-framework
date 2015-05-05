@@ -153,7 +153,7 @@ void JPetScopeReader::createInputObjects(const char* inputFilename) {
 
   // Check file type
   
-  string ext = path(fInFilename).extension().string();
+  string ext = path((const char*)fInFilename).extension().string();
 
   // Read configuration data to property tree
   
@@ -228,7 +228,7 @@ void JPetScopeReader::createInputObjects(const char* inputFilename) {
 	  (*current_config).pPrefix4      = conf_data.get<string>("pm4.prefix");
 
 	  // Add oscilloscope files
-	  string starting_loc  = path(fInFilename).parent_path().string();
+	  string starting_loc  = path((const char*)fInFilename).parent_path().string();
                  starting_loc += "/";
                  starting_loc += files_location;
 	         starting_loc += "/";
@@ -387,7 +387,7 @@ void JPetScopeReader::setFileName(const char* name)
   fOutFilename.ReplaceAll(".info", "");
   fOutFilename.ReplaceAll(".json", "");
   fOutFilename.ReplaceAll(".xml", "");
-  fOutFilename.Append(".scope.eve.root");
+  fOutFilename.Append(".reco.sig.root");
 }
 
 
