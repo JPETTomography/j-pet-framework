@@ -29,7 +29,7 @@ class JPetWriter;
  */
 
 using TaskGenerator = std::function< std::unique_ptr<JPetAnalysisModule>() >;
-using TaskGeneratorChain = std::vector<const TaskGenerator>;
+using TaskGeneratorChain = std::vector<TaskGenerator>;
 
 template <typename T, typename... Ts>
 std::unique_ptr<T> make_unique(Ts&&... params)
@@ -50,7 +50,7 @@ class JPetManager: public TNamed {
   void Init(){};
   void Run();
   void AddTask(JPetAnalysisModule* mod);
-  void AddTaskGeneratorChain(std::shared_ptr< TaskGeneratorChain > taskGeneratorChain) {ftaskGeneratorChain = taskGeneratorChain;}
+  void AddTaskGeneratorChain(std::shared_ptr< TaskGeneratorChain > taskGeneratorChain);
   void ParseCmdLine(int argc, char** argv);
   std::vector<std::string> getInputFileNames() const;
   int getRunNumber() const;
