@@ -1,6 +1,6 @@
 CC            =  g++
 LD            =  g++
-COPTS         =  `root-config --cflags` -fPIC -O2
+COPTS         =  `root-config --cflags` -fPIC -O2 -std=c++11
 LDOPTS        =  `root-config --glibs` -g -lboost_program_options
 
 #C++ Files

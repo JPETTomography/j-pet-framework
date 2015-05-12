@@ -101,6 +101,7 @@ void JPetCommonAnalysisModule::createInputObjects(const char* inputFilename)
 
    fWriter->closeFile();
    fReader->closeFile();
+   fStats.Clear();
 
 }
 
