@@ -195,3 +195,8 @@ void JPetManager::setEventBounds(long long& begin, long long& end, long long& ev
 		end = eventCount - 1;
 	}
 }
+
+void JPetManager::AddTaskGeneratorChain(std::shared_ptr<TaskGeneratorChain> taskGeneratorChain)
+{
+	ftaskGeneratorChain = taskGeneratorChain;
+}
