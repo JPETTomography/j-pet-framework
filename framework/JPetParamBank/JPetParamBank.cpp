@@ -8,16 +8,7 @@
 
 ClassImp (JPetParamBank);
 
-JPetParamBank::JPetParamBank():
-  fScintillators("JPetScin", 100),
-  fPMs("JPetPM", 100),
-  fPMCalibs("JPetPMCalib", 100),
-  fFEBs("JPetFEB", 100),
-  fTRBs("JPetTRB", 100),
-  fBarrelSlots("JPetBarrelSlot", 100),
-  fLayers("JPetLayer", 100),
-  fFrames("JPetFrame", 100),
-  fTOMBChannels("JPetTOMBChannel", 500)
+JPetParamBank::JPetParamBank()
 {
   /* */
 }
@@ -28,15 +19,15 @@ JPetParamBank::~JPetParamBank()
 
 void JPetParamBank::clear()
 {
-  fScintillators.Clear();
-  fPMs.Clear();
-  fPMCalibs.Clear();
-  fFEBs.Clear();
-  fTRBs.Clear();
-  fBarrelSlots.Clear();
-  fLayers.Clear();
-  fFrames.Clear();
-  fTOMBChannels.Clear();
+  fScintillators.clear();
+  fPMs.clear();
+  fPMCalibs.clear();
+  fFEBs.clear();
+  fTRBs.clear();
+  fBarrelSlots.clear();
+  fLayers.clear();
+  fFrames.clear();
+  fTOMBChannels.clear();
 }
 
 
