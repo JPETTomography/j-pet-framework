@@ -14,6 +14,7 @@
 #include "../JPetScopeReader/JPetScopeReader.h"
 
 //ClassImp(JPetManager);
+#include <TDSet.h>
 
 JPetManager& JPetManager::GetManager()
 {
@@ -39,6 +40,8 @@ void JPetManager::Run()
 	INFO( "========== Starting processing tasks: " + GetTimeString() + " ==========" );
 
 	vector<string> fileNames = getInputFileNames();
+	fParalelizationMaster = TProof::Open("lite://");
+	fParalelizationMaster->Process(new TDSet(),"../../framework/JPetAnalysisRunner/JPetAnalysisRunner.cpp+");
 
 	for(int i = 0; i < fileNames.size(); i++)
 	{

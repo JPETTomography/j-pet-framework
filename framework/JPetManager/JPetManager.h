@@ -17,6 +17,7 @@
 #include <list>
 #include <TNamed.h> 
 #include <TString.h>
+#include <TProof.h>
 
 class JPetAnalysisModule;
 class JPetReader;
@@ -80,5 +81,7 @@ class JPetManager: public TNamed {
   std::list<JPetAnalysisModule*>::iterator currentTask;
   std::shared_ptr<TaskGeneratorChain> ftaskGeneratorChain;
   bool fIsProgressBarEnabled;
+
+  TProof* fParalelizationMaster;
 };
 #endif /*  !JPETMANAGER_H */
