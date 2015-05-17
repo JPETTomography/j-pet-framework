@@ -69,5 +69,6 @@ private:
   
   friend class JPetParamManager;
 
+  static std::map<int, JPetParamBank*> fParamCache;
 };
 #endif /*  !JPETDBPARAMGETTER_H */

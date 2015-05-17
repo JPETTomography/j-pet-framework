@@ -158,7 +158,7 @@ class JPetParamBank: public TObject
   }
 
  private:
-  JPetParamBank(const JPetParamBank&);
+
   void operator=(const JPetParamBank&);
 
   TClonesArray fScintillators;

@@ -11,6 +11,8 @@
 #include "../DBHandler/HeaderFiles/DBHandler.h"
 #include <cstdint>
 
+std::map<int, JPetParamBank*> JPetDBParamGetter::fParamCache;
+
 JPetDBParamGetter::JPetDBParamGetter()
 {
 }
@@ -29,19 +31,25 @@ JPetDBParamGetter::~JPetDBParamGetter()
 /// dopisac ze ktos inny musi zniszczyc
 JPetParamBank* JPetDBParamGetter::generateParamBank(const int p_run_id) 
 {
-  /// we use new ... explanation 
-  JPetParamBank* pParamBank =  new JPetParamBank;
-  fillScintillators(p_run_id, *pParamBank);
-  fillPMs(p_run_id, *pParamBank);
-  fillPMCalibs(p_run_id, *pParamBank);
-  fillBarrelSlot(p_run_id, *pParamBank);
-  fillLayer(p_run_id, *pParamBank);
-fillFrame(p_run_id, *pParamBank);
-  fillFEBs(p_run_id, *pParamBank);
-  fillTRBs(p_run_id, *pParamBank);
-  fillTOMBChannels(p_run_id, *pParamBank);
-  fillAllTRefs(p_run_id, *pParamBank);
-  return pParamBank;
+    /// we use new ... explanation
+    TThread::Lock();
+    if(fParamCache.find(p_run_id) == fParamCache.end())
+    {
+        JPetParamBank* pParamBank =  new JPetParamBank;
+        fillScintillators(p_run_id, *pParamBank);
+        fillPMs(p_run_id, *pParamBank);
+        fillPMCalibs(p_run_id, *pParamBank);
+        fillBarrelSlot(p_run_id, *pParamBank);
+        fillLayer(p_run_id, *pParamBank);
+        fillFrame(p_run_id, *pParamBank);
+        fillFEBs(p_run_id, *pParamBank);
+        fillTRBs(p_run_id, *pParamBank);
+        fillTOMBChannels(p_run_id, *pParamBank);
+        fillAllTRefs(p_run_id, *pParamBank);
+        fParamCache[p_run_id] = pParamBank;
+    }
+    TThread::UnLock();
+    return new JPetParamBank(*fParamCache[p_run_id]);
 }
 
 void JPetDBParamGetter::fillScintillators(const int p_run_id, JPetParamBank& paramBank)
