@@ -103,9 +103,7 @@ void JPetAnalysisRunner::ProcessFromCmdLineArgs(int fileIndex)
 {
 
     if (fCmdParser.isRunNumberSet()) { /// we should connect to the database
-        TThread::Lock();
         fParamManager.getParametersFromDatabase(fCmdParser.getRunNumber()); /// @todo some error handling
-        TThread::UnLock();
     }
     if (fCmdParser.isProgressBarSet()) {
         fIsProgressBarEnabled = true;
