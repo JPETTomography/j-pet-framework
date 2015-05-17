@@ -13,6 +13,7 @@
 #include "../JPetLOR/JPetLOR.h"
 
 #include "../JPetParamBank/JPetParamBank.h"
+#include "../JPetParamManager/JPetParamManager.h"
 
 #include <cassert>
 #include <cmath>
@@ -44,6 +45,7 @@ public:
   void setVersion(int version) {
     fVersion = version;
   }
+  void setParamManager(JPetParamManager* paramManagerk);
 
 ClassDef(JPetCommonAnalysisModule, 0 )
   ;
@@ -64,6 +66,10 @@ protected:
   std::string fOutFileSuffix;
 
   const JPetParamBank & getParamBank();
+  JPetParamManager& getParamManager() {return *fParamManager;}
+
+private:
+  JPetParamManager* fParamManager;
 
 };
 

@@ -15,6 +15,7 @@
 
 //ClassImp(JPetManager);
 #include <TDSet.h>
+#include <TThread.h>
 
 JPetManager& JPetManager::GetManager()
 {
@@ -22,71 +23,38 @@ JPetManager& JPetManager::GetManager()
   return instance;
 }
 
-JPetManager::JPetManager(): TNamed("JPetMainManager", "JPetMainManager"), fIsProgressBarEnabled(false)
+JPetManager::JPetManager(): TNamed("JPetMainManager", "JPetMainManager")
 {
 
-}
-
-// adds the given analysis module to a list of registered task
-// @todo check if the module is not already registered
-void JPetManager::AddTask(JPetAnalysisModule* mod)
-{
-  assert(mod);
-  fTasks.push_back(mod);
 }
 
 void JPetManager::Run()
 {
-	INFO( "========== Starting processing tasks: " + GetTimeString() + " ==========" );
-
 	vector<string> fileNames = getInputFileNames();
-	fParalelizationMaster = TProof::Open("lite://");
-	fParalelizationMaster->Process(new TDSet(),"../../framework/JPetAnalysisRunner/JPetAnalysisRunner.cpp+");
+	vector<JPetAnalysisRunner*> runners;
+	vector<TThread*> threads;
 
 	for(int i = 0; i < fileNames.size(); i++)
 	{
-		ProcessFromCmdLineArgs(i);
-		currentTask = fTasks.begin();
-		long long  kNevent = (*currentTask)->getEventNb();
-		long long kFirstEvent = 0;
-		long long kLastEvent = 0;
-		for (currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
-			prepareCurrentTaskForFile(fileNames[i]);
-			setEventBounds(kFirstEvent, kLastEvent, kNevent);
-			processEventsInRange(kFirstEvent, kLastEvent);
-			(*currentTask)->terminate();
-		}
+		JPetAnalysisRunner* runner = new JPetAnalysisRunner(ftaskGeneratorChain, i, fCmdParser);
+		runners.push_back(runner);
+		threads.push_back(runner->run());
+	}
+	for(auto thread : threads)
+	{
+		thread->Join();
+	}
+	for(auto runner: runners)
+	{
+		delete runner;
 	}
 
 	INFO( "======== Finished processing all tasks: " + GetTimeString() + " ========\n" );
 }
 
-///> Initialize and process things based on the command line arguments.
-void JPetManager::ProcessFromCmdLineArgs(int fileIndex)
-{
-	if (fCmdParser.isRunNumberSet()) { /// we should connect to the database
-		fParamManager.getParametersFromDatabase(fCmdParser.getRunNumber()); /// @todo some error handling
-	}
-        
-	if (fCmdParser.isProgressBarSet()) {
-		fIsProgressBarEnabled = true;
-	}
-	if (fCmdParser.IsFileTypeSet()) {
-		if (fCmdParser.getFileType() == "scope") {
-			JPetScopeReader* module = new JPetScopeReader("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures.");
-			module->setFileName(getInputFileNames()[fileIndex].c_str());
-			fTasks.push_front(module);
-		} else if (fCmdParser.getFileType() == "hld") {
-			fUnpacker.setParams(fCmdParser.getFileNames()[fileIndex].c_str());
-			UnpackFile();
-		}
-	}
-}
-
 void JPetManager::ParseCmdLine(int argc, char** argv)
 {
   fCmdParser.parse(argc, (const char**)argv);
-
 }
 
 int JPetManager::getRunNumber() const
@@ -149,57 +117,7 @@ TString JPetManager::GetTimeString() const
   return TString( buf );
 }
 
-float JPetManager::setProgressBar(int currentEventNumber, int numberOfEvents)
-{
-  return ( ((float)currentEventNumber) / numberOfEvents ) * 100;
-}
-
-bool JPetManager::userBoundsAreCorrect(long long numberOfEvents)
-{
-	return fCmdParser.getLowerEventBound() != -1 &&
-			fCmdParser.getHigherEventBound() != -1 &&
-			fCmdParser.getHigherEventBound() < numberOfEvents;
-}
-
-void JPetManager::manageProgressBar(long long done, long long end)
-{
-	if (fIsProgressBarEnabled) {
-		printf("\r[%6.4f%% %%]", setProgressBar(done, end));
-	}
-}
-
-void JPetManager::processEventsInRange(long long begin, long long end)
-{
-	for (long long i = begin; i <= end; i++)
-	{
-		manageProgressBar(i, end);
-		(*currentTask)->exec();
-	}
-}
-
-void JPetManager::prepareCurrentTaskForFile(const string& file)
-{
-	(*currentTask)->createInputObjects( file.c_str() ); /// readers
-	(*currentTask)->createOutputObjects( file.c_str() ); /// writers + histograms
-}
-
-void JPetManager::setEventBounds(long long& begin, long long& end, long long& eventCount)
-{
-	if (userBoundsAreCorrect(eventCount) && currentTask == fTasks.begin())
-	{
-		begin = fCmdParser.getLowerEventBound();
-		end = fCmdParser.getHigherEventBound();
-		eventCount = end - begin + 1;
-	}
-	else
-	{
-		eventCount = (*currentTask)->getEventNb();
-		begin = 0;
-		end = eventCount - 1;
-	}
-}
-
-void JPetManager::AddTaskGeneratorChain(std::shared_ptr<TaskGeneratorChain> taskGeneratorChain)
+void JPetManager::AddTaskGeneratorChain(TaskGeneratorChain* taskGeneratorChain)
 {
 	ftaskGeneratorChain = taskGeneratorChain;
 }

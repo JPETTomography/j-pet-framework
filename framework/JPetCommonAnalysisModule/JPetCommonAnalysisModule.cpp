@@ -59,7 +59,7 @@ void JPetCommonAnalysisModule::createInputObjects(const char* inputFilename)
   INFO( Form("Starting %s.", GetName() ) );
   
   //fParamManager.readParametersFromFile( fReader );
-  JPetManager::GetManager().getParamManagerInstance().readParametersFromFile(fReader);
+  fParamManager->readParametersFromFile(fReader);
 
   // read the header from the previous analysis stage
   fHeader = fReader->getHeaderClone();
@@ -94,8 +94,8 @@ void JPetCommonAnalysisModule::createInputObjects(const char* inputFilename)
    fWriter->writeObject( getStatsObjects(), "Stats" );
 
    // rewrite the parametric objects from input file to output file
-   JPetManager::GetManager().getParamManagerInstance().saveParametersToFile(fWriter);
-   JPetManager::GetManager().getParamManagerInstance().clearParameters();
+   getParamManager().saveParametersToFile(fWriter);
+   getParamManager().clearParameters();
    //   fParamManager.saveParametersToFile( fWriter );
    //   fParamManager.clearParameters();  
 
@@ -107,6 +107,11 @@ void JPetCommonAnalysisModule::createInputObjects(const char* inputFilename)
 
 
 const JPetParamBank & JPetCommonAnalysisModule::getParamBank(){
-  return JPetManager::GetManager().getParamManagerInstance().getParamBank();
+  return fParamManager->getParamBank();
+}
+
+void JPetCommonAnalysisModule::setParamManager(JPetParamManager*paramManager)
+{
+  fParamManager = paramManager;
 }
 

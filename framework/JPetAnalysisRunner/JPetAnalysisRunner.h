@@ -5,31 +5,52 @@
 #ifndef FRAMEWORK_JPETANALYSISRUNNER_H
 #define FRAMEWORK_JPETANALYSISRUNNER_H
 
-#include <TSelector.h>
+#include <string>
+#include <TThread.h>
+#include "../JPetAnalysisModule/JPetAnalysisModule.h"
+#include "../JPetCommonAnalysisModule/JPetCommonAnalysisModule.h"
+#include "../JPetCmdParser/JPetCmdParser.h"
+#include "../JPetParamManager/JPetParamManager.h"
+#include "../JPetUnpacker/JPetUnpacker.h"
 
-class TH1F;
-class TRandom;
-class JPetAnalysisRunner : public TSelector {
+using TaskGenerator = std::function< JPetCommonAnalysisModule* () >;
+using TaskGeneratorChain = std::vector<TaskGenerator>;
+
+template <typename T, typename... Ts>
+std::function<T*()> makeTaskGenerator(Ts&&... params)
+{
+    return [&](){return new T(std::forward<Ts>(params)...);};
+}
+
+class JPetAnalysisRunner
+{
 public :
-
-    // Define members here
-    TH1F   *fH1F;             //! Output histogram
-    TRandom *fRandom;  //! Random number generator
-
-    JPetAnalysisRunner();
+    JPetAnalysisRunner(TaskGeneratorChain *taskGeneratorChain, int processedFile, JPetCmdParser& cmdParse);
+    TThread* run();
     virtual ~JPetAnalysisRunner();
-    virtual Int_t   Version() const { return 2; }
-    virtual void    Begin(TTree *tree){}
-    virtual void    SlaveBegin(TTree *tree);
-    virtual Bool_t  Process(Long64_t entry);
-    virtual void    SetOption(const char *option) { fOption = option; }
-    virtual void    SetObject(TObject *obj) { fObject = obj; }
-    virtual void    SetInputList(TList *input) { fInput = input; }
-    virtual TList  *GetOutputList() const { return fOutput; }
-    virtual void    SlaveTerminate(){}
-    virtual void    Terminate();
 
-    ClassDef(JPetAnalysisRunner,2);
+private:
+    static void* processProxy(void*);
+    void process();
+    void ProcessFromCmdLineArgs(int fileIndex);
+    float setProgressBar(int currentEventNumber, int numberOfEvents);
+    void prepareCurrentTaskForFile(const string& file);
+    void setEventBounds(long long& begin, long long& end, long long& eventCount);
+    void processEventsInRange(long long begin, long long end);
+    bool userBoundsAreCorrect(long long checkedEvent);
+    void manageProgressBar(long long done, long long end);
+    std::vector<std::string> getInputFileNames() const;
+    void UnpackFile() { if(fCmdParser.IsFileTypeSet()) fUnpacker.exec();}
+
+    int fProcessedFile;
+    JPetCmdParser& fCmdParser;
+    JPetParamManager fParamManager;
+    JPetUnpacker fUnpacker;
+    std::list<JPetAnalysisModule*> fTasks;
+    std::list<JPetAnalysisModule*>::iterator currentTask;
+    TaskGeneratorChain* ftaskGeneratorChain;
+    bool fIsProgressBarEnabled;
+
 };
 
 
