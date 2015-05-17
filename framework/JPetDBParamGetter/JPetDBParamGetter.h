@@ -14,8 +14,10 @@
 #else
 class pqxx;
 class pqxx::result;
-class pqxx::result::const_iterator;r
+class pqxx::result::const_iterator;
 #endif /* __CINT __ */
+
+class JPetParamManager;
 
 class JPetDBParamGetter
 {

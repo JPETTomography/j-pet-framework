@@ -7,6 +7,7 @@
 #include "./JPetDBParamGetter.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
+#include <TThread.h>
 #include "../DBHandler/HeaderFiles/DBHandler.h"
 #include <cstdint>
 
