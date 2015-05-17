@@ -16,12 +16,6 @@
 using TaskGenerator = std::function< JPetCommonAnalysisModule* () >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
-template <typename T, typename... Ts>
-std::function<T*()> makeTaskGenerator(Ts&&... params)
-{
-    return [&](){return new T(std::forward<Ts>(params)...);};
-}
-
 class JPetAnalysisRunner
 {
 public :
