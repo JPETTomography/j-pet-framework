@@ -2,7 +2,7 @@
 
 void JPetTSlot::addCh(JPetSigCh& new_ch)
 {
-  new (fSigChannels[fSize++]) JPetSigCh(new_ch);
+  fSigChannels.push_back( new JPetSigCh(new_ch) );
 }
 
 ClassImp(JPetTSlot);
