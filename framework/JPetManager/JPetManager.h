@@ -36,6 +36,7 @@ class JPetManager: public TNamed {
   void AddTask(JPetAnalysisModule* mod);
   void ParseCmdLine(int argc, char** argv);
   std::string getInputFileName() const;
+  std::string getBaseInputFileName() const;
   int getRunNumber() const;
   JPetParamManager & getParamManagerInstance() { return fParamManager; }
   void UnpackFile() { if(fCmdParser.IsFileTypeSet()) fUnpacker.exec();}
