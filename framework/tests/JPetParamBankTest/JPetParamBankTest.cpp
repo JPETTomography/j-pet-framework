@@ -21,14 +21,14 @@ BOOST_AUTO_TEST_CASE(DefaultConstructorTest)
   BOOST_REQUIRE(bank.getTRBsSize() == 0);
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
 
-  BOOST_REQUIRE(bank.getScintillators().GetEntries() == 0);
-  BOOST_REQUIRE(bank.getPMs().GetEntries() == 0);
-  BOOST_REQUIRE(bank.getPMCalibs().GetEntries() == 0);
-  BOOST_REQUIRE(bank.getBarrelSlots().GetEntries() == 0);
-  BOOST_REQUIRE(bank.getFrames().GetEntries() == 0);
-  BOOST_REQUIRE(bank.getFEBs().GetEntries() == 0);
-  BOOST_REQUIRE(bank.getTRBs().GetEntries() == 0);
-  BOOST_REQUIRE(bank.getTOMBChannels().GetEntries() == 0);
+  BOOST_REQUIRE(bank.getScintillators().size() == 0);
+  BOOST_REQUIRE(bank.getPMs().size() == 0);
+  BOOST_REQUIRE(bank.getPMCalibs().size() == 0);
+  BOOST_REQUIRE(bank.getBarrelSlots().size() == 0);
+  BOOST_REQUIRE(bank.getFrames().size() == 0);
+  BOOST_REQUIRE(bank.getFEBs().size() == 0);
+  BOOST_REQUIRE(bank.getTRBs().size() == 0);
+  BOOST_REQUIRE(bank.getTOMBChannels().size() == 0);
 }
 
 BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
@@ -65,15 +65,15 @@ BOOST_REQUIRE(bank.getFramesSize() == 1);
   BOOST_REQUIRE(bank.getTRBsSize() == 1);
   BOOST_REQUIRE(bank.getTOMBChannelsSize() == 1);
 
-  BOOST_REQUIRE(bank.getScintillators().GetEntries() == 1);
-  BOOST_REQUIRE(bank.getPMs().GetEntries() == 1);
-  BOOST_REQUIRE(bank.getPMCalibs().GetEntries() == 1);
-  BOOST_REQUIRE(bank.getBarrelSlots().GetEntries() == 1);
-  BOOST_REQUIRE(bank.getLayers().GetEntries() == 1);
-  BOOST_REQUIRE(bank.getFrames().GetEntries() == 1);
-  BOOST_REQUIRE(bank.getFEBs().GetEntries() == 1);
-  BOOST_REQUIRE(bank.getTRBs().GetEntries() == 1);
-  BOOST_REQUIRE(bank.getTOMBChannels().GetEntries() == 1);
+  BOOST_REQUIRE(bank.getScintillators().size() == 1);
+  BOOST_REQUIRE(bank.getPMs().size() == 1);
+  BOOST_REQUIRE(bank.getPMCalibs().size() == 1);
+  BOOST_REQUIRE(bank.getBarrelSlots().size() == 1);
+  BOOST_REQUIRE(bank.getLayers().size() == 1);
+  BOOST_REQUIRE(bank.getFrames().size() == 1);
+  BOOST_REQUIRE(bank.getFEBs().size() == 1);
+  BOOST_REQUIRE(bank.getTRBs().size() == 1);
+  BOOST_REQUIRE(bank.getTOMBChannels().size() == 1);
 
   BOOST_REQUIRE(bank.getScintillator(0).getID() == 111);
   BOOST_CHECK_CLOSE(bank.getScintillator(0).getAttenLen(), 8.f, epsilon);
@@ -280,14 +280,14 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   BOOST_REQUIRE(bank2.getFEBsSize() == 1);
   BOOST_REQUIRE(bank2.getTRBsSize() == 1);
 
-  BOOST_REQUIRE(bank2.getScintillators().GetEntries() == 2);
-  BOOST_REQUIRE(bank2.getPMs().GetEntries() == 4);
-  BOOST_REQUIRE(bank2.getPMCalibs().GetEntries() == 1);
-  BOOST_REQUIRE(bank2.getBarrelSlots().GetEntries() == 1);
-  BOOST_REQUIRE(bank2.getLayers().GetEntries() == 1);
-  BOOST_REQUIRE(bank2.getFrames().GetEntries() == 1);
-  BOOST_REQUIRE(bank2.getFEBs().GetEntries() == 1);
-  BOOST_REQUIRE(bank2.getTRBs().GetEntries() == 1);
+  BOOST_REQUIRE(bank2.getScintillators().size() == 2);
+  BOOST_REQUIRE(bank2.getPMs().size() == 4);
+  BOOST_REQUIRE(bank2.getPMCalibs().size() == 1);
+  BOOST_REQUIRE(bank2.getBarrelSlots().size() == 1);
+  BOOST_REQUIRE(bank2.getLayers().size() == 1);
+  BOOST_REQUIRE(bank2.getFrames().size() == 1);
+  BOOST_REQUIRE(bank2.getFEBs().size() == 1);
+  BOOST_REQUIRE(bank2.getTRBs().size() == 1);
 
   BOOST_REQUIRE(bank2.getPMCalib(0).GetId() == 256);
   BOOST_REQUIRE(bank2.getBarrelSlot(0).getID() == 1);
