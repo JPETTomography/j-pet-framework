@@ -46,8 +46,8 @@ void JPetManager::Run()
   long long kFirstEvent = 0;
   long long kLastEvent = 0;
   for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
-    (*taskIter)->createInputObjects( getInputFileName().c_str() ); /// readers
-    (*taskIter)->createOutputObjects( getInputFileName().c_str() ); /// writers + histograms
+    (*taskIter)->createInputObjects( getBaseInputFileName().c_str() ); /// readers
+    (*taskIter)->createOutputObjects( getBaseInputFileName().c_str() ); /// writers + histograms
     kNevent = (*taskIter)->getEventNb();
     kFirstEvent = 0;
     kLastEvent = kNevent - 1;
@@ -128,24 +128,22 @@ JPetManager::~JPetManager()
  *
  * Example: if the file given on command line was ../file.phys.hit.root, this method will return ../file
  */
-std::string JPetManager::getInputFileName() const
+std::string JPetManager::getBaseInputFileName() const
 {
   std::string name = fCmdParser.getFileName().c_str();
-  // strip suffixes of type .tslot.* and .phys.*
-  int pos = name.find(".tslot");
-  if ( pos == std::string::npos ) {
-    pos = name.find(".phys");
-  }
-  if ( pos == std::string::npos ) {
-    pos = name.find(".hld");
-  }
-  if ( pos == std::string::npos ) {
-    pos = name.find(".root");
-  }
+  int pos = name.find(".");
   if ( pos != std::string::npos ) {
     name.erase( pos );
-  }
+  }  
   return name;
+}
+
+/**
+ * @brief Get full Input File name including extension
+ */
+std::string JPetManager::getInputFileName() const
+{
+  return fCmdParser.getFileName().c_str();
 }
 
 /**
