@@ -6,6 +6,7 @@
 #define FRAMEWORK_JPETANALYSISRUNNER_H
 
 #include <string>
+#include <list>
 #include <TThread.h>
 #include "../JPetAnalysisModule/JPetAnalysisModule.h"
 #include "../JPetCommonAnalysisModule/JPetCommonAnalysisModule.h"
