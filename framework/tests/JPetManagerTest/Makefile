@@ -1,16 +1,16 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetManager
-EXTRA_MODULES = JPetCmdParser JPetParamManager JPetScin JPetFEB JPetTRB JPetPM JPetBarrelSlot JPetUnpacker JPetLogger JPetParamBank JPetDBParamGetter JPetTOMBChannel JPetPMCalib JPetLayer JPetFrame JPetAnalysisModule JPetScopeReader JPetHit JPetLOR JPetWriter JPetSigCh JPetPhysSignal JPetRawSignal JPetRecoSignal JPetBaseSignal JPetTreeHeader
+EXTRA_MODULES = JPetAnalysisRunner JPetCommonAnalysisModule JPetReader JPetCmdParser JPetParamManager JPetScin JPetFEB JPetTRB JPetPM JPetBarrelSlot JPetUnpacker JPetLogger JPetParamBank JPetDBParamGetter JPetTOMBChannel JPetPMCalib JPetLayer JPetFrame JPetAnalysisModule JPetScopeReader JPetHit JPetLOR JPetWriter JPetSigCh JPetPhysSignal JPetRawSignal JPetRecoSignal JPetBaseSignal JPetTreeHeader
 #classes that need Dictionnaries 
-DICTS = JPetScin JPetFEB JPetTRB JPetPM JPetUnpacker JPetParamBank JPetBarrelSlot JPetTOMBChannel JPetPMCalib JPetLayer JPetFrame JPetHit JPetLOR JPetSigCh JPetPhysSignal JPetRawSignal JPetRecoSignal JPetBaseSignal JPetAnalysisModule JPetTreeHeader
+DICTS = JPetScin JPetCommonAnalysisModule JPetFEB JPetTRB JPetPM JPetUnpacker JPetParamBank JPetBarrelSlot JPetTOMBChannel JPetPMCalib JPetLayer JPetFrame JPetHit JPetLOR JPetSigCh JPetPhysSignal JPetRawSignal JPetRecoSignal JPetBaseSignal JPetAnalysisModule JPetTreeHeader
 PQXX_LIB_SET = YES
 DBHANDLER_LIB_SET = YES
 UNPACKER_LIB_SET = YES
 ###################
 OS = $(shell uname)
 CO = g++
-CFLAGS = -Wall `root-config --cflags`
+CFLAGS = -Wall `root-config --cflags` -std=c++11
 ###################
 LDFLAGS = -Wall `root-config --glibs --ldflags` 
 LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system -lboost_program_options -lboost_regex
