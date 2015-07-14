@@ -6,7 +6,6 @@
 #ifndef JPET_FRAME_H
 #define JPET_FRAME_H
 
-#include <TRef.h>
 #include "TNamed.h"
 
 

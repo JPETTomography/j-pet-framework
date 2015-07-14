@@ -69,7 +69,7 @@ public:
   virtual int getNtimeOutsPerInput(void) const;
   virtual int getNnotimeOutsPerInput(void) const;
   
-  const JPetTRB & getTRB() const 
+  const JPetTRB & getTRB() const
   { 
     return (JPetTRB&)*fTRefTRBs.GetObject(); 
   }
@@ -81,7 +81,7 @@ public:
 
   inline bool operator==(const JPetFEB& feb) { return getID() == feb.getID(); }
   inline bool operator!=(const JPetFEB& feb) { return getID() != feb.getID(); }
-  
+
 
 protected:
   TRef fTRefTRBs;

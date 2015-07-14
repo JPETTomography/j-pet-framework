@@ -22,8 +22,8 @@ public:
   JPetBarrelSlot();
   JPetBarrelSlot(int id, bool isActive, std::string name, float theta, int inFrameID);
   
-  inline bool operator==(const JPetBarrelSlot& bslot) { return getID() == bslot.getID(); }
-  inline bool operator!=(const JPetBarrelSlot& bslot) { return getID() != bslot.getID(); }
+  inline bool operator==(const JPetBarrelSlot& bslot) const { return getID() == bslot.getID(); }
+  inline bool operator!=(const JPetBarrelSlot& bslot) const { return getID() != bslot.getID(); }
 
   inline int getID() const { return fId; }
   inline float getTheta() const { return fTheta; }
@@ -36,7 +36,7 @@ public:
   {
     fTRefLayer = &p_layer;
   }
-  
+
 private:
   int fId;
   bool fIsActive;

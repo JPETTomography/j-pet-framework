@@ -45,11 +45,12 @@ JPetParamBank* JPetDBParamGetter::generateParamBank(const int p_run_id)
         fillFEBs(p_run_id, *pParamBank);
         fillTRBs(p_run_id, *pParamBank);
         fillTOMBChannels(p_run_id, *pParamBank);
-        fillAllTRefs(p_run_id, *pParamBank);
         fParamCache[p_run_id] = pParamBank;
     }
     TThread::UnLock();
-    return new JPetParamBank(*fParamCache[p_run_id]);
+    JPetParamBank* returnedParamBank = new JPetParamBank(*fParamCache[p_run_id]);
+    fillAllTRefs(p_run_id, *returnedParamBank);
+    return returnedParamBank;
 }
 
 void JPetDBParamGetter::fillScintillators(const int p_run_id, JPetParamBank& paramBank)
