@@ -2,7 +2,6 @@
 #define _JPETTRB_H_
 
 #include "TNamed.h"
-#include <TRef.h>
 
 /**
  * @brief Parametric class representing database information on parameters of a TRB board.
@@ -22,8 +21,8 @@ class JPetTRB: public TNamed
   inline void setType(int type) { fType = type; }
   inline void setChannel(int ch) { fChannel = ch; }
 
-  inline bool operator==(const JPetTRB& trb) { return getID() == trb.getID(); }
-  inline bool operator!=(const JPetTRB& trb) { return getID() != trb.getID(); }
+  inline bool operator==(const JPetTRB& trb) const { return getID() == trb.getID(); }
+  inline bool operator!=(const JPetTRB& trb) const { return getID() != trb.getID(); }
   
  private:
   int fID;

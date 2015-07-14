@@ -38,7 +38,7 @@ public:
   inline float getRadius() const { return fRadius; }
   inline const JPetFrame& getFrame() { return static_cast<JPetFrame&>(*(fTRefFrame.GetObject())); }
   inline void setFrame(JPetFrame &frame) { fTRefFrame = &frame; }
-  
+
 protected:
   void clearTRefFrame()
   {

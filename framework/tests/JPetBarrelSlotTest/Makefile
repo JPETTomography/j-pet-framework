@@ -1,9 +1,9 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetBarrelSlot
-EXTRA_MODULES =
+EXTRA_MODULES = JPetLayer
 #classes that need Dictionnaries 
-DICTS =JPetBarrelSlot
+DICTS =JPetBarrelSlot JPetLayer
 PQXX_LIB_SET = 
 DBHANDLER_LIB_SET = 
 UNPACKER_LIB_SET = 
