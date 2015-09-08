@@ -17,7 +17,7 @@
 
 #include "../JPetTOMBChannel/JPetTOMBChannel.h"
 #include "../../JPetLoggerInclude.h"
-#include <TClonesArray.h>
+#include <vector>
 #include <cassert>
 
 class JPetParamBank: public TObject
@@ -26,6 +26,7 @@ class JPetParamBank: public TObject
   enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, kLayer, kFrame, SIZE};
 
   JPetParamBank();
+  JPetParamBank(const JPetParamBank& paramBank);
   ~JPetParamBank();
   void clear();
 
@@ -33,143 +34,157 @@ class JPetParamBank: public TObject
   int getSize(ParamObjectType type) const;
   // Scintillators
   inline void addScintillator(JPetScin& scintillator) {
-    new (fScintillators[getScintillatorsSize()]) JPetScin(scintillator);
+    fScintillators.push_back(new JPetScin(scintillator));
   }
-  inline const TClonesArray& getScintillators() const {
+  inline const std::vector<JPetScin*>& getScintillators() const {
     return fScintillators;
   }
   inline JPetScin& getScintillator(int i) const {
-    return *((JPetScin*)fScintillators[i]);
+    return *fScintillators[i];
   }
   inline int getScintillatorsSize() const {
-    return fScintillators.GetEntries();
+    return fScintillators.size();
   }
 
   // PMs
   inline void addPM(JPetPM& pm) {
-    new (fPMs[getPMsSize()]) JPetPM(pm);
+    fPMs.push_back(new JPetPM(pm));
   }
-  inline const TClonesArray& getPMs() const {
+  inline const std::vector<JPetPM*>& getPMs() const {
     return fPMs;
   }
   inline JPetPM& getPM(int i) const {
-    return *((JPetPM*)fPMs[i]);
+    return *fPMs[i];
   }
   int getPMsSize() const {
-    return fPMs.GetEntries();
+    return fPMs.size();
   }
 
   // PMCalibs
   inline void addPMCalib(JPetPMCalib& pmCalib) {
-    new (fPMCalibs[getPMCalibsSize()]) JPetPMCalib(pmCalib);
+    fPMCalibs.push_back(new JPetPMCalib(pmCalib));
   }
-  inline const TClonesArray& getPMCalibs() const {
+  inline const std::vector<JPetPMCalib*>& getPMCalibs() const {
     return fPMCalibs;
   }
   inline JPetPMCalib& getPMCalib(int i) const {
-    return *((JPetPMCalib*)fPMCalibs[i]);
+    return *fPMCalibs[i];
   }
   int getPMCalibsSize() const {
-    return fPMCalibs.GetEntries();
+    return fPMCalibs.size();
   }
   
   // FEBs
-  inline void addFEB(JPetFEB& kb) {
-    new (fFEBs[getFEBsSize()]) JPetFEB(kb);
+  inline void addFEB(JPetFEB& feb) {
+    fFEBs.push_back(new JPetFEB(feb));
   }
-  inline const TClonesArray& getFEBs() const {
+  inline const std::vector<JPetFEB*>& getFEBs() const {
     return fFEBs;
   }
   inline JPetFEB& getFEB(int i) const {
-    return *((JPetFEB*)fFEBs[i]);
+    return *fFEBs[i];
   }
   inline int getFEBsSize() const {
-    return fFEBs.GetEntries();
+    return fFEBs.size();
   }
 
   // TRBs
   inline void addTRB(JPetTRB& trb) {
-    new (fTRBs[getTRBsSize()]) JPetTRB(trb);
+    fTRBs.push_back(new JPetTRB(trb));
   }
-  inline const TClonesArray& getTRBs() const {
+  inline const std::vector<JPetTRB*>& getTRBs() const {
     return fTRBs;
   }
   inline JPetTRB& getTRB(int i) const {
-    return *((JPetTRB*)fTRBs[i]);
+    return *fTRBs[i];
   }
   inline int getTRBsSize() const {
-    return fTRBs.GetEntries();
+    return fTRBs.size();
   }
 
   // Barrel Slot
   inline void addBarrelSlot(JPetBarrelSlot& slot) {
-    new (fBarrelSlots[getBarrelSlotsSize()]) JPetBarrelSlot(slot);
+    fBarrelSlots.push_back(new JPetBarrelSlot(slot));
   }
-  inline const TClonesArray& getBarrelSlots() const {
+  inline const std::vector<JPetBarrelSlot*>& getBarrelSlots() const {
     return fBarrelSlots;
   }
   inline JPetBarrelSlot& getBarrelSlot(int i) const {
-    return *((JPetBarrelSlot*)fBarrelSlots[i]);
+    return *fBarrelSlots[i];
   }
   inline int getBarrelSlotsSize() const {
-    return fBarrelSlots.GetEntries();
+    return fBarrelSlots.size();
   }
 
   // Layer
   inline void addLayer(JPetLayer& layer) {
-    new (fLayers[getLayersSize()]) JPetLayer(layer);
+    fLayers.push_back(new JPetLayer(layer));
   }
-  inline const TClonesArray& getLayers() const {
+  inline const std::vector<JPetLayer*>& getLayers() const {
     return fLayers;
   }
   inline JPetLayer& getLayer(int i) const {
-    return *((JPetLayer*)fLayers[i]);
+    return *fLayers[i];
   }
   inline int getLayersSize() const {
-    return fLayers.GetEntries();
+    return fLayers.size();
   }
   
   // Frame
   inline void addFrame(JPetFrame& frame) {
-    new (fFrames[getFramesSize()]) JPetFrame(frame);
+    fFrames.push_back(new JPetFrame(frame));
   }
-  inline const TClonesArray& getFrames() const {
+  inline const std::vector<JPetFrame*>& getFrames() const {
     return fFrames;
   }
   inline JPetFrame& getFrame(int i) const {
-    return *((JPetFrame*)fFrames[i]);
+    return *fFrames[i];
   }
   inline int getFramesSize() const {
-    return fFrames.GetEntries();
+    return fFrames.size();
   }
   
   // TOMB Channels
   inline void addTOMBChannel(JPetTOMBChannel& tombchannel) {
-    new (fTOMBChannels[getTOMBChannelsSize()]) JPetTOMBChannel(tombchannel);
+    fTOMBChannels.push_back(new JPetTOMBChannel(tombchannel));
   }
-  inline const TClonesArray& getTOMBChannels() const {
+  inline const std::vector<JPetTOMBChannel*>& getTOMBChannels() const {
     return fTOMBChannels;
   }
   inline JPetTOMBChannel& getTOMBChannel(int i) const {
-    return *((JPetTOMBChannel*)fTOMBChannels[i]);
+    return *fTOMBChannels[i];
   }
   inline int getTOMBChannelsSize() const {
-    return fTOMBChannels.GetEntries();
+    return fTOMBChannels.size();
   }
 
  private:
 
   void operator=(const JPetParamBank&);
 
-  TClonesArray fScintillators;
-  TClonesArray fPMs;
-  TClonesArray fPMCalibs;
-  TClonesArray fFEBs;
-  TClonesArray fTRBs;
-  TClonesArray fBarrelSlots;
-  TClonesArray fLayers;
-  TClonesArray fFrames;
-  TClonesArray fTOMBChannels;
-  ClassDef (JPetParamBank, 2);
+  std::vector<JPetScin*> fScintillators;
+  std::vector<JPetPM*> fPMs;
+  std::vector<JPetPMCalib*> fPMCalibs;
+  std::vector<JPetFEB*> fFEBs;
+  std::vector<JPetTRB*> fTRBs;
+  std::vector<JPetBarrelSlot*> fBarrelSlots;
+  std::vector<JPetLayer*> fLayers;
+  std::vector<JPetFrame*> fFrames;
+  std::vector<JPetTOMBChannel*> fTOMBChannels;
+  ClassDef (JPetParamBank, 3);
+
+  template <typename T>
+  void initVectorWith(std::vector<T*>& target, const std::vector<T*>& source)
+  {
+      for(int i = 0; i < source.size(); i++)
+      {
+          target.push_back(new T(*source[i]));
+      }
+  }
 };
+
+//void JPetParamBank::initVectorWith<typename T>(std::vector<T> target, std::vector<T> source)
+//{
+
+//}
 #endif /*  !JPETPARAMBANK_H */
