@@ -35,7 +35,7 @@ JPetParamBank* JPetDBParamGetter::generateParamBank(const int p_run_id)
     TThread::Lock();
     if(fParamCache.find(p_run_id) == fParamCache.end())
     {
-        JPetParamBank* pParamBank =  new JPetParamBank;
+        JPetParamBank *pParamBank = new JPetParamBank;
         fillScintillators(p_run_id, *pParamBank);
         fillPMs(p_run_id, *pParamBank);
         fillPMCalibs(p_run_id, *pParamBank);
@@ -47,9 +47,9 @@ JPetParamBank* JPetDBParamGetter::generateParamBank(const int p_run_id)
         fillTOMBChannels(p_run_id, *pParamBank);
         fParamCache[p_run_id] = pParamBank;
     }
-    TThread::UnLock();
     JPetParamBank* returnedParamBank = new JPetParamBank(*fParamCache[p_run_id]);
     fillAllTRefs(p_run_id, *returnedParamBank);
+    TThread::UnLock();
     return returnedParamBank;
 }
 
