@@ -39,7 +39,6 @@ class JPetManager: public TNamed {
   void AddTaskGeneratorChain( TaskGeneratorChain* taskGeneratorChain);
   void ParseCmdLine(int argc, char** argv);
   std::vector<std::string> getInputFileNames() const;
-  //std::string getBaseInputFileName() const;
   int getRunNumber() const;
   TString GetTimeString() const;
 
