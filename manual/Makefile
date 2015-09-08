@@ -7,26 +7,28 @@
 PROCESSOR = pandoc
 OPTS = -t markdown
 
-SOURCE = JPetManual.md JPetScopeReaderManula.md
+SOURCE = JPetManual.md JPetScopeReaderManual.md
 SOURCE_UPDATED_DATE = $(SOURCE:.md=.md.updated)
 PDF =  $(SOURCE:.md=.pdf)
 HTML = $(SOURCE:.md=.html)
 
 DATE = `date +"%d.%m.%Y"`
 
-%.updated: %
+%.md.updated: %.md
 	@sed "s/produced on: [0-9]\{2\}.[0-9]\{2\}.[0-9]\{4\}/produced on: $(DATE)/g" $< > $@
-	@echo "$(DATE)"
 
-pdf: $(SOURCE_UPDATED_DATE)
-	$(PROCESSOR) -o $(PDF) $(SOURCE_UPDATED_DATE)
-	rm $(SOURCE_UPDATED_DATE)
+all: pdf html
 
-html: $(SOURCE_UPDATED_DATE)
-	$(PROCESSOR) -o $(HTML) $(SOURCE_UPDATED_DATE)
-	rm $(SOURCE_UPDATED_DATE)
+pdf: $(PDF)
 
+html: $(HTML)
+
+%.pdf: %.md.updated
+	$(PROCESSOR) -o $@ $^
+
+%.html: %.md.updated
+	$(PROCESSOR) -o $@ $^
 
 clean:
-	rm $(PDF) $(HTML) *.log
+	rm $(PDF) $(HTML)
 

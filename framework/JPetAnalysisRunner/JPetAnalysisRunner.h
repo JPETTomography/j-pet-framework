@@ -36,6 +36,7 @@ private:
     void manageProgressBar(long long done, long long end);
     std::vector<std::string> getInputFileNames() const;
     void UnpackFile() { if(fCmdParser.IsFileTypeSet()) fUnpacker.exec();}
+    std::string getBaseInputFileName(string name) const;
 
     int fProcessedFile;
     JPetCmdParser& fCmdParser;

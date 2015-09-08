@@ -110,7 +110,7 @@ void JPetCmdParser::parse(int argc, const char** argv)
 
 bool JPetCmdParser::isCorrectFileType(const std::string& type) const
 {
-  if (type == "hld" || type == "root" || "scope") {
+  if (type == "hld" || type == "root" || type == "scope") {
     return true;
   }
   return false;

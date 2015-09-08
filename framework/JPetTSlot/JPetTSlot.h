@@ -16,9 +16,7 @@ class JPetTSlot: public TNamed
 {
 public:
 /// @todo think about changing TClonesArray to something else ? what about cleaning
-  JPetTSlot():
-    fSigChannels("JPetSigCh", 100),
-    fSize(0)
+  JPetTSlot()
   {
     SetName("JPetTSlot");
   }
@@ -26,12 +24,12 @@ public:
   void addCh(JPetSigCh& new_ch);
 
   inline size_t size() const {
-    return fSigChannels.GetEntries();
+    return fSigChannels.size();
   }
   inline size_t getNumberOfSigCh() const {
-    return fSigChannels.GetEntries();
+    return fSigChannels.size();
   }
-  inline const TClonesArray& getSigChVect() const {
+  inline const std::vector<JPetSigCh*>& getSigChVect() const {
     return fSigChannels;
   }
   /**
@@ -61,8 +59,7 @@ public:
   ClassDef(JPetTSlot, 1);
 
 private:
-  TClonesArray fSigChannels; 
-  int fSize;
+  std::vector<JPetSigCh*> fSigChannels; 
   unsigned int fIndex; ///< sequential number of this TSlot in the HLD file
 };
 

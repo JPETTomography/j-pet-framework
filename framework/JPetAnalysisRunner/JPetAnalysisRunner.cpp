@@ -50,9 +50,9 @@ TThread* JPetAnalysisRunner::run()
 
 void JPetAnalysisRunner::prepareCurrentTaskForFile(const string& file)
 {
-    std::string bla (file);
-    (*currentTask)->createInputObjects( bla.c_str() ); /// readers
-    (*currentTask)->createOutputObjects( bla.c_str() ); /// writers + histograms
+    std::string tmpFile (file);
+    (*currentTask)->createInputObjects( tmpFile.c_str() ); /// readers
+    (*currentTask)->createOutputObjects( tmpFile.c_str() ); /// writers + histograms
 }
 
 void JPetAnalysisRunner::setEventBounds(long long& begin, long long& end, long long& eventCount)
@@ -140,9 +140,19 @@ std::vector<std::string> JPetAnalysisRunner::getInputFileNames() const
         if ( pos != std::string::npos ) {
             name.erase( pos );
         }
+
         parsedNames.push_back(name);
     }
     return parsedNames;
+}
+
+std::string JPetAnalysisRunner::getBaseInputFileName(string name) const
+{
+    int pos = name.find(".");
+    if ( pos != std::string::npos ) {
+        name.erase( pos );
+    }
+    return name;
 }
 
 JPetAnalysisRunner::~JPetAnalysisRunner()
