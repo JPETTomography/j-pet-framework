@@ -183,8 +183,4 @@ class JPetParamBank: public TObject
   }
 };
 
-//void JPetParamBank::initVectorWith<typename T>(std::vector<T> target, std::vector<T> source)
-//{
-
-//}
 #endif /*  !JPETPARAMBANK_H */
