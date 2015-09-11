@@ -13,7 +13,7 @@
 // ********            Generate Single JPetRecoSignal             ******** //
 // *********************************************************************** //
 
-const char* test_signal_filename = "scope_files/0/C1_00003.txt";
+const char* gTest_signal_filename = "scope_files/0/C1_00003.txt";
 
 struct reco_signal_generator {
   
@@ -135,7 +135,7 @@ struct signal_generation_fixture : public reco_signal_generator {
 // *********************************************************************** //
 
 signal_generation_fixture::signal_generation_fixture () : reco_signal_generator() {
-  reco_signal_generator::setup(test_signal_filename);
+  reco_signal_generator::setup(gTest_signal_filename);
 }
 
 // *********************************************************************** //
@@ -147,7 +147,7 @@ signal_generation_fixture::~signal_generation_fixture () {
 // ********                 Open Single ROOT file                 ******** //
 // *********************************************************************** //
 
-const char* test_root_filename = "test_file.reco.sig.test.0.root";
+const char* gTest_root_filename = "test_file_test_0.reco.sig.root";
 
 struct root_file_reader {
   
@@ -244,7 +244,7 @@ struct tref_correctness_fixture : public root_file_reader {
 // *********************************************************************** //
 
 tref_correctness_fixture::tref_correctness_fixture () : root_file_reader() {
-  root_file_reader::setup(test_root_filename);
+  root_file_reader::setup(gTest_root_filename);
 }
 
 // *********************************************************************** //

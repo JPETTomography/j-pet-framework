@@ -288,14 +288,14 @@ void JPetScopeReader::createNewWriter(const char* outputFilename) {
     string out_fn(fOutFilename.Data());
     int last_dot = out_fn.find_last_of(".");
 
-    string out_fn2  = out_fn.substr(0,last_dot);
+    string out_fn2  = out_fn.substr(0,last_dot );
            out_fn2 += "_";
            out_fn2 += (*fIter).pName;
 	   out_fn2 += "_";
            out_fn2 += to_string((*fIter).pCollPosition);
 	   out_fn2 += ".reco.sig";
            out_fn2 += out_fn.substr(last_dot);
-
+    
     fWriter = new JPetWriter(out_fn2.c_str());
 
     fHeader = new JPetTreeHeader(JPetManager::GetManager().getRunNumber());
