@@ -28,8 +28,7 @@ BOOST_AUTO_TEST_CASE (generate_root_file) {
   JPetManager& manager = JPetManager::GetManager();
   manager.ParseCmdLine(_argc, _argv);
   manager.Run();
-
-  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " does not exitst.");
+  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(gTest_root_filename), "File " << gTest_root_filename << " does not exist.");
 }
 
 BOOST_FIXTURE_TEST_CASE (signal_generation_test, signal_generation_fixture) {

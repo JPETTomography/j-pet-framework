@@ -30,26 +30,28 @@ JPetManager::JPetManager(): TNamed("JPetMainManager", "JPetMainManager")
 
 void JPetManager::Run()
 {
-	vector<string> fileNames = getInputFileNames();
-	vector<JPetAnalysisRunner*> runners;
-	vector<TThread*> threads;
+  vector<string> fileNames = getInputFileNames();
+  vector<JPetAnalysisRunner*> runners;
+  vector<TThread*> threads;
 
-	for(int i = 0; i < fileNames.size(); i++)
-	{
-		JPetAnalysisRunner* runner = new JPetAnalysisRunner(ftaskGeneratorChain, i, fCmdParser);
-		runners.push_back(runner);
-		threads.push_back(runner->run());
-	}
-	for(auto thread : threads)
-	{
-		thread->Join();
-	}
-	for(auto runner: runners)
-	{
-		delete runner;
-	}
+  for (int i = 0; i < fileNames.size(); i++) {
+    JPetAnalysisRunner* runner = new JPetAnalysisRunner(ftaskGeneratorChain, i, fCmdParser);
+    runners.push_back(runner);
+    auto thr = runner->run();
+    if (thr) {
+      threads.push_back(thr);
+    } else {
+      ERROR("thread pointer is null");
+    }
+  }
+  for (auto thread : threads) {
+    thread->Join();
+  }
+  for (auto runner : runners) {
+    delete runner;
+  }
 
-	INFO( "======== Finished processing all tasks: " + GetTimeString() + " ========\n" );
+  INFO( "======== Finished processing all tasks: " + GetTimeString() + " ========\n" );
 }
 
 void JPetManager::ParseCmdLine(int argc, char** argv)
@@ -80,7 +82,8 @@ JPetManager::~JPetManager()
  * Example: if the file given on command line was ../file.phys.hit.root, this method will return ../file
  */
 
-std::vector<std::string> JPetManager::getInputFileNames() const {
+std::vector<std::string> JPetManager::getInputFileNames() const
+{
   std::vector<std::string> fileNames = fCmdParser.getFileNames();
   std::vector<std::string> parsedNames;
   for (int i = 0; i < fileNames.size(); i++) {
@@ -119,5 +122,5 @@ TString JPetManager::GetTimeString() const
 
 void JPetManager::AddTaskGeneratorChain(TaskGeneratorChain* taskGeneratorChain)
 {
-	ftaskGeneratorChain = taskGeneratorChain;
+  ftaskGeneratorChain = taskGeneratorChain;
 }
