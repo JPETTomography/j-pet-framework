@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE (default_constructor)
   JPetReader reader;
   BOOST_REQUIRE(reader.fBranch == 0);
   BOOST_REQUIRE(!reader.isOpen());
-  BOOST_REQUIRE(reader.fObject == 0);
+  BOOST_REQUIRE(reader.fEvent == 0);
   BOOST_REQUIRE(reader.fTree == 0);
 }
 
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE (bad_file)
   BOOST_REQUIRE(!reader.openFile("bad_file.txt"));
   BOOST_REQUIRE(reader.fBranch == 0);
   BOOST_REQUIRE(!reader.isOpen());
-  BOOST_REQUIRE(reader.fObject == 0);
+  BOOST_REQUIRE(reader.fEvent == 0);
   BOOST_REQUIRE(reader.fTree == 0);
 }
 

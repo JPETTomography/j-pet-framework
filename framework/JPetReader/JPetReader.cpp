@@ -6,19 +6,21 @@
 
 JPetReader::JPetReader() :
   fBranch(0),
-  fObject(0),
+  fEvent(0),
   fTree(0),
-  fFile(0)
+  fFile(0),
+  fCurrentEventNumber(-1)
 {}
 
 JPetReader::JPetReader(const char* p_filename) :
   fBranch(0),
-  fObject(0),
+  fEvent(0),
   fTree(0),
-  fFile(0)
+  fFile(0),
+  fCurrentEventNumber(-1)
 {
-  if (openFile(p_filename)) {
-    readData("tree");
+  if (!openFileAndLoadData(p_filename, "tree")) {
+    ERROR("error in opening file");
   }
 }
 
@@ -30,13 +32,52 @@ JPetReader::~JPetReader()
   }
 }
 
+JPetReader::Event& JPetReader::getCurrentEvent()
+{
+  if (loadCurrentEvent()) {
+    return *fEvent;
+  } else {
+    ERROR("Could not read the current event");
+    if (fEvent) {
+      delete fEvent;
+    }
+    fEvent = new TNamed("Empty event", "Empty event");
+  }
+  return *fEvent;
+}
+
+bool JPetReader::JPetReader::nextEvent()
+{
+  fCurrentEventNumber++;
+  return loadCurrentEvent();
+}
+
+bool JPetReader::firstEvent()
+{
+  fCurrentEventNumber = 0;
+  return loadCurrentEvent();
+}
+
+bool JPetReader::lastEvent()
+{
+  fCurrentEventNumber = getNbOfAllEvents() - 1;
+  return loadCurrentEvent();
+}
+
+bool JPetReader::nthEvent(int n)
+{
+  fCurrentEventNumber = n;
+  return loadCurrentEvent();
+}
+
 void JPetReader::closeFile ()
 {
   if (fFile) delete fFile;
   fFile = 0;
   fBranch = 0;
-  fObject = 0;
+  fEvent = 0;
   fTree = 0;
+  fCurrentEventNumber = -1;
 }
 
 
@@ -51,9 +92,9 @@ bool JPetReader::openFile (const char* filename)
   return true;
 }
 
-bool JPetReader::readData (const char* treename)
+bool JPetReader::loadData(const char* treename)
 {
-  
+
   if (!isOpen() ) {
     ERROR("File not open");
     return false;
@@ -73,7 +114,35 @@ bool JPetReader::readData (const char* treename)
     ERROR("in reading branch from tree");
     return false;
   }
-  fBranch->SetAddress(&fObject);
+  fBranch->SetAddress(&fEvent);
+  fCurrentEventNumber = 0;
+  firstEvent();
+  return true;
+}
+
+bool JPetReader::readData (const char* treename)
+{
+
+  if (!isOpen() ) {
+    ERROR("File not open");
+    return false;
+  }
+  if (!treename) {
+    ERROR("empty tree name");
+    return false;
+  }
+  fTree = static_cast<TTree*>(fFile->Get(treename));
+  if (!fTree) {
+    ERROR("in reading tree");
+    return false;
+  }
+  TObjArray* arr = fTree->GetListOfBranches();
+  fBranch = (TBranch*)(arr->At(0));
+  if (!fBranch) {
+    ERROR("in reading branch from tree");
+    return false;
+  }
+  fBranch->SetAddress(&fEvent);
   return true;
 }
 
@@ -89,4 +158,3 @@ JPetTreeHeader* JPetReader::getHeaderClone() const
   // return a COPY of this header
   return new JPetTreeHeader( *header );
 }
-
