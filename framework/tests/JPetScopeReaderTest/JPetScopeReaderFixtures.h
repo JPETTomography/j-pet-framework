@@ -195,8 +195,7 @@ root_file_reader::~root_file_reader () {
 
 int root_file_reader::setup (const char* filename) {
   
-  m_reader.openFile(filename);
-  m_reader.readData("tree");
+  m_reader.openFileAndLoadData(filename);
 
   if (m_reader.isOpen()) {
 
@@ -215,11 +214,11 @@ int root_file_reader::setup (const char* filename) {
 
 void root_file_reader::check_tref_simple (void (*unit_test_function) (const void*)) {
   
-  JPetRecoSignal& sig = reinterpret_cast <JPetRecoSignal&> (m_reader.getData());
+  JPetRecoSignal& sig = reinterpret_cast <JPetRecoSignal&> (m_reader.getCurrentEvent());
 
-  for (int i = 0; i < m_reader.getEntries(); ++i) {
+  for (int i = 0; i < m_reader.getNbOfAllEvents(); ++i) {
     
-    m_reader.getEntry(i);
+    m_reader.nthEvent(i);
 
     if (unit_test_function != nullptr) {
       (*unit_test_function) (&(sig.getPM()));

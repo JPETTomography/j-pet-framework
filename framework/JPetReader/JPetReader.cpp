@@ -120,31 +120,6 @@ bool JPetReader::loadData(const char* treename)
   return true;
 }
 
-bool JPetReader::readData (const char* treename)
-{
-
-  if (!isOpen() ) {
-    ERROR("File not open");
-    return false;
-  }
-  if (!treename) {
-    ERROR("empty tree name");
-    return false;
-  }
-  fTree = static_cast<TTree*>(fFile->Get(treename));
-  if (!fTree) {
-    ERROR("in reading tree");
-    return false;
-  }
-  TObjArray* arr = fTree->GetListOfBranches();
-  fBranch = (TBranch*)(arr->At(0));
-  if (!fBranch) {
-    ERROR("in reading branch from tree");
-    return false;
-  }
-  fBranch->SetAddress(&fEvent);
-  return true;
-}
 
 /**
  * @brief Returns a copy of the header read from input file.

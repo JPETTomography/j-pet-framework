@@ -3,16 +3,9 @@
 #include "JPetCommonAnalysisModule.h"
 #include "TSystem.h"
 
-ClassImp(JPetCommonAnalysisModule);
+#include "../../JPetLoggerInclude.h"
 
-/*
-JPetCommonAnalysisModule::JPetCommonAnalysisModule():
-  JPetAnalysisModule(),
-  fEventNb(0)
-{
-  gSystem->Load("libTree");
-}
-*/
+ClassImp(JPetCommonAnalysisModule);
 
 JPetCommonAnalysisModule::JPetCommonAnalysisModule(const char* name, const char* title,
 				       const char * in_file_suffix,
@@ -20,7 +13,7 @@ JPetCommonAnalysisModule::JPetCommonAnalysisModule(const char* name, const char*
   JPetAnalysisModule(name, title),
   fVersion(0),
   fRunNb(0),
-  fEventNb(0),
+  //fEventNb(0),
   fEvent(0),
   fWriter(0),
   fReader(0),
@@ -49,12 +42,12 @@ void JPetCommonAnalysisModule::createInputObjects(const char* inputFilename)
   
   // create the JPetReader and load the tree
   fReader = new JPetReader();
-  if ( fReader->openFile( fInFileName.c_str() ) == 0) {
-    std::cerr << fName << ": Unable to open the input file. Exiting." << std::cerr;
+  if (!fReader->openFileAndLoadData( fInFileName.c_str())) {
+    ERROR(fName+std::string(": Unable to open the input file. Exiting."));
     exit(-1);
   }
-  fReader->readData();
-  fEventNb = fReader->getEntries();
+  //fReader->readData();
+  //fEventNb = fReader->getEntries();
 
   INFO( Form("Starting %s.", GetName() ) );
   
