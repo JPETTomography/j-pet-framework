@@ -15,6 +15,8 @@
 #include <TH1F.h>
 #include <TH2F.h>
 
+#include "../JPetTaskInterface/JPetTaskInterface.h"
+
 /**
  * @brief Template of a single module of the analysis representing one stage of the processing.
  *
@@ -27,7 +29,7 @@
 
  Moreover, the addStatsObject(TObject*) method can be used to store any TObject (like TH1 or TGraph) in an internal TList. Such stored objects can be accessed by getStatsObjects()->At(i) where i is the number of stored object. Add objects from the list will be written to the ROOT file at the end of processing. This mechanism is intended for saving any statistics of the data processing (See workdir/AnalysisExample).
  */
-class JPetAnalysisModule: public TNamed 
+class JPetAnalysisModule: public TNamed, public JPetTaskInterface
 {
 public:
   JPetAnalysisModule();
@@ -45,7 +47,7 @@ public:
   virtual long long getEventNb()=0;
   virtual void runSubmodules();
   virtual void terminate()=0; // called once when analysis terminates
-
+  virtual void init(const JPetTaskInterface::Options& opts){};
   int addStatsObject(TObject * statObj);
   const THashTable * getStatsObjects() const;
 
