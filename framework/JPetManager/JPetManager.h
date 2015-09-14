@@ -13,12 +13,14 @@
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetUnpacker/JPetUnpacker.h"
 #include "../JPetAnalysisRunner/JPetAnalysisRunner.h"
+#include "../JPetCommonAnalysisModule/JPetCommonAnalysisModule.h"
 
 //#include <vector>
 #include <list>
 #include <TNamed.h> 
 #include <TString.h>
 #include <TProof.h>
+
 
 class JPetAnalysisModule;
 class JPetReader;
