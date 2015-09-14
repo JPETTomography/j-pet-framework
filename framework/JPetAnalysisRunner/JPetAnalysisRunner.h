@@ -8,6 +8,8 @@
 #include <string>
 #include <list>
 #include <TThread.h>
+#include <functional> // for TaskGenerator declaration
+#include <vector> // for TaskGeneratorChain declaration
 #include "../JPetAnalysisModule/JPetAnalysisModule.h"
 #include "../JPetCommonAnalysisModule/JPetCommonAnalysisModule.h"
 #include "../JPetCmdParser/JPetCmdParser.h"
