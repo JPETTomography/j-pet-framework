@@ -42,9 +42,8 @@ BOOST_AUTO_TEST_CASE( my_test2 )
   writer.closeFile();
   
   JPetReader reader(fileName.c_str());
-  BOOST_REQUIRE_EQUAL(reader.getEntries(), 1);
-  reader.getEntry(0);
-  TNamed& objOut = (TNamed&)reader.getData();
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), 1);
+  TNamed& objOut = (TNamed&)reader.getCurrentEvent();
   BOOST_REQUIRE(std::string(objOut.GetName())=="TNamed");
   BOOST_REQUIRE(std::string(objOut.GetTitle())=="Title of this testObj");
 }
@@ -85,10 +84,10 @@ BOOST_AUTO_TEST_CASE( my_test3 )
   writer.closeFile();
   
   JPetReader reader(fileName.c_str());
-  BOOST_REQUIRE_EQUAL(reader.getEntries(), kHugeNumberOfObjects);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
   for (int i = 0; i < kHugeNumberOfObjects; i++) {
-    reader.getEntry(i);
-    TNamed& objOut = (TNamed&)reader.getData();
+    reader.nthEvent(i);
+    TNamed& objOut = (TNamed&)reader.getCurrentEvent();
     BOOST_REQUIRE(std::string(objOut.GetName())=="TNamed");
     BOOST_REQUIRE(std::string(objOut.GetTitle())==Form("Title of this testObj%d",i));
   }
