@@ -42,13 +42,8 @@ public:
   virtual bool firstEvent();
   virtual bool lastEvent();
   virtual bool nthEvent(int n);
-  virtual long long getCurrentEventNumber() const {
-    return fCurrentEventNumber;
-  };
-  virtual long long getNbOfAllEvents() const {
-    return fTree->GetEntries();
-  };
-
+  virtual long long getCurrentEventNumber() const { return fCurrentEventNumber; }
+  virtual long long getNbOfAllEvents() const { return fTree->GetEntries(); }
 
   virtual bool openFileAndLoadData(const char* filename, const char* treename = "tree") {
     if (openFile(filename) ) {
@@ -58,22 +53,7 @@ public:
   }
   virtual void closeFile();
   JPetTreeHeader* getHeaderClone() const;
-//it will go protected
-  virtual bool openFile(const char* filename);
-  virtual bool loadData(const char* treename = "tree");
-//it will be removed
-  virtual bool readData(const char* objname = "tree");
-  virtual long long getEntries () const {
-    return fTree->GetEntries();
-  }
-  virtual int getEntry (int entryNo) {
-    return fTree->GetEntry(entryNo);  /// the name of the function is bad but it mimics ROOT function
-  }
-  virtual TNamed& getData () {
-    return *fEvent;
-  }
 
-  //wtf?
   virtual TObject* getObject(const char* name) {
     if (fFile) return fFile->Get(name);
     else return 0;
@@ -82,30 +62,17 @@ public:
     if (fFile) return (fFile->IsOpen() && !fFile->IsZombie());
     else return false;
   }
-  template <class T>
-  void fillContainer(std::vector<T>& p_container, const std::string& p_objectName);
 
 protected:
+  virtual bool openFile(const char* filename);
+  virtual bool loadData(const char* treename = "tree");
   bool loadCurrentEvent() { return fTree->GetEntry(fCurrentEventNumber); }
+
   TBranch* fBranch;
-  TNamed* fEvent;
+  Event* fEvent;
   TTree* fTree;
   TFile* fFile;
   long long fCurrentEventNumber;
 };
-
-
-template <class T>
-void JPetReader::fillContainer(std::vector<T>& p_container, const std::string& p_objectName)
-{
-  TList* l_TList = static_cast<TList*>(fFile->Get(p_objectName.c_str()));
-  TObject* l_obj;
-
-  TIter next(l_TList);
-  while (l_obj = next()) {
-    T* l_item = static_cast<T*>(l_obj);
-    p_container.push_back(*l_item);
-  }
-}
 
 #endif	// JPETREADER_H

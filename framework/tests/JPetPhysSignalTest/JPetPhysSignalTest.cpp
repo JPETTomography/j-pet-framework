@@ -63,10 +63,8 @@ BOOST_AUTO_TEST_CASE( AllSignalsTest2 ) {
 
   double epsilon = 1e-5;
   JPetReader reader;
-  reader.openFile("signalTest.root");
-  reader.readData();
-  reader.getEntry(0);
-  JPetPhysSignal & phys = (JPetPhysSignal&) reader.getData();
+  reader.openFileAndLoadData("signalTest.root");
+  JPetPhysSignal & phys = (JPetPhysSignal&) reader.getCurrentEvent();
   BOOST_CHECK_CLOSE(phys.getTime(), 42.42f, epsilon);
 
   BOOST_CHECK_EQUAL(phys.getRecoSignal().getShape().size(), 502);
