@@ -86,7 +86,7 @@ bool JPetReader::openFile (const char* filename)
   closeFile();
   fFile = new TFile(filename);
   if ((!isOpen()) || fFile->IsZombie()) {
-    ERROR("Cannot open file");
+    ERROR(std::string("Cannot open file:")+std::string(filename));
     return false;
   }
   return true;
@@ -115,7 +115,6 @@ bool JPetReader::loadData(const char* treename)
     return false;
   }
   fBranch->SetAddress(&fEvent);
-  fCurrentEventNumber = 0;
   firstEvent();
   return true;
 }
@@ -128,6 +127,10 @@ bool JPetReader::loadData(const char* treename)
  */
 JPetTreeHeader* JPetReader::getHeaderClone() const
 {
+  if (!fTree) {
+    ERROR("No tree available");  
+    return 0;
+  }
   // get a pointer to a header wchich belongs to fTree
   JPetTreeHeader* header =  (JPetTreeHeader*)fTree->GetUserInfo()->At(JPetUserInfoStructure::kHeader);
   // return a COPY of this header

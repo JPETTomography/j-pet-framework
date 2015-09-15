@@ -42,8 +42,12 @@ public:
   virtual bool firstEvent();
   virtual bool lastEvent();
   virtual bool nthEvent(int n);
-  virtual long long getCurrentEventNumber() const { return fCurrentEventNumber; }
-  virtual long long getNbOfAllEvents() const { return fTree->GetEntries(); }
+  virtual long long getCurrentEventNumber() const {
+    return fCurrentEventNumber;
+  }
+  virtual long long getNbOfAllEvents() const {
+    return fTree ? fTree->GetEntries() : false;
+  }
 
   virtual bool openFileAndLoadData(const char* filename, const char* treename = "tree") {
     if (openFile(filename) ) {
@@ -66,7 +70,20 @@ public:
 protected:
   virtual bool openFile(const char* filename);
   virtual bool loadData(const char* treename = "tree");
-  bool loadCurrentEvent() { return fTree->GetEntry(fCurrentEventNumber); }
+  bool loadCurrentEvent() {
+    if (fTree) {
+      int entryCode = fTree->GetEntry(fCurrentEventNumber);
+      return isCorrectTreeEntryCode(entryCode);
+    } 
+    return false;
+  }
+  
+  inline bool isCorrectTreeEntryCode (int entryCode) const  ///see TTree GetEntry method
+  {
+    if (entryCode == -1) return false;
+    if (entryCode == 0) return false; 
+    return true;
+  }
 
   TBranch* fBranch;
   Event* fEvent;
