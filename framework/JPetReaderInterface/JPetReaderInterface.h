@@ -12,9 +12,9 @@
 
 class JPetReaderInterface {
  public:
-  typedef TNamed Event; 
+  typedef TObject MyEvent; 
   virtual ~JPetReaderInterface() {;}
-  virtual Event& getCurrentEvent()=0;   
+  virtual MyEvent& getCurrentEvent()=0;   
   virtual bool nextEvent()=0;
   virtual bool firstEvent()=0;
   virtual bool lastEvent()=0;
