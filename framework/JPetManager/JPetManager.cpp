@@ -28,7 +28,8 @@ JPetManager::JPetManager(): TNamed("JPetMainManager", "JPetMainManager")
 
 void JPetManager::Run()
 {
-  vector<string> fileNames = getInputFileNames();
+
+  vector<string> fileNames = getStrippedInputFileNames(getFullInputFileNames());
   vector<JPetAnalysisRunner*> runners;
   vector<TThread*> threads;
 
@@ -69,15 +70,19 @@ JPetManager::~JPetManager()
 {
 }
 
+std::vector<std::string> JPetManager::getFullInputFileNames() const 
+{
+  return fCmdParser.getFileNames();
+}
+
 /**
- * @brief Get Input File name stripped off the extension and the suffixes like .tslot.* or .phys.*
+ * @brief Get Stripped Input File name stripped off the extension and the suffixes like .tslot.* or .phys.*
  *
  * Example: if the file given on command line was ../file.phys.hit.root, this method will return ../file
  */
 
-std::vector<std::string> JPetManager::getInputFileNames() const
+std::vector<std::string> JPetManager::getStrippedInputFileNames(const std::vector<std::string>& fileNames) const
 {
-  std::vector<std::string> fileNames = fCmdParser.getFileNames();
   std::vector<std::string> parsedNames;
   for (int i = 0; i < fileNames.size(); i++) {
     std::string name = fileNames[i].c_str();
