@@ -18,6 +18,7 @@ class JPetTaskInterface {
   virtual void init(const Options& options)=0;
   virtual void exec()=0;
   virtual void terminate()=0;
+  virtual void addSubTask(JPetTaskInterface* subtask)=0;
 
 };
 #endif /*  !JPETTASKINTERFACE_H */
