@@ -6,7 +6,8 @@ JPetHLDReader::JPetHLDReader():
   fBranch(0),
   fEvent(0),
   fTree(0),
-  fFile(NULL)
+  fFile(NULL),
+  fCurrentEventNumber(-1)
 {
   /* */
 }
@@ -15,14 +16,56 @@ JPetHLDReader::JPetHLDReader (const char* filename):
   fBranch(0),
   fEvent(0),
   fTree(0),
-  fFile(NULL)
+  fFile(NULL),
+  fCurrentEventNumber(-1)
 {
-  if (openFile(filename) ) readData();
+  if (!openFileAndLoadData(filename, "T")) {
+    ERROR("error in opening file");
+  }
 }
 
 JPetHLDReader::~JPetHLDReader ()
 {
   closeFile();
+}
+
+
+Event& JPetHLDReader::getCurrentEvent()
+{
+  if (loadCurrentEvent()) {
+    return *fEvent;
+  } else {
+    ERROR("Could not read the current event");
+    if (fEvent) {
+      delete fEvent;
+    }
+    fEvent = new Event();
+  }
+  return *fEvent;
+}
+
+bool JPetHLDReader::nextEvent()
+{
+  fCurrentEventNumber++;
+  return loadCurrentEvent();
+}
+
+bool JPetHLDReader::firstEvent()
+{
+  fCurrentEventNumber = 0;
+  return loadCurrentEvent();
+}
+
+bool JPetHLDReader::lastEvent()
+{
+  fCurrentEventNumber = getNbOfAllEvents() - 1;
+  return loadCurrentEvent();
+}
+
+bool JPetHLDReader::nthEvent(int n)
+{
+  fCurrentEventNumber = n;
+  return loadCurrentEvent();
 }
 
 void JPetHLDReader::closeFile ()
@@ -35,6 +78,31 @@ void JPetHLDReader::closeFile ()
   fBranch = 0;
   fEvent = 0;
   fTree = 0;
+}
+
+bool JPetHLDReader::loadData(const char* treename)
+{
+  if (!isOpen() ) {
+    ERROR("File not open");
+    return false;
+  }
+  if (!treename) {
+    ERROR("empty tree name");
+    return false;
+  }
+  fTree = static_cast<TTree*>(fFile->Get(treename));
+  if (!fTree) {
+    ERROR("in reading tree");
+    return false;
+  }
+  fBranch = fTree->GetBranch("event");
+  if (!fBranch) {
+    ERROR("in reading branch from tree");
+    return false;
+  }
+  fBranch->SetAddress(&fEvent);
+  firstEvent();
+  return true;
 }
 
 
@@ -52,11 +120,3 @@ bool JPetHLDReader::openFile (const char* filename)
 }
 
 
-void JPetHLDReader::readData ()
-{
-  fTree = static_cast<TTree*>(fFile->Get("T")); /// @todo add some comment
-  assert(fTree);
-  fBranch = fTree->GetBranch("event");
-  assert(fBranch);
-  fBranch->SetAddress(&fEvent);
-}
