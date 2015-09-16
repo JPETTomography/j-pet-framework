@@ -28,12 +28,11 @@ JPetManager::JPetManager(): TNamed("JPetMainManager", "JPetMainManager")
 
 void JPetManager::Run()
 {
-
-  vector<string> fileNames = getStrippedInputFileNames(getFullInputFileNames());
   vector<JPetAnalysisRunner*> runners;
   vector<TThread*> threads;
 
-  for (int i = 0; i < fileNames.size(); i++) {
+  int numberOfFiles = getFullInputFileNames().size();
+  for (int i = 0; i < numberOfFiles; i++) {
     JPetAnalysisRunner* runner = new JPetAnalysisRunner(ftaskGeneratorChain, i, fCmdParser);
     runners.push_back(runner);
     auto thr = runner->run();
@@ -75,35 +74,6 @@ std::vector<std::string> JPetManager::getFullInputFileNames() const
   return fCmdParser.getFileNames();
 }
 
-/**
- * @brief Get Stripped Input File name stripped off the extension and the suffixes like .tslot.* or .phys.*
- *
- * Example: if the file given on command line was ../file.phys.hit.root, this method will return ../file
- */
-
-std::vector<std::string> JPetManager::getStrippedInputFileNames(const std::vector<std::string>& fileNames) const
-{
-  std::vector<std::string> parsedNames;
-  for (int i = 0; i < fileNames.size(); i++) {
-    std::string name = fileNames[i].c_str();
-    // strip suffixes of type .tslot.* and .phys.*
-    int pos = name.find(".tslot");
-    if (pos == std::string::npos) {
-      pos = name.find(".phys");
-    }
-    if (pos == std::string::npos) {
-      pos = name.find(".hld");
-    }
-    if (pos == std::string::npos) {
-      pos = name.find(".root");
-    }
-    if (pos != std::string::npos) {
-      name.erase(pos);
-    }
-    parsedNames.push_back(name);
-  }
-  return parsedNames;
-}
 
 /**
  * @brief returns the time TString in the format dd.mm.yyyy HH:MM

@@ -10,13 +10,16 @@
 #include <TThread.h>
 #include <functional> // for TaskGenerator declaration
 #include <vector> // for TaskGeneratorChain declaration
-#include "../JPetAnalysisModule/JPetAnalysisModule.h"
-#include "../JPetCommonAnalysisModule/JPetCommonAnalysisModule.h"
+//#include "../JPetAnalysisModule/JPetAnalysisModule.h"
+//#include "../JPetCommonAnalysisModule/JPetCommonAnalysisModule.h"
+#include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetCmdParser/JPetCmdParser.h"
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetUnpacker/JPetUnpacker.h"
 
-using TaskGenerator = std::function< JPetCommonAnalysisModule* () >;
+//using TaskGenerator = std::function< JPetTaskInterface* () >;
+using TaskGenerator = std::function< JPetTaskInterface* () >;
+//using TaskGenerator = std::function< JPetCommonAnalysisModule* () >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
 class JPetAnalysisRunner
@@ -36,16 +39,20 @@ private:
     void processEventsInRange(long long begin, long long end);
     bool userBoundsAreCorrect(long long checkedEvent);
     void manageProgressBar(long long done, long long end);
-    std::vector<std::string> getInputFileNames() const;
-    void UnpackFile() { if(fCmdParser.IsFileTypeSet()) fUnpacker.exec();}
+    std::vector<std::string> getFullInputFileNames() const;
     std::string getBaseInputFileName(string name) const;
+    std::vector<std::string> getStrippedInputFileNames(const std::vector<std::string>& fileNames) const;
+
+    void UnpackFile() { if(fCmdParser.IsFileTypeSet()) fUnpacker.exec();}
 
     int fProcessedFile;
     JPetCmdParser& fCmdParser;
     JPetParamManager fParamManager;
     JPetUnpacker fUnpacker;
-    std::list<JPetAnalysisModule*> fTasks;
-    std::list<JPetAnalysisModule*>::iterator currentTask;
+    std::list<JPetTaskInterface*> fTasks;
+    std::list<JPetTaskInterface*>::iterator currentTask;
+    //std::list<JPetAnalysisModule*> fTasks;
+    //std::list<JPetAnalysisModule*>::iterator currentTask;
     TaskGeneratorChain* ftaskGeneratorChain;
     bool fIsProgressBarEnabled;
 
