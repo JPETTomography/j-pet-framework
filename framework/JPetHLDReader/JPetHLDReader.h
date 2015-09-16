@@ -15,6 +15,7 @@
 #include "../../JPetLoggerInclude.h"
 
 #include "../JPetUnpacker/Unpacker2/Event.h"
+#include "../JPetReaderInterface/JPetReaderInterface.h"
 
 class Event;
 
@@ -23,7 +24,7 @@ class Event;
  *
  * This if a special case of JPetReader adapted for reading the ROOT files produced by the JPetUnpacker of HLD files. It should be used in the first JPetAnalysisModule whose processing is not preceded by any other module. In all subsequent modules, JPetReader should be used instead.
  */
-class JPetHLDReader
+class JPetHLDReader : public JPetReaderInterface 
 {
 public:
   JPetHLDReader();
@@ -31,24 +32,52 @@ public:
   virtual ~JPetHLDReader();
   
 public:
-  void closeFile();
-  long long getEntries () const {
-    return fTree->GetEntries();
+  virtual Event& getCurrentEvent();   
+  virtual bool nextEvent();
+  virtual bool firstEvent();
+  virtual bool lastEvent();
+  virtual bool nthEvent(int n);
+  virtual long long getCurrentEventNumber() const {
+    return fCurrentEventNumber;
   }
-  int getEntry (int entryNo) {
-    return fTree->GetEntry(entryNo);
+  virtual long long getNbOfAllEvents() const {
+    return fTree ? fTree->GetEntries() : 0;
+  } 
+  virtual bool openFileAndLoadData(const char* filename, const char* treename = "tree") {
+    if (openFile(filename) ) {
+      return loadData(treename);
+    }
+    return false;
   }
-  bool openFile(const char* filename);
-  void readData();
-  Event& getData() {
-    return *fEvent;
+  virtual void closeFile();
+  virtual bool isOpen() const {
+    if (fFile) return (fFile->IsOpen() && !fFile->IsZombie());
+    else return false;
   }
 
 protected:
+  virtual bool openFile(const char* filename);
+  virtual bool loadData(const char* treename = "T");
+  bool loadCurrentEvent() {
+    if (fTree) {
+      int entryCode = fTree->GetEntry(fCurrentEventNumber);
+      return isCorrectTreeEntryCode(entryCode);
+    } 
+    return false;
+  }
+  
+  inline bool isCorrectTreeEntryCode (int entryCode) const  ///see TTree GetEntry method
+  {
+    if (entryCode == -1) return false;
+    if (entryCode == 0) return false; 
+    return true;
+  }
+
   TBranch* fBranch;
   TTree* fTree;
   Event* fEvent;
   TFile* fFile;
+  long long fCurrentEventNumber;
 
 private:
   JPetHLDReader(const JPetHLDReader&);
