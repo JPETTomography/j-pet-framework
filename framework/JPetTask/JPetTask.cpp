@@ -25,6 +25,6 @@ void JPetTask::terminate()
 {
 }
 
-void JPetTask::setEvent(JPetTask::Event* ev){
+void JPetTask::setEvent(TNamed* ev){
   fEvent = ev;
 }

@@ -17,6 +17,7 @@ class JPetTask: public JPetTaskInterface
   virtual void init(const JPetTaskInterface::Options& opts);
   virtual void exec();
   virtual void terminate();
+  virtual void addSubTask(JPetTaskInterface*) {};
   virtual void setEvent(TNamed* ev);
  protected:
   TNamed* fEvent;
