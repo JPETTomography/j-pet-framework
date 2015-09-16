@@ -8,21 +8,19 @@
 #ifndef JPETMANAGER_H 
 #define JPETMANAGER_H 
 
-#include "../JPetAnalysisModule/JPetAnalysisModule.h"
+//#include "../JPetAnalysisModule/JPetAnalysisModule.h"
 #include "../JPetCmdParser/JPetCmdParser.h"
-#include "../JPetParamManager/JPetParamManager.h"
-#include "../JPetUnpacker/JPetUnpacker.h"
+//#include "../JPetParamManager/JPetParamManager.h"
+//#include "../JPetUnpacker/JPetUnpacker.h"
 #include "../JPetAnalysisRunner/JPetAnalysisRunner.h"
-#include "../JPetCommonAnalysisModule/JPetCommonAnalysisModule.h"
+//#include "../JPetCommonAnalysisModule/JPetCommonAnalysisModule.h"
 
-//#include <vector>
 #include <list>
 #include <TNamed.h> 
 #include <TString.h>
 #include <TProof.h>
 
 
-class JPetAnalysisModule;
 class JPetReader;
 class JPetWriter;
 
@@ -52,7 +50,6 @@ class JPetManager: public TNamed {
   void operator=(const JPetManager&); 
 
   JPetCmdParser fCmdParser;
-  std::list<JPetAnalysisModule*> fTasks;
   TaskGeneratorChain* ftaskGeneratorChain;
 };
 #endif /*  !JPETMANAGER_H */
