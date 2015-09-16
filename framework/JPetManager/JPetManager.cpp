@@ -11,9 +11,7 @@
 #include <string>
 
 #include "../../JPetLoggerInclude.h"
-#include "../JPetScopeReader/JPetScopeReader.h"
 
-//ClassImp(JPetManager);
 #include <TDSet.h>
 #include <TThread.h>
 
@@ -69,11 +67,6 @@ int JPetManager::getRunNumber() const
 
 JPetManager::~JPetManager()
 {
-  std::list<JPetAnalysisModule*>::iterator taskIter;
-  for (taskIter = fTasks.begin(); taskIter != fTasks.end(); taskIter++) {
-    delete (*taskIter);
-    *taskIter = 0;
-  }
 }
 
 /**
