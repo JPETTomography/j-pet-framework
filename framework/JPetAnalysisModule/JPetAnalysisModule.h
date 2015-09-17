@@ -48,6 +48,7 @@ public:
   virtual void runSubmodules();
   virtual void terminate()=0; // called once when analysis terminates
   virtual void init(const JPetTaskInterface::Options& opts){};
+  virtual void addSubTask(JPetTaskInterface*) {};
   int addStatsObject(TObject * statObj);
   const THashTable * getStatsObjects() const;
 
