@@ -13,7 +13,7 @@ JPetCommonAnalysisModule::JPetCommonAnalysisModule(const char* name, const char*
   JPetAnalysisModule(name, title),
   fVersion(0),
   fRunNb(0),
-  //fEventNb(0),
+  fEventNb(0),
   fEvent(0),
   fWriter(0),
   fReader(0),
@@ -36,18 +36,21 @@ JPetCommonAnalysisModule::~JPetCommonAnalysisModule()
 
 void JPetCommonAnalysisModule::createInputObjects(const char* inputFilename)
 {
+  std::cout <<"inside createInputObjects  JPetCommonAnalysisModule" <<std::endl;
   fInFileName = inputFilename;
   fInFileName += ".";
   fInFileName += fInFileSuffix;
   
-  // create the JPetReader and load the tree
-  fReader = new JPetReader();
+  // create the JPetReader and load the tree   
+  assert(!fReader);
+  std::cout <<"creating JPetReader" <<std::endl;
+  fReader = new JPetReader;
+  std::cout <<"after creating JPetReader" <<std::endl;
   if (!fReader->openFileAndLoadData( fInFileName.c_str())) {
     ERROR(fName+std::string(": Unable to open the input file. Exiting."));
     exit(-1);
   }
-  //fReader->readData();
-  //fEventNb = fReader->getEntries();
+  fEventNb = fReader->getNbOfAllEvents();
 
   INFO( Form("Starting %s.", GetName() ) );
   
@@ -60,7 +63,6 @@ void JPetCommonAnalysisModule::createInputObjects(const char* inputFilename)
   fHeader->addStageInfo( this->GetName(), this->GetTitle(), getVersion(),
 			 JPetManager::GetManager().GetTimeString() );
 
-  
  }
 
  void JPetCommonAnalysisModule::createOutputObjects(const char* outputFilename)

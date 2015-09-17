@@ -35,7 +35,7 @@ public:
   virtual void exec() = 0;
   virtual void begin() = 0;
   virtual void end() = 0;
-  //virtual long long getEventNb() { return fEventNb; }
+  virtual long long getEventNb() { assert(fReader); return fReader->getNbOfAllEvents(); }
   virtual void terminate();
 
   int getVersion() const {
@@ -53,7 +53,7 @@ ClassDef(JPetCommonAnalysisModule, 0 )
 protected:
   const int fRunNb;
   int fVersion;
-  //int fEventNb;
+  int fEventNb;
   int fEvent;
   JPetWriter* fWriter;
   JPetReader* fReader;
