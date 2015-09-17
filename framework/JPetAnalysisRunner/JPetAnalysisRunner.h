@@ -33,12 +33,8 @@ private:
     static void* processProxy(void*);
     void process();
     void ProcessFromCmdLineArgs(int fileIndex);
-    float setProgressBar(int currentEventNumber, int numberOfEvents);
-    void prepareCurrentTaskForFile(const string& file);
-    void setEventBounds(long long& begin, long long& end, long long& eventCount);
-    void processEventsInRange(long long begin, long long end);
-    bool userBoundsAreCorrect(long long checkedEvent);
-    void manageProgressBar(long long done, long long end);
+    //void setEventBounds(long long& begin, long long& end, long long& eventCount);
+    //bool userBoundsAreCorrect(long long checkedEvent);
     std::vector<std::string> getFullInputFileNames() const;
     std::string getBaseInputFileName(string name) const;
     std::vector<std::string> getStrippedInputFileNames(const std::vector<std::string>& fileNames) const;

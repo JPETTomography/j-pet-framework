@@ -26,30 +26,18 @@ JPetAnalysisRunner::JPetAnalysisRunner(TaskGeneratorChain* taskGeneratorChain, i
 void JPetAnalysisRunner::process()
 {
   std::cout <<"processing in Analysis Runner" <<std::endl;
-  //std::vector<std::string> fileNames = getInputFileNames();
-  //std::cout <<"inputFiles" <<std::endl;
-  //ProcessFromCmdLineArgs(fProcessedFile);
-  //std::cout <<"processFromCmdLine" <<std::endl;
-  //currentTask = fTasks.begin();
-  //assert(currentTask != fTasks.end());
-  //std::cout <<"before for loop" <<std::endl;
+  std::vector<std::string> fileNames = getFullInputFileNames();
+  ProcessFromCmdLineArgs(fProcessedFile);
   for (currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
-    std::cout <<"in for loop" <<std::endl;
     std::map<std::string,std::string> opts;
-    opts["inputFile"]="cosm_barrel.raw.sig.root";
-    opts["outputFile"]="testout.root";
+    opts["inputFile"]=fileNames[fProcessedFile];
+    opts["outputFile"]=fileNames[fProcessedFile];
+    //setEventBounds(kFirstEvent, kLastEvent, kNevent);
+    opts["firstEvent"]="100";
+    opts["lastEvent"]="200";
+    opts["progressBar"]="true";
     (*currentTask)->init(opts);
     (*currentTask)->exec();
-    //prepareCurrentTaskForFile(fileNames[fProcessedFile]);
-    //std::cout <<"in for loop2" <<std::endl;
-    //long long  kNevent = (*currentTask)->getEventNb();
-
-    //long long kFirstEvent = 0;
-    //long long kLastEvent = 0;
-    //std::cout <<"after prepareCurrent Task" <<std::endl;
-    //setEventBounds(kFirstEvent, kLastEvent, kNevent);
-    //processEventsInRange(kFirstEvent, kLastEvent);
-    std::cout <<"after" <<std::endl;
     (*currentTask)->terminate();
   }
 }
@@ -71,15 +59,9 @@ TThread* JPetAnalysisRunner::run()
   return thread;
 }
 
-void JPetAnalysisRunner::prepareCurrentTaskForFile(const string& file)
-{
-  //std::string tmpFile (file);
-  //(*currentTask)->createInputObjects( tmpFile.c_str() ); /// readers
-  //(*currentTask)->createOutputObjects( tmpFile.c_str() ); /// writers + histograms
-}
 
-void JPetAnalysisRunner::setEventBounds(long long& begin, long long& end, long long& eventCount)
-{
+//void JPetAnalysisRunner::setEventBounds(long long& begin, long long& end, long long& eventCount)
+//{
   //if (userBoundsAreCorrect(eventCount) && currentTask == fTasks.begin()) {
     //begin = fCmdParser.getLowerEventBound();
     //end = fCmdParser.getHigherEventBound();
@@ -89,43 +71,22 @@ void JPetAnalysisRunner::setEventBounds(long long& begin, long long& end, long l
     //begin = 0;
     //end = eventCount - 1;
   //}
-}
+//}
 
-void JPetAnalysisRunner::processEventsInRange(long long begin, long long end)
-{
-  for (long long i = begin; i <= end; i++) {
-    manageProgressBar(i, end);
-    std::cout <<"processEventInRange" <<std::endl;
-    (*currentTask)->exec();
-  }
-}
 
-bool JPetAnalysisRunner::userBoundsAreCorrect(long long numberOfEvents)
-{
-  return fCmdParser.getLowerEventBound() != -1 &&
-         fCmdParser.getHigherEventBound() != -1 &&
-         fCmdParser.getHigherEventBound() < numberOfEvents;
-}
+//bool JPetAnalysisRunner::userBoundsAreCorrect(long long numberOfEvents)
+//{
+  //return fCmdParser.getLowerEventBound() != -1 &&
+         //fCmdParser.getHigherEventBound() != -1 &&
+         //fCmdParser.getHigherEventBound() < numberOfEvents;
+//}
 
-void JPetAnalysisRunner::manageProgressBar(long long done, long long end)
-{
-  if (fIsProgressBarEnabled) {
-    printf("\r[%6.4f%% %%]", setProgressBar(done, end));
-  }
-}
-
-float JPetAnalysisRunner::setProgressBar(int currentEventNumber, int numberOfEvents)
-{
-  return ( ((float)currentEventNumber) / numberOfEvents ) * 100;
-}
 
 void JPetAnalysisRunner::ProcessFromCmdLineArgs(int fileIndex)
 {
 
   if (fCmdParser.isRunNumberSet()) { /// we should connect to the database
-    std::cout <<"before getParamsFromDatabase" <<std::endl;
     fParamManager.getParametersFromDatabase(fCmdParser.getRunNumber()); /// @todo some error handling
-    std::cout <<"after getParamsFromDatabase" <<std::endl;
   }
   if (fCmdParser.isProgressBarSet()) {
     fIsProgressBarEnabled = true;
@@ -136,9 +97,7 @@ void JPetAnalysisRunner::ProcessFromCmdLineArgs(int fileIndex)
       module->setFileName(getFullInputFileNames()[fileIndex].c_str());
       //fTasks.push_front(module);
     } else if (fCmdParser.getFileType() == "hld") {
-      std::cout <<"before setParams" <<std::endl;
       fUnpacker.setParams(fCmdParser.getFileNames()[fileIndex].c_str());
-      std::cout <<"before unpacking" <<std::endl;
       UnpackFile();
     }
   }
