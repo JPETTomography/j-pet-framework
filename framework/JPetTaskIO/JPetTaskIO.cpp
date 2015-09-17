@@ -13,7 +13,6 @@
 
 #include "../../JPetLoggerInclude.h"
 
-
 JPetTaskIO::JPetTaskIO():
   fWriter(0),
   fReader(0),
@@ -21,8 +20,6 @@ JPetTaskIO::JPetTaskIO():
   fTask(0)
 {
 }
-
-  
 
 void JPetTaskIO::init(const JPetTaskInterface::Options& opts)
 {
@@ -40,15 +37,12 @@ void JPetTaskIO::exec()
   JPetTaskInterface::Options emptyOpts;
   fTask->init(emptyOpts); //prepare current task for file
   const auto kEventNum = fReader->getNbOfAllEvents();
-// while
   for (auto i = 0; i < kEventNum; i++) {
     fTask->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
+    manageProgressBar(i, kEventNum);
     fTask->exec();
     fReader->nextEvent();
   }
-//
-//setEvent Bounds
-//processEventsInRange
   fTask->terminate();
 }
 void JPetTaskIO::terminate()
@@ -56,9 +50,7 @@ void JPetTaskIO::terminate()
   assert(fReader);
   assert(fWriter);
   assert(fHeader);
-  std::cout <<"here?" <<std::endl;
   fWriter->writeHeader( fHeader );
-  //fWriter->writeObject( getStatsObjects(), "Stats" );
 
   // rewrite the parametric objects from input file to output file
   //getParamManager().saveParametersToFile(fWriter);
@@ -72,19 +64,12 @@ void JPetTaskIO::terminate()
 
 void JPetTaskIO::createInputObjects(const char* inputFilename)
 {
-  //fInFileName = inputFilename;
-  //fInFileName += ".";
-  //fInFileName += fInFileSuffix;
-
-  // create the JPetReader and load the tree
   fReader = new JPetReader;
   if ( fReader->openFileAndLoadData( inputFilename )) {
     // read the header from the previous analysis stage
     fHeader = fReader->getHeaderClone();
     //fParamManager.readParametersFromFile( fReader );
     //fParamManager->readParametersFromFile(fReader);
-    //INFO( Form("Starting %s.", GetName() ) );
-
   } else {
     ERROR(inputFilename + std::string(": Unable to open the input file"));
     exit(-1);
@@ -92,15 +77,17 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
 }
 void JPetTaskIO::createOutputObjects(const char* outputFilename)
 {
-  //fOutFileName = outputFilename;
-  //fOutFileName += ".";
-  //fOutFileName += fOutFileSuffix;
-
-  //fWriter = new JPetWriter( fOutFileName.c_str() );
   fWriter = new JPetWriter( outputFilename );
+}
 
-  // call user function before starting processing
-  //begin();
+void JPetTaskIO::manageProgressBar(long long done, long long end)
+{
+    printf("\r[%6.4f%% %%]", setProgressBar(done, end));
+}
+
+float JPetTaskIO::setProgressBar(int currentEventNumber, int numberOfEvents)
+{
+  return ( ((float)currentEventNumber) / numberOfEvents ) * 100;
 }
 
 JPetTaskIO::~JPetTaskIO()
