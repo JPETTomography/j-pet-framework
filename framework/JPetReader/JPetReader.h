@@ -37,7 +37,7 @@ public:
   explicit JPetReader(const char* p_filename);
   virtual ~JPetReader(void);
 
-  virtual Event& getCurrentEvent();
+  virtual JPetReaderInterface::MyEvent& getCurrentEvent();
   virtual bool nextEvent();
   virtual bool firstEvent();
   virtual bool lastEvent();
@@ -46,7 +46,7 @@ public:
     return fCurrentEventNumber;
   }
   virtual long long getNbOfAllEvents() const {
-    return fTree ? fTree->GetEntries() : false;
+    return fTree ? fTree->GetEntries() : 0;
   }
 
   virtual bool openFileAndLoadData(const char* filename, const char* treename = "tree") {
@@ -86,7 +86,7 @@ protected:
   }
 
   TBranch* fBranch;
-  Event* fEvent;
+  JPetReaderInterface::MyEvent* fEvent;
   TTree* fTree;
   TFile* fFile;
   long long fCurrentEventNumber;
