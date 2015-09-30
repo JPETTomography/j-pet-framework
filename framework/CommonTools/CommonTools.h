@@ -12,6 +12,9 @@ class boost::noncopyable;
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iomanip>
+#include <algorithm>
+#include <cctype>
 
 
 
@@ -54,6 +57,14 @@ public:
     in >> num;
     return num;
   }
+
+static bool to_bool(std::string str) {
+    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+    std::istringstream is(str);
+    bool b;
+    is >> std::boolalpha >> b;
+    return b;
+}
   static bool ifFileExisting(const std::string &name)
   {
     std::ifstream f(name.c_str());
