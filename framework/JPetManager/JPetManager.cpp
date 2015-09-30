@@ -11,22 +11,18 @@
 #include <string>
 
 #include "../../JPetLoggerInclude.h"
+#include "../CommonTools/CommonTools.h"
 
 #include <TDSet.h>
 #include <TThread.h>
 
-JPetManager& JPetManager::GetManager()
+JPetManager& JPetManager::getManager()
 {
   static JPetManager instance;
   return instance;
 }
 
-JPetManager::JPetManager(): TNamed("JPetMainManager", "JPetMainManager")
-{
-
-}
-
-void JPetManager::Run()
+void JPetManager::run()
 {
   vector<JPetAnalysisRunner*> runners;
   vector<TThread*> threads;
@@ -49,10 +45,10 @@ void JPetManager::Run()
     delete runner;
   }
 
-  INFO( "======== Finished processing all tasks: " + GetTimeString() + " ========\n" );
+  INFO( "======== Finished processing all tasks: " + CommonTools::getTimeString() + " ========\n" );
 }
 
-void JPetManager::ParseCmdLine(int argc, char** argv)
+void JPetManager::parseCmdLine(int argc, char** argv)
 {
   fCmdParser.parse(argc, (const char**)argv);
 }
@@ -69,26 +65,13 @@ JPetManager::~JPetManager()
 {
 }
 
-std::vector<std::string> JPetManager::getFullInputFileNames() const 
+std::vector<std::string> JPetManager::getFullInputFileNames() const
 {
   return fCmdParser.getFileNames();
 }
 
 
-/**
- * @brief returns the time TString in the format dd.mm.yyyy HH:MM
- */
-TString JPetManager::GetTimeString() const
-{
-  time_t _tm = time(NULL );
-  struct tm* curtime = localtime ( &_tm );
-  char buf[100];
-  strftime( buf, 100, "%d.%m.%Y %R", curtime);
-
-  return TString( buf );
-}
-
-void JPetManager::AddTaskGeneratorChain(TaskGeneratorChain* taskGeneratorChain)
+void JPetManager::addTaskGeneratorChain(TaskGeneratorChain* taskGeneratorChain)
 {
   ftaskGeneratorChain = taskGeneratorChain;
 }
