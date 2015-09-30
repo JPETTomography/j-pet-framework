@@ -17,9 +17,9 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
   
 BOOST_AUTO_TEST_CASE( create_unique_manager )
 {
-  JPetManager& manager = JPetManager::GetManager();
+  JPetManager& manager = JPetManager::getManager();
   JPetManager* pManager = &manager;
-  JPetManager& manager2 = JPetManager::GetManager(); // it should be the same Manager
+  JPetManager& manager2 = JPetManager::getManager(); // it should be the same Manager
   JPetManager* pManager2 = &manager2;
 
   BOOST_REQUIRE_EQUAL(pManager, pManager2); 

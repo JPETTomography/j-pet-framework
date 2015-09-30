@@ -25,9 +25,9 @@ BOOST_AUTO_TEST_CASE (generate_root_file) {
         _argv[4] = const_cast<char*>("./test_file.info");
 	_argv[5] = (char*)(NULL);
 
-  JPetManager& manager = JPetManager::GetManager();
-  manager.ParseCmdLine(_argc, _argv);
-  manager.Run();
+  JPetManager& manager = JPetManager::getManager();
+  manager.parseCmdLine(_argc, _argv);
+  manager.run();
   BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(gTest_root_filename), "File " << gTest_root_filename << " does not exist.");
 }
 

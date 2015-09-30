@@ -1,4 +1,5 @@
 #include "../JPetManager/JPetManager.h"
+#include "../CommonTools/CommonTools.h"
 
 #include "JPetCommonAnalysisModule.h"
 #include "TSystem.h"
@@ -61,7 +62,7 @@ void JPetCommonAnalysisModule::createInputObjects(const char* inputFilename)
   fHeader = fReader->getHeaderClone();
   // add info about this module to the processing stages' history in Tree header
   fHeader->addStageInfo( this->GetName(), this->GetTitle(), getVersion(),
-			 JPetManager::GetManager().GetTimeString() );
+			 CommonTools::getTimeString() );
 
  }
 
