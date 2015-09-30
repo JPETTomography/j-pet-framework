@@ -58,24 +58,39 @@ public:
     return num;
   }
 
-static bool to_bool(std::string str) {
+  static bool to_bool(std::string str) {
     std::transform(str.begin(), str.end(), str.begin(), ::tolower);
     std::istringstream is(str);
     bool b;
     is >> std::boolalpha >> b;
     return b;
-}
-  static bool ifFileExisting(const std::string &name)
-  {
+  }
+
+  static bool ifFileExisting(const std::string& name) {
     std::ifstream f(name.c_str());
-    if(f.good())
-    {
+    if (f.good()) {
       f.close();
       return true;
     }
     f.close();
     return false;
   }
+
+/**
+ * @brief returns the time std::string in the format dd.mm.yyyy HH:MM
+ */
+static std::string getTimeString()
+{
+  time_t _tm = time(NULL );
+  struct tm* curtime = localtime ( &_tm );
+  char buf[100];
+  strftime( buf, 100, "%d.%m.%Y %R", curtime);
+
+  return std::string( buf );
+}
+
 };
+
+
 
 #endif // COMMON_TOOLS_H
