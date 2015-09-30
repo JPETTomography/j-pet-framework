@@ -17,7 +17,7 @@
  *
  * Each anaylsis program needs an instance of the JPetManager which is responsible for parsing the command line arguments
  * registering processing tasks, and
- * sending it to JPetAnalysisRunner which executes the registered tasks.
+ * sending it to AnalysisRunners which executes the registered tasks in threads.
  */
 
 class JPetManager 
@@ -28,13 +28,11 @@ class JPetManager
   void run();
   void addTaskGeneratorChain( TaskGeneratorChain* taskGeneratorChain);
   void parseCmdLine(int argc, char** argv);
-  std::vector<std::string> getFullInputFileNames() const;
-
-  int getRunNumber() const;
-
-//  ClassDef(JPetManager,1);
 
  private:
+  std::vector<std::string> getFullInputFileNames() const;
+  int getRunNumber() const;
+
   JPetManager(){/**/};
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&); 

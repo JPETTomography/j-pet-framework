@@ -9,12 +9,11 @@
 #include <cassert>
 #include <ctime>
 #include <string>
-
+#include <TDSet.h>
+#include <TThread.h>
 #include "../../JPetLoggerInclude.h"
 #include "../CommonTools/CommonTools.h"
 
-#include <TDSet.h>
-#include <TThread.h>
 
 JPetManager& JPetManager::getManager()
 {
