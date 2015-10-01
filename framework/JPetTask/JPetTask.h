@@ -10,6 +10,8 @@
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include <TNamed.h>
 
+class JPetWriter;
+
 class JPetTask: public JPetTaskInterface
 {
  public:
@@ -18,7 +20,10 @@ class JPetTask: public JPetTaskInterface
   virtual void exec();
   virtual void terminate();
   virtual void addSubTask(JPetTaskInterface*) {};
+  virtual void setParamManager(JPetParamManager*paramManager) {};
+  virtual void setWriter(JPetWriter* writer) {};
   virtual void setEvent(TNamed* ev);
+  virtual TNamed* getEvent() {return fEvent;}
  protected:
   TNamed* fEvent;
   
