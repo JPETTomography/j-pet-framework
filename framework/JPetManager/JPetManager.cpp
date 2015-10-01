@@ -40,16 +40,6 @@ void JPetManager::run()
     }
     i++;
   }
-  //for (int i = 0; i < numberOfFiles; i++) {
-    //JPetAnalysisRunner* runner = new JPetAnalysisRunner(ftaskGeneratorChain, i, fCmdParser);
-    //runners.push_back(runner);
-    //auto thr = runner->run();
-    //if (thr) {
-      //threads.push_back(thr);
-    //} else {
-      //ERROR("thread pointer is null");
-    //}
-  //}
   for (auto thread : threads) {
     thread->Join();
   }
@@ -64,26 +54,11 @@ void JPetManager::parseCmdLine(int argc, char** argv)
 {
   JPetCmdParser parser;
   fOptions = parser.parseAndGenerateOptions(argc, (const char**)argv);
-
-  //fCmdParser.parseAndGenerateOptions(argc, (const char**)argv);
 }
-
-//int JPetManager::getRunNumber() const
-//{
-  //if (fCmdParser.isRunNumberSet()) {
-    //return fCmdParser.getRunNumber();
-  //}
-  //return -1;
-//}
 
 JPetManager::~JPetManager()
 {
 }
-
-//std::vector<std::string> JPetManager::getFullInputFileNames() const
-//{
-  //return fCmdParser.getFileNames();
-//}
 
 
 void JPetManager::addTaskGeneratorChain(TaskGeneratorChain* taskGeneratorChain)
