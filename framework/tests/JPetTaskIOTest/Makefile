@@ -1,12 +1,13 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetTaskIO
-EXTRA_MODULES = JPetReader JPetWriter JPetTreeHeader JPetLogger JPetTask
+EXTRA_MODULES = JPetReader JPetWriter JPetTreeHeader JPetLogger JPetTask JPetHit JPetRecoSignal JPetLOR JPetBaseSignal JPetRawSignal JPetSigCh JPetPhysSignal JPetScin JPetFEB JPetParamBank JPetBarrelSlot JPetPMCalib JPetFrame JPetLayer JPetTOMBChannel JPetTRB JPetTSlot JPetPM JPetParamManager JPetDBParamGetter JPetTaskOptions JPetHLDReader
+MODULES_WK = TaskE TaskD TaskC3 TaskC2 TaskC1 TaskB TaskA
 #classes that need Dictionnaries 
-DICTS = JPetTreeHeader
-PQXX_LIB_SET = 
-DBHANDLER_LIB_SET = 
-UNPACKER_LIB_SET = 
+DICTS = JPetBarrelSlot JPetLOR JPetHit JPetPM JPetScin JPetSigCh JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetTRB JPetTSlot JPetFEB JPetTOMBChannel JPetTreeHeader JPetParamBank JPetPMCalib JPetLayer JPetFrame 
+PQXX_LIB_SET = YES
+DBHANDLER_LIB_SET = YES
+UNPACKER_LIB_SET = YES
 ###################
 OS = $(shell uname)
 CO = g++
@@ -22,8 +23,11 @@ SRC_MODULE =  $(SRC_DIR)/$(PROJECT)/$(PROJECT).cpp
 OBJ_MODULE = $(SRC_MODULE:.cpp=.o) 
 SRC_EXTRA = $(foreach MODULE, $(EXTRA_MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
 OBJ_EXTRA= $(SRC_EXTRA:.cpp=.o) 
+SRC_WK= $(foreach MODULE, $(MODULES_WK), $(MODULE).cpp) 
+OBJ_WK= $(SRC_WK:.cpp=.o) 
 OBJ_ALL = $(OBJ_MODULE)
 OBJ_ALL += $(OBJ_EXTRA)
+OBJ_ALL += $(OBJ_WK)
 ###################
 #ROOT DICTIONNARIES
 OBJ_DICT =$(foreach DICT, $(DICTS), $(SRC_DIR)/$(DICT)/$(DICT)Dict.o) 
@@ -57,6 +61,6 @@ endif
 %Test.o: %Test.cpp
 %Test.exe: %Test.o
 ###################
-all: $(TEST_EXEC) 
+all: $(OBJ_WK) $(TEST_EXEC) 
 clean:
 	rm -f *.exe *.o $(LOG) 

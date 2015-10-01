@@ -11,6 +11,8 @@
 #include <map>
 #include <string>
 
+class JPetParamManager;
+
 class JPetTaskInterface {
  public:
   typedef std::map<std::string, std::string> Options;
@@ -19,6 +21,8 @@ class JPetTaskInterface {
   virtual void exec()=0;
   virtual void terminate()=0;
   virtual void addSubTask(JPetTaskInterface* subtask)=0;
+  virtual void setParamManager(JPetParamManager*paramManager)=0;
+  
 
 };
 #endif /*  !JPETTASKINTERFACE_H */
