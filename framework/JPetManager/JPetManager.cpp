@@ -27,7 +27,6 @@ void JPetManager::run()
   INFO( "======== Starting processing all tasks: " + CommonTools::getTimeString() + " ========\n" );
   std::vector<JPetAnalysisRunner*> runners;
   std::vector<TThread*> threads;
-  //int numberOfFiles = getFullInputFileNames().size();
   int i = 0;
   for (auto opt: fOptions) {
     JPetAnalysisRunner* runner = new JPetAnalysisRunner(ftaskGeneratorChain, i, opt);
