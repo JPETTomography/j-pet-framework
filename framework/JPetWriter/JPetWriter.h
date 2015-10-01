@@ -78,7 +78,6 @@ bool JPetWriter::write(const T& obj)
 template <class T>
 bool JPetWriter::write( std::vector<T>& obj)
 {
-
   if (obj.size() == 0) {
     WARNING("Vector passed is empty");
     return false;
@@ -100,6 +99,7 @@ bool JPetWriter::write( std::vector<T>& obj)
 
   for (unsigned int i = 0; i < obj.size(); i++) {
     filler = &obj[i];
+    assert(fTree);
     fTree->Fill();
   }
 
