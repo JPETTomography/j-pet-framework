@@ -32,8 +32,6 @@ class JPetManager
   inline std::vector<JPetOptions> getOptions() const { return fOptions;}
 
  private:
-  //std::vector<std::string> getFullInputFileNames() const;
-  //int getRunNumber() const;
 
   JPetManager(){/**/};
   JPetManager(const JPetManager&);
