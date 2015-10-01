@@ -8,7 +8,8 @@
 #ifndef JPETMANAGER_H 
 #define JPETMANAGER_H 
 
-#include "../JPetCmdParser/JPetCmdParser.h"
+//#include "../JPetCmdParser/JPetCmdParser.h"
+#include "../JPetOptions/JPetOptions.h"
 #include "../JPetAnalysisRunner/JPetAnalysisRunner.h"
 
 
@@ -28,16 +29,18 @@ class JPetManager
   void run();
   void addTaskGeneratorChain( TaskGeneratorChain* taskGeneratorChain);
   void parseCmdLine(int argc, char** argv);
+  inline std::vector<JPetOptions> getOptions() const { return fOptions;}
 
  private:
-  std::vector<std::string> getFullInputFileNames() const;
-  int getRunNumber() const;
+  //std::vector<std::string> getFullInputFileNames() const;
+  //int getRunNumber() const;
 
   JPetManager(){/**/};
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&); 
 
-  JPetCmdParser fCmdParser;
+  std::vector<JPetOptions> fOptions;
+  
   TaskGeneratorChain* ftaskGeneratorChain;
 };
 #endif /*  !JPETMANAGER_H */

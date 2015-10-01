@@ -3,7 +3,7 @@ CC = g++
 LD = $(CC) 
 DEBUG_FLAG = -ggdb
 #######################
-COPTS = -Wall `root-config --cflags` $(DEBUG_FLAG) -O2 -std=c++0x
+COPTS = -Wall `root-config --cflags` $(DEBUG_FLAG) -O2 -std=c++11
 LDOPTS = -Wall `root-config --glibs` $(DEBUG_FLAG) -lboost_program_options -lboost_system -lboost_filesystem -lboost_unit_test_framework
 #######################
 SRC_MODULE = # ModuleName.cpp

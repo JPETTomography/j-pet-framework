@@ -6,16 +6,15 @@
 #include <cassert>
 #include "../JPetScopeReader/JPetScopeReader.h"
 
-JPetAnalysisRunner::JPetAnalysisRunner(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetCmdParser& cmdParser) :
+JPetAnalysisRunner::JPetAnalysisRunner(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
   ftaskGeneratorChain(taskGeneratorChain),
   fProcessedFile(processedFileId),
-  fCmdParser(cmdParser),
-  fIsProgressBarEnabled(cmdParser.isProgressBarSet())
+  fOptions(opt)
 {
   if (taskGeneratorChain) {
     for (auto taskGenerator : *ftaskGeneratorChain) {
       auto task = taskGenerator();
-      //task->setParamManager(&fParamManager);
+      task->setParamManager(&fParamManager); // maybe that should not be here
       fTasks.push_back(task);
     }
   } else {
@@ -26,17 +25,9 @@ JPetAnalysisRunner::JPetAnalysisRunner(TaskGeneratorChain* taskGeneratorChain, i
 void JPetAnalysisRunner::process()
 {
   std::cout <<"processing in Analysis Runner" <<std::endl;
-  std::vector<std::string> fileNames = getFullInputFileNames();
   ProcessFromCmdLineArgs(fProcessedFile);
   for (currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
-    std::map<std::string,std::string> opts;
-    opts["inputFile"]=fileNames[fProcessedFile];
-    opts["outputFile"]=fileNames[fProcessedFile];
-    //setEventBounds(kFirstEvent, kLastEvent, kNevent);
-    opts["firstEvent"]="100";
-    opts["lastEvent"]="200";
-    opts["progressBar"]="true";
-    (*currentTask)->init(opts);
+    (*currentTask)->init(fOptions.getOptions());
     (*currentTask)->exec();
     (*currentTask)->terminate();
   }
@@ -84,28 +75,20 @@ TThread* JPetAnalysisRunner::run()
 
 void JPetAnalysisRunner::ProcessFromCmdLineArgs(int fileIndex)
 {
-
-  if (fCmdParser.isRunNumberSet()) { /// we should connect to the database
-    fParamManager.getParametersFromDatabase(fCmdParser.getRunNumber()); /// @todo some error handling
+  auto runNum = fOptions.getRunNumber();
+  if (runNum >=0) {
+    fParamManager.getParametersFromDatabase(runNum); /// @todo some error handling
   }
-  if (fCmdParser.isProgressBarSet()) {
-    fIsProgressBarEnabled = true;
-  }
-  if (fCmdParser.IsFileTypeSet()) {
-    if (fCmdParser.getFileType() == "scope") {
+  auto inputFileType = fOptions.getInputFileType(); 
+  auto inputFile = fOptions.getInputFile();
+  if (inputFileType == JPetOptions::kScope) {
       JPetScopeReader* module = new JPetScopeReader("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures.");
-      module->setFileName(getFullInputFileNames()[fileIndex].c_str());
+      module->setFileName(inputFile);
       //fTasks.push_front(module);
-    } else if (fCmdParser.getFileType() == "hld") {
-      fUnpacker.setParams(fCmdParser.getFileNames()[fileIndex].c_str());
+    } else if (inputFileType == JPetOptions::kHld) {
+      fUnpacker.setParams(fOptions.getInputFile());
       UnpackFile();
     }
-  }
-}
-
-std::vector<std::string> JPetAnalysisRunner::getFullInputFileNames() const 
-{
-  return fCmdParser.getFileNames();
 }
 
 /**
@@ -114,39 +97,39 @@ std::vector<std::string> JPetAnalysisRunner::getFullInputFileNames() const
  * Example: if the file given on command line was ../file.phys.hit.root, this method will return ../file
  */
 
-std::vector<std::string> JPetAnalysisRunner::getStrippedInputFileNames(const std::vector<std::string>& fileNames) const
-{
-  std::vector<std::string> parsedNames;
-  for (int i = 0; i < fileNames.size(); i++) {
-    std::string name = fileNames[i].c_str();
-    // strip suffixes of type .tslot.* and .phys.*
-    int pos = name.find(".tslot");
-    if (pos == std::string::npos) {
-      pos = name.find(".phys");
-    }
-    if (pos == std::string::npos) {
-      pos = name.find(".hld");
-    }
-    if (pos == std::string::npos) {
-      pos = name.find(".root");
-    }
-    if (pos != std::string::npos) {
-      name.erase(pos);
-    }
-    parsedNames.push_back(name);
-  }
-  return parsedNames;
-}
+//std::vector<std::string> JPetAnalysisRunner::getStrippedInputFileNames(const std::vector<std::string>& fileNames) const
+//{
+  //std::vector<std::string> parsedNames;
+  //for (int i = 0; i < fileNames.size(); i++) {
+    //std::string name = fileNames[i].c_str();
+    //// strip suffixes of type .tslot.* and .phys.*
+    //int pos = name.find(".tslot");
+    //if (pos == std::string::npos) {
+      //pos = name.find(".phys");
+    //}
+    //if (pos == std::string::npos) {
+      //pos = name.find(".hld");
+    //}
+    //if (pos == std::string::npos) {
+      //pos = name.find(".root");
+    //}
+    //if (pos != std::string::npos) {
+      //name.erase(pos);
+    //}
+    //parsedNames.push_back(name);
+  //}
+  //return parsedNames;
+//}
 
 
-std::string JPetAnalysisRunner::getBaseInputFileName(string name) const
-{
-  int pos = name.find(".");
-  if ( pos != std::string::npos ) {
-    name.erase( pos );
-  }
-  return name;
-}
+//std::string JPetAnalysisRunner::getBaseInputFileName(string name) const
+//{
+  //int pos = name.find(".");
+  //if ( pos != std::string::npos ) {
+    //name.erase( pos );
+  //}
+  //return name;
+//}
 
 JPetAnalysisRunner::~JPetAnalysisRunner()
 {
