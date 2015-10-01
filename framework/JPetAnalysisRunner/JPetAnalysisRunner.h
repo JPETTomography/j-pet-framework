@@ -17,15 +17,19 @@
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetUnpacker/JPetUnpacker.h"
 
+#include "../JPetOptions/JPetOptions.h"
+
+
 //using TaskGenerator = std::function< JPetTaskInterface* () >;
 using TaskGenerator = std::function< JPetTaskInterface* () >;
+
 //using TaskGenerator = std::function< JPetCommonAnalysisModule* () >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
 class JPetAnalysisRunner
 {
 public :
-    JPetAnalysisRunner(TaskGeneratorChain *taskGeneratorChain, int processedFile, JPetCmdParser& cmdParse);
+    JPetAnalysisRunner(TaskGeneratorChain *taskGeneratorChain, int processedFile, JPetOptions opts);
     TThread* run();
     virtual ~JPetAnalysisRunner();
 
@@ -33,25 +37,20 @@ private:
     static void* processProxy(void*);
     void process();
     void ProcessFromCmdLineArgs(int fileIndex);
-    //void setEventBounds(long long& begin, long long& end, long long& eventCount);
-    //bool userBoundsAreCorrect(long long checkedEvent);
-    std::vector<std::string> getFullInputFileNames() const;
-    std::string getBaseInputFileName(string name) const;
-    std::vector<std::string> getStrippedInputFileNames(const std::vector<std::string>& fileNames) const;
+    //std::vector<std::string> getFullInputFileNames() const;
+    //std::string getBaseInputFileName(string name) const;
+    //std::vector<std::string> getStrippedInputFileNames(const std::vector<std::string>& fileNames) const;
 
-    void UnpackFile() { if(fCmdParser.IsFileTypeSet()) fUnpacker.exec();}
+    //void UnpackFile() { if(fCmdParser.IsFileTypeSet()) fUnpacker.exec();}
+    void UnpackFile() { }
 
     int fProcessedFile;
-    JPetCmdParser& fCmdParser;
     JPetParamManager fParamManager;
     JPetUnpacker fUnpacker;
     std::list<JPetTaskInterface*> fTasks;
     std::list<JPetTaskInterface*>::iterator currentTask;
-    //std::list<JPetAnalysisModule*> fTasks;
-    //std::list<JPetAnalysisModule*>::iterator currentTask;
     TaskGeneratorChain* ftaskGeneratorChain;
-    bool fIsProgressBarEnabled;
-
+    JPetOptions fOptions;
 };
 
 

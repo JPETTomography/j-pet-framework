@@ -1,6 +1,6 @@
 /**
   *  @copyright Copyright (c) 2014, J-PET collaboration
-  *  @file JPetManager.cp
+  *  @file JPetManager.cpp
   *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
   */
 
@@ -11,6 +11,7 @@
 #include <string>
 #include <TDSet.h>
 #include <TThread.h>
+#include "../JPetCmdParser/JPetCmdParser.h"
 #include "../../JPetLoggerInclude.h"
 #include "../CommonTools/CommonTools.h"
 
@@ -23,12 +24,13 @@ JPetManager& JPetManager::getManager()
 
 void JPetManager::run()
 {
-  vector<JPetAnalysisRunner*> runners;
-  vector<TThread*> threads;
-
-  int numberOfFiles = getFullInputFileNames().size();
-  for (int i = 0; i < numberOfFiles; i++) {
-    JPetAnalysisRunner* runner = new JPetAnalysisRunner(ftaskGeneratorChain, i, fCmdParser);
+  INFO( "======== Starting processing all tasks: " + CommonTools::getTimeString() + " ========\n" );
+  std::vector<JPetAnalysisRunner*> runners;
+  std::vector<TThread*> threads;
+  //int numberOfFiles = getFullInputFileNames().size();
+  int i = 0;
+  for (auto opt: fOptions) {
+    JPetAnalysisRunner* runner = new JPetAnalysisRunner(ftaskGeneratorChain, i, opt);
     runners.push_back(runner);
     auto thr = runner->run();
     if (thr) {
@@ -36,7 +38,18 @@ void JPetManager::run()
     } else {
       ERROR("thread pointer is null");
     }
+    i++;
   }
+  //for (int i = 0; i < numberOfFiles; i++) {
+    //JPetAnalysisRunner* runner = new JPetAnalysisRunner(ftaskGeneratorChain, i, fCmdParser);
+    //runners.push_back(runner);
+    //auto thr = runner->run();
+    //if (thr) {
+      //threads.push_back(thr);
+    //} else {
+      //ERROR("thread pointer is null");
+    //}
+  //}
   for (auto thread : threads) {
     thread->Join();
   }
@@ -49,25 +62,28 @@ void JPetManager::run()
 
 void JPetManager::parseCmdLine(int argc, char** argv)
 {
-  fCmdParser.parse(argc, (const char**)argv);
+  JPetCmdParser parser;
+  fOptions = parser.parseAndGenerateOptions(argc, (const char**)argv);
+
+  //fCmdParser.parseAndGenerateOptions(argc, (const char**)argv);
 }
 
-int JPetManager::getRunNumber() const
-{
-  if (fCmdParser.isRunNumberSet()) {
-    return fCmdParser.getRunNumber();
-  }
-  return -1;
-}
+//int JPetManager::getRunNumber() const
+//{
+  //if (fCmdParser.isRunNumberSet()) {
+    //return fCmdParser.getRunNumber();
+  //}
+  //return -1;
+//}
 
 JPetManager::~JPetManager()
 {
 }
 
-std::vector<std::string> JPetManager::getFullInputFileNames() const
-{
-  return fCmdParser.getFileNames();
-}
+//std::vector<std::string> JPetManager::getFullInputFileNames() const
+//{
+  //return fCmdParser.getFileNames();
+//}
 
 
 void JPetManager::addTaskGeneratorChain(TaskGeneratorChain* taskGeneratorChain)

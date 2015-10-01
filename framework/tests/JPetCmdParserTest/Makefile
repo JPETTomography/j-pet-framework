@@ -1,7 +1,7 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetCmdParser
-EXTRA_MODULES =
+EXTRA_MODULES =JPetOptions JPetLogger
 #classes that need Dictionnaries 
 DICTS = 
 PQXX_LIB_SET = 
@@ -10,7 +10,7 @@ UNPACKER_LIB_SET =
 ###################
 OS = $(shell uname)
 CO = g++
-CFLAGS = -Wall `root-config --cflags`
+CFLAGS = -Wall `root-config --cflags` -std=c++11
 ###################
 LDFLAGS = -Wall `root-config --glibs --ldflags` 
 LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system -lboost_program_options
