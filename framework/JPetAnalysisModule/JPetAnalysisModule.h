@@ -49,6 +49,7 @@ public:
   virtual void terminate()=0; // called once when analysis terminates
   virtual void init(const JPetTaskInterface::Options& opts){};
   virtual void addSubTask(JPetTaskInterface*) {};
+  virtual void setParamManager(JPetParamManager*paramManager) {};
   int addStatsObject(TObject * statObj);
   const THashTable * getStatsObjects() const;
 

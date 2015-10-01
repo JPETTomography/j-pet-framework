@@ -28,6 +28,7 @@
 #include "../JPetScopeReader/JPetScopeReader.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 #include "../JPetWriter/JPetWriter.h"
+#include "../CommonTools/CommonTools.h"
 
 #include <iostream>
 
@@ -298,9 +299,12 @@ void JPetScopeReader::createNewWriter(const char* outputFilename) {
     
     fWriter = new JPetWriter(out_fn2.c_str());
 
-    fHeader = new JPetTreeHeader(JPetManager::GetManager().getRunNumber());
-    fHeader->setBaseFileName(JPetManager::GetManager().getFullInputFileNames()[0].c_str());
-    fHeader->addStageInfo(GetName(), GetTitle(), MODULE_VERSION, JPetManager::GetManager().GetTimeString());
+    auto optionContainer = JPetManager::getManager().getOptions();
+    assert(optionContainer.size() ==1);
+    auto options = optionContainer.front();
+    fHeader = new JPetTreeHeader(options.getRunNumber());
+    fHeader->setBaseFileName(options.getInputFile());
+    fHeader->addStageInfo(GetName(), GetTitle(), MODULE_VERSION, CommonTools::getTimeString());
     fHeader->setSourcePosition((*fIter).pCollPosition);
     fWriter->writeHeader(fHeader);
   }

@@ -1,8 +1,8 @@
 /**
-  *  @copyright Copyright (c) 2014, J-PET collaboration 
+  *  @copyright Copyright (c) 2014, J-PET collaboration
   *  @file JPetCmdParserTest.cpp
   *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
-  */ 
+  */
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetCmdParserTest
 #include <boost/test/unit_test.hpp>
@@ -10,34 +10,65 @@
 #define private public
 #include "../../JPetCmdParser/JPetCmdParser.h"
 
-  BOOST_AUTO_TEST_SUITE(FirstSuite)
+//public method
+//std::vector<JPetOptions> parseAndGenerateOptions(int argc, const char** argv);
 
-  BOOST_AUTO_TEST_CASE( parsing_correct )
-  {
-    const int argc = 11;
-    const char * argv[argc];
-    argv[0] = "test";
-    argv[1] = "-t";
-    argv[2] = "hld";
-    argv[3] = "-r";
-    argv[4] = "145";
-    argv[5] = "180";
-    argv[6] = "-f";
-    argv[7] = "testfile.hld";
-    argv[8] = "testfile.hld";
-    argv[9] = "-p";
-    argv[10] = "trbnumbers.blahblah";
-    
-    JPetCmdParser parser;
-    parser.parse(argc, argv);
-    BOOST_REQUIRE( parser.IsFileTypeSet() );
-    BOOST_REQUIRE_EQUAL( (std::string)argv[2], parser.getFileType() );
-    BOOST_REQUIRE_EQUAL( (std::string)argv[7], parser.getFileNames()[0] );
-    BOOST_REQUIRE_EQUAL( (std::string)argv[8], parser.getFileNames()[1] );
-    BOOST_REQUIRE_EQUAL( atoi(argv[4]), parser.getLowerEventBound() );
-    BOOST_REQUIRE_EQUAL( atoi(argv[5]), parser.getHigherEventBound() );
-    BOOST_REQUIRE( parser.isParamSet() );
-    BOOST_REQUIRE_EQUAL( (std::string)argv[10], parser.getParam() );
-  }
+char* convertStringToCharP(const std::string& s)
+{
+  char* pc = new char[s.size() + 1];
+  std::strcpy(pc, s.c_str());
+  return pc;
+}
 
-  BOOST_AUTO_TEST_SUITE_END()
+std::vector<char*> createArgs(const std::string& commandLine) 
+{
+  std::istringstream iss(commandLine);
+  std::vector<std::string> args {std::istream_iterator<std::string>{iss},
+                                 std::istream_iterator<std::string>{}
+                                };
+  std::vector<char*> args_char;
+  std::transform(args.begin(), args.end(), std::back_inserter(args_char), convertStringToCharP);
+  return args_char;
+}
+
+BOOST_AUTO_TEST_SUITE(FirstSuite)
+
+BOOST_AUTO_TEST_CASE( parsing_1 )
+{
+  auto commandLine = "main.x -t hld -f testfile.hld -i 10";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetCmdParser parser;
+  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  auto option = options.at(0);
+  BOOST_REQUIRE(std::string(option.getInputFile()) == "testfile.hld");
+  BOOST_REQUIRE_EQUAL(option.getFirstEvent(), -1);
+  BOOST_REQUIRE_EQUAL(option.getLastEvent(), -1);
+  BOOST_REQUIRE_EQUAL(option.getRunNumber(), 10);
+  BOOST_REQUIRE(!option.isProgressBar());
+  BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kHld);
+}
+
+BOOST_AUTO_TEST_CASE( parsing_2 )
+{
+  auto commandLine = "main.x -t scope -f testfile.json ";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetCmdParser parser;
+  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  auto option = options.at(0);
+  BOOST_REQUIRE(std::string(option.getInputFile()) == "testfile.json");
+  BOOST_REQUIRE_EQUAL(option.getFirstEvent(), -1);
+  BOOST_REQUIRE_EQUAL(option.getLastEvent(), -1);
+  BOOST_REQUIRE_EQUAL(option.getRunNumber(), -1);
+  BOOST_REQUIRE(!option.isProgressBar());
+  BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kScope);
+}
+
+BOOST_AUTO_TEST_SUITE_END()

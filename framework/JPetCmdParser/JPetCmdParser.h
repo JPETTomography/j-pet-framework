@@ -2,7 +2,7 @@
  *  @copyright Copyright (c) 2014, J-PET collaboration
  *  @file JPetCmdParser.h
  *  @author Karol Stola
- *  @brief 
+ *  @brief
  */
 
 #ifndef _JPET_CMD_PARSER_H_
@@ -12,43 +12,68 @@ class JPetCmdParser;
 
 #include "boost/program_options.hpp" // Library parsing command line arguments
 #include <string>
+#include "../JPetOptions/JPetOptions.h"
 
 namespace po = boost::program_options;
 
-class JPetCmdParser {
+class JPetCmdParser
+{
 public:
   JPetCmdParser();
   ~JPetCmdParser();
-  
-private:
-  JPetCmdParser(const JPetCmdParser &cmdParser);
-  JPetCmdParser& operator=(const JPetCmdParser &cmdParser);
-  
-public:
-  void parse(int argc, const char** argv);
-  inline const std::vector<std::string>& getFileNames() const { return fVariablesMap["file"].as< std::vector<std::string> >();}
-  bool isCorrectFileType(const std::string& type) const;
-  inline const std::string& getFileType() const { return fVariablesMap["type"].as<std::string>();}
-  inline bool IsFileTypeSet() const { return (bool)fVariablesMap.count("type"); }
-      /**
-    * @brief Method returning lower bound of events range to process or -1 if they were not specified.
-    */
-  inline int getLowerEventBound() const {return fVariablesMap["range"].as< std::vector<int> >()[0];}
-  /**
-    * @brief Method returning higher bound of events range to process or -1 if they were not specified.
-    */
-  inline int getHigherEventBound() const {return fVariablesMap["range"].as< std::vector<int> >()[1];}
-  inline bool isParamSet() const { return (bool)fVariablesMap.count("param"); }
-  inline const std::string& getParam() const {return fVariablesMap["param"].as< std::string >(); }
+  std::vector<JPetOptions> parseAndGenerateOptions(int argc, const char** argv);
 
-  inline bool isRunNumberSet() const { return (bool)fVariablesMap.count("runId"); }
-  inline const int getRunNumber() const { return fVariablesMap["runId"].as<int>();}
-  
-  inline bool isProgressBarSet() const { return (bool)fVariablesMap.count("progressBar"); }
+protected:
+  inline const po::options_description getOptionsDescription() const {
+    return fOptionsDescriptions;
+  }
+  std::vector<JPetOptions> generateOptions(const po::variables_map& cmdLineOptions) const;
+
+  bool areCorrectOptions(const po::variables_map& options) const;
+  inline const std::vector<std::string>& getFileNames(const po::variables_map& variablesMap) const {
+    return variablesMap["file"].as< std::vector<std::string> >();
+  }
+  inline bool isCorrectFileType(const std::string& type) const {
+    if (type == "hld" || type == "root" || type == "scope") {
+      return true;
+    }
+    return false;
+  }
+  inline const std::string& getFileType(const po::variables_map& variablesMap) const {
+    return variablesMap["type"].as<std::string>();
+  }
+  inline bool IsFileTypeSet(const po::variables_map& variablesMap) const {
+    return (bool)variablesMap.count("type");
+  }
+  inline int getLowerEventBound(const po::variables_map& variablesMap) const {
+    return variablesMap["range"].as< std::vector<int> >()[0];
+  }
+  inline int getHigherEventBound(const po::variables_map& variablesMap) const {
+    return variablesMap["range"].as< std::vector<int> >()[1];
+  }
+  inline bool isParamSet(const po::variables_map& variablesMap) const {
+    return (bool)variablesMap.count("param");
+  }
+  inline const std::string& getParam(const po::variables_map& variablesMap) const {
+    return variablesMap["param"].as< std::string >();
+  }
+
+  inline bool isRunNumberSet(const po::variables_map& variablesMap) const {
+    return (bool)variablesMap.count("runId");
+  }
+  inline const int getRunNumber(const po::variables_map& variablesMap) const {
+    return variablesMap["runId"].as<int>();
+  }
+
+  inline bool isProgressBarSet(const po::variables_map& variablesMap) const {
+    return (bool)variablesMap.count("progressBar");
+  }
+
+  po::options_description fOptionsDescriptions;
 
 private:
-      po::options_description fOptDescriptions;
-      po::variables_map fVariablesMap;
+  JPetCmdParser(const JPetCmdParser& cmdParser);
+  JPetCmdParser& operator=(const JPetCmdParser& cmdParser);
 };
 
 #endif /* _JPET_CMD_PARSER_H_ */
