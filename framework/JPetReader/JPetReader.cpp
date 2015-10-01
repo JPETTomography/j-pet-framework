@@ -10,9 +10,7 @@ JPetReader::JPetReader() :
   fTree(0),
   fFile(0),
   fCurrentEventNumber(-1)
-{
-  std::cout <<"empty constructor" <<std::endl;
-}
+{/**/}
 
 JPetReader::JPetReader(const char* p_filename) :
   fBranch(0),
@@ -24,7 +22,6 @@ JPetReader::JPetReader(const char* p_filename) :
   if (!openFileAndLoadData(p_filename, "tree")) {
     ERROR("error in opening file");
   }
-  std::cout <<"not empty constructor" <<std::endl;
 }
 
 JPetReader::~JPetReader()
