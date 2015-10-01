@@ -5,115 +5,130 @@
  */
 
 #include "JPetCmdParser.h"
-#include "../CommonTools/CommonTools.h"
 #include <iostream>
+#include "../CommonTools/CommonTools.h"
+#include "../../JPetLoggerInclude.h"
 
-using namespace std;
-
-JPetCmdParser::JPetCmdParser()
-  : fOptDescriptions("Allowed options")
+JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
 {
-  vector<int> tmp;
+  std::vector<int> tmp;
   tmp.push_back(-1);
   tmp.push_back(-1);
 
-  fOptDescriptions.add_options()
+  fOptionsDescriptions.add_options()
   ("help,h", "produce help message")
-  ("type,t", po::value<string>()->required(), "type of file: hld, root or scope")
-  ("file,f", po::value< vector<string> >()->required()->multitoken(), "File(s) to open")
-  ("range,r", po::value< vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process.")
-  ("param,p", po::value<string>(), "File with TRB numbers.")
+  ("type,t", po::value<std::string>()->required(), "type of file: hld, root or scope")
+  ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open")
+  ("range,r", po::value< std::vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process.")
+  ("param,p", po::value<std::string>(), "File with TRB numbers.")
   ("runId,i", po::value<int>(), "Run id.")
-  ("progressBar,b", "Progress bar.")
-  ;
+  ("progressBar,b", "Progress bar.");
 }
 
 JPetCmdParser::~JPetCmdParser()
 {
+  /**/
 }
 
-void JPetCmdParser::parse(int argc, const char** argv)
+std::vector<JPetOptions> JPetCmdParser::parseAndGenerateOptions(int argc, const char** argv)
 {
-  try {
-
-    if (argc == 1) {
-      cout << "No options provided." << endl;
-      cout << fOptDescriptions << "\n";
-      exit(0);
-    }
-
-    po::store(po::parse_command_line(argc, argv, fOptDescriptions), fVariablesMap);
-
-    /* print out help */
-    if (fVariablesMap.count("help")) {
-      cout << fOptDescriptions << "\n";
-      exit(0);
-    }
-
-
-
-    po::notify(fVariablesMap);
-
-    /* parse range of events */
-    if (fVariablesMap.count("range")) {
-      if (fVariablesMap["range"].as< vector<int> >().size() != 2) {
-        cerr << "Wrong number of bounds in range: " << fVariablesMap["range"].as< vector<int> >().size() << endl;
-        exit(-1);
-      }
-      if (
-        fVariablesMap["range"].as< vector<int> >()[0]
-        > fVariablesMap["range"].as< vector<int> >()[1]) {
-        cerr << "Wrong range of events." << endl;
-        exit(-1);
-      }
-    }
-
-    if (!isCorrectFileType(getFileType())) {
-      cerr << "Wrong type of file: " << getFileType() << endl;
-      cerr << "Possible options: hld, root or scope" << endl;
-      exit(-1);
-    }
-
-    if (fVariablesMap.count("runId")) {
-      int l_runId = fVariablesMap["runId"].as<int>();
-
-      if (l_runId <= 0) {
-        cerr << "Wrong number of run id: " << l_runId << endl;
-        exit(-1);
-      }
-    }
-
-    if (fVariablesMap.count("progressBar")) {
-      int l_progressBar = fVariablesMap["progressBar"].as<int>();
-
-      if (l_progressBar != 0 && l_progressBar != 1) {
-        cerr << "Wrong parameter of progressbar: " << l_progressBar << endl;
-        exit(-1);
-      }
-    }
-
-    vector<string> fileNames(fVariablesMap["file"].as< vector<string> >());
-    for(int i = 0; i < fileNames.size(); i++)
-    {
-    	if ( ! CommonTools::ifFileExisting(fileNames[i]) ) {
-    		cerr << "File : " << fileNames[i] << " does not exist" << endl;
-    		exit(-1);
-    	}
-    }
-  } catch (exception& e) {
-    cerr << "error: " << e.what() << "\n";
-    return;
-  } catch (...) {
-    cerr << "Exception of unknown type!\n";
+  po::variables_map variablesMap;
+  if (argc == 1) {
+    WARNING("No options provided.");
+    std::cout << "No options provided" << "\n";
+    std::cout << getOptionsDescription() << "\n";
+    exit(0);
   }
+
+  po::store(po::parse_command_line(argc, argv, fOptionsDescriptions), variablesMap);
+
+  /* print out help */
+  if (variablesMap.count("help")) {
+    std::cout << getOptionsDescription() << "\n";
+    exit(0);
+  }
+  po::notify(variablesMap);
+  if (!areCorrectOptions(variablesMap)) {
+    exit(-1);
+  }
+
+  return generateOptions(variablesMap);
 }
 
-bool JPetCmdParser::isCorrectFileType(const std::string& type) const
+bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) const
 {
-  if (type == "hld" || type == "root" || type == "scope") {
-    return true;
+  /* parse range of events */
+  if (variablesMap.count("range")) {
+    if (variablesMap["range"].as< std::vector<int> >().size() != 2) {
+      std::cerr << "Wrong number of bounds in range: " << variablesMap["range"].as< std::vector<int> >().size() << std::endl;
+      return false;
+    }
+    if (
+      variablesMap["range"].as< std::vector<int> >()[0]
+      > variablesMap["range"].as< std::vector<int> >()[1]) {
+      std::cerr << "Wrong range of events." << std::endl;
+      return false;
+    }
   }
-  return false;
+
+  if (!isCorrectFileType(getFileType(variablesMap))) {
+    std::cerr << "Wrong type of file: " << getFileType(variablesMap) << std::endl;
+    std::cerr << "Possible options: hld, root or scope" << std::endl;
+    return false;
+  }
+
+  if (isRunNumberSet(variablesMap)) {
+    int l_runId = variablesMap["runId"].as<int>();
+
+    if (l_runId <= 0) {
+      std::cerr << "Wrong number of run id: " << l_runId << std::endl;
+      return false;
+    }
+  }
+
+  if (isProgressBarSet(variablesMap)) {
+    int l_progressBar = variablesMap["progressBar"].as<int>();
+
+    if (l_progressBar != 0 && l_progressBar != 1) {
+      std::cerr << "Wrong parameter of progressbar: " << l_progressBar << std::endl;
+      return false;
+    }
+  }
+
+  std::vector<std::string> fileNames(variablesMap["file"].as< std::vector<std::string> >());
+  for (int i = 0; i < fileNames.size(); i++) {
+    if ( ! CommonTools::ifFileExisting(fileNames[i]) ) {
+      std::cerr << "File : " << fileNames[i] << " does not exist" << std::endl;
+      return false;
+    }
+  }
+  return true;
+}
+
+std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map& optsMap) const
+{
+  std::map<std::string, std::string> options = JPetOptions::getDefaultOptions();
+  auto fileType = getFileType(optsMap);
+  if (isCorrectFileType(fileType)) {
+    options.at("inputFileType") = fileType;
+  }
+  if (isRunNumberSet(optsMap)) {
+    options.at("runId") = std::to_string(getRunNumber(optsMap));
+  }
+  if (isProgressBarSet(optsMap)) {
+    options.at("progressBar") = "true";
+  }
+  auto firstEvent  = getLowerEventBound(optsMap);
+  auto lastEvent  = getHigherEventBound(optsMap);
+  if (firstEvent >= 0) options.at("firstEvent") = std::to_string(firstEvent);
+  if (lastEvent >= 0) options.at("lastEvent") = std::to_string(lastEvent);
+  auto files = getFileNames(optsMap); 
+  std::vector<JPetOptions>  optionContainer; 
+  for (auto file :files) {
+    options.at("inputFile") = file;
+    optionContainer.push_back(JPetOptions(options));
+  }
+  return optionContainer;
 }
 
 //#endif /* __CINT__ */

@@ -152,7 +152,7 @@ class JPetParamBank: public TObject
     return fTOMBChannels;
   }
   inline JPetTOMBChannel& getTOMBChannel(int i) const {
-    return *fTOMBChannels[i];
+    return *(fTOMBChannels.at(i));
   }
   inline int getTOMBChannelsSize() const {
     return fTOMBChannels.size();
