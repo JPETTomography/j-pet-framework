@@ -1,7 +1,7 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetTaskIO
-EXTRA_MODULES = JPetReader JPetWriter JPetTreeHeader JPetLogger JPetTask JPetHit JPetRecoSignal JPetLOR JPetBaseSignal JPetRawSignal JPetSigCh JPetPhysSignal JPetScin JPetFEB JPetParamBank JPetBarrelSlot JPetPMCalib JPetFrame JPetLayer JPetTOMBChannel JPetTRB JPetTSlot JPetPM JPetParamManager JPetDBParamGetter JPetTaskOptions JPetHLDReader
+EXTRA_MODULES = JPetReader JPetWriter JPetTreeHeader JPetLogger JPetTask JPetHit JPetRecoSignal JPetLOR JPetBaseSignal JPetRawSignal JPetSigCh JPetPhysSignal JPetScin JPetFEB JPetParamBank JPetBarrelSlot JPetPMCalib JPetFrame JPetLayer JPetTOMBChannel JPetTRB JPetTSlot JPetPM JPetParamManager JPetDBParamGetter JPetOptions JPetHLDReader
 MODULES_WK = TaskE TaskD TaskC3 TaskC2 TaskC1 TaskB TaskA
 #classes that need Dictionnaries 
 DICTS = JPetBarrelSlot JPetLOR JPetHit JPetPM JPetScin JPetSigCh JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetTRB JPetTSlot JPetFEB JPetTOMBChannel JPetTreeHeader JPetParamBank JPetPMCalib JPetLayer JPetFrame 
