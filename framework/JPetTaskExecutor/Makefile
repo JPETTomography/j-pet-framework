@@ -4,7 +4,7 @@ COPTS         =  `root-config --cflags` -fPIC -O2 -std=c++11
 LDOPTS        =  `root-config --glibs` -g -lboost_program_options
 
 #C++ Files
-SOURCES       =  JPetAnalysisRunner.cpp
+SOURCES       =  JPetTaskExecutor.cpp
 OBJECTS       =  $(SOURCES:.cpp=.o)
 #DICT_OBJECTS  =  $(SOURCES:.cpp=Dict.cpp)
 #OBJECTS      +=  $(SOURCES:.cpp=Dict.o)

@@ -25,13 +25,13 @@ JPetManager& JPetManager::getManager()
 void JPetManager::run()
 {
   INFO( "======== Starting processing all tasks: " + CommonTools::getTimeString() + " ========\n" );
-  std::vector<JPetAnalysisRunner*> runners;
+  std::vector<JPetTaskExecutor*> executors;
   std::vector<TThread*> threads;
   int i = 0;
   for (auto opt: fOptions) {
-    JPetAnalysisRunner* runner = new JPetAnalysisRunner(ftaskGeneratorChain, i, opt);
-    runners.push_back(runner);
-    auto thr = runner->run();
+    JPetTaskExecutor* executor = new JPetTaskExecutor(fTaskGeneratorChain, i, opt);
+    executors.push_back(executor);
+    auto thr = executor->run();
     if (thr) {
       threads.push_back(thr);
     } else {
@@ -42,8 +42,8 @@ void JPetManager::run()
   for (auto thread : threads) {
     thread->Join();
   }
-  for (auto runner : runners) {
-    delete runner;
+  for (auto executor : executors) {
+    delete executor;
   }
 
   INFO( "======== Finished processing all tasks: " + CommonTools::getTimeString() + " ========\n" );
@@ -59,8 +59,13 @@ JPetManager::~JPetManager()
 {
 }
 
+void JPetManager::registerTask(const TaskGenerator& taskGen)
+{
+  assert(fTaskGeneratorChain);
+  fTaskGeneratorChain->push_back(taskGen);
+}
 
 void JPetManager::addTaskGeneratorChain(TaskGeneratorChain* taskGeneratorChain)
 {
-  ftaskGeneratorChain = taskGeneratorChain;
+  fTaskGeneratorChain = taskGeneratorChain;
 }
