@@ -8,21 +8,20 @@
 #include "../../JPetLoggerInclude.h"
 
 JPetOptions::Options JPetOptions::kDefaultOptions = {
-    {"inputFile", ""},
-    {"inputFileType", ""},
-    {"outputFile", ""},
-    {"outputFileType", ""},
-    {"firstEvent", "-1"},
-    {"lastEvent", "-1"},
-    {"progressBar", "false"},
-    {"runId", "-1"}
-  };
+  {"inputFile", ""},
+  {"inputFileType", ""},
+  {"outputFile", ""},
+  {"outputFileType", ""},
+  {"firstEvent", "-1"},
+  {"lastEvent", "-1"},
+  {"progressBar", "false"},
+  {"runId", "-1"}
+};
 
 JPetOptions::JPetOptions()
 {
   setStringToFileTypeConversion();
-  //set some default options
-  fOptions = JPetOptions::kDefaultOptions; 
+  fOptions = JPetOptions::kDefaultOptions;
 }
 
 JPetOptions::JPetOptions(const Options& opts):
