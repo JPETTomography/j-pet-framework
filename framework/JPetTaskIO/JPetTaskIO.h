@@ -1,12 +1,12 @@
 /**
  *  @copyright Copyright (c) 2015, Wojciech Krzemien
- *  @file JPetTaskIO.h 
+ *  @file JPetTaskIO.h
  *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
  *  @brief
- */ 
+ */
 
-#ifndef JPETTASKIO_H 
-#define JPETTASKIO_H 
+#ifndef JPETTASKIO_H
+#define JPETTASKIO_H
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetParamManager/JPetParamManager.h"
 
@@ -24,25 +24,31 @@ class JPetTask;
  */
 class JPetTaskIO: public JPetTaskInterface
 {
- public:
+public:
   JPetTaskIO();
   virtual void init(const JPetOptions::Options& opts);
   virtual void exec();
   virtual void terminate();
   virtual ~JPetTaskIO();
-  virtual void addSubTask(JPetTaskInterface* subtask) {fTask = (JPetTask*)subtask; };
-  void setOptions(const JPetOptions& opts) { fOptions = opts;}
+  virtual void addSubTask(JPetTaskInterface* subtask) {
+    fTask = (JPetTask*)subtask;
+  };
+  void setOptions(const JPetOptions& opts) {
+    fOptions = opts;
+  }
 
   void manageProgressBar(long long done, long long end);
   float setProgressBar(int currentEventNumber, int numberOfEvents);
 
-  void setParamManager(JPetParamManager*paramManager) {fParamManager = paramManager;}
+  void setParamManager(JPetParamManager* paramManager) {
+    fParamManager = paramManager;
+  }
 
- protected:
+protected:
   virtual void createInputObjects(const char* inputFilename);
   virtual void createOutputObjects(const char* outputFilename);
-  void setUserLimits(const JPetOptions& opts, long long& firstEvent,long long& lastEvent) const;
-  
+  void setUserLimits(const JPetOptions& opts, long long& firstEvent, long long& lastEvent) const;
+
 
 
   JPetTask* fTask;
@@ -53,8 +59,10 @@ class JPetTaskIO: public JPetTaskInterface
   JPetTreeHeader* fHeader;
 
 /// from CommonAnalysisModule
-  const JPetParamBank & getParamBank();
-  JPetParamManager& getParamManager() {return *fParamManager;}
+  const JPetParamBank& getParamBank();
+  JPetParamManager& getParamManager() {
+    return *fParamManager;
+  }
 
 private:
   JPetParamManager* fParamManager;
