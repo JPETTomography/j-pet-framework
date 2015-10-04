@@ -10,7 +10,7 @@
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetParamManager/JPetParamManager.h"
 
-#include "../JPetTaskOptions/JPetTaskOptions.h"
+#include "../JPetOptions/JPetOptions.h"
 
 class JPetWriter;
 class JPetReader;
@@ -26,12 +26,12 @@ class JPetTaskIO: public JPetTaskInterface
 {
  public:
   JPetTaskIO();
-  virtual void init(const JPetTaskOptions::Options& opts);
+  virtual void init(const JPetOptions::Options& opts);
   virtual void exec();
   virtual void terminate();
   virtual ~JPetTaskIO();
   virtual void addSubTask(JPetTaskInterface* subtask) {fTask = (JPetTask*)subtask; };
-  void setOptions(const JPetTaskOptions& opts) { fOptions = opts;}
+  void setOptions(const JPetOptions& opts) { fOptions = opts;}
 
   void manageProgressBar(long long done, long long end);
   float setProgressBar(int currentEventNumber, int numberOfEvents);
@@ -41,15 +41,13 @@ class JPetTaskIO: public JPetTaskInterface
  protected:
   virtual void createInputObjects(const char* inputFilename);
   virtual void createOutputObjects(const char* outputFilename);
-  void setUserLimits(const JPetTaskOptions& opts, long long& firstEvent,long long& lastEvent) const;
-  //bool userBoundsAreCorrect(long long checkedEvent);
-  //void setEventBounds(long long& begin, long long& end, long long& eventCount);
+  void setUserLimits(const JPetOptions& opts, long long& firstEvent,long long& lastEvent) const;
   
 
 
   JPetTask* fTask;
   int fEventNb;
-  JPetTaskOptions fOptions; //options like max num of events, first event, last event, inputFileType, outputFileType
+  JPetOptions fOptions; //options like max num of events, first event, last event, inputFileType, outputFileType
   JPetWriter* fWriter;
   JPetReaderInterface* fReader;
   JPetTreeHeader* fHeader;
