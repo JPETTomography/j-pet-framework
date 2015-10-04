@@ -4,6 +4,7 @@
 
 #include "JPetTaskExecutor.h"
 #include <cassert>
+#include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetScopeReader/JPetScopeReader.h"
 
 JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
@@ -24,8 +25,8 @@ JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int p
 
 void JPetTaskExecutor::process()
 {
-  ProcessFromCmdLineArgs(fProcessedFile);
-  for (currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
+  processFromCmdLineArgs(fProcessedFile);
+  for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
     (*currentTask)->init(fOptions.getOptions());
     (*currentTask)->exec();
     (*currentTask)->terminate();
@@ -45,7 +46,7 @@ TThread* JPetTaskExecutor::run()
   return thread;
 }
 
-void JPetTaskExecutor::ProcessFromCmdLineArgs(int fileIndex)
+void JPetTaskExecutor::processFromCmdLineArgs(int fileIndex)
 {
   auto runNum = fOptions.getRunNumber();
   if (runNum >= 0) {
@@ -56,57 +57,21 @@ void JPetTaskExecutor::ProcessFromCmdLineArgs(int fileIndex)
   if (inputFileType == JPetOptions::kScope) {
     JPetScopeReader* module = new JPetScopeReader("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures.");
     module->setFileName(inputFile);
-    //fTasks.push_front(module);
+    fTasks.push_front(module);
   } else if (inputFileType == JPetOptions::kHld) {
     fUnpacker.setParams(fOptions.getInputFile());
-    UnpackFile();
+    unpackFile();
   }
 }
 
-void JPetTaskExecutor::UnpackFile()
+void JPetTaskExecutor::unpackFile()
 {
-  if (fOptions.getInputFileType() == JPetOptions::kHld) fUnpacker.exec();
+  if (fOptions.getInputFileType() == JPetOptions::kHld) {
+    fUnpacker.exec();
+  } else {
+    WARNING("Input file is not hld and unpacker was supposed to be called!");
+  }
 }
-
-/**
- * @brief Get Stripped Input File name stripped off the extension and the suffixes like .tslot.* or .phys.*
- *
- * Example: if the file given on command line was ../file.phys.hit.root, this method will return ../file
- */
-
-//std::vector<std::string> JPetTaskExecutor::getStrippedInputFileNames(const std::vector<std::string>& fileNames) const
-//{
-//std::vector<std::string> parsedNames;
-//for (int i = 0; i < fileNames.size(); i++) {
-//std::string name = fileNames[i].c_str();
-//// strip suffixes of type .tslot.* and .phys.*
-//int pos = name.find(".tslot");
-//if (pos == std::string::npos) {
-//pos = name.find(".phys");
-//}
-//if (pos == std::string::npos) {
-//pos = name.find(".hld");
-//}
-//if (pos == std::string::npos) {
-//pos = name.find(".root");
-//}
-//if (pos != std::string::npos) {
-//name.erase(pos);
-//}
-//parsedNames.push_back(name);
-//}
-//return parsedNames;
-//}
-
-
-//std::string JPetTaskExecutor::getBaseInputFileName(string name) const
-//{
-//int pos = name.find(".");
-//if ( pos != std::string::npos ) {
-//name.erase( pos );
-//}
-//return name;
-//}
 
 JPetTaskExecutor::~JPetTaskExecutor()
 {
