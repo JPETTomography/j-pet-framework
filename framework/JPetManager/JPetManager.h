@@ -8,10 +8,12 @@
 #ifndef JPETMANAGER_H 
 #define JPETMANAGER_H 
 
+#include <memory>
 //#include "../JPetCmdParser/JPetCmdParser.h"
 #include "../JPetOptions/JPetOptions.h"
-#include "../JPetAnalysisRunner/JPetAnalysisRunner.h"
+#include "../JPetTaskExecutor/JPetTaskExecutor.h"
 
+class JPetTaskIO;
 
 /**
  * @brief Main manager of the analysis performed with the J-PET Framework.
@@ -27,18 +29,19 @@ class JPetManager
   static JPetManager& getManager();
   ~JPetManager();
   void run();
+  void registerTask(const TaskGenerator& taskGen);
   void addTaskGeneratorChain( TaskGeneratorChain* taskGeneratorChain);
   void parseCmdLine(int argc, char** argv);
   inline std::vector<JPetOptions> getOptions() const { return fOptions;}
 
  private:
 
-  JPetManager(){/**/};
+  JPetManager() { fTaskGeneratorChain = new TaskGeneratorChain; }
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&); 
 
   std::vector<JPetOptions> fOptions;
   
-  TaskGeneratorChain* ftaskGeneratorChain;
+  TaskGeneratorChain* fTaskGeneratorChain;
 };
 #endif /*  !JPETMANAGER_H */
