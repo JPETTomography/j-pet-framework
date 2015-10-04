@@ -33,7 +33,9 @@ JPetHLDReader::~JPetHLDReader ()
 Event& JPetHLDReader::getCurrentEvent()
 {
   if (loadCurrentEvent()) {
-    return *fEvent;
+    fEventW  = new  WrappedEvent(*fEvent);
+    return *fEventW;
+    //return *fEvent;
   } else {
     ERROR("Could not read the current event");
     if (fEvent) {
@@ -41,7 +43,8 @@ Event& JPetHLDReader::getCurrentEvent()
     }
     fEvent = new Event();
   }
-  return *fEvent;
+  fEventW  = new WrappedEvent(*fEvent);
+  return *fEventW;
 }
 
 bool JPetHLDReader::nextEvent()

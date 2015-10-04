@@ -6,7 +6,6 @@
 
 #include "JPetTaskIO.h"
 #include <cassert>
-#include "../JPetWriter/JPetWriter.h"
 #include "../JPetReader/JPetReader.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 #include "../JPetTask/JPetTask.h"
@@ -147,10 +146,10 @@ void JPetTaskIO::setUserLimits(const JPetOptions& opts, long long& firstEvent, l
 {
   assert(fReader);
   const auto kLastEvent = opts.getLastEvent();
-  const auto kFirstEvent = opts.getFirstEvent();  // not used for a moment
+  const auto kFirstEvent = opts.getFirstEvent();
   const auto kEventNum = fReader->getNbOfAllEvents();
   if (kLastEvent < 0)  {
-    lastEvent = kEventNum;  
+    lastEvent = kEventNum;
   } else {
     lastEvent = kLastEvent < kEventNum ? kLastEvent : kEventNum;
   }
