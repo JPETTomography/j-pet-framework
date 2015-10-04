@@ -7,11 +7,12 @@
 
 //JPetManger
 // public methods:
-//   static JPetManager& GetManager();
-//   ~JPetManager();
-//   void Init();
-//   void Run();
-//   void AddTask(JPetAnalysisModule* mod);
+// static JPetManager& getManager();
+// ~JPetManager();
+// void run();
+// void registerTask(const TaskGenerator& taskGen);
+// void parseCmdLine(int argc, char** argv);
+// inline std::vector<JPetOptions> getOptions() const { return fOptions;}
              
 BOOST_AUTO_TEST_SUITE(FirstSuite)
   
@@ -23,6 +24,13 @@ BOOST_AUTO_TEST_CASE( create_unique_manager )
   JPetManager* pManager2 = &manager2;
 
   BOOST_REQUIRE_EQUAL(pManager, pManager2); 
+}
+
+BOOST_AUTO_TEST_CASE( manager_getOptions )
+{
+  JPetManager& manager = JPetManager::getManager();
+  auto options = manager.getOptions();
+  BOOST_REQUIRE_EQUAL(options.size(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

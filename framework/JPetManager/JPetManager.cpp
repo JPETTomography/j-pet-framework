@@ -1,5 +1,5 @@
 /**
-  *  @copyright Copyright (c) 2014, J-PET collaboration
+  *  @copyright Copyright (c) 2015, J-PET collaboration
   *  @file JPetManager.cpp
   *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
   */
@@ -7,13 +7,11 @@
 #include "./JPetManager.h"
 
 #include <cassert>
-#include <ctime>
-#include <string>
 #include <TDSet.h>
 #include <TThread.h>
 #include "../JPetCmdParser/JPetCmdParser.h"
-#include "../../JPetLoggerInclude.h"
 #include "../CommonTools/CommonTools.h"
+#include "../../JPetLoggerInclude.h"
 
 
 JPetManager& JPetManager::getManager()
@@ -27,8 +25,8 @@ void JPetManager::run()
   INFO( "======== Starting processing all tasks: " + CommonTools::getTimeString() + " ========\n" );
   std::vector<JPetTaskExecutor*> executors;
   std::vector<TThread*> threads;
-  int i = 0;
-  for (auto opt: fOptions) {
+  auto i = 0;
+  for (auto opt : fOptions) {
     JPetTaskExecutor* executor = new JPetTaskExecutor(fTaskGeneratorChain, i, opt);
     executors.push_back(executor);
     auto thr = executor->run();
@@ -57,15 +55,11 @@ void JPetManager::parseCmdLine(int argc, char** argv)
 
 JPetManager::~JPetManager()
 {
+  /**/
 }
 
 void JPetManager::registerTask(const TaskGenerator& taskGen)
 {
   assert(fTaskGeneratorChain);
   fTaskGeneratorChain->push_back(taskGen);
-}
-
-void JPetManager::addTaskGeneratorChain(TaskGeneratorChain* taskGeneratorChain)
-{
-  fTaskGeneratorChain = taskGeneratorChain;
 }
