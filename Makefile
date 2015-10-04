@@ -18,7 +18,7 @@ DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader JPetScopeReader
 WRITERS = JPetWriter
 #Modules without ROOT dictionnaries
-NONDMODULES = DummyClass JPetLogger JPetCmdParser JPetParamManager JPetManager $(READERS) $(WRITERS) JPetDBParamGetter JPetParamUtils JPetAnalysisRunner JPetTask JPetTaskIO JPetAnalysisModuleT JPetCommonAnalysisModuleT JPetTaskOptions JPetOptions
+NONDMODULES = DummyClass JPetLogger JPetCmdParser JPetParamManager JPetManager $(READERS) $(WRITERS) JPetDBParamGetter JPetParamUtils JPetTaskExecutor JPetTask JPetTaskIO JPetAnalysisModuleT JPetCommonAnalysisModuleT JPetOptions
 MODULES = $(DMODULES) $(NONDMODULES)
 ################
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
