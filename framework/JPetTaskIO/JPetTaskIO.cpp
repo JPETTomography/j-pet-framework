@@ -23,10 +23,9 @@ JPetTaskIO::JPetTaskIO():
 {
 }
 
-void JPetTaskIO::init(const JPetTaskOptions::Options& opts)
+void JPetTaskIO::init(const JPetOptions::Options& opts)
 {
-  setOptions(JPetTaskOptions(opts));
-  //here we should call some function to parse options
+  setOptions(JPetOptions(opts));
   auto inputFilename = fOptions.getInputFile();
   auto outputFilename = fOptions.getOutputFile();
   createInputObjects(inputFilename);
@@ -38,6 +37,8 @@ void JPetTaskIO::exec()
 {
   assert(fTask);
   assert(fReader);
+  assert(fParamManager);
+  fTask->setParamManager(fParamManager);
   JPetTaskInterface::Options emptyOpts;
   fTask->init(emptyOpts); //prepare current task for file
   auto firstEvent = 0ll;
@@ -77,7 +78,7 @@ void JPetTaskIO::terminate()
 void JPetTaskIO::createInputObjects(const char* inputFilename)
 {
   auto treeName = "";
-  if (fOptions.getInputFileType() == JPetTaskOptions::kHld ) {
+  if (fOptions.getInputFileType() == JPetOptions::kHld ) {
     fReader = new JPetHLDReader;
     treeName = "T";
   } else {
@@ -85,7 +86,7 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
     treeName = "tree";
   }
   if ( fReader->openFileAndLoadData( inputFilename, treeName )) {
-    if (fOptions.getInputFileType() == JPetTaskOptions::kHld ) {
+    if (fOptions.getInputFileType() == JPetOptions::kHld ) {
       // create a header to be stored along with the output tree
       fHeader = new JPetTreeHeader(26);
 
@@ -142,13 +143,17 @@ JPetTaskIO::~JPetTaskIO()
 
 
 /// Sets values of firstEvent and lastEvent based on user options opts and total number of events from JPetReader
-void JPetTaskIO::setUserLimits(const JPetTaskOptions& opts, long long& firstEvent, long long& lastEvent) const
+void JPetTaskIO::setUserLimits(const JPetOptions& opts, long long& firstEvent, long long& lastEvent) const
 {
   assert(fReader);
   const auto kLastEvent = opts.getLastEvent();
   const auto kFirstEvent = opts.getFirstEvent();  // not used for a moment
   const auto kEventNum = fReader->getNbOfAllEvents();
-  lastEvent = kLastEvent < kEventNum ? kLastEvent : kEventNum;
+  if (kLastEvent < 0)  {
+    lastEvent = kEventNum;  
+  } else {
+    lastEvent = kLastEvent < kEventNum ? kLastEvent : kEventNum;
+  }
   firstEvent = kFirstEvent;
   assert(firstEvent <= lastEvent);
 }
