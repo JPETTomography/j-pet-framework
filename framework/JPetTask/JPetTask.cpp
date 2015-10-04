@@ -4,10 +4,12 @@
   *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
   */ 
 
+#include "../JPetParamManager/JPetParamManager.h"
 #include "./JPetTask.h"
 
 JPetTask::JPetTask():
-fEvent(0)
+fEvent(0),
+fParamManager(0)
 {
 }
 
@@ -28,3 +30,13 @@ void JPetTask::terminate()
 void JPetTask::setEvent(TNamed* ev){
   fEvent = ev;
 }
+
+void JPetTask::setParamManager(JPetParamManager* paramManager) {
+  fParamManager = paramManager;
+}
+
+const JPetParamBank& JPetTask::getParamBank() {
+  assert(fParamManager);
+  return fParamManager->getParamBank();
+}
+
