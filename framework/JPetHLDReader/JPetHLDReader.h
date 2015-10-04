@@ -17,7 +17,17 @@
 #include "../JPetUnpacker/Unpacker2/Event.h"
 #include "../JPetReaderInterface/JPetReaderInterface.h"
 
-class Event;
+/**
+ * @brief A class wraps Event to be able to return it as TNamed pointer
+ *
+ */
+class WrappedEvent :public Event,  public TNamed
+{
+ public:
+  WrappedEvent(const Event& ev):Event(ev), TNamed("EventWrapper", "EventWrapper")
+  {/**/}
+};
+
 
 /**
  * @brief A class responsible for reading any data from an unpacked HLD file.
@@ -76,6 +86,7 @@ protected:
   TBranch* fBranch;
   TTree* fTree;
   Event* fEvent;
+  WrappedEvent* fEventW;
   TFile* fFile;
   long long fCurrentEventNumber;
 
