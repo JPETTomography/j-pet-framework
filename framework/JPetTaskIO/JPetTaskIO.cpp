@@ -153,6 +153,12 @@ void JPetTaskIO::setUserLimits(const JPetOptions& opts, long long& firstEvent, l
   } else {
     lastEvent = kLastEvent < kEventNum ? kLastEvent : kEventNum;
   }
-  firstEvent = kFirstEvent;
+  if ( kFirstEvent < 0) {
+    firstEvent = 0;
+  } else {
+    firstEvent = kFirstEvent;
+  }
+  assert(firstEvent>=0);
+  assert(lastEvent>=0);
   assert(firstEvent <= lastEvent);
 }
