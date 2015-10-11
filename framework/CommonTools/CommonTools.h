@@ -76,19 +76,31 @@ public:
     return false;
   }
 
-/**
- * @brief returns the time std::string in the format dd.mm.yyyy HH:MM
- */
-static std::string getTimeString()
-{
-  time_t _tm = time(NULL );
-  struct tm* curtime = localtime ( &_tm );
-  char buf[100];
-  strftime( buf, 100, "%d.%m.%Y %R", curtime);
+    /**
+     * @brief returns the time std::string in the format dd.mm.yyyy HH:MM
+     */
+    static std::string getTimeString()
+    {
+      time_t _tm = time(NULL );
+      struct tm* curtime = localtime ( &_tm );
+      char buf[100];
+      strftime( buf, 100, "%d.%m.%Y %R", curtime);
 
-  return std::string( buf );
-}
+      return std::string( buf );
+    }
 
+    template <typename Map>
+    static bool mapComparator(Map const &lhs, Map const &rhs)
+    {
+        auto pred = [](decltype(*lhs.begin()) a, decltype(a) b)
+                        {
+                            return a.first == b.first
+                                && a.second == b.second;
+                        };
+
+        return lhs.size() == rhs.size()
+            && std::equal(lhs.begin(), lhs.end(), rhs.begin(), pred);
+    }
 };
 
 
