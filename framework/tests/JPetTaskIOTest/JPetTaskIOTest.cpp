@@ -28,6 +28,13 @@
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
+BOOST_AUTO_TEST_CASE(progressBarTest)
+{
+    JPetTaskIO taskIO;
+    BOOST_REQUIRE_EQUAL(taskIO.setProgressBar(5, 100), 5);
+    taskIO.manageProgressBar(5, 100);
+}
+
 BOOST_AUTO_TEST_CASE( my_testA )
 {
   //Options options = {
