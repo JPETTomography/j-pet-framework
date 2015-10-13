@@ -7,9 +7,20 @@
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-BOOST_AUTO_TEST_CASE( my_test1 )
+BOOST_AUTO_TEST_CASE(defaultConstrutocTest)
 {
-  BOOST_REQUIRE(1==0);
+    /*JPetOptions::Options options = {
+      {"inputFile", "data_files/cosm_barrel.hld.root"},
+      {"inputFileType", "hld"},
+      {"outputFile", "data_files/cosm_barrel.tslot.raw.out.root"},
+      {"outputFileType", "tslot.raw"},
+      {"firstEvent", "1"},
+      {"lastEvent", "10"},
+      {"progressBar", "false"}
+    };
+
+    JPetTaskLoader taskLoader;
+    taskLoader.init(options);*/
 }
 
 BOOST_AUTO_TEST_SUITE_END()
