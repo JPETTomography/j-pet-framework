@@ -14,11 +14,13 @@
 #include "../../JPetLoggerInclude.h"
 
 
-
 JPetTaskIO::JPetTaskIO():
+  fTask(0), 
+  fEventNb(-1),
   fWriter(0),
   fReader(0),
-  fHeader(0)
+  fHeader(0),
+  fParamManager(0)
 {
 }
 
@@ -106,7 +108,7 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
       //fParamManager.readParametersFromFile( fReader );
     }
   } else {
-    ERROR(inputFilename + std::string(": Unable to open the input file"));
+    ERROR(inputFilename + std::string(": Unable to open the input file or load the tree"));
     exit(-1);
   }
 }
@@ -114,7 +116,12 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
 void JPetTaskIO::createOutputObjects(const char* outputFilename)
 {
   fWriter = new JPetWriter( outputFilename );
-  fTask->setWriter(fWriter);
+  assert(fWriter);
+  if (fTask) { 
+    fTask->setWriter(fWriter);
+  } else {
+    WARNING("the subTask does not exist, so Write was not passed to it");  
+  }
 }
 
 void JPetTaskIO::manageProgressBar(long long done, long long end)
