@@ -15,7 +15,7 @@
 
 
 JPetTaskIO::JPetTaskIO():
-  fTask(0), 
+  fTask(0),
   fEventNb(-1),
   fWriter(0),
   fReader(0),
@@ -42,11 +42,18 @@ void JPetTaskIO::exec()
   fTask->setParamManager(fParamManager);
   JPetTaskInterface::Options emptyOpts;
   fTask->init(emptyOpts); //prepare current task for file
+  auto totalEvents = 0ll;
+  if (fReader) {
+    totalEvents = fReader->getNbOfAllEvents();
+  } else {
+    WARNING("no JPETReader set totalEvents set to -1");
+    totalEvents - 1;
+  }
   auto firstEvent = 0ll;
   auto lastEvent = 0ll;
-  setUserLimits(fOptions, firstEvent, lastEvent);
-  assert(lastEvent > 0);
-  for (auto i = firstEvent; i < lastEvent; i++) {
+  setUserLimits(fOptions, totalEvents,  firstEvent, lastEvent);
+  assert(lastEvent >= 0);
+  for (auto i = firstEvent; i <= lastEvent; i++) {
     fTask->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
     if (fOptions.isProgressBar()) {
       manageProgressBar(i, lastEvent);
@@ -117,10 +124,10 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
 {
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
-  if (fTask) { 
+  if (fTask) {
     fTask->setWriter(fWriter);
   } else {
-    WARNING("the subTask does not exist, so Write was not passed to it");  
+    WARNING("the subTask does not exist, so Write was not passed to it");
   }
 }
 
@@ -149,23 +156,27 @@ JPetTaskIO::~JPetTaskIO()
 
 
 /// Sets values of firstEvent and lastEvent based on user options opts and total number of events from JPetReader
-void JPetTaskIO::setUserLimits(const JPetOptions& opts, long long& firstEvent, long long& lastEvent) const
+// if the totEventsFromReader is less than 0, than first and last are set to -1.
+void JPetTaskIO::setUserLimits(const JPetOptions& opts, const long long kTotEventsFromReader, long long& first, long long& last) const
 {
-  assert(fReader);
   const auto kLastEvent = opts.getLastEvent();
   const auto kFirstEvent = opts.getFirstEvent();
-  const auto kEventNum = fReader->getNbOfAllEvents();
-  if (kLastEvent < 0)  {
-    lastEvent = kEventNum;
+  if ( kTotEventsFromReader < 1) {
+    WARNING("kTotEvetnsFromReader < 1, first and last set to -1");
+    first = last = -1;
   } else {
-    lastEvent = kLastEvent < kEventNum ? kLastEvent : kEventNum;
+    if ( kFirstEvent < 0) {
+      first = 0;
+    } else {
+      first = kFirstEvent < kTotEventsFromReader ? kFirstEvent : kTotEventsFromReader - 1;
+    }
+    if (kLastEvent < 0)  {
+      last = kTotEventsFromReader - 1;
+    } else {
+      last = kLastEvent < kTotEventsFromReader ? kLastEvent : kTotEventsFromReader - 1;
+    }
   }
-  if ( kFirstEvent < 0) {
-    firstEvent = 0;
-  } else {
-    firstEvent = kFirstEvent;
-  }
-  assert(firstEvent>=0);
-  assert(lastEvent>=0);
-  assert(firstEvent <= lastEvent);
+  assert(first >= 0);
+  assert(last >= 0);
+  assert(first <= last);
 }
