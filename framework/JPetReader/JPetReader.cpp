@@ -94,7 +94,6 @@ bool JPetReader::openFile (const char* filename)
 
 bool JPetReader::loadData(const char* treename)
 {
-
   if (!isOpen() ) {
     ERROR("File not open");
     return false;
