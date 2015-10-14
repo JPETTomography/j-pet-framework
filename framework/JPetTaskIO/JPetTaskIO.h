@@ -47,9 +47,12 @@ public:
 protected:
   virtual void createInputObjects(const char* inputFilename);
   virtual void createOutputObjects(const char* outputFilename);
-  void setUserLimits(const JPetOptions& opts, long long& firstEvent, long long& lastEvent) const;
+  void setUserLimits(const JPetOptions& opts,const long long totEventsFromReader, long long& firstEvent, long long& lastEvent) const;
 
-
+  const JPetParamBank& getParamBank();
+  JPetParamManager& getParamManager() {
+    return *fParamManager;
+  }
 
   JPetTask* fTask;
   int fEventNb;
@@ -57,12 +60,6 @@ protected:
   JPetWriter* fWriter;
   JPetReaderInterface* fReader;
   JPetTreeHeader* fHeader;
-
-/// from CommonAnalysisModule
-  const JPetParamBank& getParamBank();
-  JPetParamManager& getParamManager() {
-    return *fParamManager;
-  }
 
 private:
   JPetParamManager* fParamManager;
