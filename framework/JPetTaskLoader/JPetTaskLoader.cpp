@@ -27,9 +27,6 @@ void JPetTaskLoader::init(const JPetOptions::Options& opts)
   newOpts.at("inputFileType") = fInFileType;
   newOpts.at("outputFile") = outFile;
   newOpts.at("outputFileType") = fOutFileType;
-  for (auto opt : newOpts) {
-    std::cout << opt.first << " = " << opt.second << std::endl;
-  }
   setOptions(JPetOptions(newOpts));
   //here we should call some function to parse options
   auto inputFilename = fOptions.getInputFile();
