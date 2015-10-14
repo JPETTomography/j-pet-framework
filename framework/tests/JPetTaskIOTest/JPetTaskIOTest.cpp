@@ -3,7 +3,9 @@
 #include <boost/test/unit_test.hpp>
 
 #define private public
+#define protected public
 #include "../../JPetTaskIO/JPetTaskIO.h"
+#include "../../JPetCmdParser/JPetCmdParser.h"
 //#include "TaskA.h"
 //#include "TaskB.h"
 //#include "TaskC1.h"
@@ -12,16 +14,38 @@
 //#include "TaskD.h"
 //#include "TaskE.h"
 
-//// methods
-////virtual void init(const JPetTaskInterface::Options& opts);
-////virtual void exec();
-////virtual void terminate();
-////virtual ~JPetTaskIO();
-////virtual void addSubTask(JPetTaskInterface* subtask);
-////void manageProgressBar(long long done, long long end);
-////float setProgressBar(int currentEventNumber, int numberOfEvents);
+// methods
+//virtual void init(const JPetTaskInterface::Options& opts);
+//virtual void exec();
+//virtual void terminate();
+//virtual ~JPetTaskIO();
+//virtual void addSubTask(JPetTaskInterface* subtask);
+//void manageProgressBar(long long done, long long end);
+//float setProgressBar(int currentEventNumber, int numberOfEvents);
+
+///protected:
+//virtual void createInputObjects(const char* inputFilename);
+//virtual void createOutputObjects(const char* outputFilename);
+//void setUserLimits(const JPetOptions& opts, long long& firstEvent, long long& lastEvent) const;
 
 
+char* convertStringToCharP(const std::string& s)
+{
+  char* pc = new char[s.size() + 1];
+  std::strcpy(pc, s.c_str());
+  return pc;
+}
+
+std::vector<char*> createArgs(const std::string& commandLine) 
+{
+  std::istringstream iss(commandLine);
+  std::vector<std::string> args {std::istream_iterator<std::string>{iss},
+                                 std::istream_iterator<std::string>{}
+                                };
+  std::vector<char*> args_char;
+  std::transform(args.begin(), args.end(), std::back_inserter(args_char), convertStringToCharP);
+  return args_char;
+}
 
 //using Options = std::map<std::string, std::string>;
 
@@ -34,6 +58,45 @@ BOOST_AUTO_TEST_CASE(progressBarTest)
     BOOST_REQUIRE_EQUAL(taskIO.setProgressBar(5, 100), 5);
     taskIO.manageProgressBar(5, 100);
 }
+
+BOOST_AUTO_TEST_CASE( setUserLimits)
+{
+  auto commandLine = "./main.x -t root -f cosm_barrel.hld.root -i 26 -r 1000 1001";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetCmdParser parser;
+  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  auto first = 0ll;
+  auto last = 0ll;
+  auto opt = options.front().getOptions();
+  JPetOptions optObject(opt);
+  JPetTaskIO task;
+  task.setUserLimits(optObject,10000, first,last); 
+  BOOST_REQUIRE_EQUAL(first, 1000);
+  BOOST_REQUIRE_EQUAL(last, 1001);
+}
+
+BOOST_AUTO_TEST_CASE( setUserLimits2 )
+{
+  auto commandLine = "./main.x -t root -f cosm_barrel.hld.root -i 26 -r 1000 1001";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetCmdParser parser;
+  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  auto first = 0ll;
+  auto last = 0ll;
+  auto opt = options.front().getOptions();
+  JPetOptions optObject(opt);
+  JPetTaskIO task;
+  task.setUserLimits(optObject,1, first,last); 
+  BOOST_REQUIRE_EQUAL(first, 0);
+  BOOST_REQUIRE_EQUAL(last, 0);
+}
+
 
 BOOST_AUTO_TEST_CASE( my_testA )
 {
