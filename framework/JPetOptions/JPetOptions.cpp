@@ -10,8 +10,8 @@
 JPetOptions::Options JPetOptions::kDefaultOptions = {
   {"inputFile", ""},
   {"inputFileType", ""},
-  {"outputFile", ""},
-  {"outputFileType", ""},
+  {"outputFile", "root"},
+  {"outputFileType", "test.root"},
   {"firstEvent", "-1"},
   {"lastEvent", "-1"},
   {"progressBar", "false"},
