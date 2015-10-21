@@ -213,6 +213,115 @@ BOOST_AUTO_TEST_CASE(rangeTest)
     BOOST_REQUIRE(variablesMap.count("range") == 1);
     BOOST_REQUIRE(range.front() == 4);
 }
+
+BOOST_AUTO_TEST_CASE(paramTest)
+{
+    JPetCmdParser cmdParser;
+
+    auto commandLine = "main.x -p data.hld";
+    auto args_char = createArgs(commandLine);
+    auto argc = args_char.size();
+    auto argv = args_char.data();
+
+    po::options_description description("Allowed options");
+    description.add_options()
+            ("param,p", po::value<std::string>(), "File with TRB numbers.")
+    ;
+
+    po::variables_map variablesMap;
+    po::store(po::parse_command_line(argc, argv, description), variablesMap);
+    po::notify(variablesMap);
+
+    BOOST_REQUIRE(cmdParser.isParamSet(variablesMap) == true);
+    BOOST_REQUIRE(cmdParser.getParam(variablesMap) == "data.hld");
+
+    auto param = variablesMap["param"].as<std::string>();
+    BOOST_REQUIRE(variablesMap.size() == 1);
+    BOOST_REQUIRE(variablesMap.count("param") == 1);
+    BOOST_REQUIRE(param == "data.hld");
+}
+
+BOOST_AUTO_TEST_CASE(runIdTest)
+{
+    JPetCmdParser cmdParser;
+
+    auto commandLine = "main.x -i 231";
+    auto args_char = createArgs(commandLine);
+    auto argc = args_char.size();
+    auto argv = args_char.data();
+
+    po::options_description description("Allowed options");
+    description.add_options()
+            ("runId,i", po::value<int>(), "Run id.")
+    ;
+
+    po::variables_map variablesMap;
+    po::store(po::parse_command_line(argc, argv, description), variablesMap);
+    po::notify(variablesMap);
+
+    BOOST_REQUIRE(cmdParser.isRunNumberSet(variablesMap) == true);
+    BOOST_REQUIRE(cmdParser.getRunNumber(variablesMap) == 231);
+
+    auto runId = variablesMap["runId"].as<int>();
+    BOOST_REQUIRE(variablesMap.size() == 1);
+    BOOST_REQUIRE(variablesMap.count("runId") == 1);
+    BOOST_REQUIRE(runId == 231);
+}
+
+BOOST_AUTO_TEST_CASE(progressBarTest)
+{
+    JPetCmdParser cmdParser;
+
+    auto commandLine = "main.x -b 1";
+    auto args_char = createArgs(commandLine);
+    auto argc = args_char.size();
+    auto argv = args_char.data();
+
+    po::options_description description("Allowed options");
+    description.add_options()
+            ("progressBar,b", po::value<int>(), "Progress bar.")
+    ;
+
+    po::variables_map variablesMap;
+    po::store(po::parse_command_line(argc, argv, description), variablesMap);
+    po::notify(variablesMap);
+
+    BOOST_REQUIRE(cmdParser.isProgressBarSet(variablesMap) == true);
+    BOOST_REQUIRE(variablesMap.size() == 1);
+    BOOST_REQUIRE(variablesMap.count("progressBar") == 1);
+}
+
+BOOST_AUTO_TEST_CASE(generateOptionsTest)
+{
+    JPetCmdParser cmdParser;
+
+    auto commandLine = "main.x -f data.hld -t hld -r 4 -p data.hld -i 231 -b 1";
+    auto args_char = createArgs(commandLine);
+    auto argc = args_char.size();
+    auto argv = args_char.data();
+
+    po::options_description description("Allowed options");
+    description.add_options()
+            ("file,f", po::value<std::vector<std::string>>(), "File(s) to open")
+            ("type,t", po::value<std::string>(), "type of file: hld, root or scope")
+            ("range,r", po::value<std::vector<int>>(), "Range of events to process.")
+            ("param,p", po::value<std::string>(), "File with TRB numbers.")
+            ("runId,i", po::value<int>(), "Run id.")
+            ("progressBar,b", po::value<int>(), "Progress bar.")
+            ;
+
+    po::variables_map variablesMap;
+    po::store(po::parse_command_line(argc, argv, description), variablesMap);
+    po::notify(variablesMap);
+
+    auto options = cmdParser.generateOptions(variablesMap);
+    auto firstOption = options.front();
+
+    BOOST_REQUIRE(firstOption.getRunNumber() == 231);
+    BOOST_REQUIRE(firstOption.isProgressBar() == true);
+}
+
+
 /* To remove */
 BOOST_AUTO_TEST_CASE(dummyTest)
 {
