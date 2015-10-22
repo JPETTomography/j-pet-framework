@@ -43,9 +43,6 @@ public:
 
   template <class T>
   bool write(const T& obj);
-  template <class T>
-  bool write(std::vector<T>& obj);
-  //bool OpenFile(const char* filename);
   virtual bool isOpen() const {
     if (fFile) return (fFile->IsOpen() && !fFile->IsZombie());
     else return false;
@@ -70,39 +67,24 @@ protected:
 template <class T>
 bool JPetWriter::write(const T& obj)
 {
-  std::vector<T> wrapper;
-  wrapper.push_back(obj);
-  return write(wrapper);
-}
-
-template <class T>
-bool JPetWriter::write( std::vector<T>& obj)
-{
-  if (obj.size() == 0) {
-    WARNING("Vector passed is empty");
-    return false;
-  }
+  ;
 
   if ( !fFile->IsOpen() ) {
     ERROR("Could not write to file. Have you closed it already?");
     return false;
   }
+  assert(fFile);
 
   fFile->cd(/*fFileName.c_str()*/); // -> http://root.cern.ch/drupal/content/current-directory
 
-  T* filler = &obj[0];
-
+  T* filler = const_cast<T*>(&obj);
+  assert(filler);
   if (!fIsBranchCreated) {
     fTree->Branch(filler->GetName(), filler->GetName(), &filler);
     fIsBranchCreated = true;
   }
 
-  for (unsigned int i = 0; i < obj.size(); i++) {
-    filler = &obj[i];
-    assert(fTree);
-    fTree->Fill();
-  }
-
+  fTree->Fill();
   return true;
 }
 
