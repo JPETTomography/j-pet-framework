@@ -147,7 +147,7 @@ signal_generation_fixture::~signal_generation_fixture () {
 // ********                 Open Single ROOT file                 ******** //
 // *********************************************************************** //
 
-const char* gTest_root_filename = "test_file_test_0.reco.sig.root";
+const char* gTest_root_filename = "test_file.reco.sig.test.0.root";
 
 struct root_file_reader {
   
