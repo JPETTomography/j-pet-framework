@@ -36,8 +36,8 @@ BOOST_AUTO_TEST_CASE(petOptionsDefaultConstrutorTest)
     JPetOptions::Options options = {
         {"inputFile", ""},
         {"inputFileType", ""},
-        {"outputFile", ""},
-        {"outputFileType", ""},
+        {"outputFile", "root"},
+        {"outputFileType", "test.root"},
         {"firstEvent", "-1"},
         {"lastEvent", "-1"},
         {"progressBar", "false"},
