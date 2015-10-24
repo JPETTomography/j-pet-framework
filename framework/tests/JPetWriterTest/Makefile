@@ -1,16 +1,16 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetWriter
-EXTRA_MODULES = JPetLogger JPetReader JPetTreeHeader
+EXTRA_MODULES = JPetLogger JPetReader JPetTreeHeader JPetSigCh JPetTSlot JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetHit JPetLOR 
 #classes that need Dictionnaries 
-DICTS = JPetTreeHeader
+DICTS = JPetTreeHeader JPetSigCh JPetTSlot JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetHit JPetLOR 
 PQXX_LIB_SET = 
 DBHANDLER_LIB_SET = 
 UNPACKER_LIB_SET = 
 ###################
 OS = $(shell uname)
 CO = g++
-CFLAGS = -Wall `root-config --cflags`
+CFLAGS = -Wall `root-config --cflags` -std=c++11
 ###################
 LDFLAGS = -Wall `root-config --glibs --ldflags` 
 LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system -lboost_program_options -lboost_regex
