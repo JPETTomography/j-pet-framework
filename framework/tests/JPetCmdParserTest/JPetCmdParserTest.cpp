@@ -88,7 +88,6 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
     auto optionDescription = cmdParser.getOptionsDescription();
     //optionDescription.add
     //optionDescription.find()
-    cout << "andrzej" << endl;
     auto helpOptionDescription = optionDescription.find("help", true);
     //cout << helpOptionDescription.description() << endl;
     BOOST_REQUIRE(std::string(helpOptionDescription.description()) == "produce help message");
@@ -295,7 +294,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
 {
     JPetCmdParser cmdParser;
 
-    auto commandLine = "main.x -f data.hld -t hld -r 4 -p data.hld -i 231 -b 1";
+    auto commandLine = "main.x -f data.hld -t hld -r 2 -r 4 -p data.hld -i 231 -b 1";
     auto args_char = createArgs(commandLine);
     auto argc = args_char.size();
     auto argv = args_char.data();
@@ -314,51 +313,65 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
     po::store(po::parse_command_line(argc, argv, description), variablesMap);
     po::notify(variablesMap);
 
-    auto options = cmdParser.generateOptions(variablesMap);
-    auto firstOption = options.front();
+    BOOST_REQUIRE(cmdParser.areCorrectOptions(variablesMap));
 
+    std::vector<JPetOptions> options = cmdParser.generateOptions(variablesMap);
+    JPetOptions firstOption = options.front();
+
+    BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
+    BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "data.hld") == 0);
+    BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
+    //std::cout << "PROCES =" << firstOption.getOutputFileType() << std::endl;
+    //BOOST_REQUIRE(firstOption.getOutputFile() == "root");
+    //BOOST_REQUIRE(firstOption.getOutputFileType() == "test.root");
+    BOOST_REQUIRE(firstOption.getFirstEvent() == 2);
+    BOOST_REQUIRE(firstOption.getLastEvent() == 4);
     BOOST_REQUIRE(firstOption.getRunNumber() == 231);
     BOOST_REQUIRE(firstOption.isProgressBar() == true);
 }
 
-
-/* To remove */
-BOOST_AUTO_TEST_CASE(dummyTest)
+BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
 {
-    JPetCmdParser cmdParser;
-    po::variables_map variablesMap;
-    //variablesMap.insert()
-    //BOOST_REQUIRE(!cmdParser.IsFileTypeSet(variablesMap));
-    //cmdParser.generateOptions(variablesMap);
-    //BOOST_REQUIRE(cmdParser.areCorrectOptions(variablesMap));
+  auto commandLine = "main.x -f data.hld -t hld -r 2 -r 4 -p data.hld -i 231";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
 
-    // Declare the supported options.
+  JPetCmdParser parser;
+  std::vector<JPetOptions> options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
 
-    auto commandLine = "main.x -h help -c 10";
-    auto args_char = createArgs(commandLine);
-    auto ac = args_char.size();
-    auto av = args_char.data();
+  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  JPetOptions firstOption = options.front();
 
-    po::options_description desc("Allowed options");
-    desc.add_options()
-            ("help,h", "produce help message")
-            ("compression,c", po::value<int>(), "set compression level")
-    ;
+  BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
+  BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "data.hld") == 0);
+  BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
+  BOOST_REQUIRE(firstOption.getFirstEvent() == 2);
+  BOOST_REQUIRE(firstOption.getLastEvent() == 4);
+  BOOST_REQUIRE(firstOption.getRunNumber() == 231);
+  BOOST_REQUIRE(firstOption.isProgressBar() == false);
+}
 
-    po::variables_map vm;
-    po::store(po::parse_command_line(ac, av, desc), vm);
-    po::notify(vm);
+BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
+{
+  auto commandLine = "main.x -f data.hld -t hld";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
 
-    if (vm.count("help")) {
-        cout << desc << "\n";
-    }
+  JPetCmdParser parser;
+  std::vector<JPetOptions> options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
 
-    if (vm.count("compression")) {
-        cout << "Compression level was set to "
-     << vm["compression"].as<int>() << ".\n";
-    } else {
-        cout << "Compression level was not set.\n";
-    }
+  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  JPetOptions firstOption = options.front();
+
+  BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
+  BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "data.hld") == 0);
+  BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
+  BOOST_REQUIRE(firstOption.getFirstEvent() == -1);
+  BOOST_REQUIRE(firstOption.getLastEvent() == -1);
+  BOOST_REQUIRE(firstOption.getRunNumber() == -1);
+  BOOST_REQUIRE(firstOption.isProgressBar() == false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
