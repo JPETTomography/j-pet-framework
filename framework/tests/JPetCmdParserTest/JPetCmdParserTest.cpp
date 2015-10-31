@@ -332,7 +332,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
 
 BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
 {
-  auto commandLine = "main.x -f data.hld -t hld -r 2 -r 4 -p data.hld -i 231";
+  auto commandLine = "main.x -f data.hld -t hld -r 2 4 -p data.hld -i 231";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
