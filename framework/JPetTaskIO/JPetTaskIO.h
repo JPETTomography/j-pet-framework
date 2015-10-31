@@ -31,7 +31,7 @@ public:
   virtual void terminate();
   virtual ~JPetTaskIO();
   virtual void addSubTask(JPetTaskInterface* subtask) {
-    fTask = (JPetTask*)subtask;
+    fTask = dynamic_cast<JPetTask*>(subtask);
   };
   void setOptions(const JPetOptions& opts) {
     fOptions = opts;
