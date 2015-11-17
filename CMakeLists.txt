@@ -27,18 +27,25 @@ endif()
 # ------------
 
 # - ROOT
-find_package(ROOT 5 REQUIRED COMPONENTS
-  Hist
-  Physics
-  RIO
-  Thread
-  Tree
-  )
-include(${ROOT_USE_FILE})
+foreach(mode QUIET REQUIRED)
+  find_package(ROOT 5 ${mode} COMPONENTS
+    Hist
+    Physics
+    RIO
+    Thread
+    Tree
+    )
+  if(ROOT_USE_FILE)
+    include(${ROOT_USE_FILE})
+  endif()
+  if(ROOT_FOUND)
+    break()
+  endif()
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/fallback)
+endforeach()
 include_directories(${ROOT_INCLUDE_DIRS})
 add_definitions(${ROOT_DEFINITIONS})
 message(STATUS "ROOT version: ${ROOT_VERSION}")
-message(STATUS "ROOT version: ${ROOT_DIR}")
 if(ROOT_FOUND AND NOT ROOT_VERSION VERSION_LESS "6.0")
   message(FATAL_ERROR "ROOT 6.0 is not compatible")
 endif()
