@@ -41,6 +41,8 @@ foreach(mode QUIET REQUIRED)
   if(ROOT_FOUND)
     break()
   endif()
+  # if we failed with CMake based find_package, use fallback
+  # root-config version from cmake/fallback/
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/fallback)
 endforeach()
 include_directories(${ROOT_INCLUDE_DIRS})
