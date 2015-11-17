@@ -6,6 +6,7 @@
 #include <cassert>
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetScopeReader/JPetScopeReader.h"
+#include "../JPetTaskLoader/JPetTaskLoader.h"
 
 JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
   ftaskGeneratorChain(taskGeneratorChain),
@@ -27,9 +28,11 @@ void JPetTaskExecutor::process()
 {
   processFromCmdLineArgs(fProcessedFile);
   for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
+    INFO(Form("Starting task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->GetName()));
     (*currentTask)->init(fOptions.getOptions());
     (*currentTask)->exec();
     (*currentTask)->terminate();
+    INFO(Form("Finished task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->GetName()));
   }
 }
 
