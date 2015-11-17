@@ -5,8 +5,14 @@
 # Description:
 #   Provides CMake functions helping setting up the project.
 
+# function generate_root_dictionaries(output_variable
+#                                     SOURCES source1.cpp ...
+#                                     EXCLUDE name1 ...
+#                                     INCLUDE name1)
+#
 # Generate ROOT dictionaries for given SOURCES, excluding these given after
-# EXCLUDE or limiting to these given after INCLUDE
+# EXCLUDE or limiting to these given after INCLUDE.
+#
 function(generate_root_dictionaries OUT_VAR)
   cmake_parse_arguments(ARG "" "" "SOURCES;EXCLUDE;INCLUDE" ${ARGN})
   # generate ROOT dictionaries for all other source files
@@ -17,20 +23,24 @@ function(generate_root_dictionaries OUT_VAR)
     string(REGEX REPLACE ${ext} ".h"        header  ${source})
     string(REGEX REPLACE ${ext} ""          name    ${name})
     set(skip FALSE)
+    # check if there is corresponding header file to the source file
     if(NOT EXISTS ${header})
-      set(skip TRUE)
+      set(skip TRUE) # skip generation
     elseif(ARG_INCLUDE)
+      # if INCLUDE was specified, allow only names specified on the list
       list(FIND ARG_INCLUDE ${name} index)
       if(index EQUAL -1)
         set(skip TRUE)
       endif()
     else()
+      # otherwise check if name was excluded
       list(FIND ARG_EXCLUDE ${name} index)
       if(index GREATER -1)
         set(skip TRUE)
       endif()
     endif()
     if(NOT skip)
+      # output dictionary file will be kept in CMake build folder
       set(dictionary
         ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/${name}Dictionary)
       if(EXISTS ${linkdef})
@@ -46,5 +56,6 @@ function(generate_root_dictionaries OUT_VAR)
       list(APPEND dictionaries ${dictionary}.cxx)
     endif()
   endforeach()
-  SET(${OUT_VAR} ${dictionaries} PARENT_SCOPE)
+  # return generated dictionary sources to given variable
+  set(${OUT_VAR} ${dictionaries} PARENT_SCOPE)
 endfunction()
