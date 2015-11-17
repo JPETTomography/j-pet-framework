@@ -20,6 +20,7 @@ JPetTaskIO::JPetTaskIO():
   fWriter(0),
   fReader(0),
   fHeader(0),
+  fStatistics(0),
   fParamManager(0)
 {
 }
@@ -69,9 +70,11 @@ void JPetTaskIO::terminate()
   assert(fReader);
   assert(fWriter);
   assert(fHeader);
+  assert(fStatistics);
 
-  INFO(Form("Finished processing %s.", "A"));
   fWriter->writeHeader(fHeader);
+
+  fWriter->writeObject(fStatistics->getHistogramsTable(), "Stats");
 
   // store the parametric objects in the ouptut ROOT file
   getParamManager().saveParametersToFile(
@@ -114,6 +117,8 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
       fHeader = dynamic_cast<JPetReader*>(fReader)->getHeaderClone();
       //fParamManager.readParametersFromFile( fReader );
     }
+    // create an object for storing histograms and counters during processing
+    fStatistics = new JPetStatistics();
   } else {
     ERROR(inputFilename + std::string(": Unable to open the input file or load the tree"));
     exit(-1);
@@ -126,6 +131,7 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
   assert(fWriter);
   if (fTask) {
     fTask->setWriter(fWriter);
+    fTask->setStatistics(fStatistics);
   } else {
     WARNING("the subTask does not exist, so Write was not passed to it");
   }
