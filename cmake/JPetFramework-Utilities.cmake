@@ -16,32 +16,35 @@ function(generate_root_dictionaries OUT_VAR)
     string(REGEX REPLACE ${ext} "LinkDef.h" linkdef ${source})
     string(REGEX REPLACE ${ext} ".h"        header  ${source})
     string(REGEX REPLACE ${ext} ""          name    ${name})
+    set(skip FALSE)
     if(NOT EXISTS ${header})
-      continue()
-    endif()
-    list(FIND ARG_EXCLUDE ${name} index)
-    if(index GREATER -1)
-      continue()
-    endif()
-    if(ARG_INCLUDE)
+      set(skip TRUE)
+    elseif(ARG_INCLUDE)
       list(FIND ARG_INCLUDE ${name} index)
       if(index EQUAL -1)
-        continue()
+        set(skip TRUE)
+      endif()
+    else()
+      list(FIND ARG_EXCLUDE ${name} index)
+      if(index GREATER -1)
+        set(skip TRUE)
       endif()
     endif()
-    set(dictionary
-      ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/${name}Dictionary)
-    if(EXISTS ${linkdef})
-      root_generate_dictionary(${dictionary} ${header}
-        LINKDEF ${linkdef}
-        OPTIONS -f
-        )
-    else()
-      root_generate_dictionary(${dictionary} ${header}
-        OPTIONS -f
-        )
+    if(NOT skip)
+      set(dictionary
+        ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/${name}Dictionary)
+      if(EXISTS ${linkdef})
+        root_generate_dictionary(${dictionary} ${header}
+          LINKDEF ${linkdef}
+          OPTIONS -p
+          )
+      else()
+        root_generate_dictionary(${dictionary} ${header}
+          OPTIONS -p
+          )
+      endif()
+      list(APPEND dictionaries ${dictionary}.cxx)
     endif()
-    list(APPEND dictionaries ${dictionary}.cxx)
   endforeach()
   SET(${OUT_VAR} ${dictionaries} PARENT_SCOPE)
 endfunction()
