@@ -12,8 +12,8 @@
  #pragma link C++ function JPetWriter::Write(vector<JPetScin>&);
  #pragma link C++ function JPetWriter::Write(JPetSigCh&);
  #pragma link C++ function JPetWriter::Write(vector<JPetSigCh>&);
- #pragma link C++ function JPetWriter::Write(JPetSignal&);
- #pragma link C++ function JPetWriter::Write(vector<JPetSignal>&);
+ #pragma link C++ function JPetWriter::Write(JPetRawSignal&);
+ #pragma link C++ function JPetWriter::Write(vector<JPetRawSignal>&);
  #pragma link C++ function JPetWriter::Write(JPetTRB&);
  #pragma link C++ function JPetWriter::Write(vector<JPetTRB>&);
  #pragma link C++ function JPetWriter::Write(JPetTimeWindow&);
