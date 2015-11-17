@@ -11,3 +11,15 @@
 *.log
 *.kate-swp
 *.exe
+
+# CMake specific files
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
+.ninja_*
+*.ninja
+
+# output files
+/*Test
+/*.so
+/*.dylib
