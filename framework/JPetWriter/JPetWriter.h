@@ -51,7 +51,7 @@ public:
   void closeFile();
 
   int writeObject(const TObject* obj, const char* name) {
-    return fFile->WriteObject(obj, name);
+    return fFile->WriteTObject(obj, name);
   }
 
 
