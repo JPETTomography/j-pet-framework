@@ -9,12 +9,13 @@
 #define JPETTASKIO_H
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetParamManager/JPetParamManager.h"
-
+#include "../JPetStatistics/JPetStatistics.h"
 #include "../JPetOptions/JPetOptions.h"
 
 class JPetWriter;
 class JPetReader;
 class JPetTreeHeader;
+class JPetStatistics;
 class JPetTask;
 
 
@@ -60,6 +61,7 @@ protected:
   JPetWriter* fWriter;
   JPetReaderInterface* fReader;
   JPetTreeHeader* fHeader;
+  JPetStatistics* fStatistics;
 
 private:
   JPetParamManager* fParamManager;

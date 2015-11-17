@@ -40,3 +40,12 @@ const JPetParamBank& JPetTask::getParamBank() {
   return fParamManager->getParamBank();
 }
 
+void JPetTask::setStatistics(JPetStatistics * statistics) {
+  assert(statistics);
+  fStatistics = statistics;
+}
+
+JPetStatistics & JPetTask::getStatistics() {
+  assert(fStatistics);
+  return *fStatistics;
+}
