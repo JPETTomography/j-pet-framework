@@ -1,4 +1,3 @@
-#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE ScopeReader
 #define BOOST_TEST_LOG_LEVEL message
 
