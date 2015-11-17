@@ -5,7 +5,7 @@ using namespace std;
 
 ClassImp(Unpacker_TRB2_Standalone);
 
-Unpacker_TRB2_Standalone::Unpacker_TRB2_Standalone(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec) : UnpackingModule(bT, bA, hA, cN, o, r, mR, dec) {
+Unpacker_TRB2_Standalone::Unpacker_TRB2_Standalone(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec) : UnpackingModule(bT, bA, hA, cN, o, r, mR, dec, false) {
   cerr<<"TRB2_STND: Creating Unpacker_TRB2_Standalone for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<endl;
 }
 
