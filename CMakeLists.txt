@@ -189,7 +189,8 @@ if(UNIX AND
   add_definitions(-fcolor-diagnostics)
 endif()
 
-# workaround: relocation R_X86_64_32S against `...' can not be used when making a shared object
+# workaround: relocation R_X86_64_32S against `...' can not be used when
+# making a shared object
 if(UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
   set_target_properties(Unpacker2 tinyxml2 PROPERTIES COMPILE_FLAGS "-fPIC")
 endif()
