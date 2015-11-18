@@ -56,9 +56,12 @@ public:
     return fOptions;
   }
 
+  void resetEventRange();
+
   static  Options getDefaultOptions() {
     return kDefaultOptions;
   }
+
 protected:
   static Options kDefaultOptions;
 
