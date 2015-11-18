@@ -57,3 +57,8 @@ bool JPetOptions::areCorrect(const Options& opts) const
 {
   return true;
 }
+
+void JPetOptions::resetEventRange() {
+  fOptions.at("firstEvent") = "-1";
+  fOptions.at("lastEvent") = "-1";
+}

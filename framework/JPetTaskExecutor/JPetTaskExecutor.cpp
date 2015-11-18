@@ -28,6 +28,12 @@ void JPetTaskExecutor::process()
 {
   processFromCmdLineArgs(fProcessedFile);
   for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
+
+    // ignore the event range options for all but the first processed task
+    if(currentTask != fTasks.begin()){
+      fOptions.resetEventRange();
+    }
+
     INFO(Form("Starting task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->GetName()));
     (*currentTask)->init(fOptions.getOptions());
     (*currentTask)->exec();
