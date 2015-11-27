@@ -10,9 +10,9 @@ UNPACKER_LIB_SET =
 ###################
 OS = $(shell uname)
 CO = g++
-CFLAGS = -Wall `root-config --cflags` -std=c++11
+CFLAGS = -Wall $(shell root-config --cflags) -std=c++11
 ###################
-LDFLAGS = -Wall `root-config --glibs --ldflags` 
+LDFLAGS = -Wall $(shell root-config --glibs --ldflags)
 LD_BOOST_FLAGS =  -lboost_unit_test_framework -lboost_filesystem -lboost_system -lboost_program_options -lboost_regex
 LDFLAGS += ${LD_BOOST_FLAGS}
 ###################
