@@ -1,7 +1,7 @@
 CC            =  g++
 LD            =  g++
-COPTS         =  `root-config --cflags` -fPIC -O2
-LDOPTS        =  `root-config --glibs` -g
+COPTS         =  $(shell root-config --cflags) -fPIC -O2
+LDOPTS        =  $(shell root-config --glibs) -g
 CFLAGS        =  -std=c++11
 SOURCES       =  JPetParamGetterAscii.cpp
 OBJECTS       =  $(SOURCES:.cpp=.o)
