@@ -1,9 +1,9 @@
 ###################
 #THIS PART CAN BE MODIFIED
-PROJECT=JPetTSlot
+PROJECT=JPetTimeWindow
 EXTRA_MODULES =JPetSigCh
 #classes that need Dictionnaries 
-DICTS = JPetTSlot JPetSigCh
+DICTS = JPetTimeWindow JPetSigCh
 PQXX_LIB_SET = 
 DBHANDLER_LIB_SET = 
 UNPACKER_LIB_SET = 

@@ -6,7 +6,7 @@
 #include "../JPetReader/JPetReader.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 
-#include "../JPetTSlot/JPetTSlot.h"
+#include "../JPetTimeWindow/JPetTimeWindow.h"
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetHit/JPetHit.h"

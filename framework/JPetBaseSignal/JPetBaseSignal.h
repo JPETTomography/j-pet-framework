@@ -26,7 +26,7 @@ public:
   /**
    * @brief Set number of the Time Slot this signal belongs to.
    *
-   * Should be set to the value returned by JPetTSlot::getIndex() for the respective TSlot
+   * Should be set to the value returned by JPetTimeWindow::getIndex() for the respective TSlot
    */
   inline void setTSlotIndex(int index) {
     fTSlotIndex = index;

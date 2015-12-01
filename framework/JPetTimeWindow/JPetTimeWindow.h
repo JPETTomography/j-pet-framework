@@ -12,13 +12,13 @@
  *
  * A single TSlot contains many SigCh objects representing TDC hits recorded during a time window of the TRB board.
  */
-class JPetTSlot: public TNamed
+class JPetTimeWindow: public TNamed
 {
 public:
 /// @todo think about changing TClonesArray to something else ? what about cleaning
-  JPetTSlot()
+  JPetTimeWindow()
   {
-    SetName("JPetTSlot");
+    SetName("JPetTimeWindow");
   }
 
   void addCh(JPetSigCh& new_ch);
@@ -42,7 +42,7 @@ public:
   }
 
 
-  virtual ~JPetTSlot() {
+  virtual ~JPetTimeWindow() {
     //    fSigChannels.Clear("C");
   }
 
@@ -56,7 +56,7 @@ public:
 
   inline void setIndex(unsigned int index) { fIndex = index; }
 
-  ClassDef(JPetTSlot, 1);
+  ClassDef(JPetTimeWindow, 1);
 
 private:
   std::vector<JPetSigCh*> fSigChannels; 

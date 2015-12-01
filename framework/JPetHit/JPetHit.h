@@ -11,7 +11,7 @@
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
 #include "../JPetScin/JPetScin.h"
 #include "../JPetPhysSignal/JPetPhysSignal.h"
-#include "../JPetTSlot/JPetTSlot.h"
+#include "../JPetTimeWindow/JPetTimeWindow.h"
 
 #include "TNamed.h"
 #include "TVector3.h"
@@ -23,7 +23,7 @@
 class JPetBarrelSlot;
 class JPetScin;
 class JPetPhysSignal;
-class JPetTSlot;
+class JPetTimeWindow;
 
 /**
  * @brief Data class representing a reconstructed hit of a photon in the scintillator strip.

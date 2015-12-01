@@ -16,6 +16,6 @@
  #pragma link C++ function JPetWriter::Write(vector<JPetSignal>&);
  #pragma link C++ function JPetWriter::Write(JPetTRB&);
  #pragma link C++ function JPetWriter::Write(vector<JPetTRB>&);
- #pragma link C++ function JPetWriter::Write(JPetTSlot&);
- #pragma link C++ function JPetWriter::Write(vector<JPetTSlot>&);
+ #pragma link C++ function JPetWriter::Write(JPetTimeWindow&);
+ #pragma link C++ function JPetWriter::Write(vector<JPetTimeWindow>&);
 #endif
