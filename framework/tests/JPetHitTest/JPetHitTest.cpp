@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(init_constructor )
   /*JPetHit::JPetSignals bothSignals = std::make_pair(&leftSignal,&rightSignal);
   JPetBarrelSlot barrelSlot;
   JPetScin scintillator;
-  JPetTSlot tSlot;
+  JPetTimeWindow timeWindow;
   
   JPetHit hit(0.10f,0.20f,0.30f,0.40f,position,bothSignals,barrelSlot,scintillator,tSlot);
   

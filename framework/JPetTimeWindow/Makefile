@@ -3,7 +3,7 @@ LD            =  g++
 COPTS         =  `root-config --cflags` -fPIC -O2
 LDOPTS        =  `root-config --glibs` -g
 #C++ Files
-SOURCES       =  JPetTSlot.cpp
+SOURCES       =  JPetTimeWindow.cpp
 OBJECTS       =  $(SOURCES:.cpp=.o)
 DICT_OBJECTS  =  $(SOURCES:.cpp=Dict.cpp)
 OBJECTS      +=  $(SOURCES:.cpp=Dict.o)
