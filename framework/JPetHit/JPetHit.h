@@ -98,7 +98,6 @@ class JPetHit : public TNamed {
   inline void setBarrelSlot(JPetBarrelSlot& bs) {fBarrelSlot = &bs;}
   inline void setScintillator(JPetScin& sc) {fScintillator = &sc;}
 
-  inline int getScinID () const {return fScinID;}
   inline void setScinID (int scinID) {fScinID = scinID;}
 
   ClassDef(JPetHit,1);

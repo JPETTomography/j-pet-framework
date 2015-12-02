@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(constructor)
   BOOST_REQUIRE_EQUAL(event.fIsHitSet[1], 1);
 }
 
-BOOST_AUTO_TEST_CASE(hitTest)
+/*BOOST_AUTO_TEST_CASE(hitTest)
 {
   JPetHit firstHit;
   JPetHit secondHit;
@@ -57,8 +57,8 @@ BOOST_AUTO_TEST_CASE(hitTest)
   event.setFirstHit(fh);
   event.setSecondHit(sh);
   BOOST_REQUIRE(event.getFirstHit().getScinID() == fh.getScinID());
-  BOOST_REQUIRE(event.getSecondHit().getScinID() == sh.getScinID());  
-}
+  BOOST_REQUIRE(event.getSecondHit().getScinID() == sh.getScinID());
+}*/
 
 BOOST_AUTO_TEST_CASE(timeDiffTest)
 {
