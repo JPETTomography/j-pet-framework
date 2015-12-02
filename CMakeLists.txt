@@ -86,6 +86,14 @@ set(Framework_DEFINITIONS
   ${PQXX_DEFINITIONS}
   PARENT_SCOPE
   )
+# ensure that projects use C++11 too
+if(NOT MSVC)
+  set(Framework_DEFINITIONS
+    -std=c++11
+    ${Framework_DEFINITIONS}
+    PARENT_SCOPE
+    )
+endif()
 # export ROOT cint needed to generate dictionaries from projects
 set(ROOT_rootcint_CMD   ${ROOT_rootcint_CMD}   PARENT_SCOPE)
 set(rootcint_cmd        ${ROOT_rootcint_CMD}   PARENT_SCOPE)
