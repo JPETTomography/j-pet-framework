@@ -19,7 +19,7 @@ JPetRawSignal::JPetRawSignal(const int points){
 JPetRawSignal::~JPetRawSignal() {
 }
 
-int JPetRawSignal::getNPoints(JPetSigCh::EdgeType edge) const {
+int JPetRawSignal::getNumberOfPoints(JPetSigCh::EdgeType edge) const {
   if (edge == JPetSigCh::Trailing) {
     return fTrailingPoints.size();
   } else if (edge == JPetSigCh::Leading) {

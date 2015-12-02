@@ -44,7 +44,7 @@ public:
    *
    * @param edge Either JPetSigCh::Leading or JPetSigCh::Trailing
    */
-  int getNPoints(JPetSigCh::EdgeType edge) const;
+  int getNumberOfPoints(JPetSigCh::EdgeType edge) const;
 
   /**
    * @brief Add a JPetSigCh object to the signal.
