@@ -73,6 +73,26 @@ find_package(Boost 1.50.0 REQUIRED COMPONENTS
 include_directories(${Boost_INCLUDE_DIRS})
 add_definitions(${Boost_DEFINITIONS})
 
+# export ROOT, Boost and pqxx includes to depending projects
+set(Framework_INCLUDE_DIRS
+  ${ROOT_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
+  ${PQXX_INCLUDE_DIRS}
+  PARENT_SCOPE
+  )
+set(Framework_DEFINITIONS
+  ${ROOT_DEFINITIONS}
+  ${Boost_DEFINITIONS}
+  ${PQXX_DEFINITIONS}
+  PARENT_SCOPE
+  )
+# export ROOT cint needed to generate dictionaries from projects
+set(ROOT_rootcint_CMD   ${ROOT_rootcint_CMD}   PARENT_SCOPE)
+set(rootcint_cmd        ${ROOT_rootcint_CMD}   PARENT_SCOPE)
+set(ROOTCINT_EXECUTABLE ${ROOTCINT_EXECUTABLE} PARENT_SCOPE)
+# export ROOT rpath needed for OS X
+set(ROOT_LIBRARY_DIR    ${ROOT_LIBRARY_DIR}    PARENT_SCOPE)
+
 # enable rpath on OS X and point it to ROOT
 if(APPLE)
   set(CMAKE_MACOSX_RPATH ON)
