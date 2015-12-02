@@ -41,6 +41,7 @@ function(generate_root_dictionaries OUT_VAR)
     endif()
     if(NOT skip)
       # output dictionary file will be kept in CMake build folder
+      file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries)
       set(dictionary
         ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/${name}Dictionary)
       if(EXISTS ${linkdef})
