@@ -7,7 +7,7 @@
 
 cmake_minimum_required(VERSION 2.6)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(JPetFramework-Utilities) # for generate_root_dictionaries
 
 project(JPetFramework CXX) # using only C++
@@ -43,7 +43,7 @@ foreach(mode QUIET REQUIRED)
   endif()
   # if we failed with CMake based find_package, use fallback
   # root-config version from cmake/fallback/
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/fallback)
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/fallback)
 endforeach()
 include_directories(${ROOT_INCLUDE_DIRS})
 add_definitions(${ROOT_DEFINITIONS})
