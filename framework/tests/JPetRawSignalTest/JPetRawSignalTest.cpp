@@ -37,11 +37,11 @@ BOOST_AUTO_TEST_CASE(ToTTest) {
 //  BOOST_REQUIRE_EQUAL(signal.getQualityOfEnergy(), 0.f);
 //}
 
-BOOST_AUTO_TEST_CASE(GetNPointsTest) {
+BOOST_AUTO_TEST_CASE(GetNumberOfPointsTest) {
   JPetRawSignal signal;
 
-  BOOST_REQUIRE_EQUAL(signal.getNPoints(JPetSigCh::Trailing), 0);
-  BOOST_REQUIRE_EQUAL(signal.getNPoints(JPetSigCh::Leading), 0);
+  BOOST_REQUIRE_EQUAL(signal.getNumberOfPoints(JPetSigCh::Trailing), 0);
+  BOOST_REQUIRE_EQUAL(signal.getNumberOfPoints(JPetSigCh::Leading), 0);
   BOOST_REQUIRE_EQUAL(signal.getNumberOfLeadingEdgePoints(), 0);
   BOOST_REQUIRE_EQUAL(signal.getNumberOfTrailingEdgePoints(), 0);
 
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(AddLeadingPointTest) {
   const JPetSigCh sigCh;
 
   signal.addPoint(sigCh);
-  BOOST_REQUIRE_EQUAL(signal.getNPoints(JPetSigCh::Leading), 1);
+  BOOST_REQUIRE_EQUAL(signal.getNumberOfPoints(JPetSigCh::Leading), 1);
   BOOST_REQUIRE_EQUAL(signal.getNumberOfLeadingEdgePoints(), 1);
 }
 
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(AddTrailingPointTest) {
   const JPetSigCh sigCh(JPetSigCh::Trailing, 8.f);
 
   signal.addPoint(sigCh);
-  BOOST_REQUIRE_EQUAL(signal.getNPoints(JPetSigCh::Trailing), 1);
+  BOOST_REQUIRE_EQUAL(signal.getNumberOfPoints(JPetSigCh::Trailing), 1);
   BOOST_REQUIRE_EQUAL(signal.getNumberOfTrailingEdgePoints(), 1);
 }
 

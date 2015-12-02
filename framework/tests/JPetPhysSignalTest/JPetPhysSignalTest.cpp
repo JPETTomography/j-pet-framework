@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE( AllSignalsTest2 ) {
                     epsilon);
 
   const     JPetRawSignal & raw = phys.getRecoSignal().getRawSignal();
-  BOOST_CHECK_EQUAL(raw.getNPoints(JPetSigCh::Leading), 2);
+  BOOST_CHECK_EQUAL(raw.getNumberOfPoints(JPetSigCh::Leading), 2);
   BOOST_CHECK_CLOSE(
       raw.getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrValue).front().getThreshold(),
       100.f, epsilon);
