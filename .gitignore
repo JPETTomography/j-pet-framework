@@ -10,6 +10,7 @@
 *~
 *.log
 *.kate-swp
+*.kdev*
 *.exe
 
 # CMake specific files
