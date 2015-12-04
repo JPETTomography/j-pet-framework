@@ -44,7 +44,11 @@ function(generate_root_dictionaries OUT_VAR)
       file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries)
       set(dictionary
         ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/${name}Dictionary)
+      get_directory_property(incdirs INCLUDE_DIRECTORIES)
+      set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${incdirs};/")
+      string(REGEX REPLACE ^/ "" header "${header}")
       if(EXISTS ${linkdef})
+        string(REGEX REPLACE ^/ "" linkdef "${linkdef}")
         root_generate_dictionary(${dictionary} ${header}
           LINKDEF ${linkdef}
           OPTIONS -p
@@ -54,6 +58,7 @@ function(generate_root_dictionaries OUT_VAR)
           OPTIONS -p
           )
       endif()
+      set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${incdirs}")
       list(APPEND dictionaries ${dictionary}.cxx)
     endif()
   endforeach()
