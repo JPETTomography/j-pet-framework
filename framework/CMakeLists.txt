@@ -6,6 +6,7 @@
 #   Builds all J-PET framework modules using CMake build generator.
 
 cmake_minimum_required(VERSION 2.6)
+option(test "Build all tests." OFF)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(JPetFramework-Utilities) # for generate_root_dictionaries
@@ -49,13 +50,22 @@ find_package(Config++ REQUIRED)
 include_directories(${CONFIG++_INCLUDE_DIRS})
 add_definitions(${CONFIG++_DEFINITIONS})
 
-find_package(Boost 1.50.0 REQUIRED COMPONENTS
-  filesystem
-  program_options
-  regex
-  system
-  unit_test_framework
-  )
+if(test)
+	find_package(Boost 1.50.0 REQUIRED COMPONENTS
+	filesystem
+	program_options
+	regex
+	system
+	unit_test_framework
+	)
+else()
+	find_package(Boost 1.50.0 REQUIRED COMPONENTS
+	filesystem
+	program_options
+	regex
+	system
+	)
+endif()
 include_directories(${Boost_INCLUDE_DIRS})
 add_definitions(${Boost_DEFINITIONS})
 
@@ -168,7 +178,6 @@ target_link_libraries(JPetFramework
   ${ROOT_LIBRARIES}
   ${Boost_LIBRARIES}
   )
-option(test "Build all tests." OFF)
 if(test)
         add_subdirectory(tests)
 endif()
