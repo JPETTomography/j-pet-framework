@@ -8,19 +8,21 @@
 #ifndef JPETPARAMGETTERASCII_H 
 #define JPETPARAMGETTERASCII_H 
 
-class JPetParamBank;
+#include "../JPetParamBank/JPetParamBank.h"
 
-class JPetParamGetterAscii {
+class JPetParamGetterAscii : public JPetParamGetter {
 public:
-  JPetParamGetterAscii();
-  JPetParamBank* generateParamBank(const char* filename ,const int runNumber);
+  JPetParamGetterAscii(const char* filename) : filename(filename) {}
+  JPetParamBank* generateParamBank(const int runNumber);
 
 private:
   JPetParamGetterAscii(const JPetParamGetterAscii &DBParamGetter);
   JPetParamGetterAscii& operator=(const JPetParamGetterAscii &DBParamGetter);
 
 private:
-  JPetParamBank* loadFileContent(const char* inputFile, int runNumber);
+  JPetParamBank* loadFileContent(int runNumber);
+
+  std::string filename;
 
 };
 

@@ -22,20 +22,10 @@ void checkContainersSize(const JPetParamBank &bank)
   BOOST_REQUIRE_EQUAL(bank.getTOMBChannelsSize(), 4);
 }
 
-BOOST_AUTO_TEST_CASE(default_constructor)
-{
-  JPetParamManager paramMgr;
-}  
-
-BOOST_AUTO_TEST_CASE(constructor)
-{
-  JPetParamManager paramMgr(gDefaultConfigFile);
-}
-
 BOOST_AUTO_TEST_CASE(generateParamBankTest)
 {
-  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
-  l_paramManagerInstance.getParametersFromDatabase(1);
+  JPetParamManager l_paramManagerInstance(new JPetDBParamGetter(gDefaultConfigFile));
+  l_paramManagerInstance.fillParameterBank(1);
   
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank != NULL, true);
   
@@ -44,9 +34,9 @@ BOOST_AUTO_TEST_CASE(generateParamBankTest)
 
 BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByWriterAndReaderObjectsTest)
 {
-  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+  JPetParamManager l_paramManagerInstance(new JPetDBParamGetter(gDefaultConfigFile));
   
-  l_paramManagerInstance.getParametersFromDatabase(1);
+  l_paramManagerInstance.fillParameterBank(1);
 
   /*  
   const char* testDatafile = "testDataFile.txt";
@@ -74,9 +64,9 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByWriterAndReaderObjectsTest)
 BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
 {
   const char* testDatafile = "testDataFile.txt";
-  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+  JPetParamManager l_paramManagerInstance(new JPetDBParamGetter(gDefaultConfigFile));
   
-  l_paramManagerInstance.getParametersFromDatabase(1);
+  l_paramManagerInstance.fillParameterBank(1);
   
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank != NULL, true);
   
@@ -91,9 +81,9 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
 
 BOOST_AUTO_TEST_CASE(clearParametersTest)
 {
-  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+  JPetParamManager l_paramManagerInstance(new JPetDBParamGetter(gDefaultConfigFile));
   
-  l_paramManagerInstance.getParametersFromDatabase(1);
+  l_paramManagerInstance.fillParameterBank(1);
   
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank != NULL, true);
   
@@ -112,9 +102,9 @@ BOOST_AUTO_TEST_CASE(clearParametersTest)
 
 BOOST_AUTO_TEST_CASE(getParamBankTest)
 {
-  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+  JPetParamManager l_paramManagerInstance(new JPetDBParamGetter(gDefaultConfigFile));
   
-  l_paramManagerInstance.getParametersFromDatabase(1);
+  l_paramManagerInstance.fillParameterBank(1);
   
   const JPetParamBank &bank = l_paramManagerInstance.getParamBank();
   

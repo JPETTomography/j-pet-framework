@@ -6,7 +6,6 @@
 
 #include "./JPetDBParamGetter.h"
 #include <boost/lexical_cast.hpp>
-#include <boost/regex.hpp>
 #include <TThread.h>
 #include "../DBHandler/HeaderFiles/DBHandler.h"
 #include <cstdint>
@@ -409,33 +408,10 @@ JPetTRB JPetDBParamGetter::generateTRB(pqxx::result::const_iterator row) {
   return l_TRB;
 }
 
-
-int JPetDBParamGetter::getTOMBChannelFromDescription(std::string p_desc) const
-{
-  // parsing the string description of a TOMB channel to extract the channel number
-  // convention: tast 4 characters of the description represent the number
-     const char * l_pattern = ".*\\s(\\d{1,4}).*";
-     boost::regex l_regex(l_pattern);
-     boost::smatch l_matches;
-
-     int l_TOMB_no = -1;
-
-     if (boost::regex_match(p_desc, l_matches, l_regex))
-       {
-	l_TOMB_no = boost::lexical_cast<int>( l_matches[1] );
-       }else
-       {
-	 // @todo: handle parsing error somehow 
-	 ERROR( "Unable to parse TOMBInput description to get channel number." );
-      }
-     return l_TOMB_no;
-}
-
-
 JPetTOMBChannel JPetDBParamGetter::generateTOMBChannel(pqxx::result::const_iterator row) {
   
      std::string l_TOMB_description = row["tomb"].as<std::string>();
-     int l_TOMB_no = getTOMBChannelFromDescription( l_TOMB_description );
+     int l_TOMB_no = JPetParamBank::getTOMBChannelFromDescription( l_TOMB_description );
 
      JPetTOMBChannel l_TOMBChannel(l_TOMB_no);
      l_TOMBChannel.setLocalChannelNumber(row["thr_num"].as<int>());
@@ -538,7 +514,7 @@ void JPetDBParamGetter::fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank&
 		}
 
 		for (auto row : l_runDbResults) {
-				int TOMBId = getTOMBChannelFromDescription(row["tomb"].as<std::string>());
+				int TOMBId = JPetParamBank::getTOMBChannelFromDescription(row["tomb"].as<std::string>());
 				int TRBId = row["trb_id"].as<int>();
 				int FEBId = row["konradboard_id"].as<int>();
 				int PMId = row["photomultiplier_id"].as<int>();
