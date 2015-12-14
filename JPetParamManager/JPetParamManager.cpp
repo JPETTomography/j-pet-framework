@@ -5,20 +5,6 @@
 
 using namespace std;
 
-
-JPetParamManager::JPetParamManager():
-  fBank(0)
-{
-  /* */
-}
-
-/// @param DBConfigFile configuration file with the database connection settings
-JPetParamManager::JPetParamManager(const char* dBConfigFile):
-  fDBParamGetter(dBConfigFile),
-  fBank(0)
-{
-}
-
 JPetParamManager::~JPetParamManager()
 {
   if (fBank) {
@@ -27,13 +13,13 @@ JPetParamManager::~JPetParamManager()
   }
 }
 
-void JPetParamManager::getParametersFromDatabase(const int run)
+void JPetParamManager::fillParameterBank(const int run)
 {
   if (fBank) {
     delete fBank;
     fBank = 0;
   }
-  fBank = fDBParamGetter.generateParamBank(run);
+  fBank = fParamGetter->generateParamBank(run);
 }
 
 bool JPetParamManager::readParametersFromFile(JPetReader * reader)
@@ -123,7 +109,7 @@ void JPetParamManager::createXMLFile(const std::string &channelDataFileName, int
 
 void JPetParamManager::getTOMBDataAndCreateXMLFile(const int p_run_id)
 {
-  fDBParamGetter.fillTOMBChannels(p_run_id, *fBank);//private (add friend)
+  fillParameterBank(p_run_id);
   int TOMBChannelsSize = fBank->getTOMBChannelsSize();
   int channelOffset = 0;
   int numberOfChannels = 0;
@@ -134,8 +120,8 @@ void JPetParamManager::getTOMBDataAndCreateXMLFile(const int p_run_id)
     {
       if(i==0)
       {
-	std::string description = fBank->getTOMBChannel(i).getDescription();
-	channelOffset = fDBParamGetter.getTOMBChannelFromDescription(description);//private (add friend)
+        std::string description = fBank->getTOMBChannel(i).getDescription();
+        channelOffset = JPetParamBank::getTOMBChannelFromDescription(description);
       }
       ++numberOfChannels;
     }

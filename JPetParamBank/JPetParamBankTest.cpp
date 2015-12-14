@@ -5,6 +5,8 @@
 #define private public
 #include "../JPetParamBank/JPetParamBank.h"
 #include <TFile.h>
+#include <boost/lexical_cast.hpp>
+#include <boost/regex.hpp>
 
 BOOST_AUTO_TEST_SUITE(JPetParamBankTestSuite)
 
@@ -203,15 +205,15 @@ BOOST_AUTO_TEST_CASE(getSizeTest)
   bank.addTRB(trb);
   bank.addTOMBChannel(TOMBChannel);
   
-  BOOST_REQUIRE(bank.getSize(JPetParamBank::kScintillator) == 1);
-  BOOST_REQUIRE(bank.getSize(JPetParamBank::kPM) == 1);
-  BOOST_REQUIRE(bank.getSize(JPetParamBank::kPMCalib) == 1);
-  BOOST_REQUIRE(bank.getSize(JPetParamBank::kBarrelSlot) == 1);
-  BOOST_REQUIRE(bank.getSize(JPetParamBank::kLayer) == 1);
-  BOOST_REQUIRE(bank.getSize(JPetParamBank::kFrame) == 1);
-  BOOST_REQUIRE(bank.getSize(JPetParamBank::kFEB) == 1);
-  BOOST_REQUIRE(bank.getSize(JPetParamBank::kTRB) == 1);
-  BOOST_REQUIRE(bank.getSize(JPetParamBank::kTOMBChannel) == 1);
+  BOOST_REQUIRE(bank.getSize(kScintillator) == 1);
+  BOOST_REQUIRE(bank.getSize(kPM) == 1);
+  BOOST_REQUIRE(bank.getSize(kPMCalib) == 1);
+  BOOST_REQUIRE(bank.getSize(kBarrelSlot) == 1);
+  BOOST_REQUIRE(bank.getSize(kLayer) == 1);
+  BOOST_REQUIRE(bank.getSize(kFrame) == 1);
+  BOOST_REQUIRE(bank.getSize(kFEB) == 1);
+  BOOST_REQUIRE(bank.getSize(kTRB) == 1);
+  BOOST_REQUIRE(bank.getSize(kTOMBChannel) == 1);
 }
 
 BOOST_AUTO_TEST_CASE( saving_reading_file )

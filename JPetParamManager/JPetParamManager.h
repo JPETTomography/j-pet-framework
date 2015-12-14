@@ -14,13 +14,11 @@
 class JPetParamManager
 {
  public:
-  enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMB, SIZE};
-
-  JPetParamManager();
-  JPetParamManager(const char* dBConfigFile);
+  JPetParamManager() : fParamGetter(new JPetDBParamGetter()), fBank(0) {}
+  JPetParamManager(JPetParamGetter* paramGetter) : fParamGetter(paramGetter), fBank(0) {}
   ~JPetParamManager();
 
-  void getParametersFromDatabase(const int run);
+  void fillParameterBank(const int run);
   
   bool readParametersFromFile(JPetReader * reader);
   bool saveParametersToFile(JPetWriter * writer);
@@ -35,7 +33,7 @@ class JPetParamManager
   JPetParamManager(const JPetParamManager&);
   JPetParamManager& operator=(const JPetParamManager&);
 
-  JPetDBParamGetter fDBParamGetter;
+  JPetParamGetter* fParamGetter;
   JPetParamBank* fBank;
 
  protected:

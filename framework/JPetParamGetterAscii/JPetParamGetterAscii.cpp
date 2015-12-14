@@ -13,20 +13,14 @@
 #include <string>
 #include <iostream>
 
-JPetParamGetterAscii::JPetParamGetterAscii()
+JPetParamBank* JPetParamGetterAscii::generateParamBank(int runNumber)
 {
-  /**/
-}
-
-JPetParamBank* JPetParamGetterAscii::generateParamBank(const char* filename, int runNumber)
-{
-  auto paramBank = loadFileContent(filename, runNumber);
-  return paramBank;
+  return loadFileContent(runNumber);
 }
 
 /// assuming that file is in json format
 //
-JPetParamBank* JPetParamGetterAscii::loadFileContent(const char* filename, int runNumber)
+JPetParamBank* JPetParamGetterAscii::loadFileContent(int runNumber)
 {
   JPetParamBank* bank = 0;
   if (boost::filesystem::exists(filename)) {

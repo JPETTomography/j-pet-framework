@@ -10,7 +10,6 @@ const char* gDefaultConfigFile = "../DBConfig/configDB.cfg";
 BOOST_AUTO_TEST_SUITE(DBParamGetterTS)
 
 //public:
-//  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, SIZE};
 //  JPetDBParamGetter();
 //  JPetDBParamGetter(const char* dBConfigFile);
 //  JPetParamBank* generateParamBank(const int p_run_id);
@@ -37,8 +36,6 @@ BOOST_AUTO_TEST_SUITE(DBParamGetterTS)
 //  void fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBank);
 //  void fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank& paramBank);
 //  void fillAllTRefs(const int p_run_id, JPetParamBank& paramBank);
-//
-//  int getTOMBChannelFromDescription(std::string p_desc) const;
 //
 
 BOOST_AUTO_TEST_CASE(defaultConstructorTest)

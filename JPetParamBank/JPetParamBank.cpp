@@ -5,6 +5,8 @@
   */
 
 #include "./JPetParamBank.h"
+#include <boost/lexical_cast.hpp>
+#include <boost/regex.hpp>
 
 ClassImp (JPetParamBank);
 
@@ -44,7 +46,7 @@ void JPetParamBank::clear()
 }
 
 
-int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const 
+int JPetParamBank::getSize(ParamObjectType type) const
 {
   int size =-1;
   switch (type) {
@@ -80,4 +82,25 @@ int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const
       break;
   }
   return size; 
+}
+
+int JPetParamBank::getTOMBChannelFromDescription(std::string p_desc)
+{
+  // parsing the string description of a TOMB channel to extract the channel number
+  // convention: tast 4 characters of the description represent the number
+  const char * l_pattern = ".*\\s(\\d{1,4}).*";
+  boost::regex l_regex(l_pattern);
+  boost::smatch l_matches;
+
+  int l_TOMB_no = -1;
+
+  if (boost::regex_match(p_desc, l_matches, l_regex))
+  {
+    l_TOMB_no = boost::lexical_cast<int>( l_matches[1] );
+  } else
+  {
+    // @todo: handle parsing error somehow
+    ERROR( "Unable to parse TOMBInput description to get channel number." );
+  }
+  return l_TOMB_no;
 }

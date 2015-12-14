@@ -20,16 +20,15 @@
 #include <map>
 #include <cassert>
 
+enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, kLayer, kFrame, SIZE};
+
 class JPetParamBank: public TObject
 {
  public:
-  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, kLayer, kFrame, SIZE};
-
   JPetParamBank();
   JPetParamBank(const JPetParamBank& paramBank);
   ~JPetParamBank();
   void clear();
-
 
   int getSize(ParamObjectType type) const;
   // Scintillators
@@ -158,6 +157,8 @@ class JPetParamBank: public TObject
     return fTOMBChannels.size();
   }
 
+  static int getTOMBChannelFromDescription(std::string p_desc);
+
  private:
 
   void operator=(const JPetParamBank&);
@@ -180,6 +181,15 @@ class JPetParamBank: public TObject
           target[c.first] = new T(*c.second);
       }
   }
+};
+
+/**
+ * @brief An interface classes can implement to return JPetParamBank objects.
+ */
+class JPetParamGetter
+{
+public:
+  virtual JPetParamBank* generateParamBank(const int p_run_id) = 0;
 };
 
 #endif /*  !JPETPARAMBANK_H */

@@ -9,20 +9,20 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE( noExisting_file )
 {
-  JPetParamGetterAscii getter;
-  BOOST_REQUIRE(getter.generateParamBank("noExisting.txt", 1) == 0);
+  JPetParamGetterAscii getter("noExisting.txt");
+  BOOST_REQUIRE(getter.generateParamBank(1) == 0);
 }
 
 BOOST_AUTO_TEST_CASE( empty_file )
 {
-  JPetParamGetterAscii getter;
-  BOOST_REQUIRE(getter.generateParamBank("empty.txt", 1) == 0);
+  JPetParamGetterAscii getter("empty.txt");
+  BOOST_REQUIRE(getter.generateParamBank(1) == 0);
 }
 
 BOOST_AUTO_TEST_CASE( nonempty_file )
 {
-  JPetParamGetterAscii getter;
-  BOOST_REQUIRE(getter.generateParamBank("DB1.json", 1) != 0);
+  JPetParamGetterAscii getter("DB1.json");
+  BOOST_REQUIRE(getter.generateParamBank(1) != 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
