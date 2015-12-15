@@ -19,6 +19,8 @@ CMakeCache.txt
 cmake_install.cmake
 .ninja_*
 *.ninja
+Makefile
+MakeFile
 
 # output files
 /*Test
