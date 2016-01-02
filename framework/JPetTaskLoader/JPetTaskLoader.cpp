@@ -3,13 +3,12 @@
 #include "../../framework/JPetTask/JPetTask.h"
 //ClassImp(JPetTaskLoader);
 
-JPetTaskLoader::JPetTaskLoader(const char* name, const char* title,
-                               const char* in_file_type,
+JPetTaskLoader::JPetTaskLoader(const char* in_file_type,
                                const char* out_file_type,
                                JPetTask* taskToExecute):
-  TNamed(name, title),
   fInFileType(in_file_type),
-  fOutFileType(out_file_type)
+  fOutFileType(out_file_type),
+  JPetTaskIO()
 {
   addSubTask(taskToExecute);
 }

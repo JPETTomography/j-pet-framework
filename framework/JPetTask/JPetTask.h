@@ -14,10 +14,10 @@
 
 class JPetWriter;
 
-class JPetTask: public JPetTaskInterface
+class JPetTask: public JPetTaskInterface, public TNamed
 {
  public:
-  JPetTask();
+  JPetTask(const char * name="", const char * description="");
   virtual void init(const JPetTaskInterface::Options& opts);
   virtual void exec();
   virtual void terminate();
@@ -34,7 +34,6 @@ virtual TNamed* getEvent() {return fEvent;}
   TNamed* fEvent;
   JPetParamManager* fParamManager;
   JPetStatistics * fStatistics;
-  
   
 };
 #endif /*  !JPETTASK_H */
