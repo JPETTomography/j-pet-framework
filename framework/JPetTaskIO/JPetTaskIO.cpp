@@ -10,6 +10,7 @@
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 #include "../JPetTask/JPetTask.h"
 #include "../../framework/JPetHLDReader/JPetHLDReader.h"
+#include "../../framework/CommonTools/CommonTools.h"
 
 #include "../../JPetLoggerInclude.h"
 
@@ -99,15 +100,10 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
   if ( fReader->openFileAndLoadData( inputFilename, treeName )) {
     if (fOptions.getInputFileType() == JPetOptions::kHld ) {
       // create a header to be stored along with the output tree
-      fHeader = new JPetTreeHeader(26);
+      fHeader = new JPetTreeHeader(fOptions.getRunNumber());
 
       // add general info to the Tree header
-      //fHeader->setBaseFileName(
-      //JPetManager::GetManager().getInputFileNames()[0].c_str());
-
-      //// add info about this module to the processing stages' history in Tree header
-      //fHeader->addStageInfo(this->GetName(), this->GetTitle(), MODULE_VERSION,
-      //JPetManager::GetManager().GetTimeString());
+      fHeader->setBaseFileName(fOptions.getInputFile());
 
     } else {
       assert(fParamManager);
@@ -119,6 +115,17 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
     }
     // create an object for storing histograms and counters during processing
     fStatistics = new JPetStatistics();
+    
+    // add info about this module to the processing stages' history in Tree header
+
+    fHeader->setVariable("sourcePosition", "+10mm");
+    fHeader->setVariable("userInformation", "variable added for tests only");
+    fHeader->setVariable("whatever", "anything can be stored like that");
+
+
+    fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0,
+			  CommonTools::getTimeString());
+    
   } else {
     ERROR(inputFilename + std::string(": Unable to open the input file or load the tree"));
     exit(-1);

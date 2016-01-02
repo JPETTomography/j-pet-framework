@@ -34,11 +34,11 @@ void JPetTaskExecutor::process()
       fOptions.resetEventRange();
     }
 
-    INFO(Form("Starting task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->GetName()));
+    INFO(Form("Starting task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->getSubTask()->GetName()));
     (*currentTask)->init(fOptions.getOptions());
     (*currentTask)->exec();
     (*currentTask)->terminate();
-    INFO(Form("Finished task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->GetName()));
+    INFO(Form("Finished task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->getSubTask()->GetName()));
   }
 }
 

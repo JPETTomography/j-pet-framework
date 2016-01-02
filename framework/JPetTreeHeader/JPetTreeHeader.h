@@ -11,7 +11,7 @@
 #include <iostream>
 #include <ostream>
 #include <vector>
-
+#include <map>
 
 /**
  * @brief A class representing a header with info on JPet ROOT Trees.
@@ -54,16 +54,21 @@ class JPetTreeHeader: public TObject{
 
   const ProcessingStageInfo & getProcessingStageInfo(int i)const{ return fStages.at(i); }
 
-  ClassDef(JPetTreeHeader, 2);
-
+  void setVariable(std::string name, std::string value){ fDictionary[name]=value; }
+  std::string getVariable(std::string name) const {return fDictionary.at(name); }
+  
 protected:
+
+  TString stringifyDictionary() const;
 
   int fRunNo;
   TString fBaseFilename;
   double fSourcePosition;
 
   std::vector<ProcessingStageInfo> fStages;
+  std::map<std::string, std::string> fDictionary;
 
+  ClassDef(JPetTreeHeader, 3);
 };
 
 #endif
