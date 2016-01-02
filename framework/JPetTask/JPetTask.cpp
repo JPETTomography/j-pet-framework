@@ -7,9 +7,10 @@
 #include "../JPetParamManager/JPetParamManager.h"
 #include "./JPetTask.h"
 
-JPetTask::JPetTask():
+JPetTask::JPetTask(const char * name, const char * description):
 fEvent(0),
-fParamManager(0)
+fParamManager(0),
+TNamed(name, description)
 {
 }
 
@@ -49,3 +50,4 @@ JPetStatistics & JPetTask::getStatistics() {
   assert(fStatistics);
   return *fStatistics;
 }
+
