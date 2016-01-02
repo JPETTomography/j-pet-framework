@@ -11,12 +11,13 @@
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetStatistics/JPetStatistics.h"
 #include "../JPetOptions/JPetOptions.h"
+#include "../JPetTask/JPetTask.h"
 
 class JPetWriter;
 class JPetReader;
 class JPetTreeHeader;
 class JPetStatistics;
-class JPetTask;
+//class JPetTask;
 
 
 /**
@@ -34,6 +35,11 @@ public:
   virtual void addSubTask(JPetTaskInterface* subtask) {
     fTask = (JPetTask*)subtask;
   };
+  
+  virtual JPetTask* getSubTask() const {
+    return fTask;
+  }
+
   void setOptions(const JPetOptions& opts) {
     fOptions = opts;
   }

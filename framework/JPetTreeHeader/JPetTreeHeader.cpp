@@ -34,7 +34,7 @@ TString JPetTreeHeader::stringify() const
   tmp.Append( "Base file name          : " ).Append( getBaseFileName() ).Append("\n");
   tmp.Append( "Source (if any) position: " ).Append( Form("%lf",getSourcePosition()) ).Append("\n");
   tmp.Append("-----------------------------------------------------------------\n");
-  tmp.Append("-------------- Processing history (oldest first)-----------------\n");
+  tmp.Append("-------------- Processing history (oldest first) ----------------\n");
   tmp.Append("-----------------------------------------------------------------\n");
   // iterate over all stages of processing history
   for (int i = 0; i < getStagesNb(); i++ ) {
@@ -46,6 +46,8 @@ TString JPetTreeHeader::stringify() const
     tmp.Append("-----------------------------------------------------------------\n");
   }
   
+  tmp.Append( stringifyDictionary() );
+
   return tmp;
 }
 
@@ -59,3 +61,14 @@ int JPetTreeHeader::addStageInfo(TString p_name, TString p_title, int p_version,
   fStages.push_back( stage );
 }
 
+TString JPetTreeHeader::stringifyDictionary() const {
+  TString tmp;
+  tmp.Append("-----------------------------------------------------------------\n");
+  tmp.Append("--------------------- User-defined variables --------------------\n");
+  tmp.Append("-----------------------------------------------------------------\n");
+  for(auto const &entry : fDictionary){
+    tmp.Append(entry.first).Append("   =   ").Append(entry.second).Append("\n");
+    tmp.Append("-----------------------------------------------------------------\n");
+  }
+  return tmp;
+}
