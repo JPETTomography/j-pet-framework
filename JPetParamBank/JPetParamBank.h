@@ -32,7 +32,7 @@ class JPetParamBank: public TObject
 
   int getSize(ParamObjectType type) const;
   // Scintillators
-  inline void addScintillator(JPetScin& scintillator) {
+  inline void addScintillator(JPetScin scintillator) {
     fScintillators[scintillator.getID()] = new JPetScin(scintillator);
   }
   inline const std::map<int, JPetScin*>& getScintillators() const {
@@ -46,7 +46,7 @@ class JPetParamBank: public TObject
   }
 
   // PMs
-  inline void addPM(JPetPM& pm) {
+  inline void addPM(JPetPM pm) {
     fPMs[pm.getID()] = new JPetPM(pm);
   }
   inline const std::map<int, JPetPM*>& getPMs() const {
@@ -60,7 +60,7 @@ class JPetParamBank: public TObject
   }
 
   // PMCalibs
-  inline void addPMCalib(JPetPMCalib& pmCalib) {
+  inline void addPMCalib(JPetPMCalib pmCalib) {
     fPMCalibs[pmCalib.GetId()] = new JPetPMCalib(pmCalib);
   }
   inline const std::map<int, JPetPMCalib*>& getPMCalibs() const {
@@ -74,7 +74,7 @@ class JPetParamBank: public TObject
   }
   
   // FEBs
-  inline void addFEB(JPetFEB& feb) {
+  inline void addFEB(JPetFEB feb) {
     fFEBs[feb.getID()] = new JPetFEB(feb);
   }
   inline const std::map<int, JPetFEB*>& getFEBs() const {
@@ -88,7 +88,7 @@ class JPetParamBank: public TObject
   }
 
   // TRBs
-  inline void addTRB(JPetTRB& trb) {
+  inline void addTRB(JPetTRB trb) {
     fTRBs[trb.getID()] = new JPetTRB(trb);
   }
   inline const std::map<int, JPetTRB*>& getTRBs() const {
@@ -102,7 +102,7 @@ class JPetParamBank: public TObject
   }
 
   // Barrel Slot
-  inline void addBarrelSlot(JPetBarrelSlot& slot) {
+  inline void addBarrelSlot(JPetBarrelSlot slot) {
     fBarrelSlots[slot.getID()] = new JPetBarrelSlot(slot);
   }
   inline const std::map<int, JPetBarrelSlot*>& getBarrelSlots() const {
@@ -116,7 +116,7 @@ class JPetParamBank: public TObject
   }
 
   // Layer
-  inline void addLayer(JPetLayer& layer) {
+  inline void addLayer(JPetLayer layer) {
     fLayers[layer.getId()] = new JPetLayer(layer);
   }
   inline const std::map<int, JPetLayer*>& getLayers() const {
@@ -130,7 +130,7 @@ class JPetParamBank: public TObject
   }
   
   // Frame
-  inline void addFrame(JPetFrame& frame) {
+  inline void addFrame(JPetFrame frame) {
     fFrames[frame.getId()] = new JPetFrame(frame);
   }
   inline const std::map<int, JPetFrame*>& getFrames() const {
@@ -144,7 +144,7 @@ class JPetParamBank: public TObject
   }
   
   // TOMB Channels
-  inline void addTOMBChannel(JPetTOMBChannel& tombchannel) {
+  inline void addTOMBChannel(JPetTOMBChannel tombchannel) {
     fTOMBChannels[tombchannel.getChannel()] = new JPetTOMBChannel(tombchannel);
   }
   inline const std::map<int, JPetTOMBChannel*>& getTOMBChannels() const {
