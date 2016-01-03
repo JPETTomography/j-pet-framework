@@ -117,12 +117,6 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
     fStatistics = new JPetStatistics();
     
     // add info about this module to the processing stages' history in Tree header
-
-    fHeader->setVariable("sourcePosition", "+10mm");
-    fHeader->setVariable("userInformation", "variable added for tests only");
-    fHeader->setVariable("whatever", "anything can be stored like that");
-
-
     fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0,
 			  CommonTools::getTimeString());
     
