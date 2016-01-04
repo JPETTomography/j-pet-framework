@@ -15,7 +15,7 @@
 
 #include "../../framework/JPetTask/JPetTask.h"
 #include "../../framework/JPetRawSignal/JPetRawSignal.h"
-#include "../../framework/JPetTSlot/JPetTSlot.h"
+#include "../../framework/JPetTimeWindow/JPetTimeWindow.h"
 #include "../../framework/JPetParamBank/JPetParamBank.h"
 #include "../../framework/JPetParamManager/JPetParamManager.h"
 
