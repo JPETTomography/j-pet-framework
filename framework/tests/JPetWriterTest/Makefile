@@ -1,9 +1,9 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetWriter
-EXTRA_MODULES = JPetLogger JPetReader JPetTreeHeader JPetSigCh JPetTSlot JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetHit JPetLOR 
+EXTRA_MODULES = JPetLogger JPetReader JPetTreeHeader JPetSigCh JPetTimeWindow JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetHit JPetLOR 
 #classes that need Dictionnaries 
-DICTS = JPetTreeHeader JPetSigCh JPetTSlot JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetHit JPetLOR 
+DICTS = JPetTreeHeader JPetSigCh JPetTimeWindow JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetHit JPetLOR 
 PQXX_LIB_SET = 
 DBHANDLER_LIB_SET = 
 UNPACKER_LIB_SET = 

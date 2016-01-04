@@ -10,7 +10,7 @@
 #include "../../JPetReader/JPetReader.h"
 
 #include "../../JPetSigCh/JPetSigCh.h"
-#include "../../JPetTSlot/JPetTSlot.h"
+#include "../../JPetTimeWindow/JPetTimeWindow.h"
 #include "../../JPetBaseSignal/JPetBaseSignal.h"
 #include "../../JPetRawSignal/JPetRawSignal.h"
 #include "../../JPetRecoSignal/JPetRecoSignal.h"
@@ -119,15 +119,13 @@ BOOST_AUTO_TEST_CASE( saving_different_objects1 )
 
 BOOST_AUTO_TEST_CASE( saving_different_objects2 )
 {
-  //JPetTSlot testJPetTSlot;
-
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
   const auto kHugeNumberOfObjects = 10000;
   for (int i = 0; i < kHugeNumberOfObjects; i++) {
     if (i%1000==0) std::cout<<"*"<<std::flush;
-    JPetTSlot testJPetTSlot;
-    writer.write(testJPetTSlot);
+    JPetTimeWindow testJPetTimeWindow;
+    writer.write(testJPetTimeWindow);
   }
   if(boost::filesystem::exists(fileTest))
           boost::filesystem::remove(fileTest);
