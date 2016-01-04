@@ -1,4 +1,5 @@
 #include "../../JPetScopeReader/JPetScopeReader.h"
+#include "../../JPetScopeTask/JPetScopeTask.h"
 
 #include <cstddef>
 #include <cstdio>
@@ -55,7 +56,7 @@ reco_signal_generator::~reco_signal_generator () {
 
 int reco_signal_generator::setup (const char* filename) {
   
-  m_reco_signal = JPetScopeReader::generateSignal (filename);
+  m_reco_signal = JPetScopeTask::generateSignal (filename);
   m_file = fopen(filename, "r");
 
   return 0;
@@ -147,7 +148,7 @@ signal_generation_fixture::~signal_generation_fixture () {
 // ********                 Open Single ROOT file                 ******** //
 // *********************************************************************** //
 
-const char* gTest_root_filename = "test_file.reco.sig.test.0.root";
+const char* gTest_root_filename = "test_file_test_0.reco.sig.root";
 
 struct root_file_reader {
   
