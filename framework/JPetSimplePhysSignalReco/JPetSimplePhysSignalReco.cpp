@@ -52,10 +52,10 @@ JPetPhysSignal JPetSimplePhysSignalReco::createPhysSignal(JPetRecoSignal& recoSi
   // Estimate the time of the signal based on raw signal samples
   JPetRawSignal rawSignal = recoSignal.getRawSignal();
 
-  if (rawSignal.getNPoints(JPetSigCh::Leading) >= 2
-      && rawSignal.getNPoints(JPetSigCh::Trailing) >= 2) {
+  if (rawSignal.getNumberOfPoints(JPetSigCh::Leading) >= 2
+      && rawSignal.getNumberOfPoints(JPetSigCh::Trailing) >= 2) {
     // get number of points on leading edge
-    int iNumPoints = rawSignal.getNPoints(JPetSigCh::Leading);
+    int iNumPoints = rawSignal.getNumberOfPoints(JPetSigCh::Leading);
 
     std::vector<JPetSigCh> leadingPoints = rawSignal.getPoints(
         JPetSigCh::Leading, JPetRawSignal::ByThrValue);
