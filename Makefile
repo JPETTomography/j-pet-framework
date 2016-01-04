@@ -13,11 +13,7 @@ UNPACKER_LIB = Unpacker2
 ################
 SRC_DIR = $(PWD)/framework
 #Modules that should have ROOT dictionnaries
-<<<<<<< HEAD
 DMODULES = JPetBarrelSlot JPetLOR JPetHit JPetPM JPetScin JPetSigCh JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetTRB JPetTimeWindow JPetUnpacker JPetFEB JPetTOMBChannel JPetUser JPetTreeHeader JPetStatistics JPetParamBank JPetPMCalib JPetLayer JPetFrame
-=======
-DMODULES = JPetBarrelSlot JPetLOR JPetHit JPetPM JPetScin JPetSigCh JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetTRB JPetTSlot JPetUnpacker JPetFEB JPetTOMBChannel JPetUser JPetTreeHeader JPetStatistics JPetParamBank JPetPMCalib JPetLayer JPetFrame
->>>>>>> 557739e81ed86c6edcdb2a0f7bec5586b73bb827
 DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader JPetScopeReader
 WRITERS = JPetWriter
