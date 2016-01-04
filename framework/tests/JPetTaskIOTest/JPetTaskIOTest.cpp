@@ -97,7 +97,6 @@ BOOST_AUTO_TEST_CASE( setUserLimits2 )
   BOOST_REQUIRE_EQUAL(last, 0);
 }
 
-
 BOOST_AUTO_TEST_CASE( my_testA )
 {
   //Options options = {
