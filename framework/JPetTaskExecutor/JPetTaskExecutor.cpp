@@ -64,7 +64,7 @@ void JPetTaskExecutor::processFromCmdLineArgs(int fileIndex)
   auto inputFileType = fOptions.getInputFileType();
   auto inputFile = fOptions.getInputFile();
   if (inputFileType == JPetOptions::kScope) {
-    JPetScopeReader* module = new JPetScopeReader("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures.");
+    JPetScopeReader* module = new JPetScopeReader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
     module->setFileName(inputFile);
     fTasks.push_front(module);
   } else if (inputFileType == JPetOptions::kHld) {
