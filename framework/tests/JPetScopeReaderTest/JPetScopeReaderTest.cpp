@@ -5,12 +5,15 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 
-#include "JPetScopeReaderFixtures.h"
-
 #include <cstddef>
 #include <functional>
 
+#define private public
+#define protected public
+
+#include "JPetScopeReaderFixtures.h"
 #include "../../JPetManager/JPetManager.h"
+
 
 BOOST_AUTO_TEST_SUITE (FirstSuite)
 
