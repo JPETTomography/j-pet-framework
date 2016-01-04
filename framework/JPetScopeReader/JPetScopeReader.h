@@ -9,9 +9,7 @@
 #ifndef _SCOPE_READER_MODULE_H_
 #define _SCOPE_READER_MODULE_H_
 
-#define MODULE_VERSION 0.4
-
-#include "../JPetAnalysisModule/JPetAnalysisModule.h"
+#include "../JPetTaskLoader/JPetTaskLoader.h"
 
 #include <cstddef>
 #include <fstream>
@@ -20,6 +18,8 @@
 #include <vector>
 
 #include <boost/property_tree/ptree.hpp>
+
+#include "../JPetScopeTask/JPetScopeTask.h"
 
 class JPetParamBank;
 class JPetPM;
@@ -33,46 +33,13 @@ class JPetWriter;
  * This module reads oscilloscope ACSII data based on config file passed through command line.
  * Example of usign this module is located in workdir/ScopeReaderExample/ .
  */
-class JPetScopeReader: public JPetAnalysisModule {
+class JPetScopeReader: public JPetTaskLoader {
   
-  private:
-  
-  /** @brief Collection of system parameters read from config file.
-   *
-   * One object per signle configuration + collimator position is created.
-   */
-  typedef struct ScopeConfig {
-    
-    std::string pName; /**< @brief Config name. */
-    int pCollPosition; /**< @brief Collimator position. */
-
-    JPetParamBank const* pParamBank; /**< @brief Pointer to JPetParamBank for current configuration.
-                                      *
-				      * @ref JPetParamBank
-				      */
-    
-    JPetPM *pPM1, *pPM2, *pPM3, *pPM4; /**< @ref JPetPM */
-    JPetScin *pScin1, *pScin2; /**< @ref JPeScin */
-
-    std::string pPrefix1, pPrefix2, pPrefix3, pPrefix4; /**< @brief Oscilloscope ACII files prefixes. */
-
-    std::set <std::string> pFiles; /**< @brief Set of files to process. */
-    std::set <std::string> :: iterator pIter; /**< @ref pIter */
-
-  } ScopeConfig;
-
   public:
 
   /** @brief Default Constructor.
    */
-  JPetScopeReader();
-
-  /** @brief Constructor
-   *
-   * @param name Module name.
-   * @param title Short description.
-   */
-  JPetScopeReader(const char* name, const char* title);
+  JPetScopeReader(JPetScopeTask * task);
 
   /* @brief Default Destructor.
    */
@@ -92,9 +59,13 @@ class JPetScopeReader: public JPetAnalysisModule {
    */
   virtual void createOutputObjects(const char* outputFilename = 0);
 
-  /** @brief Execute analysis for single event.
+  /** @brief Perform any preparations for the analysis done by exec().
    *
    * Function containing per event analysis.
+   */
+  virtual void init();
+
+  /** @brief Execute the whole analysis performed by this module.
    */
   virtual void exec();
   
@@ -131,14 +102,6 @@ class JPetScopeReader: public JPetAnalysisModule {
    */
   JPetParamBank const& createParamBank (boost::property_tree::ptree const& conf_data);
 
-  /** @brief Produce JPetRecoSignal from single oscilloscope ASCII file.
-   *
-   * Functionality of old JPetScopeReader.
-   *
-   * @param filename oscilloscpe ASCII filename.
-   * @return generated JPetRecoSignal
-   */
-  static JPetRecoSignal generateSignal (const char* filename);
 
   private:
 

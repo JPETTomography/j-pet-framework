@@ -36,17 +36,12 @@ using namespace std;
 using namespace boost::filesystem;
 using boost::property_tree::ptree;
 
-const double ks2ps = 1.0e+12;
-const double kV2mV = 1.0e+3;
-const int kbuflen = 256;
-
-JPetScopeReader::JPetScopeReader(): JPetAnalysisModule(), fEventNb(0), fWriter(nullptr) {
+JPetScopeReader::JPetScopeReader(JPetScopeTask * task): JPetTaskLoader(), fEventNb(0), fWriter(nullptr) {
   gSystem->Load("libTree");
+
+  addSubTask(task);
 }
 
-JPetScopeReader::JPetScopeReader(const char* name, const char* title): JPetAnalysisModule(name, title), fEventNb(0), fWriter(nullptr)  {
-  gSystem->Load("libTree");
-}
 
 JPetScopeReader::~JPetScopeReader() {
 
@@ -145,8 +140,6 @@ JPetParamBank const& JPetScopeReader::createParamBank(ptree const& conf_data) {
 }
 
 void JPetScopeReader::createInputObjects(const char* inputFilename) {
-
-  INFO( Form("Starting %s.", GetName() ) );
 
   // Create property tree
 
@@ -263,7 +256,7 @@ void JPetScopeReader::createInputObjects(const char* inputFilename) {
       }
     }
   }
-  fIter = fConfigs.begin();
+
   fWriter = nullptr;
   
   fEventNb = 0;
@@ -304,74 +297,41 @@ void JPetScopeReader::createNewWriter(const char* outputFilename) {
     auto options = optionContainer.front();
     fHeader = new JPetTreeHeader(options.getRunNumber());
     fHeader->setBaseFileName(options.getInputFile());
-    fHeader->addStageInfo(GetName(), GetTitle(), MODULE_VERSION, CommonTools::getTimeString());
+    fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0, CommonTools::getTimeString());
     fHeader->setSourcePosition((*fIter).pCollPosition);
     fWriter->writeHeader(fHeader);
   }
 }
 
+void JPetScopeReader::init() {
+
+  INFO( "Starting Scope Reader Module." );
+
+  createInputObjects();
+  createOutputObjects();
+}
+
 void JPetScopeReader::exec() {
 
-  if (fIter != fConfigs.end()) {  
+  assert(fTask);
   
-    if((*fIter).pIter == (*fIter).pFiles.begin()) {
-      createNewWriter();
-    }
+  JPetTaskInterface::Options emptyOpts;
+  fTask->init(emptyOpts);
 
-    if ((*fIter).pIter != (*fIter).pFiles.end()) {
+  for(fIter = fConfigs.begin();fIter != fConfigs.end();fIter++){
     
-      string osc_file = *((*fIter).pIter);
-      string filename;
-
-      int tslot_index;
-      sscanf(path(osc_file).filename().string().c_str(), "%*3s %d", &tslot_index);
-    
-      JPetRecoSignal rsig1 = generateSignal(osc_file.c_str());
-      rsig1.setPM(*((*fIter).pPM1));
-      rsig1.setTSlotIndex(tslot_index);
-    
-      filename = path(*((*fIter).pIter)).filename().string();
-      filename[1] = ((*fIter).pPrefix2)[1];
-      osc_file = path(*((*fIter).pIter)).parent_path().string();
-      osc_file+= "/";
-      osc_file+= filename;
-  
-      JPetRecoSignal rsig2 = generateSignal(osc_file.c_str());
-      rsig2.setPM(*((*fIter).pPM2));
-      rsig2.setTSlotIndex(tslot_index);
-     
-      filename = path(*((*fIter).pIter)).filename().string();
-      filename[1] = ((*fIter).pPrefix3)[1];
-      osc_file = path(*((*fIter).pIter)).parent_path().string();
-      osc_file+= "/";
-      osc_file+= filename;
+    createNewWriter();
+    fTask->setWriter(fWriter);
    
-      JPetRecoSignal rsig3 = generateSignal(osc_file.c_str());
-      rsig3.setPM(*((*fIter).pPM3));
-      rsig3.setTSlotIndex(tslot_index);
-    
-      filename = path(*((*fIter).pIter)).filename().string();
-      filename[1] = ((*fIter).pPrefix4)[1];
-      osc_file = path(*((*fIter).pIter)).parent_path().string();
-      osc_file+= "/";
-      osc_file+= filename;
- 
-      JPetRecoSignal rsig4 = generateSignal(osc_file.c_str());
-      rsig4.setPM(*((*fIter).pPM4));
-      rsig4.setTSlotIndex(tslot_index);
-    
-      fWriter->write(rsig1);
-      fWriter->write(rsig2);
-      fWriter->write(rsig3);
-      fWriter->write(rsig4);
-    }
+    for((*fIter).pIter = (*fIter).pFiles.begin();(*fIter).pIter != (*fIter).pFiles.end(); (*fIter).pIter++){
 
-    ((*fIter).pIter)++;
-
-    if((*fIter).pIter == (*fIter).pFiles.end()) {
-      fWriter->writeObject((*fIter).pParamBank, "ParamBank");
-      fIter++;
+      dynamic_cast<JPetScopeTask*>(fTask)->setScopeConfig(&(*fIter));
+      fTask->exec();      
+      
     }
+    
+    fWriter->writeObject((*fIter).pParamBank, "ParamBank");	    
+    
   }
 }
 
@@ -397,72 +357,4 @@ void JPetScopeReader::setFileName(const char* name)
 }
 
 
-JPetRecoSignal JPetScopeReader::generateSignal(const char* filename) {
-  
-  // Open File
-  
-  FILE* input_file = fopen(filename, "r");
-
-  if (!input_file) {
-    ERROR(Form("Error: cannot open file %s", filename));
-    return JPetRecoSignal(0);
-  }
-  
-  // Read Header
-
-  int segment_size = 0;
-  {
-    char buf[kbuflen];
-    char tmp[kbuflen];
-
-    if (fgets(buf, kbuflen, input_file) != 0)
-    sscanf(buf, "%s %*s %*s", tmp);
-
-    //fScopeType = tmp;
-
-    if (fgets(buf, kbuflen, input_file) != 0)
-    sscanf(buf, "%*s %*s %*s %d", &segment_size);
-
-    if (fgets(buf, kbuflen, input_file) != 0);
-    //sscanf(buf, "%*s %*s %*s");
-
-    if (fgets(buf, kbuflen, input_file) != 0)
-    sscanf(buf, "%*s %s %s %*s", tmp, tmp + kbuflen/2);
-
-    //fDate = tmp;
-    //fTime = tmp + kbuflen/2;
-
-    if (fgets(buf, kbuflen, input_file) != 0);
-    //sscanf(buf, "%*s %*s");
-  }
-
-  // Read Data
-
-  JPetRecoSignal reco_signal(segment_size);
-
-  for (int i = 0; i < segment_size; ++i) {
-  
-    float value, threshold;
-    int stat;
- 
-    stat = fscanf(input_file, "%f %f\n", &value, &threshold);
-
-    if (stat != 2) {
-      ERROR(Form("Non-numerical symbol in file %s at line %d", filename, i + 6));
-      char tmp[kbuflen];
-      if (fgets(tmp, kbuflen, input_file) != 0);
-    }
-
-    float time = value * ks2ps; // file holds time in seconds, while SigCh requires it in picoseconds
-    float amplitude = threshold * kV2mV;  // file holds thresholds in volts, while SigCh requires it in milivolts
-
-    reco_signal.setShapePoint(time, amplitude);
-  }
-
-  // Close File
-  
-  fclose(input_file);
-
-  return reco_signal;
-}
 
