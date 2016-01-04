@@ -13,12 +13,12 @@ UNPACKER_LIB = Unpacker2
 ################
 SRC_DIR = $(PWD)/framework
 #Modules that should have ROOT dictionnaries
-DMODULES = JPetAnalysisModule JPetBarrelSlot JPetLOR JPetHit JPetMacroLoader JPetPM JPetScin JPetSigCh JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetTRB JPetTSlot JPetUnpacker JPetFEB JPetTOMBChannel JPetUser JPetTreeHeader JPetStatistics JPetParamBank JPetPMCalib JPetLayer JPetFrame JPetCommonAnalysisModule
+DMODULES = JPetBarrelSlot JPetLOR JPetHit JPetPM JPetScin JPetSigCh JPetBaseSignal JPetRawSignal JPetRecoSignal JPetPhysSignal JPetTRB JPetTSlot JPetUnpacker JPetFEB JPetTOMBChannel JPetUser JPetTreeHeader JPetStatistics JPetParamBank JPetPMCalib JPetLayer JPetFrame
 DICTS   = $(DMODULES)
 READERS = JPetReader JPetHLDReader JPetScopeReader
 WRITERS = JPetWriter
 #Modules without ROOT dictionnaries
-NONDMODULES = DummyClass JPetLogger JPetCmdParser JPetParamManager JPetManager $(READERS) $(WRITERS) JPetDBParamGetter JPetParamUtils JPetTaskExecutor JPetTask JPetTaskIO JPetAnalysisModuleT JPetCommonAnalysisModuleT JPetOptions JPetTaskLoader JPetSimplePhysSignalReco JPetScopeTask
+NONDMODULES = DummyClass JPetLogger JPetCmdParser JPetParamManager JPetManager $(READERS) $(WRITERS) JPetDBParamGetter JPetParamUtils JPetTaskExecutor JPetTask JPetTaskIO JPetOptions JPetTaskLoader JPetSimplePhysSignalReco JPetScopeTask
 MODULES = $(DMODULES) $(NONDMODULES)
 ################
 SRC_MODULES = $(foreach MODULE, $(MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).cpp) 
