@@ -1,6 +1,6 @@
 #include "./JPetMacroLoader.h"
 
-#include "../../JPetLoggerInclude.h"
+#include "../JPetLoggerInclude.h"
 
 #include <TROOT.h>
 #include <TSystem.h>

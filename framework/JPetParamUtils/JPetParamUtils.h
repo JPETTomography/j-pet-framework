@@ -11,7 +11,7 @@
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
 #include "../JPetPM/JPetPM.h"
 #include "../JPetLayer/JPetLayer.h"
-#include "../../JPetLoggerInclude.h"
+#include "../JPetLoggerInclude.h"
 #include "TMath.h"
 
 class JPetParamUtils

@@ -7,11 +7,18 @@
 #include "./JPetManager.h"
 
 #include <cassert>
+#include <ctime>
+#include <string>
+
+#include "../JPetLoggerInclude.h"
+#include "../JPetScopeReader/JPetScopeReader.h"
+#include "../CommonTools/CommonTools.h"
+#include "../JPetCmdParser/JPetCmdParser.h"
+
 #include <TDSet.h>
 #include <TThread.h>
-#include "../JPetCmdParser/JPetCmdParser.h"
-#include "../CommonTools/CommonTools.h"
-#include "../../JPetLoggerInclude.h"
+
+
 
 
 JPetManager& JPetManager::getManager()

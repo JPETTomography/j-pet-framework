@@ -10,7 +10,7 @@
 #include "../JPetTRB/JPetTRB.h"
 #include "../JPetFEB/JPetFEB.h"
 #include "../JPetTOMBChannel/JPetTOMBChannel.h"
-#include "../../JPetLoggerInclude.h"
+#include "../JPetLoggerInclude.h"
 
 /**
  * @brief Data class representing a SIGnal from a single tdc CHannel.
