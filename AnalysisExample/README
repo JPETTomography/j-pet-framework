@@ -1,0 +1,46 @@
+Aim
+---
+This example show a full dummy analysis of data from J-PET. This analysis example was created for 2 types of J-PET data listed below, but it should work with any dataset without big changes.
+ * data from small barrel, cosmic rays
+ * data from 2-strip setup with collimated source beam in the middle of strips
+
+Expected output
+---------------
+No putput to stdout.
+JPet.log file appears with the log of the processing and ROOT files with the following etensions are produced:
+ *.tslot.raw.root
+ *.tslot.cal.root
+ *.raw.sig.root
+ *.reco.sig.root
+ *.phys.sig.root
+ *.phys.hit.root
+ *.phys.eve.root
+
+* stands for the name of the input file, which in this example is one of the following:
+ cosm_barrel.hld.root
+ 2stripMid.hld.root
+
+Description
+--------------
+The analysis is split into modules, from A to E.
+
+Additional info
+--------------
+
+
+Compiling 
+------------
+make
+
+Running
+------------
+To run 2 simple examples:
+./run1.sh
+Runs the analysis of cosm_barrel.hld.root file
+./run2.sh
+Runs the analysis of 2stripMid.hld.root
+
+Author
+------------
+Aleksander Gajos
+Please report any bugs and suggestions of corrections to: <alek.gajos@gmail.com>

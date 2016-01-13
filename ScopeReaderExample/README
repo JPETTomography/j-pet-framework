@@ -1,0 +1,37 @@
+This example shows basic anaylis using JPetScopeModule. Oscilloscope ASCII data files are converted into root files with JPetEvent structures.
+
+Compiling:
+make
+
+Running:
+./main.x -t scope -f ./cfg/example.cfg
+where:
+-t scope         // sets input file type to oscilloscpe ASCII data
+-f ./cfg/example // sets location of .cfg file
+
+Output:
+- log file:
+  JPet.log
+- set of root files (one root file per collimator position)
+  example.scope.eve.@@.root // where @@ stands for collinator position (eg. example.scope.eve.6.root)
+
+Additional info:
+Structure of config file:
+------------------------------------------------------------------------
+PM0003 C2	// PM1 (pm id and file prefix)
+PM0098 C4	// PM2 (pm id and file prefix)
+PM0032 C1	// PM3 (pm id and file prefix)
+PM0042 C3	// PM4 (pm id and file prefix)
+
+SCINT0032	// SCINTILLATOR STRIP 1
+SCINT0012	// SCINTILLATOR STRIP 2
+
+data_dir	// data directory
+
+16		// coll position (single)
+4 11		// coll position (all values from 4 to 11 with jump 1)
+21 27 3		// coll position (all values from 21 to 27 with jump 3)
+------------------------------------------------------------------------
+
+Author:
+Damian Trybek <damian.trybek@uj.edu.pl>

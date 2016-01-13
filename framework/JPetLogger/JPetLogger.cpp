@@ -8,7 +8,7 @@
 #include <ctime>
 #include <cassert>
 #include "./JPetLogger.h"
-#include "../../JPetLoggerInclude.h"
+#include "../JPetLoggerInclude.h"
 
 #if JPET_SCREEN_OUTPUT == 1
 bool JPetLogger::fIsLogFile = false;

@@ -5,7 +5,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include "../../JPetLoggerInclude.h"
+#include "../JPetLoggerInclude.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetDBParamGetter/JPetDBParamGetter.h"
 #include "../JPetReader/JPetReader.h"

@@ -16,7 +16,7 @@
 #include "../JPetLayer/JPetLayer.h"
 
 #include "../JPetTOMBChannel/JPetTOMBChannel.h"
-#include "../../JPetLoggerInclude.h"
+#include "../JPetLoggerInclude.h"
 #include <vector>
 #include <cassert>
 

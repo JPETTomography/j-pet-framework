@@ -12,7 +12,7 @@
 #include <TNamed.h>
 #include <TTree.h>
 
-#include "../../JPetLoggerInclude.h"
+#include "../JPetLoggerInclude.h"
 
 #include "../JPetUnpacker/Unpacker2/Event.h"
 #include "../JPetReaderInterface/JPetReaderInterface.h"

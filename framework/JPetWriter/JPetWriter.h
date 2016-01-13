@@ -15,7 +15,7 @@ namespace boost;
 class boost::noncopyable;
 #endif /* __CINT __ */
 
-#include "../../JPetLoggerInclude.h"
+#include "../JPetLoggerInclude.h"
 
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
 #include "../JPetLOR/JPetLOR.h"

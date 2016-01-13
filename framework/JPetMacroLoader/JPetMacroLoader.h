@@ -10,7 +10,7 @@
 
 #include <cstddef>
 
-#include "../../framework/JPetAnalysisModule/JPetAnalysisModule.h"
+#include "../JPetAnalysisModule/JPetAnalysisModule.h"
 
 class JPetMacroLoader: public JPetAnalysisModule {
   
