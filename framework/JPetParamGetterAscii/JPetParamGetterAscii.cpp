@@ -5,31 +5,15 @@
   */
 
 #include "./JPetParamGetterAscii.h"
+#include "./JPetParamAsciiConstants.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include <string>
-#include <iostream>
-
-//Constants for names in the file format
-
-const std::string scintillatorsName = "scintillators";
-const std::string PMsName = "PMs";
-const std::string PMCalibsName = "PMCalibs";
-const std::string barrelSlotsName = "barrelSlots";
-const std::string layersName = "layers";
-const std::string framesName = "frames";
-const std::string FEBsName = "FEBs";
-const std::string TRBsName = "TRBs";
-const std::string TOMBChannelsName = "TOMBChannels";
 
 JPetParamBank* JPetParamGetterAscii::generateParamBank(const int runNumber)
 {
 				return loadFileContent(runNumber);
-    //JPetParamBank* returnedParamBank = new JPetParamBank(*fParamCache[runNumber]);
-    //fillAllTRefs(p_run_id, *returnedParamBank); //@TODO: ask what this is about
-    //return returnedParamBank;
 }
 
 /// assuming that file is in json format

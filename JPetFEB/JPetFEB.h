@@ -66,6 +66,7 @@ public:
   virtual std::string status(void) const;
   virtual std::string description(void) const;
   virtual int version(void) const;
+  inline int getCreator() const {return m_userId;}
   virtual int getNtimeOutsPerInput(void) const;
   virtual int getNnotimeOutsPerInput(void) const;
   

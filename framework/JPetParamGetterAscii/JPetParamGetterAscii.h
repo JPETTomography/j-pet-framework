@@ -8,7 +8,8 @@
 #ifndef JPETPARAMGETTERASCII_H 
 #define JPETPARAMGETTERASCII_H 
 
-#include<map>
+#include <map>
+#include <string>
 #include <boost/property_tree/ptree.hpp>
 #include "../JPetParamBank/JPetParamBank.h"
 
@@ -18,8 +19,8 @@ public:
   JPetParamBank* generateParamBank(const int runNumber);
 
 private:
-  JPetParamGetterAscii(const JPetParamGetterAscii &DBParamGetter);
-  JPetParamGetterAscii& operator=(const JPetParamGetterAscii &DBParamGetter);
+  JPetParamGetterAscii(const JPetParamGetterAscii &paramGetterAscii);
+  JPetParamGetterAscii& operator=(const JPetParamGetterAscii &paramGetterAscii);
 
   JPetParamBank* loadFileContent(int runNumber);
 
