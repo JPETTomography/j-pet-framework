@@ -24,6 +24,7 @@ SRC_EXTRA = $(foreach MODULE, $(EXTRA_MODULES), $(SRC_DIR)/$(MODULE)/$(MODULE).c
 OBJ_EXTRA= $(SRC_EXTRA:.cpp=.o) 
 OBJ_ALL = $(OBJ_MODULE)
 OBJ_ALL += $(OBJ_EXTRA)
+OBJ_ALL += $(SRC_DIR)/$(PROJECT)/JPetParamSaverAscii.o
 ###################
 #ROOT DICTIONNARIES
 OBJ_DICT =$(foreach DICT, $(DICTS), $(SRC_DIR)/$(DICT)/$(DICT)Dict.o) 

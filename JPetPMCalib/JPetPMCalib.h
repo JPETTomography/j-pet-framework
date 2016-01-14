@@ -39,7 +39,7 @@ public:
   virtual float GetECalConst2(void) const { return ECalConst2; };
   virtual float GetGainalpha(void) const {return gainalpha; };
   virtual float GetGainbeta(void) const { return gainbeta; };
-  virtual JPetPMCalibAssignment GetPMCalibAssignment(void) { return PMCalibAssignment; }
+  virtual JPetPMCalibAssignment GetPMCalibAssignment(void) const { return PMCalibAssignment; }
 
   inline bool operator==(const JPetPMCalib& calib) { return GetId() == calib.GetId(); }
   inline bool operator!=(const JPetPMCalib& calib) { return GetId() != calib.GetId(); }
