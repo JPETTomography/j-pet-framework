@@ -1,5 +1,5 @@
 SRC_DIR = $(PWD)
-TESTS:=$(shell ls -d *Test/)
+TESTS:=$(shell ls -I JPetDBParamGetterTest* -I JPetHLDReaderTest* -I JPetManagerTest* -I JPetParamManagerTest* -I JPetReaderTest* -I JPetTaskIOTest* -I JPetTaskLoaderTest* -I JPetUnpackerTest* -d *Test/)
 ROOT_TEST_DIR=./ROOTExamples/
 LOG=JPet.log
 all: compile_test 
