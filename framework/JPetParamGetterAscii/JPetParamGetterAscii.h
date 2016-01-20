@@ -53,12 +53,12 @@ private:
 		std::map<int, int> TRBIdTranslation(JPetParamBank & bank);
 		std::map<int, int> TOMBChannelIdTranslation(JPetParamBank & bank);
 
-		void fillScintillatorTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int>> & idTranslations);
-		void fillPMTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int>> & idTranslations);
-		void fillBarrelSlotTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int>> & idTranslations);
-		void fillLayerTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int>> & idTranslations);
-		void fillFEBTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int>> & idTranslations);
-		void fillTOMBChannelTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int>> & idTranslations);
+		void fillScintillatorTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int> > & idTranslations);
+		void fillPMTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int> > & idTranslations);
+		void fillBarrelSlotTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int> > & idTranslations);
+		void fillLayerTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int> > & idTranslations);
+		void fillFEBTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int> > & idTranslations);
+		void fillTOMBChannelTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int> > & idTranslations);
 
   std::string filename;
 

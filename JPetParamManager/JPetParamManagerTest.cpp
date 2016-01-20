@@ -4,10 +4,12 @@
 
 #define private public
 #include "../JPetParamManager/JPetParamManager.h"
+#include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 
 #include <cstddef>
+#include <boost/filesystem.hpp>
 
-const char* gDefaultConfigFile = "../DBConfig/configDB.cfg";
+const char * dataFileName = "data.json";
 
 BOOST_AUTO_TEST_SUITE(JPetParamManagerTestSuite)
 
@@ -24,7 +26,7 @@ void checkContainersSize(const JPetParamBank &bank)
 
 BOOST_AUTO_TEST_CASE(generateParamBankTest)
 {
-  JPetParamManager l_paramManagerInstance(new JPetDBParamGetter(gDefaultConfigFile));
+  JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
   l_paramManagerInstance.fillParameterBank(1);
   
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank != NULL, true);
@@ -34,7 +36,7 @@ BOOST_AUTO_TEST_CASE(generateParamBankTest)
 
 BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByWriterAndReaderObjectsTest)
 {
-  JPetParamManager l_paramManagerInstance(new JPetDBParamGetter(gDefaultConfigFile));
+  JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
   
   l_paramManagerInstance.fillParameterBank(1);
 
@@ -64,7 +66,7 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByWriterAndReaderObjectsTest)
 BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
 {
   const char* testDatafile = "testDataFile.txt";
-  JPetParamManager l_paramManagerInstance(new JPetDBParamGetter(gDefaultConfigFile));
+  JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
   
   l_paramManagerInstance.fillParameterBank(1);
   
@@ -77,11 +79,13 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
   BOOST_CHECK(l_paramManagerInstance.readParametersFromFile(testDatafile) == true);
   
   checkContainersSize(*l_paramManagerInstance.fBank);
+
+		boost::filesystem::remove(testDatafile);
 }
 
 BOOST_AUTO_TEST_CASE(clearParametersTest)
 {
-  JPetParamManager l_paramManagerInstance(new JPetDBParamGetter(gDefaultConfigFile));
+  JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
   
   l_paramManagerInstance.fillParameterBank(1);
   
@@ -102,7 +106,7 @@ BOOST_AUTO_TEST_CASE(clearParametersTest)
 
 BOOST_AUTO_TEST_CASE(getParamBankTest)
 {
-  JPetParamManager l_paramManagerInstance(new JPetDBParamGetter(gDefaultConfigFile));
+  JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
   
   l_paramManagerInstance.fillParameterBank(1);
   
