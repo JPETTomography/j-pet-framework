@@ -1,7 +1,7 @@
 ###################
 #THIS PART CAN BE MODIFIED
 PROJECT=JPetParamGetterAscii
-EXTRA_MODULES =JPetScin JPetFEB JPetTRB JPetPM JPetPMCalib JPetTreeHeader JPetLogger JPetParamBank JPetBarrelSlot JPetLayer JPetFrame JPetTOMBChannel
+EXTRA_MODULES = JPetScin JPetFEB JPetTRB JPetPM JPetPMCalib JPetTreeHeader JPetLogger JPetParamBank JPetBarrelSlot JPetLayer JPetFrame JPetTOMBChannel
 #classes that need Dictionnaries 
 DICTS = JPetScin JPetFEB JPetTRB JPetPM JPetPMCalib JPetTreeHeader JPetParamBank JPetBarrelSlot JPetLayer JPetFrame JPetTOMBChannel
 PQXX_LIB_SET = 

@@ -19,8 +19,8 @@ public:
   void saveParamBank(const JPetParamBank & bank, const int runNumber, const std::string & filename);
 
 private:
-  JPetParamSaverAscii(const JPetParamSaverAscii &DBParamGetter);
-  JPetParamSaverAscii& operator=(const JPetParamSaverAscii &DBParamGetter);
+  JPetParamSaverAscii(const JPetParamSaverAscii &paramSaver);
+  JPetParamSaverAscii& operator=(const JPetParamSaverAscii &paramSaver);
 
 		boost::property_tree::ptree getTreeFromFile(const std::string & filename);
 		void addToTree(boost::property_tree::ptree & tree, const JPetParamBank & bank, const std::string & runNumber);
