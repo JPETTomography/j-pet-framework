@@ -119,18 +119,21 @@ JPetRecoSignal JPetScopeTask::generateSignal(const char* filename) {
     float value, threshold;
     int stat;
  
-    stat = fscanf(input_file, "%f %f\n", &value, &threshold);
+    if(value >= 0.f && threshold >= 0.f)
+    {
+      stat = fscanf(input_file, "%f %f\n", &value, &threshold);
 
-    if (stat != 2) {
-      ERROR(Form("Non-numerical symbol in file %s at line %d", filename, i + 6));
-      char tmp[kbuflen];
-      if (fgets(tmp, kbuflen, input_file) != 0);
+      if (stat != 2) {
+	ERROR(Form("Non-numerical symbol in file %s at line %d", filename, i + 6));
+	char tmp[kbuflen];
+	if (fgets(tmp, kbuflen, input_file) != 0);
+      }
+
+      float time = value * ks2ps; // file holds time in seconds, while SigCh requires it in picoseconds
+      float amplitude = threshold * kV2mV;  // file holds thresholds in volts, while SigCh requires it in milivolts
+
+      reco_signal.setShapePoint(time, amplitude);
     }
-
-    float time = value * ks2ps; // file holds time in seconds, while SigCh requires it in picoseconds
-    float amplitude = threshold * kV2mV;  // file holds thresholds in volts, while SigCh requires it in milivolts
-
-    reco_signal.setShapePoint(time, amplitude);
   }
 
   // Close File
