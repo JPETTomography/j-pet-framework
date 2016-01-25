@@ -8,15 +8,8 @@
 #ifndef _JPETTASKLOADER_H_
 #define _JPETTASKLOADER_H_
 
-#include "../../framework/JPetTaskIO/JPetTaskIO.h"
+#include "../JPetTaskIO/JPetTaskIO.h"
 
-#ifdef MODULE_VERSION
-#undef MODULE_VERSION
-#endif
-
-//#define MODULE_VERSION 1
-
-/// 
 class JPetTaskLoader: public JPetTaskIO
 {
 public:

@@ -8,9 +8,9 @@
 #ifndef _JPETSIMPLEPHYSSIGNALRECO_H_
 #define _JPETSIMPLEPHYSSIGNALRECO_H_
 
-#include "../../framework/JPetTask/JPetTask.h"
-#include "../../framework/JPetPhysSignal/JPetPhysSignal.h"
-#include "../../framework/JPetRecoSignal/JPetRecoSignal.h"
+#include "../JPetTask/JPetTask.h"
+#include "../JPetPhysSignal/JPetPhysSignal.h"
+#include "../JPetRecoSignal/JPetRecoSignal.h"
 
 class JPetWriter;
 

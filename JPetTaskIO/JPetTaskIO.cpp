@@ -9,10 +9,10 @@
 #include "../JPetReader/JPetReader.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 #include "../JPetTask/JPetTask.h"
-#include "../../framework/JPetHLDReader/JPetHLDReader.h"
-#include "../../framework/CommonTools/CommonTools.h"
+#include "../JPetHLDReader/JPetHLDReader.h"
+#include "../CommonTools/CommonTools.h"
 
-#include "../../JPetLoggerInclude.h"
+#include "../JPetLoggerInclude.h"
 
 
 JPetTaskIO::JPetTaskIO():
