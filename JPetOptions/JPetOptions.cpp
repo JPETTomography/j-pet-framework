@@ -5,7 +5,7 @@
   */
 
 #include "./JPetOptions.h"
-#include "../../JPetLoggerInclude.h"
+#include "../JPetLoggerInclude.h"
 
 JPetOptions::Options JPetOptions::kDefaultOptions = {
   {"inputFile", ""},

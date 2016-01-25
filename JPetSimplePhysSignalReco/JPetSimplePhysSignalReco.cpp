@@ -4,7 +4,7 @@
 #include <libconfig.h++>  // For reading configuration files
 #include "HelperMathFunctions.h"
 #include "JPetSimplePhysSignalReco.h"
-#include "../../framework/JPetWriter/JPetWriter.h"
+#include "../JPetWriter/JPetWriter.h"
 
 JPetSimplePhysSignalReco::JPetSimplePhysSignalReco():
   fAlpha(1),

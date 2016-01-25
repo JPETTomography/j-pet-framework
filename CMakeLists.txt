@@ -134,6 +134,7 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetTaskExecutor
   JPetScopeReader
   JPetScopeTask
+  JPetOptions
   )
 add_library(JPetFramework SHARED ${SOURCES} ${HEADERS} ${DICTIONARIES})
 

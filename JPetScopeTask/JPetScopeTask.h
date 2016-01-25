@@ -13,11 +13,11 @@
 #include <string>
 #include <set>
 
-#include "../../framework/JPetTask/JPetTask.h"
-#include "../../framework/JPetRawSignal/JPetRawSignal.h"
-#include "../../framework/JPetTimeWindow/JPetTimeWindow.h"
-#include "../../framework/JPetParamBank/JPetParamBank.h"
-#include "../../framework/JPetParamManager/JPetParamManager.h"
+#include "../JPetTask/JPetTask.h"
+#include "../JPetRawSignal/JPetRawSignal.h"
+#include "../JPetTimeWindow/JPetTimeWindow.h"
+#include "../JPetParamBank/JPetParamBank.h"
+#include "../JPetParamManager/JPetParamManager.h"
 
 /** @brief Collection of system parameters read from config file.
  *

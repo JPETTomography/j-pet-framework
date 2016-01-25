@@ -1,6 +1,6 @@
 #include "JPetTaskLoader.h"
 #include <iostream>
-#include "../../framework/JPetTask/JPetTask.h"
+#include "../JPetTask/JPetTask.h"
 //ClassImp(JPetTaskLoader);
 
 JPetTaskLoader::JPetTaskLoader(const char* in_file_type,
