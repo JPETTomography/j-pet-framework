@@ -3,12 +3,13 @@
   *  @file JPetCmdParserTest.cpp
   *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
   */
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetCmdParserTest
 #include <boost/test/unit_test.hpp>
 #include <cstdlib>
 #define private public
 #define protected public
-#include "../../JPetCmdParser/JPetCmdParser.h"
+#include "../JPetCmdParser/JPetCmdParser.h"
 
 //public method
 //std::vector<JPetOptions> parseAndGenerateOptions(int argc, const char** argv);

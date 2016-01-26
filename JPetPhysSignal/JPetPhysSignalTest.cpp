@@ -1,10 +1,11 @@
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetPhysSignalTest
 #include <boost/test/unit_test.hpp>
 
 #define private public
-#include "../../JPetPhysSignal/JPetPhysSignal.h"
-#include "../../JPetWriter/JPetWriter.h"
-#include "../../JPetReader/JPetReader.h"
+#include "../JPetPhysSignal/JPetPhysSignal.h"
+#include "../JPetWriter/JPetWriter.h"
+#include "../JPetReader/JPetReader.h"
 
 BOOST_AUTO_TEST_SUITE()
 

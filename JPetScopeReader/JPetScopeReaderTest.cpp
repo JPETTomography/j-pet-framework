@@ -1,3 +1,4 @@
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE ScopeReader
 #define BOOST_TEST_LOG_LEVEL message
 
@@ -11,10 +12,10 @@
 #define protected public
 
 #include "JPetScopeReaderFixtures.h"
-#include "../../JPetManager/JPetManager.h"
+#include "../JPetManager/JPetManager.h"
 
 
-BOOST_AUTO_TEST_SUITE (FirstSuite)
+BOOST_AUTO_TEST_SUITE (JPetScopeReaderTestSuite)
 
 BOOST_AUTO_TEST_CASE (generate_root_file) {
 

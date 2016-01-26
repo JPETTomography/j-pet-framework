@@ -1,8 +1,9 @@
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetLayerTest
 #include <boost/test/unit_test.hpp>
 
 #define private public
-#include "../../JPetLayer/JPetLayer.h"
+#include "../JPetLayer/JPetLayer.h"
 
 // JPetLayer();
 // JPetLayer(int id, bool isActive, std::string name, float radius);

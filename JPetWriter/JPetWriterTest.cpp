@@ -1,3 +1,4 @@
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetWriterTest
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>  // for filesystem::remove
@@ -5,17 +6,17 @@
 
 #define private public
 #define protected public
-#include "../../JPetWriter/JPetWriter.h"
-#include "../../JPetReader/JPetReader.h"
+#include "../JPetWriter/JPetWriter.h"
+#include "../JPetReader/JPetReader.h"
 
-#include "../../JPetSigCh/JPetSigCh.h"
-#include "../../JPetTimeWindow/JPetTimeWindow.h"
-#include "../../JPetBaseSignal/JPetBaseSignal.h"
-#include "../../JPetRawSignal/JPetRawSignal.h"
-#include "../../JPetRecoSignal/JPetRecoSignal.h"
-#include "../../JPetPhysSignal/JPetPhysSignal.h"
-#include "../../JPetHit/JPetHit.h"
-#include "../../JPetLOR/JPetLOR.h"
+#include "../JPetSigCh/JPetSigCh.h"
+#include "../JPetTimeWindow/JPetTimeWindow.h"
+#include "../JPetBaseSignal/JPetBaseSignal.h"
+#include "../JPetRawSignal/JPetRawSignal.h"
+#include "../JPetRecoSignal/JPetRecoSignal.h"
+#include "../JPetPhysSignal/JPetPhysSignal.h"
+#include "../JPetHit/JPetHit.h"
+#include "../JPetLOR/JPetLOR.h"
 
 //  JPetWriter(const char *p_fileName);
 //  virtual ~JPetWriter(void);

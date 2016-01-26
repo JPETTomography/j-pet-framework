@@ -1,8 +1,9 @@
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetBarrelSlotTest
 #include <boost/test/unit_test.hpp>
 
 #define private public
-#include "../../JPetBarrelSlot/JPetBarrelSlot.h"
+#include "../JPetBarrelSlot/JPetBarrelSlot.h"
 
 // JPetBarrelSlot();
 // JPetBarrelSlot(int id, bool isActive, std::string name, float theta);

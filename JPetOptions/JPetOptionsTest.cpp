@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 
 #define private public
-#include "../../JPetOptions/JPetOptions.h"
+#include "../JPetOptions/JPetOptions.h"
 
 //JPetOptions
 //public methods

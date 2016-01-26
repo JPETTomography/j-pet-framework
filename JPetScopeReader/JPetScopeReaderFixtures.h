@@ -1,14 +1,14 @@
-#include "../../JPetScopeReader/JPetScopeReader.h"
-#include "../../JPetScopeTask/JPetScopeTask.h"
+#include "../JPetScopeReader/JPetScopeReader.h"
+#include "../JPetScopeTask/JPetScopeTask.h"
 
 #include <cstddef>
 #include <cstdio>
 
-#include "../../JPetParamBank/JPetParamBank.h"
-#include "../../JPetParamManager/JPetParamManager.h"
-#include "../../JPetReader/JPetReader.h"
-#include "../../JPetRecoSignal/JPetRecoSignal.h"
-#include "../../JPetTreeHeader/JPetTreeHeader.h"
+#include "../JPetParamBank/JPetParamBank.h"
+#include "../JPetParamManager/JPetParamManager.h"
+#include "../JPetReader/JPetReader.h"
+#include "../JPetRecoSignal/JPetRecoSignal.h"
+#include "../JPetTreeHeader/JPetTreeHeader.h"
 
 // *********************************************************************** //
 // ********            Generate Single JPetRecoSignal             ******** //

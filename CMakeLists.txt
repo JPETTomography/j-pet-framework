@@ -6,7 +6,6 @@
 #   Builds all J-PET framework modules using CMake build generator.
 
 cmake_minimum_required(VERSION 2.6)
-option(test "Build all tests." OFF)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(JPetFramework-Utilities) # for generate_root_dictionaries
@@ -50,22 +49,14 @@ find_package(Config++ REQUIRED)
 include_directories(${CONFIG++_INCLUDE_DIRS})
 add_definitions(${CONFIG++_DEFINITIONS})
 
-if(test)
-	find_package(Boost 1.50.0 REQUIRED COMPONENTS
-	filesystem
-	program_options
-	regex
-	system
-	unit_test_framework
-	)
-else()
-	find_package(Boost 1.50.0 REQUIRED COMPONENTS
-	filesystem
-	program_options
-	regex
-	system
-	)
-endif()
+find_package(Boost 1.50.0 REQUIRED COMPONENTS
+  filesystem
+  program_options
+  regex
+  system
+  unit_test_framework
+  )
+
 include_directories(${Boost_INCLUDE_DIRS})
 add_definitions(${Boost_DEFINITIONS})
 
@@ -116,6 +107,9 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
 file(GLOB HEADERS JPet*/*.h)
 file(GLOB SOURCES JPet*/*.cpp)
+file(GLOB UNIT_TEST_SOURCES JPet*/*Test.cpp)
+list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
+
 generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   EXCLUDE # exclude following sources from ROOT dictionary
           # everything else will have dictionary generated
@@ -137,6 +131,30 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetOptions
   )
 add_library(JPetFramework SHARED ${SOURCES} ${HEADERS} ${DICTIONARIES})
+
+# unit tests
+set(TESTS_DIR ${CMAKE_CURRENT_BINARY_DIR}/tests)
+file(MAKE_DIRECTORY ${TESTS_DIR})
+file(COPY unitTestUtils/run_tests.pl DESTINATION ${TESTS_DIR})
+foreach(test_source ${UNIT_TEST_SOURCES})
+  get_filename_component(test ${test_source} NAME_WE)
+  generate_root_dictionaries(test_dictionaries SOURCES ${test_source})
+  list(APPEND test_binaries ${test}.x)
+  add_executable(${test}.x EXCLUDE_FROM_ALL ${test_source}
+    ${test_dictionaries}
+    )
+  set_target_properties(${test}.x PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_DIR} )
+  target_link_libraries(${test}.x
+    JPetFramework
+    ${Boost_LIBRARIES}
+    )
+endforeach()
+
+add_custom_target(tests DEPENDS ${test_binaries} ${TESTS_DIR}/unitTestData)
+
+add_custom_command(OUTPUT ${TESTS_DIR}/unitTestData
+  COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/unitTestData ${TESTS_DIR}/unitTestData
+  )
 
 # - Unpacker
 file(GLOB UNPACKER2_HEADERS JPetUnpacker/Unpacker2/*.h)
@@ -184,17 +202,13 @@ target_link_libraries(JPetFramework
   ${ROOT_LIBRARIES}
   ${Boost_LIBRARIES}
   )
-if(test)
-        add_subdirectory(tests)
-endif()
 
 # extra files, so they are visible in your editor
 file(GLOB EXTRAS extras/**)
 add_custom_target(extra SOURCES ${EXTRAS}
   README
   Doxyfile
-  tests/README
-  tests/run_tests.pl
+  unitTestUtils/run_tests.pl
   )
 
 # make clang print colored diagnostics when invoked from Ninja

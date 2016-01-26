@@ -1,9 +1,10 @@
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetSignalTest
 
 #include <boost/test/unit_test.hpp>
-#include "../../JPetRawSignal/JPetRawSignal.h"
-#include "../../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../../JPetPM/JPetPM.h"
+#include "../JPetRawSignal/JPetRawSignal.h"
+#include "../JPetBarrelSlot/JPetBarrelSlot.h"
+#include "../JPetPM/JPetPM.h"
 
 // Tests
 BOOST_AUTO_TEST_SUITE(ParamDataTS)

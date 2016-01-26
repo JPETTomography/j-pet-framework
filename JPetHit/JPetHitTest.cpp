@@ -1,10 +1,11 @@
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetHitTest
 #include <boost/test/unit_test.hpp>
 
 #define private public
-#include "../../JPetHit/JPetHit.h"
-#include "../../JPetScin/JPetScin.h"
-#include "../../JPetBarrelSlot/JPetBarrelSlot.h"
+#include "../JPetHit/JPetHit.h"
+#include "../JPetScin/JPetScin.h"
+#include "../JPetBarrelSlot/JPetBarrelSlot.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )
