@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE (bad_file)
 
 BOOST_AUTO_TEST_CASE (good_file_with_constructor)
 {
-  JPetHLDReader reader("small_hld.root");
+  JPetHLDReader reader("unitTestData/JPetHLDReaderTest/small_hld.root");
   BOOST_REQUIRE(reader.isOpen());
   BOOST_REQUIRE(reader.nextEvent());
   BOOST_REQUIRE(reader.firstEvent());
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE (good_file_with_constructor)
 BOOST_AUTO_TEST_CASE (good_file_openFileAndLoadData)
 {
   JPetHLDReader reader;
-  BOOST_REQUIRE(reader.openFileAndLoadData("small_hld.root","T"));
+  BOOST_REQUIRE(reader.openFileAndLoadData("unitTestData/JPetHLDReaderTest/small_hld.root","T"));
   BOOST_REQUIRE(reader.isOpen());
   BOOST_REQUIRE(reader.firstEvent());
   BOOST_REQUIRE(reader.nextEvent());
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE (good_file_openFileAndLoadData)
 BOOST_AUTO_TEST_CASE (good_file_closeFile)
 {
   JPetHLDReader reader;
-  BOOST_REQUIRE(reader.openFileAndLoadData("small_hld.root","T"));
+  BOOST_REQUIRE(reader.openFileAndLoadData("unitTestData/JPetHLDReaderTest/small_hld.root","T"));
   BOOST_REQUIRE(reader.isOpen());
   reader.closeFile();
   BOOST_REQUIRE(!reader.isOpen());

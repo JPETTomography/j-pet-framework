@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE( parsing_1 )
 {
-  auto commandLine = "main.x -t hld -f testfile.hld -i 10";
+  auto commandLine = "main.x -t hld -f unitTestData/JPetCmdParserTest/testfile.hld -i 10";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE( parsing_1 )
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
-  BOOST_REQUIRE(std::string(option.getInputFile()) == "testfile.hld");
+  BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCmdParserTest/testfile.hld");
   BOOST_REQUIRE_EQUAL(option.getFirstEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getLastEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getRunNumber(), 10);
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE( parsing_1 )
 
 BOOST_AUTO_TEST_CASE( parsing_2 )
 {
-  auto commandLine = "main.x -t scope -f testfile.json ";
+  auto commandLine = "main.x -t scope -f unitTestData/JPetCmdParserTest/testfile.json ";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
-  BOOST_REQUIRE(std::string(option.getInputFile()) == "testfile.json");
+  BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCmdParserTest/testfile.json");
   BOOST_REQUIRE_EQUAL(option.getFirstEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getLastEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getRunNumber(), -1);
@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE(fileTest)
 {
     JPetCmdParser cmdParser;
 
-    auto commandLine = "main.x -f data.hld";
+    auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld";
     auto args_char = createArgs(commandLine);
     auto argc = args_char.size();
     auto argv = args_char.data();
@@ -150,12 +150,12 @@ BOOST_AUTO_TEST_CASE(fileTest)
 
     auto fileNames = cmdParser.getFileNames(variablesMap);
     BOOST_REQUIRE(fileNames.size() == 1);
-    BOOST_REQUIRE(fileNames.front() == "data.hld");
+    BOOST_REQUIRE(fileNames.front() == "unitTestData/JPetCmdParserTest/data.hld");
 
     auto file = variablesMap["file"].as<std::vector<std::string>>();
     BOOST_REQUIRE(variablesMap.size() == 1);
     BOOST_REQUIRE(variablesMap.count("file") == 1);
-    BOOST_REQUIRE(file.front() == "data.hld");
+    BOOST_REQUIRE(file.front() == "unitTestData/JPetCmdParserTest/data.hld");
 }
 
 BOOST_AUTO_TEST_CASE(fileTypeTest)
@@ -216,7 +216,7 @@ BOOST_AUTO_TEST_CASE(paramTest)
 {
     JPetCmdParser cmdParser;
 
-    auto commandLine = "main.x -p data.hld";
+    auto commandLine = "main.x -p unitTestData/JPetCmdParserTest/data.hld";
     auto args_char = createArgs(commandLine);
     auto argc = args_char.size();
     auto argv = args_char.data();
@@ -231,12 +231,12 @@ BOOST_AUTO_TEST_CASE(paramTest)
     po::notify(variablesMap);
 
     BOOST_REQUIRE(cmdParser.isParamSet(variablesMap) == true);
-    BOOST_REQUIRE(cmdParser.getParam(variablesMap) == "data.hld");
+    BOOST_REQUIRE(cmdParser.getParam(variablesMap) == "unitTestData/JPetCmdParserTest/data.hld");
 
     auto param = variablesMap["param"].as<std::string>();
     BOOST_REQUIRE(variablesMap.size() == 1);
     BOOST_REQUIRE(variablesMap.count("param") == 1);
-    BOOST_REQUIRE(param == "data.hld");
+    BOOST_REQUIRE(param == "unitTestData/JPetCmdParserTest/data.hld");
 }
 
 BOOST_AUTO_TEST_CASE(runIdTest)
@@ -293,7 +293,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
 {
     JPetCmdParser cmdParser;
 
-    auto commandLine = "main.x -f data.hld -t hld -r 2 -r 4 -p data.hld -i 231 -b 1";
+    auto commandLine = "main.x -f data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -b 1";
     auto args_char = createArgs(commandLine);
     auto argc = args_char.size();
     auto argv = args_char.data();
