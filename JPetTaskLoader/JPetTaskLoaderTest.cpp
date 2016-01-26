@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 
 #define private public
-#include "../../JPetTaskLoader/JPetTaskLoader.h"
+#include "../JPetTaskLoader/JPetTaskLoader.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 

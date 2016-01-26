@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 
 #define private public
-#include "../HelperMathFunctions.h"
+#include "../JPetSimplePhysSignalReco/HelperMathFunctions.h"
 
 //float polynomialFit(const vector<float>& t, const vector<float>& v_source, int alfa, float v0)
 

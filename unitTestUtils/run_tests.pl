@@ -11,17 +11,14 @@ if ( @ARGV > 0) {
 } else {
   $level="error";
 }
-my @tests = `ls -d *Test/`;
+my @tests = `ls *Test.x`;
 my $path = cwd();
-foreach my $test_dir (@tests) {
-  chdir($path);
-  chomp $test_dir;  
-  my $test =$test_dir;
-  chop $test; #remove trailing /
-  $test = "./".$test.".exe";
-  print $test_dir."\n";
-  chdir($test_dir);
-  #my $run_command = $test_dir.$test." --log_level=".$level;
+foreach my $test (@tests) {
+  chomp $test;  
+  my $test_name = $test;
+  $test_name =~ s/\.x//g;
+  print "\n".$test_name."\n";
+  $test = "./".$test;
   my $run_command = $test." --log_level=".$level;
   open my $handler, $run_command." |";
   while (<$handler>) {

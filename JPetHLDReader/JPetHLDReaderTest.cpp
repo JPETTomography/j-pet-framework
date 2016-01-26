@@ -5,7 +5,7 @@
 #define private public
 #define protected public
 
-#include "../../JPetHLDReader/JPetHLDReader.h"
+#include "../JPetHLDReader/JPetHLDReader.h"
 
 #include <cstddef>
 #include <iostream>

@@ -11,7 +11,7 @@ namespace SERVICES
 {
 
 DBHandler* DBHandler::m_instance = nullptr;
-const char* DBHandler::kDefaultConfigFile ="../../DBConfig/configDB.cfg"; ///@todo add description somewhere
+const char* DBHandler::kDefaultConfigFile ="./DBConfig/configDB.cfg"; ///@todo add description somewhere
 
 /// function invokes the configuration file only if the getInstance is invoked for the first time
 DBHandler& DBHandler::getInstance(const char* configFile)  {

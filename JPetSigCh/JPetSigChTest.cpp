@@ -1,8 +1,9 @@
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetSigChTest
 #include <boost/test/unit_test.hpp>
 
 #define private public
-#include "../../JPetSigCh/JPetSigCh.h"
+#include "../JPetSigCh/JPetSigCh.h"
 
 /// @todo update the method list - tests are outdated
 //  JPetSigCh() { init(); }

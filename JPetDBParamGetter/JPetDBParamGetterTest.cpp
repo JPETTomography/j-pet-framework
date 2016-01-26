@@ -1,8 +1,9 @@
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetDBParamGetterTest
 #include <boost/test/unit_test.hpp>
 
 #define private public
-#include "../../JPetDBParamGetter/JPetDBParamGetter.h"
+#include "../JPetDBParamGetter/JPetDBParamGetter.h"
 
 const char* gDefaultConfigFile = "DBConfig/configDB.cfg";
 

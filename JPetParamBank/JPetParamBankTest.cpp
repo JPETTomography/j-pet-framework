@@ -1,11 +1,12 @@
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetParamBankTest
 #include <boost/test/unit_test.hpp>
 
 #define private public
-#include "../../JPetParamBank/JPetParamBank.h"
+#include "../JPetParamBank/JPetParamBank.h"
 #include <TFile.h>
 
-BOOST_AUTO_TEST_SUITE(ParamBankTS)
+BOOST_AUTO_TEST_SUITE(JPetParamBankTestSuite)
 
 BOOST_AUTO_TEST_CASE(DefaultConstructorTest)
 {

@@ -1,11 +1,12 @@
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetReaderTest
 #include <boost/test/unit_test.hpp>
 
 #define private public
 #define protected public
 
-#include "../../JPetReader/JPetReader.h"
-#include "../../JPetWriter/JPetWriter.h"
+#include "../JPetReader/JPetReader.h"
+#include "../JPetWriter/JPetWriter.h"
 
 #include <cstddef>
 #include <iostream>
@@ -33,7 +34,7 @@
   //virtual TObject* getObject(const char* name);
   //virtual bool isOpen() const;
 
-BOOST_AUTO_TEST_SUITE (FirstSuite)
+BOOST_AUTO_TEST_SUITE (JPetReaderTestSuite)
 
 
 BOOST_AUTO_TEST_CASE (default_constructor)

@@ -3,9 +3,9 @@
 #include <boost/test/unit_test.hpp>
 
 #define private public
-#include "../../JPetTask/JPetTask.h"
+#include "../JPetTask/JPetTask.h"
 
-BOOST_AUTO_TEST_SUITE(FirstSuite)
+BOOST_AUTO_TEST_SUITE(JPetTaskTestSuite)
 
 BOOST_AUTO_TEST_CASE( my_test1 )
 {

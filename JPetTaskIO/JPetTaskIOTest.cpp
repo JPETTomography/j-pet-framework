@@ -4,8 +4,8 @@
 
 #define private public
 #define protected public
-#include "../../JPetTaskIO/JPetTaskIO.h"
-#include "../../JPetCmdParser/JPetCmdParser.h"
+#include "../JPetTaskIO/JPetTaskIO.h"
+#include "../JPetCmdParser/JPetCmdParser.h"
 //#include "TaskA.h"
 //#include "TaskB.h"
 //#include "TaskC1.h"
@@ -29,6 +29,13 @@
 //void setUserLimits(const JPetOptions& opts, long long& firstEvent, long long& lastEvent) const;
 
 
+
+//using Options = std::map<std::string, std::string>;
+
+
+BOOST_AUTO_TEST_SUITE(FirstSuite)
+
+
 char* convertStringToCharP(const std::string& s)
 {
   char* pc = new char[s.size() + 1];
@@ -47,10 +54,7 @@ std::vector<char*> createArgs(const std::string& commandLine)
   return args_char;
 }
 
-//using Options = std::map<std::string, std::string>;
 
-
-BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE(progressBarTest)
 {
