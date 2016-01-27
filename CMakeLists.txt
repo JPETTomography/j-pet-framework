@@ -152,6 +152,7 @@ endforeach()
 
 add_custom_target(tests DEPENDS ${test_binaries} ${TESTS_DIR}/unitTestData)
 
+# create a symlink to the directory with data necessary for some unit tests
 add_custom_command(OUTPUT ${TESTS_DIR}/unitTestData
   COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/unitTestData ${TESTS_DIR}/unitTestData
   )
@@ -186,6 +187,13 @@ add_library(dbhandler SHARED ${DBHANDLER_HEADERS} ${DBHANDLER_SOURCES})
 target_link_libraries(dbhandler
   ${PQXX_LIBRARIES}
   ${CONFIG++_LIBRARIES}
+  )
+
+# copy the DB config file to an expected location
+set(db_config_dir ${CMAKE_CURRENT_BINARY_DIR}/DBConfig)
+add_custom_command(TARGET dbhandler
+  POST_BUILD 
+  COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/DBHandler/Config ${db_config_dir}
   )
 
 # - tinyxml2

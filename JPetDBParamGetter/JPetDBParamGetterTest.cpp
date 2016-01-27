@@ -5,7 +5,7 @@
 #define private public
 #include "../JPetDBParamGetter/JPetDBParamGetter.h"
 
-const char* gDefaultConfigFile = "DBConfig/configDB.cfg";
+const char* gDefaultConfigFile = "../DBConfig/configDB.cfg";
 
 BOOST_AUTO_TEST_SUITE(DBParamGetterTS)
 
@@ -52,15 +52,15 @@ BOOST_AUTO_TEST_CASE(dummyFillingTest)
   int run  = 1;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
   
-  std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl;
-  std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl;
-  std::cout << "PMCalib numbers:" << bank->getPMCalibsSize() <<std::endl;
-  std::cout << "BarrelSlot numbers:" << bank->getBarrelSlotsSize() <<std::endl;
-  std::cout << "Layer numbers:" << bank->getLayersSize() <<std::endl;
-  std::cout << "Frame numbers:" << bank->getFramesSize() <<std::endl;
-  std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl;
-  std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl;
-  std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl;
+  /* std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl; */
+  /* std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl; */
+  /* std::cout << "PMCalib numbers:" << bank->getPMCalibsSize() <<std::endl; */
+  /* std::cout << "BarrelSlot numbers:" << bank->getBarrelSlotsSize() <<std::endl; */
+  /* std::cout << "Layer numbers:" << bank->getLayersSize() <<std::endl; */
+  /* std::cout << "Frame numbers:" << bank->getFramesSize() <<std::endl; */
+  /* std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl; */
+  /* std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl; */
+  /* std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl; */
 
   BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank->getPMsSize() == 4);
@@ -78,15 +78,15 @@ BOOST_AUTO_TEST_CASE(run28Test)
   JPetDBParamGetter paramGetter(gDefaultConfigFile);
   int run  = 28;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
-  std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl;
-  std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl;
-  std::cout << "PMCalib numbers:" << bank->getPMCalibsSize() <<std::endl;
-  std::cout << "BarrelSlot numbers:" << bank->getBarrelSlotsSize() <<std::endl;
-  std::cout << "Layer numbers:" << bank->getLayersSize() <<std::endl;
-  std::cout << "Frame numbers:" << bank->getFramesSize() <<std::endl;
-  std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl;
-  std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl;
-  std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl;
+  /* std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl; */
+  /* std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl; */
+  /* std::cout << "PMCalib numbers:" << bank->getPMCalibsSize() <<std::endl; */
+  /* std::cout << "BarrelSlot numbers:" << bank->getBarrelSlotsSize() <<std::endl; */
+  /* std::cout << "Layer numbers:" << bank->getLayersSize() <<std::endl; */
+  /* std::cout << "Frame numbers:" << bank->getFramesSize() <<std::endl; */
+  /* std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl; */
+  /* std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl; */
+  /* std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl; */
   BOOST_REQUIRE(bank->getScintillatorsSize() > 0);
   BOOST_REQUIRE(bank->getPMsSize() > 0);
   BOOST_REQUIRE(bank->getPMCalibsSize() == 0); // 0 due to run id == 26  // TODO Check it with DB // RESOLVED sql function returns (0 rows) for run_id=26
@@ -104,11 +104,11 @@ BOOST_AUTO_TEST_CASE(fillTRefsTest)
   int run  = 1;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
   
-  std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl;
-  std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl;
-  std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl;
-  std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl;
-  std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl;
+  /* std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl; */
+  /* std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl; */
+  /* std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl; */
+  /* std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl; */
+  /* std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl; */
 
   BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank->getPMsSize() == 4);
@@ -157,13 +157,13 @@ BOOST_AUTO_TEST_CASE(fillBarrelSlotTRefTest)
   int run  = 1;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
   
-  std::cout << "Scintillators size:" << bank->getScintillatorsSize() <<std::endl;
-  std::cout << "PM size:" << bank->getPMsSize() <<std::endl;
-  std::cout << "FEB size:" << bank->getFEBsSize() <<std::endl;
-  std::cout << "TRB size:" << bank->getTRBsSize() <<std::endl;
-  std::cout << "TOMB channel size:" << bank->getTOMBChannelsSize() <<std::endl;
-  std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl;
-  std::cout << "Layer size:" << bank->getLayersSize() <<std::endl;
+  /* std::cout << "Scintillators size:" << bank->getScintillatorsSize() <<std::endl; */
+  /* std::cout << "PM size:" << bank->getPMsSize() <<std::endl; */
+  /* std::cout << "FEB size:" << bank->getFEBsSize() <<std::endl; */
+  /* std::cout << "TRB size:" << bank->getTRBsSize() <<std::endl; */
+  /* std::cout << "TOMB channel size:" << bank->getTOMBChannelsSize() <<std::endl; */
+  /* std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl; */
+  /* std::cout << "Layer size:" << bank->getLayersSize() <<std::endl; */
 
   BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank->getPMsSize() == 4);
@@ -186,13 +186,13 @@ BOOST_AUTO_TEST_CASE(fillLayerTRefTest)
   int run  = 1;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
   
-  std::cout << "Scintillators size:" << bank->getScintillatorsSize() <<std::endl;
-  std::cout << "PM size:" << bank->getPMsSize() <<std::endl;
-  std::cout << "FEB size:" << bank->getFEBsSize() <<std::endl;
-  std::cout << "TRB size:" << bank->getTRBsSize() <<std::endl;
-  std::cout << "TOMB channel size:" << bank->getTOMBChannelsSize() <<std::endl;
-  std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl;
-  std::cout << "Layer size:" << bank->getLayersSize() <<std::endl;
+  /* std::cout << "Scintillators size:" << bank->getScintillatorsSize() <<std::endl; */
+  /* std::cout << "PM size:" << bank->getPMsSize() <<std::endl; */
+  /* std::cout << "FEB size:" << bank->getFEBsSize() <<std::endl; */
+  /* std::cout << "TRB size:" << bank->getTRBsSize() <<std::endl; */
+  /* std::cout << "TOMB channel size:" << bank->getTOMBChannelsSize() <<std::endl; */
+  /* std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl; */
+  /* std::cout << "Layer size:" << bank->getLayersSize() <<std::endl; */
 
   BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank->getPMsSize() == 4);
