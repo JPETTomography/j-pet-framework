@@ -14,7 +14,7 @@
 // ********            Generate Single JPetRecoSignal             ******** //
 // *********************************************************************** //
 
-const char* gTest_signal_filename = "scope_files/0/C1_00003.txt";
+const char* gTest_signal_filename = "unitTestData/JPetScopeReaderTest/scope_files/0/C1_00003.txt";
 
 struct reco_signal_generator {
   
@@ -148,7 +148,7 @@ signal_generation_fixture::~signal_generation_fixture () {
 // ********                 Open Single ROOT file                 ******** //
 // *********************************************************************** //
 
-const char* gTest_root_filename = "test_file_test_0.reco.sig.root";
+const char* gTest_root_filename = "unitTestData/JPetScopeReaderTest/test_file_test_0.reco.sig.root";
 
 struct root_file_reader {
   

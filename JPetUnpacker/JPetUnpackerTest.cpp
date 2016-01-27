@@ -49,20 +49,20 @@ BOOST_AUTO_TEST_CASE( my_test2 )
 BOOST_FIXTURE_TEST_CASE( my_test3, Fixture )
 {
   JPetUnpacker unpack;
-  unpack.setParams("xx14099113231.hld", 10, "conf_trb3.xml");
+  unpack.setParams("unitTestData/JPetUnpackerTest/xx14099113231.hld", 10, "unitTestData/JPetUnpackerTest/conf_trb3.xml");
   BOOST_REQUIRE(unpack.exec());
   BOOST_REQUIRE(unpack.getEventsToProcess() == 10);
-  BOOST_REQUIRE(unpack.getHldFile() == "xx14099113231.hld");
-  BOOST_REQUIRE(unpack.getCfgFile() == "conf_trb3.xml");
+  BOOST_REQUIRE(unpack.getHldFile() == "unitTestData/JPetUnpackerTest/xx14099113231.hld");
+  BOOST_REQUIRE(unpack.getCfgFile() == "unitTestData/JPetUnpackerTest/conf_trb3.xml");
   BOOST_REQUIRE(unpack.exec());
 }
 
 BOOST_FIXTURE_TEST_CASE( my_test4, Fixture )
 {
   JPetUnpacker unpack;
-  unpack.setParams("xx14099113231.hld", 10, "conf_trb3.xml");
+  unpack.setParams("unitTestData/JPetUnpackerTest/xx14099113231.hld", 10, "unitTestData/JPetUnpackerTest/conf_trb3.xml");
   BOOST_REQUIRE(unpack.exec());
-  unpack.setParams("xx14099113231.hld", 10, "conf_trb.xml");
+  unpack.setParams("unitTestData/JPetUnpackerTest/xx14099113231.hld", 10, "unitTestData/JPetUnpackerTest/conf_trb.xml");
   BOOST_REQUIRE(!unpack.exec());
 }
 

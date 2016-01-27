@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE (generate_root_file) {
         _argv[1] = const_cast<char*>("-t");
         _argv[2] = const_cast<char*>("scope");
         _argv[3] = const_cast<char*>("-f");
-        _argv[4] = const_cast<char*>("./test_file.info");
+        _argv[4] = const_cast<char*>("unitTestData/JPetScopeReaderTest/test_file.info");
 	_argv[5] = (char*)(NULL);
 
   JPetManager& manager = JPetManager::getManager();
