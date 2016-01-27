@@ -265,15 +265,15 @@ BOOST_AUTO_TEST_CASE(fillContainersTest)
   int run  = 1;
   JPetParamBank bank;
   
-  std::cout << "Scintillators number:" << bank.getScintillatorsSize() <<std::endl;
-  std::cout << "PM numbers:" << bank.getPMsSize() <<std::endl;
-  std::cout << "PMCalib numbers:" << bank.getPMCalibsSize() <<std::endl;
-  std::cout << "BarrelSlot numbers:" << bank.getBarrelSlotsSize() <<std::endl;
-  std::cout << "Layer numbers:" << bank.getLayersSize() <<std::endl;
-  std::cout << "Frame numbers:" << bank.getFramesSize() <<std::endl;
-  std::cout << "FEB numbers:" << bank.getFEBsSize() <<std::endl;
-  std::cout << "TRB numbers:" << bank.getTRBsSize() <<std::endl;
-  std::cout << "TOMB channel numbers:" << bank.getTOMBChannelsSize() <<std::endl;
+  /* std::cout << "Scintillators number:" << bank.getScintillatorsSize() <<std::endl; */
+  /* std::cout << "PM numbers:" << bank.getPMsSize() <<std::endl; */
+  /* std::cout << "PMCalib numbers:" << bank.getPMCalibsSize() <<std::endl; */
+  /* std::cout << "BarrelSlot numbers:" << bank.getBarrelSlotsSize() <<std::endl; */
+  /* std::cout << "Layer numbers:" << bank.getLayersSize() <<std::endl; */
+  /* std::cout << "Frame numbers:" << bank.getFramesSize() <<std::endl; */
+  /* std::cout << "FEB numbers:" << bank.getFEBsSize() <<std::endl; */
+  /* std::cout << "TRB numbers:" << bank.getTRBsSize() <<std::endl; */
+  /* std::cout << "TOMB channel numbers:" << bank.getTOMBChannelsSize() <<std::endl; */
 
   BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
   BOOST_REQUIRE(bank.getPMsSize() == 0);
@@ -495,7 +495,7 @@ BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
   int run  = 2;
   JPetParamBank bank;
   
-  std::cout << "PMCalib numbers:" << bank.getPMCalibsSize() <<std::endl;
+  /* std::cout << "PMCalib numbers:" << bank.getPMCalibsSize() <<std::endl; */
 
   BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
   

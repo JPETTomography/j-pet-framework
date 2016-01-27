@@ -294,7 +294,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
 {
     JPetCmdParser cmdParser;
 
-    auto commandLine = "main.x -f data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -b 1";
+    auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -b 1";
     auto args_char = createArgs(commandLine);
     auto argc = args_char.size();
     auto argv = args_char.data();
@@ -319,7 +319,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
     JPetOptions firstOption = options.front();
 
     BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
-    BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "data.hld") == 0);
+    BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
     BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
     //std::cout << "PROCES =" << firstOption.getOutputFileType() << std::endl;
     //BOOST_REQUIRE(firstOption.getOutputFile() == "root");
@@ -332,7 +332,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
 
 BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
 {
-  auto commandLine = "main.x -f data.hld -t hld -r 2 4 -p data.hld -i 231";
+  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 4 -p data.hld -i 231";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
@@ -344,7 +344,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
   JPetOptions firstOption = options.front();
 
   BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
-  BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "data.hld") == 0);
+  BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
   BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
   BOOST_REQUIRE(firstOption.getFirstEvent() == 2);
   BOOST_REQUIRE(firstOption.getLastEvent() == 4);
@@ -354,7 +354,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
 
 BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
 {
-  auto commandLine = "main.x -f data.hld -t hld";
+  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
@@ -366,7 +366,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
   JPetOptions firstOption = options.front();
 
   BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
-  BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "data.hld") == 0);
+  BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
   BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
   BOOST_REQUIRE(firstOption.getFirstEvent() == -1);
   BOOST_REQUIRE(firstOption.getLastEvent() == -1);

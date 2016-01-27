@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE (bad_file)
 
 BOOST_AUTO_TEST_CASE (good_file_with_constructor)
 {
-  JPetReader reader("small.root");
+  JPetReader reader("unitTestData/JPetReaderTest/small.root");
   BOOST_REQUIRE(reader.isOpen());
   BOOST_REQUIRE(std::string(reader.getCurrentEvent().GetName())==std::string("JPetTSlot"));
   BOOST_REQUIRE(reader.nextEvent());
@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE (good_file_with_constructor)
 }
 BOOST_AUTO_TEST_CASE (good_file_getObject)
 {
-  JPetReader reader("small.root");
+  JPetReader reader("unitTestData/JPetReaderTest/small.root");
   BOOST_REQUIRE(!reader.getObject("nonExistentObj"));
   BOOST_REQUIRE(reader.getObject("tree"));
 }
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE (good_file_getObject)
 BOOST_AUTO_TEST_CASE (good_file_openFileAndLoadData)
 {
   JPetReader reader;
-  BOOST_REQUIRE(reader.openFileAndLoadData("small.root","tree"));
+  BOOST_REQUIRE(reader.openFileAndLoadData("unitTestData/JPetReaderTest/small.root","tree"));
   BOOST_REQUIRE(reader.isOpen());
   BOOST_REQUIRE(std::string(reader.getCurrentEvent().GetName())==std::string("JPetTSlot"));
   BOOST_REQUIRE(reader.firstEvent());
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE (good_file_openFileAndLoadData)
 BOOST_AUTO_TEST_CASE (good_file_closeFile)
 {
   JPetReader reader;
-  BOOST_REQUIRE(reader.openFileAndLoadData("small.root","tree"));
+  BOOST_REQUIRE(reader.openFileAndLoadData("unitTestData/JPetReaderTest/small.root","tree"));
   BOOST_REQUIRE(reader.isOpen());
   reader.closeFile();
   BOOST_REQUIRE(!reader.isOpen());
