@@ -7,7 +7,7 @@
 
 #include <cstddef>
 
-const char* gDefaultConfigFile = "DBConfig/configDB.cfg";
+const char* gDefaultConfigFile = "../DBConfig/configDB.cfg";
 
 BOOST_AUTO_TEST_SUITE(JPetParamManagerTestSuite)
 
