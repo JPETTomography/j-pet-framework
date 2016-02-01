@@ -17,7 +17,7 @@
 
 #include "../JPetTOMBChannel/JPetTOMBChannel.h"
 #include "../JPetLoggerInclude.h"
-#include <vector>
+#include <map>
 #include <cassert>
 
 class JPetParamBank: public TObject
@@ -34,13 +34,13 @@ class JPetParamBank: public TObject
   int getSize(ParamObjectType type) const;
   // Scintillators
   inline void addScintillator(JPetScin& scintillator) {
-    fScintillators.push_back(new JPetScin(scintillator));
+    fScintillators[scintillator.getID()] = new JPetScin(scintillator);
   }
-  inline const std::vector<JPetScin*>& getScintillators() const {
+  inline const std::map<int, JPetScin*>& getScintillators() const {
     return fScintillators;
   }
   inline JPetScin& getScintillator(int i) const {
-    return *fScintillators[i];
+    return *(fScintillators.at(i));
   }
   inline int getScintillatorsSize() const {
     return fScintillators.size();
@@ -48,13 +48,13 @@ class JPetParamBank: public TObject
 
   // PMs
   inline void addPM(JPetPM& pm) {
-    fPMs.push_back(new JPetPM(pm));
+    fPMs[pm.getID()] = new JPetPM(pm);
   }
-  inline const std::vector<JPetPM*>& getPMs() const {
+  inline const std::map<int, JPetPM*>& getPMs() const {
     return fPMs;
   }
   inline JPetPM& getPM(int i) const {
-    return *fPMs[i];
+    return *(fPMs.at(i));
   }
   int getPMsSize() const {
     return fPMs.size();
@@ -62,13 +62,13 @@ class JPetParamBank: public TObject
 
   // PMCalibs
   inline void addPMCalib(JPetPMCalib& pmCalib) {
-    fPMCalibs.push_back(new JPetPMCalib(pmCalib));
+    fPMCalibs[pmCalib.GetId()] = new JPetPMCalib(pmCalib);
   }
-  inline const std::vector<JPetPMCalib*>& getPMCalibs() const {
+  inline const std::map<int, JPetPMCalib*>& getPMCalibs() const {
     return fPMCalibs;
   }
   inline JPetPMCalib& getPMCalib(int i) const {
-    return *fPMCalibs[i];
+    return *(fPMCalibs.at(i));
   }
   int getPMCalibsSize() const {
     return fPMCalibs.size();
@@ -76,13 +76,13 @@ class JPetParamBank: public TObject
   
   // FEBs
   inline void addFEB(JPetFEB& feb) {
-    fFEBs.push_back(new JPetFEB(feb));
+    fFEBs[feb.getID()] = new JPetFEB(feb);
   }
-  inline const std::vector<JPetFEB*>& getFEBs() const {
+  inline const std::map<int, JPetFEB*>& getFEBs() const {
     return fFEBs;
   }
   inline JPetFEB& getFEB(int i) const {
-    return *fFEBs[i];
+    return *(fFEBs.at(i));
   }
   inline int getFEBsSize() const {
     return fFEBs.size();
@@ -90,13 +90,13 @@ class JPetParamBank: public TObject
 
   // TRBs
   inline void addTRB(JPetTRB& trb) {
-    fTRBs.push_back(new JPetTRB(trb));
+    fTRBs[trb.getID()] = new JPetTRB(trb);
   }
-  inline const std::vector<JPetTRB*>& getTRBs() const {
+  inline const std::map<int, JPetTRB*>& getTRBs() const {
     return fTRBs;
   }
   inline JPetTRB& getTRB(int i) const {
-    return *fTRBs[i];
+    return *(fTRBs.at(i));
   }
   inline int getTRBsSize() const {
     return fTRBs.size();
@@ -104,13 +104,13 @@ class JPetParamBank: public TObject
 
   // Barrel Slot
   inline void addBarrelSlot(JPetBarrelSlot& slot) {
-    fBarrelSlots.push_back(new JPetBarrelSlot(slot));
+    fBarrelSlots[slot.getID()] = new JPetBarrelSlot(slot);
   }
-  inline const std::vector<JPetBarrelSlot*>& getBarrelSlots() const {
+  inline const std::map<int, JPetBarrelSlot*>& getBarrelSlots() const {
     return fBarrelSlots;
   }
   inline JPetBarrelSlot& getBarrelSlot(int i) const {
-    return *fBarrelSlots[i];
+    return *(fBarrelSlots.at(i));
   }
   inline int getBarrelSlotsSize() const {
     return fBarrelSlots.size();
@@ -118,13 +118,13 @@ class JPetParamBank: public TObject
 
   // Layer
   inline void addLayer(JPetLayer& layer) {
-    fLayers.push_back(new JPetLayer(layer));
+    fLayers[layer.getId()] = new JPetLayer(layer);
   }
-  inline const std::vector<JPetLayer*>& getLayers() const {
+  inline const std::map<int, JPetLayer*>& getLayers() const {
     return fLayers;
   }
   inline JPetLayer& getLayer(int i) const {
-    return *fLayers[i];
+    return *(fLayers.at(i));
   }
   inline int getLayersSize() const {
     return fLayers.size();
@@ -132,13 +132,13 @@ class JPetParamBank: public TObject
   
   // Frame
   inline void addFrame(JPetFrame& frame) {
-    fFrames.push_back(new JPetFrame(frame));
+    fFrames[frame.getId()] = new JPetFrame(frame);
   }
-  inline const std::vector<JPetFrame*>& getFrames() const {
+  inline const std::map<int, JPetFrame*>& getFrames() const {
     return fFrames;
   }
   inline JPetFrame& getFrame(int i) const {
-    return *fFrames[i];
+    return *(fFrames.at(i));
   }
   inline int getFramesSize() const {
     return fFrames.size();
@@ -146,9 +146,9 @@ class JPetParamBank: public TObject
   
   // TOMB Channels
   inline void addTOMBChannel(JPetTOMBChannel& tombchannel) {
-    fTOMBChannels.push_back(new JPetTOMBChannel(tombchannel));
+    fTOMBChannels[tombchannel.getChannel()] = new JPetTOMBChannel(tombchannel);
   }
-  inline const std::vector<JPetTOMBChannel*>& getTOMBChannels() const {
+  inline const std::map<int, JPetTOMBChannel*>& getTOMBChannels() const {
     return fTOMBChannels;
   }
   inline JPetTOMBChannel& getTOMBChannel(int i) const {
@@ -162,23 +162,22 @@ class JPetParamBank: public TObject
 
   void operator=(const JPetParamBank&);
 
-  std::vector<JPetScin*> fScintillators;
-  std::vector<JPetPM*> fPMs;
-  std::vector<JPetPMCalib*> fPMCalibs;
-  std::vector<JPetFEB*> fFEBs;
-  std::vector<JPetTRB*> fTRBs;
-  std::vector<JPetBarrelSlot*> fBarrelSlots;
-  std::vector<JPetLayer*> fLayers;
-  std::vector<JPetFrame*> fFrames;
-  std::vector<JPetTOMBChannel*> fTOMBChannels;
+  std::map<int, JPetScin*> fScintillators;
+  std::map<int, JPetPM*> fPMs;
+  std::map<int, JPetPMCalib*> fPMCalibs;
+  std::map<int, JPetFEB*> fFEBs;
+  std::map<int, JPetTRB*> fTRBs;
+  std::map<int, JPetBarrelSlot*> fBarrelSlots;
+  std::map<int, JPetLayer*> fLayers;
+  std::map<int, JPetFrame*> fFrames;
+  std::map<int, JPetTOMBChannel*> fTOMBChannels;
   ClassDef (JPetParamBank, 3);
 
   template <typename T>
-  void initVectorWith(std::vector<T*>& target, const std::vector<T*>& source)
+  void copyMapValues(std::map<int, T*>& target, const std::map<int, T*>& source)
   {
-      for(int i = 0; i < source.size(); i++)
-      {
-          target.push_back(new T(*source[i]));
+      for (auto & c : source) {
+          target[c.first] = new T(*c.second);
       }
   }
 };
