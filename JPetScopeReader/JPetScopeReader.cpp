@@ -123,18 +123,18 @@ JPetParamBank const& JPetScopeReader::createParamBank(ptree const& conf_data) {
     param_bank->addScintillator(scin1);
     param_bank->addScintillator(scin2);
 
-    (param_bank->getPM(0)).setScin(param_bank->getScintillator(0));
-    (param_bank->getPM(1)).setScin(param_bank->getScintillator(0));
-    (param_bank->getPM(2)).setScin(param_bank->getScintillator(1));
-    (param_bank->getPM(3)).setScin(param_bank->getScintillator(1));
+    (param_bank->getPM(pmid1)).setScin(param_bank->getScintillator(scinid1));
+    (param_bank->getPM(pmid2)).setScin(param_bank->getScintillator(scinid1));
+    (param_bank->getPM(pmid3)).setScin(param_bank->getScintillator(scinid2));
+    (param_bank->getPM(pmid4)).setScin(param_bank->getScintillator(scinid2));
 
-    (param_bank->getPM(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
-    (param_bank->getPM(1)).setBarrelSlot(param_bank->getBarrelSlot(0));
-    (param_bank->getPM(2)).setBarrelSlot(param_bank->getBarrelSlot(1));
-    (param_bank->getPM(3)).setBarrelSlot(param_bank->getBarrelSlot(1));
+    (param_bank->getPM(pmid1)).setBarrelSlot(param_bank->getBarrelSlot(bslotid1));
+    (param_bank->getPM(pmid2)).setBarrelSlot(param_bank->getBarrelSlot(bslotid1));
+    (param_bank->getPM(pmid3)).setBarrelSlot(param_bank->getBarrelSlot(bslotid2));
+    (param_bank->getPM(pmid4)).setBarrelSlot(param_bank->getBarrelSlot(bslotid2));
 
-    (param_bank->getScintillator(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
-    (param_bank->getScintillator(1)).setBarrelSlot(param_bank->getBarrelSlot(1));
+    (param_bank->getScintillator(scinid1)).setBarrelSlot(param_bank->getBarrelSlot(bslotid1));
+    (param_bank->getScintillator(scinid2)).setBarrelSlot(param_bank->getBarrelSlot(bslotid2));
 
     return *param_bank;
 }

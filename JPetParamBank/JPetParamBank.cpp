@@ -15,15 +15,15 @@ JPetParamBank::JPetParamBank()
 
 JPetParamBank::JPetParamBank(const JPetParamBank& paramBank)
 {
-  initVectorWith(fScintillators, paramBank.fScintillators);
-  initVectorWith(fPMs, paramBank.fPMs);
-  initVectorWith(fPMCalibs, paramBank.fPMCalibs);
-  initVectorWith(fFEBs, paramBank.fFEBs);
-  initVectorWith(fTRBs, paramBank.fTRBs);
-  initVectorWith(fBarrelSlots, paramBank.fBarrelSlots);
-  initVectorWith(fLayers, paramBank.fLayers);
-  initVectorWith(fFrames, paramBank.fFrames);
-  initVectorWith(fTOMBChannels, paramBank.fTOMBChannels);
+  copyMapValues(fScintillators, paramBank.fScintillators);
+  copyMapValues(fPMs, paramBank.fPMs);
+  copyMapValues(fPMCalibs, paramBank.fPMCalibs);
+  copyMapValues(fFEBs, paramBank.fFEBs);
+  copyMapValues(fTRBs, paramBank.fTRBs);
+  copyMapValues(fBarrelSlots, paramBank.fBarrelSlots);
+  copyMapValues(fLayers, paramBank.fLayers);
+  copyMapValues(fFrames, paramBank.fFrames);
+  copyMapValues(fTOMBChannels, paramBank.fTOMBChannels);
 }
 
 JPetParamBank::~JPetParamBank()

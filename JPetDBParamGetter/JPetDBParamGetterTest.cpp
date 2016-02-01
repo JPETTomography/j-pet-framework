@@ -121,6 +121,7 @@ BOOST_AUTO_TEST_CASE(fillTRefsTest)
   paramGetter.fillTOMBChannelsTRefs(run, *bank);
   
   // PM TRef to Scint
+		// TODO(timorl): this probably doesn't work after the id changes, check and fix
   JPetPM& pm_ref = bank->getPM(0);
   BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(1).getID());
   pm_ref = bank->getPM(1);
@@ -130,14 +131,13 @@ BOOST_AUTO_TEST_CASE(fillTRefsTest)
   pm_ref = bank->getPM(3);
   BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(1).getID());
   
-  BOOST_REQUIRE(bank->getPM(0).getFEB().isActive());
-  BOOST_REQUIRE(bank->getPM(1).getFEB().isActive());
-  BOOST_REQUIRE(bank->getPM(2).getFEB().isActive());
-  BOOST_REQUIRE(bank->getPM(3).getFEB().isActive());
+		for (auto & cs : bank->getPMs()) {
+				BOOST_REQUIRE(cs.second->getFEB().isActive());
+		}
 
   // Consistency of TRefs from TOMBChannels
-  for(int i=0;i<bank->getTOMBChannelsSize();++i){
-    JPetTOMBChannel& TOMBChannel_ref = bank->getTOMBChannel(i);
+  for (auto & cs : bank->getTOMBChannels()){
+    JPetTOMBChannel & TOMBChannel_ref = *cs.second;
     BOOST_REQUIRE(TOMBChannel_ref.getFEB().isActive());
     BOOST_REQUIRE_EQUAL(TOMBChannel_ref.getFEB().getID() ,TOMBChannel_ref.getPM().getFEB().getID());
     BOOST_REQUIRE_EQUAL(TOMBChannel_ref.getTRB().getID() ,TOMBChannel_ref.getFEB().getTRB().getID());
@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE(fillBarrelSlotTRefTest)
   paramGetter.fillBarrelSlotTRefs(run, *bank);
   
   // BarrelSlot TRef for Layer
-  JPetBarrelSlot& barrelSlot = bank->getBarrelSlot(0);
+  JPetBarrelSlot& barrelSlot = *(bank->getBarrelSlots().begin()->second);
   BOOST_REQUIRE(barrelSlot.getLayer().getId() == 1);
 }
 
@@ -205,44 +205,10 @@ BOOST_AUTO_TEST_CASE(fillLayerTRefTest)
   paramGetter.fillLayerTRefs(run, *bank);
   
   // Layer TRef for Frame
-  JPetLayer& layer = bank->getLayer(0);
+  JPetLayer& layer = *(bank->getLayers().begin()->second);
   BOOST_REQUIRE(layer.getFrame().getId() == 1);
 }
-/*
-BOOST_AUTO_TEST_CASE(fillPMTRefsWithBarrelSlotTest)
-{
-  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-  int run  = 1;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-  
-  std::cout << "PM size:" << bank->getPMsSize() <<std::endl;
-  std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl;
 
-  BOOST_REQUIRE(bank->getPMsSize() == 4);
-  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
-  
-  // PM TRef for BarrelSlot
-  JPetPM& l_PM = bank->getPM(0);
-  std::cout << l_PM.getBarrelSlot().getID() << std::endl;
-}
-
-BOOST_AUTO_TEST_CASE(fillScintillatorTRefsWithBarrelSlotTest)
-{
-  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-  int run  = 1;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-  
-  std::cout << "Scintillators size:" << bank->getScintillatorsSize() <<std::endl;
-  std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl;
-
-  BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
-  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
-  
-  // Scintillator TRef for BarrelSlot
-  JPetScin& l_scintillator = bank->getScintillator(0);
-  std::cout << l_scintillator.getBarrelSlot().getID() << std::endl;
-}
-*/
 BOOST_AUTO_TEST_CASE(getDataFromDBTest)
 {
   JPetDBParamGetter paramGetter(gDefaultConfigFile);
@@ -502,73 +468,67 @@ BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
   paramGetter.fillPMCalibs(run, bank);
   
   BOOST_REQUIRE(bank.getPMCalibsSize() == 4); // 0 due to run id == 1  // TODO Check it with DB // RESOLVED sql function returns (4 rows) for run_id=2
+
+		auto calibs = bank.getPMCalibs().begin();
+
+		JPetPMCalib & calib1 = *(calibs->second);
   
-  BOOST_REQUIRE(bank.getPMCalib(0).GetId() == 1);
-  BOOST_REQUIRE(bank.getPMCalib(0).GetNamePM() == "dummy");
-  BOOST_REQUIRE(bank.getPMCalib(0).GetOpthv() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(0).GetECalConst1() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(0).GetECalConst2() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(0).GetGainalpha() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(0).GetGainbeta() == 0);
+  BOOST_REQUIRE(calib1.GetId() == 1);
+  BOOST_REQUIRE(calib1.GetNamePM() == "dummy");
+  BOOST_REQUIRE(calib1.GetOpthv() == 0);
+  BOOST_REQUIRE(calib1.GetECalConst1() == 0);
+  BOOST_REQUIRE(calib1.GetECalConst2() == 0);
+  BOOST_REQUIRE(calib1.GetGainalpha() == 0);
+  BOOST_REQUIRE(calib1.GetGainbeta() == 0);
   
-  BOOST_REQUIRE(bank.getPMCalib(0).GetPMCalibAssignment().id == 2);
-  BOOST_REQUIRE(bank.getPMCalib(0).GetPMCalibAssignment().photomultiplier_id == 3);
+  BOOST_REQUIRE(calib1.GetPMCalibAssignment().id == 2);
+  BOOST_REQUIRE(calib1.GetPMCalibAssignment().photomultiplier_id == 3);
   
-  BOOST_REQUIRE(bank.getPMCalib(1).GetId() == 1);
-  BOOST_REQUIRE(bank.getPMCalib(1).GetNamePM() == "dummy");
-  BOOST_REQUIRE(bank.getPMCalib(1).GetOpthv() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(1).GetECalConst1() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(1).GetECalConst2() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(1).GetGainalpha() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(1).GetGainbeta() == 0);
+		calibs++;
+		JPetPMCalib & calib2 = *(calibs->second);
+
+  BOOST_REQUIRE(calib2.GetId() == 1);
+  BOOST_REQUIRE(calib2.GetNamePM() == "dummy");
+  BOOST_REQUIRE(calib2.GetOpthv() == 0);
+  BOOST_REQUIRE(calib2.GetECalConst1() == 0);
+  BOOST_REQUIRE(calib2.GetECalConst2() == 0);
+  BOOST_REQUIRE(calib2.GetGainalpha() == 0);
+  BOOST_REQUIRE(calib2.GetGainbeta() == 0);
   
-  BOOST_REQUIRE(bank.getPMCalib(1).GetPMCalibAssignment().id == 1);
-  BOOST_REQUIRE(bank.getPMCalib(1).GetPMCalibAssignment().photomultiplier_id == 1);
+  BOOST_REQUIRE(calib2.GetPMCalibAssignment().id == 1);
+  BOOST_REQUIRE(calib2.GetPMCalibAssignment().photomultiplier_id == 1);
   
-  BOOST_REQUIRE(bank.getPMCalib(2).GetId() == 1);
-  BOOST_REQUIRE(bank.getPMCalib(2).GetNamePM() == "dummy");
-  BOOST_REQUIRE(bank.getPMCalib(2).GetOpthv() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(2).GetECalConst1() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(2).GetECalConst2() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(2).GetGainalpha() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(2).GetGainbeta() == 0);
+		calibs++;
+		JPetPMCalib & calib3 = *(calibs->second);
+
+  BOOST_REQUIRE(calib3.GetId() == 1);
+  BOOST_REQUIRE(calib3.GetNamePM() == "dummy");
+  BOOST_REQUIRE(calib3.GetOpthv() == 0);
+  BOOST_REQUIRE(calib3.GetECalConst1() == 0);
+  BOOST_REQUIRE(calib3.GetECalConst2() == 0);
+  BOOST_REQUIRE(calib3.GetGainalpha() == 0);
+  BOOST_REQUIRE(calib3.GetGainbeta() == 0);
   
-  BOOST_REQUIRE(bank.getPMCalib(2).GetPMCalibAssignment().id == 3);
-  BOOST_REQUIRE(bank.getPMCalib(2).GetPMCalibAssignment().photomultiplier_id == 7);
+  BOOST_REQUIRE(calib3.GetPMCalibAssignment().id == 3);
+  BOOST_REQUIRE(calib3.GetPMCalibAssignment().photomultiplier_id == 7);
   
-  BOOST_REQUIRE(bank.getPMCalib(3).GetId() == 1);
-  BOOST_REQUIRE(bank.getPMCalib(3).GetNamePM() == "dummy");
-  BOOST_REQUIRE(bank.getPMCalib(3).GetOpthv() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(3).GetECalConst1() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(3).GetECalConst2() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(3).GetGainalpha() == 0);
-  BOOST_REQUIRE(bank.getPMCalib(3).GetGainbeta() == 0);
+		calibs++;
+		JPetPMCalib & calib4 = *(calibs->second);
+
+  BOOST_REQUIRE(calib4.GetId() == 1);
+  BOOST_REQUIRE(calib4.GetNamePM() == "dummy");
+  BOOST_REQUIRE(calib4.GetOpthv() == 0);
+  BOOST_REQUIRE(calib4.GetECalConst1() == 0);
+  BOOST_REQUIRE(calib4.GetECalConst2() == 0);
+  BOOST_REQUIRE(calib4.GetGainalpha() == 0);
+  BOOST_REQUIRE(calib4.GetGainbeta() == 0);
   
-  BOOST_REQUIRE(bank.getPMCalib(3).GetPMCalibAssignment().id == 4);
-  BOOST_REQUIRE(bank.getPMCalib(3).GetPMCalibAssignment().photomultiplier_id == 4);
+  BOOST_REQUIRE(calib4.GetPMCalibAssignment().id == 4);
+  BOOST_REQUIRE(calib4.GetPMCalibAssignment().photomultiplier_id == 4);
   
   bank.clear();
 
   BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
-}
-
-BOOST_AUTO_TEST_CASE(paramBankCopyTest)
-{
-  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-  int run  = 1;
-  JPetParamBank*bank1 = paramGetter.generateParamBank(run);
-  JPetParamBank*bank2 = paramGetter.generateParamBank(run);
-
-  ((JPetPM*)bank1->fPMs[0])->setID(111);
-  ((JPetPM*)bank2->fPMs[0])->setID(666);
-
-  ((JPetScin*)bank1->fScintillators[0])->getBarrelSlot().fId = 111;
-  ((JPetScin*)bank2->fScintillators[0])->getBarrelSlot().fId = 666;
-
-  BOOST_REQUIRE(((JPetPM*)bank1->fPMs[0])->getID() != ((JPetPM*)bank2->fPMs[0])->getID());
-  BOOST_REQUIRE(((JPetTOMBChannel*)bank1->fTOMBChannels[0])->fTRB != ((JPetTOMBChannel*)bank2->fTOMBChannels[0])->fTRB );
-  BOOST_REQUIRE(((JPetScin*)bank1->getScintillators()[0])->getBarrelSlot() != ((JPetScin*)bank2->getScintillators()[0])->getBarrelSlot());
-
 }
 
 BOOST_AUTO_TEST_SUITE_END()
