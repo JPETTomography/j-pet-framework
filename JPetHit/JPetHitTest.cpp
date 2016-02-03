@@ -20,6 +20,9 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_REQUIRE_CLOSE(hit.fPos.X(),0, epsilon );
   BOOST_REQUIRE_CLOSE(hit.fPos.Y(),0, epsilon );
   BOOST_REQUIRE_CLOSE(hit.fPos.Z(),0, epsilon );
+
+  BOOST_REQUIRE_EQUAL(hit.fIsSignalAset, false);
+  BOOST_REQUIRE_EQUAL(hit.fIsSignalBset, false);
   
 //  BOOST_REQUIRE(hit.fSignals->first == NULL);
 //  BOOST_REQUIRE(hit.fSignals->second == NULL);
@@ -34,6 +37,7 @@ BOOST_AUTO_TEST_CASE(init_constructor )
   TVector3 position(1.0f,2.0f,3.0f);
   JPetPhysSignal leftSignal;
   JPetPhysSignal rightSignal;
+
   /*JPetHit::JPetSignals bothSignals = std::make_pair(&leftSignal,&rightSignal);
   JPetBarrelSlot barrelSlot;
   JPetScin scintillator;
@@ -59,8 +63,40 @@ BOOST_AUTO_TEST_CASE(init_constructor )
   BOOST_REQUIRE(hit.fBarrelSlot != NULL);
   BOOST_REQUIRE(hit.fScintillator != NULL);
   BOOST_REQUIRE(hit.fTSlot != NULL);*/
+
 }
 
+
+BOOST_AUTO_TEST_CASE(consistency_check_test)
+{
+  JPetPhysSignal leftSignal;
+  JPetPhysSignal rightSignal;
+  JPetBarrelSlot slot1(43, true, "", 0, 43);
+  JPetBarrelSlot slot2(44, true, "", 0, 44);
+  JPetPM pmA(JPetPM::SideA, 101, 0, 0, std::pair<float,float>(0,0));
+  JPetPM pmB(JPetPM::SideB, 102, 0, 0, std::pair<float,float>(0,0));
+  leftSignal.setPM(pmA);
+  rightSignal.setPM(pmB);
+  
+  pmA.setBarrelSlot(slot1);
+  pmB.setBarrelSlot(slot1);
+  
+  JPetHit hit1;
+  BOOST_REQUIRE_EQUAL( hit1.areSignalsConsistent(), true ); 
+  hit1.setSignalA(leftSignal);
+  BOOST_REQUIRE_EQUAL( hit1.areSignalsConsistent(), true );
+  hit1.setSignalB(rightSignal);
+  BOOST_REQUIRE_EQUAL( hit1.areSignalsConsistent(), true );
+
+  pmB.setBarrelSlot(slot2); // signals come from different barrel slots
+  BOOST_REQUIRE_EQUAL( hit1.areSignalsConsistent(), false );
+
+  pmB.setBarrelSlot(slot1); // everyting conistent again
+  BOOST_REQUIRE_EQUAL( hit1.areSignalsConsistent(), true );
+
+  pmB.setSide(JPetPM::SideA); // pmA and pmB are both on side A
+  BOOST_REQUIRE_EQUAL( hit1.areSignalsConsistent(), false );
+}
 
 BOOST_AUTO_TEST_CASE(set_get_scalars_test){
   JPetHit hit;
@@ -106,7 +142,13 @@ BOOST_AUTO_TEST_CASE(set_get_objects_test)
   JPetScin scin;
   scin.setID( scinID );
   JPetBarrelSlot slot;
-
+  JPetPM pmA(JPetPM::SideA, 101, 0, 0, std::pair<float,float>(0,0));
+  JPetPM pmB(JPetPM::SideB, 102, 0, 0, std::pair<float,float>(0,0));
+  pmA.setBarrelSlot(slot);
+  pmB.setBarrelSlot(slot);
+  leftSignal.setPM(pmA);
+  rightSignal.setPM(pmB);  
+  
   JPetHit hit;
   hit.setSignalA( leftSignal );
   hit.setSignalB( rightSignal );
