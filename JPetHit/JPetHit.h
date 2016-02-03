@@ -67,7 +67,7 @@ class JPetHit : public TNamed {
 		     else return fSignalB;}
   inline const JPetPhysSignal& getSignalA() const {return fSignalA;}
   inline const JPetPhysSignal& getSignalB() const {return fSignalB;}
-
+ 
   inline const JPetScin& getScintillator() const {return (JPetScin&)*fScintillator.GetObject();}
   inline const JPetBarrelSlot& getBarrelSlot() const {return (JPetBarrelSlot&)*fBarrelSlot.GetObject();}
 
@@ -90,11 +90,9 @@ class JPetHit : public TNamed {
   inline void setPosY(float y) {fPos.SetY(y);}
   inline void setPosZ(float z) {fPos.SetZ(z);}
   inline void setPos (float x,float y,float z) {fPos.SetXYZ(x,y,z);}
-  inline void setSignals (JPetPhysSignal & p_sigA, JPetPhysSignal & p_sigB) {
-              fSignalA = p_sigA;
-	      fSignalB = p_sigB;}
-  inline void setSignalA(JPetPhysSignal & p_sig) {fSignalA=p_sig;}
-  inline void setSignalB(JPetPhysSignal & p_sig) {fSignalB=p_sig;}
+  void setSignals(JPetPhysSignal & p_sigA, JPetPhysSignal & p_sigB);
+  void setSignalA(JPetPhysSignal & p_sig);
+  void setSignalB(JPetPhysSignal & p_sig);
   inline void setBarrelSlot(JPetBarrelSlot& bs) {fBarrelSlot = &bs;}
   inline void setScintillator(JPetScin& sc) {fScintillator = &sc;}
 
@@ -103,7 +101,9 @@ class JPetHit : public TNamed {
   ClassDef(JPetHit,1);
   
   private:
-   
+
+  bool areSignalsConsistent() const;
+  
   float fEnergy; ///< reconstructed energy of the hit [keV]
   float fQualityOfEnergy;
   float fTime; ///< reconstructed time of the hit [ps]
@@ -114,7 +114,9 @@ class JPetHit : public TNamed {
   TVector3 fPos;
   JPetPhysSignal fSignalA;
   JPetPhysSignal fSignalB;
-
+  bool fIsSignalAset;
+  bool fIsSignalBset;
+  
   int fScinID; ///< For simple reconstruction
 
   // references to parametric objects
