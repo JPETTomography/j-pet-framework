@@ -26,7 +26,7 @@ JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSi
 
   fIsSignalAset = true ;
   fIsSignalBset = true ;
-  areSignalsConsistent();
+  checkConsistency();
 }
 
 JPetHit::~JPetHit() {
@@ -34,7 +34,8 @@ JPetHit::~JPetHit() {
 
 
 /** @brief Checks whether both signals set in this Hit object
- *  come from the same barrel slot and logs an error message if not.
+ *  come from the same barrel slot and opposite-side PMTs and logs 
+ *  an error message if not.
  *
  *  Pairing two signals originating from photomultipliers belonging to
  *  two different barrel slots or the same barrel side (i.e. attached 
@@ -47,7 +48,7 @@ JPetHit::~JPetHit() {
  *
  *  @return true if both signals are consistently from the same barrel slot.
  */
-bool JPetHit::areSignalsConsistent() const{
+bool JPetHit::checkConsistency() const{
 
   
   if( !fIsSignalAset || !fIsSignalBset ){
@@ -78,16 +79,16 @@ void JPetHit::setSignals(JPetPhysSignal & p_sigA, JPetPhysSignal & p_sigB) {
   fIsSignalAset = true;
   fSignalB = p_sigB;
   fIsSignalBset = true;
-  areSignalsConsistent();
+  checkConsistency();
 }
 
 void JPetHit::setSignalA(JPetPhysSignal & p_sig) {
   fSignalA=p_sig;
   fIsSignalAset=true;
-  areSignalsConsistent();
+  checkConsistency();
 }
 void JPetHit::setSignalB(JPetPhysSignal & p_sig) {
   fSignalB=p_sig;
   fIsSignalBset=true;
-  areSignalsConsistent();  
+  checkConsistency();  
 }

@@ -102,7 +102,7 @@ class JPetHit : public TNamed {
   
   private:
 
-  bool areSignalsConsistent() const;
+  bool checkConsistency() const;
   
   float fEnergy; ///< reconstructed energy of the hit [keV]
   float fQualityOfEnergy;
