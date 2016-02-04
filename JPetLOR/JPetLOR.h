@@ -67,6 +67,7 @@ public:
     fSecondHit = secondHit;
     fIsHitSet[0] = true;
     fIsHitSet[1] = true;
+    checkConsistency();
   }
 
   /**
@@ -77,6 +78,7 @@ public:
   inline void setFirstHit(JPetHit & firstHit) {
     fFirstHit = firstHit;
     fIsHitSet[0] = true;
+    checkConsistency();
   }
 
   /**
@@ -87,6 +89,7 @@ public:
   inline void setSecondHit(JPetHit & secondHit) {
     fSecondHit = secondHit;
     fIsHitSet[1] = true;
+    checkConsistency();
   }
 
   /// Set the reconstructed time difference between the two hits of the event [ps]
@@ -104,6 +107,8 @@ ClassDef(JPetLOR,1);
 
 private:
 
+ bool checkConsistency() const; 
+ 
   float fTime; ///< reconstructed absolute time of the event wrt to beginning of the run [ps]
   float fQualityOfTime;
 
