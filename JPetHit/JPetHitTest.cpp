@@ -82,20 +82,20 @@ BOOST_AUTO_TEST_CASE(consistency_check_test)
   pmB.setBarrelSlot(slot1);
   
   JPetHit hit1;
-  BOOST_REQUIRE_EQUAL( hit1.areSignalsConsistent(), true ); 
+  BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), true ); 
   hit1.setSignalA(leftSignal);
-  BOOST_REQUIRE_EQUAL( hit1.areSignalsConsistent(), true );
+  BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), true );
   hit1.setSignalB(rightSignal);
-  BOOST_REQUIRE_EQUAL( hit1.areSignalsConsistent(), true );
+  BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), true );
 
   pmB.setBarrelSlot(slot2); // signals come from different barrel slots
-  BOOST_REQUIRE_EQUAL( hit1.areSignalsConsistent(), false );
+  BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), false );
 
   pmB.setBarrelSlot(slot1); // everyting conistent again
-  BOOST_REQUIRE_EQUAL( hit1.areSignalsConsistent(), true );
+  BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), true );
 
   pmB.setSide(JPetPM::SideA); // pmA and pmB are both on side A
-  BOOST_REQUIRE_EQUAL( hit1.areSignalsConsistent(), false );
+  BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), false );
 }
 
 BOOST_AUTO_TEST_CASE(set_get_scalars_test){
