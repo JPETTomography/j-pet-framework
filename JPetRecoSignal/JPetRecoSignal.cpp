@@ -52,5 +52,5 @@ void JPetRecoSignal::setRawSignal(const JPetRawSignal& rawSignal){
    fRawSignal = rawSignal;
    setPM( rawSignal.getPM() );
    setBarrelSlot( rawSignal.getBarrelSlot() );
-   setTSlotIndex( rawSignal.getTSlotIndex() );
+   setTimeWindowIndex( rawSignal.getTimeWindowIndex() );
 }
