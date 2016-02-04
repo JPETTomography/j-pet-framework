@@ -12,6 +12,8 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   JPetLOR event;
   BOOST_REQUIRE_EQUAL(event.getTime(), 0.0f);
   BOOST_REQUIRE_EQUAL(event.getQualityOfTime(), 0.0f);
+
+  BOOST_REQUIRE_EQUAL(event.checkConsistency(), true);
   
   //BOOST_REQUIRE(event.fHits->first == NULL);
   //BOOST_REQUIRE(event.fHits->second == NULL);
@@ -19,9 +21,15 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 
 BOOST_AUTO_TEST_CASE(constructor)
 {
+  JPetBarrelSlot slot1(43, true, "", 0, 43);
+  JPetBarrelSlot slot2(44, true, "", 0, 44);
   JPetHit firstHit;
   JPetHit secondHit;
+  firstHit.setBarrelSlot(slot1);
+  secondHit.setBarrelSlot(slot2);
   JPetLOR event(8.5f, 4.5f, firstHit, secondHit);
+
+  BOOST_REQUIRE_EQUAL(event.checkConsistency(), true);
   
   float epsilon = 0.0001f;
   BOOST_REQUIRE_CLOSE(event.getTime(), 8.5f, epsilon);
@@ -82,6 +90,35 @@ BOOST_AUTO_TEST_CASE(timeTest)
   event.setTime(111.f);
   float epsilon = 0.0001f;
   BOOST_REQUIRE_CLOSE(event.getTime(), 111.f, epsilon);
+}
+
+BOOST_AUTO_TEST_CASE(consistency_check_test)
+{
+  JPetBarrelSlot slot1(43, true, "", 0, 43);
+  JPetBarrelSlot slot2(44, true, "", 0, 44);
+  JPetHit firstHit;
+  JPetHit secondHit;
+  firstHit.setBarrelSlot(slot1);
+  secondHit.setBarrelSlot(slot2);
+  JPetLOR event(8.5f, 4.5f, firstHit, secondHit);
+
+  BOOST_REQUIRE_EQUAL(event.checkConsistency(), true);
+
+  secondHit.setBarrelSlot(slot1);
+  event.setSecondHit(secondHit);
+  BOOST_REQUIRE_EQUAL(event.checkConsistency(), false);
+
+  secondHit.setBarrelSlot(slot2);
+  event.setSecondHit(secondHit);
+  BOOST_REQUIRE_EQUAL(event.checkConsistency(), true);
+
+  firstHit.setTime(10.001);
+  secondHit.setTime(10.002);
+  event.setHits(firstHit, secondHit);
+  BOOST_REQUIRE_EQUAL(event.checkConsistency(), true);
+
+  event.setHits(secondHit, firstHit);
+  BOOST_REQUIRE_EQUAL(event.checkConsistency(), false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
