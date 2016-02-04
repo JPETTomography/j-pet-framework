@@ -146,8 +146,8 @@ BOOST_AUTO_TEST_CASE(GetMapOfTimesVsThrValueTest) {
 
 BOOST_AUTO_TEST_CASE(SetAndGetTSlotIndexTest) {
   JPetRawSignal signal;
-  signal.setTSlotIndex(8);
-  BOOST_CHECK(signal.getTSlotIndex() == 8);
+  signal.setTimeWindowIndex(8);
+  BOOST_CHECK(signal.getTimeWindowIndex() == 8);
 }
 
 BOOST_AUTO_TEST_CASE(SetAndGetTRefPMObjectTest) {

@@ -26,17 +26,17 @@ public:
   /**
    * @brief Set number of the Time Slot this signal belongs to.
    *
-   * Should be set to the value returned by JPetTimeWindow::getIndex() for the respective TSlot
+   * Should be set to the value returned by JPetTimeWindow::getIndex() for the respective Time Window
    */
-  inline void setTSlotIndex(int index) {
-    fTSlotIndex = index;
+  inline void setTimeWindowIndex(unsigned int index) {
+    fTimeWindowIndex = index;
   }
 
   /**
-   * @brief Get the number of the Time Slot this signal belongs to.
+   * @brief Get the number of the Time Window this signal belongs to.
    */
-  inline int getTSlotIndex() const {
-    return fTSlotIndex;
+  inline unsigned int getTimeWindowIndex() const {
+    return fTimeWindowIndex;
   }
 
   inline void setPM(const JPetPM & pm) {
@@ -68,7 +68,7 @@ private:
   TRef fPM; ///< Photomultiplier which recorded this signal
   TRef fBarrelSlot; ///< BarrelSlot containing the PM which recorded this signal
 
-  int fTSlotIndex; // index of original TSlot
+  unsigned int fTimeWindowIndex; // index of original TSlot
 
 ClassDef(JPetBaseSignal, 1)
   ;

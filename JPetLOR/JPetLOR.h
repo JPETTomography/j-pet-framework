@@ -103,6 +103,7 @@ public:
     return fTimeDiff;
   }
 
+  
 ClassDef(JPetLOR,1);
 
 private:

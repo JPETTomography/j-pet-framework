@@ -98,6 +98,8 @@ class JPetHit : public TNamed {
 
   inline void setScinID (int scinID) {fScinID = scinID;}
 
+  unsigned int getTimeWindowIndex()const;
+  
   ClassDef(JPetHit,1);
   
   private:
@@ -126,3 +128,4 @@ class JPetHit : public TNamed {
 };
   
 #endif
+
