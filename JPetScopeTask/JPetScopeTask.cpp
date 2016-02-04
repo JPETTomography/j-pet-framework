@@ -24,12 +24,12 @@ void JPetScopeTask::exec()
   std::string osc_file = *(fConfig->pIter);
   std::string filename;
   
-  int tslot_index;
-  sscanf(path(osc_file).filename().string().c_str(), "%*3s %d", &tslot_index);
+  int time_window_index;
+  sscanf(path(osc_file).filename().string().c_str(), "%*3s %d", &time_window_index);
   
   JPetRecoSignal rsig1 = generateSignal(osc_file.c_str());
   rsig1.setPM(*(fConfig->pPM1));
-  rsig1.setTSlotIndex(tslot_index);
+  rsig1.setTimeWindowIndex(time_window_index);
   
   filename = path(*(fConfig->pIter)).filename().string();
   filename[1] = (fConfig->pPrefix2)[1];
@@ -39,7 +39,7 @@ void JPetScopeTask::exec()
   
   JPetRecoSignal rsig2 = generateSignal(osc_file.c_str());
   rsig2.setPM(*(fConfig->pPM2));
-  rsig2.setTSlotIndex(tslot_index);
+  rsig2.setTimeWindowIndex(time_window_index);
   
   filename = path(*(fConfig->pIter)).filename().string();
   filename[1] = (fConfig->pPrefix3)[1];
@@ -49,7 +49,7 @@ void JPetScopeTask::exec()
   
   JPetRecoSignal rsig3 = generateSignal(osc_file.c_str());
   rsig3.setPM(*(fConfig->pPM3));
-  rsig3.setTSlotIndex(tslot_index);
+  rsig3.setTimeWindowIndex(time_window_index);
   
   filename = path(*(fConfig->pIter)).filename().string();
   filename[1] = (fConfig->pPrefix4)[1];
@@ -59,7 +59,7 @@ void JPetScopeTask::exec()
   
   JPetRecoSignal rsig4 = generateSignal(osc_file.c_str());
   rsig4.setPM(*(fConfig->pPM4));
-  rsig4.setTSlotIndex(tslot_index);
+  rsig4.setTimeWindowIndex(time_window_index);
   
   fWriter->write(rsig1);
   fWriter->write(rsig2);

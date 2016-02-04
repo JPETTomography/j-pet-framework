@@ -33,18 +33,23 @@ JPetHit::~JPetHit() {
 }
 
 
-/** @brief Checks whether both signals set in this Hit object
- *  come from the same barrel slot and opposite-side PMTs and logs 
- *  an error message if not.
+/** @brief Checks whether information contained in both Signal objects
+ *  set in this Hit object is consistent and logs an error message if
+ *  it is not.
  *
  *  Pairing two signals originating from photomultipliers belonging to
  *  two different barrel slots or the same barrel side (i.e. attached 
  *  to different scintillators) would make no physical sense. This method 
  *  ensures that it is not the case.
  * 
- *  If the signals come from the same barrel slot and opposite-side PMTs, 
- *  this method only returns true.
- *  Otherwise, false is returned and an appropriate error message is logged.
+ *  This method checks the following:
+ *  - if both signals come from the same barrel slot
+ *  - if the two signals come from opposite-side PMTs
+ *  - if both signals belong to the same time window
+ * 
+ *  If all the above conditions are met, this method only returns 'true'.
+ *  If any of these conditions is violated, 'false' is returned and
+ *  an appropriate message is written to the log file.
  *
  *  @return true if both signals are consistently from the same barrel slot.
  */
@@ -70,6 +75,10 @@ bool JPetHit::checkConsistency() const{
     return false;
   }
 
+  if( getSignalA().getTimeWindowIndex() != getSignalB().getTimeWindowIndex() ){
+    ERROR( Form("Signals added to Hit come from different time windows: %d and %d." ,
+		getSignalA().getTimeWindowIndex(), getSignalB().getTimeWindowIndex()) );
+  }
   
   return true;
 }
@@ -91,4 +100,8 @@ void JPetHit::setSignalB(JPetPhysSignal & p_sig) {
   fSignalB=p_sig;
   fIsSignalBset=true;
   checkConsistency();  
+}
+
+unsigned int JPetHit::getTimeWindowIndex() const{
+  return getSignalA().getTimeWindowIndex();
 }
