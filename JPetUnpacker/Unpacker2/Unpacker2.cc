@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "./tinyxml2-master/tinyxml2.h"
+#include <tinyxml2.h>
 #include <map>
 #include <cstdio>
 #include "Unpacker2.h"
