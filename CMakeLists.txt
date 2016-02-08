@@ -162,19 +162,16 @@ file(GLOB UNPACKER2_HEADERS JPetUnpacker/Unpacker2/*.h)
 file(GLOB UNPACKER2_SOURCES JPetUnpacker/Unpacker2/*.cc)
 generate_root_dictionaries(UNPACKER_DICTIONARIES SOURCES ${UNPACKER2_SOURCES}
   INCLUDE # generate ROOT dictionaries for following sources
-  Unpacker2
+  #  Unpacker2
   TDCHit
+  TDCHitExtended
   ADCHit
   Event
-  UnpackingModule
-  Unpacker_HPTDC_HR
-  Unpacker_HPTDC_VHR
-  Unpacker_HUB2
-  Unpacker_TRB2
-  Unpacker_Shower
-  Unpacker_Ecal_ADC
-  Unpacker_TRB3
-  Unpacker_Lattice_TDC
+  EventIII
+  TDCChannel
+  #  UnpackingModule
+  #  Unpacker_TRB3
+  #  Unpacker_Lattice_TDC
   )
 add_library(Unpacker2 ${UNPACKER2_HEADERS} ${UNPACKER2_SOURCES}
   ${UNPACKER_DICTIONARIES}
