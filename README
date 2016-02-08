@@ -9,7 +9,7 @@ It is written in C++ using the object-oriented approach. It is based on the ROOT
 The Latest Version
 ------------------
 
-The latest stable version can be downloaded from the git repository. You must have git client istalled and have rights to access the subversion. If it is the case you can just:
+The latest stable version can be downloaded from the git repository. You must have git client istalled and have rights to access the repository. If it is the case you can just:
 
 git clone ssh://yourUser@koza.if.uj.edu.pl/srv/git/j-pet-framework.git myFramework
 cd myFramework 
@@ -26,8 +26,9 @@ Documentation
 The program documentation will be added along the framework development. 
 
 The code documentation can be generated with Doxygen package using:
-$> make documentation 
-The index.html file will be available in the html/ directory.
+$> make documentation
+in the build directory (see the INSTALL file).
+The index.html file will be available in the html/ directory located inside the build directory.
 
 Installation
 ------------
@@ -37,7 +38,7 @@ Please see the file called INSTALL.
 Authors
 -------
 
-J-Pet analysis framework is being developed by Wojciech Krzemien, Karol Stola, Damian Trybek, Aleksander Gajos and Andrzej Gruntowski.
+J-Pet analysis framework is being developed by Wojciech Krzemien, Karol Stola, Damian Trybek, Aleksander Gajos, Andrzej Gruntowski, Szymon Niedźwiecki, Oleksandr Rundel and Tomasz Kisielewski.
 
 Bug Reporting & Contact
 -----------------------
