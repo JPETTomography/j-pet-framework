@@ -49,6 +49,11 @@ find_package(Config++ REQUIRED)
 include_directories(${CONFIG++_INCLUDE_DIRS})
 add_definitions(${CONFIG++_DEFINITIONS})
 
+find_package(TinyXML REQUIRED)
+include_directories(${TINYXML_INCLUDE_DIRS})
+add_definitions(${CONFIG++_DEFINITIONS})
+
+
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
@@ -162,19 +167,19 @@ file(GLOB UNPACKER2_HEADERS JPetUnpacker/Unpacker2/*.h)
 file(GLOB UNPACKER2_SOURCES JPetUnpacker/Unpacker2/*.cc)
 generate_root_dictionaries(UNPACKER_DICTIONARIES SOURCES ${UNPACKER2_SOURCES}
   INCLUDE # generate ROOT dictionaries for following sources
-  #  Unpacker2
   TDCHit
   TDCHitExtended
   ADCHit
   Event
   EventIII
   TDCChannel
-  #  UnpackingModule
-  #  Unpacker_TRB3
-  #  Unpacker_Lattice_TDC
   )
 add_library(Unpacker2 ${UNPACKER2_HEADERS} ${UNPACKER2_SOURCES}
   ${UNPACKER_DICTIONARIES}
+  )
+
+target_link_libraries(Unpacker2
+  ${TINYXML_LIBRARIES}
   )
 
 # - DBHandler
@@ -193,19 +198,13 @@ add_custom_command(TARGET dbhandler
   COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/DBHandler/Config ${db_config_dir}
   )
 
-# - tinyxml2
-add_library(tinyxml2
-  JPetUnpacker/Unpacker2/tinyxml2-master/tinyxml2.h
-  JPetUnpacker/Unpacker2/tinyxml2-master/tinyxml2.cpp
-  )
-
 # add dependencies
 target_link_libraries(JPetFramework
   Unpacker2
-  tinyxml2
   dbhandler
   ${ROOT_LIBRARIES}
   ${Boost_LIBRARIES}
+  ${TINYXML_LIBRARIES}
   )
 
 # extra files, so they are visible in your editor
@@ -226,7 +225,7 @@ endif()
 # workaround: relocation R_X86_64_32S against `...' can not be used when
 # making a shared object
 if(UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-  set_target_properties(Unpacker2 tinyxml2 PROPERTIES COMPILE_FLAGS "-fPIC")
+  set_target_properties(Unpacker2 PROPERTIES COMPILE_FLAGS "-fPIC")
 endif()
 
 
