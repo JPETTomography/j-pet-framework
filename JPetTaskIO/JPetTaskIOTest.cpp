@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(progressBarTest)
 
 BOOST_AUTO_TEST_CASE( setUserLimits)
 {
-  auto commandLine = "./main.x -t root -f cosm_barrel.hld.root -i 26 -r 1000 1001";
+  auto commandLine = "./main.x -t root -f unitTestData/JPetTaskIOTest/cosm_barrel.hld.root -i 26 -r 1000 1001";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE( setUserLimits)
 
 BOOST_AUTO_TEST_CASE( setUserLimits2 )
 {
-  auto commandLine = "./main.x -t root -f cosm_barrel.hld.root -i 26 -r 1000 1001";
+  auto commandLine = "./main.x -t root -f unitTestData/JPetTaskIOTest/cosm_barrel.hld.root -i 26 -r 1000 1001";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
