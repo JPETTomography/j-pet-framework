@@ -3,6 +3,8 @@
 #include <boost/filesystem.hpp>
 #include <cassert>
 
+#include "JPetPostUnpackerFilter.h"
+
 ClassImp(JPetUnpacker);
 
 JPetUnpacker::JPetUnpacker():
@@ -53,6 +55,20 @@ bool JPetUnpacker::exec()
     fUnpacker = 0;
   }
   fUnpacker = new Unpacker2(fHldFile.c_str(), fCfgFile.c_str(), fEventsToProcess);
+
+  // apply post-unpacking filters
+  string newFileName = fHldFile + ".root";
+
+  // @todo: handle the following parameters needed by calculate_times
+  const char * calibFileName = "";
+  int refChannelOffset = 65;
+  JPetPostUnpackerFilter::calculate_times(fEventsToProcess, newFileName.c_str(), refChannelOffset, "");
+
+  newFileName = newFileName.substr(0, newFileName.size() - 5);
+  newFileName += "_times.root";
+  
+  JPetPostUnpackerFilter::calculate_hits(fEventsToProcess, newFileName.c_str());
+  
   return true;
 }
 
