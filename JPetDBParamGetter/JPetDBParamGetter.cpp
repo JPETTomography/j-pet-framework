@@ -20,8 +20,8 @@ JPetDBParamGetter::JPetDBParamGetter()
 /// @param DBConfigFile configuration file with the database connection settings
 JPetDBParamGetter::JPetDBParamGetter(const char* dBConfigFile)
 {
-  DB::SERVICES::DBHandler::getInstance(dBConfigFile); /// this command aims to load the configuration file, the return value is irrelevant
-
+  DB::SERVICES::DBHandler::getInstance(dBConfigFile); // this command aims to load the configuration file, the return value is irrelevant
+  /// ToDo: It is very bad that such command is in a non-singleton's constructor
 }
 
 JPetDBParamGetter::~JPetDBParamGetter()
