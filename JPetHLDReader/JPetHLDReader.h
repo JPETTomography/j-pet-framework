@@ -14,17 +14,17 @@
 
 #include "../JPetLoggerInclude.h"
 
-#include "../JPetUnpacker/Unpacker2/Event.h"
+#include "../JPetUnpacker/Unpacker2/EventIII.h"
 #include "../JPetReaderInterface/JPetReaderInterface.h"
 
 /**
  * @brief A class wraps Event to be able to return it as TNamed pointer
  *
  */
-class WrappedEvent :public Event,  public TNamed
+class WrappedEvent :public EventIII,  public TNamed
 {
  public:
-  WrappedEvent(const Event& ev):Event(ev), TNamed("EventWrapper", "EventWrapper")
+  WrappedEvent(const EventIII& ev):EventIII(ev), TNamed("EventWrapper", "EventWrapper")
   {/**/}
 };
 
@@ -42,7 +42,7 @@ public:
   virtual ~JPetHLDReader();
   
 public:
-  virtual Event& getCurrentEvent();   
+  virtual EventIII& getCurrentEvent();   
   virtual bool nextEvent();
   virtual bool firstEvent();
   virtual bool lastEvent();
@@ -85,7 +85,7 @@ protected:
 
   TBranch* fBranch;
   TTree* fTree;
-  Event* fEvent;
+  EventIII* fEvent;
   WrappedEvent* fEventW;
   TFile* fFile;
   long long fCurrentEventNumber;

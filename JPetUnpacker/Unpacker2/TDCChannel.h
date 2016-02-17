@@ -39,6 +39,8 @@ public:
 	void AddHit(double lead, double trail);
 	double GetLeadTime1() { return leadTime1; }
 	double GetLeadTime(int mult) { return leadTimes[mult]; }
+	double GetTrailTime1() { return trailTime1; }
+	double GetTrailTime(int mult) { return trailTimes[mult]; }
 	double GetTOT1() { return tot1; }
 	int GetMult() { return hitsNum; }
 	double GetTOT(int mult) { return tots[mult]; }
