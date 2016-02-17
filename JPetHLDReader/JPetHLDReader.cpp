@@ -30,7 +30,7 @@ JPetHLDReader::~JPetHLDReader ()
 }
 
 
-Event& JPetHLDReader::getCurrentEvent()
+EventIII& JPetHLDReader::getCurrentEvent()
 {
   if (loadCurrentEvent()) {
     fEventW  = new  WrappedEvent(*fEvent);
@@ -41,7 +41,7 @@ Event& JPetHLDReader::getCurrentEvent()
     if (fEvent) {
       delete fEvent;
     }
-    fEvent = new Event();
+    fEvent = new EventIII();
   }
   fEventW  = new WrappedEvent(*fEvent);
   return *fEventW;
@@ -98,7 +98,7 @@ bool JPetHLDReader::loadData(const char* treename)
     ERROR("in reading tree");
     return false;
   }
-  fBranch = fTree->GetBranch("event");
+  fBranch = fTree->GetBranch("eventIII");
   if (!fBranch) {
     ERROR("in reading branch from tree");
     return false;
