@@ -1,7 +1,5 @@
 #include "./SDARecoChargeCalc.h"
 #include "../../tools/JPetRecoSignalTools/JPetRecoSignalTools.h"
-#include "sstream"
-#include <stdlib.h>
 
 SDARecoChargeCalc::SDARecoChargeCalc(const char* name, const char* description) 
   : JPetTask(name, description),
