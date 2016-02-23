@@ -24,7 +24,6 @@ class JPetStatistics: public TObject{
  public:
   
   void createHistogram(TObject * object);
-  void createHistogram(TObject * object);
   void createGraph(TObject * object);
   void createCanvas(TObject * object);
   TH1F & getHisto1D(const char * name);
