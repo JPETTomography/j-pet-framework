@@ -44,9 +44,9 @@ bool JPetParamManager::saveParametersToFile(JPetWriter * writer)
   return true;
 }
 
-bool JPetParamManager::readParametersFromFile(const char* filename)
+bool JPetParamManager::readParametersFromFile(std::string filename)
 {
-  TFile file(filename, "READ");
+  TFile file(filename.c_str(), "READ");
   if (!file.IsOpen()) {
     ERROR("Could not read from file.");
     return false;
@@ -57,9 +57,9 @@ bool JPetParamManager::readParametersFromFile(const char* filename)
   return true;
 }
 
-bool JPetParamManager::saveParametersToFile(const char* filename)
+bool JPetParamManager::saveParametersToFile(std::string filename)
 {
-  TFile file(filename, "UPDATE");
+  TFile file(filename.c_str(), "UPDATE");
   if (!file.IsOpen()) {
     ERROR("Could not write to file.");
     return false;

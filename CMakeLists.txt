@@ -135,6 +135,8 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetScopeTask
   JPetOptions
   JPetPostUnpackerFilter
+  JPetParamGetterAscii
+  JPetParamSaverAscii
   )
 add_library(JPetFramework SHARED ${SOURCES} ${HEADERS} ${DICTIONARIES})
 

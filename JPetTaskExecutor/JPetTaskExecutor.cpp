@@ -59,7 +59,7 @@ void JPetTaskExecutor::processFromCmdLineArgs(int fileIndex)
 {
   auto runNum = fOptions.getRunNumber();
   if (runNum >= 0) {
-    fParamManager.getParametersFromDatabase(runNum); /// @todo some error handling
+    fParamManager.fillParameterBank(runNum); /// @todo some error handling
   }
   auto inputFileType = fOptions.getInputFileType();
   auto inputFile = fOptions.getInputFile();

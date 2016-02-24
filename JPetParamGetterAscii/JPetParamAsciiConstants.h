@@ -5,8 +5,8 @@
   *  @brief Constants for names in the json file format
   */
 
-#ifndef JPETPARAMASCIICONSTANTS_H 
-#define JPETPARAMASCIICONSTANTS_H 
+#ifndef JPETPARAMASCIICONSTANTS_H
+#define JPETPARAMASCIICONSTANTS_H
 
 const std::string scintillatorsName = "scintillators";
 const std::string PMsName = "PMs";

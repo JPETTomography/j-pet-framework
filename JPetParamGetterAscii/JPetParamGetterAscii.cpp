@@ -39,21 +39,12 @@ JPetParamBank* JPetParamGetterAscii::loadFileContent(int runNumber)
 						fillTOMBChannels(runContents, *bank);
 						//TRefs need to be filled after creating everything.
 						//The IDs in the bank don't match the ids in the DB, so we need a translation.
-						std::map<std::string, std::map<int, int>> idTranslations;
-						idTranslations[scintillatorsName] = scintillatorIdTranslation(*bank);
-						idTranslations[PMsName] = PMIdTranslation(*bank);
-						idTranslations[barrelSlotsName] = barrelSlotIdTranslation(*bank);
-						idTranslations[layersName] = layerIdTranslation(*bank);
-						idTranslations[framesName] = frameIdTranslation(*bank);
-						idTranslations[FEBsName] = FEBIdTranslation(*bank);
-						idTranslations[TRBsName] = TRBIdTranslation(*bank);
-						idTranslations[TOMBChannelsName] = TOMBChannelIdTranslation(*bank);
-						fillScintillatorTRefs(runContents, *bank, idTranslations);
-						fillPMTRefs(runContents, *bank, idTranslations);
-						fillBarrelSlotTRefs(runContents, *bank, idTranslations);
-						fillLayerTRefs(runContents, *bank, idTranslations);
-						fillFEBTRefs(runContents, *bank, idTranslations);
-						fillTOMBChannelTRefs(runContents, *bank, idTranslations);
+						fillScintillatorTRefs(runContents, *bank);
+						fillPMTRefs(runContents, *bank);
+						fillBarrelSlotTRefs(runContents, *bank);
+						fillLayerTRefs(runContents, *bank);
+						fillFEBTRefs(runContents, *bank);
+						fillTOMBChannelTRefs(runContents, *bank);
 				} else {
 						ERROR(std::string("No run with such id:") + runNumberS);
 				}
@@ -76,23 +67,14 @@ void JPetParamGetterAscii::fillScintillators(boost::property_tree::ptree & runCo
 		}
 }
 
-std::map<int, int> JPetParamGetterAscii::scintillatorIdTranslation(JPetParamBank & bank)
-{
-		std::map<int, int> result;
-		for (int i = 0; i < bank.getScintillatorsSize(); i++) {
-				result[bank.getScintillator(i).getID()] = i;
-		}
-		return result;
-}
-
-void JPetParamGetterAscii::fillScintillatorTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int>> & idTranslations)
+void JPetParamGetterAscii::fillScintillatorTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank)
 {
 		if (auto possibleInfos = runContents.get_child_optional(scintillatorsName)) {
 				auto infos = * possibleInfos;
 				for (auto infoRaw : infos) {
 						auto info = infoRaw.second;
-						int id = idTranslations[scintillatorsName][info.get<int>("id")];
-						int relId = idTranslations[barrelSlotsName][info.get<int>(barrelSlotsName+"_id")];
+						int id = info.get<int>("id");
+						int relId = info.get<int>(barrelSlotsName+"_id");
 						bank.getScintillator(id).setBarrelSlot(bank.getBarrelSlot(relId));
 				}
 		} else {
@@ -123,27 +105,18 @@ void JPetParamGetterAscii::fillPMs(boost::property_tree::ptree & runContents, JP
 		}
 }
 
-std::map<int, int> JPetParamGetterAscii::PMIdTranslation(JPetParamBank & bank)
-{
-		std::map<int, int> result;
-		for (int i = 0; i < bank.getPMsSize(); i++) {
-				result[bank.getPM(i).getID()] = i;
-		}
-		return result;
-}
-
-void JPetParamGetterAscii::fillPMTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int>> & idTranslations)
+void JPetParamGetterAscii::fillPMTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank)
 {
 		if (auto possibleInfos = runContents.get_child_optional(PMsName)) {
 				auto infos = * possibleInfos;
 				for (auto infoRaw : infos) {
 						auto info = infoRaw.second;
-						int id = idTranslations[PMsName][info.get<int>("id")];
-						int relId = idTranslations[barrelSlotsName][info.get<int>(barrelSlotsName+"_id")];
+						int id = info.get<int>("id");
+						int relId = info.get<int>(barrelSlotsName+"_id");
 						bank.getPM(id).setBarrelSlot(bank.getBarrelSlot(relId));
-						relId = idTranslations[FEBsName][info.get<int>(FEBsName+"_id")];
+						relId = info.get<int>(FEBsName+"_id");
 						bank.getPM(id).setFEB(bank.getFEB(relId));
-						relId = idTranslations[scintillatorsName][info.get<int>(scintillatorsName+"_id")];
+						relId = info.get<int>(scintillatorsName+"_id");
 						bank.getPM(id).setScin(bank.getScintillator(relId));
 				}
 		} else {
@@ -201,23 +174,14 @@ void JPetParamGetterAscii::fillBarrelSlots(boost::property_tree::ptree & runCont
 		}
 }
 
-std::map<int, int> JPetParamGetterAscii::barrelSlotIdTranslation(JPetParamBank & bank)
-{
-		std::map<int, int> result;
-		for (int i = 0; i < bank.getBarrelSlotsSize(); i++) {
-				result[bank.getBarrelSlot(i).getID()] = i;
-		}
-		return result;
-}
-
-void JPetParamGetterAscii::fillBarrelSlotTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int>> & idTranslations)
+void JPetParamGetterAscii::fillBarrelSlotTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank)
 {
 		if (auto possibleInfos = runContents.get_child_optional(barrelSlotsName)) {
 				auto infos = * possibleInfos;
 				for (auto infoRaw : infos) {
 						auto info = infoRaw.second;
-						int id = idTranslations[barrelSlotsName][info.get<int>("id")];
-						int relId = idTranslations[layersName][info.get<int>(layersName+"_id")];
+						int id = info.get<int>("id");
+						int relId = info.get<int>(layersName+"_id");
 						bank.getBarrelSlot(id).setLayer(bank.getLayer(relId));
 				}
 		} else {
@@ -248,23 +212,14 @@ void JPetParamGetterAscii::fillLayers(boost::property_tree::ptree & runContents,
 		}
 }
 
-std::map<int, int> JPetParamGetterAscii::layerIdTranslation(JPetParamBank & bank)
-{
-		std::map<int, int> result;
-		for (int i = 0; i < bank.getLayersSize(); i++) {
-				result[bank.getLayer(i).getId()] = i;
-		}
-		return result;
-}
-
-void JPetParamGetterAscii::fillLayerTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int>> & idTranslations)
+void JPetParamGetterAscii::fillLayerTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank)
 {
 		if (auto possibleInfos = runContents.get_child_optional(layersName)) {
 				auto infos = * possibleInfos;
 				for (auto infoRaw : infos) {
 						auto info = infoRaw.second;
-						int id = idTranslations[layersName][info.get<int>("id")];
-						int relId = idTranslations[framesName][info.get<int>(framesName+"_id")];
+						int id = info.get<int>("id");
+						int relId = info.get<int>(framesName+"_id");
 						bank.getLayer(id).setFrame(bank.getFrame(relId));
 				}
 		} else {
@@ -294,15 +249,6 @@ void JPetParamGetterAscii::fillFrames(boost::property_tree::ptree & runContents,
 		}
 }
 
-std::map<int, int> JPetParamGetterAscii::frameIdTranslation(JPetParamBank & bank)
-{
-		std::map<int, int> result;
-		for (int i = 0; i < bank.getFramesSize(); i++) {
-				result[bank.getFrame(i).getId()] = i;
-		}
-		return result;
-}
-
 JPetFrame JPetParamGetterAscii::frameFromInfo(boost::property_tree::ptree & info)
 {
 		int id = info.get<int>("id");
@@ -327,23 +273,14 @@ void JPetParamGetterAscii::fillFEBs(boost::property_tree::ptree & runContents, J
 		}
 }
 
-std::map<int, int> JPetParamGetterAscii::FEBIdTranslation(JPetParamBank & bank)
-{
-		std::map<int, int> result;
-		for (int i = 0; i < bank.getFEBsSize(); i++) {
-				result[bank.getFEB(i).getID()] = i;
-		}
-		return result;
-}
-
-void JPetParamGetterAscii::fillFEBTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int>> & idTranslations)
+void JPetParamGetterAscii::fillFEBTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank)
 {
 		if (auto possibleInfos = runContents.get_child_optional(FEBsName)) {
 				auto infos = * possibleInfos;
 				for (auto infoRaw : infos) {
 						auto info = infoRaw.second;
-						int id = idTranslations[FEBsName][info.get<int>("id")];
-						int relId = idTranslations[TRBsName][info.get<int>(TRBsName+"_id")];
+						int id = info.get<int>("id");
+						int relId = info.get<int>(TRBsName+"_id");
 						bank.getFEB(id).setTRB(bank.getTRB(relId));
 				}
 		} else {
@@ -377,15 +314,6 @@ void JPetParamGetterAscii::fillTRBs(boost::property_tree::ptree & runContents, J
 		}
 }
 
-std::map<int, int> JPetParamGetterAscii::TRBIdTranslation(JPetParamBank & bank)
-{
-		std::map<int, int> result;
-		for (int i = 0; i < bank.getTRBsSize(); i++) {
-				result[bank.getTRB(i).getID()] = i;
-		}
-		return result;
-}
-
 JPetTRB JPetParamGetterAscii::TRBFromInfo(boost::property_tree::ptree & info)
 {
 		int id = info.get<int>("id");
@@ -407,27 +335,18 @@ void JPetParamGetterAscii::fillTOMBChannels(boost::property_tree::ptree & runCon
 		}
 }
 
-std::map<int, int> JPetParamGetterAscii::TOMBChannelIdTranslation(JPetParamBank & bank)
-{
-		std::map<int, int> result;
-		for (int i = 0; i < bank.getTOMBChannelsSize(); i++) {
-				result[bank.getTOMBChannel(i).getChannel()] = i;
-		}
-		return result;
-}
-
-void JPetParamGetterAscii::fillTOMBChannelTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int>> & idTranslations)
+void JPetParamGetterAscii::fillTOMBChannelTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank)
 {
 		if (auto possibleInfos = runContents.get_child_optional(TOMBChannelsName)) {
 				auto infos = * possibleInfos;
 				for (auto infoRaw : infos) {
 						auto info = infoRaw.second;
-						int id = idTranslations[TOMBChannelsName][info.get<int>("id")];
-						int relId = idTranslations[TRBsName][info.get<int>(TRBsName+"_id")];
+						int id = info.get<int>("id");
+						int relId = info.get<int>(TRBsName+"_id");
 						bank.getTOMBChannel(id).setTRB(bank.getTRB(relId));
-						relId = idTranslations[FEBsName][info.get<int>(FEBsName+"_id")];
+						relId = info.get<int>(FEBsName+"_id");
 						bank.getTOMBChannel(id).setFEB(bank.getFEB(relId));
-						relId = idTranslations[PMsName][info.get<int>(PMsName+"_id")];
+						relId = info.get<int>(PMsName+"_id");
 						bank.getTOMBChannel(id).setPM(bank.getPM(relId));
 				}
 		} else {
