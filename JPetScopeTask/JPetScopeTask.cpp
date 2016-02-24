@@ -14,7 +14,8 @@ const int kbuflen = 256;
 JPetScopeTask::JPetScopeTask(const char * name, const char * description):
   JPetTask(name, description),
   fWriter(0),
-  fParamManager(0)
+  fParamManager(0),
+  typeOfFile(0)
 {
 }
 
