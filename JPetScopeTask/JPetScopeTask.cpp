@@ -88,11 +88,11 @@ JPetRecoSignal JPetScopeTask::generateSignal(const char* filename) {
   
   // Read Header
 
+  int segment_size = 0;
   //std::string fileNameWithExtension(filename);
   //if(fileNameWithExtension.substr(fileNameWithExtension.find_last_of(".") + 1) != "tsv")
   if(typeOfFile != 1)
   {
-    int segment_size = 0;
     {
       char buf[kbuflen];
       char tmp[kbuflen];
