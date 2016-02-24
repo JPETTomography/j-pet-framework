@@ -23,8 +23,8 @@ class JPetParamManager
   bool readParametersFromFile(JPetReader * reader);
   bool saveParametersToFile(JPetWriter * writer);
 
-  bool readParametersFromFile(const char* filename);
-  bool saveParametersToFile(const char* filename);
+  bool readParametersFromFile(std::string filename);
+  bool saveParametersToFile(std::string filename);
   
   void clearParameters();
   const JPetParamBank& getParamBank() const { assert(fBank); return *fBank;}

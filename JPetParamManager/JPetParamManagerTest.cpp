@@ -9,7 +9,8 @@
 #include <cstddef>
 #include <boost/filesystem.hpp>
 
-const char * dataFileName = "data.json";
+const std::string dataDir = "unitTestData/JPetParamManagerTest/";
+const std::string dataFileName = dataDir+"data.json";
 
 BOOST_AUTO_TEST_SUITE(JPetParamManagerTestSuite)
 
@@ -65,7 +66,7 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByWriterAndReaderObjectsTest)
 
 BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
 {
-  const char* testDatafile = "testDataFile.txt";
+	std::string testDatafile = dataDir+"testDataFile.txt";
   JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
   
   l_paramManagerInstance.fillParameterBank(1);

@@ -1,12 +1,12 @@
 /**
  *  @copyright Copyright (c) 2015, J-PET collaboration
- *  @file JPetParamGetterAscii.h 
+ *  @file JPetParamGetterAscii.h
  *  @author Tomasz Kisielewski, tymorl@gmail.com
  *  @brief Class to save a parameter bank to an ASCII file in the JSON format.
- */ 
+ */
 
-#ifndef JPETPARAMSAVERASCII_H 
-#define JPETPARAMSAVERASCII_H 
+#ifndef JPETPARAMSAVERASCII_H
+#define JPETPARAMSAVERASCII_H
 
 #include<map>
 #include <string>

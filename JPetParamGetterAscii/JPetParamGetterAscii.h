@@ -1,12 +1,12 @@
 /**
  *  @copyright Copyright (c) 2015, J-PET collaboration
- *  @file JPetParamGetterAscii.h 
+ *  @file JPetParamGetterAscii.h
  *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
  *  @brief Class to generate parameter bank based on ASCII file content.
- */ 
+ */
 
-#ifndef JPETPARAMGETTERASCII_H 
-#define JPETPARAMGETTERASCII_H 
+#ifndef JPETPARAMGETTERASCII_H
+#define JPETPARAMGETTERASCII_H
 
 #include <map>
 #include <string>
@@ -15,7 +15,7 @@
 
 class JPetParamGetterAscii : public JPetParamGetter {
 public:
-  JPetParamGetterAscii(const char* filename) : filename(filename) {}
+  JPetParamGetterAscii(std::string filename) : filename(filename) {}
   JPetParamBank* generateParamBank(const int runNumber);
 
 private:
@@ -53,12 +53,12 @@ private:
 		std::map<int, int> TRBIdTranslation(JPetParamBank & bank);
 		std::map<int, int> TOMBChannelIdTranslation(JPetParamBank & bank);
 
-		void fillScintillatorTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int> > & idTranslations);
-		void fillPMTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int> > & idTranslations);
-		void fillBarrelSlotTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int> > & idTranslations);
-		void fillLayerTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int> > & idTranslations);
-		void fillFEBTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int> > & idTranslations);
-		void fillTOMBChannelTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank, std::map<std::string, std::map<int, int> > & idTranslations);
+		void fillScintillatorTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank);
+		void fillPMTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank);
+		void fillBarrelSlotTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank);
+		void fillLayerTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank);
+		void fillFEBTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank);
+		void fillTOMBChannelTRefs(boost::property_tree::ptree & runContents, JPetParamBank & bank);
 
   std::string filename;
 

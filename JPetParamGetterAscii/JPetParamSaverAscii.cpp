@@ -54,7 +54,7 @@ void JPetParamSaverAscii::fillScintillators(boost::property_tree::ptree & runCon
 {
 	boost::property_tree::ptree infos;
 	for (auto scin : bank.getScintillators()) {
-		infos.push_back(std::make_pair("", scintillatorToInfo(*scin)));
+		infos.push_back(std::make_pair("", scintillatorToInfo(*scin.second)));
 	}
 	runContents.add_child(scintillatorsName, infos);
 }
@@ -78,7 +78,7 @@ void JPetParamSaverAscii::fillPMs(boost::property_tree::ptree & runContents, con
 {
 	boost::property_tree::ptree infos;
 	for (auto pm : bank.getPMs()) {
-		infos.push_back(std::make_pair("", PMToInfo(*pm)));
+		infos.push_back(std::make_pair("", PMToInfo(*pm.second)));
 	}
 	runContents.add_child(PMsName, infos);
 }
@@ -100,7 +100,7 @@ void JPetParamSaverAscii::fillPMCalibs(boost::property_tree::ptree & runContents
 {
 	boost::property_tree::ptree infos;
 	for (auto pmCalib : bank.getPMCalibs()) {
-		infos.push_back(std::make_pair("", PMCalibToInfo(*pmCalib)));
+		infos.push_back(std::make_pair("", PMCalibToInfo(*pmCalib.second)));
 	}
 	runContents.add_child(PMCalibsName, infos);
 }
@@ -126,7 +126,7 @@ void JPetParamSaverAscii::fillBarrelSlots(boost::property_tree::ptree & runConte
 {
 	boost::property_tree::ptree infos;
 	for (auto bs : bank.getBarrelSlots()) {
-		infos.push_back(std::make_pair("", barrelSlotToInfo(*bs)));
+		infos.push_back(std::make_pair("", barrelSlotToInfo(*bs.second)));
 	}
 	runContents.add_child(barrelSlotsName, infos);
 }
@@ -149,7 +149,7 @@ void JPetParamSaverAscii::fillLayers(boost::property_tree::ptree & runContents, 
 {
 	boost::property_tree::ptree infos;
 	for (auto layer : bank.getLayers()) {
-		infos.push_back(std::make_pair("", layerToInfo(*layer)));
+		infos.push_back(std::make_pair("", layerToInfo(*layer.second)));
 	}
 	runContents.add_child(layersName, infos);
 }
@@ -171,7 +171,7 @@ void JPetParamSaverAscii::fillFrames(boost::property_tree::ptree & runContents, 
 {
 	boost::property_tree::ptree infos;
 	for (auto frame : bank.getFrames()) {
-		infos.push_back(std::make_pair("", frameToInfo(*frame)));
+		infos.push_back(std::make_pair("", frameToInfo(*frame.second)));
 	}
 	runContents.add_child(framesName, infos);
 }
@@ -193,7 +193,7 @@ void JPetParamSaverAscii::fillFEBs(boost::property_tree::ptree & runContents, co
 {
 	boost::property_tree::ptree infos;
 	for (auto feb : bank.getFEBs()) {
-		infos.push_back(std::make_pair("", FEBToInfo(*feb)));
+		infos.push_back(std::make_pair("", FEBToInfo(*feb.second)));
 	}
 	runContents.add_child(FEBsName, infos);
 }
@@ -219,7 +219,7 @@ void JPetParamSaverAscii::fillTRBs(boost::property_tree::ptree & runContents, co
 {
 	boost::property_tree::ptree infos;
 	for (auto trb : bank.getTRBs()) {
-		infos.push_back(std::make_pair("", TRBToInfo(*trb)));
+		infos.push_back(std::make_pair("", TRBToInfo(*trb.second)));
 	}
 	runContents.add_child(TRBsName, infos);
 }
@@ -238,7 +238,7 @@ void JPetParamSaverAscii::fillTOMBChannels(boost::property_tree::ptree & runCont
 {
 	boost::property_tree::ptree infos;
 	for (auto tomb : bank.getTOMBChannels()) {
-		infos.push_back(std::make_pair("", TOMBChannelToInfo(*tomb)));
+		infos.push_back(std::make_pair("", TOMBChannelToInfo(*tomb.second)));
 	}
 	runContents.add_child(TOMBChannelsName, infos);
 }
