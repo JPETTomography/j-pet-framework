@@ -14,8 +14,7 @@ const int kbuflen = 256;
 JPetScopeTask::JPetScopeTask(const char * name, const char * description):
   JPetTask(name, description),
   fWriter(0),
-  fParamManager(0),
-  typeOfFile(0)
+  fParamManager(0)
 {
 }
 
@@ -89,34 +88,32 @@ JPetRecoSignal JPetScopeTask::generateSignal(const char* filename) {
   // Read Header
 
   int segment_size = 0;
-  //std::string fileNameWithExtension(filename);
-  //if(fileNameWithExtension.substr(fileNameWithExtension.find_last_of(".") + 1) != "tsv")
-  if(typeOfFile != 1)
+  
+  std::string fileNameWithExtension(filename);
+  if(fileNameWithExtension.substr(fileNameWithExtension.find_last_of(".") + 1) != "tsv")
   {
-    {
-      char buf[kbuflen];
-      char tmp[kbuflen];
+    char buf[kbuflen];
+    char tmp[kbuflen];
 
-      if (fgets(buf, kbuflen, input_file) != 0)
-      sscanf(buf, "%s %*s %*s", tmp);
+    if (fgets(buf, kbuflen, input_file) != 0)
+    sscanf(buf, "%s %*s %*s", tmp);
 
-      //fScopeType = tmp;
+    //fScopeType = tmp;
 
-      if (fgets(buf, kbuflen, input_file) != 0)
-      sscanf(buf, "%*s %*s %*s %d", &segment_size);
+    if (fgets(buf, kbuflen, input_file) != 0)
+    sscanf(buf, "%*s %*s %*s %d", &segment_size);
 
-      if (fgets(buf, kbuflen, input_file) != 0);
-      //sscanf(buf, "%*s %*s %*s");
+    if (fgets(buf, kbuflen, input_file) != 0);
+    //sscanf(buf, "%*s %*s %*s");
 
-      if (fgets(buf, kbuflen, input_file) != 0)
-      sscanf(buf, "%*s %s %s %*s", tmp, tmp + kbuflen/2);
+    if (fgets(buf, kbuflen, input_file) != 0)
+    sscanf(buf, "%*s %s %s %*s", tmp, tmp + kbuflen/2);
 
-      //fDate = tmp;
-      //fTime = tmp + kbuflen/2;
+    //fDate = tmp;
+    //fTime = tmp + kbuflen/2;
 
-      if (fgets(buf, kbuflen, input_file) != 0);
-      //sscanf(buf, "%*s %*s");
-    }
+    if (fgets(buf, kbuflen, input_file) != 0);
+    //sscanf(buf, "%*s %*s");
   }
 
   // Read Data
