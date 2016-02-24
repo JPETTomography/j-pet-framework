@@ -1,6 +1,9 @@
 #include "../JPetScopeTask/JPetScopeTask.h"
 #include "../JPetParamManager/JPetParamManager.h"
 
+#include <iostream>
+#include <string>
+
 #include <boost/filesystem.hpp>
 using namespace boost::filesystem;
 
@@ -85,6 +88,9 @@ JPetRecoSignal JPetScopeTask::generateSignal(const char* filename) {
   // Read Header
 
   int segment_size = 0;
+  
+  std::string fileNameWithExtension(filename);
+  if(fileNameWithExtension.substr(fileNameWithExtension.find_last_of(".") + 1) != "tsv")
   {
     char buf[kbuflen];
     char tmp[kbuflen];
