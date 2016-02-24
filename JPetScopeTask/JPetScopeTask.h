@@ -67,6 +67,11 @@ public:
     fConfig = config;
   }
   
+  inline void setTypeOfFile(int type)
+  {
+    typeOfFile = type;
+  }
+  
 protected:
 
   /** @brief Produce JPetRecoSignal from single oscilloscope ASCII file.
@@ -78,7 +83,7 @@ protected:
    */
   static JPetRecoSignal generateSignal (const char* filename);
   
-  
+  int typeOfFile;
   JPetWriter* fWriter;
   JPetParamManager* fParamManager;
 
