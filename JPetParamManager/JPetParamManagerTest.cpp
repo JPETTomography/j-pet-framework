@@ -1,10 +1,10 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetParamManagerTest
 #include <boost/test/unit_test.hpp>
-
+#include "../DBHandler/HeaderFiles/DBHandler.h"
 #define private public
 #include "../JPetParamManager/JPetParamManager.h"
-
+#undef private
 #include <cstddef>
 
 const char* gDefaultConfigFile = "../DBConfig/configDB.cfg";
@@ -24,17 +24,16 @@ void checkContainersSize(const JPetParamBank &bank)
 
 BOOST_AUTO_TEST_CASE(default_constructor)
 {
-  JPetParamManager paramMgr;
+	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	JPetParamManager paramMgr;
 }  
 
-BOOST_AUTO_TEST_CASE(constructor)
-{
-  JPetParamManager paramMgr(gDefaultConfigFile);
-}
 
 BOOST_AUTO_TEST_CASE(generateParamBankTest)
 {
-  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	
+  JPetParamManager l_paramManagerInstance;
   l_paramManagerInstance.getParametersFromDatabase(1);
   
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank != NULL, true);
@@ -44,7 +43,9 @@ BOOST_AUTO_TEST_CASE(generateParamBankTest)
 
 BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByWriterAndReaderObjectsTest)
 {
-  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	
+  JPetParamManager l_paramManagerInstance;
   
   l_paramManagerInstance.getParametersFromDatabase(1);
 
@@ -74,7 +75,9 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByWriterAndReaderObjectsTest)
 BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
 {
   const char* testDatafile = "testDataFile.txt";
-  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+  DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+  
+  JPetParamManager l_paramManagerInstance;
   
   l_paramManagerInstance.getParametersFromDatabase(1);
   
@@ -91,7 +94,9 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
 
 BOOST_AUTO_TEST_CASE(clearParametersTest)
 {
-  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	
+  JPetParamManager l_paramManagerInstance;
   
   l_paramManagerInstance.getParametersFromDatabase(1);
   
@@ -112,7 +117,9 @@ BOOST_AUTO_TEST_CASE(clearParametersTest)
 
 BOOST_AUTO_TEST_CASE(getParamBankTest)
 {
-  JPetParamManager l_paramManagerInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	
+  JPetParamManager l_paramManagerInstance;
   
   l_paramManagerInstance.getParametersFromDatabase(1);
   

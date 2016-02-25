@@ -14,7 +14,6 @@ namespace DB
 	using namespace pqxx;
 	namespace SERVICES
 	{
-		
 		class DBHandler
 		{
 			
