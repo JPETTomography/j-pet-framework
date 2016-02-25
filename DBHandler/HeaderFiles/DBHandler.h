@@ -50,8 +50,6 @@ namespace DB
 			work m_work;
 		private:
 			static DBHandler* m_instance;
-			static const char* kDefaultConfigFile;
-			
 			DBHandler(DB::FUNCTIONS::DBConfigData l_dbconfig);
 			DBHandler(string p_db_name,string p_db_username,string p_db_password,string p_db_hostname,string p_db_port);
 			DBHandler(const DBHandler& p_dbHandler) = delete;
