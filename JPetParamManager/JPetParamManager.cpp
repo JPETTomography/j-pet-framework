@@ -12,13 +12,6 @@ JPetParamManager::JPetParamManager():
   /* */
 }
 
-/// @param DBConfigFile configuration file with the database connection settings
-JPetParamManager::JPetParamManager(const char* dBConfigFile):
-  fDBParamGetter(dBConfigFile),
-  fBank(0)
-{
-}
-
 JPetParamManager::~JPetParamManager()
 {
   if (fBank) {
