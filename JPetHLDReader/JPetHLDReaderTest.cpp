@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE (good_file_with_constructor)
   BOOST_REQUIRE(reader.nthEvent(0));
   BOOST_REQUIRE(reader.nthEvent(5));
   BOOST_REQUIRE_EQUAL(reader.getCurrentEventNumber(), 5);
-  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), 10);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), 6);
 }
 
 BOOST_AUTO_TEST_CASE (good_file_openFileAndLoadData)
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE (good_file_openFileAndLoadData)
   BOOST_REQUIRE(reader.nthEvent(0));
   BOOST_REQUIRE(reader.nthEvent(5));
   BOOST_REQUIRE_EQUAL(reader.getCurrentEventNumber(), 5);
-  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), 10);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), 6);
   
 }
 
