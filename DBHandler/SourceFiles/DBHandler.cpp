@@ -12,7 +12,6 @@ namespace DB
 	{
 		
 		DBHandler* DBHandler::m_instance = nullptr;
-		const char* DBHandler::kDefaultConfigFile ="../DBConfig/configDB.cfg"; ///@todo add description somewhere
 		
 		void DBHandler::createInstance(string configFile){
 			deleteInstance();
