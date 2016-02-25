@@ -1,5 +1,5 @@
-#ifndef _JPETTSLOT_H_
-#define _JPETTSLOT_H_
+#ifndef _JPETTIMEWINDOW_H_
+#define _JPETTIMEWINDOW_H_
 
 #include <vector>
 #include <map>
@@ -29,7 +29,7 @@ public:
   inline size_t getNumberOfSigCh() const {
     return fSigChannels.size();
   }
-  inline const std::vector<JPetSigCh*>& getSigChVect() const {
+  inline const std::vector<JPetSigCh>& getSigChVect() const {
     return fSigChannels;
   }
   /**
@@ -37,13 +37,13 @@ public:
    *
    * @param i number of SigCh object to be returned; i should be between 0 and getNumberOfSigCh-1
    */
-  inline JPetSigCh& operator[](int i) const {
-    return *((JPetSigCh*)fSigChannels[i]);
+  inline const JPetSigCh& operator[](int i) const {
+    return fSigChannels[i];
   }
 
 
   virtual ~JPetTimeWindow() {
-    //    fSigChannels.Clear("C");
+    fSigChannels.clear();
   }
 
   /**
@@ -59,7 +59,7 @@ public:
   ClassDef(JPetTimeWindow, 1);
 
 private:
-  std::vector<JPetSigCh*> fSigChannels; 
+  std::vector<JPetSigCh> fSigChannels; 
   unsigned int fIndex; ///< sequential number of this TSlot in the HLD file
 };
 
