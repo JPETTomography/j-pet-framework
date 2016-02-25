@@ -24,7 +24,6 @@ class JPetDBParamGetter
 public:
   enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, SIZE};
   JPetDBParamGetter();
-  JPetDBParamGetter(const char* dBConfigFile);
   JPetParamBank* generateParamBank(const int p_run_id);
   ~JPetDBParamGetter();
   

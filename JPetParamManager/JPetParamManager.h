@@ -17,7 +17,6 @@ class JPetParamManager
   enum ParamObjectType {kScintillator, kPM, kFEB, kTRB, kTOMB, SIZE};
 
   JPetParamManager();
-  JPetParamManager(const char* dBConfigFile);
   ~JPetParamManager();
 
   void getParametersFromDatabase(const int run);
