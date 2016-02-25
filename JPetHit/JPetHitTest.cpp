@@ -6,6 +6,7 @@
 #include "../JPetHit/JPetHit.h"
 #include "../JPetScin/JPetScin.h"
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
+#undef private 
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )

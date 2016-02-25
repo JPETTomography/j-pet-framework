@@ -4,7 +4,7 @@
 
 #define private public
 #include "../JPetLayer/JPetLayer.h"
-
+#undef private
 // JPetLayer();
 // JPetLayer(int id, bool isActive, std::string name, float radius);
 // 

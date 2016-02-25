@@ -4,9 +4,10 @@
 
 #define private public
 #define protected public
-
 #include "../JPetReader/JPetReader.h"
 #include "../JPetWriter/JPetWriter.h"
+#undef private
+#undef protected
 
 #include <cstddef>
 #include <iostream>

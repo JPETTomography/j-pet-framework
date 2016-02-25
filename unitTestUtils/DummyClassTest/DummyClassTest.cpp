@@ -5,8 +5,8 @@
 
 
 #define private public
-
 #include "../DummyClass/DummyClass.h"
+#undef private
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
   

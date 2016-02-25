@@ -4,7 +4,7 @@
 
 #define private public
 #include "../JPetSigCh/JPetSigCh.h"
-
+#undef private
 /// @todo update the method list - tests are outdated
 //  JPetSigCh() { init(); }
 //  JPetSigCh(EdgeType Edge, float EdgeTime);
