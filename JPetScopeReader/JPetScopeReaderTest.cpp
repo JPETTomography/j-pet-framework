@@ -10,8 +10,10 @@
 
 #define private public
 #define protected public
-
 #include "JPetScopeReaderFixtures.h"
+#undef protected
+#undef private
+
 #include "../JPetManager/JPetManager.h"
 
 

@@ -4,6 +4,7 @@
 
 #define private public
 #include "../JPetScin/JPetScin.h"
+#undef private
 
 //  public:
 //JPetScin();

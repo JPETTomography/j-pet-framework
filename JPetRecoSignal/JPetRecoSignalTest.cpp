@@ -4,6 +4,7 @@
 
 #define private public
 #include "../JPetRecoSignal/JPetRecoSignal.h"
+#undef private
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 

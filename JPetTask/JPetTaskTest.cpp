@@ -4,6 +4,7 @@
 
 #define private public
 #include "../JPetTask/JPetTask.h"
+#undef private
 
 BOOST_AUTO_TEST_SUITE(JPetTaskTestSuite)
 

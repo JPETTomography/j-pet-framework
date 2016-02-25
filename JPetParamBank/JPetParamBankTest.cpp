@@ -4,6 +4,7 @@
 
 #define private public
 #include "../JPetParamBank/JPetParamBank.h"
+#undef private
 #include <TFile.h>
 
 BOOST_AUTO_TEST_SUITE(JPetParamBankTestSuite)

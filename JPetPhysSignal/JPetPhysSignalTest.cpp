@@ -4,6 +4,7 @@
 
 #define private public
 #include "../JPetPhysSignal/JPetPhysSignal.h"
+#undef private
 #include "../JPetWriter/JPetWriter.h"
 #include "../JPetReader/JPetReader.h"
 

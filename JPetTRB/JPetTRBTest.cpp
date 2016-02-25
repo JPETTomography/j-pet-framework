@@ -4,6 +4,7 @@
 
 #define private public
 #include "../JPetTRB/JPetTRB.h"
+#undef private
 
 //  public:
 //  JPetTRB();

@@ -5,6 +5,8 @@
 #define private public
 #define protected public
 #include "../JPetTaskIO/JPetTaskIO.h"
+#undef private
+#undef protected
 #include "../JPetCmdParser/JPetCmdParser.h"
 //#include "TaskA.h"
 //#include "TaskB.h"

@@ -4,7 +4,7 @@
 
 #define private public
 #include "../JPetPM/JPetPM.h"
-
+#undef private
 //  public:
 //  JPetPM();
 //  inline Side getSide() const { return fSide; }

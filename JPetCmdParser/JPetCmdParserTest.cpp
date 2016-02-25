@@ -10,7 +10,8 @@
 #define private public
 #define protected public
 #include "../JPetCmdParser/JPetCmdParser.h"
-
+#undef private 
+#undef protected
 //public method
 //std::vector<JPetOptions> parseAndGenerateOptions(int argc, const char** argv);
 
