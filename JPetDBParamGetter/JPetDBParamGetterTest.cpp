@@ -122,15 +122,14 @@ BOOST_AUTO_TEST_CASE(fillTRefsTest)
   paramGetter.fillTOMBChannelsTRefs(run, *bank);
   
   // PM TRef to Scint
-		// TODO(timorl): this probably doesn't work after the id changes, check and fix
-  JPetPM& pm_ref = bank->getPM(0);
+  JPetPM& pm_ref = bank->getPM(54);
+  BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(2).getID());
+  pm_ref = bank->getPM(55);
   BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(1).getID());
-  pm_ref = bank->getPM(1);
-  BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(0).getID());
-  pm_ref = bank->getPM(2);
-  BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(0).getID());
-  pm_ref = bank->getPM(3);
+  pm_ref = bank->getPM(57);
   BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(1).getID());
+  pm_ref = bank->getPM(59);
+  BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(2).getID());
   
 		for (auto & cs : bank->getPMs()) {
 				BOOST_REQUIRE(cs.second->getFEB().isActive());
