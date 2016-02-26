@@ -5,7 +5,7 @@
 #define private public
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetTimeWindow/JPetTimeWindow.h"
-
+#undef private
 /// @todo update methods tests are outdated
 //#include <TError.h> /// gErrorIgnoreLevel
 //  gErrorIgnoreLevel = 7000;
@@ -16,7 +16,7 @@
 ///  void AddCh(JPetSigCh& new_ch);
 ///  inline size_t size() const ;
 ///  inline size_t getNumberOfSigCh() const;
-///  inline const std::vector<JPetSigCh*> & getSigChVect() const;
+///  inline const std::vector<JPetSigCh> & getSigChVect() const;
 ///  inline JPetSigCh & operator[](int i) const;
 ///  virtual JPetTimeWindow();
 
@@ -49,10 +49,10 @@ BOOST_AUTO_TEST_CASE( some_channels )
   BOOST_REQUIRE_CLOSE(test[1].getValue(), 1.5, epsilon);
   BOOST_REQUIRE_CLOSE(test[2].getValue(), 98, epsilon);
 
-  std::vector<JPetSigCh*> array = test.getSigChVect();
-  BOOST_REQUIRE_CLOSE((array.at(0))->getValue(), 1.2, epsilon);
-  BOOST_REQUIRE_CLOSE((array.at(1))->getValue(), 1.5, epsilon);
-  BOOST_REQUIRE_CLOSE((array.at(2))->getValue(), 98, epsilon);
+  const std::vector<JPetSigCh> array = test.getSigChVect();
+  BOOST_REQUIRE_CLOSE((array.at(0)).getValue(), 1.2, epsilon);
+  BOOST_REQUIRE_CLOSE((array.at(1)).getValue(), 1.5, epsilon);
+  BOOST_REQUIRE_CLOSE((array.at(2)).getValue(), 98, epsilon);
 
 }
 

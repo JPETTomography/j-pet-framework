@@ -4,6 +4,7 @@
 
 #define private public
 #include "../JPetParamBank/JPetParamBank.h"
+#undef private
 #include <TFile.h>
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>

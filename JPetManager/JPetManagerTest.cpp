@@ -4,7 +4,7 @@
 
 #define private public
 #include "../JPetManager/JPetManager.h"
-
+#undef private
 //JPetManger
 // public methods:
 // static JPetManager& getManager();

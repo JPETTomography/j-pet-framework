@@ -4,7 +4,7 @@
 
 #define private public
 #include "../JPetLOR/JPetLOR.h"
-
+#undef private
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE( default_constructor )

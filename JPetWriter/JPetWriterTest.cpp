@@ -8,6 +8,8 @@
 #define protected public
 #include "../JPetWriter/JPetWriter.h"
 #include "../JPetReader/JPetReader.h"
+#undef private
+#undef protected
 
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetTimeWindow/JPetTimeWindow.h"

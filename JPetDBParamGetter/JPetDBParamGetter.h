@@ -23,7 +23,6 @@ class JPetDBParamGetter : public JPetParamGetter
 {
 public:
   JPetDBParamGetter();
-  JPetDBParamGetter(const char* dBConfigFile);
   JPetParamBank* generateParamBank(const int p_run_id);
   ~JPetDBParamGetter();
   

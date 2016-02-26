@@ -5,6 +5,7 @@
 
 #define private public
 #include "../JPetUnpacker/JPetUnpacker.h"
+#undef private
 //JPetUnpacker();
 //~JPetUnpacker();
 //void exec();
