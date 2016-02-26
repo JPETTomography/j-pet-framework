@@ -116,25 +116,33 @@ file(GLOB UNIT_TEST_SOURCES JPet*/*Test.cpp)
 list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
 
 generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
-  EXCLUDE # exclude following sources from ROOT dictionary
-          # everything else will have dictionary generated
+  # exclude following sources from ROOT dictionary
+  # everything else will have dictionary generated
   # FIXME: For some reason these are excluded, it should be some better way
   # than writing them down explicitly to tell which file needs dictionary
   # and which not.
-  JPetAnalysisRunner
-  JPetCmdParser
-  JPetDBParamGetter
-  JPetManager
-  JPetParamManager
-  JPetReader
-  JPetTask
-  JPetTaskIO
-  JPetTaskLoader
-  JPetTaskExecutor
-  JPetScopeReader
-  JPetScopeTask
-  JPetOptions
-  JPetPostUnpackerFilter
+  INCLUDE
+  JPetTimeWindow
+  JPetSigCh
+  JPetBaseSignal
+  JPetRawSignal
+  JPetRecoSignal
+  JPetPhysSignal
+  JPetStatistics
+  JPetTreeHeader
+  JPetParamBank
+  JPetHit
+  JPetLOR
+  JPetPM
+  JPetPMCalib
+  JPetScin
+  JPetTRB
+  JPetTOMBChannel
+  JPetBarrel
+  JPetLayer
+  JPetBarrelSlot
+  JPetFrame
+  JPetFEB
   )
 add_library(JPetFramework SHARED ${SOURCES} ${HEADERS} ${DICTIONARIES})
 
