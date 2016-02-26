@@ -4,7 +4,7 @@
 
 #define private public
 #include "../JPetPMCalib/JPetPMCalib.h"
-
+#undef private
 
 BOOST_AUTO_TEST_SUITE(JPetPMCalibTestSuite)
 

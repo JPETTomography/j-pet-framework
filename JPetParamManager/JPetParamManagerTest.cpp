@@ -4,6 +4,7 @@
 
 #define private public
 #include "../JPetParamManager/JPetParamManager.h"
+#undef private
 #include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 
 #include <cstddef>

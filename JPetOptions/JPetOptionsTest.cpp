@@ -4,7 +4,7 @@
 
 #define private public
 #include "../JPetOptions/JPetOptions.h"
-
+#undef private
 //JPetOptions
 //public methods
 //JPetOptions();

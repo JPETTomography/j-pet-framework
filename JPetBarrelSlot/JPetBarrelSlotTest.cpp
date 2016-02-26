@@ -4,7 +4,7 @@
 
 #define private public
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
-
+#undef private 
 // JPetBarrelSlot();
 // JPetBarrelSlot(int id, bool isActive, std::string name, float theta);
 // 
