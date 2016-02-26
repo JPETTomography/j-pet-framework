@@ -2,7 +2,8 @@
 
 SDAMatchHits::SDAMatchHits(const char* name, const char* description)
   : JPetTask(name, description),
-  fMatched(0)
+    fMatched(0),
+    fCurrentEventNumber(0)
 {
 }
 
@@ -13,6 +14,7 @@ SDAMatchHits::~SDAMatchHits()
 void SDAMatchHits::init(const JPetTaskInterface::Options& /* opts */)
 {
   fMatched = 0; 
+  fCurrentEventNumber=0;
 }
 
 void SDAMatchHits::exec()
