@@ -17,6 +17,8 @@
  *  The messages can be redirected to the screen if the SCREEN_OUTPUT is 1.
  *  Also the whole JPetLogger can be switched off/on by setting the JPETLOGGER_ON flag to 1.
  */
+#ifndef JPETLOGGER_INCLUDE_H
+#define JPETLOGGER_INCLUDE_H
 
 // current settings
 // 1 - switched on
@@ -51,3 +53,5 @@
   #define INFO(X)
   #define DATE_AND_TIME()
 #endif
+
+#endif 
