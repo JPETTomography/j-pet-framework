@@ -3,14 +3,6 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>  // for filesystem::remove
 #include <TNamed.h>
-
-#define private public
-#define protected public
-#include "../JPetWriter/JPetWriter.h"
-#include "../JPetReader/JPetReader.h"
-#undef private
-#undef protected
-
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetTimeWindow/JPetTimeWindow.h"
 #include "../JPetBaseSignal/JPetBaseSignal.h"
@@ -19,6 +11,9 @@
 #include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetHit/JPetHit.h"
 #include "../JPetLOR/JPetLOR.h"
+#include "../JPetWriter/JPetWriter.h"
+#include "../JPetReader/JPetReader.h"
+
 
 //  JPetWriter(const char *p_fileName);
 //  virtual ~JPetWriter(void);

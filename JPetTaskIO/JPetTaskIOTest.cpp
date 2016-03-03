@@ -1,13 +1,9 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetTaskIOTest
 #include <boost/test/unit_test.hpp>
-
-#define private public
-#define protected public
-#include "../JPetTaskIO/JPetTaskIO.h"
-#undef private
-#undef protected
 #include "../JPetCmdParser/JPetCmdParser.h"
+#include "../JPetTaskIO/JPetTaskIO.h"
+
 //#include "TaskA.h"
 //#include "TaskB.h"
 //#include "TaskC1.h"
@@ -64,7 +60,8 @@ BOOST_AUTO_TEST_CASE(progressBarTest)
     BOOST_REQUIRE_EQUAL(taskIO.setProgressBar(5, 100), 5);
     taskIO.manageProgressBar(5, 100);
 }
-
+//ToDo: remake this tests without calling private methods
+/*
 BOOST_AUTO_TEST_CASE( setUserLimits)
 {
   auto commandLine = "./main.x -t root -f unitTestData/JPetTaskIOTest/cosm_barrel.hld.root -i 26 -r 1000 1001";
@@ -279,5 +276,5 @@ BOOST_AUTO_TEST_CASE( my_testA )
 
   //BOOST_REQUIRE(1 == 0);
 }
-
+*/
 BOOST_AUTO_TEST_SUITE_END()

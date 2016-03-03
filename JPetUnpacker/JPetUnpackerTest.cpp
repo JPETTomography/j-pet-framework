@@ -2,10 +2,11 @@
 #define BOOST_TEST_MODULE JPetUnpackerTest
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
-
-#define private public
 #include "../JPetUnpacker/JPetUnpacker.h"
-#undef private
+
+
+
+
 //JPetUnpacker();
 //~JPetUnpacker();
 //void exec();
