@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(defaultConstructorTest)
 
 BOOST_AUTO_TEST_CASE(dummyFillingTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   int run  = 1;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(dummyFillingTest)
 
 BOOST_AUTO_TEST_CASE(run28Test)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	JPetDBParamGetter paramGetter;
   int run  = 28;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(run28Test)
 
 BOOST_AUTO_TEST_CASE(fillTRefsTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   int run  = 1;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(fillTRefsTest)
 
 BOOST_AUTO_TEST_CASE(fillBarrelSlotTRefTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   int run  = 1;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
@@ -187,7 +187,7 @@ BOOST_AUTO_TEST_CASE(fillBarrelSlotTRefTest)
 
 BOOST_AUTO_TEST_CASE(fillLayerTRefTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   int run  = 1;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE(fillScintillatorTRefsWithBarrelSlotTest)
 */
 BOOST_AUTO_TEST_CASE(getDataFromDBTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromPhotoMultipliers", "1");
   size_t l_sizeResultQuerry = l_runDbResults.size();
@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE(getDataFromDBTest)
 
 BOOST_AUTO_TEST_CASE(generateSelectQueryTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   std::string selectQuerry = paramGetter.generateSelectQuery("getDataFromTRBs", "1");
   BOOST_REQUIRE(selectQuerry == "SELECT * FROM getDataFromTRBs(1);");
@@ -269,7 +269,7 @@ BOOST_AUTO_TEST_CASE(generateSelectQueryTest)
 
 BOOST_AUTO_TEST_CASE(fillContainersTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   int run  = 1;
@@ -330,7 +330,7 @@ BOOST_AUTO_TEST_CASE(fillContainersTest)
 
 BOOST_AUTO_TEST_CASE(generateScintillatorTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -351,7 +351,7 @@ BOOST_AUTO_TEST_CASE(generateScintillatorTest)
 
 BOOST_AUTO_TEST_CASE(generatePMTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -372,7 +372,7 @@ BOOST_AUTO_TEST_CASE(generatePMTest)
 
 BOOST_AUTO_TEST_CASE(generatePMCalibTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -393,7 +393,7 @@ BOOST_AUTO_TEST_CASE(generatePMCalibTest)
 
 BOOST_AUTO_TEST_CASE(generateBarrelSlotTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -414,7 +414,7 @@ BOOST_AUTO_TEST_CASE(generateBarrelSlotTest)
 
 BOOST_AUTO_TEST_CASE(generateLayerTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -435,7 +435,7 @@ BOOST_AUTO_TEST_CASE(generateLayerTest)
 
 BOOST_AUTO_TEST_CASE(generateFrameTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -456,7 +456,7 @@ BOOST_AUTO_TEST_CASE(generateFrameTest)
 
 BOOST_AUTO_TEST_CASE(generateFEBTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -477,7 +477,7 @@ BOOST_AUTO_TEST_CASE(generateFEBTest)
 
 BOOST_AUTO_TEST_CASE(generateTRBTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -498,7 +498,7 @@ BOOST_AUTO_TEST_CASE(generateTRBTest)
 
 BOOST_AUTO_TEST_CASE(generateTOMBChannelTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -519,7 +519,7 @@ BOOST_AUTO_TEST_CASE(generateTOMBChannelTest)
 
 BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   int run  = 2;
@@ -584,7 +584,7 @@ BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
 
 BOOST_AUTO_TEST_CASE(paramBankCopyTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   int run  = 1;
