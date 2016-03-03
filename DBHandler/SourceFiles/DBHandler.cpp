@@ -13,7 +13,7 @@ namespace DB
 		
 		DBHandler* DBHandler::m_instance = nullptr;
 		
-		void DBHandler::createInstance(string configFile){
+		void DBHandler::createDBConnection(string configFile){
 			deleteInstance();
 			FUNCTIONS::DBConfigData l_dbconfig;
 			FUNCTIONS::DBConfigControler::readConfigFileAndFillDBConfigData(configFile, l_dbconfig);
