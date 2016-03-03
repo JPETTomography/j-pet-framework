@@ -1,10 +1,12 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetSigChTest
 #include <boost/test/unit_test.hpp>
-
-#define private public
 #include "../JPetSigCh/JPetSigCh.h"
-#undef private
+
+
+
+
+
 /// @todo update the method list - tests are outdated
 //  JPetSigCh() { init(); }
 //  JPetSigCh(EdgeType Edge, float EdgeTime);

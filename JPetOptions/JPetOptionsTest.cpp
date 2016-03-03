@@ -1,10 +1,9 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetOptionsTest
 #include <boost/test/unit_test.hpp>
-
-#define private public
 #include "../JPetOptions/JPetOptions.h"
-#undef private
+
+
 //JPetOptions
 //public methods
 //JPetOptions();

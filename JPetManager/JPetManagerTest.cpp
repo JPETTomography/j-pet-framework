@@ -2,9 +2,10 @@
 #define BOOST_TEST_MODULE JPetManagerTest
 #include <boost/test/unit_test.hpp>
 
-#define private public
+
 #include "../JPetManager/JPetManager.h"
-#undef private
+
+
 //JPetManger
 // public methods:
 // static JPetManager& getManager();
