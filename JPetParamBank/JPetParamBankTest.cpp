@@ -220,14 +220,10 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   JPetParamBank bank;
   JPetScin scint1(1, 0, 0, 0, 0);
   JPetScin scint2(2, 0, 0, 0, 0);
-  JPetPM pm1;
-  JPetPM pm2;
-  JPetPM pm3;
-  JPetPM pm4;
-  pm1.setID(1);
-  pm2.setID(2);
-  pm3.setID(3);
-  pm4.setID(4);
+  JPetPM pm1(1);
+  JPetPM pm2(2);
+  JPetPM pm3(3);
+  JPetPM pm4(4);
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
   JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 6);
   JPetLayer layer(1, true, "layerTest", 35.f);

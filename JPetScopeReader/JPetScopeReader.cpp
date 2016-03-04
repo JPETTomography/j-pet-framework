@@ -94,21 +94,13 @@ JPetParamBank const& JPetScopeReader::createParamBank(ptree const& conf_data) {
     JPetBarrelSlot bslot1 (bslotid1, bslotactive1, bslotname1, bslottheta1, bslotframe1);
     JPetBarrelSlot bslot2 (bslotid2, bslotactive2, bslotname2, bslottheta2, bslotframe2);
 
-    JPetPM pm1;
-    JPetPM pm2;
-    JPetPM pm3;
-    JPetPM pm4;
+    JPetPM pm1(pmid1);
+    JPetPM pm2(pmid2);
+    JPetPM pm3(pmid3);
+    JPetPM pm4(pmid4);
 
-    JPetScin scin1;
-    JPetScin scin2;
-
-    pm1.setID(pmid1);
-    pm2.setID(pmid2);
-    pm3.setID(pmid3);
-    pm4.setID(pmid4);
-
-    scin1.setID(scinid1);
-    scin2.setID(scinid2);
+    JPetScin scin1(scinid1);
+    JPetScin scin2(scinid2);
 
     JPetParamBank* param_bank = new JPetParamBank();
 

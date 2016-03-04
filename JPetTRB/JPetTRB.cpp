@@ -10,6 +10,9 @@ JPetTRB::JPetTRB():
   SetName("JPetTRB");
 }
 
+JPetTRB::JPetTRB(int id) : fID(id)
+{}
+
 JPetTRB::JPetTRB(int id, int type, int ch): 
   fID(id), 
   fType(type),

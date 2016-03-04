@@ -36,6 +36,7 @@ class JPetPM: public TNamed
   enum GainNumber {kFirst, kSecond};
 
   JPetPM();
+  JPetPM(int id);
   JPetPM(Side side,
 	 int id,
 	 int HVset,
@@ -50,7 +51,6 @@ class JPetPM: public TNamed
   inline float getHVgain(GainNumber nr) { return (nr == kFirst) ? fHVgain.first : fHVgain.second; }
   inline std::pair<float, float> getHVgain() { return fHVgain; }
   inline void setSide(Side side) { fSide = side; }
-  inline void setID(int id) { fID = id; }
   inline void setHVset(int set) { fHVset = set; }
   inline void setHVopt(int opt) { fHVopt= opt; }
   inline void setHVgain(float g1, float g2) { fHVgain.first = g1; fHVgain.second = g2; }

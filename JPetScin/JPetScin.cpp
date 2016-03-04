@@ -13,6 +13,9 @@ fScinSize(0., 0., 0.)
   SetName("JPetScin");
 }
 
+JPetScin::JPetScin(int id) : fID(id)
+{}
+
 JPetScin::JPetScin(int id, float attenLen, float length, float height, float width):
 fID(id),
 fAttenLen(attenLen),

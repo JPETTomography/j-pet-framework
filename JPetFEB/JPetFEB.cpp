@@ -35,6 +35,8 @@ JPetFEB::JPetFEB() :
   SetName("JPetFEB");
 }
 
+JPetFEB::JPetFEB(int id) : m_id(id)
+{}
 
 JPetFEB::JPetFEB(int p_id, 
 	       bool p_isActive, 
@@ -63,11 +65,6 @@ JPetFEB::~JPetFEB()
 int JPetFEB::getID() const
 {
   return m_id;
-}
-
-void JPetFEB::setID(int p_id)
-{
-  m_id = p_id;
 }
 
 bool JPetFEB::isActive() const

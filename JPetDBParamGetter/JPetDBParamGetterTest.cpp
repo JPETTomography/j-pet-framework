@@ -591,13 +591,9 @@ BOOST_AUTO_TEST_CASE(paramBankCopyTest)
   JPetParamBank*bank1 = paramGetter.generateParamBank(run);
   JPetParamBank*bank2 = paramGetter.generateParamBank(run);
 
-  ((JPetPM*)bank1->fPMs[0])->setID(111);
-  ((JPetPM*)bank2->fPMs[0])->setID(666);
-
   ((JPetScin*)bank1->fScintillators[0])->getBarrelSlot().fId = 111;
   ((JPetScin*)bank2->fScintillators[0])->getBarrelSlot().fId = 666;
 
-  BOOST_REQUIRE(((JPetPM*)bank1->fPMs[0])->getID() != ((JPetPM*)bank2->fPMs[0])->getID());
   BOOST_REQUIRE(((JPetTOMBChannel*)bank1->fTOMBChannels[0])->fTRB != ((JPetTOMBChannel*)bank2->fTOMBChannels[0])->fTRB );
   BOOST_REQUIRE(((JPetScin*)bank1->getScintillators()[0])->getBarrelSlot() != ((JPetScin*)bank2->getScintillators()[0])->getBarrelSlot());
 

@@ -10,6 +10,9 @@ JPetPM::JPetPM():
   SetName("JPetPM");
 }
 
+JPetPM::JPetPM(int id) : fID(id)
+{}
+
 JPetPM::JPetPM(Side side, 
 	       int id, 
 	       int HVset, 

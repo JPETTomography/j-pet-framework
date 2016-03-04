@@ -26,13 +26,13 @@ class JPetTRB: public TNamed
 {
  public:
   JPetTRB();
+  JPetTRB(int id);
   JPetTRB(int id, int type, int channel);
   ~JPetTRB();
 
   inline int getID() const { return fID; }
   inline int getType() const { return fType; }
   inline int getChannel() const { return fChannel; }
-  inline void setID(int id) { fID = id; }
   inline void setType(int type) { fType = type; }
   inline void setChannel(int ch) { fChannel = ch; }
 

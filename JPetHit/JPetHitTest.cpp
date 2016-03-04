@@ -140,8 +140,7 @@ BOOST_AUTO_TEST_CASE(set_get_objects_test)
   rightSignal.setTime( timeB );
 
   int scinID = 42;
-  JPetScin scin;
-  scin.setID( scinID );
+  JPetScin scin(scinID);
   JPetBarrelSlot slot;
   JPetPM pmA(JPetPM::SideA, 101, 0, 0, std::pair<float,float>(0,0));
   JPetPM pmB(JPetPM::SideB, 102, 0, 0, std::pair<float,float>(0,0));
