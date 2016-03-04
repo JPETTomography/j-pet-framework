@@ -33,7 +33,7 @@ namespace DB
 			
 		public:
 			static DBHandler&getInstance(void);
-			static void createInstance(string configFile);
+			static void createDBConnection(string configFile);
 			static void deleteInstance(void);
 			
 			virtual ~DBHandler(void);
