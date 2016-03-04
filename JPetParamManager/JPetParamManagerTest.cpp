@@ -24,14 +24,14 @@ void checkContainersSize(const JPetParamBank &bank)
 
 BOOST_AUTO_TEST_CASE(default_constructor)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	JPetParamManager paramMgr;
 }  
 
 
 BOOST_AUTO_TEST_CASE(generateParamBankTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetParamManager l_paramManagerInstance;
   l_paramManagerInstance.getParametersFromDatabase(1);
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(generateParamBankTest)
 
 BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByWriterAndReaderObjectsTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetParamManager l_paramManagerInstance;
   
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByWriterAndReaderObjectsTest)
 BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
 {
   const char* testDatafile = "testDataFile.txt";
-  DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+  DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   
   JPetParamManager l_paramManagerInstance;
   
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
 
 BOOST_AUTO_TEST_CASE(clearParametersTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetParamManager l_paramManagerInstance;
   
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(clearParametersTest)
 
 BOOST_AUTO_TEST_CASE(getParamBankTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetParamManager l_paramManagerInstance;
   
