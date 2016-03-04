@@ -294,8 +294,7 @@ JPetPM JPetDBParamGetter::generatePM(pqxx::result::const_iterator row) {
 
       JPetPM::Side l_side = (l_hvpmconnection_isrightside) ? JPetPM::Side::SideB : JPetPM::Side::SideA;
 
-      JPetPM l_pm;
-      l_pm.setID(l_photomultiplier_id);
+      JPetPM l_pm(l_photomultiplier_id);
       l_pm.setSide(l_side);
 
       return  l_pm;

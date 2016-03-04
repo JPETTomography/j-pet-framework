@@ -69,13 +69,13 @@ protected:
   
 public:
   JPetFEB();
+  JPetFEB(int id);
   JPetFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description,
 	  int p_version, int p_userId, int p_n_time_outputs_per_input,
 	  int p_n_notime_outputs_per_input);
   virtual ~JPetFEB(void);
   
   virtual int getID(void) const;
-  virtual void setID(int p_id);
   virtual bool isActive(void) const;
   virtual std::string status(void) const;
   virtual std::string description(void) const;

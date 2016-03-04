@@ -40,6 +40,7 @@ class JPetScin: public TNamed
   };
 
   JPetScin();
+  JPetScin(int id);
   JPetScin(int id, float attenLen, float length, float height, float width);
   ~JPetScin();
 
@@ -47,7 +48,6 @@ class JPetScin: public TNamed
   inline float getAttenLen() const { return fAttenLen; }
   inline ScinDimensions getScinSize() const { return fScinSize; }
   float getScinSize(Dimension dim) const;
-  inline void setID(int id) { fID = id; }
   inline void setAttenLen(float attenLen) { fAttenLen = attenLen; }
   inline void setScinSize(ScinDimensions size) { fScinSize = size; }
   void setScinSize(Dimension dim, float value);
