@@ -10,8 +10,12 @@ JPetTRB::JPetTRB():
   SetName("JPetTRB");
 }
 
-JPetTRB::JPetTRB(int id) : fID(id)
-{}
+JPetTRB::JPetTRB(int id) : fID(id),
+               fType(0),
+               fChannel(0)
+{
+  SetName("JPetTRB");
+}
 
 JPetTRB::JPetTRB(int id, int type, int ch): 
   fID(id), 

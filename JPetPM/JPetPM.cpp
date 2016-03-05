@@ -10,8 +10,14 @@ JPetPM::JPetPM():
   SetName("JPetPM");
 }
 
-JPetPM::JPetPM(int id) : fID(id)
-{}
+JPetPM::JPetPM(int id) : fSide(SideA),
+			 fID(id),
+			 fHVset(0),
+			 fHVopt(0),
+			 fHVgain(std::make_pair(0.0, 0.0))
+{
+  SetName("JPetPM");
+}
 
 JPetPM::JPetPM(Side side, 
 	       int id, 

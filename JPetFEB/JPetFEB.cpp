@@ -35,8 +35,17 @@ JPetFEB::JPetFEB() :
   SetName("JPetFEB");
 }
 
-JPetFEB::JPetFEB(int id) : m_id(id)
-{}
+JPetFEB::JPetFEB(int id) : m_id(id),
+			   m_isActive(false),
+			   m_status(""),
+			   m_description(""),
+			   m_version(0),
+			   m_userId(0),
+			   m_n_time_outputs_per_input(0),
+			   m_n_notime_outputs_per_input(0)
+{
+  SetName("JPetFEB");
+}
 
 JPetFEB::JPetFEB(int p_id, 
 	       bool p_isActive, 
