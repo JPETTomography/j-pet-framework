@@ -90,7 +90,7 @@ ClassDef(JPetLOR,1);
  *
  *  @return true if both signals are consistently from the same barrel slot.
  */
-  const bool checkConsistency() const; 
+const bool isFromSameBarrelSlot() const; 
 private:
 
   float fTime; ///< reconstructed absolute time of the event wrt to beginning of the run [ps]

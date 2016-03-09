@@ -34,7 +34,7 @@ JPetLOR::JPetLOR(float Time, float QualityOfTime, JPetHit& firstHit,
   fIsHitSet[0] = true;
   fIsHitSet[1] = true;
 
-  checkConsistency();
+  isFromSameBarrelSlot();
 }
 
 JPetLOR::~JPetLOR(){}
@@ -62,17 +62,17 @@ void JPetLOR::setHits(const JPetHit& firstHit, const JPetHit& secondHit) {
 	fSecondHit = secondHit;
 	fIsHitSet[0] = true;
 	fIsHitSet[1] = true;
-	checkConsistency();
+	isFromSameBarrelSlot();
 }
 void JPetLOR::setFirstHit(const JPetHit& firstHit) {
 	fFirstHit = firstHit;
 	fIsHitSet[0] = true;
-	checkConsistency();
+	isFromSameBarrelSlot();
 }
 void JPetLOR::setSecondHit(const JPetHit& secondHit) {
 	fSecondHit = secondHit;
 	fIsHitSet[1] = true;
-	checkConsistency();
+	isFromSameBarrelSlot();
 }
 void JPetLOR::setTimeDiff(const float td) {
 	fTimeDiff = td;
@@ -97,7 +97,7 @@ const bool JPetLOR::isHitSet(const unsigned int index){
 	};
 }
 
-const bool JPetLOR::checkConsistency() const {
+const bool JPetLOR::isFromSameBarrelSlot() const {
   
   if( !fIsHitSet[0] || !fIsHitSet[1] ){
     return true; // do not claim incosistency if signals are not set yet
