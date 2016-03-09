@@ -26,8 +26,6 @@ BOOST_AUTO_TEST_CASE(default_constructor)
 	JPetParamManager paramMgr;
 }  
 
-//ToDo: remake this tests without calling private methods
-/*
 BOOST_AUTO_TEST_CASE(generateParamBankTest)
 {
 	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
@@ -35,9 +33,9 @@ BOOST_AUTO_TEST_CASE(generateParamBankTest)
   JPetParamManager l_paramManagerInstance;
   l_paramManagerInstance.getParametersFromDatabase(1);
   
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank != NULL, true);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().isDummy(), false);
   
-  checkContainersSize(*l_paramManagerInstance.fBank);
+  checkContainersSize(l_paramManagerInstance.getParamBank());
 }
 
 BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByWriterAndReaderObjectsTest)
@@ -65,18 +63,12 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
   
   l_paramManagerInstance.getParametersFromDatabase(1);
   
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank != NULL, true);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().isDummy(), false);
   
   BOOST_CHECK(l_paramManagerInstance.saveParametersToFile(testDatafile) == true);
-  
-  l_paramManagerInstance.fBank->clear();
-  
-  BOOST_CHECK(l_paramManagerInstance.readParametersFromFile(testDatafile) == true);
-  
-  checkContainersSize(*l_paramManagerInstance.fBank);
 }
 
-BOOST_AUTO_TEST_CASE(clearParametersTest)
+BOOST_AUTO_TEST_CASE(some_Test_that_had_no_name)
 {
 	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
@@ -84,19 +76,19 @@ BOOST_AUTO_TEST_CASE(clearParametersTest)
   
   l_paramManagerInstance.getParametersFromDatabase(1);
   
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank != NULL, true);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().isDummy(),false);
   
-  checkContainersSize(*l_paramManagerInstance.fBank);
+  checkContainersSize(l_paramManagerInstance.getParamBank());
   
   l_paramManagerInstance.clearParameters();
   
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getScintillatorsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getPMsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getPMCalibsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getFEBsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getTRBsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getBarrelSlotsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.fBank->getTOMBChannelsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getScintillatorsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getPMsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getPMCalibsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getFEBsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getTRBsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getBarrelSlotsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getTOMBChannelsSize(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(getParamBankTest)
@@ -111,5 +103,4 @@ BOOST_AUTO_TEST_CASE(getParamBankTest)
   
   checkContainersSize(bank);
 }
-*/
 BOOST_AUTO_TEST_SUITE_END()
