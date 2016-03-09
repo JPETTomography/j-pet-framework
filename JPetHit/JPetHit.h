@@ -48,72 +48,81 @@ class JPetHit : public TNamed {
   JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime, TVector3& Position, 
           JPetPhysSignal& SignalA, JPetPhysSignal& SignalB, JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator);
   virtual ~JPetHit();
-  /// Returns the reconstructed energy of this hit [keV]
-  inline const float getEnergy() const {return fEnergy;}
-  /// Returns a quantitative measure of the hit energy reconstruction quality
-  inline const float getQualityOfEnergy() const {return fQualityOfEnergy;}
-  /// Returns the absolute time reconstructed for this hit [ps]
-  inline const float getTime() const {return fTime;}
-  /// Returns the reconstructed time difference between signals on two ends of scintillator (difference "Side A" - "Side B") 
-  inline const float getTimeDiff() const {return fTimeDiff;}
-  /// Returns a quantitative measure of the hit time reconstruction quality
-  inline const float getQualityOfTime() const {return fQualityOfTime;}
-  inline const float getQualityOfTimeDiff() const {return fQualityOfTimeDiff;}
+  const float getEnergy() const;
+  const float getQualityOfEnergy() const;
+  const float getTime() const ;
+  const float getTimeDiff() const ;
+  const float getQualityOfTime() const;
+  const float getQualityOfTimeDiff() const ;
   /**
    * @brief Returns the 1-dim position of the hit along the scintillator
    *
    * @return position along the strip in cm, measured from the "Side A" end of the strip.
    */
-  inline const float getPosAlongStrip() const {return fPosAlongStrip;}
-  inline const float getPosX() const {return fPos.X();}
-  inline const float getPosY() const  {return fPos.Y();}
-  inline const float getPosZ() const  {return fPos.Z();}
-  inline const float getPos(int index) const {return fPos(index);}
-  inline const TVector3& getPos() const {return fPos;}
-  inline const JPetPhysSignal& getSignal(Signal pos) const {
-                     if(pos==SideA) return fSignalA;
-		     else return fSignalB;}
-  inline const JPetPhysSignal& getSignalA() const {return fSignalA;}
-  inline const JPetPhysSignal& getSignalB() const {return fSignalB;}
- 
-  inline const JPetScin& getScintillator() const {return (JPetScin&)*fScintillator.GetObject();}
-  inline const JPetBarrelSlot& getBarrelSlot() const {return (JPetBarrelSlot&)*fBarrelSlot.GetObject();}
-
-  /// Sets the reconstructed energy of the hit [keV]
-  inline void setEnergy(float energy) {fEnergy = energy;}
-  inline void setQualityOfEnergy(float qualityOfEnergy) {fQualityOfEnergy = qualityOfEnergy;}
-  /// Sets the reconstructed time of the hit into scintillator [ps]
-  inline void setTime(float time) {fTime = time;}
-  inline void setQualityOfTime(float qualityOfTime) {fQualityOfTime = qualityOfTime;}
-  /// Sets the reconstructed time difference between two signals at ends of the scintillator (difference "Side A" - "Side B") [ps]
-  inline void setTimeDiff(float td) {fTimeDiff = td;}
-  inline void setQualityOfTimeDiff(float qtd) {fQualityOfTimeDiff = qtd;}
+  const float getPosAlongStrip() const ;
+  const float getPosX() const;
+  const float getPosY() const ;
+  const float getPosZ() const;
+  const float getPos(int index) const;
+  const int getScinID()const;
+  const TVector3& getPos() const;
+  const JPetPhysSignal& getSignal(Signal pos) const;
+  const JPetPhysSignal& getSignalA() const;
+  const JPetPhysSignal& getSignalB() const;
+  const JPetScin& getScintillator() const;
+  const JPetBarrelSlot& getBarrelSlot() const;
+  const bool isSignalASet()const;
+  const bool isSignalBSet()const;
+  
+  void setEnergy(float energy);
+  void setQualityOfEnergy(float qualityOfEnergy);
+  void setTime(float time);
+  void setQualityOfTime(float qualityOfTime);
+  void setTimeDiff(float td);
+  void setQualityOfTimeDiff(float qtd);
   /**
    * @brief Sets the 1-dim position of the hit along the scintillator
    *
    * The position should be in cm, measured from the "A Side" end of the strip. This value should be set after calculation of the position using the time difference of the two signals.
    */
-  inline void setPosAlongStrip(float pos) {fPosAlongStrip = pos;}
-  inline void setPosX(float x) {fPos.SetX(x);}
-  inline void setPosY(float y) {fPos.SetY(y);}
-  inline void setPosZ(float z) {fPos.SetZ(z);}
-  inline void setPos (float x,float y,float z) {fPos.SetXYZ(x,y,z);}
+  void setPosAlongStrip(const float pos);
+  void setPosX(float x) ;
+  void setPosY(float y);
+  void setPosZ(float z) ;
+  void setPos (float x,float y,float z) ;
+  void setBarrelSlot( JPetBarrelSlot& bs) ;
+  void setScintillator(JPetScin& sc) ;
+  void setScinID (const int scinID);
+  
   void setSignals(JPetPhysSignal & p_sigA, JPetPhysSignal & p_sigB);
   void setSignalA(JPetPhysSignal & p_sig);
   void setSignalB(JPetPhysSignal & p_sig);
-  inline void setBarrelSlot(JPetBarrelSlot& bs) {fBarrelSlot = &bs;}
-  inline void setScintillator(JPetScin& sc) {fScintillator = &sc;}
-
-  inline void setScinID (int scinID) {fScinID = scinID;}
-
   unsigned int getTimeWindowIndex()const;
   
   ClassDef(JPetHit,1);
-  
-  private:
+  /** @brief Checks whether information contained in both Signal objects
+   *  set in this Hit object is consistent and logs an error message if
+   *  it is not.
+   *
+   *  Pairing two signals originating from photomultipliers belonging to
+   *  two different barrel slots or the same barrel side (i.e. attached 
+   *  to different scintillators) would make no physical sense. This method 
+   *  ensures that it is not the case.
+   * 
+   *  This method checks the following:
+   *  - if both signals come from the same barrel slot
+   *  - if the two signals come from opposite-side PMTs
+   *  - if both signals belong to the same time window
+   * 
+   *  If all the above conditions are met, this method only returns 'true'.
+   *  If any of these conditions is violated, 'false' is returned and
+   *  an appropriate message is written to the log file.
+   *
+   *  @return true if both signals are consistently from the same barrel slot.
+   */
+  const bool checkConsistency() const;
 
-  bool checkConsistency() const;
-  
+  private:
   float fEnergy; ///< reconstructed energy of the hit [keV]
   float fQualityOfEnergy;
   float fTime; ///< reconstructed time of the hit [ps]

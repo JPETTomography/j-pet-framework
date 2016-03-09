@@ -40,37 +40,55 @@ JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSi
 
 JPetHit::~JPetHit() {
 }
+const float JPetHit::getEnergy() const {return fEnergy;}
+const float JPetHit::getQualityOfEnergy() const {return fQualityOfEnergy;}
+const float JPetHit::getTime() const {return fTime;}
+const float JPetHit::getTimeDiff() const {return fTimeDiff;}
+const float JPetHit::getQualityOfTime() const {return fQualityOfTime;}
+const float JPetHit::getQualityOfTimeDiff() const {return fQualityOfTimeDiff;}
+const float JPetHit::getPosAlongStrip() const {return fPosAlongStrip;}
+const float JPetHit::getPosX() const {return fPos.X();}
+const float JPetHit::getPosY() const  {return fPos.Y();}
+const float JPetHit::getPosZ() const  {return fPos.Z();}
+const float JPetHit::getPos(int index) const {return fPos(index);}
+const int JPetHit::getScinID() const{return fScinID;}
+const TVector3& JPetHit::getPos() const {return fPos;}
+const JPetPhysSignal& JPetHit::getSignal(Signal pos) const {
+	if(pos==SideA) return fSignalA;
+	else return fSignalB;
+}
+const JPetPhysSignal& JPetHit::getSignalA() const {return fSignalA;}
+const JPetPhysSignal& JPetHit::getSignalB() const {return fSignalB;}
+const JPetScin& JPetHit::getScintillator() const {return (JPetScin&)*fScintillator.GetObject();}
+const JPetBarrelSlot& JPetHit::getBarrelSlot() const {return (JPetBarrelSlot&)*fBarrelSlot.GetObject();}
+const bool JPetHit::isSignalASet() const{return fIsSignalAset;}
+const bool JPetHit::isSignalBSet() const{return fIsSignalBset;}
 
 
-/** @brief Checks whether information contained in both Signal objects
- *  set in this Hit object is consistent and logs an error message if
- *  it is not.
- *
- *  Pairing two signals originating from photomultipliers belonging to
- *  two different barrel slots or the same barrel side (i.e. attached 
- *  to different scintillators) would make no physical sense. This method 
- *  ensures that it is not the case.
- * 
- *  This method checks the following:
- *  - if both signals come from the same barrel slot
- *  - if the two signals come from opposite-side PMTs
- *  - if both signals belong to the same time window
- * 
- *  If all the above conditions are met, this method only returns 'true'.
- *  If any of these conditions is violated, 'false' is returned and
- *  an appropriate message is written to the log file.
- *
- *  @return true if both signals are consistently from the same barrel slot.
- */
-bool JPetHit::checkConsistency() const{
 
-  
+void JPetHit::setEnergy(float energy) {fEnergy = energy;}
+void JPetHit::setQualityOfEnergy(float qualityOfEnergy) {fQualityOfEnergy = qualityOfEnergy;}
+void JPetHit::setTime(float time) {fTime = time;}
+void JPetHit::setQualityOfTime(float qualityOfTime) {fQualityOfTime = qualityOfTime;}
+void JPetHit::setTimeDiff(float td) {fTimeDiff = td;}
+void JPetHit::setQualityOfTimeDiff(float qtd) {fQualityOfTimeDiff = qtd;}
+void JPetHit::setPosAlongStrip(const float pos) {fPosAlongStrip = pos;}
+void JPetHit::setPosX(float x) {fPos.SetX(x);}
+void JPetHit::setPosY(float y) {fPos.SetY(y);}
+void JPetHit::setPosZ(float z) {fPos.SetZ(z);}
+void JPetHit::setPos (float x,float y,float z) {fPos.SetXYZ(x,y,z);}
+void JPetHit::setBarrelSlot(JPetBarrelSlot& bs) {fBarrelSlot = &bs;}
+void JPetHit::setScintillator(JPetScin& sc) {fScintillator = &sc;}
+void JPetHit::setScinID (const int scinID) {fScinID = scinID;}
+
+
+const bool JPetHit::checkConsistency() const{
   if( !fIsSignalAset || !fIsSignalBset ){
     return true; // do not claim incosistency if signals are not set yet
   }
 
-  int slot_a = getSignalA().getPM().getBarrelSlot().getID();
-  int slot_b = getSignalB().getPM().getBarrelSlot().getID();
+  const int slot_a = getSignalA().getPM().getBarrelSlot().getID();
+  const int slot_b = getSignalB().getPM().getBarrelSlot().getID();
   
   if( slot_a != slot_b ){
     ERROR( Form("Signals added to Hit come from different barrel slots: %d and %d." ,
