@@ -43,7 +43,7 @@ class JPetParamManager
   bool saveParametersToFile(const char* filename);
   
   void clearParameters();
-  const JPetParamBank& getParamBank() const { assert(fBank); return *fBank;}
+  const JPetParamBank& getParamBank() const;
 
  private:
   JPetParamManager(const JPetParamManager&);

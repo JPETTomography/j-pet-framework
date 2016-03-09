@@ -28,8 +28,7 @@
 #include <vector>
 #include <cassert>
 
-class JPetParamBank: public TObject
-{
+class JPetParamBank: public TObject{
  public:
   enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, kLayer, kFrame, SIZE};
 
@@ -37,9 +36,12 @@ class JPetParamBank: public TObject
   JPetParamBank(const JPetParamBank& paramBank);
   ~JPetParamBank();
   void clear();
-
-
+  
+  JPetParamBank(const bool dummy);
+  const bool isDummy()const;
+  
   int getSize(ParamObjectType type) const;
+  
   // Scintillators
   inline void addScintillator(JPetScin& scintillator) {
     fScintillators.push_back(new JPetScin(scintillator));
@@ -167,9 +169,8 @@ class JPetParamBank: public TObject
   }
 
  private:
-
   void operator=(const JPetParamBank&);
-
+  bool fDummy;
   std::vector<JPetScin*> fScintillators;
   std::vector<JPetPM*> fPMs;
   std::vector<JPetPMCalib*> fPMCalibs;
@@ -179,6 +180,7 @@ class JPetParamBank: public TObject
   std::vector<JPetLayer*> fLayers;
   std::vector<JPetFrame*> fFrames;
   std::vector<JPetTOMBChannel*> fTOMBChannels;
+ 
   ClassDef (JPetParamBank, 3);
 
   template <typename T>
