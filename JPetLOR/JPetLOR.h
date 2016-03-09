@@ -39,86 +39,60 @@ public:
   virtual ~JPetLOR();
 
 public:
-  /// Get the reconstructed absolute time of the event wrt beginning of the run [ps]
-  inline const float getTime() const {
-    return fTime;
-  }
-  ;
-  inline const float getQualityOfTime() const {
-    return fQualityOfTime;
-  }
-  ;
-  /// Set the reconstructed absolute time of the event wrt beginning of the run [ps]
-  inline void setTime(float time) {
-    fTime = time;
-  }
-  ;
-  inline void setQualityOfTime(float qualityOfTime) {
-    fQualityOfTime = qualityOfTime;
-  }
-  ;
-  inline const JPetHit& getFirstHit() const {
-    return fFirstHit;
-  }
-  ;
-  inline const JPetHit& getSecondHit() const {
-    return fSecondHit;
-  }
-  ;
+	const float getTime() const;
+	const float getQualityOfTime() const;
+	void setTime(const float time);
+	void setQualityOfTime(const float qualityOfTime);
+	const JPetHit& getFirstHit() const;
+	const JPetHit& getSecondHit() const;
 
   /**
    * @brief Set both hits of this event at once.
    *
    *
    */
-  inline void setHits(JPetHit & firstHit, JPetHit & secondHit) {
-    fFirstHit = firstHit;
-    fSecondHit = secondHit;
-    fIsHitSet[0] = true;
-    fIsHitSet[1] = true;
-    checkConsistency();
-  }
+  void setHits(const JPetHit & firstHit,const JPetHit & secondHit);
 
   /**
    * @brief Set the first (earlier) hit of this event.
    *
    * Convention: "first" and "second" hits refer to their chronological order in a time slot.
    */
-  inline void setFirstHit(JPetHit & firstHit) {
-    fFirstHit = firstHit;
-    fIsHitSet[0] = true;
-    checkConsistency();
-  }
+  void setFirstHit(const JPetHit & firstHit);
 
   /**
    * @brief Set the second (later) hit of this event.
    *
    * Convention: "first" and "second" hits refer to their chronological order in a time slot.
    */
-  inline void setSecondHit(JPetHit & secondHit) {
-    fSecondHit = secondHit;
-    fIsHitSet[1] = true;
-    checkConsistency();
-  }
+  void setSecondHit(const JPetHit & secondHit);
 
-  /// Set the reconstructed time difference between the two hits of the event [ps]
-  inline void setTimeDiff(float td) {
-    fTimeDiff = td;
-  }
-  inline void setQualityOfTimeDiff(float qtd) {
-    fQualityOfTime = qtd;
-  }
-  inline float getTimeDiff() const {
-    return fTimeDiff;
-  }
-
+  void setTimeDiff(const float td);
+  void setQualityOfTimeDiff(const float qtd);
+  const float getTimeDiff() const;
+  const float getQualityOfTimeDiff() const;
+  const bool isHitSet(const unsigned int index);
   
 ClassDef(JPetLOR,1);
 
+/** @brief Checks whether both Hit objects set in this LOR object
+ *  come from different barrel slots and are properly time-ordered
+ *  and logs an error message if not.
+ *
+ *  Pairing two hits from the same Barrel Slot (i.e. from the same scintillator)
+ *  into a LOR would make no physical sense. This method ensures that it is not the case.
+ *  Moreover, by convention the First Hit should have and earlier time that Second Hit.
+ *  This method also ensures
+ * 
+ *  If the signals come from the same barrel slot and opposite-side PMTs, 
+ *  this method only returns true.
+ *  Otherwise, false is returned and an appropriate error message is logged.
+ *
+ *  @return true if both signals are consistently from the same barrel slot.
+ */
+  const bool checkConsistency() const; 
 private:
 
- bool checkConsistency() const; 
- 
   float fTime; ///< reconstructed absolute time of the event wrt to beginning of the run [ps]
   float fQualityOfTime;
 

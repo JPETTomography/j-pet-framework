@@ -6,8 +6,6 @@
 
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
-//ToDo: remake this tests without calling private methods
-/*
 BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetLOR event;
@@ -15,9 +13,6 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_REQUIRE_EQUAL(event.getQualityOfTime(), 0.0f);
 
   BOOST_REQUIRE_EQUAL(event.checkConsistency(), true);
-  
-  //BOOST_REQUIRE(event.fHits->first == NULL);
-  //BOOST_REQUIRE(event.fHits->second == NULL);
 }
 
 BOOST_AUTO_TEST_CASE(constructor)
@@ -35,13 +30,10 @@ BOOST_AUTO_TEST_CASE(constructor)
   float epsilon = 0.0001f;
   BOOST_REQUIRE_CLOSE(event.getTime(), 8.5f, epsilon);
   BOOST_REQUIRE_CLOSE(event.getQualityOfTime(), 4.5f, epsilon);
-  
   BOOST_REQUIRE_CLOSE(event.getTimeDiff(), 0.f, epsilon);
-  
-  BOOST_REQUIRE_EQUAL(event.fTimeDiff, 0.f);
-  BOOST_REQUIRE_EQUAL(event.fQualityOfTimeDiff, 0.f);
-  BOOST_REQUIRE_EQUAL(event.fIsHitSet[0], 1);
-  BOOST_REQUIRE_EQUAL(event.fIsHitSet[1], 1);
+  BOOST_REQUIRE_EQUAL(event.getQualityOfTimeDiff(), 0.f);
+  BOOST_REQUIRE_EQUAL(event.isHitSet(0), 1);
+  BOOST_REQUIRE_EQUAL(event.isHitSet(1), 1);
 }
 
 BOOST_AUTO_TEST_CASE(hitTest)
@@ -82,7 +74,7 @@ BOOST_AUTO_TEST_CASE(qualityOfTimeTest)
   JPetLOR event;
   event.setQualityOfTimeDiff(111.f);
   float epsilon = 0.0001f;
-  BOOST_REQUIRE_CLOSE(event.fQualityOfTime, 111.f, epsilon);
+  BOOST_REQUIRE_CLOSE(event.getQualityOfTime(), 111.f, epsilon);
 }
 
 BOOST_AUTO_TEST_CASE(timeTest)
@@ -121,5 +113,4 @@ BOOST_AUTO_TEST_CASE(consistency_check_test)
   event.setHits(secondHit, firstHit);
   BOOST_REQUIRE_EQUAL(event.checkConsistency(), false);
 }
-*/
 BOOST_AUTO_TEST_SUITE_END()
