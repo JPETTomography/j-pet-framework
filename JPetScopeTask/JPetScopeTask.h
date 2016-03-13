@@ -10,7 +10,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetScopeReader.h
+ *  @file JPetScopeTask.h
  *  @brief Module for oscilloscope data
  */
 
@@ -84,7 +84,6 @@ protected:
    * @param filename oscilloscpe ASCII filename.
    * @return generated JPetRecoSignal
    */
-  //static JPetRecoSignal generateSignal (const char* filename);
   
   
   JPetWriter* fWriter;

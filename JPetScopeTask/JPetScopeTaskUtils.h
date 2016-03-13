@@ -11,7 +11,6 @@
  *  limitations under the License.
  *
  *  @file JPetScopeTaskUtils.h
- *  @brief Module for oscilloscope data
  */
 
 const double ks2ps = 1.0e+12;
