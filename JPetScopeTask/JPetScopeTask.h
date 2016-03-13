@@ -84,7 +84,7 @@ protected:
    * @param filename oscilloscpe ASCII filename.
    * @return generated JPetRecoSignal
    */
-  static JPetRecoSignal generateSignal (const char* filename);
+  //static JPetRecoSignal generateSignal (const char* filename);
   
   
   JPetWriter* fWriter;
