@@ -1,4 +1,4 @@
-#include "../JPetScopeTask/JPetScopeTask.h"
+#include "JPetScopeTask.h"
 #include "../JPetParamManager/JPetParamManager.h"
 
 #include <iostream>
