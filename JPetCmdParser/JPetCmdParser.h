@@ -31,7 +31,6 @@ public:
   ~JPetCmdParser();
   std::vector<JPetOptions> parseAndGenerateOptions(int argc, const char** argv);
 
-protected:
   inline const po::options_description getOptionsDescription() const {
     return fOptionsDescriptions;
   }
@@ -77,6 +76,7 @@ protected:
     return (bool)variablesMap.count("progressBar");
   }
 
+protected:
   po::options_description fOptionsDescriptions;
 
 private:

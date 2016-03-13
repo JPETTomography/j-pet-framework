@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
 */
 
 //ToDo: remake unit tests without calling private methods
-/*
+
 BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
 {
     JPetCmdParser cmdParser;
@@ -379,5 +379,5 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
   BOOST_REQUIRE(firstOption.getRunNumber() == -1);
   BOOST_REQUIRE(firstOption.isProgressBar() == false);
 }
-*/
+
 BOOST_AUTO_TEST_SUITE_END()
