@@ -24,9 +24,10 @@ class JPetOptions
 {
 
 public:
-  enum FileType  {kNoType, kScope, kRaw, kRoot, kHld, kPhysEve, kPhysHit, kPhysSig,
-                  kRawSig, kRecoSig, kTslotCal, kTslotRaw
-                 };
+  enum FileType
+  {
+    kNoType, kScope, kRaw, kRoot, kHld, kPhysEve, kPhysHit, kPhysSig, kRawSig, kRecoSig, kTslotCal, kTslotRaw, kUndefinedFileType
+  };
   typedef std::map<std::string, std::string> Options;
   typedef std::vector<std::string> InputFileNames;
 
@@ -52,14 +53,10 @@ public:
   bool isProgressBar() const {
     return CommonTools::to_bool(fOptions.at("progressBar"));
   }
-  FileType getInputFileType() const {
-    auto option = fOptions.at("inputFileType");
-    return fStringToFileType.at(option);
-  }
-  FileType getOutputFileType() const {
-    auto option = fOptions.at("outputFileType");
-    return fStringToFileType.at(option);
-  }
+  
+  FileType getInputFileType() const;
+  FileType getOutputFileType() const;
+  
   inline Options getOptions() const {
     return fOptions;
   }
@@ -73,6 +70,8 @@ public:
 protected:
   static Options kDefaultOptions;
 
+  void handleErrorMessage(const std::string &errorMessage, const std::out_of_range &outOfRangeException) const;
+  FileType handleFileType(const std::string &fileType) const;
   void setOptions(const Options& opts) {
     fOptions = opts;
   }

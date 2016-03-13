@@ -44,6 +44,37 @@ JPetOptions::JPetOptions(const Options& opts):
   }
 }
 
+void JPetOptions::handleErrorMessage(const std::string &errorMessage, const std::out_of_range &outOfRangeException) const
+{
+  std::cerr << errorMessage << outOfRangeException.what() << '\n';
+  ERROR(errorMessage);
+}
+
+JPetOptions::FileType JPetOptions::handleFileType(const std::string &fileType) const 
+{
+  try
+  {
+    auto option = fOptions.at(fileType);
+    
+    try
+    {
+      return fStringToFileType.at(option);
+    }
+    catch(const std::out_of_range &outOfRangeFileTypeException)
+    {
+      std::string errorMessage = "Out of range error in fileType container ";
+      handleErrorMessage(errorMessage, outOfRangeFileTypeException);
+    }
+  }
+  catch(const std::out_of_range &outOfRangeOptionException)
+  {
+    std::string errorMessage = "Out of range error in Options container ";
+    handleErrorMessage(errorMessage, outOfRangeOptionException);
+  }
+  
+  return FileType::kUndefinedFileType;
+}
+
 void JPetOptions::setStringToFileTypeConversion()
 {
   fStringToFileType = {
@@ -65,6 +96,16 @@ void JPetOptions::setStringToFileTypeConversion()
 bool JPetOptions::areCorrect(const Options& opts) const
 {
   return true;
+}
+
+JPetOptions::FileType JPetOptions::getInputFileType() const 
+{
+  return handleFileType("inputFileType");
+}
+
+JPetOptions::FileType JPetOptions::getOutputFileType() const 
+{
+  return handleFileType("outputFileType");
 }
 
 void JPetOptions::resetEventRange() {
