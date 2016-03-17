@@ -95,6 +95,22 @@ void JPetTaskIO::terminate()
   fReader->closeFile();
 
 }
+void JPetTaskIO::addSubTask(JPetTaskInterface* subtask) {
+	fTask = dynamic_cast<JPetTask*>(subtask);
+}
+JPetTask* JPetTaskIO::getSubTask() const {
+	return fTask;
+}
+
+void JPetTaskIO::setOptions(const JPetOptions& opts) {
+	fOptions = opts;
+}
+void JPetTaskIO::setParamManager(JPetParamManager* paramManager) {
+	fParamManager = paramManager;
+}
+JPetParamManager& JPetTaskIO::getParamManager() {
+	return *fParamManager;
+}
 
 void JPetTaskIO::createInputObjects(const char* inputFilename)
 {
