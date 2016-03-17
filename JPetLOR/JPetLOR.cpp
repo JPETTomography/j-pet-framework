@@ -33,8 +33,6 @@ JPetLOR::JPetLOR(float Time, float QualityOfTime, JPetHit& firstHit,
 {
   fIsHitSet[0] = true;
   fIsHitSet[1] = true;
-
-  isFromSameBarrelSlot();
 }
 
 JPetLOR::~JPetLOR(){}
@@ -62,17 +60,14 @@ void JPetLOR::setHits(const JPetHit& firstHit, const JPetHit& secondHit) {
 	fSecondHit = secondHit;
 	fIsHitSet[0] = true;
 	fIsHitSet[1] = true;
-	isFromSameBarrelSlot();
 }
 void JPetLOR::setFirstHit(const JPetHit& firstHit) {
 	fFirstHit = firstHit;
 	fIsHitSet[0] = true;
-	isFromSameBarrelSlot();
 }
 void JPetLOR::setSecondHit(const JPetHit& secondHit) {
 	fSecondHit = secondHit;
 	fIsHitSet[1] = true;
-	isFromSameBarrelSlot();
 }
 void JPetLOR::setTimeDiff(const float td) {
 	fTimeDiff = td;
@@ -98,20 +93,18 @@ const bool JPetLOR::isHitSet(const unsigned int index){
 }
 
 const bool JPetLOR::isFromSameBarrelSlot() const {  
-  if( !fIsHitSet[0] || !fIsHitSet[1] ){
-    return true; // do not claim incosistency if signals are not set yet
-  }
-  const int slot_a = getFirstHit().getBarrelSlot().getID();
-  const int slot_b = getSecondHit().getBarrelSlot().getID();
-  if( slot_a == slot_b ){
-    ERROR( Form("Hits added to LOR come from the same barrel slots: %d." ,slot_a) );
-    return false; 
-  }
-  
-  if( getFirstHit().getTime() > getSecondHit().getTime() ){
-    ERROR( "Hits added to LOR are not in chronological order." );
-    return false; 
-  }
-  
-  return true;
+	if(fIsHitSet[0]&&fIsHitSet[1] ){// do not claim inconsistency if signals are not set yet
+		const int slot_a = getFirstHit().getBarrelSlot().getID();
+		const int slot_b = getSecondHit().getBarrelSlot().getID();
+		if( slot_a == slot_b ){
+			ERROR( Form("Hits added to LOR come from the same barrel slots: %d." ,slot_a) );
+			return false; 
+		}
+		
+		if( getFirstHit().getTime() > getSecondHit().getTime() ){
+			ERROR( "Hits added to LOR are not in chronological order." );
+			return false; 
+		}
+	}
+	return true;
 }
