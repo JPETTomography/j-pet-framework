@@ -97,15 +97,12 @@ const bool JPetLOR::isHitSet(const unsigned int index){
 	};
 }
 
-const bool JPetLOR::isFromSameBarrelSlot() const {
-  
+const bool JPetLOR::isFromSameBarrelSlot() const {  
   if( !fIsHitSet[0] || !fIsHitSet[1] ){
     return true; // do not claim incosistency if signals are not set yet
   }
-
   const int slot_a = getFirstHit().getBarrelSlot().getID();
   const int slot_b = getSecondHit().getBarrelSlot().getID();
-  
   if( slot_a == slot_b ){
     ERROR( Form("Hits added to LOR come from the same barrel slots: %d." ,slot_a) );
     return false; 
