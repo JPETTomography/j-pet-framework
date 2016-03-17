@@ -4,33 +4,6 @@
 #include "../JPetCmdParser/JPetCmdParser.h"
 #include "../JPetTaskIO/JPetTaskIO.h"
 
-//#include "TaskA.h"
-//#include "TaskB.h"
-//#include "TaskC1.h"
-//#include "TaskC2.h"
-//#include "TaskC3.h"
-//#include "TaskD.h"
-//#include "TaskE.h"
-
-// methods
-//virtual void init(const JPetTaskInterface::Options& opts);
-//virtual void exec();
-//virtual void terminate();
-//virtual ~JPetTaskIO();
-//virtual void addSubTask(JPetTaskInterface* subtask);
-//void manageProgressBar(long long done, long long end);
-//float setProgressBar(int currentEventNumber, int numberOfEvents);
-
-///protected:
-//virtual void createInputObjects(const char* inputFilename);
-//virtual void createOutputObjects(const char* outputFilename);
-//void setUserLimits(const JPetOptions& opts, long long& firstEvent, long long& lastEvent) const;
-
-
-
-//using Options = std::map<std::string, std::string>;
-
-
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 
