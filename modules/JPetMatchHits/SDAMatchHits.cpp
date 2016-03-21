@@ -77,7 +77,7 @@ std::vector<JPetHit> SDAMatchHits::createHits(std::vector<JPetPhysSignal>& signa
   return hits;
 }
 
-std::vector<JPetHit> matchHitsWithinSlot(std::vector<JPetPhysSignal> signals){
+std::vector<JPetHit> SDAMatchHits::matchHitsWithinSlot(std::vector<JPetPhysSignal> signals){
 
   std::vector<JPetHit> hits;
   
