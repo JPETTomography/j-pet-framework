@@ -57,7 +57,7 @@ reco_signal_generator::~reco_signal_generator () {
 
 int reco_signal_generator::setup (const char* filename) {
   
-  m_reco_signal = generateSignal (filename);
+  m_reco_signal = RecoSignalUtils::generateSignal (filename);
   m_file = fopen(filename, "r");
 
   return 0;

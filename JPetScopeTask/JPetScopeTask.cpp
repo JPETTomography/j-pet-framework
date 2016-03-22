@@ -28,7 +28,7 @@ void JPetScopeTask::exec()
   int time_window_index;
   sscanf(path(osc_file).filename().string().c_str(), "%*3s %d", &time_window_index);
   
-  JPetRecoSignal rsig1 = generateSignal(osc_file.c_str());
+  JPetRecoSignal rsig1 = RecoSignalUtils::generateSignal(osc_file.c_str());
   rsig1.setPM(*(fConfig->pPM1));
   rsig1.setTimeWindowIndex(time_window_index);
   
@@ -38,7 +38,7 @@ void JPetScopeTask::exec()
   osc_file+= "/";
   osc_file+= filename;
   
-  JPetRecoSignal rsig2 = generateSignal(osc_file.c_str());
+  JPetRecoSignal rsig2 = RecoSignalUtils::generateSignal(osc_file.c_str());
   rsig2.setPM(*(fConfig->pPM2));
   rsig2.setTimeWindowIndex(time_window_index);
   
@@ -48,7 +48,7 @@ void JPetScopeTask::exec()
   osc_file+= "/";
   osc_file+= filename;
   
-  JPetRecoSignal rsig3 = generateSignal(osc_file.c_str());
+  JPetRecoSignal rsig3 = RecoSignalUtils::generateSignal(osc_file.c_str());
   rsig3.setPM(*(fConfig->pPM3));
   rsig3.setTimeWindowIndex(time_window_index);
   
@@ -58,7 +58,7 @@ void JPetScopeTask::exec()
   osc_file+= "/";
   osc_file+= filename;
   
-  JPetRecoSignal rsig4 = generateSignal(osc_file.c_str());
+  JPetRecoSignal rsig4 = RecoSignalUtils::generateSignal(osc_file.c_str());
   rsig4.setPM(*(fConfig->pPM4));
   rsig4.setTimeWindowIndex(time_window_index);
   
