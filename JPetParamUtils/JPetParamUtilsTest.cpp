@@ -1,10 +1,9 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetParamUtilsTest
 #include <boost/test/unit_test.hpp>
-
-#define private public
 #include "../JPetParamUtils/JPetParamUtils.h"
-#undef private
+
+
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE( default_not_related_slots )

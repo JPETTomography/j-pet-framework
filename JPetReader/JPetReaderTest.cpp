@@ -1,20 +1,14 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetReaderTest
-#include <boost/test/unit_test.hpp>
-
-#define private public
-#define protected public
-#include "../JPetReader/JPetReader.h"
-#include "../JPetWriter/JPetWriter.h"
-#undef private
-#undef protected
-
 #include <cstddef>
 #include <iostream>
 #include <vector>
-
+#include <boost/test/unit_test.hpp>
 #include <TError.h> /// gErrorIgnoreLevel
 #include <TObjString.h>
+
+#include "../JPetReader/JPetReader.h"
+#include "../JPetWriter/JPetWriter.h"
 
 // method list
   //JPetReader(void); //maybe remove this one

@@ -40,24 +40,15 @@ public:
   virtual void exec();
   virtual void terminate();
   virtual ~JPetTaskIO();
-  virtual void addSubTask(JPetTaskInterface* subtask) {
-    fTask = (JPetTask*)subtask;
-  };
-  
-  virtual JPetTask* getSubTask() const {
-    return fTask;
-  }
+  virtual void addSubTask(JPetTaskInterface* subtask);
+  virtual JPetTask* getSubTask() const;
 
-  void setOptions(const JPetOptions& opts) {
-    fOptions = opts;
-  }
+  void setOptions(const JPetOptions& opts);
 
   void manageProgressBar(long long done, long long end);
   float setProgressBar(int currentEventNumber, int numberOfEvents);
 
-  void setParamManager(JPetParamManager* paramManager) {
-    fParamManager = paramManager;
-  }
+  void setParamManager(JPetParamManager* paramManager);
 
 protected:
   virtual void createInputObjects(const char* inputFilename);
@@ -65,9 +56,7 @@ protected:
   void setUserLimits(const JPetOptions& opts,const long long totEventsFromReader, long long& firstEvent, long long& lastEvent) const;
 
   const JPetParamBank& getParamBank();
-  JPetParamManager& getParamManager() {
-    return *fParamManager;
-  }
+  JPetParamManager& getParamManager();
 
   JPetTask* fTask;
   int fEventNb;

@@ -17,11 +17,9 @@
 
 ClassImp (JPetParamBank);
 
-JPetParamBank::JPetParamBank()
-{
-  /* */
-}
-
+JPetParamBank::JPetParamBank(){fDummy=false;}
+JPetParamBank::JPetParamBank(const bool d){fDummy=d;}
+const bool JPetParamBank::isDummy()const{return fDummy;}
 JPetParamBank::JPetParamBank(const JPetParamBank& paramBank)
 {
   initVectorWith(fScintillators, paramBank.fScintillators);

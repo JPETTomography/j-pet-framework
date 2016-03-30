@@ -2,10 +2,12 @@
 #define BOOST_TEST_MODULE JPetTSlotTest
 #include <boost/test/unit_test.hpp>
 
-#define private public
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetTimeWindow/JPetTimeWindow.h"
-#undef private
+
+
+
+
 /// @todo update methods tests are outdated
 //#include <TError.h> /// gErrorIgnoreLevel
 //  gErrorIgnoreLevel = 7000;

@@ -1,10 +1,9 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE HelperMathFunctionsTest
 #include <boost/test/unit_test.hpp>
-
-#define private public
 #include "../JPetSimplePhysSignalReco/HelperMathFunctions.h"
-#undef private
+
+
 
 //float polynomialFit(const vector<float>& t, const vector<float>& v_source, int alfa, float v0)
 

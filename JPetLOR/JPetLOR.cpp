@@ -33,48 +33,78 @@ JPetLOR::JPetLOR(float Time, float QualityOfTime, JPetHit& firstHit,
 {
   fIsHitSet[0] = true;
   fIsHitSet[1] = true;
-
-  checkConsistency();
 }
 
-JPetLOR::~JPetLOR()
-{
+JPetLOR::~JPetLOR(){}
+
+const float JPetLOR::getTime() const {
+	return fTime;
+}
+const float JPetLOR::getQualityOfTime() const{
+	return fQualityOfTime;
+}
+void JPetLOR::setTime(const float time){
+	fTime = time;
+}
+void JPetLOR::setQualityOfTime(const float qualityOfTime) {
+	fQualityOfTime = qualityOfTime;
+}
+const JPetHit& JPetLOR::getFirstHit() const {
+	return fFirstHit;
+}
+const JPetHit& JPetLOR::getSecondHit() const {
+	return fSecondHit;
+}
+void JPetLOR::setHits(const JPetHit& firstHit, const JPetHit& secondHit) {
+	fFirstHit = firstHit;
+	fSecondHit = secondHit;
+	fIsHitSet[0] = true;
+	fIsHitSet[1] = true;
+}
+void JPetLOR::setFirstHit(const JPetHit& firstHit) {
+	fFirstHit = firstHit;
+	fIsHitSet[0] = true;
+}
+void JPetLOR::setSecondHit(const JPetHit& secondHit) {
+	fSecondHit = secondHit;
+	fIsHitSet[1] = true;
+}
+void JPetLOR::setTimeDiff(const float td) {
+	fTimeDiff = td;
+}
+void JPetLOR::setQualityOfTimeDiff(const float qtd) {
+	fQualityOfTime = qtd;
+}
+const float JPetLOR::getTimeDiff() const {
+	return fTimeDiff;
+}
+const float JPetLOR::getQualityOfTimeDiff() const{
+	return fQualityOfTimeDiff;
+}
+const bool JPetLOR::isHitSet(const unsigned int index){
+	switch(index){
+		case 0:
+			return fIsHitSet[0];
+		case 1:
+			return fIsHitSet[1];
+		default:
+			return false;
+	};
 }
 
-/** @brief Checks whether both Hit objects set in this LOR object
- *  come from different barrel slots and are properly time-ordered
- *  and logs an error message if not.
- *
- *  Pairing two hits from the same Barrel Slot (i.e. from the same scintillator)
- *  into a LOR would make no physical sense. This method ensures that it is not the case.
- *  Moreover, by convention the First Hit should have and earlier time that Second Hit.
- *  This method also ensures
- * 
- *  If the signals come from the same barrel slot and opposite-side PMTs, 
- *  this method only returns true.
- *  Otherwise, false is returned and an appropriate error message is logged.
- *
- *  @return true if both signals are consistently from the same barrel slot.
- */
-bool JPetLOR::checkConsistency() const {
-  
-  if( !fIsHitSet[0] || !fIsHitSet[1] ){
-    return true; // do not claim incosistency if signals are not set yet
-  }
-
-  int slot_a = getFirstHit().getBarrelSlot().getID();
-  int slot_b = getSecondHit().getBarrelSlot().getID();
-  
-  if( slot_a == slot_b ){
-    ERROR( Form("Hits added to LOR come from the same barrel slots: %d." ,
-		slot_a) );
-    return false; 
-  }
-  
-  if( getFirstHit().getTime() > getSecondHit().getTime() ){
-    ERROR( "Hits added to LOR are not in chronological order." );
-    return false; 
-  }
-  
-  return true;
+const bool JPetLOR::isFromSameBarrelSlot() const {  
+	if(fIsHitSet[0]&&fIsHitSet[1] ){// do not claim inconsistency if signals are not set yet
+		const int slot_a = getFirstHit().getBarrelSlot().getID();
+		const int slot_b = getSecondHit().getBarrelSlot().getID();
+		if( slot_a == slot_b ){
+			ERROR( Form("Hits added to LOR come from the same barrel slots: %d." ,slot_a) );
+			return false; 
+		}
+		
+		if( getFirstHit().getTime() > getSecondHit().getTime() ){
+			ERROR( "Hits added to LOR are not in chronological order." );
+			return false; 
+		}
+	}
+	return true;
 }

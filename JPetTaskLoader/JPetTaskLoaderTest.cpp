@@ -1,10 +1,9 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetTaskLoaderTest
 #include <boost/test/unit_test.hpp>
-
-#define private public
 #include "../JPetTaskLoader/JPetTaskLoader.h"
-#undef private
+
+
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
