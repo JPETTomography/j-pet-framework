@@ -26,6 +26,8 @@ JPetParamManager::JPetParamManager():
 {
   /* */
 }
+JPetParamManager::JPetParamManager(const JPetParamManager&){}
+JPetParamManager& JPetParamManager::operator=(const JPetParamManager&){}
 
 JPetParamManager::~JPetParamManager()
 {
@@ -78,6 +80,13 @@ bool JPetParamManager::readParametersFromFile(const char* filename)
   if (!fBank) return false;
   return true;
 }
+
+const JPetParamBank& JPetParamManager::getParamBank() const{
+	static JPetParamBank DummyResult(true);
+	if(fBank)return *fBank;
+	else return DummyResult;
+}
+
 
 bool JPetParamManager::saveParametersToFile(const char* filename)
 {

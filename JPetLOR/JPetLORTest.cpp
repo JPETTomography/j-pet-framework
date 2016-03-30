@@ -2,21 +2,17 @@
 #define BOOST_TEST_MODULE JPetLORTest
 #include <boost/test/unit_test.hpp>
 
-#define private public
 #include "../JPetLOR/JPetLOR.h"
-#undef private
-BOOST_AUTO_TEST_SUITE(FirstSuite)
 
+
+BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetLOR event;
   BOOST_REQUIRE_EQUAL(event.getTime(), 0.0f);
   BOOST_REQUIRE_EQUAL(event.getQualityOfTime(), 0.0f);
 
-  BOOST_REQUIRE_EQUAL(event.checkConsistency(), true);
-  
-  //BOOST_REQUIRE(event.fHits->first == NULL);
-  //BOOST_REQUIRE(event.fHits->second == NULL);
+  BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), true);
 }
 
 BOOST_AUTO_TEST_CASE(constructor)
@@ -29,21 +25,18 @@ BOOST_AUTO_TEST_CASE(constructor)
   secondHit.setBarrelSlot(slot2);
   JPetLOR event(8.5f, 4.5f, firstHit, secondHit);
 
-  BOOST_REQUIRE_EQUAL(event.checkConsistency(), true);
+  BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), true);
   
   float epsilon = 0.0001f;
   BOOST_REQUIRE_CLOSE(event.getTime(), 8.5f, epsilon);
   BOOST_REQUIRE_CLOSE(event.getQualityOfTime(), 4.5f, epsilon);
-  
   BOOST_REQUIRE_CLOSE(event.getTimeDiff(), 0.f, epsilon);
-  
-  BOOST_REQUIRE_EQUAL(event.fTimeDiff, 0.f);
-  BOOST_REQUIRE_EQUAL(event.fQualityOfTimeDiff, 0.f);
-  BOOST_REQUIRE_EQUAL(event.fIsHitSet[0], 1);
-  BOOST_REQUIRE_EQUAL(event.fIsHitSet[1], 1);
+  BOOST_REQUIRE_EQUAL(event.getQualityOfTimeDiff(), 0.f);
+  BOOST_REQUIRE_EQUAL(event.isHitSet(0), 1);
+  BOOST_REQUIRE_EQUAL(event.isHitSet(1), 1);
 }
 
-/*BOOST_AUTO_TEST_CASE(hitTest)
+BOOST_AUTO_TEST_CASE(hitTest)
 {
   JPetHit firstHit;
   JPetHit secondHit;
@@ -66,7 +59,7 @@ BOOST_AUTO_TEST_CASE(constructor)
   event.setSecondHit(sh);
   BOOST_REQUIRE(event.getFirstHit().getScinID() == fh.getScinID());
   BOOST_REQUIRE(event.getSecondHit().getScinID() == sh.getScinID());
-}*/
+}
 
 BOOST_AUTO_TEST_CASE(timeDiffTest)
 {
@@ -81,7 +74,7 @@ BOOST_AUTO_TEST_CASE(qualityOfTimeTest)
   JPetLOR event;
   event.setQualityOfTimeDiff(111.f);
   float epsilon = 0.0001f;
-  BOOST_REQUIRE_CLOSE(event.fQualityOfTime, 111.f, epsilon);
+  BOOST_REQUIRE_CLOSE(event.getQualityOfTime(), 111.f, epsilon);
 }
 
 BOOST_AUTO_TEST_CASE(timeTest)
@@ -102,23 +95,22 @@ BOOST_AUTO_TEST_CASE(consistency_check_test)
   secondHit.setBarrelSlot(slot2);
   JPetLOR event(8.5f, 4.5f, firstHit, secondHit);
 
-  BOOST_REQUIRE_EQUAL(event.checkConsistency(), true);
+  BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), true);
 
   secondHit.setBarrelSlot(slot1);
   event.setSecondHit(secondHit);
-  BOOST_REQUIRE_EQUAL(event.checkConsistency(), false);
+  BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), false);
 
   secondHit.setBarrelSlot(slot2);
   event.setSecondHit(secondHit);
-  BOOST_REQUIRE_EQUAL(event.checkConsistency(), true);
+  BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), true);
 
   firstHit.setTime(10.001);
   secondHit.setTime(10.002);
   event.setHits(firstHit, secondHit);
-  BOOST_REQUIRE_EQUAL(event.checkConsistency(), true);
+  BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), true);
 
   event.setHits(secondHit, firstHit);
-  BOOST_REQUIRE_EQUAL(event.checkConsistency(), false);
+  BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), false);
 }
-
 BOOST_AUTO_TEST_SUITE_END()

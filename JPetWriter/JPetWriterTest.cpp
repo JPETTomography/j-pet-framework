@@ -3,14 +3,6 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>  // for filesystem::remove
 #include <TNamed.h>
-
-#define private public
-#define protected public
-#include "../JPetWriter/JPetWriter.h"
-#include "../JPetReader/JPetReader.h"
-#undef private
-#undef protected
-
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetTimeWindow/JPetTimeWindow.h"
 #include "../JPetBaseSignal/JPetBaseSignal.h"
@@ -19,6 +11,9 @@
 #include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetHit/JPetHit.h"
 #include "../JPetLOR/JPetLOR.h"
+#include "../JPetWriter/JPetWriter.h"
+#include "../JPetReader/JPetReader.h"
+
 
 //  JPetWriter(const char *p_fileName);
 //  virtual ~JPetWriter(void);
@@ -67,6 +62,7 @@ BOOST_AUTO_TEST_CASE( my_helperTest_for_test3 )
   TTree tree("tree", "tree");  
   tree.SetAutoSave(1000);
   TNamed* filler = 0;
+  // cppcheck-suppress nullPointer
   tree.Branch("TNamed", "TNamed", &filler);
   const int kHugeNumberOfObjects = 10000;
   for (int i = 0; i < kHugeNumberOfObjects; i++) {

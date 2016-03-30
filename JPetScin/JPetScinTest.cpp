@@ -1,10 +1,9 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetScinTest
 #include <boost/test/unit_test.hpp>
-
-#define private public
 #include "../JPetScin/JPetScin.h"
-#undef private
+
+
 
 //  public:
 //JPetScin();
