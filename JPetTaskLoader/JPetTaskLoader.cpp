@@ -14,10 +14,13 @@
  *  @brief Class loads user task and execute in a loop of events
  */
 
+
 #include "JPetTaskLoader.h"
 #include <iostream>
 #include "../JPetTask/JPetTask.h"
 //ClassImp(JPetTaskLoader);
+
+#include <boost/filesystem.hpp>
 
 JPetTaskLoader::JPetTaskLoader(const char* in_file_type,
                                const char* out_file_type,
@@ -37,6 +40,9 @@ void JPetTaskLoader::init(const JPetOptions::Options& opts)
   auto inFile = newOpts.at("inputFile");
   auto outFile = inFile;
   inFile = generateProperNameFile(inFile, fInFileType);
+
+  std::cout<<"My INFILE is: "<<inFile<<std::endl;
+
   outFile = generateProperNameFile(outFile, fOutFileType);
   newOpts.at("inputFile") = inFile;
   newOpts.at("inputFileType") = fInFileType;
@@ -52,18 +58,24 @@ void JPetTaskLoader::init(const JPetOptions::Options& opts)
 
 std::string JPetTaskLoader::generateProperNameFile(const std::string& srcFilename, const std::string& fileType) const
 {
-  auto baseFileName = getBaseFileName(srcFilename);
+  auto baseFileName = getBaseFilePath(srcFilename);
   return baseFileName + "." + fileType + ".root";
 }
 
-std::string JPetTaskLoader::getBaseFileName(const std::string& srcName) const
+std::string JPetTaskLoader::getBaseFilePath(const std::string& srcName) const
 {
-  auto name(srcName);
+  boost::filesystem::path p(srcName);
+  // the file name and path are treated separately not to strip dots from the path
+  std::string name = p.filename().native();
+  boost::filesystem::path dir = p.parent_path().native();
+  //strip the "extension" starting from the first dot in the file name
   auto pos = name.find(".");
   if ( pos != std::string::npos ) {
     name.erase( pos );
   }
-  return name;
+  boost::filesystem::path bare_name(name);
+  
+  return (dir / bare_name).native();
 }
 
 JPetTaskLoader::~JPetTaskLoader()
