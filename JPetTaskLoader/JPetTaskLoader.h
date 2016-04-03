@@ -31,7 +31,22 @@ public:
   virtual ~JPetTaskLoader();
 protected:
   std::string generateProperNameFile(const std::string& srcFilename, const std::string& fileType) const;
-  std::string getBaseFileName(const std::string& srcName) const;
+  
+  /**
+   * @brief Strips the framework file "extension" from full file path
+   *
+   * The "extension" can be composed of multiple parts, dot-separated. 
+   * The extension carries information not only about file type but also
+   * about types of the objects within the ROOT file.
+   * Everything following the first dot in the file name (but not in the file
+   * path) is treated as an extension.
+   *
+   * Example:
+   * ./data/somefile.phys.sig.root
+   * the extension is "phys.sig.root"
+   *
+   */
+  std::string getBaseFilePath(const std::string& srcName) const;
 
   std::string fInFileType;
   std::string fOutFileType;
