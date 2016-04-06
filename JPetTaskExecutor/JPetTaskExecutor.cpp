@@ -19,9 +19,10 @@
 #include "../JPetScopeReader/JPetScopeReader.h"
 #include "../JPetTaskLoader/JPetTaskLoader.h"
 
+
 JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
-  ftaskGeneratorChain(taskGeneratorChain),
   fProcessedFile(processedFileId),
+  ftaskGeneratorChain(taskGeneratorChain),
   fOptions(opt)
 {
   if (taskGeneratorChain) {

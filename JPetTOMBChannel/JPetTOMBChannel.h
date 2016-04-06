@@ -50,7 +50,7 @@ public:
   const JPetTRB & getTRB()const{ return (JPetTRB&)*fTRB.GetObject(); }
   const JPetPM & getPM()const{ return (JPetPM&)*fPM.GetObject(); }
   float getThreshold()const{ return fThreshold; }
-  unsigned int getChannel()const{ return fChannel; }
+  int getChannel()const{ return fChannel; }
   std::string getDescription()const{ return m_description; }
 
   inline bool operator==(const JPetTOMBChannel& channel) { return getChannel() == channel.getChannel(); }

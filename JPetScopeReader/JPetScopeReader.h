@@ -60,7 +60,7 @@ class JPetScopeReader: public JPetTaskLoader {
    *
    * @param inputFilename Config file name.
    */
-  virtual void createInputObjects(const char* inputFilename = 0);
+  virtual void createInputObjects();
 
   /** @brief Required by JPetManager.
    *
@@ -98,7 +98,7 @@ class JPetScopeReader: public JPetTaskLoader {
    *
    * When processing events for new configuration new output file is created.
    */
-  void createNewWriter(const char* outputFilename = 0);
+  void createNewWriter();
 
   /** @brief Create bank with system describing objects.
    *

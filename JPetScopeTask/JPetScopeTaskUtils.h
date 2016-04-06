@@ -13,6 +13,9 @@
  *  @file JPetScopeTaskUtils.h
  */
 
+#include "../JPetRecoSignal/JPetRecoSignal.h"
+
+
 const double ks2ps = 1.0e+12;
 const double kV2mV = 1.0e+3;
 const int kbuflen = 256;

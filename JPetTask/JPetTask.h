@@ -32,7 +32,7 @@ class JPetTask: public JPetTaskInterface, public TNamed
   virtual void addSubTask(JPetTaskInterface*) {};
   virtual void setParamManager(JPetParamManager*paramManager);
   virtual void setStatistics(JPetStatistics* statistics);
-  virtual void setWriter(JPetWriter* writer) {};
+  virtual void setWriter(JPetWriter*) {};
   virtual void setEvent(TNamed* ev);
   const JPetParamBank& getParamBank();
   JPetStatistics & getStatistics();

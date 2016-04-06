@@ -158,7 +158,7 @@ JPetParamBank const& JPetScopeReader::createParamBank(ptree const& conf_data) {
     return *param_bank;
 }
 
-void JPetScopeReader::createInputObjects(const char* inputFilename) {
+void JPetScopeReader::createInputObjects() {
 
   // Create property tree
 
@@ -288,7 +288,7 @@ void JPetScopeReader::createOutputObjects(const char* outputFilename) {
   fIter = fConfigs.begin();
 }
 
-void JPetScopeReader::createNewWriter(const char* outputFilename) {
+void JPetScopeReader::createNewWriter() {
   
   if (fConfigs.empty()) {
     ERROR("No files for processing.");
