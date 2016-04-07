@@ -1,3 +1,18 @@
+/**
+ *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetScin.h
+ */
+
 #ifndef _JPETSCIN_H_
 #define _JPETSCIN_H_
 
@@ -25,6 +40,7 @@ class JPetScin: public TNamed
   };
 
   JPetScin();
+  JPetScin(int id);
   JPetScin(int id, float attenLen, float length, float height, float width);
   ~JPetScin();
 
@@ -32,7 +48,6 @@ class JPetScin: public TNamed
   inline float getAttenLen() const { return fAttenLen; }
   inline ScinDimensions getScinSize() const { return fScinSize; }
   float getScinSize(Dimension dim) const;
-  inline void setID(int id) { fID = id; }
   inline void setAttenLen(float attenLen) { fAttenLen = attenLen; }
   inline void setScinSize(ScinDimensions size) { fScinSize = size; }
   void setScinSize(Dimension dim, float value);

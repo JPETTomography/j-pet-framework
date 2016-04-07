@@ -9,6 +9,7 @@
 #include "../JPetReader/JPetReader.h"
 #include "../JPetRecoSignal/JPetRecoSignal.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
+#include "../JPetScopeTask/JPetScopeTaskUtils.h"
 
 // *********************************************************************** //
 // ********            Generate Single JPetRecoSignal             ******** //
@@ -56,7 +57,7 @@ reco_signal_generator::~reco_signal_generator () {
 
 int reco_signal_generator::setup (const char* filename) {
   
-  m_reco_signal = JPetScopeTask::generateSignal (filename);
+  m_reco_signal = RecoSignalUtils::generateSignal (filename);
   m_file = fopen(filename, "r");
 
   return 0;

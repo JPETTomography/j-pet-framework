@@ -1,8 +1,17 @@
 /**
-  *  @copyright Copyright (c) 2014, Wojciech Krzemien
-  *  @file JPetDBParamGetter.cpp
-  *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
-  */ 
+ *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetDBParamGetter.cpp
+ */
 
 #include "./JPetDBParamGetter.h"
 #include <boost/lexical_cast.hpp>
@@ -276,8 +285,7 @@ JPetPM JPetDBParamGetter::generatePM(pqxx::result::const_iterator row) {
 
       JPetPM::Side l_side = (l_hvpmconnection_isrightside) ? JPetPM::Side::SideB : JPetPM::Side::SideA;
 
-      JPetPM l_pm;
-      l_pm.setID(l_photomultiplier_id);
+      JPetPM l_pm(l_photomultiplier_id);
       l_pm.setSide(l_side);
 
       return  l_pm;
@@ -380,7 +388,7 @@ JPetFEB JPetDBParamGetter::generateFEB(pqxx::result::const_iterator row) {
       int l_konradboard_creator_id = row["konradboard_creator_id"].as<int>();
       int l_time_outputs_per_input = row["time_outputs_per_input"].as<int>();
       int l_notime_outputs_per_input = row["notime_outputs_per_input"].as<int>();
-      
+
       JPetFEB l_FEB(l_konradboard_id,
                     l_konradboard_isactive,
                     l_konradboard_status,

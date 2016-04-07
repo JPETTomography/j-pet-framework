@@ -1,8 +1,17 @@
 /**
-  *  @copyright Copyright (c) 2015, J-PET collaboration
-  *  @file JPetOptions.cpp
-  *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
-  */
+ *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetOptions.cpp
+ */
 
 #include "./JPetOptions.h"
 #include "../JPetLoggerInclude.h"
@@ -35,6 +44,37 @@ JPetOptions::JPetOptions(const Options& opts):
   }
 }
 
+void JPetOptions::handleErrorMessage(const std::string &errorMessage, const std::out_of_range &outOfRangeException) const
+{
+  std::cerr << errorMessage << outOfRangeException.what() << '\n';
+  ERROR(errorMessage);
+}
+
+JPetOptions::FileType JPetOptions::handleFileType(const std::string &fileType) const 
+{
+  try
+  {
+    auto option = fOptions.at(fileType);
+    
+    try
+    {
+      return fStringToFileType.at(option);
+    }
+    catch(const std::out_of_range &outOfRangeFileTypeException)
+    {
+      std::string errorMessage = "Out of range error in fileType container ";
+      handleErrorMessage(errorMessage, outOfRangeFileTypeException);
+    }
+  }
+  catch(const std::out_of_range &outOfRangeOptionException)
+  {
+    std::string errorMessage = "Out of range error in Options container ";
+    handleErrorMessage(errorMessage, outOfRangeOptionException);
+  }
+  
+  return FileType::kUndefinedFileType;
+}
+
 void JPetOptions::setStringToFileTypeConversion()
 {
   fStringToFileType = {
@@ -56,6 +96,16 @@ void JPetOptions::setStringToFileTypeConversion()
 bool JPetOptions::areCorrect(const Options& opts) const
 {
   return true;
+}
+
+JPetOptions::FileType JPetOptions::getInputFileType() const 
+{
+  return handleFileType("inputFileType");
+}
+
+JPetOptions::FileType JPetOptions::getOutputFileType() const 
+{
+  return handleFileType("outputFileType");
 }
 
 void JPetOptions::resetEventRange() {

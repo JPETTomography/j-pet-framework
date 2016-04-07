@@ -1,11 +1,19 @@
-/** 
- *   @copyright Copyright (c) 2012, Wojciech Krzemien
- *   @file JPetLogger.h
- *   @version 1.0
- *   @author Wojciech Krzemien
- *   @brief Simple logger class. Don't use directly. Macros from JPetLoggerInclude.h should be used instead. 
- *   JPetLogger class implements a simple logging functionality.
- *   For every message the logfile stream is opened, the message is written and the stream is closed again. This assures that no messages are lost in case of errrors.
+/**
+ *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetLogger.h
+ *  @brief Simple logger class. Don't use directly. Macros from JPetLoggerInclude.h should be used instead. 
+ *  JPetLogger class implements a simple logging functionality.
+ *  For every message the logfile stream is opened, the message is written and the stream is closed again. This assures that no messages are lost in case of errrors.
  */
 
 #ifndef JPETLOGGER_H

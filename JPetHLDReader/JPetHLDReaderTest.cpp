@@ -1,21 +1,15 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetHLDReaderTest
-#include <boost/test/unit_test.hpp>
-
-#define private public
-#define protected public
-#include "../JPetHLDReader/JPetHLDReader.h"
-#undef private 
-#undef protected
-
 #include <cstddef>
 #include <iostream>
 #include <vector>
-
+#include <boost/test/unit_test.hpp>
 #include <TError.h> /// gErrorIgnoreLevel
 #include <TObjString.h>
 
-// method list
+#include "../JPetHLDReader/JPetHLDReader.h"
+
+
 
 BOOST_AUTO_TEST_SUITE (FirstSuite)
 

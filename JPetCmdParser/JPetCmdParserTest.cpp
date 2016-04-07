@@ -1,19 +1,23 @@
 /**
-  *  @copyright Copyright (c) 2014, J-PET collaboration
-  *  @file JPetCmdParserTest.cpp
-  *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
-  */
+ *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetCmdParserTest.cpp
+ */
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetCmdParserTest
 #include <boost/test/unit_test.hpp>
 #include <cstdlib>
-#define private public
-#define protected public
 #include "../JPetCmdParser/JPetCmdParser.h"
-#undef private 
-#undef protected
-//public method
-//std::vector<JPetOptions> parseAndGenerateOptions(int argc, const char** argv);
 
 using namespace std;
 
@@ -83,6 +87,9 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
   ("runId,i", po::value<int>(), "Run id.")
   ("progressBar,b", "Progress bar.");
 */
+
+//ToDo: remake unit tests without calling private methods
+
 BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
 {
     JPetCmdParser cmdParser;
@@ -159,7 +166,6 @@ BOOST_AUTO_TEST_CASE(fileTest)
     BOOST_REQUIRE(variablesMap.count("file") == 1);
     BOOST_REQUIRE(file.front() == "unitTestData/JPetCmdParserTest/data.hld");
 }
-
 BOOST_AUTO_TEST_CASE(fileTypeTest)
 {
     JPetCmdParser cmdParser;
@@ -187,7 +193,6 @@ BOOST_AUTO_TEST_CASE(fileTypeTest)
     BOOST_REQUIRE(cmdParser.getFileType(variablesMap) == "hld");
     BOOST_REQUIRE(cmdParser.IsFileTypeSet(variablesMap));
 }
-
 BOOST_AUTO_TEST_CASE(rangeTest)
 {
     JPetCmdParser cmdParser;

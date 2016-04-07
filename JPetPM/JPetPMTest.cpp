@@ -1,10 +1,10 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetPMTest
 #include <boost/test/unit_test.hpp>
-
-#define private public
 #include "../JPetPM/JPetPM.h"
-#undef private
+
+
+
 //  public:
 //  JPetPM();
 //  inline Side getSide() const { return fSide; }
