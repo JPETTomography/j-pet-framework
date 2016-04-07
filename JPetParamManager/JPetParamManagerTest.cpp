@@ -59,12 +59,6 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
   
   BOOST_CHECK(l_paramManagerInstance.saveParametersToFile(testDatafile) == true);
   
-  l_paramManagerInstance.fBank->clear();
-  
-  BOOST_CHECK(l_paramManagerInstance.readParametersFromFile(testDatafile) == true);
-  
-  checkContainersSize(*l_paramManagerInstance.getParamBank());
-
 		boost::filesystem::remove(testDatafile);
 }
 
