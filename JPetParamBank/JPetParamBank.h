@@ -32,8 +32,6 @@ enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kB
 
 class JPetParamBank: public TObject{
  public:
-  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, kLayer, kFrame, SIZE};
-
   JPetParamBank();
   JPetParamBank(const JPetParamBank& paramBank);
   ~JPetParamBank();

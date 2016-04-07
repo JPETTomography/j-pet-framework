@@ -128,8 +128,7 @@ JPetPM JPetParamGetterAscii::PMFromInfo(boost::property_tree::ptree & info)
 {
 		int id = info.get<int>("id");
 		JPetPM::Side side = info.get<bool>("is_right_side") ? JPetPM::Side::SideB : JPetPM::Side::SideA;
-		JPetPM result;
-		result.setID(id);
+		JPetPM result(id);
 		result.setSide(side);
 		return result;
 }
