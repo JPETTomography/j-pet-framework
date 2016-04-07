@@ -1,24 +1,16 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE ScopeReader
 #define BOOST_TEST_LOG_LEVEL message
-
-#include <boost/test/unit_test.hpp>
-#include <boost/filesystem.hpp>
-
 #include <cstddef>
 #include <functional>
-
-#define private public
-#define protected public
-#include "JPetScopeReaderFixtures.h"
-#undef protected
-#undef private
-
+#include <boost/test/unit_test.hpp>
+#include <boost/filesystem.hpp>
 #include "../JPetManager/JPetManager.h"
+
+#include "JPetScopeReaderFixtures.h"
 
 
 BOOST_AUTO_TEST_SUITE (JPetScopeReaderTestSuite)
-
 BOOST_AUTO_TEST_CASE (generate_root_file) {
 
   int   _argc    = 5;
@@ -35,7 +27,6 @@ BOOST_AUTO_TEST_CASE (generate_root_file) {
   manager.run();
   BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(gTest_root_filename), "File " << gTest_root_filename << " does not exist.");
 }
-
 BOOST_FIXTURE_TEST_CASE (signal_generation_test, signal_generation_fixture) {
 
   check_header(
@@ -51,7 +42,6 @@ BOOST_FIXTURE_TEST_CASE (signal_generation_test, signal_generation_fixture) {
     }
   );
 }
-
 BOOST_FIXTURE_TEST_CASE (tref_correctness_test, tref_correctness_fixture) {
   
   check_tref_simple(
@@ -61,5 +51,4 @@ BOOST_FIXTURE_TEST_CASE (tref_correctness_test, tref_correctness_fixture) {
   );
   //check_tref_simple(nullptr);
 }
-
 BOOST_AUTO_TEST_SUITE_END()

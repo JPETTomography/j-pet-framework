@@ -1,8 +1,16 @@
 /**
- *  @copyright Copyright (c) 2014, Wojciech Krzemien
+ *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
  *  @file JPetParamBank.h
- *  @author Wojciech Krzemien, wojciech.krzemien@if.uj.edu.pl
- *  @brief
  */
 
 #ifndef JPETPARAMBANK_H
@@ -22,15 +30,20 @@
 
 enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, kLayer, kFrame, SIZE};
 
-class JPetParamBank: public TObject
-{
+class JPetParamBank: public TObject{
  public:
+  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, kLayer, kFrame, SIZE};
+
   JPetParamBank();
   JPetParamBank(const JPetParamBank& paramBank);
   ~JPetParamBank();
   void clear();
-
+  
+  JPetParamBank(const bool dummy);
+  const bool isDummy()const;
+  
   int getSize(ParamObjectType type) const;
+  
   // Scintillators
   inline void addScintillator(JPetScin scintillator) {
     fScintillators[scintillator.getID()] = new JPetScin(scintillator);
@@ -160,9 +173,8 @@ class JPetParamBank: public TObject
   static int getTOMBChannelFromDescription(std::string p_desc);
 
  private:
-
   void operator=(const JPetParamBank&);
-
+  bool fDummy;
   std::map<int, JPetScin*> fScintillators;
   std::map<int, JPetPM*> fPMs;
   std::map<int, JPetPMCalib*> fPMCalibs;

@@ -1,3 +1,20 @@
+/**
+ *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetScopeReader.cpp
+ *  @brief Module for oscilloscope data
+ *  Reads oscilloscope ASCII data and procudes JPetRecoSignal structures.
+ */
+
 #include "./JPetScopeReader.h"
 
 #include <cassert>
@@ -93,22 +110,24 @@ JPetParamBank const& JPetScopeReader::createParamBank(ptree const& conf_data) {
     
     JPetBarrelSlot bslot1 (bslotid1, bslotactive1, bslotname1, bslottheta1, bslotframe1);
     JPetBarrelSlot bslot2 (bslotid2, bslotactive2, bslotname2, bslottheta2, bslotframe2);
+    
+    JPetPM pm1(pmid1);
+    JPetPM pm2(pmid2);
+    JPetPM pm3(pmid3);
+    JPetPM pm4(pmid4);
 
-    JPetPM pm1;
-    JPetPM pm2;
-    JPetPM pm3;
-    JPetPM pm4;
-
-    JPetScin scin1;
-    JPetScin scin2;
-
-    pm1.setID(pmid1);
-    pm2.setID(pmid2);
-    pm3.setID(pmid3);
-    pm4.setID(pmid4);
-
-    scin1.setID(scinid1);
-    scin2.setID(scinid2);
+    /**
+    * A		B
+    * PM1	PM2
+    * PM3	PM4
+    */
+    pm1.setSide(JPetPM::SideA);
+    pm2.setSide(JPetPM::SideB);
+    pm3.setSide(JPetPM::SideA);
+    pm4.setSide(JPetPM::SideB);
+    
+    JPetScin scin1(scinid1);
+    JPetScin scin2(scinid2);
 
     JPetParamBank* param_bank = new JPetParamBank();
 
@@ -139,7 +158,7 @@ JPetParamBank const& JPetScopeReader::createParamBank(ptree const& conf_data) {
     return *param_bank;
 }
 
-void JPetScopeReader::createInputObjects(const char* inputFilename) {
+void JPetScopeReader::createInputObjects() {
 
   // Create property tree
 
@@ -275,7 +294,7 @@ void JPetScopeReader::createOutputObjects(const char* outputFilename) {
   fIter = fConfigs.begin();
 }
 
-void JPetScopeReader::createNewWriter(const char* outputFilename) {
+void JPetScopeReader::createNewWriter() {
   
   if (fConfigs.empty()) {
     ERROR("No files for processing.");

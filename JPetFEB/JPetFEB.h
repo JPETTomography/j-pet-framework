@@ -1,4 +1,18 @@
-// JPet Front-end board - JPetFEB.h
+/**
+ *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetFEB.h
+ */
+
 #ifndef JPET_FEB_H
 #define JPET_FEB_H
 
@@ -55,13 +69,13 @@ protected:
   
 public:
   JPetFEB();
+  JPetFEB(int id);
   JPetFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description,
 	  int p_version, int p_userId, int p_n_time_outputs_per_input,
 	  int p_n_notime_outputs_per_input);
   virtual ~JPetFEB(void);
   
   virtual int getID(void) const;
-  virtual void setID(int p_id);
   virtual bool isActive(void) const;
   virtual std::string status(void) const;
   virtual std::string description(void) const;

@@ -1,9 +1,18 @@
 /**
- * @file JPetScopeReader.h
- * @author Damian Trybek, damian.trybek@uj.edu.pl
- * @copyright Copyright (c) 2015, Damian Trybek
- * @brief Module for oscilloscope data
- * Reads oscilloscope ASCII data and procudes JPetRecoSignal structures.
+ *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetScopeReader.h
+ *  @brief Module for oscilloscope data
+ *  Reads oscilloscope ASCII data and procudes JPetRecoSignal structures.
  */
 
 #ifndef _SCOPE_READER_MODULE_H_
@@ -51,7 +60,7 @@ class JPetScopeReader: public JPetTaskLoader {
    *
    * @param inputFilename Config file name.
    */
-  virtual void createInputObjects(const char* inputFilename = 0);
+  virtual void createInputObjects();
 
   /** @brief Required by JPetManager.
    *
@@ -89,7 +98,7 @@ class JPetScopeReader: public JPetTaskLoader {
    *
    * When processing events for new configuration new output file is created.
    */
-  void createNewWriter(const char* outputFilename = 0);
+  void createNewWriter();
 
   /** @brief Create bank with system describing objects.
    *

@@ -2,9 +2,7 @@
 #define BOOST_TEST_MODULE JPetDBParamGetterTest
 #include <boost/test/unit_test.hpp>
 #include "../DBHandler/HeaderFiles/DBHandler.h"
-#define private public
 #include "../JPetDBParamGetter/JPetDBParamGetter.h"
-#undef private
 
 const char* gDefaultConfigFile = "../DBConfig/configDB.cfg";
 
@@ -46,21 +44,11 @@ BOOST_AUTO_TEST_CASE(defaultConstructorTest)
 
 BOOST_AUTO_TEST_CASE(dummyFillingTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   int run  = 1;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
   
-  /* std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl; */
-  /* std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl; */
-  /* std::cout << "PMCalib numbers:" << bank->getPMCalibsSize() <<std::endl; */
-  /* std::cout << "BarrelSlot numbers:" << bank->getBarrelSlotsSize() <<std::endl; */
-  /* std::cout << "Layer numbers:" << bank->getLayersSize() <<std::endl; */
-  /* std::cout << "Frame numbers:" << bank->getFramesSize() <<std::endl; */
-  /* std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl; */
-  /* std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl; */
-  /* std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl; */
-
   BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank->getPMsSize() == 4);
   BOOST_REQUIRE(bank->getPMCalibsSize() == 0); // 0 due to run id == 1  // TODO Check it with DB // RESOLVED sql function returns (0 rows) for run_id=1
@@ -74,19 +62,10 @@ BOOST_AUTO_TEST_CASE(dummyFillingTest)
 
 BOOST_AUTO_TEST_CASE(run28Test)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	JPetDBParamGetter paramGetter;
   int run  = 28;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
-  /* std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl; */
-  /* std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl; */
-  /* std::cout << "PMCalib numbers:" << bank->getPMCalibsSize() <<std::endl; */
-  /* std::cout << "BarrelSlot numbers:" << bank->getBarrelSlotsSize() <<std::endl; */
-  /* std::cout << "Layer numbers:" << bank->getLayersSize() <<std::endl; */
-  /* std::cout << "Frame numbers:" << bank->getFramesSize() <<std::endl; */
-  /* std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl; */
-  /* std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl; */
-  /* std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl; */
   BOOST_REQUIRE(bank->getScintillatorsSize() > 0);
   BOOST_REQUIRE(bank->getPMsSize() > 0);
   BOOST_REQUIRE(bank->getPMCalibsSize() == 0); // 0 due to run id == 26  // TODO Check it with DB // RESOLVED sql function returns (0 rows) for run_id=26
@@ -98,18 +77,15 @@ BOOST_AUTO_TEST_CASE(run28Test)
   BOOST_REQUIRE(bank->getTOMBChannelsSize() > 0);
 }
 
+
+//ToDo: remake this tests without calling private methods
+/*
 BOOST_AUTO_TEST_CASE(fillTRefsTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   int run  = 1;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
-  
-  /* std::cout << "Scintillators number:" << bank->getScintillatorsSize() <<std::endl; */
-  /* std::cout << "PM numbers:" << bank->getPMsSize() <<std::endl; */
-  /* std::cout << "FEB numbers:" << bank->getFEBsSize() <<std::endl; */
-  /* std::cout << "TRB numbers:" << bank->getTRBsSize() <<std::endl; */
-  /* std::cout << "TOMB channel numbers:" << bank->getTOMBChannelsSize() <<std::endl; */
 
   BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank->getPMsSize() == 4);
@@ -143,28 +119,18 @@ BOOST_AUTO_TEST_CASE(fillTRefsTest)
     BOOST_REQUIRE_EQUAL(TOMBChannel_ref.getTRB().getID() ,TOMBChannel_ref.getFEB().getTRB().getID());
   }
   
-
-  /* 
-   * Possible bug in implementation - for the same TOMBChannel two PMs are possible?
-  TOMBChannel_ref = bank->getTOMBChannel(1);
-  PM_ref = bank->getPM(2);
-  */
+ 
+  // Possible bug in implementation - for the same TOMBChannel two PMs are possible?
+  //TOMBChannel_ref = bank->getTOMBChannel(1);
+  //PM_ref = bank->getPM(2);
 }  
 
 BOOST_AUTO_TEST_CASE(fillBarrelSlotTRefTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   int run  = 1;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
-  
-  /* std::cout << "Scintillators size:" << bank->getScintillatorsSize() <<std::endl; */
-  /* std::cout << "PM size:" << bank->getPMsSize() <<std::endl; */
-  /* std::cout << "FEB size:" << bank->getFEBsSize() <<std::endl; */
-  /* std::cout << "TRB size:" << bank->getTRBsSize() <<std::endl; */
-  /* std::cout << "TOMB channel size:" << bank->getTOMBChannelsSize() <<std::endl; */
-  /* std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl; */
-  /* std::cout << "Layer size:" << bank->getLayersSize() <<std::endl; */
 
   BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank->getPMsSize() == 4);
@@ -183,19 +149,10 @@ BOOST_AUTO_TEST_CASE(fillBarrelSlotTRefTest)
 
 BOOST_AUTO_TEST_CASE(fillLayerTRefTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   int run  = 1;
   JPetParamBank* bank = paramGetter.generateParamBank(run);
-  
-  /* std::cout << "Scintillators size:" << bank->getScintillatorsSize() <<std::endl; */
-  /* std::cout << "PM size:" << bank->getPMsSize() <<std::endl; */
-  /* std::cout << "FEB size:" << bank->getFEBsSize() <<std::endl; */
-  /* std::cout << "TRB size:" << bank->getTRBsSize() <<std::endl; */
-  /* std::cout << "TOMB channel size:" << bank->getTOMBChannelsSize() <<std::endl; */
-  /* std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl; */
-  /* std::cout << "Layer size:" << bank->getLayersSize() <<std::endl; */
-
   BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank->getPMsSize() == 4);
   BOOST_REQUIRE(bank->getFEBsSize() == 1);
@@ -210,10 +167,42 @@ BOOST_AUTO_TEST_CASE(fillLayerTRefTest)
   JPetLayer& layer = *(bank->getLayers().begin()->second);
   BOOST_REQUIRE(layer.getFrame().getId() == 1);
 }
+BOOST_AUTO_TEST_CASE(fillPMTRefsWithBarrelSlotTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  int run  = 1;
+  JPetParamBank* bank = paramGetter.generateParamBank(run);
+  
+  std::cout << "PM size:" << bank->getPMsSize() <<std::endl;
+  std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl;
 
+  BOOST_REQUIRE(bank->getPMsSize() == 4);
+  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
+  
+  // PM TRef for BarrelSlot
+  JPetPM& l_PM = bank->getPM(0);
+  std::cout << l_PM.getBarrelSlot().getID() << std::endl;
+}
+
+BOOST_AUTO_TEST_CASE(fillScintillatorTRefsWithBarrelSlotTest)
+{
+  JPetDBParamGetter paramGetter(gDefaultConfigFile);
+  int run  = 1;
+  JPetParamBank* bank = paramGetter.generateParamBank(run);
+  
+  std::cout << "Scintillators size:" << bank->getScintillatorsSize() <<std::endl;
+  std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl;
+
+  BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
+  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
+  
+  // Scintillator TRef for BarrelSlot
+  JPetScin& l_scintillator = bank->getScintillator(0);
+  std::cout << l_scintillator.getBarrelSlot().getID() << std::endl;
+}
 BOOST_AUTO_TEST_CASE(getDataFromDBTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromPhotoMultipliers", "1");
   size_t l_sizeResultQuerry = l_runDbResults.size();
@@ -223,7 +212,7 @@ BOOST_AUTO_TEST_CASE(getDataFromDBTest)
 
 BOOST_AUTO_TEST_CASE(generateSelectQueryTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   std::string selectQuerry = paramGetter.generateSelectQuery("getDataFromTRBs", "1");
   BOOST_REQUIRE(selectQuerry == "SELECT * FROM getDataFromTRBs(1);");
@@ -231,22 +220,12 @@ BOOST_AUTO_TEST_CASE(generateSelectQueryTest)
 
 BOOST_AUTO_TEST_CASE(fillContainersTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   int run  = 1;
   JPetParamBank bank;
   
-  /* std::cout << "Scintillators number:" << bank.getScintillatorsSize() <<std::endl; */
-  /* std::cout << "PM numbers:" << bank.getPMsSize() <<std::endl; */
-  /* std::cout << "PMCalib numbers:" << bank.getPMCalibsSize() <<std::endl; */
-  /* std::cout << "BarrelSlot numbers:" << bank.getBarrelSlotsSize() <<std::endl; */
-  /* std::cout << "Layer numbers:" << bank.getLayersSize() <<std::endl; */
-  /* std::cout << "Frame numbers:" << bank.getFramesSize() <<std::endl; */
-  /* std::cout << "FEB numbers:" << bank.getFEBsSize() <<std::endl; */
-  /* std::cout << "TRB numbers:" << bank.getTRBsSize() <<std::endl; */
-  /* std::cout << "TOMB channel numbers:" << bank.getTOMBChannelsSize() <<std::endl; */
-
   BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
   BOOST_REQUIRE(bank.getPMsSize() == 0);
   BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
@@ -292,7 +271,7 @@ BOOST_AUTO_TEST_CASE(fillContainersTest)
 
 BOOST_AUTO_TEST_CASE(generateScintillatorTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -313,7 +292,7 @@ BOOST_AUTO_TEST_CASE(generateScintillatorTest)
 
 BOOST_AUTO_TEST_CASE(generatePMTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -334,7 +313,7 @@ BOOST_AUTO_TEST_CASE(generatePMTest)
 
 BOOST_AUTO_TEST_CASE(generatePMCalibTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -355,7 +334,7 @@ BOOST_AUTO_TEST_CASE(generatePMCalibTest)
 
 BOOST_AUTO_TEST_CASE(generateBarrelSlotTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -376,7 +355,7 @@ BOOST_AUTO_TEST_CASE(generateBarrelSlotTest)
 
 BOOST_AUTO_TEST_CASE(generateLayerTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -397,7 +376,7 @@ BOOST_AUTO_TEST_CASE(generateLayerTest)
 
 BOOST_AUTO_TEST_CASE(generateFrameTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -418,7 +397,7 @@ BOOST_AUTO_TEST_CASE(generateFrameTest)
 
 BOOST_AUTO_TEST_CASE(generateFEBTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -439,7 +418,7 @@ BOOST_AUTO_TEST_CASE(generateFEBTest)
 
 BOOST_AUTO_TEST_CASE(generateTRBTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -460,7 +439,7 @@ BOOST_AUTO_TEST_CASE(generateTRBTest)
 
 BOOST_AUTO_TEST_CASE(generateTOMBChannelTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   JPetParamBank bank;
@@ -481,13 +460,11 @@ BOOST_AUTO_TEST_CASE(generateTOMBChannelTest)
 
 BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
 {
-	DB::SERVICES::DBHandler::createInstance(gDefaultConfigFile);
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
 	
   JPetDBParamGetter paramGetter;
   int run  = 2;
   JPetParamBank bank;
-  
-  /* std::cout << "PMCalib numbers:" << bank.getPMCalibsSize() <<std::endl; */
 
   BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
   
@@ -557,4 +534,21 @@ BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
   BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
 }
 
+BOOST_AUTO_TEST_CASE(paramBankCopyTest)
+{
+	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
+	
+  JPetDBParamGetter paramGetter;
+  int run  = 1;
+  JPetParamBank*bank1 = paramGetter.generateParamBank(run);
+  JPetParamBank*bank2 = paramGetter.generateParamBank(run);
+
+  ((JPetScin*)bank1->fScintillators[0])->getBarrelSlot().fId = 111;
+  ((JPetScin*)bank2->fScintillators[0])->getBarrelSlot().fId = 666;
+
+  BOOST_REQUIRE(((JPetTOMBChannel*)bank1->fTOMBChannels[0])->fTRB != ((JPetTOMBChannel*)bank2->fTOMBChannels[0])->fTRB );
+  BOOST_REQUIRE(((JPetScin*)bank1->getScintillators()[0])->getBarrelSlot() != ((JPetScin*)bank2->getScintillators()[0])->getBarrelSlot());
+
+}
+*/
 BOOST_AUTO_TEST_SUITE_END()

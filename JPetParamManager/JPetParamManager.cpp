@@ -1,3 +1,18 @@
+/**
+ *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetParamManager.cpp
+ */
+
 #include "JPetParamManager.h"
 
 #include <TFile.h>
@@ -55,6 +70,12 @@ bool JPetParamManager::readParametersFromFile(std::string filename)
 
   if (!fBank) return false;
   return true;
+}
+
+const JPetParamBank& JPetParamManager::getParamBank() const{
+	static JPetParamBank DummyResult(true);
+	if(fBank)return *fBank;
+	else return DummyResult;
 }
 
 bool JPetParamManager::saveParametersToFile(std::string filename)
@@ -116,7 +137,7 @@ void JPetParamManager::getTOMBDataAndCreateXMLFile(const int p_run_id)
   
   if(TOMBChannelsSize)
   {
-    for(unsigned int i=0;i<TOMBChannelsSize;++i)
+    for(int i=0;i<TOMBChannelsSize;++i)
     {
       if(i==0)
       {

@@ -2,13 +2,12 @@
 #define BOOST_TEST_MODULE JPetHitTest
 #include <boost/test/unit_test.hpp>
 
-#define private public
 #include "../JPetHit/JPetHit.h"
 #include "../JPetScin/JPetScin.h"
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#undef private 
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
+
 BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetHit hit;
@@ -18,55 +17,13 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_REQUIRE_CLOSE(hit.getTime(), 0.0f, epsilon);
   BOOST_REQUIRE_CLOSE(hit.getQualityOfTime(), 0.0f, epsilon);
   
-  BOOST_REQUIRE_CLOSE(hit.fPos.X(),0, epsilon );
-  BOOST_REQUIRE_CLOSE(hit.fPos.Y(),0, epsilon );
-  BOOST_REQUIRE_CLOSE(hit.fPos.Z(),0, epsilon );
+  BOOST_REQUIRE_CLOSE(hit.getPosX(),0, epsilon );
+  BOOST_REQUIRE_CLOSE(hit.getPosY(),0, epsilon );
+  BOOST_REQUIRE_CLOSE(hit.getPosZ(),0, epsilon );
 
-  BOOST_REQUIRE_EQUAL(hit.fIsSignalAset, false);
-  BOOST_REQUIRE_EQUAL(hit.fIsSignalBset, false);
-  
-//  BOOST_REQUIRE(hit.fSignals->first == NULL);
-//  BOOST_REQUIRE(hit.fSignals->second == NULL);
-//  BOOST_REQUIRE(hit.fBarrelSlot == NULL);
-  //BOOST_REQUIRE(hit.fScintillator == NULL);
-  //BOOST_REQUIRE(hit.fTSlot == NULL);
+  BOOST_REQUIRE_EQUAL(hit.isSignalASet(), false);
+  BOOST_REQUIRE_EQUAL(hit.isSignalBSet(), false);
 }
-
-BOOST_AUTO_TEST_CASE(init_constructor )
-{
-  // Create requied data
-  TVector3 position(1.0f,2.0f,3.0f);
-  JPetPhysSignal leftSignal;
-  JPetPhysSignal rightSignal;
-
-  /*JPetHit::JPetSignals bothSignals = std::make_pair(&leftSignal,&rightSignal);
-  JPetBarrelSlot barrelSlot;
-  JPetScin scintillator;
-  JPetTimeWindow timeWindow;
-  
-  JPetHit hit(0.10f,0.20f,0.30f,0.40f,position,bothSignals,barrelSlot,scintillator,tSlot);
-  
-  //boost checks
-  BOOST_REQUIRE_EQUAL(hit.GetEnergy(), 0.10f);
-  BOOST_REQUIRE_EQUAL(hit.GetQualityOfEnergy(), 0.20f);
-  BOOST_REQUIRE_EQUAL(hit.GetTime(), 0.30f);
-  BOOST_REQUIRE_EQUAL(hit.GetQualityOfTime(), 0.40f);
-  BOOST_REQUIRE_EQUAL(hit.GetPosX(),1.0f);
-  BOOST_REQUIRE_EQUAL(hit.GetPosY(),2.0f);
-  BOOST_REQUIRE_EQUAL(hit.GetPosZ(),3.0f);
-  BOOST_REQUIRE_EQUAL(hit.GetPos(0),1.0f);
-  BOOST_REQUIRE_EQUAL(hit.GetPos(1),2.0f);
-  BOOST_REQUIRE_EQUAL(hit.GetPos(2),3.0f);
-  
-  BOOST_REQUIRE(hit.fPos != NULL);
-  BOOST_REQUIRE(hit.fSignals->first != NULL);
-  BOOST_REQUIRE(hit.fSignals->second != NULL);
-  BOOST_REQUIRE(hit.fBarrelSlot != NULL);
-  BOOST_REQUIRE(hit.fScintillator != NULL);
-  BOOST_REQUIRE(hit.fTSlot != NULL);*/
-
-}
-
 
 BOOST_AUTO_TEST_CASE(consistency_check_test)
 {
@@ -127,9 +84,6 @@ BOOST_AUTO_TEST_CASE(set_get_scalars_test){
 
 BOOST_AUTO_TEST_CASE(set_get_objects_test)
 {
-
-  // Create requied data
-  
   TVector3 position(1.0f,2.0f,3.0f);
   JPetPhysSignal leftSignal;
   JPetPhysSignal rightSignal;
@@ -140,8 +94,7 @@ BOOST_AUTO_TEST_CASE(set_get_objects_test)
   rightSignal.setTime( timeB );
 
   int scinID = 42;
-  JPetScin scin;
-  scin.setID( scinID );
+  JPetScin scin(scinID);
   JPetBarrelSlot slot;
   JPetPM pmA(JPetPM::SideA, 101, 0, 0, std::pair<float,float>(0,0));
   JPetPM pmB(JPetPM::SideB, 102, 0, 0, std::pair<float,float>(0,0));
@@ -165,5 +118,4 @@ BOOST_AUTO_TEST_CASE(set_get_objects_test)
   BOOST_REQUIRE_EQUAL( hit.getSignalB().getTime(), timeB );
 
 }
-
 BOOST_AUTO_TEST_SUITE_END()
