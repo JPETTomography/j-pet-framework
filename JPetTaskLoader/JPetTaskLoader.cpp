@@ -25,9 +25,9 @@
 JPetTaskLoader::JPetTaskLoader(const char* in_file_type,
                                const char* out_file_type,
                                JPetTask* taskToExecute):
+  JPetTaskIO(),
   fInFileType(in_file_type),
-  fOutFileType(out_file_type),
-  JPetTaskIO()
+  fOutFileType(out_file_type)
 {
   addSubTask(taskToExecute);
 }

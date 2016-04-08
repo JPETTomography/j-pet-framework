@@ -110,7 +110,7 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
   }
 
   std::vector<std::string> fileNames(variablesMap["file"].as< std::vector<std::string> >());
-  for (int i = 0; i < fileNames.size(); i++) {
+  for (unsigned int i = 0; i < fileNames.size(); i++) {
     if ( ! CommonTools::ifFileExisting(fileNames[i]) ) {
       std::string fileName = fileNames[i];
       ERROR("File : " + fileName + " does not exist.");

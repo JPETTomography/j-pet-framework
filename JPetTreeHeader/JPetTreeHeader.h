@@ -49,7 +49,7 @@ class JPetTreeHeader: public TObject{
  public:
   JPetTreeHeader();
   JPetTreeHeader(int run);
-  void Print(Option_t* opt = "") const { std::cout << this->stringify(); }
+  void Print() const { std::cout << this->stringify(); }
 
   /// produce a std::string edscribing all the information dontained in this object
   std::string stringify() const;
