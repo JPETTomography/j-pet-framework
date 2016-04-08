@@ -269,10 +269,6 @@ JPetScin JPetDBParamGetter::generateScintillator(pqxx::result::const_iterator ro
       double l_scintillator_width = row["scintillator_width"].as<double>();
       double l_scintillator_height = row["scintillator_height"].as<double>();
 
-      int l_setup_id = row["setup_id"].as<int>();
-      int l_run_id = row["run_id"].as<int>();
-      
-
       JPetScin l_scin(l_scintillator_id,
                       0.f,			/// @todo what is attenuation length in database?
                       l_scintillator_length,
@@ -284,13 +280,9 @@ JPetScin JPetDBParamGetter::generateScintillator(pqxx::result::const_iterator ro
 
 
 JPetPM JPetDBParamGetter::generatePM(pqxx::result::const_iterator row) {
-      int l_hvpmconnection_id = row["hvpmconnection_id"].as<int>();
       bool l_hvpmconnection_isrightside = row["hvpmconnection_isrightside"].as<bool>();
 
       int l_photomultiplier_id = row["photomultiplier_id"].as<int>();
-
-      int l_setup_id = row["setup_id"].as<int>();
-      int l_run_id = row["run_id"].as<int>();
 
       JPetPM::Side l_side = (l_hvpmconnection_isrightside) ? JPetPM::Side::SideB : JPetPM::Side::SideA;
 
@@ -332,7 +324,7 @@ JPetBarrelSlot JPetDBParamGetter::generateBarrelSlot(pqxx::result::const_iterato
   std::string l_slot_name = row["slot_name"].as<std::string>();
   double l_slot_theta1 = row["slot_theta1"].as<double>();
   int l_slot_inFrameId = row["slot_inFrameId"].as<int>();
-  int l_layer_id = row["layer_id"].as<int>();
+  //int l_layer_id = row["layer_id"].as<int>();
 
   JPetBarrelSlot l_barrelSlot(l_slot_id,
 			      l_slot_isActive,
@@ -355,7 +347,7 @@ JPetLayer JPetDBParamGetter::generateLayer(pqxx::result::const_iterator row)
   bool l_layer_isActive = row["layer_isActive"].as<bool>();
   std::string l_layer_name = row["layer_name"].as<std::string>();
   double l_layer_radius = row["layer_radius"].as<double>();
-  int l_frame_id = row["frame_id"].as<int>();
+  //int l_frame_id = row["frame_id"].as<int>();
   
   JPetLayer l_layer(l_layer_id,
         	    l_layer_isActive,
@@ -399,9 +391,6 @@ JPetFEB JPetDBParamGetter::generateFEB(pqxx::result::const_iterator row) {
       int l_konradboard_creator_id = row["konradboard_creator_id"].as<int>();
       int l_time_outputs_per_input = row["time_outputs_per_input"].as<int>();
       int l_notime_outputs_per_input = row["notime_outputs_per_input"].as<int>();
-      
-      int l_setup_id = row["setup_id"].as<int>();
-      int l_run_id = row["run_id"].as<int>();
 
       JPetFEB l_FEB(l_konradboard_id,
                     l_konradboard_isactive,
@@ -416,9 +405,6 @@ JPetFEB JPetDBParamGetter::generateFEB(pqxx::result::const_iterator row) {
 
 JPetTRB JPetDBParamGetter::generateTRB(pqxx::result::const_iterator row) {
       int l_TRB_id = row["TRB_id"].as<int>();
-
-      int l_setup_id = row["setup_id"].as<int>();
-      int l_run_id = row["run_id"].as<int>();
 
       JPetTRB l_TRB(l_TRB_id,
                     0,		/// @todo what is type in database
@@ -651,7 +637,6 @@ void JPetDBParamGetter::fillTOMBChannelsTRefs(const int p_run_id, JPetParamBank&
 	  int l_TRB_id = row["trb_id"].as<int>();
 	  int l_FEB_id = row["konradboard_id"].as<int>();
 	  int l_PM_id = row["photomultiplier_id"].as<int>();
-	  int l_Slot_id = row["slot_id"].as<int>();
 	  float l_Threshold = row["threshold"].as<float>();
 	  
 	  // find index of TOMBChannel with l_TOMB_no

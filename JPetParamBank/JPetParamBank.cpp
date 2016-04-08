@@ -17,11 +17,10 @@
 
 ClassImp (JPetParamBank);
 
-JPetParamBank::JPetParamBank(){fDummy=false;}
-JPetParamBank::JPetParamBank(const bool d){fDummy=d;}
+JPetParamBank::JPetParamBank():fDummy(false){}
+JPetParamBank::JPetParamBank(const bool d):fDummy(d){}
 const bool JPetParamBank::isDummy()const{return fDummy;}
-JPetParamBank::JPetParamBank(const JPetParamBank& paramBank)
-{
+JPetParamBank::JPetParamBank(const JPetParamBank& paramBank):fDummy(false){
   initVectorWith(fScintillators, paramBank.fScintillators);
   initVectorWith(fPMs, paramBank.fPMs);
   initVectorWith(fPMCalibs, paramBank.fPMCalibs);

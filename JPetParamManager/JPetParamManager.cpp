@@ -147,7 +147,7 @@ void JPetParamManager::getTOMBDataAndCreateXMLFile(const int p_run_id)
   
   if(TOMBChannelsSize)
   {
-    for(unsigned int i=0;i<TOMBChannelsSize;++i)
+    for(int i=0;i<TOMBChannelsSize;++i)
     {
       if(i==0)
       {
