@@ -60,7 +60,7 @@ class JPetScopeReader: public JPetTaskLoader {
    *
    * @param inputFilename Config file name.
    */
-  virtual void createInputObjects();
+  virtual void createInputObjects(const char* inputFilename = 0);
 
   /** @brief Required by JPetManager.
    *

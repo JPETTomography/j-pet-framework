@@ -158,7 +158,7 @@ JPetParamBank const& JPetScopeReader::createParamBank(ptree const& conf_data) {
     return *param_bank;
 }
 
-void JPetScopeReader::createInputObjects() {
+void JPetScopeReader::createInputObjects(const char*) {
 
   // Create property tree
 
