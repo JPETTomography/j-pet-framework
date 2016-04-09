@@ -16,10 +16,11 @@
 #include "../JPetParamManager/JPetParamManager.h"
 #include "./JPetTask.h"
 
+
 JPetTask::JPetTask(const char * name, const char * description):
+TNamed(name, description),
 fEvent(0),
-fParamManager(0),
-TNamed(name, description)
+fParamManager(0)
 {
 }
 

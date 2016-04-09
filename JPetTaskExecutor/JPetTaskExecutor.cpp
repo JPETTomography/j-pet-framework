@@ -67,7 +67,7 @@ TThread* JPetTaskExecutor::run()
   return thread;
 }
 
-void JPetTaskExecutor::processFromCmdLineArgs(int fileIndex)
+void JPetTaskExecutor::processFromCmdLineArgs(int)
 {
   auto runNum = fOptions.getRunNumber();
   if (runNum >= 0) {
