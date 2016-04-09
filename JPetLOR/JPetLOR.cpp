@@ -18,8 +18,11 @@
 ClassImp(JPetLOR);
 
 JPetLOR::JPetLOR() :
-    TNamed("JPetLOR", "Event Structure"), fTime(0.0f), fQualityOfTime(0.0f),
-    fTimeDiff(0.0f), fQualityOfTimeDiff(0.0f)
+    TNamed("JPetLOR", "Event Structure"), 
+    fTime(0.0f), 
+    fQualityOfTime(0.0f),
+    fTimeDiff(0.0f), 
+    fQualityOfTimeDiff(0.0f)
 {
   fIsHitSet[0] = false;
   fIsHitSet[1] = false;
@@ -27,9 +30,13 @@ JPetLOR::JPetLOR() :
 
 JPetLOR::JPetLOR(float Time, float QualityOfTime, JPetHit& firstHit,
                  JPetHit& secondHit) :
-    TNamed("JPetLOR", "Event Structure"), fTime(Time),
-    fQualityOfTime(QualityOfTime), fFirstHit(firstHit), fSecondHit(secondHit),
-    fTimeDiff(0.0f), fQualityOfTimeDiff(0.0f)
+    TNamed("JPetLOR", "Event Structure"), 
+    fTime(Time),
+    fQualityOfTime(QualityOfTime),
+    fTimeDiff(0.0f),
+    fQualityOfTimeDiff(0.0f),
+    fFirstHit(firstHit), 
+    fSecondHit(secondHit)
 {
   fIsHitSet[0] = true;
   fIsHitSet[1] = true;
