@@ -66,7 +66,7 @@ class JPetTreeHeader: public TObject{
   inline void setSourcePosition(double p_pos) { fSourcePosition = p_pos; }
 
   /// add information on one processing stage, i.e. one module
-  int addStageInfo(std::string name, std::string title, int version, std::string time_stamp);
+  void addStageInfo(std::string name, std::string title, int version, std::string time_stamp);
   int getStagesNb()const{ return fStages.size(); }
 
   const ProcessingStageInfo & getProcessingStageInfo(int i)const{ return fStages.at(i); }
