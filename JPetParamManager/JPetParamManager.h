@@ -47,7 +47,7 @@ class JPetParamManager
 
  private:
   JPetParamManager(const JPetParamManager&);
-  JPetParamManager& operator=(const JPetParamManager&);
+  JPetParamManager& operator=(const JPetParamManager&) = delete;
 
   JPetDBParamGetter fDBParamGetter;
   JPetParamBank* fBank;

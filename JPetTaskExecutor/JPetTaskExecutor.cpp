@@ -57,6 +57,7 @@ void JPetTaskExecutor::process()
 void* JPetTaskExecutor::processProxy(void* runner)
 {
   static_cast<JPetTaskExecutor*>(runner)->process();
+  return 0;
 }
 
 TThread* JPetTaskExecutor::run()

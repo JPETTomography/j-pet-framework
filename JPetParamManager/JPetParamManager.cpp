@@ -27,7 +27,6 @@ JPetParamManager::JPetParamManager():
   /* */
 }
 JPetParamManager::JPetParamManager(const JPetParamManager&){}
-JPetParamManager& JPetParamManager::operator=(const JPetParamManager&){}
 
 JPetParamManager::~JPetParamManager()
 {
