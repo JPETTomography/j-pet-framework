@@ -21,15 +21,15 @@ ClassImp(JPetTreeHeader);
 
 JPetTreeHeader::JPetTreeHeader():
   fRunNo(-1),
-  fSourcePosition(-1),
-  fBaseFilename("filename not set")
+  fBaseFilename("filename not set"),
+  fSourcePosition(-1)
 {
 }
 
 JPetTreeHeader::JPetTreeHeader(int run):
   fRunNo(run),
-  fSourcePosition(-1),
-  fBaseFilename("filename not set")
+  fBaseFilename("filename not set"),
+  fSourcePosition(-1)
 {
 }
 
@@ -49,7 +49,7 @@ tmp << stringifyDictionary();
 return tmp.str();
 }
 
-int JPetTreeHeader::addStageInfo(std::string p_name, std::string p_title, int p_version, std::string p_time_stamp )
+void JPetTreeHeader::addStageInfo(std::string p_name, std::string p_title, int p_version, std::string p_time_stamp )
 {
   ProcessingStageInfo stage;
   stage.fModuleName = p_name;
