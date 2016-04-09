@@ -39,7 +39,7 @@ public :
 private:
   static void* processProxy(void*);
   void process();
-  void processFromCmdLineArgs(int fileIndex);
+  void processFromCmdLineArgs(int);
   void unpackFile();
 
   int fProcessedFile;
