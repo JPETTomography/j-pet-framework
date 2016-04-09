@@ -93,7 +93,7 @@ void JPetOptions::setStringToFileTypeConversion()
   };
 }
 
-bool JPetOptions::areCorrect(const Options& opts) const
+bool JPetOptions::areCorrect(const Options&) const
 {
   return true;
 }

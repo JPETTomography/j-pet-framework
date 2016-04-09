@@ -32,7 +32,7 @@ JPetScopeTask::JPetScopeTask(const char * name, const char * description):
 {
 }
 
-void JPetScopeTask::init(const JPetTaskInterface::Options& opts)
+void JPetScopeTask::init(const JPetTaskInterface::Options&)
 {
 }
 

@@ -34,7 +34,7 @@ public:
   JPetOptions();
   explicit JPetOptions(const Options& opts);
 
-  bool areCorrect(const Options& opts) const;
+  bool areCorrect(const Options&) const;
   const char* getInputFile() const {
     return fOptions.at("inputFile").c_str();
   }
