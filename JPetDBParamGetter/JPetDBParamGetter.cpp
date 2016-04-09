@@ -460,7 +460,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
 
   if (l_PMsSize > 0 && l_FEBsSize > 0) {
 
-    for (unsigned int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index) {
+    for (int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index) {
     std::string pm_id = boost::lexical_cast<std::string>(paramBank.getPM(l_PM_index).getID());
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
     std::string args = pm_id + "," + l_run_id;
@@ -473,7 +473,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
         for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
           int l_KonradBoard_id = row["KonradBoard_id"].as<int>();
 
-          for (unsigned int l_FEB_index = 0u; l_FEB_index < l_FEBsSize; ++l_FEB_index) {
+          for (int l_FEB_index = 0u; l_FEB_index < l_FEBsSize; ++l_FEB_index) {
             int l_FEB_id = paramBank.getFEB(l_FEB_index).getID();
 
             if (l_FEB_id == l_KonradBoard_id) {
@@ -493,7 +493,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
 
   if (l_PMsSize > 0 && l_ScinsSize > 0) {
 
-    for (unsigned int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index) {
+    for (int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index) {
     std::string pm_id = boost::lexical_cast<std::string>(paramBank.getPM(l_PM_index).getID());
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
   std::string args = pm_id + "," + l_run_id;
@@ -505,7 +505,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
       if (l_sizeResultQuerry) {
         for (pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) {
           int l_scin_id = row["Scintillator_id"].as<int>();
-          for (unsigned int l_scin_index = 0u; l_scin_index < l_ScinsSize; ++l_scin_index) {
+          for (int l_scin_index = 0u; l_scin_index < l_ScinsSize; ++l_scin_index) {
             int l_ScinId = paramBank.getScintillator(l_scin_index).getID();
 
             if (l_scin_id == l_ScinId) {
@@ -525,7 +525,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
   // BarrelSlot for Photomultiplier`TRef
   if(l_PMsSize > 0 && l_BarrelSlotSize > 0)
   {
-    for(std::uint_fast32_t l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index)
+    for(int l_PM_index = 0u; l_PM_index < l_PMsSize; ++l_PM_index)
     {
       std::string pm_id = boost::lexical_cast<std::string>(paramBank.getPM(l_PM_index).getID());
       std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
@@ -540,7 +540,7 @@ void JPetDBParamGetter::fillPMsTRefs(const int p_run_id, JPetParamBank& paramBan
 	{
           std::uint_fast32_t l_barrelSlot_id_from_db = row["hvpmconnection_slot_id"].as<std::uint_fast32_t>();
 	  
-          for(std::uint_fast32_t l_barrelSlot_index = 0u; l_barrelSlot_index < l_BarrelSlotSize; ++l_barrelSlot_index)
+          for(int l_barrelSlot_index = 0u; l_barrelSlot_index < l_BarrelSlotSize; ++l_barrelSlot_index)
 	  {
             std::uint_fast32_t l_barrelSlot_id_from_paramBankContainer = paramBank.getBarrelSlot(l_barrelSlot_index).getID();
 
@@ -574,7 +574,7 @@ void JPetDBParamGetter::fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBa
 
   if (l_FEBsSize > 0 && l_TRBsSize > 0) {
 
-    for (unsigned int l_FEB_index = 0u; l_FEB_index < l_FEBsSize; ++l_FEB_index) {
+    for (int l_FEB_index = 0u; l_FEB_index < l_FEBsSize; ++l_FEB_index) {
 
 //     ((JPetFEB*)fFEBs[l_FEB_index])->clearTRefTRBs();
  ///wk!!!     paramBank.getFEB(l_FEB_index).clearTRefTRBs();
@@ -594,7 +594,7 @@ void JPetDBParamGetter::fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBa
           //int l_TRBInput_id = row["TRBInput_id"].as<int>();
           int l_TRB_id = row["TRB_id"].as<int>();
 
-          for (unsigned int l_TRB_index = 0u; l_TRB_index < l_TRBsSize; ++l_TRB_index) {
+          for (int l_TRB_index = 0u; l_TRB_index < l_TRBsSize; ++l_TRB_index) {
 //            int l_TRBId = ((JPetTRB*)fTRBs[l_TRB_index])->getID();
             int l_TRBId = paramBank.getTRB(l_TRB_index).getID();
 
