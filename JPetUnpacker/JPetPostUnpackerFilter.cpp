@@ -58,9 +58,9 @@ int JPetPostUnpackerFilter::calculate_hits(int eventsNum, const char* fileName)
   TFile* new_file = new TFile(newFileName.c_str(), "RECREATE");
   TTree* new_tree = new TTree("T", "Times converted into hit units");
   EventIII* new_event = 0;
-  Int_t split = 2;
-  Int_t bsize = 64000;
-  TBranch* event_branch = new_tree->Branch("eventIII", "EventIII", &new_event, bsize, split);
+  //Int_t split = 2;
+  //Int_t bsize = 64000;
+  //TBranch* event_branch = new_tree->Branch("eventIII", "EventIII", &new_event, bsize, split);
   
   Int_t entries = (Int_t)chain.GetEntries();
 
@@ -79,7 +79,7 @@ int JPetPostUnpackerFilter::calculate_hits(int eventsNum, const char* fileName)
     iter = new TIter(pArray);
     
     
-    while( pHit = (TDCHitExtended*) iter->Next() ){
+    while( (pHit = ((TDCHitExtended*) iter->Next())) ){
       TDCChannel* new_ch = new_event->AddTDCChannel(pHit->GetChannel());
       
       // hit construction logic
@@ -144,7 +144,7 @@ int JPetPostUnpackerFilter::calculate_times(int eventsNum, const char* fileName,
   }
   
   //int localTrailIndex = 0;
-  double lastTime = -1;
+  //double lastTime = -1;
   int localIndex = 0;
   
   TChain chain("T");
@@ -192,7 +192,7 @@ int JPetPostUnpackerFilter::calculate_times(int eventsNum, const char* fileName,
    }
    
    // fetch the reference times
-   while( pHit = (TDCHit*) iter->Next()) {
+   while( (pHit = ((TDCHit*) iter->Next()))) {
      if (pHit->GetChannel() % refChannelOffset == 0){
        
        refTimeEpoch[pHit->GetChannel() / refChannelOffset] = pHit->GetLeadEpoch(0);
@@ -216,11 +216,11 @@ int JPetPostUnpackerFilter::calculate_times(int eventsNum, const char* fileName,
    }
    // create time lines for normal channels
    iter->Begin();
-   while( pHit = (TDCHit*) iter->Next() ){
+   while( (pHit = ((TDCHit*) iter->Next())) ){
      if ( (pHit->GetLeadsNum() > 0 && pHit->GetTrailsNum() > 0) && ((pHit->GetChannel() % refChannelOffset) != 0) ){
        TDCHitExtended* new_hit = new_event->AddTDCHitExtended(pHit->GetChannel());
        //localTrailIndex = 0;
-       lastTime = -1;
+       //lastTime = -1;
        localIndex = 0;
        
        int tdc_number = pHit->GetChannel() / refChannelOffset;

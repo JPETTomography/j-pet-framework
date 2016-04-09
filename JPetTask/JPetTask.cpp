@@ -25,7 +25,7 @@ fParamManager(0)
 }
 
 
-void JPetTask::init(const JPetTaskInterface::Options& opts)
+void JPetTask::init(const JPetTaskInterface::Options&a)
 {
 }
 
