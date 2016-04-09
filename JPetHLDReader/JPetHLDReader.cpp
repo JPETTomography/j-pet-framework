@@ -20,8 +20,8 @@
 
 JPetHLDReader::JPetHLDReader():
   fBranch(0),
-  fEvent(0),
   fTree(0),
+  fEvent(0),
   fFile(NULL),
   fCurrentEventNumber(-1)
 {
@@ -30,8 +30,8 @@ JPetHLDReader::JPetHLDReader():
 
 JPetHLDReader::JPetHLDReader (const char* filename):
   fBranch(0),
-  fEvent(0),
   fTree(0),
+  fEvent(0),
   fFile(NULL),
   fCurrentEventNumber(-1)
 {
