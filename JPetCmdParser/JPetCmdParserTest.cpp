@@ -273,6 +273,29 @@ BOOST_AUTO_TEST_CASE(runIdTest)
     BOOST_REQUIRE(runId == 231);
 }
 
+BOOST_AUTO_TEST_CASE(localDBTest)
+{
+    auto commandLine = "main.x -l input.json -L output.json";
+    auto args_char = createArgs(commandLine);
+    auto argc = args_char.size();
+    auto argv = args_char.data();
+
+    po::options_description description("Allowed options");
+    description.add_options()
+						("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
+						("localDBCreate,L", po::value<std::string>(), "Where to save the parameter database.")
+    ;
+
+    po::variables_map variablesMap;
+    po::store(po::parse_command_line(argc, argv, description), variablesMap);
+    po::notify(variablesMap);
+
+    BOOST_REQUIRE(JPetCmdParser::isLocalDBSet(variablesMap) == true);
+    BOOST_REQUIRE(JPetCmdParser::getLocalDBName(variablesMap) == std::string("input.json"));
+    BOOST_REQUIRE(JPetCmdParser::isLocalDBCreateSet(variablesMap) == true);
+    BOOST_REQUIRE(JPetCmdParser::getLocalDBCreateName(variablesMap) == std::string("output.json"));
+}
+
 BOOST_AUTO_TEST_CASE(progressBarTest)
 {
     JPetCmdParser cmdParser;
@@ -300,7 +323,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
 {
     JPetCmdParser cmdParser;
 
-    auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -b 1";
+    auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -b 1 -l unitTestData/JPetCmdParserTest/input.json -L output.json";
     auto args_char = createArgs(commandLine);
     auto argc = args_char.size();
     auto argv = args_char.data();
@@ -313,6 +336,8 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
             ("param,p", po::value<std::string>(), "File with TRB numbers.")
             ("runId,i", po::value<int>(), "Run id.")
             ("progressBar,b", po::value<int>(), "Progress bar.")
+												("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
+												("localDBCreate,L", po::value<std::string>(), "Where to save the parameter database.")
             ;
 
     po::variables_map variablesMap;
@@ -334,11 +359,15 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
     BOOST_REQUIRE(firstOption.getLastEvent() == 4);
     BOOST_REQUIRE(firstOption.getRunNumber() == 231);
     BOOST_REQUIRE(firstOption.isProgressBar() == true);
+    BOOST_REQUIRE(firstOption.isLocalDB() == true);
+    BOOST_REQUIRE(firstOption.getLocalDB() == std::string("unitTestData/JPetCmdParserTest/input.json"));
+    BOOST_REQUIRE(firstOption.isLocalDBCreate() == true);
+    BOOST_REQUIRE(firstOption.getLocalDBCreate() == std::string("output.json"));
 }
 
 BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
 {
-  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 4 -p data.hld -i 231";
+  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 4 -p data.hld -i 231 -L output.json";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
@@ -356,6 +385,9 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
   BOOST_REQUIRE(firstOption.getLastEvent() == 4);
   BOOST_REQUIRE(firstOption.getRunNumber() == 231);
   BOOST_REQUIRE(firstOption.isProgressBar() == false);
+		BOOST_REQUIRE(firstOption.isLocalDB() == false);
+		BOOST_REQUIRE(firstOption.isLocalDBCreate() == true);
+		BOOST_REQUIRE(firstOption.getLocalDBCreate() == std::string("output.json"));
 }
 
 BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
@@ -378,6 +410,8 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
   BOOST_REQUIRE(firstOption.getLastEvent() == -1);
   BOOST_REQUIRE(firstOption.getRunNumber() == -1);
   BOOST_REQUIRE(firstOption.isProgressBar() == false);
+		BOOST_REQUIRE(firstOption.isLocalDB() == false);
+		BOOST_REQUIRE(firstOption.isLocalDBCreate() == false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

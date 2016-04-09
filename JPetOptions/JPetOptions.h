@@ -53,6 +53,26 @@ public:
   bool isProgressBar() const {
     return CommonTools::to_bool(fOptions.at("progressBar"));
   }
+		bool isLocalDB() const {
+				return fOptions.count("localDB") > 0;
+		}
+		std::string getLocalDB() const {
+				std::string result("");
+				if (isLocalDB()) {
+						result = fOptions.at("localDB");
+				}
+				return result;
+		}
+		bool isLocalDBCreate() const {
+				return fOptions.count("localDBCreate") > 0;
+		}
+		std::string getLocalDBCreate() const {
+				std::string result("");
+				if (isLocalDBCreate()) {
+						result = fOptions.at("localDBCreate");
+				}
+				return result;
+		}
   
   FileType getInputFileType() const;
   FileType getOutputFileType() const;
