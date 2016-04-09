@@ -284,7 +284,7 @@ void JPetScopeReader::createInputObjects(const char*) {
   }
 }
 
-void JPetScopeReader::createOutputObjects(const char* outputFilename) {
+void JPetScopeReader::createOutputObjects(const char*) {
   fIter = fConfigs.begin();
 }
 
