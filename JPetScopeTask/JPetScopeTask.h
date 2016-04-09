@@ -58,7 +58,7 @@ class JPetScopeTask: public JPetTask
 {
 public:
   JPetScopeTask(const char * name, const char * description);
-  virtual void init(const JPetTaskInterface::Options& opts);
+  virtual void init(const JPetTaskInterface::Options&);
   virtual void exec();
   virtual void terminate();
   virtual void setWriter(JPetWriter* writer) {
