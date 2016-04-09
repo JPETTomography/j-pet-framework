@@ -26,7 +26,7 @@ class JPetTask: public JPetTaskInterface, public TNamed
 {
  public:
   JPetTask(const char * name="", const char * description="");
-  virtual void init(const JPetTaskInterface::Options& opts);
+  virtual void init(const JPetTaskInterface::Options&);
   virtual void exec();
   virtual void terminate();
   virtual void addSubTask(JPetTaskInterface*) {};

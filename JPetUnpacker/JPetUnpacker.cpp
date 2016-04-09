@@ -76,7 +76,7 @@ bool JPetUnpacker::exec()
   string newFileName = fHldFile + ".root";
 
   // @todo: handle the following parameters needed by calculate_times
-  const char * calibFileName = "";
+  //const char * calibFileName = "";
   int refChannelOffset = 65;
   JPetPostUnpackerFilter::calculate_times(fEventsToProcess, newFileName.c_str(), refChannelOffset, "");
 
