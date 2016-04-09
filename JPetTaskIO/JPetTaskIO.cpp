@@ -58,7 +58,7 @@ void JPetTaskIO::exec()
     totalEvents = fReader->getNbOfAllEvents();
   } else {
     WARNING("no JPETReader set totalEvents set to -1");
-    totalEvents - 1;
+    totalEvents = -1;
   }
   auto firstEvent = 0ll;
   auto lastEvent = 0ll;
