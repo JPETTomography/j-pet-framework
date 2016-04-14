@@ -26,6 +26,10 @@ JPetParamManager::~JPetParamManager()
     delete fBank;
     fBank = 0;
   }
+		if (fParamGetter) {
+				delete fParamGetter;
+				fParamGetter = 0;
+		}
 }
 
 void JPetParamManager::fillParameterBank(const int run)
