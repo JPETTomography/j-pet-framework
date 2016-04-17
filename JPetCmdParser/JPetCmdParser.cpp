@@ -17,6 +17,8 @@
 #include <iostream>
 #include "../CommonTools/CommonTools.h"
 #include "../JPetLoggerInclude.h"
+#include "../JPetScopeReaderConfigParser/JPetScopeReaderConfigParser.h"
+
 
 JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
 {
@@ -155,6 +157,30 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
   auto lastEvent  = getHigherEventBound(optsMap);
   if (firstEvent >= 0) options.at("firstEvent") = std::to_string(firstEvent);
   if (lastEvent >= 0) options.at("lastEvent") = std::to_string(lastEvent);
+  
+  /* TODO : Uncomment code
+    if (fileType.compare("scope") == 0) {
+    string inputConfigJsonFileNameTest = "unitTestData/JPetScopeReaderConfigParserTest/example.json";	//TODO Set proper filename
+    
+    JPetScopeReaderConfigParser scopeReaderConfigParser;
+    scopeReaderConfigParser.readData(inputConfigJsonFileNameTest);
+    string scopeFileName = scopeReaderConfigParser.getFileName();
+    vector<int> scopePositions = scopeReaderConfigParser.getPositions();
+    
+    options.emplace("scopeFileName", scopeFileName);
+    
+    unsigned int scopePositionNumber = 0;
+    std::string scopePosition = "";
+    
+    for(auto &position: scopePositions)
+    {
+      ++scopePositionNumber;
+      scopePosition = "scopePosition" + std::to_string(scopePositionNumber);
+      options.emplace(scopePosition, std::to_string(position));
+    }
+  }
+  */
+  
   auto files = getFileNames(optsMap); 
   std::vector<JPetOptions>  optionContainer;
   for (auto file :files) {
