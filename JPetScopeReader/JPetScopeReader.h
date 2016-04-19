@@ -26,6 +26,7 @@
 #include <set>
 #include <vector>
 
+//wk po calkowitej refaktoryzacji ten naglowek nie powinen byc potrzebny
 #include <boost/property_tree/ptree.hpp>
 
 #include "../JPetScopeTask/JPetScopeTask.h"

@@ -21,6 +21,9 @@
 
 BOOST_AUTO_TEST_SUITE(JPetScopeReaderConfigParserTestSuite)
 
+///po stworzeniu obiektu, bez wczytania pliku 
+//przetestowac co zwracaja wtedy wszystkie publiczne funkcje
+
 BOOST_AUTO_TEST_CASE(readDataTest)
 {
   string inputConfigJsonFileNameTest = "unitTestData/JPetScopeReaderConfigParserTest/example.json";
@@ -33,5 +36,8 @@ BOOST_AUTO_TEST_CASE(readDataTest)
   BOOST_REQUIRE_EQUAL(scopeReaderConfigParser.getFileName(), outputFileNameTest);
   BOOST_REQUIRE(scopeReaderConfigParser.getPositions().size() == scopeReaderConfigParserPositionsSize);
 }
+
+///wk dodac test otwierajacy nieistniejacy plik json
+///przetestowac co zwracaja wtedy wszystkie publiczne funkcje
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -72,6 +72,8 @@ JPetScopeReader::~JPetScopeReader() {
 JPetParamBank const& JPetScopeReader::createParamBank(ptree const& conf_data) {
     
     // Read Data from config tree
+//wk to powinno byc robione przez ScopeConfigParser
+//
 
     int bslotid1, bslotid2;
     bool bslotactive1, bslotactive2;
@@ -106,6 +108,7 @@ JPetParamBank const& JPetScopeReader::createParamBank(ptree const& conf_data) {
     scinid1 = conf_data.get("scin1.id", 0);
     scinid2 = conf_data.get("scin2.id", 0);
 
+// wk do tego momentu
     // Create Parametric objects
     
     JPetBarrelSlot bslot1 (bslotid1, bslotactive1, bslotname1, bslottheta1, bslotframe1);
@@ -183,8 +186,7 @@ void JPetScopeReader::createInputObjects(const char*) {
     exit(-1); 
   }
 
-  // Fill fConfigs
-  
+  // Fill fConfigs 
   for (ptree::const_iterator it = prop_tree.begin(); it != prop_tree.end(); ++it) {
 
     string files_location;
@@ -195,6 +197,7 @@ void JPetScopeReader::createInputObjects(const char*) {
 
     JPetParamBank const& param_bank = createParamBank (conf_data);
 
+//wk to trzeba wyabstrahowac jako metode ktora zwraca zestaw nazw plikow wyjsciowych
     // Fill Configs
 
     string collimator_function;
@@ -280,6 +283,7 @@ void JPetScopeReader::createInputObjects(const char*) {
 	}
       }
     }
+  //wk to trzeba wyabstrahowac jako metode end
   }
 
   fWriter = nullptr;
@@ -304,9 +308,9 @@ void JPetScopeReader::createNewWriter() {
 
     INFO (Form("Creating root file for configuration %s and position %d", ((*fIter).pName).c_str(), (*fIter).pCollPosition));
 
+//wk wyodrebnij to jako metode
     string out_fn(fOutFilename.Data());
     int last_dot = out_fn.find_last_of(".");
-
     string out_fn2  = out_fn.substr(0,last_dot );
            out_fn2 += "_";
            out_fn2 += (*fIter).pName;
@@ -314,6 +318,7 @@ void JPetScopeReader::createNewWriter() {
            out_fn2 += to_string((*fIter).pCollPosition);
 	   out_fn2 += ".reco.sig";
            out_fn2 += out_fn.substr(last_dot);
+//wk az do tego miejsca, petoda zwraca stringa 
     
     fWriter = new JPetWriter(out_fn2.c_str());
 
