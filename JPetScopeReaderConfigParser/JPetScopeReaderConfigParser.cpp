@@ -43,8 +43,9 @@ void JPetScopeReaderConfigParser::readData(const string &configFileName)
 {
   ptree propTree;
 
-  string configFileExtension = path(configFileName).extension().string();
   
+  string configFileExtension = path(configFileName).extension().string();
+/// wk mozna zostawic tylko json, inne nie ma sensu ?
   if(configFileExtension.compare(".ini") == 0) 
   {
     read_ini(configFileName, propTree);
@@ -64,6 +65,9 @@ void JPetScopeReaderConfigParser::readData(const string &configFileName)
   else 
   {
     ERROR("Cannot open config file. Exiting");
+  /// wk exit(-1) to trzeba inaczej obsluzyc a nie exit(-1)
+  // np. zwrocic boola i sprawdzic w funkcjach powyzej
+  // 
     exit(-1); 
   }
   
