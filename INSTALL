@@ -57,6 +57,8 @@ Requirements
 
   7. cmake [3]
 
+  8. tinyxml
+
 Tested Platforms
 ----------------
 
@@ -102,7 +104,7 @@ Requirements installation
 
 For Ubuntu:
 
-sudo apt-get install libboost-all-dev libpqxx-3.1 libpqxx3-dev libconfig++ cmake
+sudo apt-get install libboost-all-dev libpqxx-3.1 libpqxx3-dev libconfig++ cmake libtinyxml2-0.0.0
 
 For Fedora 20:
 sudo yum install boost-devel libpqxx libpqxx-devel libconfig libconfig-devel cmake
