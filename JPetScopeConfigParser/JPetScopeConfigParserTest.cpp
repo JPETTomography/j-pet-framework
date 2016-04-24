@@ -10,31 +10,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *  @file JPetScopeReaderConfigParser.h
+ *  @file JPetScopeConfigParser.h
  */
 
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE JPetScopeReaderConfigParserTest
+#define BOOST_TEST_MODULE JPetScopeConfigParser
 #include <boost/test/unit_test.hpp>
-#include "JPetScopeReaderConfigParser.h"
+#include "JPetScopeConfigParser.h"
 
 
-BOOST_AUTO_TEST_SUITE(JPetScopeReaderConfigParserTestSuite)
+BOOST_AUTO_TEST_SUITE(JPetScopeConfigParserTestSuite)
 
 ///po stworzeniu obiektu, bez wczytania pliku 
 //przetestowac co zwracaja wtedy wszystkie publiczne funkcje
 
 BOOST_AUTO_TEST_CASE(readDataTest)
 {
-  string inputConfigJsonFileNameTest = "unitTestData/JPetScopeReaderConfigParserTest/example.json";
-  string outputFileNameTest = "config1";
+  std::string inputConfigJsonFileNameTest = "unitTestData/JPetScopeConfigParser/example.json";
+  std::string outputFileNameTest = "config1";
   unsigned int scopeReaderConfigParserPositionsSize = 5;
   
-  JPetScopeReaderConfigParser scopeReaderConfigParser;
+  JPetScopeConfigParser scopeReaderConfigParser;
   scopeReaderConfigParser.readData(inputConfigJsonFileNameTest);
   
   BOOST_REQUIRE_EQUAL(scopeReaderConfigParser.getFileName(), outputFileNameTest);
   BOOST_REQUIRE(scopeReaderConfigParser.getPositions().size() == scopeReaderConfigParserPositionsSize);
+}
+
+BOOST_AUTO_TEST_CASE(noExistingTest)
+{
+  /*std::string inputConfigJsonFileNameTest = "unitTestData/JPetScopeConfigParser/notExistingFile.json";
+  std::string outputFileNameTest = "config1";
+  unsigned int scopeReaderConfigParserPositionsSize = 5;
+  
+  JPetScopeConfigParser scopeReaderConfigParser;
+  scopeReaderConfigParser.readData(inputConfigJsonFileNameTest);*/
+  
+  //BOOST_REQUIRE_EQUAL(scopeReaderConfigParser.getFileName(), outputFileNameTest);
+  //BOOST_REQUIRE(scopeReaderConfigParser.getPositions().size() == scopeReaderConfigParserPositionsSize);
 }
 
 ///wk dodac test otwierajacy nieistniejacy plik json
