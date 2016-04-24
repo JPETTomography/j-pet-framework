@@ -298,6 +298,21 @@ void JPetScopeReader::createOutputObjects(const char*) {
   fIter = fConfigs.begin();
 }
 
+std::string JPetScopeReader::createOutputFilename()
+{
+  string out_fn(fOutFilename.Data());
+  int last_dot = out_fn.find_last_of(".");
+  string out_fn2  = out_fn.substr(0,last_dot );
+	  out_fn2 += "_";
+	  out_fn2 += (*fIter).pName;
+	  out_fn2 += "_";
+	  out_fn2 += to_string((*fIter).pCollPosition);
+	  out_fn2 += ".reco.sig";
+	  out_fn2 += out_fn.substr(last_dot);
+	  
+  return out_fn2;
+}
+
 void JPetScopeReader::createNewWriter() {
   
   if (fConfigs.empty()) {
@@ -309,6 +324,7 @@ void JPetScopeReader::createNewWriter() {
     INFO (Form("Creating root file for configuration %s and position %d", ((*fIter).pName).c_str(), (*fIter).pCollPosition));
 
 //wk wyodrebnij to jako metode
+    /*
     string out_fn(fOutFilename.Data());
     int last_dot = out_fn.find_last_of(".");
     string out_fn2  = out_fn.substr(0,last_dot );
@@ -318,6 +334,8 @@ void JPetScopeReader::createNewWriter() {
            out_fn2 += to_string((*fIter).pCollPosition);
 	   out_fn2 += ".reco.sig";
            out_fn2 += out_fn.substr(last_dot);
+           */
+    std::string out_fn2 = createOutputFilename();
 //wk az do tego miejsca, petoda zwraca stringa 
     
     fWriter = new JPetWriter(out_fn2.c_str());
