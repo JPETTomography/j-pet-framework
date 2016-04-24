@@ -17,7 +17,7 @@
 #include <iostream>
 #include "../CommonTools/CommonTools.h"
 #include "../JPetLoggerInclude.h"
-#include "../JPetScopeReaderConfigParser/JPetScopeReaderConfigParser.h"
+#include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 
 
 JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
@@ -162,10 +162,10 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
     if (fileType.compare("scope") == 0) {
     string inputConfigJsonFileNameTest = "unitTestData/JPetScopeReaderConfigParserTest/example.json";	//TODO Set proper filename
     
-    JPetScopeReaderConfigParser scopeReaderConfigParser;
-    scopeReaderConfigParser.readData(inputConfigJsonFileNameTest);
-    string scopeFileName = scopeReaderConfigParser.getFileName();
-    vector<int> scopePositions = scopeReaderConfigParser.getPositions();
+    JPetScopeConfigParser scopeConfigParser;
+    scopeConfigParser.readData(inputConfigJsonFileNameTest);
+    string scopeFileName = scopeConfigParser.getFileName();
+    vector<int> scopePositions = scopeConfigParser.getPositions();
     
     options.emplace("scopeFileName", scopeFileName);
     

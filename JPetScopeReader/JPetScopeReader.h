@@ -95,6 +95,10 @@ class JPetScopeReader: public JPetTaskLoader {
    */
   void setFileName(const char* name);
   
+  /** @brief Create outfile name.
+   */
+  std::string createOutputFilename();
+  
   /** @brief Create writer for new configuration.
    *
    * When processing events for new configuration new output file is created.
