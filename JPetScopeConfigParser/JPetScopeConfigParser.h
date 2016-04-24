@@ -13,10 +13,10 @@
  *  @file JPetScopeConfigParser.h
  */
 
-#ifndef JPET_SCOPE_READER_CONFIG_PARSER_H
-#define JPET_SCOPE_READER_CONFIG_PARSER_H
+#ifndef JPET_SCOPE_CONFIG_PARSER_H
+#define JPET_SCOPE_CONFIG_PARSER_H
 
-#include <iostream>
+//#include <iostream>
 #include <string>
 #include <vector>
 //#include <cstdint>
@@ -138,4 +138,4 @@ public:
   std::vector<JPetScinData> getScinData() const { return scinData; }
 };
 
-#endif // JPET_SCOPE_READER_CONFIG_PARSER_H
+#endif // JPET_SCOPE_CONFIG_PARSER_H
