@@ -23,15 +23,15 @@
 #include <boost/property_tree/ptree.hpp>
 
 
-//nigdy nie używaj using namespace w header 
-//przegoogluj ten temat, bo już drugi raz to robisz
-//using namespace std;
+//!!! to samo - co z using namespace
+//!!! propagujesz to do wszystkich plikow ktore przyjmuja ten naglowek, po co?
 using boost::property_tree::ptree;
 
-//zmien nazwe na JPetScopeConfigParser
-//bo parsera chcemy uzyc nie tylko w ScopeReaderze
 class JPetScopeConfigParser
 {
+//jak juz uzywasz explicite public/protected w twoich structrach to mozesz zastąpić struct->klase
+//pierwotnie myslalem, ze to beda structury typu POD, ale to jest ok, 
+// https://en.wikipedia.org/wiki/Passive_data_structure
 protected:
   struct JPetParamObject
   {
@@ -64,7 +64,7 @@ protected:
       frame(paramFrame)
     {}
     
-    friend JPetScopeConfigParser;
+    friend JPetScopeConfigParser; // czy ten friend nie moglyby byc w JPetParamObject tylko czy nie?
   };
   
   struct JPetPMData : JPetParamObject
@@ -103,32 +103,11 @@ protected:
   
 public:
   JPetScopeConfigParser();
-
-//wk najlepiej zdefiniowac pomocnicza strukture
-//np. 
-//struct BSlotData 
-//{
-// int fId;
-// bool fIsActive;
-// string fName;
-// float fTheta;
-// int fFrame;
-//};
-// i dodac metode:
-// std::vector<BSlotData> getBslotData(ptree const& conf_data) const;
-// patrz JPetScopeReader linijki od 78
-// dodatkowo jezeli potrzebne można dodać pomocnicze
-// std::vector<std::string> getBSlotNames(ptree const& conf_data) const;
-// itd.
-  
-//    files_location = conf_data.get<string>("location");
-//    zamienic na getFilesLocation(ptree const& conf_data) const;
   
   bool createParamObject(ptree const& conf_data);
   bool getFilesLocation(ptree const& conf_data);
   bool createOutputFileNames(const std::string &configFileName, const int position);
   bool readData(const std::string &configFileName);  
-  //brakuje const  gdy metoda nic nie zmienia w obiekcie
   std::string getFileName() const { return fileName; }
   std::string getFilesLocation() const { return filesLocation; };
   std::vector<std::string> getOutputFileNames() const { return outputFileNames; }
