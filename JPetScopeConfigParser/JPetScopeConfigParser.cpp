@@ -37,18 +37,18 @@
 //using namespace boost::filesystem;
 
 
-JPetScopeConfigParser::JPetScopeConfigParser() : fileName(""), filesLocation("")
+JPetScopeConfigParser::JPetScopeConfigParser() : configName(""), location("")
 {}
 
 
-bool JPetScopeConfigParser::getFilesLocation(boost::property_tree::ptree const& conf_data)
+bool JPetScopeConfigParser::createFilesLocation(boost::property_tree::ptree const& conf_data)
 {
   //jezeli nie znajdzie location to rzuca wyjatkiem?
   //trzeba wyjatek przechwycic wypisac ERROR("...");
   //i zwrocic false
   try
   {
-    filesLocation = conf_data.get<std::string>("location");
+    location = conf_data.get<std::string>("location");
   }
   catch(const std::runtime_error &error)
   {
@@ -165,22 +165,28 @@ bool JPetScopeConfigParser::createParamObjects(boost::property_tree::ptree const
   createBSlotData(conf_data);
   createPMData(conf_data);
   createScinData(conf_data);
-  
   bool createParamObjectsSuccessfully = createBSlotData(conf_data) && createPMData(conf_data) && createScinData(conf_data);
   
-  return createParamObjectsSuccessfully == true ? true : false;
+  return createParamObjectsSuccessfully;
+}
+
+std::string JPetScopeConfigParser::createPath(const std::string &configFileName, const int position)
+{
+  std::string starting_loc  = boost::filesystem::path(configFileName).parent_path().string();
+	      starting_loc += "/";
+	      starting_loc += location;
+	      starting_loc += "/";
+	      starting_loc += std::to_string(position);
+  return starting_loc;
 }
 
 //gdzies powinenen byc tez zwracany false inaczej to bez sensu
 bool JPetScopeConfigParser::createOutputFileNames(const std::string &configFileName, const int position)
 {
-  std::string starting_loc  = boost::filesystem::path(configFileName).parent_path().string();
-	  starting_loc += "/";
-	  starting_loc += filesLocation;
-	  starting_loc += "/";
-	  starting_loc += std::to_string(position);
+  std::string starting_loc = createPath(configFileName, position);
 
   boost::filesystem::path current_dir(starting_loc);
+std::cout << "starting_loc = " << starting_loc << std::endl;
   std::string prefix = pmData.front().prefix; //o co tu chodzi to jest niejasne dla mnie
   boost::regex pattern(Form("%s_\\d*.txt", prefix.c_str()));
 std::cout << "current_dir= " << current_dir << std::endl;	  
@@ -216,12 +222,14 @@ std::cout << "msg= " << msg << std::endl;
   return true;
 }
 
-bool JPetScopeConfigParser::readData(const std::string &configFileName)
+bool JPetScopeConfigParser::hasExtension(const std::string &configFileExtension, const std::string &requiredFileExtension)
 {
-  boost::property_tree::ptree propTree;
+  return configFileExtension.compare(requiredFileExtension) == 0;
+}
 
-  std::string configFileExtension = boost::filesystem::path(configFileName).extension().string();
-  if(configFileExtension.compare(".json") == 0) 
+bool JPetScopeConfigParser::readJson(const std::string &configFileExtension, const std::string &requiredFileExtension, const std::string &configFileName, boost::property_tree::ptree &propTree)
+{
+  if(hasExtension(configFileExtension, requiredFileExtension))
   {
     read_json(configFileName, propTree);
   }
@@ -230,6 +238,16 @@ bool JPetScopeConfigParser::readData(const std::string &configFileName)
     ERROR("Cannot open config file. Exiting");
     return false;
   }
+  return true;
+}
+
+bool JPetScopeConfigParser::readData(const std::string &configFileName)
+{
+  boost::property_tree::ptree propTree;
+
+  const std::string configFileExtension = boost::filesystem::path(configFileName).extension().string();
+  const std::string requiredFileExtension = ".json";
+  readJson(configFileExtension, requiredFileExtension, configFileName, propTree);
   
   for(boost::property_tree::ptree::const_iterator it = propTree.begin(); it != propTree.end(); ++it) 
   {
@@ -238,14 +256,14 @@ bool JPetScopeConfigParser::readData(const std::string &configFileName)
     const boost::property_tree::ptree& conf_data = it->second;
     
     //files_location = conf_data.get<string>("location");
-    getFilesLocation(conf_data);
+    createFilesLocation(conf_data);
     
     createParamObjects(conf_data);
     
-    if(fileName.empty())
+    if(configName.empty())
     {
-      fileName = it->first;
-//std::cout << "fileName= " << fileName << std::endl;
+      configName = it->first;
+//std::cout << "configName= " << configName << std::endl;
     }
 
     std::string collimatorFunction = "";
@@ -253,14 +271,7 @@ bool JPetScopeConfigParser::readData(const std::string &configFileName)
     
     BOOST_FOREACH(const boost::property_tree::ptree::value_type& v, conf_data.get_child("collimator")) 
     {
-      if(configFileExtension.compare(".json") == 0) 
-      {
-	collimatorFunction = v.second.get<std::string>("positions");
-      }
-      else 
-      {
-	collimatorFunction = v.second.data();
-      }
+      collimatorFunction = v.second.get<std::string>("positions");
 
       n = sscanf(collimatorFunction.c_str(), "%d %d %d", &a, &b, &c);
 
