@@ -93,8 +93,8 @@ protected:
     friend JPetScopeConfigParser;
   };
   
-  std::string fileName;
-  std::string filesLocation;
+  std::string configName;
+  std::string location;
   std::vector<std::string> outputFileNames;
   std::vector<int> positions;
   std::vector<JPetBSlotData> bSlotData;
@@ -108,11 +108,14 @@ public:
   bool createPMData(boost::property_tree::ptree const& conf_data);
   bool createScinData(boost::property_tree::ptree const& conf_data);
   bool createParamObjects(boost::property_tree::ptree const& conf_data);
-  bool getFilesLocation(boost::property_tree::ptree const& conf_data);
+  std::string createPath(const std::string &configFileName, const int position);
+  bool createFilesLocation(boost::property_tree::ptree const& conf_data);
   bool createOutputFileNames(const std::string &configFileName, const int position);
+  bool hasExtension(const std::string &configFileExtension, const std::string &requiredFileExtension);
+  bool readJson(const std::string &configFileExtension, const std::string &requiredFileExtension, const std::string &configFileName, boost::property_tree::ptree &propTree);
   bool readData(const std::string &configFileName);  
-  std::string getFileName() const { return fileName; }
-  std::string getFilesLocation() const { return filesLocation; };
+  std::string getFileName() const { return configName; }
+  std::string getLocation() const { return location; };
   std::vector<std::string> getOutputFileNames() const { return outputFileNames; }
   std::vector<int> getPositions() const { return positions; }
   std::vector<JPetBSlotData> getBSlotData() const { return bSlotData; }
