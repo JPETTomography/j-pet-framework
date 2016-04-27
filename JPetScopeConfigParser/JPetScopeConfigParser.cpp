@@ -22,7 +22,6 @@
 #include "JPetScopeConfigParser.h"
 #include "../JPetLoggerInclude.h"
 
-//#include <boost/property_tree/ptree.hpp>
 #include <boost/regex.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/info_parser.hpp>
@@ -34,9 +33,6 @@
 #include <cstdio>
 
 
-//#include <iostream>
-//using namespace std;
-
 //using boost::property_tree::ptree;
 using namespace boost::filesystem;
 
@@ -44,52 +40,59 @@ using namespace boost::filesystem;
 JPetScopeConfigParser::JPetScopeConfigParser() : fileName(""), filesLocation("")
 {}
 
+
 bool JPetScopeConfigParser::getFilesLocation(ptree const& conf_data)
 {
+  //jezeli nie znajdzie location to rzuca wyjatkiem?
+  //trzeba wyjatek przechwycic wypisac ERROR("...");
+  //i zwrocic false
   filesLocation = conf_data.get<std::string>("location");
   return true;
 }
 
+//jezeli nie znajdzie czegos przez get() to rzuca wyjatkiem?
+//trzeba wyjatek przechwycic wypisac ERROR("...");
+//i zwrocic false
+//nazwa metody jest zla -> jest tworzone duzo obiektow
+//a nie jeden
 bool JPetScopeConfigParser::createParamObject(ptree const& conf_data) 
 {
-    int bslotid1, bslotid2;
-    bool bslotactive1, bslotactive2;
-    std::string bslotname1, bslotname2;
-    float bslottheta1, bslottheta2;
-    int bslotframe1, bslotframe2;
 
-    bslotid1 = conf_data.get("bslot1.id", -1);
-    bslotid2 = conf_data.get("bslot2.id", -1);
+//mozna wyodrebnic createBSlotData -> zobacz nize
+    int bslotid1 = conf_data.get("bslot1.id", -1);
+    int bslotid2 = conf_data.get("bslot2.id", -1);
 
-    bslotactive1 = conf_data.get("bslot1.active", false);
-    bslotactive2 = conf_data.get("bslot2.active", false);
+    bool bslotactive1 = conf_data.get("bslot1.active", false);
+    bool bslotactive2 = conf_data.get("bslot2.active", false);
 
-    bslotname1 = conf_data.get("bslot1.name", std::string(""));
-    bslotname2 = conf_data.get("bslot2.name", std::string(""));
+    std::string bslotname1 = conf_data.get("bslot1.name", std::string(""));
+    std::string bslotname2 = conf_data.get("bslot2.name", std::string(""));
 
-    bslottheta1 = conf_data.get("bslot1.theta", -1.f);
-    bslottheta2 = conf_data.get("bslot2.theta", -1.f);
+    float bslottheta1 = conf_data.get("bslot1.theta", -1.f);
+    float bslottheta2 = conf_data.get("bslot2.theta", -1.f);
 
-    bslotframe1 = conf_data.get("bslot1.frame", -1);
-    bslotframe2 = conf_data.get("bslot2.frame", -1);
+    int bslotframe1 = conf_data.get("bslot1.frame", -1);
+    int bslotframe2 = conf_data.get("bslot2.frame", -1);
     
     JPetBSlotData bSlotData1(bslotid1, bslotactive1, bslotname1, bslottheta1, bslotframe1);
     JPetBSlotData bSlotData2(bslotid2, bslotactive2, bslotname2, bslottheta2, bslotframe2);
     bSlotData.push_back(bSlotData1);
     bSlotData.push_back(bSlotData2);
+//do tego momentu
 
-    int pmid1, pmid2, pmid3, pmid4;
 
-    pmid1 = conf_data.get("pm1.id", 0);
-    pmid2 = conf_data.get("pm2.id", 0);
-    pmid3 = conf_data.get("pm3.id", 0);
-    pmid4 = conf_data.get("pm4.id", 0);
+   //wk od tego momentu mozna wyodrebnic PM
+    int pmid1 = conf_data.get("pm1.id", 0);
+    int pmid2 = conf_data.get("pm2.id", 0);
+    int pmid3 = conf_data.get("pm3.id", 0);
+    int pmid4 = conf_data.get("pm4.id", 0);
     
     std::string pmPrefix1 = conf_data.get<std::string>("pm1.prefix");
     std::string pmPrefix2 = conf_data.get<std::string>("pm2.prefix");
     std::string pmPrefix3 = conf_data.get<std::string>("pm3.prefix");
     std::string pmPrefix4 = conf_data.get<std::string>("pm4.prefix");
     
+    //wk to jest chyba bug bo jest wszedzie pmid1    
     JPetPMData pmData1(pmid1, pmPrefix1);
     JPetPMData pmData2(pmid1, pmPrefix2);
     JPetPMData pmData3(pmid1, pmPrefix3);
@@ -99,11 +102,12 @@ bool JPetScopeConfigParser::createParamObject(ptree const& conf_data)
     pmData.push_back(pmData2);
     pmData.push_back(pmData3);
     pmData.push_back(pmData4);
+//wk do tego mozna wyodrebnic metode ktora zwraca JPetPMData 
+//createPMData(cptree const& conf_data) 
 
-    int scinid1, scinid2;
-
-    scinid1 = conf_data.get("scin1.id", 0);
-    scinid2 = conf_data.get("scin2.id", 0);
+//podobnie mozna wyodrebnic createScinData
+    int scinid1 = conf_data.get("scin1.id", 0);
+    int scinid2 = conf_data.get("scin2.id", 0);
     
     JPetScinData scinData1(scinid1);
     JPetScinData scinData2(scinid2);
@@ -122,6 +126,8 @@ std::cout << scinid1 << " " << scinid2 << std::endl;
     return true;
 }
 
+
+//gdzies powinenen byc tez zwracany false inaczej to bez sensu
 bool JPetScopeConfigParser::createOutputFileNames(const std::string &configFileName, const int position)
 {
   std::string starting_loc  = path(configFileName).parent_path().string();
@@ -131,7 +137,7 @@ bool JPetScopeConfigParser::createOutputFileNames(const std::string &configFileN
 	  starting_loc += std::to_string(position);
 
   path current_dir(starting_loc);
-  std::string prefix = pmData.front().prefix;
+  std::string prefix = pmData.front().prefix; //o co tu chodzi to jest niejasne dla mnie
   boost::regex pattern(Form("%s_\\d*.txt", prefix.c_str()));
 std::cout << "current_dir= " << current_dir << std::endl;	  
   if (exists(current_dir))
@@ -171,7 +177,6 @@ bool JPetScopeConfigParser::readData(const std::string &configFileName)
 
   
   std::string configFileExtension = path(configFileName).extension().string();
-/// wk mozna zostawic tylko json, inne nie ma sensu ?
   if(configFileExtension.compare(".json") == 0) 
   {
     read_json(configFileName, propTree);
@@ -179,9 +184,6 @@ bool JPetScopeConfigParser::readData(const std::string &configFileName)
   else 
   {
     ERROR("Cannot open config file. Exiting");
-  /// wk exit(-1) to trzeba inaczej obsluzyc a nie exit(-1)
-  // np. zwrocic boola i sprawdzic w funkcjach powyzej
-  // 
     return false;
   }
   
