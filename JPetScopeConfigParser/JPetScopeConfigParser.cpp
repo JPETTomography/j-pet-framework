@@ -13,12 +13,6 @@
  *  @file JPetScopeConfigParser.cpp
  */
 
-/*
- * Temporary help
- * read_json(...)
- * http://www.boost.org/doc/libs/1_55_0/doc/html/boost/property_tree/json_parser/read_json_idp102885800.html
- */
-
 #include "JPetScopeConfigParser.h"
 #include "../JPetLoggerInclude.h"
 
@@ -33,19 +27,12 @@
 #include <cstdio>
 
 
-//using boost::property_tree::ptree;
-//using namespace boost::filesystem;
-
-
 JPetScopeConfigParser::JPetScopeConfigParser() : configName(""), location("")
 {}
 
 
 bool JPetScopeConfigParser::createFilesLocation(boost::property_tree::ptree const& conf_data)
 {
-  //jezeli nie znajdzie location to rzuca wyjatkiem?
-  //trzeba wyjatek przechwycic wypisac ERROR("...");
-  //i zwrocic false
   try
   {
     location = conf_data.get<std::string>("location");
@@ -111,8 +98,7 @@ bool JPetScopeConfigParser::createPMData(boost::property_tree::ptree const& conf
     std::string pmPrefix2 = conf_data.get<std::string>("pm2.prefix");
     std::string pmPrefix3 = conf_data.get<std::string>("pm3.prefix");
     std::string pmPrefix4 = conf_data.get<std::string>("pm4.prefix");
-    
-    //wk to jest chyba bug bo jest wszedzie pmid1    
+       
     JPetPMData pmData1(pmid1, pmPrefix1);
     JPetPMData pmData2(pmid2, pmPrefix2);
     JPetPMData pmData3(pmid3, pmPrefix3);
@@ -155,11 +141,7 @@ std::cout << scinid1 << " " << scinid2 << std::endl;
   }
   return true;
 }
-//jezeli nie znajdzie czegos przez get() to rzuca wyjatkiem?
-//trzeba wyjatek przechwycic wypisac ERROR("...");
-//i zwrocic false
-//nazwa metody jest zla -> jest tworzone duzo obiektow
-//a nie jeden
+
 bool JPetScopeConfigParser::createParamObjects(boost::property_tree::ptree const& conf_data) 
 {
   createBSlotData(conf_data);
@@ -180,7 +162,6 @@ std::string JPetScopeConfigParser::createPath(const std::string &configFileName,
   return starting_loc;
 }
 
-//gdzies powinenen byc tez zwracany false inaczej to bez sensu
 bool JPetScopeConfigParser::createOutputFileNames(const std::string &configFileName, const int position)
 {
   std::string starting_loc = createPath(configFileName, position);
@@ -247,45 +228,43 @@ bool JPetScopeConfigParser::readData(const std::string &configFileName)
 
   const std::string configFileExtension = boost::filesystem::path(configFileName).extension().string();
   const std::string requiredFileExtension = ".json";
-  readJson(configFileExtension, requiredFileExtension, configFileName, propTree);
   
-  for(boost::property_tree::ptree::const_iterator it = propTree.begin(); it != propTree.end(); ++it) 
+  if(readJson(configFileExtension, requiredFileExtension, configFileName, propTree))
   {
-    //string files_location;
-    
-    const boost::property_tree::ptree& conf_data = it->second;
-    
-    //files_location = conf_data.get<string>("location");
-    createFilesLocation(conf_data);
-    
-    createParamObjects(conf_data);
-    
-    if(configName.empty())
+    for(boost::property_tree::ptree::const_iterator it = propTree.begin(); it != propTree.end(); ++it) 
     {
-      configName = it->first;
-//std::cout << "configName= " << configName << std::endl;
-    }
-
-    std::string collimatorFunction = "";
-    int a = 0, b = 0, c = 0, n = 0;
-    
-    BOOST_FOREACH(const boost::property_tree::ptree::value_type& v, conf_data.get_child("collimator")) 
-    {
-      collimatorFunction = v.second.get<std::string>("positions");
-
-      n = sscanf(collimatorFunction.c_str(), "%d %d %d", &a, &b, &c);
-
-      if(n > 0) 
-      {
-        if(n == 1) {b = a; c = 1;}
-	if(n == 2) {c = 1;}
-	
-	for(int j = a; j <=b; j+= c) 
+      const boost::property_tree::ptree& conf_data = it->second;
+      
+      if(createFilesLocation(conf_data) && createParamObjects(conf_data))
+      {      
+	if(configName.empty())
 	{
-	  positions.emplace_back(j);
-//std::cout << "pCollPosition= " << j << std::endl;
-	  
-	  createOutputFileNames(configFileName, j);
+	  configName = it->first;
+    //std::cout << "configName= " << configName << std::endl;
+	}
+
+	std::string collimatorFunction = "";
+	int a = 0, b = 0, c = 0, n = 0;
+	
+	BOOST_FOREACH(const boost::property_tree::ptree::value_type& v, conf_data.get_child("collimator")) 
+	{
+	  collimatorFunction = v.second.get<std::string>("positions");
+
+	  n = sscanf(collimatorFunction.c_str(), "%d %d %d", &a, &b, &c);
+
+	  if(n > 0) 
+	  {
+	    if(n == 1) {b = a; c = 1;}
+	    if(n == 2) {c = 1;}
+	    
+	    for(int j = a; j <=b; j+= c) 
+	    {
+	      positions.emplace_back(j);
+    //std::cout << "pCollPosition= " << j << std::endl;
+	      
+	      createOutputFileNames(configFileName, j);
+	    }
+	  }
 	}
       }
     }

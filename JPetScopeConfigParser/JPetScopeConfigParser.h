@@ -16,22 +16,13 @@
 #ifndef JPET_SCOPE_CONFIG_PARSER_H
 #define JPET_SCOPE_CONFIG_PARSER_H
 
-//#include <iostream>
 #include <string>
 #include <vector>
-//#include <cstdint>
 #include <boost/property_tree/ptree.hpp>
 
 
-//!!! to samo - co z using namespace
-//!!! propagujesz to do wszystkich plikow ktore przyjmuja ten naglowek, po co?
-//using boost::property_tree::ptree;
-
 class JPetScopeConfigParser
 {
-//jak juz uzywasz explicite public/protected w twoich structrach to mozesz zastąpić struct->klase
-//pierwotnie myslalem, ze to beda structury typu POD, ale to jest ok, 
-// https://en.wikipedia.org/wiki/Passive_data_structure
 protected:
   class JPetParamObject
   {
@@ -49,7 +40,7 @@ protected:
   class JPetBSlotData : public JPetParamObject
   {
   protected:
-    bool active;//TODO daje nazwe active zeby bylo konsystentnie z *.json-ew. mozna wszedzie ustali nazwe?
+    bool active;
     std::string name;
     float theta;
     int frame;
@@ -64,7 +55,7 @@ protected:
       frame(paramFrame)
     {}
     
-    friend JPetScopeConfigParser; // czy ten friend nie moglyby byc w JPetParamObject tylko czy nie?
+    friend JPetScopeConfigParser;
   };
   
   class JPetPMData : public JPetParamObject
@@ -93,13 +84,18 @@ protected:
     friend JPetScopeConfigParser;
   };
   
+  class JPetConfigData
+  {
+    
+  };
+  
   std::string configName;
-  std::string location;
-  std::vector<std::string> outputFileNames;
-  std::vector<int> positions;
   std::vector<JPetBSlotData> bSlotData;
   std::vector<JPetPMData> pmData;
   std::vector<JPetScinData> scinData;
+  std::string location;
+  std::vector<int> positions;
+  std::vector<std::string> outputFileNames;
   
 public:
   JPetScopeConfigParser();
@@ -114,13 +110,14 @@ public:
   bool hasExtension(const std::string &configFileExtension, const std::string &requiredFileExtension);
   bool readJson(const std::string &configFileExtension, const std::string &requiredFileExtension, const std::string &configFileName, boost::property_tree::ptree &propTree);
   bool readData(const std::string &configFileName);  
+  
   std::string getFileName() const { return configName; }
-  std::string getLocation() const { return location; };
-  std::vector<std::string> getOutputFileNames() const { return outputFileNames; }
-  std::vector<int> getPositions() const { return positions; }
   std::vector<JPetBSlotData> getBSlotData() const { return bSlotData; }
   std::vector<JPetPMData> getPMData() const { return pmData; }
   std::vector<JPetScinData> getScinData() const { return scinData; }
+  std::string getLocation() const { return location; };
+  std::vector<int> getPositions() const { return positions; }
+  std::vector<std::string> getOutputFileNames() const { return outputFileNames; }
 };
 
 #endif // JPET_SCOPE_CONFIG_PARSER_H
