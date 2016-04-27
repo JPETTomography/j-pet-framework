@@ -34,31 +34,35 @@
 
 
 //using boost::property_tree::ptree;
-using namespace boost::filesystem;
+//using namespace boost::filesystem;
 
 
 JPetScopeConfigParser::JPetScopeConfigParser() : fileName(""), filesLocation("")
 {}
 
 
-bool JPetScopeConfigParser::getFilesLocation(ptree const& conf_data)
+bool JPetScopeConfigParser::getFilesLocation(boost::property_tree::ptree const& conf_data)
 {
   //jezeli nie znajdzie location to rzuca wyjatkiem?
   //trzeba wyjatek przechwycic wypisac ERROR("...");
   //i zwrocic false
-  filesLocation = conf_data.get<std::string>("location");
+  try
+  {
+    filesLocation = conf_data.get<std::string>("location");
+  }
+  catch(const std::runtime_error &error)
+  {
+    std::string message = "No location. Error = " + std::string(error.what());
+    ERROR(message);
+    return false;
+  }
   return true;
 }
 
-//jezeli nie znajdzie czegos przez get() to rzuca wyjatkiem?
-//trzeba wyjatek przechwycic wypisac ERROR("...");
-//i zwrocic false
-//nazwa metody jest zla -> jest tworzone duzo obiektow
-//a nie jeden
-bool JPetScopeConfigParser::createParamObject(ptree const& conf_data) 
+bool JPetScopeConfigParser::createBSlotData(boost::property_tree::ptree const& conf_data)
 {
-
-//mozna wyodrebnic createBSlotData -> zobacz nize
+  try
+  {
     int bslotid1 = conf_data.get("bslot1.id", -1);
     int bslotid2 = conf_data.get("bslot2.id", -1);
 
@@ -78,10 +82,26 @@ bool JPetScopeConfigParser::createParamObject(ptree const& conf_data)
     JPetBSlotData bSlotData2(bslotid2, bslotactive2, bslotname2, bslottheta2, bslotframe2);
     bSlotData.push_back(bSlotData1);
     bSlotData.push_back(bSlotData2);
-//do tego momentu
+    
+std::cout << bslotid1 << " " << bslotid1 << std::endl;
+std::cout << bslotactive1 << " " << bslotactive2 << std::endl;
+std::cout << bslotname1 << " " << bslotname2 << std::endl;
+std::cout << bslottheta1 << " " << bslottheta1 << std::endl;
+std::cout << bslotframe1 << " " << bslotframe2 << std::endl;
+  }
+  catch(const std::runtime_error &error)
+  {
+    std::string message = "BSlot data error parsing. Error = " + std::string(error.what());
+    ERROR(message);
+    return false;
+  }
+  return true;
+}
 
-
-   //wk od tego momentu mozna wyodrebnic PM
+bool JPetScopeConfigParser::createPMData(boost::property_tree::ptree const& conf_data)
+{
+  try
+  {
     int pmid1 = conf_data.get("pm1.id", 0);
     int pmid2 = conf_data.get("pm2.id", 0);
     int pmid3 = conf_data.get("pm3.id", 0);
@@ -94,18 +114,29 @@ bool JPetScopeConfigParser::createParamObject(ptree const& conf_data)
     
     //wk to jest chyba bug bo jest wszedzie pmid1    
     JPetPMData pmData1(pmid1, pmPrefix1);
-    JPetPMData pmData2(pmid1, pmPrefix2);
-    JPetPMData pmData3(pmid1, pmPrefix3);
-    JPetPMData pmData4(pmid1, pmPrefix4);
+    JPetPMData pmData2(pmid2, pmPrefix2);
+    JPetPMData pmData3(pmid3, pmPrefix3);
+    JPetPMData pmData4(pmid4, pmPrefix4);
     
     pmData.push_back(pmData1);
     pmData.push_back(pmData2);
     pmData.push_back(pmData3);
     pmData.push_back(pmData4);
-//wk do tego mozna wyodrebnic metode ktora zwraca JPetPMData 
-//createPMData(cptree const& conf_data) 
+std::cout << pmid1 << " " << pmid2 << " " << pmid3 << " " << pmid4 << std::endl;
+  }
+  catch(const std::runtime_error &error)
+  {
+    std::string message = "PM data error parsing. Error = " + std::string(error.what());
+    ERROR(message);
+    return false;
+  }
+  return true;
+}
 
-//podobnie mozna wyodrebnic createScinData
+bool JPetScopeConfigParser::createScinData(boost::property_tree::ptree const& conf_data)
+{
+  try
+  {
     int scinid1 = conf_data.get("scin1.id", 0);
     int scinid2 = conf_data.get("scin2.id", 0);
     
@@ -114,36 +145,49 @@ bool JPetScopeConfigParser::createParamObject(ptree const& conf_data)
     
     scinData.push_back(scinData1);
     scinData.push_back(scinData2);
-    
-std::cout << bslotid1 << " " << bslotid1 << std::endl;
-std::cout << bslotactive1 << " " << bslotactive2 << std::endl;
-std::cout << bslotname1 << " " << bslotname2 << std::endl;
-std::cout << bslottheta1 << " " << bslottheta1 << std::endl;
-std::cout << bslotframe1 << " " << bslotframe2 << std::endl;
-std::cout << pmid1 << " " << pmid2 << " " << pmid3 << " " << pmid4 << std::endl;
 std::cout << scinid1 << " " << scinid2 << std::endl;
-    
-    return true;
+  }
+  catch(const std::runtime_error &error)
+  {
+    std::string message = "Scin data error parsing. Error = " + std::string(error.what());
+    ERROR(message);
+    return false;
+  }
+  return true;
 }
-
+//jezeli nie znajdzie czegos przez get() to rzuca wyjatkiem?
+//trzeba wyjatek przechwycic wypisac ERROR("...");
+//i zwrocic false
+//nazwa metody jest zla -> jest tworzone duzo obiektow
+//a nie jeden
+bool JPetScopeConfigParser::createParamObjects(boost::property_tree::ptree const& conf_data) 
+{
+  createBSlotData(conf_data);
+  createPMData(conf_data);
+  createScinData(conf_data);
+  
+  bool createParamObjectsSuccessfully = createBSlotData(conf_data) && createPMData(conf_data) && createScinData(conf_data);
+  
+  return createParamObjectsSuccessfully == true ? true : false;
+}
 
 //gdzies powinenen byc tez zwracany false inaczej to bez sensu
 bool JPetScopeConfigParser::createOutputFileNames(const std::string &configFileName, const int position)
 {
-  std::string starting_loc  = path(configFileName).parent_path().string();
+  std::string starting_loc  = boost::filesystem::path(configFileName).parent_path().string();
 	  starting_loc += "/";
 	  starting_loc += filesLocation;
 	  starting_loc += "/";
 	  starting_loc += std::to_string(position);
 
-  path current_dir(starting_loc);
+  boost::filesystem::path current_dir(starting_loc);
   std::string prefix = pmData.front().prefix; //o co tu chodzi to jest niejasne dla mnie
   boost::regex pattern(Form("%s_\\d*.txt", prefix.c_str()));
 std::cout << "current_dir= " << current_dir << std::endl;	  
   if (exists(current_dir))
   {
 std::cout << "if" << std::endl;
-    for (recursive_directory_iterator iter(current_dir), end; iter != end; ++iter) 
+    for (boost::filesystem::recursive_directory_iterator iter(current_dir), end; iter != end; ++iter) 
     {
       std::string name = iter->path().leaf().string();
 std::cout << "name= " << name << std::endl;
@@ -167,16 +211,16 @@ std::cout << "dir= " << dir << std::endl;
     msg += "\" does not exist.";
 std::cout << "msg= " << msg << std::endl;
     ERROR(msg.c_str());
+    return false;
   }
   return true;
 }
 
 bool JPetScopeConfigParser::readData(const std::string &configFileName)
 {
-  ptree propTree;
+  boost::property_tree::ptree propTree;
 
-  
-  std::string configFileExtension = path(configFileName).extension().string();
+  std::string configFileExtension = boost::filesystem::path(configFileName).extension().string();
   if(configFileExtension.compare(".json") == 0) 
   {
     read_json(configFileName, propTree);
@@ -187,16 +231,16 @@ bool JPetScopeConfigParser::readData(const std::string &configFileName)
     return false;
   }
   
-  for(ptree::const_iterator it = propTree.begin(); it != propTree.end(); ++it) 
+  for(boost::property_tree::ptree::const_iterator it = propTree.begin(); it != propTree.end(); ++it) 
   {
     //string files_location;
     
-    const ptree& conf_data = it->second;
+    const boost::property_tree::ptree& conf_data = it->second;
     
     //files_location = conf_data.get<string>("location");
     getFilesLocation(conf_data);
     
-    createParamObject(conf_data);
+    createParamObjects(conf_data);
     
     if(fileName.empty())
     {
@@ -207,7 +251,7 @@ bool JPetScopeConfigParser::readData(const std::string &configFileName)
     std::string collimatorFunction = "";
     int a = 0, b = 0, c = 0, n = 0;
     
-    BOOST_FOREACH(const ptree::value_type& v, conf_data.get_child("collimator")) 
+    BOOST_FOREACH(const boost::property_tree::ptree::value_type& v, conf_data.get_child("collimator")) 
     {
       if(configFileExtension.compare(".json") == 0) 
       {
