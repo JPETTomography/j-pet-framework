@@ -25,7 +25,7 @@
 
 //!!! to samo - co z using namespace
 //!!! propagujesz to do wszystkich plikow ktore przyjmuja ten naglowek, po co?
-using boost::property_tree::ptree;
+//using boost::property_tree::ptree;
 
 class JPetScopeConfigParser
 {
@@ -33,7 +33,7 @@ class JPetScopeConfigParser
 //pierwotnie myslalem, ze to beda structury typu POD, ale to jest ok, 
 // https://en.wikipedia.org/wiki/Passive_data_structure
 protected:
-  struct JPetParamObject
+  class JPetParamObject
   {
   protected:
     unsigned int id;
@@ -46,7 +46,7 @@ protected:
     friend JPetScopeConfigParser;
   };
   
-  struct JPetBSlotData : JPetParamObject
+  class JPetBSlotData : public JPetParamObject
   {
   protected:
     bool active;//TODO daje nazwe active zeby bylo konsystentnie z *.json-ew. mozna wszedzie ustali nazwe?
@@ -67,7 +67,7 @@ protected:
     friend JPetScopeConfigParser; // czy ten friend nie moglyby byc w JPetParamObject tylko czy nie?
   };
   
-  struct JPetPMData : JPetParamObject
+  class JPetPMData : public JPetParamObject
   {
   protected:
     std::string prefix;
@@ -82,7 +82,7 @@ protected:
     friend JPetScopeConfigParser;
   };
   
-  struct JPetScinData : JPetParamObject
+  class JPetScinData : public JPetParamObject
   {
   public:
     JPetScinData() = default;
@@ -104,8 +104,11 @@ protected:
 public:
   JPetScopeConfigParser();
   
-  bool createParamObject(ptree const& conf_data);
-  bool getFilesLocation(ptree const& conf_data);
+  bool createBSlotData(boost::property_tree::ptree const& conf_data);
+  bool createPMData(boost::property_tree::ptree const& conf_data);
+  bool createScinData(boost::property_tree::ptree const& conf_data);
+  bool createParamObjects(boost::property_tree::ptree const& conf_data);
+  bool getFilesLocation(boost::property_tree::ptree const& conf_data);
   bool createOutputFileNames(const std::string &configFileName, const int position);
   bool readData(const std::string &configFileName);  
   std::string getFileName() const { return fileName; }
