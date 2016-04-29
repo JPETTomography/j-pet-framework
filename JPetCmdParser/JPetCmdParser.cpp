@@ -31,7 +31,9 @@ JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
   ("range,r", po::value< std::vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process.")
   ("param,p", po::value<std::string>(), "File with TRB numbers.")
   ("runId,i", po::value<int>(), "Run id.")
-  ("progressBar,b", "Progress bar.");
+  ("progressBar,b", "Progress bar.")
+		("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
+		("localDBCreate,L", po::value<std::string>(), "Where to save the parameter database.");
 }
 
 JPetCmdParser::~JPetCmdParser()
@@ -109,6 +111,15 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
     }
   }
 
+		if (isLocalDBSet(variablesMap)) {
+				std::string localDBName = getLocalDBName(variablesMap);
+    if ( ! CommonTools::ifFileExisting(localDBName) ) {
+      ERROR("File : " + localDBName + " does not exist.");
+      std::cerr << "File : " << localDBName << " does not exist" << std::endl;
+      return false;
+    }
+		}
+
   std::vector<std::string> fileNames(variablesMap["file"].as< std::vector<std::string> >());
   for (unsigned int i = 0; i < fileNames.size(); i++) {
     if ( ! CommonTools::ifFileExisting(fileNames[i]) ) {
@@ -134,6 +145,12 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
   if (isProgressBarSet(optsMap)) {
     options.at("progressBar") = "true";
   }
+		if (isLocalDBSet(optsMap)) {
+				options["localDB"] = getLocalDBName(optsMap);
+		}
+		if (isLocalDBCreateSet(optsMap)) {
+				options["localDBCreate"] = getLocalDBCreateName(optsMap);
+		}
   auto firstEvent  = getLowerEventBound(optsMap);
   auto lastEvent  = getHigherEventBound(optsMap);
   if (firstEvent >= 0) options.at("firstEvent") = std::to_string(firstEvent);

@@ -142,18 +142,18 @@ JPetParamBank const& JPetScopeReader::createParamBank(ptree const& conf_data) {
     param_bank->addScintillator(scin1);
     param_bank->addScintillator(scin2);
 
-    (param_bank->getPM(0)).setScin(param_bank->getScintillator(0));
-    (param_bank->getPM(1)).setScin(param_bank->getScintillator(0));
-    (param_bank->getPM(2)).setScin(param_bank->getScintillator(1));
-    (param_bank->getPM(3)).setScin(param_bank->getScintillator(1));
+    (param_bank->getPM(pmid1)).setScin(param_bank->getScintillator(scinid1));
+    (param_bank->getPM(pmid2)).setScin(param_bank->getScintillator(scinid1));
+    (param_bank->getPM(pmid3)).setScin(param_bank->getScintillator(scinid2));
+    (param_bank->getPM(pmid4)).setScin(param_bank->getScintillator(scinid2));
 
-    (param_bank->getPM(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
-    (param_bank->getPM(1)).setBarrelSlot(param_bank->getBarrelSlot(0));
-    (param_bank->getPM(2)).setBarrelSlot(param_bank->getBarrelSlot(1));
-    (param_bank->getPM(3)).setBarrelSlot(param_bank->getBarrelSlot(1));
+    (param_bank->getPM(pmid1)).setBarrelSlot(param_bank->getBarrelSlot(bslotid1));
+    (param_bank->getPM(pmid2)).setBarrelSlot(param_bank->getBarrelSlot(bslotid1));
+    (param_bank->getPM(pmid3)).setBarrelSlot(param_bank->getBarrelSlot(bslotid2));
+    (param_bank->getPM(pmid4)).setBarrelSlot(param_bank->getBarrelSlot(bslotid2));
 
-    (param_bank->getScintillator(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
-    (param_bank->getScintillator(1)).setBarrelSlot(param_bank->getBarrelSlot(1));
+    (param_bank->getScintillator(scinid1)).setBarrelSlot(param_bank->getBarrelSlot(bslotid1));
+    (param_bank->getScintillator(scinid2)).setBarrelSlot(param_bank->getBarrelSlot(bslotid2));
 
     return *param_bank;
 }
@@ -225,14 +225,20 @@ void JPetScopeReader::createInputObjects(const char*) {
 	  (*current_config).pParamBank    = &param_bank;
 
 	  // Add PMs
-	  (*current_config).pPM1          = &(param_bank.getPM(0));
-	  (*current_config).pPM2          = &(param_bank.getPM(1));
-	  (*current_config).pPM3          = &(param_bank.getPM(2));
-	  (*current_config).pPM4          = &(param_bank.getPM(3));
+			auto PMiter = param_bank.getPMs().begin();
+	  (*current_config).pPM1 = (*PMiter).second;
+			PMiter++;
+	  (*current_config).pPM2 = (*PMiter).second;
+			PMiter++;
+	  (*current_config).pPM3 = (*PMiter).second;
+			PMiter++;
+	  (*current_config).pPM4 = (*PMiter).second;
 
 	  // Add Scintillators
-	  (*current_config).pScin1        = &(param_bank.getScintillator(0));
-	  (*current_config).pScin2        = &(param_bank.getScintillator(1));
+			auto scinIter = param_bank.getScintillators().begin();
+	  (*current_config).pScin1 = (*scinIter).second;
+			scinIter++;
+	  (*current_config).pScin2 = (*scinIter).second;
 
 	  // Add filename prefixes
 	  (*current_config).pPrefix1      = conf_data.get<string>("pm1.prefix");

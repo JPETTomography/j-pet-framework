@@ -2,10 +2,12 @@
 #define BOOST_TEST_MODULE JPetParamManagerTest
 #include <cstddef>
 #include <boost/test/unit_test.hpp>
-#include "../DBHandler/HeaderFiles/DBHandler.h"
+#include <boost/filesystem.hpp>
 #include "../JPetParamManager/JPetParamManager.h"
+#include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 
-const std::string gDefaultConfigFile = "../DBConfig/configDB.cfg";
+const std::string dataDir = "unitTestData/JPetParamManagerTest/";
+const std::string dataFileName = dataDir+"data.json";
 
 BOOST_AUTO_TEST_SUITE(JPetParamManagerTestSuite)
 
@@ -20,18 +22,10 @@ void checkContainersSize(const JPetParamBank &bank)
   BOOST_REQUIRE_EQUAL(bank.getTOMBChannelsSize(), 4);
 }
 
-BOOST_AUTO_TEST_CASE(default_constructor)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	JPetParamManager paramMgr;
-}  
-
 BOOST_AUTO_TEST_CASE(generateParamBankTest)
 {
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetParamManager l_paramManagerInstance;
-  l_paramManagerInstance.getParametersFromDatabase(1);
+  JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
+  l_paramManagerInstance.fillParameterBank(1);
   
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().isDummy(), false);
   
@@ -56,25 +50,23 @@ BOOST_AUTO_TEST_CASE(generateParamBankTest)
 
 BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
 {
-  const char* testDatafile = "testDataFile.txt";
-  DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
+	std::string testDatafile = dataDir+"testDataFile.txt";
+  JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
   
-  JPetParamManager l_paramManagerInstance;
-  
-  l_paramManagerInstance.getParametersFromDatabase(1);
+  l_paramManagerInstance.fillParameterBank(1);
   
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().isDummy(), false);
   
   BOOST_CHECK(l_paramManagerInstance.saveParametersToFile(testDatafile) == true);
+  
+		boost::filesystem::remove(testDatafile);
 }
 
 BOOST_AUTO_TEST_CASE(some_Test_that_had_no_name)
 {
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetParamManager l_paramManagerInstance;
+  JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
   
-  l_paramManagerInstance.getParametersFromDatabase(1);
+  l_paramManagerInstance.fillParameterBank(1);
   
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().isDummy(),false);
   
@@ -93,11 +85,9 @@ BOOST_AUTO_TEST_CASE(some_Test_that_had_no_name)
 
 BOOST_AUTO_TEST_CASE(getParamBankTest)
 {
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetParamManager l_paramManagerInstance;
+  JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
   
-  l_paramManagerInstance.getParametersFromDatabase(1);
+  l_paramManagerInstance.fillParameterBank(1);
   
   const JPetParamBank &bank = l_paramManagerInstance.getParamBank();
   
