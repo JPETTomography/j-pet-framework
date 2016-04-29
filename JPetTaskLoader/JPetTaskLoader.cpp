@@ -41,8 +41,6 @@ void JPetTaskLoader::init(const JPetOptions::Options& opts)
   auto outFile = inFile;
   inFile = generateProperNameFile(inFile, fInFileType);
 
-  std::cout<<"My INFILE is: "<<inFile<<std::endl;
-
   outFile = generateProperNameFile(outFile, fOutFileType);
   newOpts.at("inputFile") = inFile;
   newOpts.at("inputFileType") = fInFileType;
