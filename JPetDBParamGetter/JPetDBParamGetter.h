@@ -27,10 +27,9 @@ class pqxx::result::const_iterator;
 
 class JPetParamManager;
 
-class JPetDBParamGetter
+class JPetDBParamGetter : public JPetParamGetter
 {
 public:
-  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, SIZE};
   JPetDBParamGetter();
   JPetParamBank* generateParamBank(const int p_run_id);
   ~JPetDBParamGetter();
@@ -71,10 +70,6 @@ private:
   void fillLayerTRefs(const int p_run_id, JPetParamBank& paramBank);
   void fillScinTRef(const int p_run_id, JPetParamBank& paramBank);
   void fillAllTRefs(const int p_run_id, JPetParamBank& paramBank);
-
-  int getTOMBChannelFromDescription(std::string p_desc) const;
-  
-  friend class JPetParamManager;
 
   static std::map<int, JPetParamBank*> fParamCache;
 };

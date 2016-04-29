@@ -14,6 +14,8 @@
  */
 
 #include "./JPetParamBank.h"
+#include <boost/lexical_cast.hpp>
+#include <boost/regex.hpp>
 
 ClassImp (JPetParamBank);
 
@@ -21,15 +23,15 @@ JPetParamBank::JPetParamBank():fDummy(false){}
 JPetParamBank::JPetParamBank(const bool d):fDummy(d){}
 const bool JPetParamBank::isDummy()const{return fDummy;}
 JPetParamBank::JPetParamBank(const JPetParamBank& paramBank):fDummy(false){
-  initVectorWith(fScintillators, paramBank.fScintillators);
-  initVectorWith(fPMs, paramBank.fPMs);
-  initVectorWith(fPMCalibs, paramBank.fPMCalibs);
-  initVectorWith(fFEBs, paramBank.fFEBs);
-  initVectorWith(fTRBs, paramBank.fTRBs);
-  initVectorWith(fBarrelSlots, paramBank.fBarrelSlots);
-  initVectorWith(fLayers, paramBank.fLayers);
-  initVectorWith(fFrames, paramBank.fFrames);
-  initVectorWith(fTOMBChannels, paramBank.fTOMBChannels);
+  copyMapValues(fScintillators, paramBank.fScintillators);
+  copyMapValues(fPMs, paramBank.fPMs);
+  copyMapValues(fPMCalibs, paramBank.fPMCalibs);
+  copyMapValues(fFEBs, paramBank.fFEBs);
+  copyMapValues(fTRBs, paramBank.fTRBs);
+  copyMapValues(fBarrelSlots, paramBank.fBarrelSlots);
+  copyMapValues(fLayers, paramBank.fLayers);
+  copyMapValues(fFrames, paramBank.fFrames);
+  copyMapValues(fTOMBChannels, paramBank.fTOMBChannels);
 }
 
 JPetParamBank::~JPetParamBank()
@@ -50,7 +52,7 @@ void JPetParamBank::clear()
 }
 
 
-int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const 
+int JPetParamBank::getSize(ParamObjectType type) const
 {
   int size =-1;
   switch (type) {
@@ -86,4 +88,25 @@ int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const
       break;
   }
   return size; 
+}
+
+int JPetParamBank::getTOMBChannelFromDescription(std::string p_desc)
+{
+  // parsing the string description of a TOMB channel to extract the channel number
+  // convention: tast 4 characters of the description represent the number
+  const char * l_pattern = ".*\\s(\\d{1,4}).*";
+  boost::regex l_regex(l_pattern);
+  boost::smatch l_matches;
+
+  int l_TOMB_no = -1;
+
+  if (boost::regex_match(p_desc, l_matches, l_regex))
+  {
+    l_TOMB_no = boost::lexical_cast<int>( l_matches[1] );
+  } else
+  {
+    // @todo: handle parsing error somehow
+    ERROR( "Unable to parse TOMBInput description to get channel number." );
+  }
+  return l_TOMB_no;
 }

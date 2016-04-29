@@ -18,6 +18,8 @@
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetScopeReader/JPetScopeReader.h"
 #include "../JPetTaskLoader/JPetTaskLoader.h"
+#include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
+#include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
 
 
 JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
@@ -25,10 +27,15 @@ JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int p
   ftaskGeneratorChain(taskGeneratorChain),
   fOptions(opt)
 {
+		if (fOptions.isLocalDB()) {
+				fParamManager = new JPetParamManager(new JPetParamGetterAscii(fOptions.getLocalDB()));
+		} else {
+				fParamManager = new JPetParamManager();
+		}
   if (taskGeneratorChain) {
     for (auto taskGenerator : *ftaskGeneratorChain) {
       auto task = taskGenerator();
-      task->setParamManager(&fParamManager); // maybe that should not be here
+      task->setParamManager(fParamManager); // maybe that should not be here
       fTasks.push_back(task);
     }
   } else {
@@ -72,7 +79,11 @@ void JPetTaskExecutor::processFromCmdLineArgs(int)
 {
   auto runNum = fOptions.getRunNumber();
   if (runNum >= 0) {
-    fParamManager.getParametersFromDatabase(runNum); /// @todo some error handling
+    fParamManager->fillParameterBank(runNum); /// @todo some error handling
+				if (fOptions.isLocalDBCreate()) {
+						JPetParamSaverAscii saver;
+						saver.saveParamBank(fParamManager->getParamBank(), runNum, fOptions.getLocalDBCreate());
+				}
   }
   auto inputFileType = fOptions.getInputFileType();
   auto inputFile = fOptions.getInputFile();

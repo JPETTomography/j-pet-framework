@@ -20,29 +20,25 @@
 
 using namespace std;
 
-
-JPetParamManager::JPetParamManager():
-  fBank(0)
-{
-  /* */
-}
-JPetParamManager::JPetParamManager(const JPetParamManager&){}
-
 JPetParamManager::~JPetParamManager()
 {
   if (fBank) {
     delete fBank;
     fBank = 0;
   }
+		if (fParamGetter) {
+				delete fParamGetter;
+				fParamGetter = 0;
+		}
 }
 
-void JPetParamManager::getParametersFromDatabase(const int run)
+void JPetParamManager::fillParameterBank(const int run)
 {
   if (fBank) {
     delete fBank;
     fBank = 0;
   }
-  fBank = fDBParamGetter.generateParamBank(run);
+  fBank = fParamGetter->generateParamBank(run);
 }
 
 bool JPetParamManager::readParametersFromFile(JPetReader * reader)
@@ -67,9 +63,9 @@ bool JPetParamManager::saveParametersToFile(JPetWriter * writer)
   return true;
 }
 
-bool JPetParamManager::readParametersFromFile(const char* filename)
+bool JPetParamManager::readParametersFromFile(std::string filename)
 {
-  TFile file(filename, "READ");
+  TFile file(filename.c_str(), "READ");
   if (!file.IsOpen()) {
     ERROR("Could not read from file.");
     return false;
@@ -86,10 +82,9 @@ const JPetParamBank& JPetParamManager::getParamBank() const{
 	else return DummyResult;
 }
 
-
-bool JPetParamManager::saveParametersToFile(const char* filename)
+bool JPetParamManager::saveParametersToFile(std::string filename)
 {
-  TFile file(filename, "UPDATE");
+  TFile file(filename.c_str(), "UPDATE");
   if (!file.IsOpen()) {
     ERROR("Could not write to file.");
     return false;
@@ -139,7 +134,7 @@ void JPetParamManager::createXMLFile(const std::string &channelDataFileName, int
 
 void JPetParamManager::getTOMBDataAndCreateXMLFile(const int p_run_id)
 {
-  fDBParamGetter.fillTOMBChannels(p_run_id, *fBank);//private (add friend)
+  fillParameterBank(p_run_id);
   int TOMBChannelsSize = fBank->getTOMBChannelsSize();
   int channelOffset = 0;
   int numberOfChannels = 0;
@@ -150,8 +145,8 @@ void JPetParamManager::getTOMBDataAndCreateXMLFile(const int p_run_id)
     {
       if(i==0)
       {
-	std::string description = fBank->getTOMBChannel(i).getDescription();
-	channelOffset = fDBParamGetter.getTOMBChannelFromDescription(description);//private (add friend)
+        std::string description = fBank->getTOMBChannel(i).getDescription();
+        channelOffset = JPetParamBank::getTOMBChannelFromDescription(description);
       }
       ++numberOfChannels;
     }

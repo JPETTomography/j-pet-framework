@@ -12,6 +12,7 @@
 *.kate-swp
 *.kdev*
 *.exe
+.*.swp
 
 # CMake specific files
 CMakeFiles

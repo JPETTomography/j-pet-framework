@@ -76,6 +76,20 @@ public:
     return (bool)variablesMap.count("progressBar");
   }
 
+  static inline bool isLocalDBSet(const po::variables_map& variablesMap) {
+    return variablesMap.count("localDB") > 0;
+  }
+  static inline std::string getLocalDBName(const po::variables_map& variablesMap) {
+    return variablesMap["localDB"].as<std::string>();
+  }
+
+  static inline bool isLocalDBCreateSet(const po::variables_map& variablesMap) {
+    return variablesMap.count("localDBCreate") > 0;
+  }
+  static inline std::string getLocalDBCreateName(const po::variables_map& variablesMap) {
+    return variablesMap["localDBCreate"].as<std::string>();
+  }
+
 protected:
   po::options_description fOptionsDescriptions;
 

@@ -43,7 +43,7 @@ private:
   void unpackFile();
 
   int fProcessedFile;
-  JPetParamManager fParamManager;
+  JPetParamManager* fParamManager;
   JPetUnpacker fUnpacker;
   std::list<JPetTaskInterface*> fTasks;
   TaskGeneratorChain* ftaskGeneratorChain;
