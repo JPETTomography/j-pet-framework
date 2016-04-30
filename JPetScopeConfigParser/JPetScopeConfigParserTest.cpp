@@ -17,35 +17,106 @@
 #define BOOST_TEST_MODULE JPetScopeConfigParser
 #include <boost/test/unit_test.hpp>
 #include "JPetScopeConfigParser.h"
+#include <algorithm>
 
+std::string gInputConfigJsonFilenameTest = "../../unitTestData/JPetScopeConfigParser/example.json";
 
 BOOST_AUTO_TEST_SUITE(JPetScopeConfigParserTestSuite)
 
-///po stworzeniu obiektu, bez wczytania pliku 
-//przetestowac co zwracaja wtedy wszystkie publiczne funkcje
-
-BOOST_AUTO_TEST_CASE(readDataTest)
+BOOST_AUTO_TEST_CASE(defaultConstructor)
 {
-  std::string inputConfigJsonFileNameTest = "unitTestData/JPetScopeConfigParser/example.json";
-  std::string outputFileNameTest = "config1";
-  unsigned int scopeReaderConfigParserPositionsSize = 5;
-  
-  JPetScopeConfigParser scopeReaderConfigParser;
-  scopeReaderConfigParser.readData(inputConfigJsonFileNameTest);
-  
-  BOOST_REQUIRE_EQUAL(scopeReaderConfigParser.getFileName(), outputFileNameTest);
-  BOOST_REQUIRE(scopeReaderConfigParser.getPositions().size() == scopeReaderConfigParserPositionsSize);
+  JPetScopeConfigParser parser;
+  BOOST_REQUIRE(parser.getLoadedConfigData().empty());
 }
+
+BOOST_AUTO_TEST_CASE(transformToNumbers)
+{
+  using VecOfStrings = std::vector<std::string>;
+  using VecOfNums = std::vector<int>;
+  JPetScopeConfigParser parser;
+  BOOST_REQUIRE(parser.transformToNumbers(VecOfStrings {""}).empty());
+  BOOST_REQUIRE(parser.transformToNumbers(VecOfStrings {"1"}) == (VecOfNums {1}));
+  BOOST_REQUIRE(parser.transformToNumbers(VecOfStrings {"1", "2"}) == (VecOfNums {1, 2}));
+  BOOST_REQUIRE(parser.transformToNumbers(VecOfStrings {"1", "2", "10"}) == (VecOfNums {1, 2, 10}));
+  BOOST_REQUIRE(parser.transformToNumbers(VecOfStrings {"a"}).empty());
+  BOOST_REQUIRE(parser.transformToNumbers(VecOfStrings {"1", "a", "10"}) == (VecOfNums {1, 10}));
+  BOOST_REQUIRE(parser.transformToNumbers(VecOfStrings {"a", "2", "5"}) == (VecOfNums {2, 5}));
+}
+
+BOOST_AUTO_TEST_CASE(generateFileNames)
+{
+  using VecOfNums = std::vector<int>;
+  using VecOfStrings = std::vector<std::string>;
+  JPetScopeConfigParser parser;
+  BOOST_REQUIRE(parser.generateFileNames("", "", (VecOfNums {})).empty());
+  BOOST_REQUIRE(parser.generateFileNames("example", "config1", (VecOfNums {1})) == (VecOfStrings {"example_config1_1"}));
+  BOOST_REQUIRE(parser.generateFileNames("example", "config2", (VecOfNums {1, 3})) == (VecOfStrings {"example_config2_1", "example_config2_3"}));
+}
+
+BOOST_AUTO_TEST_CASE(getJsonContent)
+{
+  JPetScopeConfigParser parser;
+  BOOST_REQUIRE(parser.getLoadedConfigData().empty());
+  BOOST_REQUIRE(parser.getJsonContent("").empty());
+
+  BOOST_REQUIRE(parser.getJsonContent("blabla.iki").empty());
+  BOOST_REQUIRE(parser.getLoadedConfigData().empty());
+
+  BOOST_REQUIRE(parser.getJsonContent("nonexistent.json").empty());
+  BOOST_REQUIRE(parser.getLoadedConfigData().empty());
+
+  BOOST_REQUIRE(!parser.getJsonContent(gInputConfigJsonFilenameTest).empty());
+  BOOST_REQUIRE(parser.getLoadedConfigData().empty());
+}
+
+BOOST_AUTO_TEST_CASE(loadConfigFile)
+{
+  JPetScopeConfigParser parser;
+  BOOST_REQUIRE(!parser.loadConfigFile(""));
+  BOOST_REQUIRE(parser.getLoadedConfigData().empty());
+  BOOST_REQUIRE(parser.loadConfigFile(gInputConfigJsonFilenameTest));
+  BOOST_REQUIRE(!parser.getLoadedConfigData().empty());
+}
+
+BOOST_AUTO_TEST_CASE(getInputFileNames)
+{
+  using VecOfStrings = std::vector<std::string>;
+  JPetScopeConfigParser parser;
+  BOOST_REQUIRE(parser.getInputFileNames("").empty());
+  VecOfStrings expectedRes {"config1_1", "config1_5",
+                            "config1_2", "config1_12",
+                            "config1_6"};
+  std::transform(expectedRes.begin(), expectedRes.end(),expectedRes.begin(), 
+                [&](std::string name) {
+                  return gInputConfigJsonFilenameTest+"_"+name;
+                }); 
+  BOOST_REQUIRE(parser.getInputFileNames(gInputConfigJsonFilenameTest) == expectedRes);
+}
+
+
+//
+//BOOST_AUTO_TEST_CASE(readDataTest)
+//{
+//std::string inputconfigjsonfilenametest = "unittestdata/jpetscopeconfigparser/example.json";
+//std::string outputFileNameTest = "config1";
+//unsigned int scopeReaderConfigParserPositionsSize = 5;
+
+//JPetScopeConfigParser scopeReaderConfigParser;
+//scopeReaderConfigParser.readData(inputConfigJsonFileNameTest);
+
+//BOOST_REQUIRE_EQUAL(scopeReaderConfigParser.getFileName(), outputFileNameTest);
+//BOOST_REQUIRE(scopeReaderConfigParser.getPositions().size() == scopeReaderConfigParserPositionsSize);
+//}
 
 BOOST_AUTO_TEST_CASE(noExistingTest)
 {
   /*std::string inputConfigJsonFileNameTest = "unitTestData/JPetScopeConfigParser/notExistingFile.json";
   std::string outputFileNameTest = "config1";
   unsigned int scopeReaderConfigParserPositionsSize = 5;
-  
+
   JPetScopeConfigParser scopeReaderConfigParser;
   scopeReaderConfigParser.readData(inputConfigJsonFileNameTest);*/
-  
+
   //BOOST_REQUIRE_EQUAL(scopeReaderConfigParser.getFileName(), outputFileNameTest);
   //BOOST_REQUIRE(scopeReaderConfigParser.getPositions().size() == scopeReaderConfigParserPositionsSize);
 }
