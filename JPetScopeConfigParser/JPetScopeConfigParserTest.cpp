@@ -17,6 +17,7 @@
 #define BOOST_TEST_MODULE JPetScopeConfigParser
 #include <boost/test/unit_test.hpp>
 #include "JPetScopeConfigParser.h"
+#include "JPetScopeConfigPOD.h"
 #include <algorithm>
 
 std::string gInputConfigJsonFilenameTest = "../../unitTestData/JPetScopeConfigParser/example.json";
@@ -26,7 +27,6 @@ BOOST_AUTO_TEST_SUITE(JPetScopeConfigParserTestSuite)
 BOOST_AUTO_TEST_CASE(defaultConstructor)
 {
   JPetScopeConfigParser parser;
-  BOOST_REQUIRE(parser.getLoadedConfigData().empty());
 }
 
 BOOST_AUTO_TEST_CASE(transformToNumbers)
@@ -63,14 +63,6 @@ BOOST_AUTO_TEST_CASE(getJsonContent)
   BOOST_REQUIRE(!parser.getJsonContent(gInputConfigJsonFilenameTest).empty());
 }
 
-BOOST_AUTO_TEST_CASE(loadConfigFile)
-{
-  JPetScopeConfigParser parser;
-  BOOST_REQUIRE(!parser.loadConfigFile(""));
-  BOOST_REQUIRE(parser.getLoadedConfigData().empty());
-  BOOST_REQUIRE(parser.loadConfigFile(gInputConfigJsonFilenameTest));
-  BOOST_REQUIRE(!parser.getLoadedConfigData().empty());
-}
 
 BOOST_AUTO_TEST_CASE(getInputFileNames)
 {
@@ -90,16 +82,17 @@ BOOST_AUTO_TEST_CASE(getInputFileNames)
 
 BOOST_AUTO_TEST_CASE(getConfigs)
 {
+  using namespace scope_config;
   using VecOfStrings = std::vector<std::string>;
   JPetScopeConfigParser parser;
   BOOST_REQUIRE(parser.getConfigs("").empty());
 
-  JPetScopeConfigParser::Config config;
+  Config config;
   config.fLocation="data";
   config.fCollimatorPositions = VecOfStrings { "1 5 2", "12", "6"};
-  config.fBSlots= std::vector<JPetScopeConfigParser::BSlot>{ JPetScopeConfigParser::BSlot(-1,false,"",-1., -1), JPetScopeConfigParser::BSlot(-1,false,"",-1., -1)};
-  config.fPMs = std::vector<JPetScopeConfigParser::PM>{JPetScopeConfigParser::PM(3,"C2"), JPetScopeConfigParser::PM(98, "C4"), JPetScopeConfigParser::PM(32, "C1"), JPetScopeConfigParser::PM(42, "C3")}; 
-  config.fScins=std::vector<JPetScopeConfigParser::Scin>{JPetScopeConfigParser::Scin(32), JPetScopeConfigParser::Scin(12)};
+  config.fBSlots= std::vector<BSlot>{ BSlot(-1,false,"",-1., -1), BSlot(-1,false,"",-1., -1)};
+  config.fPMs = std::vector<PM>{PM(3,"C2"), PM(98, "C4"), PM(32, "C1"), PM(42, "C3")}; 
+  config.fScins=std::vector<Scin>{Scin(32), Scin(12)};
   config.fName="config1";
   
   BOOST_REQUIRE(!parser.getConfigs(gInputConfigJsonFilenameTest).empty());
