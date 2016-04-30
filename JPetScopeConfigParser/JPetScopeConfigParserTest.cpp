@@ -88,7 +88,6 @@ BOOST_AUTO_TEST_CASE(getInputFileNames)
 }
 
 
-
 BOOST_AUTO_TEST_CASE(getConfigs)
 {
   using VecOfStrings = std::vector<std::string>;
