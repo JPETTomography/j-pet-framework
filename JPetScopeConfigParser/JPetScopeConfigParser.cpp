@@ -27,6 +27,7 @@
 #include <cstdio>
 
 #include <iostream>
+
 bool JPetScopeConfigParser::loadConfigFile(std::string configFileName)
 {
   fLoadedConfigData = getJsonContent(configFileName);
@@ -36,6 +37,30 @@ bool JPetScopeConfigParser::loadConfigFile(std::string configFileName)
   return true;
 }
 
+std::vector<JPetScopeConfigParser::Config> JPetScopeConfigParser::getConfigs(const std::string& configFileName) const
+{
+  std::vector<Config> configs;
+  using boost::property_tree::ptree;
+  auto prop_tree = getJsonContent(configFileName);
+  for (ptree::const_iterator it = prop_tree.begin(); it != prop_tree.end(); ++it) {
+    auto currConfigName = it->first;
+    auto currConfigContent = it->second;
+    configs.push_back(getConfig(currConfigName, currConfigContent));
+  }
+  return configs;
+}
+
+JPetScopeConfigParser::Config JPetScopeConfigParser::getConfig(std::string configName, boost::property_tree::ptree const& configContent) const
+{
+  Config config;
+  config.fName = configName;
+  config.fLocation = getLocation(configContent);
+  config.fCollimatorPositions = getPositions(configContent);
+  config.fBSlots = getBSlots(configContent);
+  config.fPMs = getPMs(configContent);
+  config.fScins = getScins(configContent);
+  return config; 
+}
 
 std::vector<std::string> JPetScopeConfigParser::getInputFileNames(std::string configFileName) const
 {
@@ -44,19 +69,24 @@ std::vector<std::string> JPetScopeConfigParser::getInputFileNames(std::string co
   auto prop_tree = getJsonContent(configFileName);
   ///loop over all config sets.
   for (ptree::const_iterator it = prop_tree.begin(); it != prop_tree.end(); ++it) {
-    auto currentConfigName = it->first; 
+    auto currentConfigName = it->first;
     auto currentConfigContent = it->second;
     std::vector<std::string> positionsContainer;
     BOOST_FOREACH(const ptree::value_type & v, currentConfigContent.get_child("collimator")) {
       //! one element positions can contain a string of several numbers e.g. "2 3 10"
       positionsContainer.push_back(v.second.get<std::string>("positions"));
     }
-    auto currFileNames =generateFileNames(configFileName, currentConfigName, transformToNumbers(positionsContainer));
+    auto currFileNames = generateFileNames(configFileName, currentConfigName, transformToNumbers(positionsContainer));
     inputFileNames.insert(inputFileNames.end(), currFileNames.begin(), currFileNames.end());
   }
   return inputFileNames;
 }
 
+// The function takes a vector of string, each string can contain one or more integers separated by
+// space and it will transform it to vector of integers.
+// If some elements are non-numbers the rest of the string is ignored.
+// If floats or doubles are present in the string, the will be cast to int.
+// e.g. ["1 2", "3", "7 a 5", "1.2"] -> [1, 2, 3, 7, 1]
 std::vector<int> JPetScopeConfigParser::transformToNumbers(const std::vector<std::string>& positions) const
 {
   std::vector<int> numbers;
@@ -70,6 +100,9 @@ std::vector<int> JPetScopeConfigParser::transformToNumbers(const std::vector<std
   return numbers;
 }
 
+/// The filename is generated according to the following pattern:
+/// configFileName_configName_positions
+/// e.g. "example_config1_5"
 std::vector<std::string>  JPetScopeConfigParser::generateFileNames(
   const std::string& configFileName,
   const std::string& configName,
@@ -77,151 +110,110 @@ std::vector<std::string>  JPetScopeConfigParser::generateFileNames(
 {
   std::vector<std::string> fileNames(positions.size());
   std::transform(positions.begin(), positions.end(), fileNames.begin(),
-    [&configFileName, &configName](int number) {
-      return configFileName + "_" + configName + "_" + std::to_string(number);
-    }
-  );
+  [&configFileName, &configName](int number) {
+    return configFileName + "_" + configName + "_" + std::to_string(number);
+  }
+                );
   return fileNames;
 }
 
-//JPetScopeConfigParser::JPetScopeConfigParser() : configName(""), location("")
-//{}
 
+std::string JPetScopeConfigParser::getLocation(boost::property_tree::ptree const& content) const
+{
+  std::string location;
+  try {
+    location = content.get<std::string>("location");
+  } catch (const std::runtime_error& error) {
+    std::string message = "No location found in config file. Error = " + std::string(error.what());
+    ERROR(message);
+  }
+  return location;
+}
 
-//bool JPetScopeConfigParser::createFilesLocation(boost::property_tree::ptree const& conf_data, std::vector<JPetConfigData>::iterator configDataElement)
-//{
-//try
-//{
-//location = conf_data.get<std::string>("location");//TODO do usuniecia ale pod koniec jak wektor bedzie caly wypelniony
-//(*configDataElement).location = location;
-//}
-//catch(const std::runtime_error &error)
-//{
-//std::string message = "No location. Error = " + std::string(error.what());
-//ERROR(message);
-//return false;
-//}
-//return true;
-//}
+std::vector<std::string> JPetScopeConfigParser::getPositions(boost::property_tree::ptree const& configContent) const
+{
+  using boost::property_tree::ptree;
+  std::vector<std::string> positions;
+  try {
+    BOOST_FOREACH(const ptree::value_type & v, configContent.get_child("collimator")) {
+      //! one element positions can contain a string of several numbers e.g. "2 3 10"
+      positions.push_back(v.second.get<std::string>("positions"));
+    }
+  } catch (const std::runtime_error& error) {
+    std::string message = "Error parsing collimator positions. Error = " + std::string(error.what());
+    ERROR(message);
+  }
+  return positions;
+}
 
-//bool JPetScopeConfigParser::createBSlotData(boost::property_tree::ptree const& conf_data, std::vector<JPetConfigData>::iterator configDataElement)
-//{
-//try
-//{
-//int bslotid1 = conf_data.get("bslot1.id", -1);
-//int bslotid2 = conf_data.get("bslot2.id", -1);
+std::vector<JPetScopeConfigParser::BSlot> JPetScopeConfigParser::getBSlots(boost::property_tree::ptree const& content) const
+{
+  std::vector<BSlot> bslots;
+  try {
+    int bslotid1 = content.get("bslot1.id", -1);
+    int bslotid2 = content.get("bslot2.id", -1);
 
-//bool bslotactive1 = conf_data.get("bslot1.active", false);
-//bool bslotactive2 = conf_data.get("bslot2.active", false);
+    bool bslotactive1 = content.get("bslot1.active", false);
+    bool bslotactive2 = content.get("bslot2.active", false);
 
-//std::string bslotname1 = conf_data.get("bslot1.name", std::string(""));
-//std::string bslotname2 = conf_data.get("bslot2.name", std::string(""));
+    std::string bslotname1 = content.get("bslot1.name", std::string(""));
+    std::string bslotname2 = content.get("bslot2.name", std::string(""));
 
-//float bslottheta1 = conf_data.get("bslot1.theta", -1.f);
-//float bslottheta2 = conf_data.get("bslot2.theta", -1.f);
+    float bslottheta1 = content.get("bslot1.theta", -1.f);
+    float bslottheta2 = content.get("bslot2.theta", -1.f);
 
-//int bslotframe1 = conf_data.get("bslot1.frame", -1);
-//int bslotframe2 = conf_data.get("bslot2.frame", -1);
+    int bslotframe1 = content.get("bslot1.frame", -1);
+    int bslotframe2 = content.get("bslot2.frame", -1);
 
-//JPetBSlotData bSlotData1(bslotid1, bslotactive1, bslotname1, bslottheta1, bslotframe1);
-//JPetBSlotData bSlotData2(bslotid2, bslotactive2, bslotname2, bslottheta2, bslotframe2);
-//bSlotData.push_back(bSlotData1);
-//bSlotData.push_back(bSlotData2);
+    bslots.push_back(BSlot(bslotid1, bslotactive1, bslotname1, bslottheta1, bslotframe1));
+    bslots.push_back(BSlot(bslotid2, bslotactive2, bslotname2, bslottheta2, bslotframe2));
+  } catch (const std::runtime_error& error) {
+    std::string message = "BSlot data error parsing. Error = " + std::string(error.what());
+    ERROR(message);
+  }
+  return bslots;
+}
 
-//(*configDataElement).bSlotData.emplace_back(bSlotData1);
-//(*configDataElement).bSlotData.emplace_back(bSlotData2);
+std::vector<JPetScopeConfigParser::PM> JPetScopeConfigParser::getPMs(boost::property_tree::ptree const& content) const
+{
+  std::vector<PM> pms;
+  try {
+    int pmid1 = content.get("pm1.id", -1);
+    int pmid2 = content.get("pm2.id", -1);
+    int pmid3 = content.get("pm3.id", -1);
+    int pmid4 = content.get("pm4.id", -1);
 
-//std::cout << bslotid1 << " " << bslotid1 << std::endl;
-//std::cout << bslotactive1 << " " << bslotactive2 << std::endl;
-//std::cout << bslotname1 << " " << bslotname2 << std::endl;
-//std::cout << bslottheta1 << " " << bslottheta1 << std::endl;
-//std::cout << bslotframe1 << " " << bslotframe2 << std::endl;
-//}
-//catch(const std::runtime_error &error)
-//{
-//std::string message = "BSlot data error parsing. Error = " + std::string(error.what());
-//ERROR(message);
-//return false;
-//}
-//return true;
-//}
+    std::string pmPrefix1 = content.get<std::string>("pm1.prefix");
+    std::string pmPrefix2 = content.get<std::string>("pm2.prefix");
+    std::string pmPrefix3 = content.get<std::string>("pm3.prefix");
+    std::string pmPrefix4 = content.get<std::string>("pm4.prefix");
 
-//bool JPetScopeConfigParser::createPMData(boost::property_tree::ptree const& conf_data, std::vector<JPetConfigData>::iterator configDataElement)
-//{
-//try
-//{
-//int pmid1 = conf_data.get("pm1.id", 0);
-//int pmid2 = conf_data.get("pm2.id", 0);
-//int pmid3 = conf_data.get("pm3.id", 0);
-//int pmid4 = conf_data.get("pm4.id", 0);
+    pms.push_back(PM(pmid1, pmPrefix1));
+    pms.push_back(PM(pmid2, pmPrefix2));
+    pms.push_back(PM(pmid3, pmPrefix3));
+    pms.push_back(PM(pmid4, pmPrefix4));
 
-//std::string pmPrefix1 = conf_data.get<std::string>("pm1.prefix");
-//std::string pmPrefix2 = conf_data.get<std::string>("pm2.prefix");
-//std::string pmPrefix3 = conf_data.get<std::string>("pm3.prefix");
-//std::string pmPrefix4 = conf_data.get<std::string>("pm4.prefix");
+  } catch (const std::runtime_error& error) {
+    std::string message = "PM data error parsing. Error = " + std::string(error.what());
+    ERROR(message);
+  }
+  return pms;
+}
 
-//JPetPMData pmData1(pmid1, pmPrefix1);
-//JPetPMData pmData2(pmid2, pmPrefix2);
-//JPetPMData pmData3(pmid3, pmPrefix3);
-//JPetPMData pmData4(pmid4, pmPrefix4);
-
-//pmData.push_back(pmData1);
-//pmData.push_back(pmData2);
-//pmData.push_back(pmData3);
-//pmData.push_back(pmData4);
-
-//(*configDataElement).pmData.emplace_back(pmData1);
-//(*configDataElement).pmData.emplace_back(pmData2);
-//(*configDataElement).pmData.emplace_back(pmData3);
-//(*configDataElement).pmData.emplace_back(pmData4);
-
-//std::cout << pmid1 << " " << pmid2 << " " << pmid3 << " " << pmid4 << std::endl;
-//}
-//catch(const std::runtime_error &error)
-//{
-//std::string message = "PM data error parsing. Error = " + std::string(error.what());
-//ERROR(message);
-//return false;
-//}
-//return true;
-//}
-
-//bool JPetScopeConfigParser::createScinData(boost::property_tree::ptree const& conf_data, std::vector<JPetConfigData>::iterator configDataElement)
-//{
-//try
-//{
-//int scinid1 = conf_data.get("scin1.id", 0);
-//int scinid2 = conf_data.get("scin2.id", 0);
-
-//JPetScinData scinData1(scinid1);
-//JPetScinData scinData2(scinid2);
-
-//scinData.push_back(scinData1);
-//scinData.push_back(scinData2);
-
-//(*configDataElement).scinData.emplace_back(scinData1);
-//(*configDataElement).scinData.emplace_back(scinData2);
-
-//std::cout << scinid1 << " " << scinid2 << std::endl;
-//}
-//catch(const std::runtime_error &error)
-//{
-//std::string message = "Scin data error parsing. Error = " + std::string(error.what());
-//ERROR(message);
-//return false;
-//}
-//return true;
-//}
-
-//bool JPetScopeConfigParser::createParamObjects(boost::property_tree::ptree const& conf_data, std::vector<JPetConfigData>::iterator configDataElement)
-//{
-//bool createBSlotDataSuccessfully = createBSlotData(conf_data, configDataElement);
-//bool createPMDataSuccessfully = createPMData(conf_data, configDataElement);
-//bool createScinDataSuccessfully = createScinData(conf_data, configDataElement);
-//bool createParamObjectsSuccessfully = createBSlotDataSuccessfully && createPMDataSuccessfully && createScinDataSuccessfully;
-
-//return createParamObjectsSuccessfully;
-//}
+std::vector<JPetScopeConfigParser::Scin> JPetScopeConfigParser::getScins(boost::property_tree::ptree const& content) const
+{
+  std::vector<Scin> scins;
+  try {
+    int scinid1 = content.get("scin1.id", 0);
+    int scinid2 = content.get("scin2.id", 0);
+    scins.push_back(Scin(scinid1));
+    scins.push_back(Scin(scinid2));
+  } catch (const std::runtime_error& error) {
+    std::string message = "Scin data error parsing. Error = " + std::string(error.what());
+    ERROR(message);
+  }
+  return scins;
+}
 
 //std::string JPetScopeConfigParser::createPath(const std::string &configFileName, const int position)
 //{
@@ -286,74 +278,3 @@ boost::property_tree::ptree JPetScopeConfigParser::getJsonContent(const std::str
   }
   return propTree;
 }
-
-//bool JPetScopeConfigParser::readData(const std::string &configFileName)
-//{
-//boost::property_tree::ptree propTree;
-
-//const std::string configFileExtension = boost::filesystem::path(configFileName).extension().string();
-//const std::string requiredFileExtension = ".json";
-
-//if(getJsonContent(configFileExtension, requiredFileExtension, configFileName, propTree))
-//{
-//for(boost::property_tree::ptree::const_iterator it = propTree.begin(); it != propTree.end(); ++it)
-//{
-//const boost::property_tree::ptree& conf_data = it->second;
-
-////proof of concept
-//JPetConfigData configData;
-//configDataContainer.emplace_back(configData);
-//std::vector<JPetConfigData>::iterator lastElementFromConfigData = configDataContainer.end() - 1;
-
-//bool createFilesLocationSuccessfully = createFilesLocation(conf_data, lastElementFromConfigData);
-//bool createParamObjectsSuccessfully = createParamObjects(conf_data, lastElementFromConfigData);
-
-//std::cout << "configDataContainer.front().location = " << configDataContainer.front().location << std::endl;
-//for(unsigned i=0; i<configDataContainer.front().bSlotData.size(); ++i) std::cout << "A = " << configDataContainer.front().bSlotData[i] << std::endl;
-//for(unsigned i=0; i<configDataContainer.front().pmData.size(); ++i) std::cout << "B = " << configDataContainer.front().pmData[i] << std::endl;
-//for(unsigned i=0; i<configDataContainer.front().scinData.size(); ++i) std::cout << "C = " << configDataContainer.front().scinData[i] << std::endl;
-
-//if(createFilesLocationSuccessfully && createParamObjectsSuccessfully)
-//{
-////if(configName.empty())
-//{
-//configName = it->first;
-////std::cout << "configName= " << configName << std::endl;
-//(*lastElementFromConfigData).configName = configName;
-
-//std::cout << "configDataContainer.front().configName = " << configDataContainer.front().configName << std::endl;
-//}
-
-//std::string collimatorFunction = "";
-//int a = 0, b = 0, c = 0, n = 0;
-
-//BOOST_FOREACH(const boost::property_tree::ptree::value_type& v, conf_data.get_child("collimator"))
-//{
-//collimatorFunction = v.second.get<std::string>("positions");
-
-//n = sscanf(collimatorFunction.c_str(), "%d %d %d", &a, &b, &c);
-
-//if(n > 0)
-//{
-//if(n == 1) {b = a; c = 1;}
-//if(n == 2) {c = 1;}
-
-//for(int j = a; j <=b; j+= c)
-//{
-//positions.emplace_back(j);
-////j - pozycja z pliku json
-////std::cout << "pCollPosition= " << j << std::endl;
-//(*lastElementFromConfigData).positions.emplace_back(j);
-
-//std::cout << "configDataContainer.front().positions.size() = " << configDataContainer.front().positions.size() << std::endl;
-//for(unsigned i=0; i<configDataContainer.front().positions.size(); ++i) std::cout << "D = " << configDataContainer.front().positions[i] << std::endl;
-
-//createOutputFileNames(configFileName, j);
-//}
-//}
-//}
-//}
-//}
-//}
-//return true;
-//}
