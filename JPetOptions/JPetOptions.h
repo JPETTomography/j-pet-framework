@@ -38,6 +38,9 @@ public:
   const char* getInputFile() const {
     return fOptions.at("inputFile").c_str();
   }
+  const char* getScopeConfigFile() const {
+    return fOptions.at("scopeConfigFile").c_str();
+  }
   const char* getOutputFile() const {
     return fOptions.at("outputFile").c_str();
   }
