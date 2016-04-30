@@ -28,19 +28,12 @@
 
 #include <iostream>
 
-bool JPetScopeConfigParser::loadConfigFile(std::string configFileName)
-{
-  fLoadedConfigData = getJsonContent(configFileName);
-  if (fLoadedConfigData.empty()) {
-    return false;
-  }
-  return true;
-}
 
-std::vector<JPetScopeConfigParser::Config> JPetScopeConfigParser::getConfigs(const std::string& configFileName) const
+std::vector<scope_config::Config> JPetScopeConfigParser::getConfigs(const std::string& configFileName) const
 {
-  std::vector<Config> configs;
+  using namespace scope_config;
   using boost::property_tree::ptree;
+  std::vector<Config> configs;
   auto prop_tree = getJsonContent(configFileName);
   for (ptree::const_iterator it = prop_tree.begin(); it != prop_tree.end(); ++it) {
     auto currConfigName = it->first;
@@ -50,8 +43,9 @@ std::vector<JPetScopeConfigParser::Config> JPetScopeConfigParser::getConfigs(con
   return configs;
 }
 
-JPetScopeConfigParser::Config JPetScopeConfigParser::getConfig(std::string configName, boost::property_tree::ptree const& configContent) const
+scope_config::Config JPetScopeConfigParser::getConfig(std::string configName, boost::property_tree::ptree const& configContent) const
 {
+  using namespace scope_config;
   Config config;
   config.fName = configName;
   config.fLocation = getLocation(configContent);
@@ -146,8 +140,9 @@ std::vector<std::string> JPetScopeConfigParser::getPositions(boost::property_tre
   return positions;
 }
 
-std::vector<JPetScopeConfigParser::BSlot> JPetScopeConfigParser::getBSlots(boost::property_tree::ptree const& content) const
+std::vector<scope_config::BSlot> JPetScopeConfigParser::getBSlots(boost::property_tree::ptree const& content) const
 {
+  using namespace scope_config;
   std::vector<BSlot> bslots;
   try {
     int bslotid1 = content.get("bslot1.id", -1);
@@ -174,8 +169,9 @@ std::vector<JPetScopeConfigParser::BSlot> JPetScopeConfigParser::getBSlots(boost
   return bslots;
 }
 
-std::vector<JPetScopeConfigParser::PM> JPetScopeConfigParser::getPMs(boost::property_tree::ptree const& content) const
+std::vector<scope_config::PM> JPetScopeConfigParser::getPMs(boost::property_tree::ptree const& content) const
 {
+  using namespace scope_config;
   std::vector<PM> pms;
   try {
     int pmid1 = content.get("pm1.id", -1);
@@ -200,8 +196,9 @@ std::vector<JPetScopeConfigParser::PM> JPetScopeConfigParser::getPMs(boost::prop
   return pms;
 }
 
-std::vector<JPetScopeConfigParser::Scin> JPetScopeConfigParser::getScins(boost::property_tree::ptree const& content) const
+std::vector<scope_config::Scin> JPetScopeConfigParser::getScins(boost::property_tree::ptree const& content) const
 {
+  using namespace scope_config;
   std::vector<Scin> scins;
   try {
     int scinid1 = content.get("scin1.id", 0);
