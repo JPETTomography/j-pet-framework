@@ -19,87 +19,27 @@
 #include <string>
 #include <vector>
 #include <boost/property_tree/ptree.hpp>
-
+#include "JPetScopeConfigPOD.h"
 
 class JPetScopeConfigParser
 {
-public:
-  struct BSlot
-  {
-    BSlot(int id = -1, bool active = false, const std::string& name="", float theta=-1.0, int frame =-1):
-      fId(id),
-      fActive(active),
-      fName(name),
-      fTheta(theta),
-      fFrame(frame)
-    {/**/}
-    int fId;
-    bool fActive;
-    std::string fName;
-    float fTheta;
-    int fFrame;
-  };
-
-  struct PM 
-  {
-    PM(int id = -1, const std::string& prefix =""):
-      fId(id),
-      fPrefix(prefix)
-    {  }
-    int fId;
-    std::string fPrefix;
-  };
-  struct Scin
-  {
-    Scin(int id = -1):
-      fId(id)
-    { /**/ }
-    int fId;
-  };
-
-  struct Config
-  {
-    Config()
-    { /* */} 
-    Config(const std::string& name, const std::vector<BSlot>& bslots, 
-           const std::vector<PM>& pms, const std::vector<Scin>& scins,
-           const std::string& location, const std::vector<std::string> positions):
-            fName(name),
-            fBSlots(bslots),
-            fPMs(pms),
-            fScins(scins),
-            fLocation(location),
-            fCollimatorPositions(positions)
-    { /* */} 
-    std::string fName;
-    std::vector<BSlot> fBSlots;  
-    std::vector<PM> fPMs;  
-    std::vector<Scin> fScins;  
-    std::string fLocation;
-    std::vector<std::string> fCollimatorPositions;
-  };
   
 public:
   JPetScopeConfigParser() {}
-  boost::property_tree::ptree getJsonContent(const std::string &configFileName) const;
-  bool loadConfigFile(std::string configName);
-  inline boost::property_tree::ptree getLoadedConfigData() const { return fLoadedConfigData; }
+  std::vector<scope_config::Config> getConfigs(const std::string& configFileName) const;
   std::vector<std::string> getInputFileNames(std::string configFileName) const;
-
   std::vector<int> transformToNumbers(const std::vector<std::string>& positions) const;
   std::vector<std::string>  generateFileNames(const std::string& configFileName, const std::string& configName, const std::vector<int>& positions) const;
-  std::vector<Config> getConfigs(const std::string& configFileName) const;
+  boost::property_tree::ptree getJsonContent(const std::string &configFileName) const;
 
 protected:
-  Config getConfig(std::string configName, boost::property_tree::ptree const& configContent) const;
-  Config getConfig(boost::property_tree::ptree const& configContent) const;
+  scope_config::Config getConfig(std::string configName, boost::property_tree::ptree const& configContent) const;
   std::vector<std::string> getPositions(boost::property_tree::ptree const& configContent) const;
   std::string getLocation(boost::property_tree::ptree const& content) const;
-  std::vector<JPetScopeConfigParser::BSlot> getBSlots(boost::property_tree::ptree const& content) const;
-  std::vector<JPetScopeConfigParser::PM> getPMs(boost::property_tree::ptree const& content) const;
-  std::vector<JPetScopeConfigParser::Scin> getScins(boost::property_tree::ptree const& content) const;
+  std::vector<scope_config::BSlot> getBSlots(boost::property_tree::ptree const& content) const;
+  std::vector<scope_config::PM> getPMs(boost::property_tree::ptree const& content) const;
+  std::vector<scope_config::Scin> getScins(boost::property_tree::ptree const& content) const;
                                                
-  boost::property_tree::ptree fLoadedConfigData; 
 private:
   JPetScopeConfigParser(const JPetScopeConfigParser&);
   void operator=(const JPetScopeConfigParser&);
