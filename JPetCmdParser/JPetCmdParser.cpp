@@ -157,32 +157,23 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
   auto lastEvent  = getHigherEventBound(optsMap);
   if (firstEvent >= 0) options.at("firstEvent") = std::to_string(firstEvent);
   if (lastEvent >= 0) options.at("lastEvent") = std::to_string(lastEvent);
-  
-  /* TODO : Uncomment code
-    if (fileType.compare("scope") == 0) {
-    string inputConfigJsonFileNameTest = "unitTestData/JPetScopeReaderConfigParserTest/example.json";	//TODO Set proper filename
-    
-    JPetScopeConfigParser scopeConfigParser;
-    scopeConfigParser.readData(inputConfigJsonFileNameTest);
-    string scopeFileName = scopeConfigParser.getFileName();
-    vector<int> scopePositions = scopeConfigParser.getPositions();
-    
-    options.emplace("scopeFileName", scopeFileName);
-    
-    unsigned int scopePositionNumber = 0;
-    std::string scopePosition = "";
-    
-    for(auto &position: scopePositions)
-    {
-      ++scopePositionNumber;
-      scopePosition = "scopePosition" + std::to_string(scopePositionNumber);
-      options.emplace(scopePosition, std::to_string(position));
-    }
-  }
-  */
-  
+
   auto files = getFileNames(optsMap); 
   std::vector<JPetOptions>  optionContainer;
+  /// In case of scope there is one special input file 
+  /// which is a config file which must be parsed.
+  /// Based on its content the set of true input files are generated.
+  /// The config input file name also should be stored in a special option field.
+  std::cout <<fileType <<std::endl;
+  if (fileType == "scope") {
+    std::cout <<"inside" <<std::endl;
+    assert(files.size() == 1); /// there should be only file which is config.
+    auto configFileName = files.front();
+    options.at("scopeConfigFile") =  configFileName;  
+    JPetScopeConfigParser scopeConfigParser;
+    files =scopeConfigParser.getInputFileNames(configFileName);
+  }
+  /// for every single input file we creat separate JPetOptions
   for (auto file :files) {
     options.at("inputFile") = file;
     optionContainer.push_back(JPetOptions(options));
