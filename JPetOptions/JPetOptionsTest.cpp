@@ -35,6 +35,7 @@ BOOST_AUTO_TEST_CASE(petOptionsDefaultConstrutorTest)
     JPetOptions::Options options = {
         {"inputFile", ""},
         {"inputFileType", ""},
+        {"scopeConfigFile",""},
         {"outputFile", "root"},
         {"outputFileType", "test.root"},
         {"firstEvent", "-1"},
@@ -51,6 +52,7 @@ BOOST_AUTO_TEST_CASE(petOptionsBasicTest)
 {
     JPetOptions::Options options = {
         {"inputFile", "input"},
+        {"scopeConfigFile","test.json"},
         {"outputFile", "output"},
         {"firstEvent", "8246821 0xffff 020"},
         {"lastEvent", "8246821 0xffff 020"},
@@ -62,6 +64,7 @@ BOOST_AUTO_TEST_CASE(petOptionsBasicTest)
 
     JPetOptions petOptions(options);
     BOOST_REQUIRE_EQUAL(petOptions.getInputFile(), "input");
+    BOOST_REQUIRE_EQUAL(petOptions.getScopeConfigFile(), "test.json");
     BOOST_REQUIRE_EQUAL(petOptions.getOutputFile(), "output");
     auto firstEvent = petOptions.getFirstEvent();
     BOOST_REQUIRE_EQUAL(firstEvent, 8246821);
