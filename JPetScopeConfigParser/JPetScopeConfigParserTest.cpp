@@ -54,6 +54,16 @@ BOOST_AUTO_TEST_CASE(generateFileNames)
   BOOST_REQUIRE(parser.generateFileNames("example", "config2", (VecOfNums {1, 3})) == (VecOfStrings {"example_config2_1", "example_config2_3"}));
 }
 
+BOOST_AUTO_TEST_CASE(generateDirectories)
+{
+  using VecOfNums = std::vector<int>;
+  using VecOfStrings = std::vector<std::string>;
+  JPetScopeConfigParser parser;
+  BOOST_REQUIRE(parser.generateDirectories("", (VecOfNums {})).empty());
+  BOOST_REQUIRE(parser.generateDirectories("dir", (VecOfNums {1})) == (VecOfStrings {"dir/1"}));
+  BOOST_REQUIRE(parser.generateDirectories("dir2", (VecOfNums {1, 3})) == (VecOfStrings {"dir2/1", "dir2/3"}));
+}
+
 BOOST_AUTO_TEST_CASE(getJsonContent)
 {
   JPetScopeConfigParser parser;

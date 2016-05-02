@@ -25,8 +25,8 @@
 #include <boost/foreach.hpp>
 #include <TApplication.h>
 #include <cstdio>
-
 #include <iostream>
+#include "../CommonTools/CommonTools.h"
 
 
 std::vector<scope_config::Config> JPetScopeConfigParser::getConfigs(const std::string& configFileName) const
@@ -56,6 +56,19 @@ scope_config::Config JPetScopeConfigParser::getConfig(std::string configName, bo
   return config; 
 }
 
+std::vector<std::string> JPetScopeConfigParser::getInputDirectories(const std::string& configFileLocation, const std::vector<scope_config::Config>& configs) const
+{
+  std::vector<std::string> directories;
+  for(const auto& config: configs) 
+  {
+    auto path = configFileLocation + "/" +config.fLocation;
+    auto currDir = generateDirectories(path, transformToNumbers(config.fCollimatorPositions));
+    directories.insert(directories.end(), currDir.begin(), currDir.end());
+  }
+  return directories;
+}
+
+
 std::vector<std::string> JPetScopeConfigParser::getInputFileNames(std::string configFileName) const
 {
   std::vector<std::string> inputFileNames;
@@ -70,11 +83,12 @@ std::vector<std::string> JPetScopeConfigParser::getInputFileNames(std::string co
       //! one element positions can contain a string of several numbers e.g. "2 3 10"
       positionsContainer.push_back(v.second.get<std::string>("positions"));
     }
-    auto currFileNames = generateFileNames(configFileName, currentConfigName, transformToNumbers(positionsContainer));
+    auto currFileNames = generateFileNames(configFileName, CommonTools::stripFileNameSuffix(currentConfigName), transformToNumbers(positionsContainer));
     inputFileNames.insert(inputFileNames.end(), currFileNames.begin(), currFileNames.end());
   }
   return inputFileNames;
 }
+
 
 // The function takes a vector of string, each string can contain one or more integers separated by
 // space and it will transform it to vector of integers.
@@ -92,6 +106,22 @@ std::vector<int> JPetScopeConfigParser::transformToNumbers(const std::vector<std
     }
   }
   return numbers;
+}
+
+/// The directory is generated according to the following pattern:
+/// base_path/position 
+/// e.g. "unittests/data/1"
+std::vector<std::string>  JPetScopeConfigParser::generateDirectories(
+  const std::string& basePath,
+  const std::vector<int>& positions) const
+{
+  std::vector<std::string> DirNames(positions.size());
+  std::transform(positions.begin(), positions.end(), DirNames.begin(),
+  [ &basePath](int number) {
+    return basePath + "/" + std::to_string(number);
+  }
+                );
+  return DirNames;
 }
 
 /// The filename is generated according to the following pattern:
