@@ -103,6 +103,13 @@ public:
   {
     return  boost::filesystem::change_extension(filename, "").string();
   }
+  inline static std::string currentFullPath() {
+    return boost::filesystem::path( boost::filesystem::current_path() ).string();
+  }
+
+  inline static std::string extractPathFromFile(const std::string& fileWithPath) {
+    return boost::filesystem::path( fileWithPath ).parent_path().string();
+  }
 
 };
 
