@@ -22,6 +22,7 @@
 namespace boost;
 class boost::noncopyable;
 #endif /* __CINT __ */
+#include <boost/filesystem.hpp>
 #include <ctime>
 #include <fstream>
 #include <sstream>
@@ -96,6 +97,13 @@ public:
       return lhs.size() == rhs.size()
 	  && std::equal(lhs.begin(), lhs.end(), rhs.begin(), pred);
   }
+
+  ///removes the suffix of the file
+  inline static std::string stripFileNameSuffix(const std::string& filename)
+  {
+    return  boost::filesystem::change_extension(filename, "").string();
+  }
+
 };
 
 
