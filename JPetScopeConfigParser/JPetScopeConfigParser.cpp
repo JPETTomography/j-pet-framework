@@ -242,58 +242,6 @@ std::vector<scope_config::Scin> JPetScopeConfigParser::getScins(boost::property_
   return scins;
 }
 
-//std::string JPetScopeConfigParser::createPath(const std::string &configFileName, const int position)
-//{
-//std::string starting_loc  = boost::filesystem::path(configFileName).parent_path().string();
-//starting_loc += "/";
-//starting_loc += location;
-//starting_loc += "/";
-//starting_loc += std::to_string(position);
-//return starting_loc;
-//}
-
-//bool JPetScopeConfigParser::createOutputFileNames(const std::string &configFileName, const int position)
-//{
-//std::string starting_loc = createPath(configFileName, position);
-
-//boost::filesystem::path current_dir(starting_loc);
-//std::cout << "starting_loc = " << starting_loc << std::endl;
-//std::string prefix = pmData.front().prefix; //o co tu chodzi to jest niejasne dla mnie
-//boost::regex pattern(Form("%s_\\d*.txt", prefix.c_str()));
-//std::cout << "current_dir= " << current_dir << std::endl;
-//if (exists(current_dir))
-//{
-//std::cout << "if" << std::endl;
-//for (boost::filesystem::recursive_directory_iterator iter(current_dir), end; iter != end; ++iter)
-//{
-//std::string name = iter->path().leaf().string();
-//std::cout << "name= " << name << std::endl;
-//std::string dir = "";
-//if (regex_match(name, pattern))
-//{
-//name[1] = prefix[1];
-//dir = iter->path().parent_path().string();
-//dir += "/";
-//dir += name;
-////(*current_config).pFiles.insert(dir);
-//outputFileNames.push_back(dir);
-//std::cout << "dir= " << dir << std::endl;
-//}
-//}
-//}
-//else
-//{
-//std::string msg  = "Directory: \"";
-//msg += current_dir.string();
-//msg += "\" does not exist.";
-////std::cout << "msg= " << msg << std::endl;
-//ERROR(msg.c_str());
-//return false;
-//}
-//return true;
-//}
-
-
 boost::property_tree::ptree JPetScopeConfigParser::getJsonContent(const std::string& configFileName) const
 {
   boost::property_tree::ptree propTree;
