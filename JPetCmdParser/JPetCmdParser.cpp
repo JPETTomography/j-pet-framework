@@ -162,16 +162,15 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
   std::vector<JPetOptions>  optionContainer;
   /// In case of scope there is one special input file 
   /// which is a config file which must be parsed.
-  /// Based on its content the set of true input files are generated.
+  /// Based on its content the set of input directories are generated.
+  /// The input directories contain data files.
   /// The config input file name also should be stored in a special option field.
-  std::cout <<fileType <<std::endl;
   if (fileType == "scope") {
-    std::cout <<"inside" <<std::endl;
     assert(files.size() == 1); /// there should be only file which is config.
     auto configFileName = files.front();
     options.at("scopeConfigFile") =  configFileName;  
     JPetScopeConfigParser scopeConfigParser;
-    files =scopeConfigParser.getInputFileNames(configFileName);
+    files =scopeConfigParser.getInputDirectories(CommonTools::extractPathFromFile(configFileName), scopeConfigParser.getConfigs(configFileName));
   }
   /// for every single input file we creat separate JPetOptions
   for (auto file :files) {
