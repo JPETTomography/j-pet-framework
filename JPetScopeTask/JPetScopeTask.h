@@ -74,6 +74,8 @@ public:
   void setScopeConfig(const ScopeConfig * config){
     fConfig = config;
   }
+
+  int getTimeWindowIndex(const std::string&  pathAndFileName) const;
   
 protected:
 
