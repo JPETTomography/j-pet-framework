@@ -26,10 +26,10 @@
 #include <set>
 #include <vector>
 
-//wk po calkowitej refaktoryzacji ten naglowek nie powinen byc potrzebny
 #include <boost/property_tree/ptree.hpp>
 
 #include "../JPetScopeTask/JPetScopeTask.h"
+#include "../JPetScopeConfigParser/JPetScopeConfigPOD.h"
 
 class JPetParamBank;
 class JPetPM;
@@ -45,35 +45,28 @@ class JPetWriter;
  */
 class JPetScopeReader: public JPetTaskLoader {
   
-  public:
+ public:
 
-  /** @brief Default Constructor.
-   */
   JPetScopeReader(JPetScopeTask * task);
-
-  /* @brief Default Destructor.
-   */
   virtual ~JPetScopeReader();
 
   /** @brief Prepare list of input files.
    *
-   * Parse config file, prepare list of oscilloscope ASCII files to be processed and prepares parameters bank.
+   * Parse config file and prepares parameters bank.
    *
    * @param inputFilename Config file name.
    */
-  virtual void createInputObjects(const char* inputFilename = 0);
+  virtual void createInputObjects(const char* inputFilename);
 
   /** @brief Required by JPetManager.
    *
-   * Currently does nothing
    */
-  virtual void createOutputObjects(const char* outputFilename = 0);
+  virtual void createOutputObjects(const char* outputFilename);
 
   /** @brief Perform any preparations for the analysis done by exec().
    *
    * Function containing per event analysis.
    */
-  virtual void init();
 
   /** @brief Execute the whole analysis performed by this module.
    */
@@ -105,6 +98,10 @@ class JPetScopeReader: public JPetTaskLoader {
    */
   void createNewWriter();
 
+  virtual void init(const JPetOptions::Options& opts);
+  std::vector<std::string> createInputScopeFileNames(const std::string& inputPathToScopeFiles) const;
+  
+
   /** @brief Create bank with system describing objects.
    *
    * Param bank is created basing on configuration file.
@@ -114,10 +111,9 @@ class JPetScopeReader: public JPetTaskLoader {
    *
    * @todo Add possibility to read parameters for SQL database.
    */
-  JPetParamBank const& createParamBank (boost::property_tree::ptree const& conf_data);
 
-
-  private:
+  JPetParamBank const& createParamBank (const scope_config::Config& configs);
+ private:
 
   long long fEventNb; /**< @brief Number of events to process. */ 
   
