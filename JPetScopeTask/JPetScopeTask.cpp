@@ -36,13 +36,19 @@ void JPetScopeTask::init(const JPetTaskInterface::Options&)
 {
 }
 
+int JPetScopeTask::getTimeWindowIndex(const std::string&  pathAndFileName) const
+{
+  int time_window_index = -1;
+  sscanf(path(pathAndFileName).filename().string().c_str(), "%*3s %d", &time_window_index);
+  return time_window_index;
+}
+
 void JPetScopeTask::exec() 
 {
   std::string osc_file = *(fConfig->pIter);
   std::string filename;
   
-  int time_window_index;
-  sscanf(path(osc_file).filename().string().c_str(), "%*3s %d", &time_window_index);
+  int time_window_index = getTimeWindowIndex(osc_file);
   
   JPetRecoSignal rsig1 = RecoSignalUtils::generateSignal(osc_file.c_str());
   rsig1.setPM(*(fConfig->pPM1));
