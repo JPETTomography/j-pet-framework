@@ -30,8 +30,20 @@ BOOST_AUTO_TEST_CASE(defaultConstructor)
 BOOST_AUTO_TEST_CASE(getTimeWindowIndex)
 {
   JPetScopeTask sTask("testScopeTask", "It is a test scope task");
+  ///always 4th character if it is a number or digit
   BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex(""), -1);
+  BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("02"), -1);
+  BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("023"), -1);
+  BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("_000a"), 0);
+  BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("0040a"), 0);
+  BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("C1_0002"), 2);
+  BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("C4_0004"), 4);
+  BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("_0004"), 4);
+  BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("_000a"), 0);
+  BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("107349"), 349);
+  BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("C1_0003.txt"), 3);
 }
+
 
 
 BOOST_AUTO_TEST_SUITE_END()
