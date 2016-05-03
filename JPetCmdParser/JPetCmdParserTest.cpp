@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
-  BOOST_REQUIRE_EQUAL(std::string(option.getInputFile()), "unitTestData/JPetCmdParserTest/testfile.json_config1_6");
+  BOOST_REQUIRE_EQUAL(std::string(option.getInputFile()), "unitTestData/JPetCmdParserTest/data/6");
   BOOST_REQUIRE_EQUAL(option.getFirstEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getLastEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getRunNumber(), -1);
