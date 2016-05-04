@@ -58,9 +58,7 @@ class JPetScopeTask: public JPetTask
 {
 public:
   JPetScopeTask(const char * name, const char * description);
-  virtual void init(const JPetTaskInterface::Options&);
   virtual void exec();
-  virtual void terminate();
   virtual void setWriter(JPetWriter* writer) {
     fWriter = writer;
   }
@@ -74,19 +72,13 @@ public:
   void setScopeConfig(const ScopeConfig * config){
     fConfig = config;
   }
-
+  
   int getTimeWindowIndex(const std::string&  pathAndFileName) const;
   
+  inline std::vector<std::string> getInputFiles() const { return fInputFiles; } /// getting oscilloscope data full file names to process
+  inline void setInputFiles(std::vector<std::string> inputFiles) { fInputFiles = inputFiles; }
 protected:
-
-  /** @brief Produce JPetRecoSignal from single oscilloscope ASCII file.
-   *
-   * Functionality of old JPetScopeReader.
-   *
-   * @param filename oscilloscpe ASCII filename.
-   * @return generated JPetRecoSignal
-   */
-  
+  std::vector<std::string> fInputFiles;
   
   JPetWriter* fWriter;
   JPetParamManager* fParamManager;
