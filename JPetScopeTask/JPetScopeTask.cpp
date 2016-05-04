@@ -12,6 +12,7 @@
  *
  *  @file JPetScopeTask.cpp
  *  @brief Module for oscilloscope data
+ *  Reads oscilloscope ASCII files and produces JPetRecoSignal objects.
  */
 
 #include "JPetScopeTask.h"
@@ -23,16 +24,14 @@
 
 #include <boost/filesystem.hpp>
 using namespace boost::filesystem;
+#include <boost/iterator/zip_iterator.hpp> ///for zip iterator
+#include <iterator> /// for zip iterator
 
 
 JPetScopeTask::JPetScopeTask(const char * name, const char * description):
   JPetTask(name, description),
   fWriter(0),
   fParamManager(0)
-{
-}
-
-void JPetScopeTask::init(const JPetTaskInterface::Options&)
 {
 }
 
@@ -45,51 +44,62 @@ int JPetScopeTask::getTimeWindowIndex(const std::string&  pathAndFileName) const
 
 void JPetScopeTask::exec() 
 {
-  std::string osc_file = *(fConfig->pIter);
-  std::string filename;
+  assert(fParamManager);
+  const std::vector<JPetPM*> pms = fParamManager->getParamBank().getPMs(); 
+  assert(fInputFiles.size() == 4);
+  assert(pms.size() == fInputFiles.size());
+  for(size_t i = 0u; i < fInputFiles.size(); ++i ) {
+    std::string file = fInputFiles[i];
+    JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.c_str());
+    sig.setTimeWindowIndex(getTimeWindowIndex(file));
+    JPetPM* pm = pms[i];
+    assert(pm);
+    sig.setPM(*pm);
+    assert(fWriter);
+    fWriter->write(sig);
+  }  
   
-  int time_window_index = getTimeWindowIndex(osc_file);
+  //std::string osc_file = *(fConfig->pIter);
+  //std::string filename;
   
-  JPetRecoSignal rsig1 = RecoSignalUtils::generateSignal(osc_file.c_str());
-  rsig1.setPM(*(fConfig->pPM1));
-  rsig1.setTimeWindowIndex(time_window_index);
+  //int time_window_index = getTimeWindowIndex(osc_file);
   
-  filename = path(*(fConfig->pIter)).filename().string();
-  filename[1] = (fConfig->pPrefix2)[1];
-  osc_file = path(*(fConfig->pIter)).parent_path().string();
-  osc_file+= "/";
-  osc_file+= filename;
+  //JPetRecoSignal rsig1 = RecoSignalUtils::generateSignal(osc_file.c_str());
+  //rsig1.setPM(*(fConfig->pPM1));
+  //rsig1.setTimeWindowIndex(time_window_index);
   
-  JPetRecoSignal rsig2 = RecoSignalUtils::generateSignal(osc_file.c_str());
-  rsig2.setPM(*(fConfig->pPM2));
-  rsig2.setTimeWindowIndex(time_window_index);
+  //filename = path(*(fConfig->pIter)).filename().string();
+  //filename[1] = (fConfig->pPrefix2)[1];
+  //osc_file = path(*(fConfig->pIter)).parent_path().string();
+  //osc_file+= "/";
+  //osc_file+= filename;
   
-  filename = path(*(fConfig->pIter)).filename().string();
-  filename[1] = (fConfig->pPrefix3)[1];
-  osc_file = path(*(fConfig->pIter)).parent_path().string();
-  osc_file+= "/";
-  osc_file+= filename;
+  //JPetRecoSignal rsig2 = RecoSignalUtils::generateSignal(osc_file.c_str());
+  //rsig2.setPM(*(fConfig->pPM2));
+  //rsig2.setTimeWindowIndex(time_window_index);
   
-  JPetRecoSignal rsig3 = RecoSignalUtils::generateSignal(osc_file.c_str());
-  rsig3.setPM(*(fConfig->pPM3));
-  rsig3.setTimeWindowIndex(time_window_index);
+  //filename = path(*(fConfig->pIter)).filename().string();
+  //filename[1] = (fConfig->pPrefix3)[1];
+  //osc_file = path(*(fConfig->pIter)).parent_path().string();
+  //osc_file+= "/";
+  //osc_file+= filename;
   
-  filename = path(*(fConfig->pIter)).filename().string();
-  filename[1] = (fConfig->pPrefix4)[1];
-  osc_file = path(*(fConfig->pIter)).parent_path().string();
-  osc_file+= "/";
-  osc_file+= filename;
+  //JPetRecoSignal rsig3 = RecoSignalUtils::generateSignal(osc_file.c_str());
+  //rsig3.setPM(*(fConfig->pPM3));
+  //rsig3.setTimeWindowIndex(time_window_index);
   
-  JPetRecoSignal rsig4 = RecoSignalUtils::generateSignal(osc_file.c_str());
-  rsig4.setPM(*(fConfig->pPM4));
-  rsig4.setTimeWindowIndex(time_window_index);
+  //filename = path(*(fConfig->pIter)).filename().string();
+  //filename[1] = (fConfig->pPrefix4)[1];
+  //osc_file = path(*(fConfig->pIter)).parent_path().string();
+  //osc_file+= "/";
+  //osc_file+= filename;
   
-  fWriter->write(rsig1);
-  fWriter->write(rsig2);
-  fWriter->write(rsig3);
-  fWriter->write(rsig4);
-}
-
-void JPetScopeTask::terminate() 
-{
+  //JPetRecoSignal rsig4 = RecoSignalUtils::generateSignal(osc_file.c_str());
+  //rsig4.setPM(*(fConfig->pPM4));
+  //rsig4.setTimeWindowIndex(time_window_index);
+  
+  //fWriter->write(rsig1);
+  //fWriter->write(rsig2);
+  //fWriter->write(rsig3);
+  //fWriter->write(rsig4);
 }
