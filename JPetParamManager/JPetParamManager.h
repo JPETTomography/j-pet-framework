@@ -25,6 +25,7 @@
 #include "../JPetDBParamGetter/JPetDBParamGetter.h"
 #include "../JPetReader/JPetReader.h"
 #include "../JPetWriter/JPetWriter.h"
+#include "../JPetScopeConfigParser/JPetScopeConfigPOD.h" /// for generateParametersFromScopeConfig
 
 class JPetParamManager
 {
@@ -41,12 +42,15 @@ class JPetParamManager
   bool readParametersFromFile(std::string filename);
   bool saveParametersToFile(std::string filename);
   
+  bool getParametersFromScopeConfig(const scope_config::Config& config);
+  JPetParamBank* generateParametersFromScopeConfig(const scope_config::Config& config) const;
+ 
   void clearParameters();
   const JPetParamBank& getParamBank() const;
 
  private:
   JPetParamManager(const JPetParamManager&);
-  JPetParamManager& operator=(const JPetParamManager&){}
+  JPetParamManager& operator=(const JPetParamManager&);
 
   JPetParamGetter* fParamGetter;
   JPetParamBank* fBank;

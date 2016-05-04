@@ -82,6 +82,61 @@ const JPetParamBank& JPetParamManager::getParamBank() const{
 	else return DummyResult;
 }
 
+
+bool JPetParamManager::getParametersFromScopeConfig(const scope_config::Config& config)
+{
+  if (fBank) {
+    delete fBank;
+    fBank = 0;
+  }
+  fBank = generateParametersFromScopeConfig(config);
+  if (!fBank) return false;
+  return true;
+}
+
+JPetParamBank* JPetParamManager::generateParametersFromScopeConfig(const scope_config::Config& config) const
+{
+  JPetParamBank* param_bank = new JPetParamBank();
+  for (const auto &  bslot : config.fBSlots) {
+    JPetBarrelSlot tmp(bslot.fId, bslot.fActive, bslot.fName, bslot.fTheta, bslot.fFrame);
+    param_bank->addBarrelSlot(tmp);
+  }
+  for (const auto &  pm : config.fPMs) {
+    JPetPM tmp(pm.fId);
+    param_bank->addPM(tmp);
+  }
+
+  for (const auto &  scin : config.fScins) {
+    JPetScin tmp(scin.fId);
+    param_bank->addScintillator(tmp);
+  }
+
+  /**
+  * A		B
+  * PM1	PM2
+  * PM3	PM4
+  */
+  (param_bank->getPM(0)).setSide(JPetPM::SideA);
+  (param_bank->getPM(1)).setSide(JPetPM::SideB);
+  (param_bank->getPM(2)).setSide(JPetPM::SideA);
+  (param_bank->getPM(3)).setSide(JPetPM::SideB);
+
+  (param_bank->getPM(0)).setScin(param_bank->getScintillator(0));
+  (param_bank->getPM(1)).setScin(param_bank->getScintillator(0));
+  (param_bank->getPM(2)).setScin(param_bank->getScintillator(1));
+  (param_bank->getPM(3)).setScin(param_bank->getScintillator(1));
+
+  (param_bank->getPM(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
+  (param_bank->getPM(1)).setBarrelSlot(param_bank->getBarrelSlot(0));
+  (param_bank->getPM(2)).setBarrelSlot(param_bank->getBarrelSlot(1));
+  (param_bank->getPM(3)).setBarrelSlot(param_bank->getBarrelSlot(1));
+
+  (param_bank->getScintillator(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
+  (param_bank->getScintillator(1)).setBarrelSlot(param_bank->getBarrelSlot(1));
+
+  return param_bank;
+}
+
 bool JPetParamManager::saveParametersToFile(std::string filename)
 {
   TFile file(filename.c_str(), "UPDATE");
