@@ -217,7 +217,6 @@ void JPetScopeReader::createInputObjects(const char* inputFileName)
 {
   JPetScopeConfigParser confParser;
   auto configs = confParser.getConfigs(fOptions.getScopeConfigFile());
->>>>>>> Refactoring of JPetScopeReader - partly, based on Andrzej and Alek's coded
 
 ///is it ok? with respect to configs
   for (const auto & config : configs) {
