@@ -50,6 +50,7 @@ class JPetScopeReader: public JPetTaskLoader {
   JPetScopeReader(JPetScopeTask * task);
   virtual ~JPetScopeReader();
 
+  bool isCorrectScopeFileName(const std::string& filename) const;
   /** @brief Prepare list of input files.
    *
    * Parse config file and prepares parameters bank.
@@ -68,8 +69,6 @@ class JPetScopeReader: public JPetTaskLoader {
    * Function containing per event analysis.
    */
 
-  /** @brief Execute the whole analysis performed by this module.
-   */
   virtual void exec();
   
   /** @brief Return number of events to be processed.
@@ -101,18 +100,6 @@ class JPetScopeReader: public JPetTaskLoader {
   virtual void init(const JPetOptions::Options& opts);
   std::vector<std::string> createInputScopeFileNames(const std::string& inputPathToScopeFiles) const;
   
-
-  /** @brief Create bank with system describing objects.
-   *
-   * Param bank is created basing on configuration file.
-   * 
-   * @param conf_data branch of property tree for single configuration.
-   * @return JPetParamBank with data describing current configuration.
-   *
-   * @todo Add possibility to read parameters for SQL database.
-   */
-
-  JPetParamBank const& createParamBank (const scope_config::Config& configs);
  private:
 
   long long fEventNb; /**< @brief Number of events to process. */ 
