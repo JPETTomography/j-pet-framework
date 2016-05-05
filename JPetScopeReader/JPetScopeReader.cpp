@@ -54,10 +54,10 @@ using namespace std;
 using namespace boost::filesystem;
 using boost::property_tree::ptree;
 
+
 JPetScopeReader::JPetScopeReader(JPetScopeTask* task): JPetTaskLoader(), fEventNb(0), fWriter(nullptr)
 {
   gSystem->Load("libTree");
-
   addSubTask(task);
 }
 
@@ -72,155 +72,16 @@ JPetScopeReader::~JPetScopeReader()
 
 }
 
-JPetParamBank const& JPetScopeReader::createParamBank (const scope_config::Config& config)
-{
-  JPetParamBank* param_bank = new JPetParamBank();
-  for (const auto &  bslot : config.fBSlots) {
-    JPetBarrelSlot tmp(bslot.fId, bslot.fActive, bslot.fName, bslot.fTheta, bslot.fFrame);
-    param_bank->addBarrelSlot(tmp);
-  }
-  for (const auto &  pm : config.fPMs) {
-    JPetPM tmp(pm.fId);
-    param_bank->addPM(tmp);
-  }
-
-  for (const auto &  scin : config.fScins) {
-    JPetScin tmp(scin.fId);
-    param_bank->addScintillator(tmp);
-  }
-
-  /**
-  * A		B
-  * PM1	PM2
-  * PM3	PM4
-  */
-  (param_bank->getPM(0)).setSide(JPetPM::SideA);
-  (param_bank->getPM(1)).setSide(JPetPM::SideB);
-  (param_bank->getPM(2)).setSide(JPetPM::SideA);
-  (param_bank->getPM(3)).setSide(JPetPM::SideB);
-
-  (param_bank->getPM(0)).setScin(param_bank->getScintillator(0));
-  (param_bank->getPM(1)).setScin(param_bank->getScintillator(0));
-  (param_bank->getPM(2)).setScin(param_bank->getScintillator(1));
-  (param_bank->getPM(3)).setScin(param_bank->getScintillator(1));
-
-  (param_bank->getPM(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
-  (param_bank->getPM(1)).setBarrelSlot(param_bank->getBarrelSlot(0));
-  (param_bank->getPM(2)).setBarrelSlot(param_bank->getBarrelSlot(1));
-  (param_bank->getPM(3)).setBarrelSlot(param_bank->getBarrelSlot(1));
-
-  (param_bank->getScintillator(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
-  (param_bank->getScintillator(1)).setBarrelSlot(param_bank->getBarrelSlot(1));
-
-  return *param_bank;
-}
-
-//JPetParamBank const& JPetScopeReader::createParamBank(ptree const& conf_data) {
-
-//// Read Data from config tree
-////wk to powinno byc robione przez ScopeConfigParser
-////
-
-//int bslotid1, bslotid2;
-//bool bslotactive1, bslotactive2;
-//string bslotname1, bslotname2;
-//float bslottheta1, bslottheta2;
-//int bslotframe1, bslotframe2;
-
-//bslotid1 = conf_data.get("bslot1.id", -1);
-//bslotid2 = conf_data.get("bslot2.id", -1);
-
-//bslotactive1 = conf_data.get("bslot1.active", false);
-//bslotactive2 = conf_data.get("bslot2.active", false);
-
-//bslotname1 = conf_data.get("bslot1.name", string(""));
-//bslotname2 = conf_data.get("bslot2.name", string(""));
-
-//bslottheta1 = conf_data.get("bslot1.theta", -1.f);
-//bslottheta2 = conf_data.get("bslot2.theta", -1.f);
-
-//bslotframe1 = conf_data.get("bslot1.frame", -1);
-//bslotframe2 = conf_data.get("bslot2.frame", -1);
-
-//int pmid1, pmid2, pmid3, pmid4;
-
-//pmid1 = conf_data.get("pm1.id", 0);
-//pmid2 = conf_data.get("pm2.id", 0);
-//pmid3 = conf_data.get("pm3.id", 0);
-//pmid4 = conf_data.get("pm4.id", 0);
-
-//int scinid1, scinid2;
-
-//scinid1 = conf_data.get("scin1.id", 0);
-//scinid2 = conf_data.get("scin2.id", 0);
-
-//// wk do tego momentu
-//// Create Parametric objects
-
-//scinid1 = conf_data.get("scin1.id", 0);
-//scinid2 = conf_data.get("scin2.id", 0);
-
-//// wk do tego momentu
-//// Create Parametric objects
-
-//JPetBarrelSlot bslot1 (bslotid1, bslotactive1, bslotname1, bslottheta1, bslotframe1);
-//JPetBarrelSlot bslot2 (bslotid2, bslotactive2, bslotname2, bslottheta2, bslotframe2);
-
-//JPetPM pm1(pmid1);
-//JPetPM pm2(pmid2);
-//JPetPM pm3(pmid3);
-//JPetPM pm4(pmid4);
-
-/**
-* A		B
-* PM1	PM2
-* PM3	PM4
-*/
-//pm1.setSide(JPetPM::SideA);
-//pm2.setSide(JPetPM::SideB);
-//pm3.setSide(JPetPM::SideA);
-//pm4.setSide(JPetPM::SideB);
-
-//JPetScin scin1(scinid1);
-//JPetScin scin2(scinid2);
-
-//JPetParamBank* param_bank = new JPetParamBank();
-
-//param_bank->addBarrelSlot(bslot1);
-//param_bank->addBarrelSlot(bslot2);
-
-//param_bank->addPM(pm1);
-//param_bank->addPM(pm2);
-//param_bank->addPM(pm3);
-//param_bank->addPM(pm4);
-
-//param_bank->addScintillator(scin1);
-//param_bank->addScintillator(scin2);
-
-//(param_bank->getPM(0)).setScin(param_bank->getScintillator(0));
-//(param_bank->getPM(1)).setScin(param_bank->getScintillator(0));
-//(param_bank->getPM(2)).setScin(param_bank->getScintillator(1));
-//(param_bank->getPM(3)).setScin(param_bank->getScintillator(1));
-
-//(param_bank->getPM(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
-//(param_bank->getPM(1)).setBarrelSlot(param_bank->getBarrelSlot(0));
-//(param_bank->getPM(2)).setBarrelSlot(param_bank->getBarrelSlot(1));
-//(param_bank->getPM(3)).setBarrelSlot(param_bank->getBarrelSlot(1));
-
-//(param_bank->getScintillator(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
-//(param_bank->getScintillator(1)).setBarrelSlot(param_bank->getBarrelSlot(1));
-
-//return *param_bank;
-//}
-
 void JPetScopeReader::createInputObjects(const char* inputFileName)
 {
   JPetScopeConfigParser confParser;
   auto configs = confParser.getConfigs(fOptions.getScopeConfigFile());
 
-///is it ok? with respect to configs
+  assert(configs.size()==1); ///wk for a moment
   for (const auto & config : configs) {
-    JPetParamBank const& param_bank = createParamBank (config); ///how to set correct param manager?
+    if(!getParamManager().getParametersFromScopeConfig(config)) { 
+      ERROR("Unable to generate Param Bank from Scope Config");
+    } 
   }
   /// inputFile is in this context the directory with oscilloscope files
   auto inputScopeFiles = createInputScopeFileNames(fOptions.getInputFile());
@@ -353,9 +214,25 @@ void JPetScopeReader::createInputObjects(const char* inputFileName)
 }
 
 
+
 std::vector<std::string> JPetScopeReader::createInputScopeFileNames(const std::string& inputPathToScopeFiles) const
 {
+  std::vector<std::string> scopeFiles;
   path current_dir(inputPathToScopeFiles);
+  if (exists(current_dir)) {
+    for (recursive_directory_iterator iter(current_dir), end; iter != end; ++iter) {
+      std::string filename = iter->path().leaf().string();
+      if( isCorrectScopeFileName(filename)) {
+        scopeFiles.push_back(iter->path().parent_path().string() + "/" + filename);
+      }
+    }
+    
+  } else {
+    string msg  = "Directory: \"";
+    msg += current_dir.string();
+    msg += "\" does not exist.";
+    ERROR(msg.c_str());
+  }
 
   //boost::regex pattern(Form("%s_\\d*.txt", (*current_config).pPrefix1.c_str()));
 
@@ -378,6 +255,14 @@ std::vector<std::string> JPetScopeReader::createInputScopeFileNames(const std::s
     //ERROR(msg.c_str());
   //}
 
+  return scopeFiles;
+}
+
+/// not very effective, but at least we can test it
+bool JPetScopeReader::isCorrectScopeFileName(const std::string& filename) const
+{
+  boost::regex pattern("^[A-Za-z0-9]+_\\d*.txt");
+  return regex_match(filename, pattern);
 }
 
 void JPetScopeReader::createOutputObjects(const char* outputFileName)
@@ -453,24 +338,27 @@ void JPetScopeReader::exec()
 
   assert(fTask);
 
+  fTask->setParamManager(&(getParamManager()));
   JPetTaskInterface::Options emptyOpts;
   fTask->init(emptyOpts);
+  createNewWriter();
+  fTask->setWriter(fWriter);
+  fTask->exec();
+  fTask->terminate();
+   
+  //for (fIter = fConfigs.begin(); fIter != fConfigs.end(); fIter++) {
 
-  for (fIter = fConfigs.begin(); fIter != fConfigs.end(); fIter++) {
 
-    createNewWriter();
-    fTask->setWriter(fWriter);
+    //for ((*fIter).pIter = (*fIter).pFiles.begin(); (*fIter).pIter != (*fIter).pFiles.end(); (*fIter).pIter++) {
 
-    for ((*fIter).pIter = (*fIter).pFiles.begin(); (*fIter).pIter != (*fIter).pFiles.end(); (*fIter).pIter++) {
+      //dynamic_cast<JPetScopeTask*>(fTask)->setScopeConfig(&(*fIter));
+      //fTask->exec();
 
-      dynamic_cast<JPetScopeTask*>(fTask)->setScopeConfig(&(*fIter));
-      fTask->exec();
+    //}
 
-    }
+    //fWriter->writeObject((*fIter).pParamBank, "ParamBank");
 
-    fWriter->writeObject((*fIter).pParamBank, "ParamBank");
-
-  }
+  //}
 }
 
 void JPetScopeReader::terminate()
