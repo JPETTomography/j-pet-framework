@@ -53,29 +53,48 @@ BOOST_FIXTURE_TEST_CASE (tref_correctness_test, tref_correctness_fixture) {
   //check_tref_simple(nullptr);
 }
 
+BOOST_AUTO_TEST_CASE (getFilePrefix) 
+{
+  JPetScopeReader reader(0);
+  BOOST_REQUIRE(reader.getFilePrefix("").empty());
+  BOOST_REQUIRE(reader.getFilePrefix("abkabd").empty());
+  BOOST_REQUIRE(reader.getFilePrefix("jfsd808").empty());
+  BOOST_REQUIRE_EQUAL(reader.getFilePrefix("c1_0554.txt"), "c1");
+  BOOST_REQUIRE_EQUAL(reader.getFilePrefix("c098_0554.txt"), "c098");
+  BOOST_REQUIRE_EQUAL(reader.getFilePrefix("cq_"), "cq");
+  BOOST_REQUIRE_EQUAL(reader.getFilePrefix("a_ss_q"), "a");
+}
+
 BOOST_AUTO_TEST_CASE (createInputScopeFileNames) 
 {
-  using VecOfStrings = std::vector<std::string>;
   JPetScopeReader reader(0);
-  BOOST_REQUIRE(reader.createInputScopeFileNames("").empty());
-  BOOST_REQUIRE(reader.createInputScopeFileNames("non_existing").empty());
-  BOOST_REQUIRE(!reader.createInputScopeFileNames("unitTestData/JPetScopeReaderTest/scope_files/0").empty());
-  VecOfStrings expectedRes {
-    "C1_00003.txt",  "C2_00003.txt",  "C3_00003.txt",  "C4_00003.txt",
-    "C1_00004.txt",  "C2_00004.txt",  "C3_00004.txt",  "C4_00004.txt"
+  BOOST_REQUIRE(reader.createInputScopeFileNames("", {}).empty());
+  BOOST_REQUIRE(reader.createInputScopeFileNames("non_existing", {}).empty());
+  BOOST_REQUIRE(!reader.createInputScopeFileNames("unitTestData/JPetScopeReaderTest/scope_files/0", {{"c1",0}, {"c2",1}, {"c3", 2}, {"c4",3}}).empty());
+  std::map<int, std::vector<string>>  expectedRes {
+    {0, {"C1_00003.txt","C1_00004.txt"}}, {1, {"C2_00003.txt","C2_00004.txt"}},   
+    {2, {"C3_00003.txt","C3_00004.txt"}}, {3, {"C4_00003.txt","C4_00004.txt"}}
   };
   std::string pathToFiles = "unitTestData/JPetScopeReaderTest/scope_files/0";
-  std::transform(expectedRes.begin(), expectedRes.end(),expectedRes.begin(), 
-                [&](std::string name) {
-                  return pathToFiles + "/"+name;
+  std::for_each(expectedRes.begin(), expectedRes.end(), 
+                [&](std::pair<const int, std::vector<std::string> >&  el) {
+                      for_each(el.second.begin(), el.second.end(),
+                      [&](std::string& name) {
+                        name = pathToFiles + "/" + name;
+                      });
+                      std::sort(el.second.begin(), el.second.end());
                 }); 
-   
-  auto obtainedRes = reader.createInputScopeFileNames(pathToFiles);
-  BOOST_REQUIRE(!obtainedRes.empty());
+  std::map<int, std::vector<std::string> > obtainedRes = reader.createInputScopeFileNames(pathToFiles, {{"C1",0}, {"C2",1}, {"C3", 2}, {"C4",3}});
   /// to assure the same order of elements for comparison
-  std::sort(obtainedRes.begin(), obtainedRes.end());
-  std::sort(expectedRes.begin(), expectedRes.end());
-  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedRes.begin(), obtainedRes.end(), expectedRes.begin(), expectedRes.end());
+  std::for_each(obtainedRes.begin(), obtainedRes.end(), 
+                [&](std::pair<const int, std::vector<std::string> >&  el) {
+                      std::sort(el.second.begin(), el.second.end());
+                }); 
+  BOOST_REQUIRE(!obtainedRes.empty());
+  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedRes[0].begin(), obtainedRes[0].end(), expectedRes[0].begin(), expectedRes[0].end());
+  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedRes[1].begin(), obtainedRes[1].end(), expectedRes[1].begin(), expectedRes[1].end());
+  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedRes[2].begin(), obtainedRes[2].end(), expectedRes[2].begin(), expectedRes[2].end());
+  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedRes[3].begin(), obtainedRes[3].end(), expectedRes[3].begin(), expectedRes[3].end());
 }
 
 BOOST_AUTO_TEST_CASE (isCorrectScopeFileName) 
@@ -90,6 +109,10 @@ BOOST_AUTO_TEST_CASE (isCorrectScopeFileName)
   BOOST_REQUIRE(reader.isCorrectScopeFileName("C5_000.txt"));
   BOOST_REQUIRE(reader.isCorrectScopeFileName("AA_004.txt"));
   BOOST_REQUIRE(reader.isCorrectScopeFileName("AA_004.txt"));
+}
+
+BOOST_AUTO_TEST_CASE (FullTest) 
+{
 }
 
 BOOST_AUTO_TEST_SUITE_END()
