@@ -24,8 +24,6 @@
 
 #include <boost/filesystem.hpp>
 using namespace boost::filesystem;
-#include <boost/iterator/zip_iterator.hpp> ///for zip iterator
-#include <iterator> /// for zip iterator
 
 
 JPetScopeTask::JPetScopeTask(const char * name, const char * description):
@@ -46,19 +44,20 @@ void JPetScopeTask::exec()
 {
   assert(fParamManager);
   const std::vector<JPetPM*> pms = fParamManager->getParamBank().getPMs(); 
-  assert(fInputFiles.size() == 4);
-  assert(pms.size() == fInputFiles.size());
-  for(size_t i = 0u; i < fInputFiles.size(); ++i ) {
-    std::string file = fInputFiles[i];
-    JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.c_str());
-    sig.setTimeWindowIndex(getTimeWindowIndex(file));
+  assert(pms.size() == 4);
+  //assert(pms.size() == fInputFiles.size());
+  for(size_t i = 0u; i < pms.size(); ++i ) {
     JPetPM* pm = pms[i];
     assert(pm);
-    sig.setPM(*pm);
-    assert(fWriter);
-    fWriter->write(sig);
-  }  
-  
+    const auto& files = fInputFiles.find(i)->second; 
+    for (const auto& file: files) {
+      JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.c_str());
+      sig.setTimeWindowIndex(getTimeWindowIndex(file));
+      sig.setPM(*pm);
+      assert(fWriter);
+      fWriter->write(sig);
+    }
+  }
   //std::string osc_file = *(fConfig->pIter);
   //std::string filename;
   
