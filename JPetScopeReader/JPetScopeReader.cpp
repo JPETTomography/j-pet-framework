@@ -77,185 +77,73 @@ void JPetScopeReader::createInputObjects(const char* inputFileName)
   JPetScopeConfigParser confParser;
   auto configs = confParser.getConfigs(fOptions.getScopeConfigFile());
 
-  assert(configs.size()==1); ///wk for a moment
+  assert(configs.size() == 1); ///wk for a moment
+  std::map<int, std::vector<std::string>> inputScopeFiles;
   for (const auto & config : configs) {
-    if(!getParamManager().getParametersFromScopeConfig(config)) { 
+    if (!getParamManager().getParametersFromScopeConfig(config)) {
       ERROR("Unable to generate Param Bank from Scope Config");
-    } 
+    }
+    auto prefix2PM =  getPMPrefixToPMIndicesMap(config);
+    inputScopeFiles = createInputScopeFileNames(fOptions.getInputFile(), prefix2PM);
   }
   /// inputFile is in this context the directory with oscilloscope files
-  auto inputScopeFiles = createInputScopeFileNames(fOptions.getInputFile());
-
-///
-
-  /*  // Create property tree*/
-
-  //ptree prop_tree;
-
-  //// Check file type
-
-  //string ext = path((const char*)fInFilename).extension().string();
-
-  //// Read configuration data to property tree
-
-  //if (ext.compare(".ini") == 0) {
-  //read_ini(fInFilename.Data(), prop_tree);
-  //} else if (ext.compare(".info") == 0) {
-  //read_info(fInFilename.Data(), prop_tree);
-  //} else if (ext.compare(".json") == 0) {
-  //read_json(fInFilename.Data(), prop_tree);
-  //} else if (ext.compare(".xml") == 0) {
-  //read_xml(fInFilename.Data(), prop_tree);
-  //} else {
-  //ERROR("Cannot open config file. Exiting");
-  //exit(-1);
-  //}
-
-  // Fill fConfigs
-  //for (ptree::const_iterator it = prop_tree.begin(); it != prop_tree.end(); ++it) {
-
-  //string files_location;
-
-  //const ptree& conf_data = it->second;
-
-  //files_location = conf_data.get<string>("location");
-
-  //JPetParamBank const& param_bank = createParamBank (conf_data);
-
-////wk to trzeba wyabstrahowac jako metode ktora zwraca zestaw nazw plikow wyjsciowych
-  //// Fill Configs
-
-  //string collimator_function;
-  //int a, b, c, n;
-  //BOOST_FOREACH(const ptree::value_type& v, conf_data.get_child("collimator")) {
-
-  //if (ext.compare(".json") == 0) collimator_function = v.second.get<string>("positions");
-  //else collimator_function = v.second.data();
-
-  //n = sscanf(collimator_function.c_str(), "%d %d %d", &a, &b, &c);
-
-  //if (n > 0) {
-  //if (n == 1) {b = a; c = 1;}
-  //if (n == 2) {c = 1;}
-
-  //for (int j = a; j <=b; j+= c) {
-
-  //fConfigs.push_back(ScopeConfig());
-  //vector <ScopeConfig> :: iterator current_config = fConfigs.end() - 1;
-
-  //// Add config name
-  //(*current_config).pName         = it->first;
-
-  //// Add collimator position
-  //(*current_config).pCollPosition = j;
-
-  //// Add param bank
-  //(*current_config).pParamBank    = &param_bank;
-
-  //// Add PMs
-  //(*current_config).pPM1          = &(param_bank.getPM(0));
-  //(*current_config).pPM2          = &(param_bank.getPM(1));
-  //(*current_config).pPM3          = &(param_bank.getPM(2));
-  //(*current_config).pPM4          = &(param_bank.getPM(3));
-
-  //// Add Scintillators
-  //(*current_config).pScin1        = &(param_bank.getScintillator(0));
-  //(*current_config).pScin2        = &(param_bank.getScintillator(1));
-
-  //// Add filename prefixes
-  //(*current_config).pPrefix1      = conf_data.get<string>("pm1.prefix");
-  //(*current_config).pPrefix2      = conf_data.get<string>("pm2.prefix");
-  //(*current_config).pPrefix3      = conf_data.get<string>("pm3.prefix");
-  //(*current_config).pPrefix4      = conf_data.get<string>("pm4.prefix");
-
-  //// Add oscilloscope files
-  //string starting_loc  = path((const char*)fInFilename).parent_path().string();
-  //starting_loc += "/";
-  //starting_loc += files_location;
-  //starting_loc += "/";
-  //starting_loc += to_string (j);
-
-  //path current_dir(starting_loc);
-  //boost::regex pattern(Form("%s_\\d*.txt", (*current_config).pPrefix1.c_str()));
-
-  //if (exists(current_dir))
-  //for (recursive_directory_iterator iter(current_dir), end; iter != end; ++iter) {
-  //string name = iter->path().leaf().string();
-  //string dir;
-  //if (regex_match(name, pattern)) {
-  //name[1] = ((*current_config).pPrefix1)[1];
-  //dir = iter->path().parent_path().string();
-  //dir += "/";
-  //dir += name;
-  //(*current_config).pFiles.insert(dir);
-  //}
-  //}
-  //else {
-  //string msg  = "Directory: \"";
-  //msg += current_dir.string();
-  //msg += "\" does not exist.";
-  //ERROR(msg.c_str());
-  //}
-
-  //// Set Iterator to begining
-  //(*current_config).pIter         = (*current_config).pFiles.begin();
-  //}
-  //}
-  //}
-  ////wk to trzeba wyabstrahowac jako metode end
-  //}
-
-  //fWriter = nullptr;
-
-  //fEventNb = 0;
-  //for (vector <ScopeConfig> :: iterator it = fConfigs.begin(); it != fConfigs.end(); ++it) {
-  //fEventNb += (*it).pFiles.size();
-  //}
+  /// It is not a nice solution, I know
+  (static_cast<JPetScopeTask*>(fTask))->setInputFiles(inputScopeFiles);
 }
 
-
-
-std::vector<std::string> JPetScopeReader::createInputScopeFileNames(const std::string& inputPathToScopeFiles) const
+std::map<std::string, int> JPetScopeReader::getPMPrefixToPMIndicesMap(const scope_config::Config& config) const
 {
-  std::vector<std::string> scopeFiles;
+  std::map< std::string, int> prefixToIndex;
+  int i = 0;
+  for (const auto &  pm : config.fPMs) {
+    prefixToIndex[pm.fPrefix] = i;
+    i++;
+  }
+  return prefixToIndex;
+}
+
+/// Returns a map of list of scope input files. The key is the corresponding
+/// index of the photomultiplier in the param bank.
+std::map<int, std::vector<std::string>> JPetScopeReader::createInputScopeFileNames(
+                                            const std::string& inputPathToScopeFiles, 
+                                            std::map<std::string, int> pmPref2Index
+                                                                   ) const
+{
+  std::map<int, std::vector<std::string>> scopeFiles;
+  /// adding accepted keys that corresponds to PM indices
+  for (const auto& el: pmPref2Index) {
+    scopeFiles[el.second];
+  }
   path current_dir(inputPathToScopeFiles);
   if (exists(current_dir)) {
     for (recursive_directory_iterator iter(current_dir), end; iter != end; ++iter) {
       std::string filename = iter->path().leaf().string();
-      if( isCorrectScopeFileName(filename)) {
-        scopeFiles.push_back(iter->path().parent_path().string() + "/" + filename);
+      if (isCorrectScopeFileName(filename)) {
+        auto prefix = getFilePrefix(filename);
+        if ( pmPref2Index.find(prefix) != pmPref2Index.end()) { 
+          int index = pmPref2Index.find(prefix)->second;
+          scopeFiles.at(index).push_back(iter->path().parent_path().string() + "/" + filename);
+        } else {
+          WARNING("The filename does not contain the accepted prefix:" + filename);
+        }
       }
     }
-    
   } else {
     string msg  = "Directory: \"";
     msg += current_dir.string();
     msg += "\" does not exist.";
     ERROR(msg.c_str());
   }
-
-  //boost::regex pattern(Form("%s_\\d*.txt", (*current_config).pPrefix1.c_str()));
-
-  //if (exists(current_dir)) {
-    //for (recursive_directory_iterator iter(current_dir), end; iter != end; ++iter) {
-      //string name = iter->path().leaf().string();
-      //string dir;
-      //if (regex_match(name, pattern)) {
-        //name[1] = ((*current_config).pPrefix1)[1];
-        //dir = iter->path().parent_path().string();
-        //dir += "/";
-        //dir += name;
-        //(*current_config).pFiles.insert(dir);
-      //}
-    //}
-  //} else {
-    //string msg  = "Directory: \"";
-    //msg += current_dir.string();
-    //msg += "\" does not exist.";
-    //ERROR(msg.c_str());
-  //}
-
   return scopeFiles;
+}
+
+std::string JPetScopeReader::getFilePrefix(const std::string& filename) const
+{
+  auto pos = filename.find("_");
+  if (pos != string::npos) {
+    return filename.substr(0, pos);
+  }
+  return "";
 }
 
 /// not very effective, but at least we can test it
@@ -343,20 +231,21 @@ void JPetScopeReader::exec()
   fTask->init(emptyOpts);
   createNewWriter();
   fTask->setWriter(fWriter);
+  
   fTask->exec();
   fTask->terminate();
-   
+
   //for (fIter = fConfigs.begin(); fIter != fConfigs.end(); fIter++) {
 
 
-    //for ((*fIter).pIter = (*fIter).pFiles.begin(); (*fIter).pIter != (*fIter).pFiles.end(); (*fIter).pIter++) {
+  //for ((*fIter).pIter = (*fIter).pFiles.begin(); (*fIter).pIter != (*fIter).pFiles.end(); (*fIter).pIter++) {
 
-      //dynamic_cast<JPetScopeTask*>(fTask)->setScopeConfig(&(*fIter));
-      //fTask->exec();
+  //dynamic_cast<JPetScopeTask*>(fTask)->setScopeConfig(&(*fIter));
+  //fTask->exec();
 
-    //}
+  //}
 
-    //fWriter->writeObject((*fIter).pParamBank, "ParamBank");
+  //fWriter->writeObject((*fIter).pParamBank, "ParamBank");
 
   //}
 }
