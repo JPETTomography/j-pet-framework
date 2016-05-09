@@ -50,55 +50,24 @@ class JPetScopeReader: public JPetTaskLoader {
   JPetScopeReader(JPetScopeTask * task);
   virtual ~JPetScopeReader();
 
-  bool isCorrectScopeFileName(const std::string& filename) const;
-  /** @brief Prepare list of input files.
-   *
-   * Parse config file and prepares parameters bank.
-   *
-   * @param inputFilename Config file name.
-   */
   virtual void createInputObjects(const char* inputFilename);
-
-  /** @brief Required by JPetManager.
-   *
-   */
   virtual void createOutputObjects(const char* outputFilename);
 
-  /** @brief Perform any preparations for the analysis done by exec().
-   *
-   * Function containing per event analysis.
-   */
-
+  virtual void init(const JPetOptions::Options& opts);
   virtual void exec();
-  
-  /** @brief Return number of events to be processed.
-   *
-   * @return fEventNb
-   */
-  virtual long long getEventNb() {return fEventNb;}
-  
-  /** @brief End analysis.
-   */
   virtual void terminate();
+  virtual long long getEventNb() {return fEventNb;}
 
-  /** @biref Set input file name.
-   *
-   * @param name input file name.
-   */
   void setFileName(const char* name);
-  
-  /** @brief Create outfile name.
-   */
   std::string createOutputFilename();
-  
-  /** @brief Create writer for new configuration.
-   *
-   * When processing events for new configuration new output file is created.
-   */
   void createNewWriter();
 
-  virtual void init(const JPetOptions::Options& opts);
-  std::vector<std::string> createInputScopeFileNames(const std::string& inputPathToScopeFiles) const;
+  std::map<int, std::vector<std::string>> createInputScopeFileNames(const std::string& inputPathToScopeFiles,
+                                                     std::map<std::string, int> pmPref2Index
+                                                    ) const;
+  std::map<std::string, int> getPMPrefixToPMIndicesMap(const scope_config::Config& config) const;
+  bool isCorrectScopeFileName(const std::string& filename) const;
+  std::string getFilePrefix(const std::string& filename) const;
   
  private:
 
