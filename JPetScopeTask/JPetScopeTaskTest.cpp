@@ -17,6 +17,7 @@
 #define BOOST_TEST_MODULE JPetScopeTaskTest
 #include <boost/test/unit_test.hpp>
 #include "JPetScopeTask.h"
+#include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include <algorithm>
 
 BOOST_AUTO_TEST_SUITE(JPetScopeTaskTestTestSuite)
@@ -43,7 +44,5 @@ BOOST_AUTO_TEST_CASE(getTimeWindowIndex)
   BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("107349"), 349);
   BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("C1_0003.txt"), 3);
 }
-
-
 
 BOOST_AUTO_TEST_SUITE_END()

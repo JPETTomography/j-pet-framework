@@ -75,10 +75,10 @@ public:
   
   int getTimeWindowIndex(const std::string&  pathAndFileName) const;
   
-  inline std::vector<std::string> getInputFiles() const { return fInputFiles; } /// getting oscilloscope data full file names to process
-  inline void setInputFiles(std::vector<std::string> inputFiles) { fInputFiles = inputFiles; }
+  inline std::map<int, std::vector<std::string>> getInputFiles() const { return fInputFiles; } /// getting oscilloscope data full file names to process
+  inline void setInputFiles(const std::map<int, std::vector<std::string>>& inputFiles) { fInputFiles = inputFiles; }
 protected:
-  std::vector<std::string> fInputFiles;
+  std::map<int, std::vector<std::string>> fInputFiles;
   
   JPetWriter* fWriter;
   JPetParamManager* fParamManager;
