@@ -14,7 +14,7 @@
  */
 
 #include "JPetTreeHeader.h"
-#include "../CommonTools/CommonTools.h"
+#include "../JPetCommonTools/JPetCommonTools.h"
 #include <sstream>
 
 ClassImp(JPetTreeHeader);
@@ -39,7 +39,7 @@ std::string JPetTreeHeader::stringify() const
   tmp<<"-----------------------------------------------------------------\n" ;
   tmp<<"------------------------- General Info --------------------------\n" ;
   tmp<<"-----------------------------------------------------------------\n" ;
-  tmp<< "Run number              : " << CommonTools::Itoa(fRunNo) <<"\n";
+  tmp<< "Run number              : " << JPetCommonTools::Itoa(fRunNo) <<"\n";
   tmp<< "Base file name          : "<<getBaseFileName()<<"\n";
   tmp<< "Source (if any) position: "<< Form("%lf",getSourcePosition())<<"\n";
 
@@ -84,7 +84,7 @@ std::string JPetTreeHeader::stringifyHistory() const {
     const ProcessingStageInfo & info = getProcessingStageInfo(i);
     tmp<< "Module Name         : " << info.fModuleName<<"\n";
     tmp<< "Module desc.        : " << info.fModuleDescription<<"\n";
-    tmp<< "Module version      : " << CommonTools::Itoa( info.fModuleVersion ) <<"\n";
+    tmp<< "Module version      : " << JPetCommonTools::Itoa( info.fModuleVersion ) <<"\n";
     tmp<< "Started processing  : " << info.fCreationTime <<"\n";
     tmp<<"-----------------------------------------------------------------\n";
   }  

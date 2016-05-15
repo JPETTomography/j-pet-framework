@@ -19,7 +19,7 @@
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 #include "../JPetTask/JPetTask.h"
 #include "../JPetHLDReader/JPetHLDReader.h"
-#include "../CommonTools/CommonTools.h"
+#include "../JPetCommonTools/JPetCommonTools.h"
 
 #include "../JPetLoggerInclude.h"
 
@@ -143,7 +143,7 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
     
     // add info about this module to the processing stages' history in Tree header
     fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0,
-			  CommonTools::getTimeString());
+			  JPetCommonTools::getTimeString());
     
   } else {
     ERROR(inputFilename + std::string(": Unable to open the input file or load the tree"));

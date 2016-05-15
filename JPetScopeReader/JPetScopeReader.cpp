@@ -45,7 +45,7 @@
 #include "../JPetScopeReader/JPetScopeReader.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 #include "../JPetWriter/JPetWriter.h"
-#include "../CommonTools/CommonTools.h"
+#include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 
 #include <iostream>
@@ -205,7 +205,7 @@ void JPetScopeReader::createNewWriter()
     auto options = optionContainer.front();
     fHeader = new JPetTreeHeader(options.getRunNumber());
     fHeader->setBaseFileName(options.getInputFile());
-    fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0, CommonTools::getTimeString());
+    fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0, JPetCommonTools::getTimeString());
     fHeader->setSourcePosition((*fIter).pCollPosition);
     fWriter->writeHeader(fHeader);
   }
