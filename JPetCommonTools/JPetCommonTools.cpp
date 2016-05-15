@@ -10,13 +10,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file CommonTools.h
+ *  @file JPetCommonTools.h
  */
 
-#include "CommonTools.h"
+#include "JPetCommonTools.h"
 
 
-const std::string CommonTools::currentDateTime() 
+const std::string JPetCommonTools::currentDateTime() 
 {
   time_t     now = time(0);
   struct tm  tstruct;
@@ -28,20 +28,20 @@ const std::string CommonTools::currentDateTime()
   return buf;
 }
 
-std::size_t CommonTools::findSubstring(const std::string& p_string, const std::string& p_substring) 
+std::size_t JPetCommonTools::findSubstring(const std::string& p_string, const std::string& p_substring) 
 {
   // TODO check extension of the file. If necessary change it to another.
   return p_string.find(p_substring);
 }
 
-std::string CommonTools::doubleToString(double x) 
+std::string JPetCommonTools::doubleToString(double x) 
 {
   std::ostringstream out;
   out << x;
   return out.str();
 }
 
-int CommonTools::stringToInt(const std::string& str) 
+int JPetCommonTools::stringToInt(const std::string& str) 
 {
   std::istringstream in(str);
   int num;
