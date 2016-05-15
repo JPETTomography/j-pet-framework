@@ -38,9 +38,8 @@ class JPetTaskIO_test:public JPetTaskIO{
 public:
 	JPetTaskIO_test(){}
 	virtual ~JPetTaskIO_test(){}
-	void setUserLimits(const JPetOptions& opts,const long long totEventsFromReader, long long& firstEvent, long long& lastEvent) const{
-		JPetTaskIO::setUserLimits(opts,totEventsFromReader,firstEvent,lastEvent);
-	}
+	
+	using JPetTaskIO::setUserLimits;
 };
 BOOST_AUTO_TEST_CASE( setUserLimits)
 {

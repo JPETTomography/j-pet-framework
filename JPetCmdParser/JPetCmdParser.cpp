@@ -15,7 +15,7 @@
 
 #include "JPetCmdParser.h"
 #include <iostream>
-#include "../CommonTools/CommonTools.h"
+#include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetLoggerInclude.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 
@@ -124,7 +124,7 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
 
   std::vector<std::string> fileNames(variablesMap["file"].as< std::vector<std::string> >());
   for (unsigned int i = 0; i < fileNames.size(); i++) {
-    if ( ! CommonTools::ifFileExisting(fileNames[i]) ) {
+    if ( ! JPetCommonTools::ifFileExisting(fileNames[i]) ) {
       std::string fileName = fileNames[i];
       ERROR("File : " + fileName + " does not exist.");
       std::cerr << "File : " << fileNames[i] << " does not exist" << std::endl;
@@ -170,7 +170,7 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
     auto configFileName = files.front();
     options.at("scopeConfigFile") =  configFileName;  
     JPetScopeConfigParser scopeConfigParser;
-    files =scopeConfigParser.getInputDirectories(CommonTools::extractPathFromFile(configFileName), scopeConfigParser.getConfigs(configFileName));
+    files =scopeConfigParser.getInputDirectories(JPetCommonTools::extractPathFromFile(configFileName), scopeConfigParser.getConfigs(configFileName));
   }
   /// for every single input file we creat separate JPetOptions
   for (auto file :files) {

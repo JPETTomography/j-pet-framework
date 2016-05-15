@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(petOptionsDefaultConstrutorTest)
     };
 
     JPetOptions petOptions;
-    BOOST_REQUIRE_EQUAL(CommonTools::mapComparator(petOptions.getOptions(), options), true);
+    BOOST_REQUIRE_EQUAL(JPetCommonTools::mapComparator(petOptions.getOptions(), options), true);
 }
 
 BOOST_AUTO_TEST_CASE(petOptionsBasicTest)
@@ -75,8 +75,8 @@ BOOST_AUTO_TEST_CASE(petOptionsBasicTest)
     BOOST_REQUIRE_EQUAL(petOptions.isProgressBar(), true);
     BOOST_REQUIRE_EQUAL(petOptions.getInputFileType(), JPetOptions::FileType::kRoot);
     BOOST_REQUIRE_EQUAL(petOptions.getOutputFileType(), JPetOptions::FileType::kScope);
-    BOOST_REQUIRE_EQUAL(CommonTools::mapComparator(petOptions.getOptions(), options), true);
-    BOOST_REQUIRE_EQUAL(CommonTools::mapComparator(petOptions.getDefaultOptions(), options), false);
+    BOOST_REQUIRE_EQUAL(JPetCommonTools::mapComparator(petOptions.getOptions(), options), true);
+    BOOST_REQUIRE_EQUAL(JPetCommonTools::mapComparator(petOptions.getDefaultOptions(), options), false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

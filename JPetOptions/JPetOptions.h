@@ -18,7 +18,7 @@
 
 #include <string>
 #include <map>
-#include "../CommonTools/CommonTools.h"
+#include "../JPetCommonTools/JPetCommonTools.h"
 
 class JPetOptions
 {
@@ -54,7 +54,7 @@ public:
     return std::stoi(fOptions.at("runId"));
   }
   bool isProgressBar() const {
-    return CommonTools::to_bool(fOptions.at("progressBar"));
+    return JPetCommonTools::to_bool(fOptions.at("progressBar"));
   }
 		bool isLocalDB() const {
 				return fOptions.count("localDB") > 0;

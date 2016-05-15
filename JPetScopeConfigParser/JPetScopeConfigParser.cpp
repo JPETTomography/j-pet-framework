@@ -26,7 +26,7 @@
 #include <TApplication.h>
 #include <cstdio>
 #include <iostream>
-#include "../CommonTools/CommonTools.h"
+#include "../JPetCommonTools/JPetCommonTools.h"
 
 
 std::vector<scope_config::Config> JPetScopeConfigParser::getConfigs(const std::string& configFileName) const
@@ -83,7 +83,7 @@ std::vector<std::string> JPetScopeConfigParser::getInputFileNames(std::string co
       //! one element positions can contain a string of several numbers e.g. "2 3 10"
       positionsContainer.push_back(v.second.get<std::string>("positions"));
     }
-    auto currFileNames = generateFileNames(configFileName, CommonTools::stripFileNameSuffix(currentConfigName), transformToNumbers(positionsContainer));
+    auto currFileNames = generateFileNames(configFileName, JPetCommonTools::stripFileNameSuffix(currentConfigName), transformToNumbers(positionsContainer));
     inputFileNames.insert(inputFileNames.end(), currFileNames.begin(), currFileNames.end());
   }
   return inputFileNames;
