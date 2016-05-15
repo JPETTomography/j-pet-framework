@@ -14,7 +14,7 @@
  */
 
 #include "JPetUser.h"
-#include "../CommonTools/CommonTools.h"
+#include "../JPetCommonTools/JPetCommonTools.h"
 
 
 ClassImp(JPetUser);
@@ -52,7 +52,7 @@ JPetUser::JPetUser(int p_id,
 						  m_lastLoginDate(p_lastLoginDate)
 {
 /*
-  std::string l_currentDateTime = CommonTools::currentDateTime();
+  std::string l_currentDateTime = JPetCommonTools::currentDateTime();
   m_creationDate = l_currentDateTime;
   m_lastLoginDate = l_currentDateTime;
 */
