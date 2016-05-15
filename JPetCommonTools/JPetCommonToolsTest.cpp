@@ -10,23 +10,38 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file CommonToolsTest.cpp
+ *  @file JPetCommonToolsTest.cpp
  */
 
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE CommonToolsTest
+#define BOOST_TEST_MODULE JPetCommonToolsTest
 #include <boost/test/unit_test.hpp>
 #include <map>
-#include "CommonTools.h"
+#include "JPetCommonTools.h"
 
+//CMakeLists.txt
+//file(GLOB UNIT_TEST_SOURCES JPetCommonToolsTest.cpp)
 
 BOOST_AUTO_TEST_SUITE(CommonToolsTestSuite)
 
-BOOST_AUTO_TEST_CASE(mapComparatorTest)
+BOOST_AUTO_TEST_CASE(mapAreEqualTest)
 {
   std::map<int, int> mapTestLeft, mapTestRight;
-  bool areMapsEqual = CommonTools::mapComparator(mapTestLeft, mapTestRight);
+  bool areMapsEqual = JPetCommonTools::mapComparator(mapTestLeft, mapTestRight);
   BOOST_REQUIRE_EQUAL(areMapsEqual, true);
+}
+
+BOOST_AUTO_TEST_CASE(mapsAreNotEqualTest)
+{
+  std::map<char,int> first;
+  first['a']=10;
+  first['b']=30;
+  first['c']=50;
+  first['d']=70;
+  std::map<char,int> second;
+  
+  bool areMapsEqual = JPetCommonTools::mapComparator(first, second);
+  BOOST_REQUIRE_EQUAL(areMapsEqual, false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

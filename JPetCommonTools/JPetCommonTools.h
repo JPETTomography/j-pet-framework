@@ -10,7 +10,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file CommonTools.h
+ *  @file JPetCommonTools.h
  */
 
 #ifndef COMMON_TOOLS_H
@@ -33,7 +33,7 @@ class boost::noncopyable;
 
 
 
-class CommonTools : public boost::noncopyable
+class JPetCommonTools : public boost::noncopyable
 {
 public:
   static const std::string currentDateTime();
