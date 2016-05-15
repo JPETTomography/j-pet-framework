@@ -21,7 +21,7 @@
 
 #include "../JPetLoggerInclude.h"
 #include "../JPetScopeReader/JPetScopeReader.h"
-#include "../CommonTools/CommonTools.h"
+#include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetCmdParser/JPetCmdParser.h"
 
 #include <TDSet.h>
@@ -38,7 +38,7 @@ JPetManager& JPetManager::getManager()
 
 void JPetManager::run()
 {
-  INFO( "======== Starting processing all tasks: " + CommonTools::getTimeString() + " ========\n" );
+  INFO( "======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
   std::vector<JPetTaskExecutor*> executors;
   std::vector<TThread*> threads;
   auto i = 0;
@@ -60,7 +60,7 @@ void JPetManager::run()
     delete executor;
   }
 
-  INFO( "======== Finished processing all tasks: " + CommonTools::getTimeString() + " ========\n" );
+  INFO( "======== Finished processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
 }
 
 void JPetManager::parseCmdLine(int argc, char** argv)
