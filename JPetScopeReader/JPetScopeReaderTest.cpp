@@ -10,21 +10,35 @@
 #include "JPetScopeReaderFixtures.h"
 #include "../JPetScopeReader/JPetScopeReader.h"
 
+char* convertStringToCharP(const std::string& s)
+{
+  char* pc = new char[s.size() + 1];
+  std::strcpy(pc, s.c_str());
+  return pc;
+}
+
+std::vector<char*> createArgs(const std::string& commandLine) 
+{
+  std::istringstream iss(commandLine);
+  std::vector<std::string> args {std::istream_iterator<std::string>{iss},
+                                 std::istream_iterator<std::string>{}
+                                };
+  std::vector<char*> args_char;
+  std::transform(args.begin(), args.end(), std::back_inserter(args_char), convertStringToCharP);
+  return args_char;
+}
+
 
 BOOST_AUTO_TEST_SUITE (JPetScopeReaderTestSuite)
 BOOST_AUTO_TEST_CASE (generate_root_file) {
 
-  int   _argc    = 5;
-  char* _argv[6];
-        _argv[0] = const_cast<char*>("JPetScopeReaderTest.exe");
-        _argv[1] = const_cast<char*>("-t");
-        _argv[2] = const_cast<char*>("scope");
-        _argv[3] = const_cast<char*>("-f");
-        _argv[4] = const_cast<char*>("unitTestData/JPetScopeReaderTest/test_file.json");
-	_argv[5] = (char*)(NULL);
+  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeReaderTest/test_file.json";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
 
   JPetManager& manager = JPetManager::getManager();
-  manager.parseCmdLine(_argc, _argv);
+  manager.parseCmdLine(argc, argv);
   manager.run();
   BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(gTest_root_filename), "File " << gTest_root_filename << " does not exist.");
 }
