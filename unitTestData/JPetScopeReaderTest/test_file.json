@@ -45,17 +45,11 @@
         {
             "id": "12"
         },
-        "location": "data",
+        "location": "scope_files",
         "collimator":
         [
             {
-                "positions": "1 5 2"
-            },
-            {
-                "positions": "12"
-            },
-            {
-                "positions": "6"
+                "positions": "0"
             }
         ]
     }
