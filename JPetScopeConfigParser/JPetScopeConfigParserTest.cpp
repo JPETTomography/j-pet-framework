@@ -20,7 +20,7 @@
 #include "JPetScopeConfigPOD.h"
 #include <algorithm>
 
-std::string gInputConfigJsonFilenameTest = "../../unitTestData/JPetScopeConfigParser/example.json";
+std::string gInputConfigJsonFilenameTest = "unitTestData/JPetScopeConfigParser/example.json";
 
 BOOST_AUTO_TEST_SUITE(JPetScopeConfigParserTestSuite)
 
