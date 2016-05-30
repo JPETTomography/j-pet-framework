@@ -88,13 +88,19 @@ void JPetTaskExecutor::processFromCmdLineArgs(int)
   auto inputFileType = fOptions.getInputFileType();
   auto inputFile = fOptions.getInputFile();
   if (inputFileType == JPetOptions::kScope) {
-    JPetScopeReader* module = new JPetScopeReader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
-    module->setFileName(inputFile);
-    fTasks.push_front(module);
+    createScopeTaskAndAddToTaskList(inputFile);
   } else if (inputFileType == JPetOptions::kHld) {
     fUnpacker.setParams(fOptions.getInputFile());
     unpackFile();
   }
+}
+
+void JPetTaskExecutor::createScopeTaskAndAddToTaskList(const char* inputFile)
+{
+  JPetScopeReader* module = new JPetScopeReader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
+  assert(module); 
+  module->setParamManager(fParamManager); 
+  fTasks.push_front(module);
 }
 
 void JPetTaskExecutor::unpackFile()
