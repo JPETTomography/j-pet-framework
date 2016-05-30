@@ -80,7 +80,7 @@ void JPetScopeReader::createInputObjects(const char* inputFileName)
   assert(configs.size() == 1); ///wk for a moment
   std::map<int, std::vector<std::string>> inputScopeFiles;
   for (const auto & config : configs) {
-    if (!getParamManager().getParametersFromScopeConfig(config)) {
+    if (getParamManager().isNullObject() || (!getParamManager().getParametersFromScopeConfig(config))) {
       ERROR("Unable to generate Param Bank from Scope Config");
     }
     auto prefix2PM =  getPMPrefixToPMIndicesMap(config);
