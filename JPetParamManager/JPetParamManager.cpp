@@ -20,6 +20,15 @@
 
 using namespace std;
 
+
+JPetParamManager::JPetParamManager(bool isNull):
+  fParamGetter(new JPetDBParamGetter()),
+  fBank(0),
+  fIsNullObject(isNull)
+{
+  /* */
+}
+
 JPetParamManager::~JPetParamManager()
 {
   if (fBank) {
