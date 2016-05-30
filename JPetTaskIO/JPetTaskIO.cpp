@@ -108,8 +108,11 @@ void JPetTaskIO::setOptions(const JPetOptions& opts) {
 void JPetTaskIO::setParamManager(JPetParamManager* paramManager) {
 	fParamManager = paramManager;
 }
+
 JPetParamManager& JPetTaskIO::getParamManager() {
-	return *fParamManager;
+  static JPetParamManager NullManager(true);
+  if (fParamManager) return *fParamManager;
+  else return NullManager;
 }
 
 void JPetTaskIO::createInputObjects(const char* inputFilename)
