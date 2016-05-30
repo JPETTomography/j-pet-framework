@@ -30,8 +30,12 @@
 class JPetParamManager
 {
  public:
-  JPetParamManager() : fParamGetter(new JPetDBParamGetter()), fBank(0) {}
-  JPetParamManager(JPetParamGetter* paramGetter) : fParamGetter(paramGetter), fBank(0) {}
+  JPetParamManager() : fParamGetter(new JPetDBParamGetter()), fBank(0), fIsNullObject(false) {}
+  JPetParamManager(JPetParamGetter* paramGetter) : fParamGetter(paramGetter), fBank(0) , fIsNullObject(false) {}
+  /// Special constructor to create NullObject.
+  /// This object can be returned if JPetParamManager is not created, 
+  /// and the const& is expected to be returned.
+  explicit JPetParamManager(bool isNull);   
   ~JPetParamManager();
 
   void fillParameterBank(const int run);
@@ -48,12 +52,15 @@ class JPetParamManager
   void clearParameters();
   const JPetParamBank& getParamBank() const;
 
+  inline bool isNullObject()const { return fIsNullObject; }
+
  private:
   JPetParamManager(const JPetParamManager&);
   JPetParamManager& operator=(const JPetParamManager&);
 
   JPetParamGetter* fParamGetter;
   JPetParamBank* fBank;
+  bool fIsNullObject;
 
  protected:
   void createXMLFile(const std::string &channelDataFileName, int channelOffset, int numberOfChannels);
