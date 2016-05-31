@@ -20,6 +20,7 @@ JPetOptions::Options JPetOptions::kDefaultOptions = {
   {"inputFile", ""},
   {"inputFileType", ""},
   {"scopeConfigFile",""},
+  {"scopeInputDirectory",""},
   {"outputFile", "root"},
   {"outputFileType", "test.root"},
   {"firstEvent", "-1"},
