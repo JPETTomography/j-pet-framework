@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(getParamBankTest)
   checkContainersSize(bank);
 }
 
-BOOST_AUTO_TEST_CASE(generateParametersFromScopeConfig)
+BOOST_AUTO_TEST_CASE(getParametersFromScopeConfig)
 {
 	
   using namespace scope_config;
@@ -108,9 +108,10 @@ BOOST_AUTO_TEST_CASE(generateParametersFromScopeConfig)
   config.fScins=std::vector<Scin>{Scin(32), Scin(12)};
   config.fName="config1";
   JPetParamManager paramManagerInstance;
-  JPetParamBank* bank = paramManagerInstance.generateParametersFromScopeConfig(config);
-  BOOST_REQUIRE(bank);
-  auto bslots = bank->getBarrelSlots();
+  BOOST_REQUIRE(paramManagerInstance.getParametersFromScopeConfig(config));
+  const JPetParamBank& bank = paramManagerInstance.getParamBank();
+  BOOST_REQUIRE(!bank.isDummy());
+  auto bslots = bank.getBarrelSlots();
   BOOST_REQUIRE_EQUAL(bslots.size(), 2);
   int i = 0;
   for(const BSlot& BSlotConf: config.fBSlots) {
@@ -122,7 +123,7 @@ BOOST_AUTO_TEST_CASE(generateParametersFromScopeConfig)
     BOOST_REQUIRE_EQUAL(bslots[i]->getTheta(), BSlotConf.fTheta);
     i++;
   }
-  auto pms = bank->getPMs();
+  auto pms = bank.getPMs();
   BOOST_REQUIRE_EQUAL(pms.size(), 4);
   i = 0;
   for(const PM& PMConf: config.fPMs) {
@@ -130,7 +131,7 @@ BOOST_AUTO_TEST_CASE(generateParametersFromScopeConfig)
     BOOST_REQUIRE_EQUAL(pms[i]->getID(), PMConf.fId);
     i++;
   }
-  auto scintillators = bank->getScintillators();
+  auto scintillators = bank.getScintillators();
   BOOST_REQUIRE_EQUAL(scintillators.size(), 2);
   i = 0;
   for(const Scin& ScinConf: config.fScins) {
@@ -156,8 +157,6 @@ BOOST_AUTO_TEST_CASE(generateParametersFromScopeConfig)
 
   BOOST_REQUIRE_EQUAL(scintillators[0]->getBarrelSlot().getID(), config.fBSlots[0].fId);
   BOOST_REQUIRE_EQUAL(scintillators[1]->getBarrelSlot().getID(), config.fBSlots[1].fId);
-  
-  if (bank) delete bank;
 }
 
 BOOST_AUTO_TEST_SUITE_END()
