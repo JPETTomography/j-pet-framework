@@ -81,23 +81,26 @@ protected:
 template <class T>
 bool JPetWriter::write(const T& obj)
 {
-  ;
-
+  DEBUG("JPetWriter");
   if ( !fFile->IsOpen() ) {
     ERROR("Could not write to file. Have you closed it already?");
     return false;
   }
   assert(fFile);
-
+  DEBUG("cd");
   fFile->cd(/*fFileName.c_str()*/); // -> http://root.cern.ch/drupal/content/current-directory
 
+  DEBUG("filler");
   T* filler = const_cast<T*>(&obj);
   assert(filler);
   if (!fIsBranchCreated) {
+    DEBUG("Branch");
+    assert(fTree);
     fTree->Branch(filler->GetName(), filler->GetName(), &filler);
     fIsBranchCreated = true;
   }
 
+  DEBUG("fTree->Fill()");
   fTree->Fill();
   return true;
 }

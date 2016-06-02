@@ -47,7 +47,6 @@ void JPetTaskExecutor::process()
 {
   processFromCmdLineArgs(fProcessedFile);
   for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
-
     // ignore the event range options for all but the first processed task
     if(currentTask != fTasks.begin()){
       fOptions.resetEventRange();
@@ -63,6 +62,7 @@ void JPetTaskExecutor::process()
 
 void* JPetTaskExecutor::processProxy(void* runner)
 {
+  assert(runner);
   static_cast<JPetTaskExecutor*>(runner)->process();
   return 0;
 }

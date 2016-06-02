@@ -95,24 +95,36 @@ void JPetTaskIO::terminate()
   fReader->closeFile();
 
 }
-void JPetTaskIO::addSubTask(JPetTaskInterface* subtask) {
-	fTask = dynamic_cast<JPetTask*>(subtask);
+void JPetTaskIO::addSubTask(JPetTaskInterface* subtask)
+{
+  fTask = dynamic_cast<JPetTask*>(subtask);
 }
-JPetTask* JPetTaskIO::getSubTask() const {
-	return fTask;
-}
-
-void JPetTaskIO::setOptions(const JPetOptions& opts) {
-	fOptions = opts;
-}
-void JPetTaskIO::setParamManager(JPetParamManager* paramManager) {
-	fParamManager = paramManager;
+JPetTask* JPetTaskIO::getSubTask() const
+{
+  return fTask;
 }
 
-JPetParamManager& JPetTaskIO::getParamManager() {
+void JPetTaskIO::setOptions(const JPetOptions& opts)
+{
+  fOptions = opts;
+}
+void JPetTaskIO::setParamManager(JPetParamManager* paramManager)
+{
+  DEBUG("JPetTaskIO");
+  fParamManager = paramManager;
+}
+
+JPetParamManager& JPetTaskIO::getParamManager()
+{
+  DEBUG("JPetTaskIO");
   static JPetParamManager NullManager(true);
-  if (fParamManager) return *fParamManager;
-  else return NullManager;
+  if (fParamManager) {
+    DEBUG("JPetParamManger returning normal parammanager");
+    return *fParamManager;
+  } else {
+    DEBUG("JPetParamManger returning NullManager ");
+    return NullManager;
+  }
 }
 
 void JPetTaskIO::createInputObjects(const char* inputFilename)
@@ -143,11 +155,11 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
     }
     // create an object for storing histograms and counters during processing
     fStatistics = new JPetStatistics();
-    
+
     // add info about this module to the processing stages' history in Tree header
     fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0,
-			  JPetCommonTools::getTimeString());
-    
+                          JPetCommonTools::getTimeString());
+
   } else {
     ERROR(inputFilename + std::string(": Unable to open the input file or load the tree"));
     exit(-1);
