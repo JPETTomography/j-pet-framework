@@ -75,6 +75,9 @@ void JPetLogger::logMessage(const char* func, const char* msg, MessageType type)
     case kError:
       std::cout << "Error ";
       break;
+    case kDebug:
+      std::cout << "Debug ";
+      break;
   }
   std::cout << func << "():"
   << msg
