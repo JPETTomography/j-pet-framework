@@ -51,16 +51,10 @@ class JPetScopeReader: public JPetTaskLoader {
   virtual ~JPetScopeReader();
 
   virtual void createInputObjects(const char* inputFilename);
-  virtual void createOutputObjects(const char* outputFilename);
 
   virtual void init(const JPetOptions::Options& opts);
   virtual void exec();
   virtual void terminate();
-  virtual long long getEventNb() {return fEventNb;}
-
-  void setFileName(const char* name);
-  std::string createOutputFilename();
-  void createNewWriter();
 
   std::map<int, std::vector<std::string>> createInputScopeFileNames(const std::string& inputPathToScopeFiles,
                                                      std::map<std::string, int> pmPref2Index
@@ -68,24 +62,6 @@ class JPetScopeReader: public JPetTaskLoader {
   std::map<std::string, int> getPMPrefixToPMIndicesMap(const scope_config::Config& config) const;
   bool isCorrectScopeFileName(const std::string& filename) const;
   std::string getFilePrefix(const std::string& filename) const;
-  
- private:
-
-  long long fEventNb; /**< @brief Number of events to process. */ 
-  
-  JPetTreeHeader* fHeader; /**< @ref JPetTreeHeader. */ 
-  JPetWriter* fWriter; /**< @ref JPetWriter. */
-
-  TString fInFilename; /**< @brief Location of config file. */
-  TString fOutFilename; /**< @brief Location of output root file. */
-
-  std::vector <ScopeConfig> fConfigs; /**< @brief Vector of all configurations.
-                                       * 
-				       * @ref ScopeConfig
-				       */
-
-  std::vector <ScopeConfig> :: iterator fIter; /**< @ref fConfigs */
-
 };
 
 #endif

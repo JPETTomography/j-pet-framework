@@ -55,40 +55,40 @@ using namespace boost::filesystem;
 using boost::property_tree::ptree;
 
 
-JPetScopeReader::JPetScopeReader(JPetScopeTask* task): JPetTaskLoader(), fEventNb(0), fWriter(nullptr)
+JPetScopeReader::JPetScopeReader(JPetScopeTask* task): JPetTaskLoader("", "reco.sig", task)
 {
-  gSystem->Load("libTree");
-  addSubTask(task);
+gSystem->Load("libTree");
+  /**/
 }
-
 
 JPetScopeReader::~JPetScopeReader()
 {
-
   if (fWriter != nullptr) {
     delete fWriter;
     fWriter = nullptr;
   }
-
 }
+
 
 void JPetScopeReader::createInputObjects(const char* inputFileName)
 {
   JPetScopeConfigParser confParser;
-  auto configs = confParser.getConfigs(fOptions.getScopeConfigFile());
+  auto config = confParser.getConfig(fOptions.getScopeConfigFile());
 
-  assert(configs.size() == 1); ///wk for a moment
   std::map<int, std::vector<std::string>> inputScopeFiles;
-  for (const auto & config : configs) {
-    if (getParamManager().isNullObject() || (!getParamManager().getParametersFromScopeConfig(config))) {
-      ERROR("Unable to generate Param Bank from Scope Config");
-    }
-    auto prefix2PM =  getPMPrefixToPMIndicesMap(config);
-    inputScopeFiles = createInputScopeFileNames(fOptions.getInputFile(), prefix2PM);
-  }
-  /// inputFile is in this context the directory with oscilloscope files
-  /// It is not a nice solution, I know
+  auto prefix2PM =  getPMPrefixToPMIndicesMap(config);
+  inputScopeFiles = createInputScopeFileNames(fOptions.getScopeInputDirectory(), prefix2PM);
   (static_cast<JPetScopeTask*>(fTask))->setInputFiles(inputScopeFiles);
+
+
+  // create an object for storing histograms and counters during processing
+  fStatistics = new JPetStatistics();
+  assert(fStatistics);
+  fHeader = new JPetTreeHeader(fOptions.getRunNumber());
+  assert(fHeader);
+  fHeader->setBaseFileName(fOptions.getInputFile());
+  fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0, JPetCommonTools::getTimeString());
+  //fHeader->setSourcePosition((*fIter).pCollPosition);
 }
 
 std::map<std::string, int> JPetScopeReader::getPMPrefixToPMIndicesMap(const scope_config::Config& config) const
@@ -105,22 +105,23 @@ std::map<std::string, int> JPetScopeReader::getPMPrefixToPMIndicesMap(const scop
 /// Returns a map of list of scope input files. The key is the corresponding
 /// index of the photomultiplier in the param bank.
 std::map<int, std::vector<std::string>> JPetScopeReader::createInputScopeFileNames(
-                                            const std::string& inputPathToScopeFiles, 
-                                            std::map<std::string, int> pmPref2Index
-                                                                   ) const
+                                       const std::string& inputPathToScopeFiles,
+                                       std::map<std::string, int> pmPref2Index
+                                     ) const
 {
   std::map<int, std::vector<std::string>> scopeFiles;
-  /// adding accepted keys that corresponds to PM indices
-  for (const auto& el: pmPref2Index) {
-    scopeFiles[el.second];
-  }
   path current_dir(inputPathToScopeFiles);
   if (exists(current_dir)) {
+  
+    /// adding accepted keys that corresponds to PM indices
+    for (const auto & el : pmPref2Index) {
+      scopeFiles[el.second];
+    }
     for (recursive_directory_iterator iter(current_dir), end; iter != end; ++iter) {
       std::string filename = iter->path().leaf().string();
       if (isCorrectScopeFileName(filename)) {
         auto prefix = getFilePrefix(filename);
-        if ( pmPref2Index.find(prefix) != pmPref2Index.end()) { 
+        if ( pmPref2Index.find(prefix) != pmPref2Index.end()) {
           int index = pmPref2Index.find(prefix)->second;
           scopeFiles.at(index).push_back(iter->path().parent_path().string() + "/" + filename);
         } else {
@@ -153,124 +154,31 @@ bool JPetScopeReader::isCorrectScopeFileName(const std::string& filename) const
   return regex_match(filename, pattern);
 }
 
-void JPetScopeReader::createOutputObjects(const char* outputFileName)
-{
-  //fIter = fConfigs.begin();
-}
-
-std::string JPetScopeReader::createOutputFilename()
-{
-  string out_fn(fOutFilename.Data());
-  int last_dot = out_fn.find_last_of(".");
-  string out_fn2  = out_fn.substr(0, last_dot );
-  out_fn2 += "_";
-  out_fn2 += (*fIter).pName;
-  out_fn2 += "_";
-  out_fn2 += to_string((*fIter).pCollPosition);
-  out_fn2 += ".reco.sig";
-  out_fn2 += out_fn.substr(last_dot);
-
-  return out_fn2;
-}
-
-void JPetScopeReader::createNewWriter()
-{
-
-  if (fConfigs.empty()) {
-    ERROR("No files for processing.");
-  } else {
-    terminate();
-
-    INFO (Form("Creating root file for configuration %s and position %d", ((*fIter).pName).c_str(), (*fIter).pCollPosition));
-
-//wk wyodrebnij to jako metode
-    /*
-    string out_fn(fOutFilename.Data());
-    int last_dot = out_fn.find_last_of(".");
-    string out_fn2  = out_fn.substr(0,last_dot );
-           out_fn2 += "_";
-           out_fn2 += (*fIter).pName;
-     out_fn2 += "_";
-           out_fn2 += to_string((*fIter).pCollPosition);
-     out_fn2 += ".reco.sig";
-           out_fn2 += out_fn.substr(last_dot);
-           */
-    std::string out_fn2 = createOutputFilename();
-//wk az do tego miejsca, petoda zwraca stringa
-
-    fWriter = new JPetWriter(out_fn2.c_str());
-
-    auto optionContainer = JPetManager::getManager().getOptions();
-    assert(optionContainer.size() == 1);
-    auto options = optionContainer.front();
-    fHeader = new JPetTreeHeader(options.getRunNumber());
-    fHeader->setBaseFileName(options.getInputFile());
-    fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0, JPetCommonTools::getTimeString());
-    fHeader->setSourcePosition((*fIter).pCollPosition);
-    fWriter->writeHeader(fHeader);
-  }
-}
-
 void JPetScopeReader::init(const JPetOptions::Options& opts)
 {
-  INFO( "Starting Scope Reader Module." );
-  setOptions(JPetOptions(opts));
-  auto inputFilename = fOptions.getInputFile();
-  auto outputFilename = fOptions.getOutputFile();
-  createInputObjects(inputFilename);
-  createOutputObjects(outputFilename);
+  INFO( "Initialize Scope Reader Module." );
+  JPetTaskLoader::init(opts);
 }
 
 void JPetScopeReader::exec()
 {
-
   assert(fTask);
-
   fTask->setParamManager(&(getParamManager()));
   JPetTaskInterface::Options emptyOpts;
   fTask->init(emptyOpts);
-  createNewWriter();
-  fTask->setWriter(fWriter);
-  
   fTask->exec();
   fTask->terminate();
-
-  //for (fIter = fConfigs.begin(); fIter != fConfigs.end(); fIter++) {
-
-
-  //for ((*fIter).pIter = (*fIter).pFiles.begin(); (*fIter).pIter != (*fIter).pFiles.end(); (*fIter).pIter++) {
-
-  //dynamic_cast<JPetScopeTask*>(fTask)->setScopeConfig(&(*fIter));
-  //fTask->exec();
-
-  //}
-
-  //fWriter->writeObject((*fIter).pParamBank, "ParamBank");
-
-  //}
 }
 
 void JPetScopeReader::terminate()
 {
-
-  if (fWriter)
-    if (fWriter->isOpen()) {
-      fWriter->closeFile();
-      delete fWriter;
-      fWriter = nullptr;
-    }
+  assert(fWriter);
+  assert(fHeader);
+  assert(fStatistics);
+  fWriter->writeHeader(fHeader);
+  fWriter->writeObject(fStatistics->getHistogramsTable(), "Stats");
+   //store the parametric objects in the ouptut ROOT file
+  getParamManager().saveParametersToFile(fWriter);
+  getParamManager().clearParameters();
+  fWriter->closeFile();
 }
-
-void JPetScopeReader::setFileName(const char* name)
-{
-  fInFilename = TString(name);
-  fOutFilename = TString(name);
-  fOutFilename.ReplaceAll(".ini", "");
-  fOutFilename.ReplaceAll(".info", "");
-  fOutFilename.ReplaceAll(".json", "");
-  fOutFilename.ReplaceAll(".xml", "");
-  fOutFilename.Append(".root");
-}
-
-
-
