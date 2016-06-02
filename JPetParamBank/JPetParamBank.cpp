@@ -25,6 +25,7 @@ JPetParamBank::JPetParamBank():fDummy(false){}
 JPetParamBank::JPetParamBank(const bool d):fDummy(d){}
 const bool JPetParamBank::isDummy()const{return fDummy;}
 JPetParamBank::JPetParamBank(const JPetParamBank& paramBank):fDummy(false){
+
   copyMapValues(fScintillators, paramBank.fScintillators);
   copyMapValues(fPMs, paramBank.fPMs);
   copyMapValues(fPMCalibs, paramBank.fPMCalibs);
@@ -38,6 +39,7 @@ JPetParamBank::JPetParamBank(const JPetParamBank& paramBank):fDummy(false){
 
 JPetParamBank::~JPetParamBank()
 {
+  DEBUG("destructor of JPetParamBank");
   //std::for_each(fScintillators.begin(), fScintillators.end(), std::default_delete<JPetScin>());
   //std::for_each(fPMs.begin(), fPMs.end(), std::default_delete<JPetPM>());
   //std::for_each(fPMCalibs.begin(), fPMCalibs.end(), std::default_delete<JPetPMCalib>());
