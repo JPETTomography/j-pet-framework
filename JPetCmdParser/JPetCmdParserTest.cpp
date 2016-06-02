@@ -72,7 +72,9 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
-  BOOST_REQUIRE_EQUAL(std::string(option.getInputFile()), "unitTestData/JPetCmdParserTest/data/6");
+  BOOST_REQUIRE_EQUAL(std::string(option.getInputFile()), "testfile_config1_6");
+  BOOST_REQUIRE_EQUAL(std::string(option.getScopeConfigFile()), "unitTestData/JPetCmdParserTest/testfile.json");
+  BOOST_REQUIRE_EQUAL(std::string(option.getScopeInputDirectory()), "unitTestData/JPetCmdParserTest/data/6");
   BOOST_REQUIRE_EQUAL(option.getFirstEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getLastEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getRunNumber(), -1);
@@ -353,7 +355,6 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
     BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
     BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
     BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
-    //std::cout << "PROCES =" << firstOption.getOutputFileType() << std::endl;
     //BOOST_REQUIRE(firstOption.getOutputFile() == "root");
     //BOOST_REQUIRE(firstOption.getOutputFileType() == "test.root");
     BOOST_REQUIRE(firstOption.getFirstEvent() == 2);

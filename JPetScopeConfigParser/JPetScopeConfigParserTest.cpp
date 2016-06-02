@@ -74,28 +74,30 @@ BOOST_AUTO_TEST_CASE(getJsonContent)
 }
 
 
-BOOST_AUTO_TEST_CASE(getInputFileNames)
+
+BOOST_AUTO_TEST_CASE(getInputDirectoriesAndFakeInputFile)
 {
   using VecOfStrings = std::vector<std::string>;
   JPetScopeConfigParser parser;
-  BOOST_REQUIRE(parser.getInputFileNames("").empty());
-  VecOfStrings expectedRes {"config1_1", "config1_5",
-                            "config1_2", "config1_12",
-                            "config1_6"};
-  std::transform(expectedRes.begin(), expectedRes.end(),expectedRes.begin(), 
-                [&](std::string name) {
-                  return gInputConfigJsonFilenameTest+"_"+name;
-                }); 
-  BOOST_REQUIRE(parser.getInputFileNames(gInputConfigJsonFilenameTest) == expectedRes);
+  using namespace scope_config;
+  Config config;
+  BOOST_REQUIRE(parser.getInputDirectoriesAndFakeInputFiles("").empty()); 
+  BOOST_REQUIRE(!parser.getInputDirectoriesAndFakeInputFiles(gInputConfigJsonFilenameTest).empty()); 
 }
 
 
-BOOST_AUTO_TEST_CASE(getConfigs)
+BOOST_AUTO_TEST_CASE(getConfig)
 {
   using namespace scope_config;
   using VecOfStrings = std::vector<std::string>;
   JPetScopeConfigParser parser;
-  BOOST_REQUIRE(parser.getConfigs("").empty());
+  Config emptyConf = parser.getConfig("");
+  BOOST_REQUIRE_EQUAL(emptyConf.fName, "");
+  BOOST_REQUIRE_EQUAL(emptyConf.fLocation, "");
+  BOOST_REQUIRE(emptyConf.fBSlots.empty());
+  BOOST_REQUIRE(emptyConf.fPMs.empty());
+  BOOST_REQUIRE(emptyConf.fScins.empty());
+  BOOST_REQUIRE(emptyConf.fCollimatorPositions.empty());
 
   Config config;
   config.fLocation="data";
@@ -105,8 +107,7 @@ BOOST_AUTO_TEST_CASE(getConfigs)
   config.fScins=std::vector<Scin>{Scin(32), Scin(12)};
   config.fName="config1";
   
-  BOOST_REQUIRE(!parser.getConfigs(gInputConfigJsonFilenameTest).empty());
-  auto res = parser.getConfigs(gInputConfigJsonFilenameTest).front();
+  auto res = parser.getConfig(gInputConfigJsonFilenameTest);
 
   BOOST_REQUIRE(res.fName == config.fName);
   BOOST_REQUIRE(res.fLocation == config.fLocation);
