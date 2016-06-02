@@ -56,8 +56,11 @@ void JPetManager::run()
   for (auto thread : threads) {
     thread->Join();
   }
-  for (auto executor : executors) {
-    delete executor;
+  for (auto& executor : executors) {
+    if (executor) {
+      delete executor;
+      executor = 0;
+    }
   }
 
   INFO( "======== Finished processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
@@ -71,7 +74,10 @@ void JPetManager::parseCmdLine(int argc, char** argv)
 
 JPetManager::~JPetManager()
 {
-  /**/
+  /// delete shared caches for paramBanks  
+  /// @todo I think that should be changed
+  JPetDBParamGetter::clearParamCache();
+  JPetScopeParamGetter::clearParamCache();
 }
 
 void JPetManager::registerTask(const TaskGenerator& taskGen)
