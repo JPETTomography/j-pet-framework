@@ -45,18 +45,19 @@ void JPetManager::run()
   for (auto opt : fOptions) {
     JPetTaskExecutor* executor = new JPetTaskExecutor(fTaskGeneratorChain, i, opt);
     executors.push_back(executor);
-    auto thr = executor->run();
-    if (thr) {
-      threads.push_back(thr);
-    } else {
-      ERROR("thread pointer is null");
-    }
+    executor->process();
+    //auto thr = executor->run();
+    //if (thr) {
+      //threads.push_back(thr);
+    //} else {
+      //ERROR("thread pointer is null");
+    //}
     i++;
   }
-  for (auto thread : threads) {
-    assert(thread);
-    thread->Join();
-  }
+  //for (auto thread : threads) {
+    //assert(thread);
+    //thread->Join();
+  //}
   for (auto& executor : executors) {
     if (executor) {
       delete executor;
