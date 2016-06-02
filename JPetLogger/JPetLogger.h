@@ -35,6 +35,9 @@ class JPetLogger {
   inline static void info(const char* func, const char* msg) {
     logMessage(func, msg, kInfo);
   }
+  inline static void debug(const char* func, const char* msg) {
+    logMessage(func, msg, kDebug);
+  }
 
   inline static void warning(const char* func, const std::string& msg) {
     logMessage(func , msg.c_str(), kWarning);
@@ -45,8 +48,11 @@ class JPetLogger {
   inline static void info(const char* func, const std::string& msg) {
     logMessage(func, msg.c_str(), kInfo);
   }
+  inline static void debug(const char* func, const std::string& msg) {
+    logMessage(func, msg.c_str(), kDebug);
+  }
  private:
-  enum MessageType {kInfo, kWarning, kError};
+  enum MessageType {kInfo, kWarning, kError, kDebug};
 
   JPetLogger();
   JPetLogger(const JPetLogger&);
