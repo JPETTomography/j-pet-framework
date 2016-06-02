@@ -52,6 +52,7 @@ void JPetParamManager::fillParameterBank(const int run)
 
 bool JPetParamManager::readParametersFromFile(JPetReader * reader)
 {
+  assert(reader);
   if (!reader->isOpen()) {
     ERROR("Cannot read parameters from file. The provided JPetReader is closed.");
     return false;
@@ -64,6 +65,7 @@ bool JPetParamManager::readParametersFromFile(JPetReader * reader)
 
 bool JPetParamManager::saveParametersToFile(JPetWriter * writer)
 {
+  assert(writer);
   if (!writer->isOpen()) {
     ERROR("Could not write parameters to file. The provided JPetWriter is closed.");
     return false;
@@ -91,14 +93,13 @@ const JPetParamBank& JPetParamManager::getParamBank() const{
 	else return DummyResult;
 }
 
-
-bool JPetParamManager::getParametersFromScopeConfig(const scope_config::Config& config)
+bool JPetParamManager::getParametersFromScopeConfig(const std::string& scopeConfFile)
 {
   if (fBank) {
     delete fBank;
     fBank = 0;
   }
-  fBank = fScopeParamGetter.generateParamBank(config);
+  fBank = fScopeParamGetter.generateParamBank(scopeConfFile);
   if (!fBank) return false;
   return true;
 }
@@ -111,6 +112,7 @@ bool JPetParamManager::saveParametersToFile(std::string filename)
     return false;
   }
   file.cd();
+  assert(fBank);
   file.WriteObject(fBank, "ParamBank");
   return true;
 }
