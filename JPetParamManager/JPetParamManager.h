@@ -47,12 +47,12 @@ class JPetParamManager
   bool readParametersFromFile(std::string filename);
   bool saveParametersToFile(std::string filename);
   
-  bool getParametersFromScopeConfig(const scope_config::Config& config);
+  bool getParametersFromScopeConfig(const std::string& scopeConfFile);
  
   void clearParameters();
   const JPetParamBank& getParamBank() const;
 
-  inline bool isNullObject()const { return fIsNullObject; }
+  inline bool isNullObject() const { return fIsNullObject; }
 
  private:
   JPetParamManager(const JPetParamManager&);
