@@ -65,8 +65,6 @@ protected:
   JPetReaderInterface* fReader;
   JPetTreeHeader* fHeader;
   JPetStatistics* fStatistics;
-
-private:
   JPetParamManager* fParamManager;
 
 };
