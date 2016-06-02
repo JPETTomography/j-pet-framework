@@ -47,6 +47,7 @@ void JPetTask::setParamManager(JPetParamManager* paramManager) {
 }
 
 const JPetParamBank& JPetTask::getParamBank() {
+  DEBUG("JPetTask");
   assert(fParamManager);
   return fParamManager->getParamBank();
 }
