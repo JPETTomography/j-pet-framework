@@ -179,6 +179,8 @@ float JPetTaskIO::setProgressBar(int currentEventNumber, int numberOfEvents)
 
 const JPetParamBank& JPetTaskIO::getParamBank()
 {
+  DEBUG("from JPetTaskIO");
+  assert(fParamManager);
   return fParamManager->getParamBank();
 }
 
