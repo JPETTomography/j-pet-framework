@@ -54,6 +54,7 @@ void JPetManager::run()
     i++;
   }
   for (auto thread : threads) {
+    assert(thread);
     thread->Join();
   }
   for (auto& executor : executors) {
