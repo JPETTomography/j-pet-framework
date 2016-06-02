@@ -54,7 +54,7 @@ private:
   JPetTOMBChannel generateTOMBChannel(pqxx::result::const_iterator row);
 
   void fillScintillators(const int p_run_id, JPetParamBank& paramBank);
-  void fillParamContainer(ParamObjectType type, const int p_run_id, JPetParamBank& paramBank);
+  void fillParamContainer(JPetParamBank::ParamObjectType type, const int p_run_id, JPetParamBank& paramBank);
 
   void fillPMs(const int p_run_id, JPetParamBank& paramBank);
   void fillPMCalibs(const int p_run_id, JPetParamBank& paramBank);
