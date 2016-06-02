@@ -36,8 +36,10 @@ JPetWriter::~JPetWriter()
 {
   if (isOpen()) {
     fTree->AutoSave("SaveSelf");
-    delete fFile;
-    fFile = 0;
+    if (fFile) {
+      delete fFile;
+      fFile = 0;
+    }
     fTree = 0;
   }
 }
