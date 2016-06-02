@@ -25,16 +25,16 @@ class JPetParamManager;
 class JPetScopeParamGetter
 {
 public:
-  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, SIZE};
   JPetScopeParamGetter();
-  JPetParamBank* generateParamBank(const scope_config::Config& config);
   ~JPetScopeParamGetter();
+  JPetParamBank* generateParamBank(const std::string& scopeConfFile);
+  static void clearParamCache(); ///Dangerous cause it is shared by all threads
   
 private:
   JPetScopeParamGetter(const JPetScopeParamGetter&);
   JPetScopeParamGetter& operator=(const JPetScopeParamGetter&);
   
   friend class JPetParamManager;
-  static std::map<std::string, JPetParamBank*> fParamCache;
+  static std::map<std::string, JPetParamBank*> gParamCache; /// this static variable is shared among all threads
 };
 #endif /*  !JPETSCOPEPARAMGETTER_H */
