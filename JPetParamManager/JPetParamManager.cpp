@@ -88,9 +88,10 @@ bool JPetParamManager::readParametersFromFile(std::string filename)
 }
 
 const JPetParamBank& JPetParamManager::getParamBank() const{
-	static JPetParamBank DummyResult(true);
-	if(fBank)return *fBank;
-	else return DummyResult;
+  DEBUG("getParamBank() from JPetParamManager");
+  static JPetParamBank DummyResult(true);
+  if(fBank) return *fBank;
+  else return DummyResult;
 }
 
 bool JPetParamManager::getParametersFromScopeConfig(const std::string& scopeConfFile)
