@@ -1,21 +1,21 @@
 {
-    "test":
+    "config1":
     {
         "bslot1":
         {
-            "id": "-1",
-            "active": "false",
-            "name": "",
-            "theta": "-1.0",
-            "frame": "-1"
+            "id": "1",
+            "active": "true",
+            "name": "aa",
+            "theta": "1.0",
+            "frame": "1"
         },
         "bslot2":
         {
-            "id": "-1",
+            "id": "2",
             "active": "false",
-            "name": "",
-            "theta": "-1.0",
-            "frame": "-1"
+            "name": "bb",
+            "theta": "2.0",
+            "frame": "2"
         },
         "pm1":
         {
