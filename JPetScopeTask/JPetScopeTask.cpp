@@ -42,6 +42,7 @@ int JPetScopeTask::getTimeWindowIndex(const std::string&  pathAndFileName) const
 void JPetScopeTask::exec() 
 {
   assert(fParamManager);
+  DEBUG("JPetScopeTask - getParamBank() called"); 
   const std::vector<JPetPM*> pms = fParamManager->getParamBank().getPMs(); 
   assert(pms.size() == 4);
   for(size_t i = 0u; i < pms.size(); ++i ) {

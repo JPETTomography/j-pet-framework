@@ -34,6 +34,7 @@ JPetWriter::JPetWriter(const char* p_fileName) :
 
 JPetWriter::~JPetWriter()
 {
+  DEBUG("destructor of JPetWriter");
   if (isOpen()) {
     fTree->AutoSave("SaveSelf");
     if (fFile) {
@@ -42,6 +43,7 @@ JPetWriter::~JPetWriter()
     }
     fTree = 0;
   }
+  DEBUG("exiting destructor of JPetWriter");
 }
 
 void JPetWriter::closeFile()
