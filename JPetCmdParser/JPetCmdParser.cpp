@@ -161,7 +161,7 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
   auto files = getFileNames(optsMap); 
   std::vector<JPetOptions>  optionContainer;
   /// In case of scope there is one special input file 
-  /// which is a config file which must be parsed.
+  /// which is a json config file which must be parsed.
   /// Based on its content the set of input directories are generated.
   /// The input directories contain data files.
   /// The config input file name also should be stored in a special option field.
@@ -170,12 +170,23 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
     auto configFileName = files.front();
     options.at("scopeConfigFile") =  configFileName;  
     JPetScopeConfigParser scopeConfigParser;
-    files =scopeConfigParser.getInputDirectories(JPetCommonTools::extractPathFromFile(configFileName), scopeConfigParser.getConfigs(configFileName));
-  }
-  /// for every single input file we creat separate JPetOptions
-  for (auto file :files) {
-    options.at("inputFile") = file;
-    optionContainer.push_back(JPetOptions(options));
+    /// The scope module must use a fake input file name which will be used to 
+    /// produce the correct output file names by the following modules. 
+    /// At the same time, the input directory with true input files must be 
+    /// also added. The container of pairs <directory, fileName> is generated
+    /// based on the content of the configuration file.
+    JPetScopeConfigParser::DirFileContainer dirsAndFiles = scopeConfigParser.getInputDirectoriesAndFakeInputFiles(configFileName);
+    for (auto dirAndFile: dirsAndFiles) {
+      options.at("scopeInputDirectory") = dirAndFile.first;
+      options.at("inputFile") = dirAndFile.second;
+      optionContainer.push_back(JPetOptions(options));
+    }
+  } else {
+    /// for every single input file we create separate JPetOptions
+    for (auto file :files) {
+      options.at("inputFile") = file;
+      optionContainer.push_back(JPetOptions(options));
+    }
   }
   return optionContainer;
 }
