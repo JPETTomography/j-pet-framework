@@ -163,7 +163,7 @@ void JPetScopeReader::init(const JPetOptions::Options& opts)
 void JPetScopeReader::exec()
 {
   assert(fTask);
-  fTask->setParamManager(&(getParamManager()));
+  fTask->setParamManager(fParamManager);
   JPetTaskInterface::Options emptyOpts;
   fTask->init(emptyOpts);
   fTask->exec();
