@@ -40,7 +40,6 @@ void JPetTaskLoader::init(const JPetOptions::Options& opts)
   auto inFile = newOpts.at("inputFile");
   auto outFile = inFile;
   inFile = generateProperNameFile(inFile, fInFileType);
-
   outFile = generateProperNameFile(outFile, fOutFileType);
   newOpts.at("inputFile") = inFile;
   newOpts.at("inputFileType") = fInFileType;
