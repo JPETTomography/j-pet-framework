@@ -36,10 +36,10 @@ public :
   TThread* run();
   virtual ~JPetTaskExecutor();
 
+  void process(); /// That was private. I made it public to run without threads.
 private:
   void createScopeTaskAndAddToTaskList();
   static void* processProxy(void*);
-  void process();
   void processFromCmdLineArgs(int);
   void unpackFile();
 
