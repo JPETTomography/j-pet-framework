@@ -31,8 +31,9 @@ class JPetDBParamGetter : public JPetParamGetter
 {
 public:
   JPetDBParamGetter();
-  JPetParamBank* generateParamBank(const int p_run_id);
   ~JPetDBParamGetter();
+  JPetParamBank* generateParamBank(const int p_run_id);
+  static void clearParamCache(); ///Dangerous cause it is shared by all threads
   
 private:
   JPetDBParamGetter(const JPetDBParamGetter &DBParamGetter);
@@ -71,6 +72,9 @@ private:
   void fillScinTRef(const int p_run_id, JPetParamBank& paramBank);
   void fillAllTRefs(const int p_run_id, JPetParamBank& paramBank);
 
-  static std::map<int, JPetParamBank*> fParamCache;
+  
+  friend class JPetParamManager;
+
+  static std::map<int, JPetParamBank*> gParamCache;
 };
 #endif /*  !JPETDBPARAMGETTER_H */
