@@ -17,31 +17,35 @@
 #define JPETPARAMBANK_H
 
 #include "../JPetScin/JPetScin.h"
-#include "../JPetTRB/JPetTRB.h"
-#include "../JPetFEB/JPetFEB.h"
 #include "../JPetPM/JPetPM.h"
 #include "../JPetPMCalib/JPetPMCalib.h"
+#include "../JPetFEB/JPetFEB.h"
+#include "../JPetTRB/JPetTRB.h"
+#include "../JPetBarrelSlot/JPetBarrelSlot.h"
 #include "../JPetLayer/JPetLayer.h"
-
+#include "../JPetFrame/JPetFrame.h"
 #include "../JPetTOMBChannel/JPetTOMBChannel.h"
 #include "../JPetLoggerInclude.h"
 #include <map>
 #include <cassert>
+#include <algorithm> //for_each
+#include <memory> //std::default
 
-enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, kLayer, kFrame, SIZE};
+class JPetParamBank: public TObject
+{
+public:
+  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, kLayer, kFrame, SIZE};
 
-class JPetParamBank: public TObject{
- public:
   JPetParamBank();
   JPetParamBank(const JPetParamBank& paramBank);
   ~JPetParamBank();
   void clear();
-  
+
   JPetParamBank(const bool dummy);
   const bool isDummy()const;
-  
+
   int getSize(ParamObjectType type) const;
-  
+
   // Scintillators
   inline void addScintillator(JPetScin scintillator) {
     fScintillators[scintillator.getID()] = new JPetScin(scintillator);
@@ -83,7 +87,7 @@ class JPetParamBank: public TObject{
   int getPMCalibsSize() const {
     return fPMCalibs.size();
   }
-  
+
   // FEBs
   inline void addFEB(JPetFEB feb) {
     fFEBs[feb.getID()] = new JPetFEB(feb);
@@ -139,7 +143,7 @@ class JPetParamBank: public TObject{
   inline int getLayersSize() const {
     return fLayers.size();
   }
-  
+
   // Frame
   inline void addFrame(JPetFrame frame) {
     fFrames[frame.getId()] = new JPetFrame(frame);
@@ -153,7 +157,7 @@ class JPetParamBank: public TObject{
   inline int getFramesSize() const {
     return fFrames.size();
   }
-  
+
   // TOMB Channels
   inline void addTOMBChannel(JPetTOMBChannel tombchannel) {
     fTOMBChannels[tombchannel.getChannel()] = new JPetTOMBChannel(tombchannel);
