@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(getParametersFromScopeConfigFile)
   using namespace scope_config;
   using VecOfStrings = std::vector<std::string>;
 
-  const char* testConfigFile = "unitTestData/JPetParamManagerTest/config.json";
+  const char* testConfigFile = "unitTestData/JPetParamManagerTest/conf.json";
   Config config;
   config.fLocation="data";
   config.fCollimatorPositions = VecOfStrings { "1 5 2", "12", "6"};
@@ -128,6 +128,73 @@ BOOST_AUTO_TEST_CASE(getParametersFromScopeConfigFile)
   config.fScins=std::vector<Scin>{Scin(32), Scin(12)};
   config.fName="config1";
   JPetParamManager paramManagerInstance;
+  BOOST_REQUIRE(paramManagerInstance.getParametersFromScopeConfig(testConfigFile));
+  const JPetParamBank& bank = paramManagerInstance.getParamBank();
+  BOOST_REQUIRE(!bank.isDummy());
+  auto bslots = bank.getBarrelSlots();
+  BOOST_REQUIRE_EQUAL(bslots.size(), 2);
+  int i = 0;
+  for(const BSlot& BSlotConf: config.fBSlots) {
+    BOOST_REQUIRE(bslots[i]);
+    BOOST_REQUIRE_EQUAL(bslots[i]->getID(), BSlotConf.fId);
+    BOOST_REQUIRE_EQUAL(bslots[i]->isActive(), BSlotConf.fActive);
+    BOOST_REQUIRE_EQUAL(bslots[i]->getName(), BSlotConf.fName);
+    BOOST_REQUIRE_EQUAL(bslots[i]->getInFrameID(), BSlotConf.fFrame);
+    BOOST_REQUIRE_EQUAL(bslots[i]->getTheta(), BSlotConf.fTheta);
+    i++;
+  }
+  auto pms = bank.getPMs();
+  BOOST_REQUIRE_EQUAL(pms.size(), 4);
+  i = 0;
+  for(const PM& PMConf: config.fPMs) {
+    BOOST_REQUIRE(pms[i]);
+    BOOST_REQUIRE_EQUAL(pms[i]->getID(), PMConf.fId);
+    i++;
+  }
+  auto scintillators = bank.getScintillators();
+  BOOST_REQUIRE_EQUAL(scintillators.size(), 2);
+  i = 0;
+  for(const Scin& ScinConf: config.fScins) {
+    BOOST_REQUIRE(scintillators[i]);
+    BOOST_REQUIRE_EQUAL(scintillators[i]->getID(), ScinConf.fId);
+    i++;
+  }
+
+  BOOST_REQUIRE_EQUAL(pms[0]->getSide(), JPetPM::SideA);
+  BOOST_REQUIRE_EQUAL(pms[1]->getSide(), JPetPM::SideB);
+  BOOST_REQUIRE_EQUAL(pms[2]->getSide(), JPetPM::SideA);
+  BOOST_REQUIRE_EQUAL(pms[3]->getSide(), JPetPM::SideB);
+
+  BOOST_REQUIRE_EQUAL(pms[0]->getScin().getID(), config.fScins[0].fId);
+  BOOST_REQUIRE_EQUAL(pms[1]->getScin().getID(), config.fScins[0].fId);
+  BOOST_REQUIRE_EQUAL(pms[2]->getScin().getID(), config.fScins[1].fId);
+  BOOST_REQUIRE_EQUAL(pms[3]->getScin().getID(), config.fScins[1].fId);
+
+  BOOST_REQUIRE_EQUAL(pms[0]->getBarrelSlot().getID(), config.fBSlots[0].fId);
+  BOOST_REQUIRE_EQUAL(pms[1]->getBarrelSlot().getID(), config.fBSlots[0].fId);
+  BOOST_REQUIRE_EQUAL(pms[2]->getBarrelSlot().getID(), config.fBSlots[1].fId);
+  BOOST_REQUIRE_EQUAL(pms[3]->getBarrelSlot().getID(), config.fBSlots[1].fId);
+
+  BOOST_REQUIRE_EQUAL(scintillators[0]->getBarrelSlot().getID(), config.fBSlots[0].fId);
+  BOOST_REQUIRE_EQUAL(scintillators[1]->getBarrelSlot().getID(), config.fBSlots[1].fId);
+}
+
+BOOST_AUTO_TEST_CASE(getParametersFromScopeConfigFileTwice)
+{
+  JPetScopeParamGetter::clearParamCache();
+  using namespace scope_config;
+  using VecOfStrings = std::vector<std::string>;
+
+  const char* testConfigFile = "unitTestData/JPetParamManagerTest/conf.json";
+  Config config;
+  config.fLocation="data";
+  config.fCollimatorPositions = VecOfStrings { "1 5 2", "12", "6"};
+  config.fBSlots= std::vector<BSlot>{ BSlot(1,true,"aa",1., 1), BSlot(2,false,"bb",2., 2)};
+  config.fPMs = std::vector<PM>{PM(3,"C2"), PM(98, "C4"), PM(32, "C1"), PM(42, "C3")}; 
+  config.fScins=std::vector<Scin>{Scin(32), Scin(12)};
+  config.fName="config1";
+  JPetParamManager paramManagerInstance;
+  BOOST_REQUIRE(paramManagerInstance.getParametersFromScopeConfig(testConfigFile));
   BOOST_REQUIRE(paramManagerInstance.getParametersFromScopeConfig(testConfigFile));
   const JPetParamBank& bank = paramManagerInstance.getParamBank();
   BOOST_REQUIRE(!bank.isDummy());
