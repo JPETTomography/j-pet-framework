@@ -28,8 +28,7 @@ using namespace boost::filesystem;
 
 JPetScopeTask::JPetScopeTask(const char * name, const char * description):
   JPetTask(name, description),
-  fWriter(0),
-  fParamManager(0)
+  fWriter(0)
 {
 }
 
@@ -45,60 +44,20 @@ void JPetScopeTask::exec()
   assert(fParamManager);
   const std::vector<JPetPM*> pms = fParamManager->getParamBank().getPMs(); 
   assert(pms.size() == 4);
-  //assert(pms.size() == fInputFiles.size());
   for(size_t i = 0u; i < pms.size(); ++i ) {
     JPetPM* pm = pms[i];
     assert(pm);
-    const auto& files = fInputFiles.find(i)->second; 
-    for (const auto& file: files) {
-      JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.c_str());
-      sig.setTimeWindowIndex(getTimeWindowIndex(file));
-      sig.setPM(*pm);
-      assert(fWriter);
-      fWriter->write(sig);
+    if (fInputFiles.find(i) != fInputFiles.end()) {
+      const auto& files = fInputFiles.find(i)->second; 
+      for (const auto& file: files) {
+        JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.c_str());
+        sig.setTimeWindowIndex(getTimeWindowIndex(file));
+        sig.setPM(*pm);
+        assert(fWriter);
+        fWriter->write(sig);
+      }
+    } else {
+      ERROR("Could not find the Input Files for given set");
     }
   }
-  //std::string osc_file = *(fConfig->pIter);
-  //std::string filename;
-  
-  //int time_window_index = getTimeWindowIndex(osc_file);
-  
-  //JPetRecoSignal rsig1 = RecoSignalUtils::generateSignal(osc_file.c_str());
-  //rsig1.setPM(*(fConfig->pPM1));
-  //rsig1.setTimeWindowIndex(time_window_index);
-  
-  //filename = path(*(fConfig->pIter)).filename().string();
-  //filename[1] = (fConfig->pPrefix2)[1];
-  //osc_file = path(*(fConfig->pIter)).parent_path().string();
-  //osc_file+= "/";
-  //osc_file+= filename;
-  
-  //JPetRecoSignal rsig2 = RecoSignalUtils::generateSignal(osc_file.c_str());
-  //rsig2.setPM(*(fConfig->pPM2));
-  //rsig2.setTimeWindowIndex(time_window_index);
-  
-  //filename = path(*(fConfig->pIter)).filename().string();
-  //filename[1] = (fConfig->pPrefix3)[1];
-  //osc_file = path(*(fConfig->pIter)).parent_path().string();
-  //osc_file+= "/";
-  //osc_file+= filename;
-  
-  //JPetRecoSignal rsig3 = RecoSignalUtils::generateSignal(osc_file.c_str());
-  //rsig3.setPM(*(fConfig->pPM3));
-  //rsig3.setTimeWindowIndex(time_window_index);
-  
-  //filename = path(*(fConfig->pIter)).filename().string();
-  //filename[1] = (fConfig->pPrefix4)[1];
-  //osc_file = path(*(fConfig->pIter)).parent_path().string();
-  //osc_file+= "/";
-  //osc_file+= filename;
-  
-  //JPetRecoSignal rsig4 = RecoSignalUtils::generateSignal(osc_file.c_str());
-  //rsig4.setPM(*(fConfig->pPM4));
-  //rsig4.setTimeWindowIndex(time_window_index);
-  
-  //fWriter->write(rsig1);
-  //fWriter->write(rsig2);
-  //fWriter->write(rsig3);
-  //fWriter->write(rsig4);
 }
