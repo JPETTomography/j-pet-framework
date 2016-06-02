@@ -16,6 +16,7 @@
 #include "./JPetScopeParamGetter.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include <TThread.h>
+#include "../JPetLoggerInclude.h"
 
 std::map<std::string, JPetParamBank*> JPetScopeParamGetter::gParamCache;
 
@@ -40,7 +41,7 @@ JPetScopeParamGetter::JPetScopeParamGetter()
 
 JPetScopeParamGetter::~JPetScopeParamGetter()
 {
-  /**/
+  DEBUG("destructor");
 }
 
 JPetParamBank* JPetScopeParamGetter::generateParamBank(const std::string& scopeConfFile)
