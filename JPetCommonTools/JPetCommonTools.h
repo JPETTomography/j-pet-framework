@@ -111,6 +111,10 @@ public:
     return boost::filesystem::path( fileWithPath ).parent_path().string();
   }
 
+  inline static std::string extractFileNameFromFullPath(const std::string& fileWithPath) {
+    return boost::filesystem::path( fileWithPath ).filename().string();
+  }
+
 };
 
 
