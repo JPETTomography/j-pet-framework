@@ -27,64 +27,30 @@
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetParamManager/JPetParamManager.h"
 
-/** @brief Collection of system parameters read from config file.
- *
- * One object per signle configuration + collimator position is created.
- */
-typedef struct ScopeConfig {
-  
-  std::string pName; /**< @brief Config name. */
-  int pCollPosition; /**< @brief Collimator position. */
-  
-  JPetParamBank const* pParamBank; /**< @brief Pointer to JPetParamBank for current configuration.
-				    *
-				    * @ref JPetParamBank
-				    */
-  
-  JPetPM *pPM1, *pPM2, *pPM3, *pPM4; /**< @ref JPetPM */
-  JPetScin *pScin1, *pScin2; /**< @ref JPeScin */
-  
-  std::string pPrefix1, pPrefix2, pPrefix3, pPrefix4; /**< @brief Oscilloscope ACII files prefixes. */
-  
-  std::set <std::string> pFiles; /**< @brief Set of files to process. */
-  std::set <std::string> :: iterator pIter; /**< @ref pIter */
-  
-} ScopeConfig;
-
-
 class JPetWriter;
 
 class JPetScopeTask: public JPetTask
 {
+
 public:
-  JPetScopeTask(const char * name, const char * description);
+  JPetScopeTask(const char* name, const char* description);
   virtual void exec();
+  int getTimeWindowIndex(const std::string&  pathAndFileName) const;
+  /// getting oscilloscope data full file names to process
+  inline std::map<int, std::vector<std::string>> getInputFiles() const {
+    return fInputFiles;    
+  }
+  inline void setInputFiles(const std::map<int, std::vector<std::string>>& inputFiles) {
+    fInputFiles = inputFiles;
+  }
+
   virtual void setWriter(JPetWriter* writer) {
     fWriter = writer;
   }
-  void setParamManager(JPetParamManager* paramManager) {
-    fParamManager = paramManager;
-  }
-  const JPetParamBank& getParamBank() {
-    return fParamManager->getParamBank();
-  }
 
-  void setScopeConfig(const ScopeConfig * config){
-    fConfig = config;
-  }
-  
-  int getTimeWindowIndex(const std::string&  pathAndFileName) const;
-  
-  inline std::map<int, std::vector<std::string>> getInputFiles() const { return fInputFiles; } /// getting oscilloscope data full file names to process
-  inline void setInputFiles(const std::map<int, std::vector<std::string>>& inputFiles) { fInputFiles = inputFiles; }
 protected:
   std::map<int, std::vector<std::string>> fInputFiles;
-  
   JPetWriter* fWriter;
-  JPetParamManager* fParamManager;
-
-  const ScopeConfig * fConfig;
-
 };
 #endif /*  !JPETSCOPETASK_H */
 
