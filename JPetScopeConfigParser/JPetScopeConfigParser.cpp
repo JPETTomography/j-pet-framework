@@ -29,18 +29,21 @@
 #include "../JPetCommonTools/JPetCommonTools.h"
 
 
-std::vector<scope_config::Config> JPetScopeConfigParser::getConfigs(const std::string& configFileName) const
+scope_config::Config JPetScopeConfigParser::getConfig(const std::string& configFileName) const
 {
   using namespace scope_config;
   using boost::property_tree::ptree;
-  std::vector<Config> configs;
+  Config config;
   auto prop_tree = getJsonContent(configFileName);
+  if(prop_tree.size() > 1 ) {
+    ERROR("More than one config found in the configuration file! Only the last set will be used!");
+  }
   for (ptree::const_iterator it = prop_tree.begin(); it != prop_tree.end(); ++it) {
     auto currConfigName = it->first;
     auto currConfigContent = it->second;
-    configs.push_back(getConfig(currConfigName, currConfigContent));
+    config = getConfig(currConfigName, currConfigContent);
   }
-  return configs;
+  return config;
 }
 
 scope_config::Config JPetScopeConfigParser::getConfig(std::string configName, boost::property_tree::ptree const& configContent) const
@@ -56,39 +59,40 @@ scope_config::Config JPetScopeConfigParser::getConfig(std::string configName, bo
   return config; 
 }
 
-std::vector<std::string> JPetScopeConfigParser::getInputDirectories(const std::string& configFileLocation, const std::vector<scope_config::Config>& configs) const
+std::vector<JPetScopeConfigParser::InputDirectory> JPetScopeConfigParser::getInputDirectories(const std::string& configFileLocation, const scope_config::Config& config) const
 {
   std::vector<std::string> directories;
-  for(const auto& config: configs) 
-  {
-    auto path = configFileLocation + "/" +config.fLocation;
-    auto currDir = generateDirectories(path, transformToNumbers(config.fCollimatorPositions));
-    directories.insert(directories.end(), currDir.begin(), currDir.end());
-  }
+  auto path = configFileLocation + "/" +config.fLocation;
+  auto currDir = generateDirectories(path, transformToNumbers(config.fCollimatorPositions));
+  directories.insert(directories.end(), currDir.begin(), currDir.end());
   return directories;
 }
 
-
-std::vector<std::string> JPetScopeConfigParser::getInputFileNames(std::string configFileName) const
+std::vector<JPetScopeConfigParser::FakeInputFile> JPetScopeConfigParser::getFakeInputFileNames(const std::string& configFileName, const scope_config::Config& config) const
 {
-  std::vector<std::string> inputFileNames;
-  using boost::property_tree::ptree;
-  auto prop_tree = getJsonContent(configFileName);
-  ///loop over all config sets.
-  for (ptree::const_iterator it = prop_tree.begin(); it != prop_tree.end(); ++it) {
-    auto currentConfigName = it->first;
-    auto currentConfigContent = it->second;
-    std::vector<std::string> positionsContainer;
-    BOOST_FOREACH(const ptree::value_type & v, currentConfigContent.get_child("collimator")) {
-      //! one element positions can contain a string of several numbers e.g. "2 3 10"
-      positionsContainer.push_back(v.second.get<std::string>("positions"));
-    }
-    auto currFileNames = generateFileNames(configFileName, JPetCommonTools::stripFileNameSuffix(currentConfigName), transformToNumbers(positionsContainer));
-    inputFileNames.insert(inputFileNames.end(), currFileNames.begin(), currFileNames.end());
-  }
-  return inputFileNames;
+  std::vector<std::string> positionsContainer = config.fCollimatorPositions;
+  return generateFileNames(JPetCommonTools::stripFileNameSuffix(configFileName), config.fName,  transformToNumbers(positionsContainer));
 }
 
+
+JPetScopeConfigParser::DirFileContainer JPetScopeConfigParser::getInputDirectoriesAndFakeInputFiles(
+  const std::string& configFileWithPath) const
+{
+  auto config  = getConfig(configFileWithPath);
+  auto filenames = getFakeInputFileNames(JPetCommonTools::extractFileNameFromFullPath(configFileWithPath), config);
+  auto directories =  getInputDirectories(JPetCommonTools::extractPathFromFile(configFileWithPath), config);
+  JPetScopeConfigParser::DirFileContainer  container;
+  if (filenames.size() != directories.size()) {
+    ERROR("filenames.size() != directories.size()");
+  } else {
+    container.reserve(filenames.size());
+    std::transform(
+      directories.begin(), directories.end(), filenames.begin(), std::back_inserter(container),
+      [](InputDirectory dir, FakeInputFile file) { return std::make_pair(dir, file); }
+    );
+  }
+  return container;
+}
 
 // The function takes a vector of string, each string can contain one or more integers separated by
 // space and it will transform it to vector of integers.

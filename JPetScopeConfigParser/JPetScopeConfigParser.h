@@ -23,17 +23,23 @@
 
 class JPetScopeConfigParser
 {
-  
 public:
+  using FakeInputFile=std::string; /// fake input file name is generated only to be parsed by next modules 
+  /// (if needed by any) and create correct output file name.
+  using InputDirectory=std::string;
+  using DirFilePair = std::pair< InputDirectory, FakeInputFile >;
+  using DirFileContainer=std::vector< DirFilePair>; 
+
   JPetScopeConfigParser() {}
-  std::vector<scope_config::Config> getConfigs(const std::string& configFileName) const;
-  std::vector<std::string> getInputDirectories(const std::string& basePath, const std::vector<scope_config::Config>& configs) const;
-  std::vector<std::string> getInputFileNames(std::string configFileName) const;
-  std::vector<int> transformToNumbers(const std::vector<std::string>& positions) const;
+  DirFileContainer getInputDirectoriesAndFakeInputFiles(const std::string& configFileWithPath) const;
+  scope_config::Config getConfig(const std::string& configFileName) const;
+
+  std::vector<InputDirectory> getInputDirectories(const std::string& configFileLocation, const scope_config::Config& config) const;
+  std::vector<FakeInputFile> getFakeInputFileNames(const std::string& configFileName, const scope_config::Config& config) const;
   std::vector<std::string>  generateFileNames(const std::string& configFileName, const std::string& configName, const std::vector<int>& positions) const;
   std::vector<std::string> generateDirectories(const std::string& basePath, const std::vector<int>& positions) const;
   boost::property_tree::ptree getJsonContent(const std::string &configFileName) const;
-
+  std::vector<int> transformToNumbers(const std::vector<std::string>& positions) const;
   
 protected:
   scope_config::Config getConfig(std::string configName, boost::property_tree::ptree const& configContent) const;
