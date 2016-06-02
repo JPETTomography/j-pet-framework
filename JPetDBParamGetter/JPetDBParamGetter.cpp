@@ -19,47 +19,58 @@
 #include "../DBHandler/HeaderFiles/DBHandler.h"
 #include <cstdint>
 
-std::map<int, JPetParamBank*> JPetDBParamGetter::fParamCache;
+std::map<int, JPetParamBank*> JPetDBParamGetter::gParamCache;
+
+void JPetDBParamGetter::clearParamCache()
+{
+  TThread::Lock();
+  WARNING("JPetDBParamGetter::gParamCache will be cleared");
+  for (auto & pair : JPetDBParamGetter::gParamCache) {
+    if (pair.second) {
+      delete pair.second;
+      pair.second = 0;
+    }
+  }
+  JPetDBParamGetter::gParamCache.clear();
+  TThread::UnLock();
+}
 
 JPetDBParamGetter::JPetDBParamGetter()
 {
 }
+
 JPetDBParamGetter::~JPetDBParamGetter()
 {
 }
 
-/// dopisac ze ktos inny musi zniszczyc
-// why not to use for instance shared_ptr?
-JPetParamBank* JPetDBParamGetter::generateParamBank(const int p_run_id) 
+JPetParamBank* JPetDBParamGetter::generateParamBank(const int p_run_id)
 {
-    /// we use new ... explanation
-    TThread::Lock();
-    if(fParamCache.find(p_run_id) == fParamCache.end())
-    {
-        JPetParamBank *pParamBank = new JPetParamBank;
-        fillScintillators(p_run_id, *pParamBank);
-        fillPMs(p_run_id, *pParamBank);
-        fillPMCalibs(p_run_id, *pParamBank);
-        fillBarrelSlot(p_run_id, *pParamBank);
-        fillLayer(p_run_id, *pParamBank);
-        fillFrame(p_run_id, *pParamBank);
-        fillFEBs(p_run_id, *pParamBank);
-        fillTRBs(p_run_id, *pParamBank);
-        fillTOMBChannels(p_run_id, *pParamBank);
-        fParamCache[p_run_id] = pParamBank;
-    }
-    JPetParamBank* returnedParamBank = new JPetParamBank(*fParamCache[p_run_id]);
-    fillAllTRefs(p_run_id, *returnedParamBank);
-    TThread::UnLock();
-    return returnedParamBank;
+  TThread::Lock();
+  if (JPetDBParamGetter::gParamCache.find(p_run_id) == gParamCache.end()) {
+    JPetParamBank* pParamBank = new JPetParamBank;
+    fillScintillators(p_run_id, *pParamBank);
+    fillPMs(p_run_id, *pParamBank);
+    fillPMCalibs(p_run_id, *pParamBank);
+    fillBarrelSlot(p_run_id, *pParamBank);
+    fillLayer(p_run_id, *pParamBank);
+    fillFrame(p_run_id, *pParamBank);
+    fillFEBs(p_run_id, *pParamBank);
+    fillTRBs(p_run_id, *pParamBank);
+    fillTOMBChannels(p_run_id, *pParamBank);
+    JPetDBParamGetter::gParamCache[p_run_id] = pParamBank;
+  }
+  JPetParamBank* returnedParamBank = new JPetParamBank(*JPetDBParamGetter::gParamCache[p_run_id]);
+  fillAllTRefs(p_run_id, *returnedParamBank);
+  TThread::UnLock();
+  return returnedParamBank;
 }
 
 void JPetDBParamGetter::fillScintillators(const int p_run_id, JPetParamBank& paramBank)
 {
   INFO("Start filling Scintillators container.");
-    //"SELECT * FROM getDataFromScintillators(" + l_run_id + ");";
+  //"SELECT * FROM getDataFromScintillators(" + l_run_id + ");";
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-  pqxx::result l_runDbResults = getDataFromDB("getDataFromScintillators",l_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromScintillators", l_run_id);
 
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
@@ -74,19 +85,19 @@ void JPetDBParamGetter::fillScintillators(const int p_run_id, JPetParamBank& par
   }
 }
 
-std::string JPetDBParamGetter::generateSelectQuery(const std::string& sqlFun, const std::string& arguments) 
+std::string JPetDBParamGetter::generateSelectQuery(const std::string& sqlFun, const std::string& arguments)
 {
   std::string sqlQuerry = "SELECT * FROM ";
   sqlQuerry += sqlFun;
-  sqlQuerry += "(" +arguments + ");";
+  sqlQuerry += "(" + arguments + ");";
   return sqlQuerry;
 }
 
 /// @brief method calls the remote PostgreSQL function sqlfunction with the id argument and returns results from database
-pqxx::result JPetDBParamGetter::getDataFromDB(const std::string& sqlfunction,const  std::string& arguments) 
+pqxx::result JPetDBParamGetter::getDataFromDB(const std::string& sqlfunction, const  std::string& arguments)
 {
   //std::string l_run_id = boost::lexical_cast<std::string>(id);
-  std::string l_sqlQuerry = generateSelectQuery(sqlfunction,arguments);
+  std::string l_sqlQuerry = generateSelectQuery(sqlfunction, arguments);
   DB::SERVICES::DBHandler& l_dbHandlerInstance = DB::SERVICES::DBHandler::getInstance();
   return  l_dbHandlerInstance.querry(l_sqlQuerry);
 }
@@ -106,7 +117,7 @@ void JPetDBParamGetter::fillPMs(const int p_run_id, JPetParamBank& paramBank)
   INFO("Start filling PMs container.");
 
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-  pqxx::result l_runDbResults = getDataFromDB("getDataFromPhotoMultipliers",l_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromPhotoMultipliers", l_run_id);
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -125,7 +136,7 @@ void JPetDBParamGetter::fillPMCalibs(const int p_run_id, JPetParamBank& paramBan
   INFO("Start filling PMCalibs container.");
 
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-  pqxx::result l_runDbResults = getDataFromDB("getPmCalibration",l_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getPmCalibration", l_run_id);
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -201,7 +212,7 @@ void JPetDBParamGetter::fillFEBs(const int p_run_id, JPetParamBank& paramBank)
   INFO("Start filling FEBs container.");
 
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-  pqxx::result l_runDbResults = getDataFromDB("getDataFromKonradBoards",l_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromKonradBoards", l_run_id);
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -220,7 +231,7 @@ void JPetDBParamGetter::fillTRBs(const int p_run_id, JPetParamBank& paramBank)
   INFO("Start filling TRBs container.");
 
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-  pqxx::result l_runDbResults = getDataFromDB("getDataFromTRBs",l_run_id);
+  pqxx::result l_runDbResults = getDataFromDB("getDataFromTRBs", l_run_id);
 
   size_t l_sizeResultQuerry = l_runDbResults.size();
 
@@ -241,18 +252,18 @@ void JPetDBParamGetter::fillTOMBChannels(const int p_run_id, JPetParamBank& para
   INFO("Start filling TOMBChannels container.");
 
   std::string l_run_id = boost::lexical_cast<std::string>(p_run_id);
-  pqxx::result l_runDbResults = getDataFromDB("getEverythingVsTOMB",l_run_id);
-  
+  pqxx::result l_runDbResults = getDataFromDB("getEverythingVsTOMB", l_run_id);
+
   size_t l_sizeResultQuerry = l_runDbResults.size();
 
   if (l_sizeResultQuerry) {
     {
-      for (pqxx::result::const_iterator row = l_runDbResults.begin(); 
-	   row != l_runDbResults.end(); 
-	   ++row) {
-	JPetTOMBChannel l_TOMBChannel = generateTOMBChannel(row);
-	paramBank.addTOMBChannel(l_TOMBChannel);
-    }
+      for (pqxx::result::const_iterator row = l_runDbResults.begin();
+           row != l_runDbResults.end();
+           ++row) {
+        JPetTOMBChannel l_TOMBChannel = generateTOMBChannel(row);
+        paramBank.addTOMBChannel(l_TOMBChannel);
+      }
 
     }
   } else {
@@ -261,34 +272,36 @@ void JPetDBParamGetter::fillTOMBChannels(const int p_run_id, JPetParamBank& para
 }
 
 
-JPetScin JPetDBParamGetter::generateScintillator(pqxx::result::const_iterator row) {
-      int l_scintillator_id = row["scintillator_id"].as<int>();
+JPetScin JPetDBParamGetter::generateScintillator(pqxx::result::const_iterator row)
+{
+  int l_scintillator_id = row["scintillator_id"].as<int>();
 
-      double l_scintillator_length = row["scintillator_length"].as<double>();
-      double l_scintillator_width = row["scintillator_width"].as<double>();
-      double l_scintillator_height = row["scintillator_height"].as<double>();
+  double l_scintillator_length = row["scintillator_length"].as<double>();
+  double l_scintillator_width = row["scintillator_width"].as<double>();
+  double l_scintillator_height = row["scintillator_height"].as<double>();
 
-      JPetScin l_scin(l_scintillator_id,
-                      0.f,			/// @todo what is attenuation length in database?
-                      l_scintillator_length,
-                      l_scintillator_height,
-                      l_scintillator_width);
+  JPetScin l_scin(l_scintillator_id,
+                  0.f,			/// @todo what is attenuation length in database?
+                  l_scintillator_length,
+                  l_scintillator_height,
+                  l_scintillator_width);
 
-      return l_scin;
+  return l_scin;
 }
 
 
-JPetPM JPetDBParamGetter::generatePM(pqxx::result::const_iterator row) {
-      bool l_hvpmconnection_isrightside = row["hvpmconnection_isrightside"].as<bool>();
+JPetPM JPetDBParamGetter::generatePM(pqxx::result::const_iterator row)
+{
+  bool l_hvpmconnection_isrightside = row["hvpmconnection_isrightside"].as<bool>();
 
-      int l_photomultiplier_id = row["photomultiplier_id"].as<int>();
+  int l_photomultiplier_id = row["photomultiplier_id"].as<int>();
 
-      JPetPM::Side l_side = (l_hvpmconnection_isrightside) ? JPetPM::Side::SideB : JPetPM::Side::SideA;
+  JPetPM::Side l_side = (l_hvpmconnection_isrightside) ? JPetPM::Side::SideB : JPetPM::Side::SideA;
 
-      JPetPM l_pm(l_photomultiplier_id);
-      l_pm.setSide(l_side);
+  JPetPM l_pm(l_photomultiplier_id);
+  l_pm.setSide(l_side);
 
-      return  l_pm;
+  return  l_pm;
 }
 
 JPetPMCalib JPetDBParamGetter::generatePMCalib(pqxx::result::const_iterator row)
@@ -302,17 +315,17 @@ JPetPMCalib JPetDBParamGetter::generatePMCalib(pqxx::result::const_iterator row)
   double l_pm_calibration_gainbeta = row["pm_calibration_gainbeta"].as<double>();
   int l_pm_calibration_assignment_id = row["pm_calibration_assignment_id"].as<int>();
   int l_pm_calibration_assignment_photomuliplier_id = row["pm_calibration_assignment_photomuliplier_id"].as<int>();
-  
+
   JPetPMCalib l_PMCalib(l_pm_calibration_id,
-			l_pm_calibration_name,
-			l_pm_calibration_opthv,
-			l_pm_calibration_c2e_1,
-			l_pm_calibration_c2e_2,
-			l_pm_calibration_gainalpha,
-			l_pm_calibration_gainbeta,
-			l_pm_calibration_assignment_id,
-			l_pm_calibration_assignment_photomuliplier_id);
-  
+                        l_pm_calibration_name,
+                        l_pm_calibration_opthv,
+                        l_pm_calibration_c2e_1,
+                        l_pm_calibration_c2e_2,
+                        l_pm_calibration_gainalpha,
+                        l_pm_calibration_gainbeta,
+                        l_pm_calibration_assignment_id,
+                        l_pm_calibration_assignment_photomuliplier_id);
+
   return l_PMCalib;
 }
 
@@ -325,17 +338,17 @@ JPetBarrelSlot JPetDBParamGetter::generateBarrelSlot(pqxx::result::const_iterato
   int l_slot_inFrameId = row["slot_inFrameId"].as<int>();
 
   JPetBarrelSlot l_barrelSlot(l_slot_id,
-			      l_slot_isActive,
-			      l_slot_name,
-			      l_slot_theta1,
-			      l_slot_inFrameId);
+                              l_slot_isActive,
+                              l_slot_name,
+                              l_slot_theta1,
+                              l_slot_inFrameId);
 //  JPetBarrelSlot l_barrelSlot(l_slot_id,
 //			      l_slot_isActive,
 //			      l_slot_name,
 //			      l_slot_theta1,
 //			      l_slot_inFrameId,
 //			      l_layer_id);
-//  
+//
   return l_barrelSlot;
 }
 
@@ -345,11 +358,10 @@ JPetLayer JPetDBParamGetter::generateLayer(pqxx::result::const_iterator row)
   bool l_layer_isActive = row["layer_isActive"].as<bool>();
   std::string l_layer_name = row["layer_name"].as<std::string>();
   double l_layer_radius = row["layer_radius"].as<double>();
-  
   JPetLayer l_layer(l_layer_id,
-        	    l_layer_isActive,
-        	    l_layer_name,
-        	    l_layer_radius);
+                    l_layer_isActive,
+                    l_layer_name,
+                    l_layer_radius);
 
   //JPetLayer l_layer(l_layer_id,
   //      	    l_layer_isActive,
@@ -370,42 +382,44 @@ JPetFrame JPetDBParamGetter::generateFrame(pqxx::result::const_iterator row)
   int l_frame_creator_id = row["frame_creator_id"].as<int>();
 
   JPetFrame l_frame(l_frame_id,
-		    l_frame_isActive,
-		    l_frame_status,
-		    l_frame_description,
-		    l_frame_version,
-		    l_frame_creator_id);
-  
+                    l_frame_isActive,
+                    l_frame_status,
+                    l_frame_description,
+                    l_frame_version,
+                    l_frame_creator_id);
+
   return l_frame;
 }
 
-JPetFEB JPetDBParamGetter::generateFEB(pqxx::result::const_iterator row) {
-      int l_konradboard_id = row["konradboard_id"].as<int>();
-      bool l_konradboard_isactive = row["konradboard_isactive"].as<bool>();
-      std::string l_konradboard_status = row["konradboard_status"].as<std::string>();
-      std::string l_konradboard_description = row["konradboard_description"].as<std::string>();
-      int l_konradboard_version = row["konradboard_version"].as<int>();
-      int l_konradboard_creator_id = row["konradboard_creator_id"].as<int>();
-      int l_time_outputs_per_input = row["time_outputs_per_input"].as<int>();
-      int l_notime_outputs_per_input = row["notime_outputs_per_input"].as<int>();
+JPetFEB JPetDBParamGetter::generateFEB(pqxx::result::const_iterator row)
+{
+  int l_konradboard_id = row["konradboard_id"].as<int>();
+  bool l_konradboard_isactive = row["konradboard_isactive"].as<bool>();
+  std::string l_konradboard_status = row["konradboard_status"].as<std::string>();
+  std::string l_konradboard_description = row["konradboard_description"].as<std::string>();
+  int l_konradboard_version = row["konradboard_version"].as<int>();
+  int l_konradboard_creator_id = row["konradboard_creator_id"].as<int>();
+  int l_time_outputs_per_input = row["time_outputs_per_input"].as<int>();
+  int l_notime_outputs_per_input = row["notime_outputs_per_input"].as<int>();
 
-      JPetFEB l_FEB(l_konradboard_id,
-                    l_konradboard_isactive,
-                    l_konradboard_status,
-                    l_konradboard_description,
-                    l_konradboard_version,
-                    l_konradboard_creator_id,
-		    l_time_outputs_per_input,
-		    l_notime_outputs_per_input);
-    return l_FEB;
+  JPetFEB l_FEB(l_konradboard_id,
+                l_konradboard_isactive,
+                l_konradboard_status,
+                l_konradboard_description,
+                l_konradboard_version,
+                l_konradboard_creator_id,
+                l_time_outputs_per_input,
+                l_notime_outputs_per_input);
+  return l_FEB;
 }
 
-JPetTRB JPetDBParamGetter::generateTRB(pqxx::result::const_iterator row) {
-      int l_TRB_id = row["TRB_id"].as<int>();
+JPetTRB JPetDBParamGetter::generateTRB(pqxx::result::const_iterator row)
+{
+  int l_TRB_id = row["TRB_id"].as<int>();
 
-      JPetTRB l_TRB(l_TRB_id,
-                    0,		/// @todo what is type in database
-                    0);		/// @todo what is channel in database
+  JPetTRB l_TRB(l_TRB_id,
+                0,		/// @todo what is type in database
+                0);		/// @todo what is channel in database
   return l_TRB;
 }
 
@@ -414,10 +428,10 @@ JPetTOMBChannel JPetDBParamGetter::generateTOMBChannel(pqxx::result::const_itera
      std::string l_TOMB_description = row["tomb"].as<std::string>();
      int l_TOMB_no = JPetParamBank::getTOMBChannelFromDescription( l_TOMB_description );
 
-     JPetTOMBChannel l_TOMBChannel(l_TOMB_no);
-     l_TOMBChannel.setLocalChannelNumber(row["thr_num"].as<int>());
-     l_TOMBChannel.setFEBInputNumber(row["feb_input"].as<int>());
-     return l_TOMBChannel;
+  JPetTOMBChannel l_TOMBChannel(l_TOMB_no);
+  l_TOMBChannel.setLocalChannelNumber(row["thr_num"].as<int>());
+  l_TOMBChannel.setFEBInputNumber(row["feb_input"].as<int>());
+  return l_TOMBChannel;
 }
 
 
@@ -482,7 +496,6 @@ void JPetDBParamGetter::fillFEBsTRefs(const int p_run_id, JPetParamBank& paramBa
   int l_TRBsSize = paramBank.getTRBsSize();
 
   if (l_FEBsSize > 0 && l_TRBsSize > 0) {
-
     for (auto & content : paramBank.getFEBs()) {
 						JPetFEB & feb = *content.second;
 						std::string febId = boost::lexical_cast<std::string>(feb.getID());
@@ -649,7 +662,7 @@ void JPetDBParamGetter::fillAllTRefs(const int p_run_id, JPetParamBank& paramBan
     fillFEBsTRefs(p_run_id, paramBank);
     //fillTRBsTRefs(p_run_id, paramBank);
     fillTOMBChannelsTRefs(p_run_id, paramBank);
-    
+
     fillBarrelSlotTRefs(p_run_id, paramBank);
     fillLayerTRefs(p_run_id, paramBank);
     fillScinTRef(p_run_id, paramBank);
