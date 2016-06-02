@@ -14,9 +14,24 @@
  */
 
 #include "./JPetScopeParamGetter.h"
+#include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include <TThread.h>
 
-std::map<std::string, JPetParamBank*> JPetScopeParamGetter::fParamCache;
+std::map<std::string, JPetParamBank*> JPetScopeParamGetter::gParamCache;
+
+void JPetScopeParamGetter::clearParamCache()
+{
+  TThread::Lock();
+  WARNING("JPetScopeParamGetter::gParamCache will be cleared");
+  for (auto & pair : JPetScopeParamGetter::gParamCache) {
+    if (pair.second) {
+      delete pair.second;
+      pair.second = 0;
+    }
+  }
+  JPetScopeParamGetter::gParamCache.clear();
+  TThread::UnLock();
+}
 
 JPetScopeParamGetter::JPetScopeParamGetter()
 {
@@ -28,11 +43,14 @@ JPetScopeParamGetter::~JPetScopeParamGetter()
   /**/
 }
 
-JPetParamBank* JPetScopeParamGetter::generateParamBank(const scope_config::Config& config)
+JPetParamBank* JPetScopeParamGetter::generateParamBank(const std::string& scopeConfFile)
 {
   TThread::Lock();
+  JPetScopeConfigParser parser;
+  auto config = parser.getConfig(scopeConfFile);
+  
   auto configName = config.fName;
-  if (fParamCache.find(configName) == fParamCache.end()) {
+  if (JPetScopeParamGetter::gParamCache.find(configName) == JPetScopeParamGetter::gParamCache.end()) {
     JPetParamBank* param_bank = new JPetParamBank();
     for (const auto &  bslot : config.fBSlots) {
       JPetBarrelSlot tmp(bslot.fId, bslot.fActive, bslot.fName, bslot.fTheta, bslot.fFrame);
@@ -70,9 +88,9 @@ JPetParamBank* JPetScopeParamGetter::generateParamBank(const scope_config::Confi
 
     (param_bank->getScintillator(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
     (param_bank->getScintillator(1)).setBarrelSlot(param_bank->getBarrelSlot(1));
-    fParamCache[configName] = param_bank;
+    JPetScopeParamGetter::gParamCache[configName] = param_bank;
   }
-  JPetParamBank* returnedParamBank = new JPetParamBank(*fParamCache[configName]);
+  JPetParamBank* returnedParamBank = new JPetParamBank(*JPetScopeParamGetter::gParamCache[configName]);
 
   TThread::UnLock();
   return returnedParamBank;
