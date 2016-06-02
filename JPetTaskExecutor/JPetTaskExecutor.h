@@ -37,7 +37,7 @@ public :
   virtual ~JPetTaskExecutor();
 
 private:
-  void createScopeTaskAndAddToTaskList(const char* inputFile);
+  void createScopeTaskAndAddToTaskList();
   static void* processProxy(void*);
   void process();
   void processFromCmdLineArgs(int);
