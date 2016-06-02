@@ -184,9 +184,18 @@ const JPetParamBank& JPetTaskIO::getParamBank()
 
 JPetTaskIO::~JPetTaskIO()
 {
-  if (fTask) delete fTask;
-  if (fWriter) delete fWriter;
-  if (fReader) delete fReader;
+  if (fTask) {
+    delete fTask;
+    fTask = 0;
+  }
+  if (fWriter) {
+    delete fWriter;
+    fWriter = 0;
+  }
+  if (fReader) {
+    delete fReader;
+    fReader = 0;
+  }
 }
 
 
