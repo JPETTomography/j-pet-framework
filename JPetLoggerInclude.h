@@ -26,6 +26,7 @@
 #define JPET_LOGGER_LEVEL_INFO 1
 #define JPET_LOGGER_LEVEL_WARNING 1
 #define JPET_LOGGER_LEVEL_ERROR 1
+#define JPET_LOGGER_LEVEL_DEBUG 1
 #define JPET_SCREEN_OUTPUT 0
 
 // don't touch this part
@@ -47,10 +48,16 @@
   #else
     #define ERROR(X)
   #endif
+  #if JPET_LOGGER_LEVEL_DEBUG == 1
+    #define DEBUG(X)   JPetLogger::debug(__func__, X)
+  #else
+    #define DEBUG(X)
+  #endif
 #else
   #define WARNING(X)
   #define ERROR(X)
   #define INFO(X)
+  #define DEBUG(X)
   #define DATE_AND_TIME()
 #endif
 
