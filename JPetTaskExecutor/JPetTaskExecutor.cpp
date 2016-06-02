@@ -88,18 +88,22 @@ void JPetTaskExecutor::processFromCmdLineArgs(int)
   auto inputFileType = fOptions.getInputFileType();
   auto inputFile = fOptions.getInputFile();
   if (inputFileType == JPetOptions::kScope) {
-    createScopeTaskAndAddToTaskList(inputFile);
+    createScopeTaskAndAddToTaskList();
   } else if (inputFileType == JPetOptions::kHld) {
     fUnpacker.setParams(fOptions.getInputFile());
     unpackFile();
   }
 }
 
-void JPetTaskExecutor::createScopeTaskAndAddToTaskList(const char* inputFile)
+void JPetTaskExecutor::createScopeTaskAndAddToTaskList()
 {
   JPetScopeReader* module = new JPetScopeReader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
   assert(module); 
   module->setParamManager(fParamManager); 
+  auto scopeFile = fOptions.getScopeConfigFile();
+  if (!fParamManager->getParametersFromScopeConfig(scopeFile)) {
+    ERROR("Unable to generate Param Bank from Scope Config");
+  }
   fTasks.push_front(module);
 }
 
@@ -114,7 +118,10 @@ void JPetTaskExecutor::unpackFile()
 
 JPetTaskExecutor::~JPetTaskExecutor()
 {
-  for (auto task : fTasks) {
-    delete task;
+  for (auto& task : fTasks) {
+    if (task) {
+      delete task;
+      task = 0;
+    }
   }
 }
