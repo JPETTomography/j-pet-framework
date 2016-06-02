@@ -149,7 +149,7 @@ signal_generation_fixture::~signal_generation_fixture () {
 // ********                 Open Single ROOT file                 ******** //
 // *********************************************************************** //
 
-const char* gTest_root_filename = "unitTestData/JPetScopeReaderTest/test_file_test_0.reco.sig.root";
+const char* gTest_root_filename = "test_file_test_0.reco.sig.root";
 
 struct root_file_reader {
   

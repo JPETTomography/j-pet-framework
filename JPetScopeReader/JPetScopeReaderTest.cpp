@@ -33,6 +33,8 @@ BOOST_AUTO_TEST_SUITE (JPetScopeReaderTestSuite)
 
 BOOST_AUTO_TEST_CASE (getFilePrefix) 
 {
+  JPetDBParamGetter::clearParamCache();
+  JPetScopeParamGetter::clearParamCache();
   JPetScopeReader reader(0);
   BOOST_REQUIRE(reader.getFilePrefix("").empty());
   BOOST_REQUIRE(reader.getFilePrefix("abkabd").empty());
@@ -45,6 +47,8 @@ BOOST_AUTO_TEST_CASE (getFilePrefix)
 
 BOOST_AUTO_TEST_CASE (createInputScopeFileNames) 
 {
+  JPetDBParamGetter::clearParamCache();
+  JPetScopeParamGetter::clearParamCache();
   JPetScopeReader reader(0);
   BOOST_REQUIRE(reader.createInputScopeFileNames("", {}).empty());
   BOOST_REQUIRE(reader.createInputScopeFileNames("non_existing", {}).empty());
@@ -77,6 +81,8 @@ BOOST_AUTO_TEST_CASE (createInputScopeFileNames)
 
 BOOST_AUTO_TEST_CASE (isCorrectScopeFileName) 
 {
+  JPetDBParamGetter::clearParamCache();
+  JPetScopeParamGetter::clearParamCache();
   JPetScopeReader reader(0);
   BOOST_REQUIRE(!reader.isCorrectScopeFileName(""));
   BOOST_REQUIRE(!reader.isCorrectScopeFileName("C1_004.gif"));
@@ -90,7 +96,10 @@ BOOST_AUTO_TEST_CASE (isCorrectScopeFileName)
 }
 
 BOOST_AUTO_TEST_CASE (generate_root_file) {
-
+  JPetDBParamGetter::clearParamCache();
+  JPetScopeParamGetter::clearParamCache();
+  const char* test_root_filename = "test_file_test_0.reco.sig.root";
+  boost::filesystem::remove(test_root_filename); 
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeReaderTest/test_file.json";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
@@ -99,7 +108,63 @@ BOOST_AUTO_TEST_CASE (generate_root_file) {
   JPetManager& manager = JPetManager::getManager();
   manager.parseCmdLine(argc, argv);
   manager.run();
-  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(gTest_root_filename), "File " << gTest_root_filename << " does not exist.");
+  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " does not exist.");
+}
+
+BOOST_AUTO_TEST_CASE (position_does_not_exist) {
+  JPetDBParamGetter::clearParamCache();
+  JPetScopeParamGetter::clearParamCache();
+
+  const char* test_root_filename = "wrong_file_test_30.reco.sig.root";
+  boost::filesystem::remove(test_root_filename); 
+  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeReaderTest/wrong_file.json"; 
+  //contains a single position 30 that does not exist
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetManager& manager = JPetManager::getManager();
+  manager.parseCmdLine(argc, argv);
+  manager.run();
+  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " does not exist.");
+}
+
+BOOST_AUTO_TEST_CASE (folder_does_not_exist) 
+{
+  JPetDBParamGetter::clearParamCache();
+  JPetScopeParamGetter::clearParamCache();
+  const char* test_root_filename = "wrong_file2_test_0.reco.sig.root";
+  boost::filesystem::remove(test_root_filename); 
+  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeReaderTest/wrong_file2.json"; 
+  //contains a wrong data folder name
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetManager& manager = JPetManager::getManager();
+  manager.parseCmdLine(argc, argv);
+  manager.run();
+  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " does not exist.");
+}
+
+BOOST_AUTO_TEST_CASE (generate_root_file2) {
+  JPetDBParamGetter::clearParamCache();
+  JPetScopeParamGetter::clearParamCache();
+
+  const char* test_root_filename1 = "test_file2_test_0.reco.sig.root";
+  const char* test_root_filename2 = "test_file2_test_1.reco.sig.root";
+  boost::filesystem::remove(test_root_filename1); 
+  boost::filesystem::remove(test_root_filename2); 
+  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeReaderTest/test_file2.json";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetManager& manager = JPetManager::getManager();
+  manager.parseCmdLine(argc, argv);
+  manager.run();
+  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename1), "File " << test_root_filename1 << " does not exist.");
+  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename2), "File " << test_root_filename2 << " does not exist.");
 }
 
 BOOST_FIXTURE_TEST_CASE (signal_generation_test, signal_generation_fixture) {
