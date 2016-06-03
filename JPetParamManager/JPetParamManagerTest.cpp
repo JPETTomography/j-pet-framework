@@ -28,7 +28,6 @@ BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetDBParamGetter::clearParamCache();
   JPetScopeParamGetter::clearParamCache();
-  DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetParamManager paramMgr;
 }  
 BOOST_AUTO_TEST_CASE(generateParamBankTest)

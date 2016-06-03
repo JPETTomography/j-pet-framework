@@ -115,7 +115,7 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
 
 		if (isLocalDBSet(variablesMap)) {
 				std::string localDBName = getLocalDBName(variablesMap);
-    if ( ! CommonTools::ifFileExisting(localDBName) ) {
+    if ( !JPetCommonTools::ifFileExisting(localDBName) ) {
       ERROR("File : " + localDBName + " does not exist.");
       std::cerr << "File : " << localDBName << " does not exist" << std::endl;
       return false;
