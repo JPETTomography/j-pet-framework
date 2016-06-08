@@ -56,10 +56,10 @@ class JPetScopeReader: public JPetTaskLoader {
   virtual void exec();
   virtual void terminate();
 
-  std::map<int, std::vector<std::string>> createInputScopeFileNames(const std::string& inputPathToScopeFiles,
-                                                     std::map<std::string, int> pmPref2Index
+  std::map<std::string, int> createInputScopeFileNames(const std::string& inputPathToScopeFiles,
+                                                     std::map<std::string, int> pmPref2Id
                                                     ) const;
-  std::map<std::string, int> getPMPrefixToPMIndicesMap(const scope_config::Config& config) const;
+  std::map<std::string, int> getPMPrefixToPMIdMap(const scope_config::Config& config) const;
   bool isCorrectScopeFileName(const std::string& filename) const;
   std::string getFilePrefix(const std::string& filename) const;
 };
