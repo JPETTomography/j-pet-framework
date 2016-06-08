@@ -37,10 +37,10 @@ public:
   virtual void exec();
   int getTimeWindowIndex(const std::string&  pathAndFileName) const;
   /// getting oscilloscope data full file names to process
-  inline std::map<int, std::vector<std::string>> getInputFiles() const {
+  inline std::map<std::string, int> getInputFiles() const {
     return fInputFiles;    
   }
-  inline void setInputFiles(const std::map<int, std::vector<std::string>>& inputFiles) {
+  inline void setInputFiles(const std::map<std::string, int>& inputFiles) {
     fInputFiles = inputFiles;
   }
 
@@ -49,7 +49,7 @@ public:
   }
 
 protected:
-  std::map<int, std::vector<std::string>> fInputFiles;
+  std::map<std::string, int> fInputFiles;
   JPetWriter* fWriter;
 };
 #endif /*  !JPETSCOPETASK_H */
