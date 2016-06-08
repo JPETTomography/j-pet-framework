@@ -57,7 +57,19 @@ void JPetScopeTask::exec()
   if (bank.isDummy()) {
     ERROR("bank is Dummy");
   } else {
-  /*  const std::vector<JPetPM*> pms = bank.getPMs(); */
+    for(const auto & file : fInputFiles){
+      DEBUG(std::string("file to open:")+file.first);
+      JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.first.c_str());
+      sig.setTimeWindowIndex(getTimeWindowIndex(file.first));
+      DEBUG("before setPM");
+      const JPetPM & pm = bank.getPM(file.second);
+      sig.setPM(pm);
+      DEBUG("after setPM");
+      assert(fWriter);
+      fWriter->write(sig);
+    }
+    
+    /*  const std::vector<JPetPM*> pms = bank.getPMs(); */
     //assert(pms.size() == 4);
     //for(size_t i = 0u; i < pms.size(); ++i ) {
       //JPetPM* pm = pms[i];
