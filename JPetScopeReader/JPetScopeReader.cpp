@@ -75,9 +75,8 @@ void JPetScopeReader::createInputObjects(const char* inputFileName)
   JPetScopeConfigParser confParser;
   auto config = confParser.getConfig(fOptions.getScopeConfigFile());
 
-  std::map<int, std::vector<std::string>> inputScopeFiles;
-  auto prefix2PM =  getPMPrefixToPMIndicesMap(config);
-  inputScopeFiles = createInputScopeFileNames(fOptions.getScopeInputDirectory(), prefix2PM);
+  auto prefix2PM =  getPMPrefixToPMIdMap(config);
+  std::map<std::string, int> inputScopeFiles = createInputScopeFileNames(fOptions.getScopeInputDirectory(), prefix2PM);
   (static_cast<JPetScopeTask*>(fTask))->setInputFiles(inputScopeFiles);
 
 
@@ -91,39 +90,33 @@ void JPetScopeReader::createInputObjects(const char* inputFileName)
   //fHeader->setSourcePosition((*fIter).pCollPosition);
 }
 
-std::map<std::string, int> JPetScopeReader::getPMPrefixToPMIndicesMap(const scope_config::Config& config) const
+std::map<std::string, int> JPetScopeReader::getPMPrefixToPMIdMap(const scope_config::Config& config) const
 {
-  std::map< std::string, int> prefixToIndex;
-  int i = 0;
+  std::map< std::string, int> prefixToId;
   for (const auto &  pm : config.fPMs) {
-    prefixToIndex[pm.fPrefix] = i;
-    i++;
+    prefixToId[pm.fPrefix] = pm.fId;
   }
-  return prefixToIndex;
+  return prefixToId;
 }
 
 /// Returns a map of list of scope input files. The key is the corresponding
 /// index of the photomultiplier in the param bank.
-std::map<int, std::vector<std::string>> JPetScopeReader::createInputScopeFileNames(
+std::map<std::string, int> JPetScopeReader::createInputScopeFileNames(
                                        const std::string& inputPathToScopeFiles,
-                                       std::map<std::string, int> pmPref2Index
+                                       std::map<std::string, int> pmPref2Id
                                      ) const
 {
-  std::map<int, std::vector<std::string>> scopeFiles;
+  std::map<std::string, int> scopeFiles;
   path current_dir(inputPathToScopeFiles);
   if (exists(current_dir)) {
-  
-    /// adding accepted keys that corresponds to PM indices
-    for (const auto & el : pmPref2Index) {
-      scopeFiles[el.second];
-    }
+    
     for (recursive_directory_iterator iter(current_dir), end; iter != end; ++iter) {
       std::string filename = iter->path().leaf().string();
       if (isCorrectScopeFileName(filename)) {
         auto prefix = getFilePrefix(filename);
-        if ( pmPref2Index.find(prefix) != pmPref2Index.end()) {
-          int index = pmPref2Index.find(prefix)->second;
-          scopeFiles.at(index).push_back(iter->path().parent_path().string() + "/" + filename);
+        if ( pmPref2Id.find(prefix) != pmPref2Id.end()) {
+          int id = pmPref2Id.find(prefix)->second;
+          scopeFiles[iter->path().parent_path().string() + "/" + filename] = id;
         } else {
           WARNING("The filename does not contain the accepted prefix:" + filename);
         }
