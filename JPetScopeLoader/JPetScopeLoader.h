@@ -10,13 +10,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetScopeReader.h
+ *  @file JPetScopeLoader.h
  *  @brief Module for oscilloscope data
  *  Reads oscilloscope ASCII data and procudes JPetRecoSignal structures.
  */
 
-#ifndef _SCOPE_READER_MODULE_H_
-#define _SCOPE_READER_MODULE_H_
+#ifndef _SCOPE_LOADER_MODULE_H_
+#define _SCOPE_LOADER_MODULE_H_
 
 #include "../JPetTaskLoader/JPetTaskLoader.h"
 
@@ -41,14 +41,14 @@ class JPetWriter;
 /** @brief Analysis Module for oscilloscope ASCII files.
  *
  * This module reads oscilloscope ACSII data based on config file passed through command line.
- * Example of usign this module is located in workdir/ScopeReaderExample/ .
+ * Example of usign this module is located in workdir/ScopeLoaderExample/ .
  */
-class JPetScopeReader: public JPetTaskLoader {
+class JPetScopeLoader: public JPetTaskLoader {
   
  public:
 
-  JPetScopeReader(JPetScopeTask * task);
-  virtual ~JPetScopeReader();
+  JPetScopeLoader(JPetScopeTask * task);
+  virtual ~JPetScopeLoader();
 
   virtual void createInputObjects(const char* inputFilename);
 

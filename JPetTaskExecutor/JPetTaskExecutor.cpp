@@ -16,7 +16,7 @@
 #include "JPetTaskExecutor.h"
 #include <cassert>
 #include "../JPetTaskInterface/JPetTaskInterface.h"
-#include "../JPetScopeReader/JPetScopeReader.h"
+#include "../JPetScopeLoader/JPetScopeLoader.h"
 #include "../JPetTaskLoader/JPetTaskLoader.h"
 #include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
@@ -97,7 +97,7 @@ void JPetTaskExecutor::processFromCmdLineArgs(int)
 
 void JPetTaskExecutor::createScopeTaskAndAddToTaskList()
 {
-  JPetScopeReader* module = new JPetScopeReader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
+  JPetScopeLoader* module = new JPetScopeLoader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
   assert(module); 
   module->setParamManager(fParamManager); 
   auto scopeFile = fOptions.getScopeConfigFile();
