@@ -106,10 +106,11 @@ std::map<std::string, int> JPetScopeReader::createInputScopeFileNames(
                                        std::map<std::string, int> pmPref2Id
                                      ) const
 {
+  for (auto el:pmPref2Id){
+  }
   std::map<std::string, int> scopeFiles;
   path current_dir(inputPathToScopeFiles);
   if (exists(current_dir)) {
-    
     for (recursive_directory_iterator iter(current_dir), end; iter != end; ++iter) {
       std::string filename = iter->path().leaf().string();
       if (isCorrectScopeFileName(filename)) {
