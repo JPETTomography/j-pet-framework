@@ -33,7 +33,7 @@ JPetScopeTask::JPetScopeTask(const char * name, const char * description):
 {
 }
 
-int JPetScopeTask::getTimeWindowIndex(const std::string&  pathAndFileName) const
+int JPetScopeTask::getTimeWindowIndex(const std::string&  pathAndFileName)
 {
   DEBUG("JPetScopeTask");
   int time_window_index = -1;
@@ -57,7 +57,8 @@ void JPetScopeTask::exec()
   if (bank.isDummy()) {
     ERROR("bank is Dummy");
   } else {
-    for(const auto & file : fInputFiles){
+    auto inputFilesInTimeWindowOrder = getFilesInTimeWindowOrder(fInputFiles);   
+    for(const auto & file : inputFilesInTimeWindowOrder){
       DEBUG(std::string("file to open:")+file.first);
       JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.first.c_str());
       sig.setTimeWindowIndex(getTimeWindowIndex(file.first));
@@ -91,4 +92,11 @@ void JPetScopeTask::exec()
       //}
   /*  }*/
   }
+}
+
+
+std::map<std::string, int, cmpByTimeWindowIndex> JPetScopeTask::getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const
+{
+  std::map<std::string, int, cmpByTimeWindowIndex> orderedMap(inputFiles.begin(), inputFiles.end());
+  return orderedMap;
 }

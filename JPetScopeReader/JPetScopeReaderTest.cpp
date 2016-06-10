@@ -52,31 +52,25 @@ BOOST_AUTO_TEST_CASE (createInputScopeFileNames)
   JPetScopeReader reader(0);
   BOOST_REQUIRE(reader.createInputScopeFileNames("", {}).empty());
   BOOST_REQUIRE(reader.createInputScopeFileNames("non_existing", {}).empty());
-  BOOST_REQUIRE(!reader.createInputScopeFileNames("unitTestData/JPetScopeReaderTest/scope_files/0", {{"c1",0}, {"c2",1}, {"c3", 2}, {"c4",3}}).empty());
-  std::map<int, std::vector<string>>  expectedRes {
-    {0, {"C1_00003.txt","C1_00004.txt"}}, {1, {"C2_00003.txt","C2_00004.txt"}},   
-    {2, {"C3_00003.txt","C3_00004.txt"}}, {3, {"C4_00003.txt","C4_00004.txt"}}
+  BOOST_REQUIRE(!reader.createInputScopeFileNames("unitTestData/JPetScopeReaderTest/scope_files/0", {{"C1",0}, {"C2",1}, {"C3", 2}, {"C4",3}}).empty());
+  std::map<std::string, int>  expectedRes0 {
+      {"C1_00003.txt",0}, {"C1_00004.txt", 0},  {"C2_00003.txt",1}, {"C2_00004.txt",1},   
+    {"C3_00003.txt",2},{"C3_00004.txt", 2}, {"C4_00003.txt",3},{"C4_00004.txt", 3}
   };
+  std::map<std::string, int>  expectedRes;
   std::string pathToFiles = "unitTestData/JPetScopeReaderTest/scope_files/0";
-  std::for_each(expectedRes.begin(), expectedRes.end(), 
-                [&](std::pair<const int, std::vector<std::string> >&  el) {
-                      for_each(el.second.begin(), el.second.end(),
-                      [&](std::string& name) {
-                        name = pathToFiles + "/" + name;
-                      });
-                      std::sort(el.second.begin(), el.second.end());
-                }); 
-  std::map<int, std::vector<std::string> > obtainedRes = reader.createInputScopeFileNames(pathToFiles, {{"C1",0}, {"C2",1}, {"C3", 2}, {"C4",3}});
-  /// to assure the same order of elements for comparison
-  std::for_each(obtainedRes.begin(), obtainedRes.end(), 
-                [&](std::pair<const int, std::vector<std::string> >&  el) {
-                      std::sort(el.second.begin(), el.second.end());
-                }); 
+  for (const auto& el: expectedRes0) {
+    expectedRes[pathToFiles + "/" + el.first] = el.second;
+  }
+  std::map<std::string, int> obtainedRes = reader.createInputScopeFileNames(pathToFiles, {{"C1",0}, {"C2",1}, {"C3", 2}, {"C4",3}});
   BOOST_REQUIRE(!obtainedRes.empty());
-  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedRes[0].begin(), obtainedRes[0].end(), expectedRes[0].begin(), expectedRes[0].end());
-  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedRes[1].begin(), obtainedRes[1].end(), expectedRes[1].begin(), expectedRes[1].end());
-  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedRes[2].begin(), obtainedRes[2].end(), expectedRes[2].begin(), expectedRes[2].end());
-  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedRes[3].begin(), obtainedRes[3].end(), expectedRes[3].begin(), expectedRes[3].end());
+  BOOST_REQUIRE_EQUAL(obtainedRes.size(), expectedRes.size());
+  auto it2 = obtainedRes.begin();
+  for (auto it =expectedRes.begin(); it != expectedRes.end(); ++it) {
+    BOOST_REQUIRE_EQUAL(it->first, it2->first);
+    BOOST_REQUIRE_EQUAL(it->second, it2->second);
+    ++it2;
+  }
 }
 
 BOOST_AUTO_TEST_CASE (isCorrectScopeFileName) 

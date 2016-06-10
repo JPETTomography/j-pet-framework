@@ -49,7 +49,6 @@ JPetParamBank* JPetScopeParamGetter::generateParamBank(const std::string& scopeC
   TThread::Lock();
   JPetScopeConfigParser parser;
   auto config = parser.getConfig(scopeConfFile);
-  
   auto configName = config.fName;
   if (JPetScopeParamGetter::gParamCache.find(configName) == JPetScopeParamGetter::gParamCache.end()) {
     JPetParamBank* param_bank = new JPetParamBank();
@@ -72,23 +71,24 @@ JPetParamBank* JPetScopeParamGetter::generateParamBank(const std::string& scopeC
     * PM1	PM2
     * PM3	PM4
     */
-    (param_bank->getPM(0)).setSide(JPetPM::SideA);
-    (param_bank->getPM(1)).setSide(JPetPM::SideB);
-    (param_bank->getPM(2)).setSide(JPetPM::SideA);
-    (param_bank->getPM(3)).setSide(JPetPM::SideB);
+    assert(config.fPMs.size()==4);
+    (param_bank->getPM(config.fPMs[0].fId)).setSide(JPetPM::SideA);
+    (param_bank->getPM(config.fPMs[1].fId)).setSide(JPetPM::SideB);
+    (param_bank->getPM(config.fPMs[2].fId)).setSide(JPetPM::SideA);
+    (param_bank->getPM(config.fPMs[3].fId)).setSide(JPetPM::SideB);
+    assert(config.fScins.size()==2);
+    (param_bank->getPM(config.fPMs[0].fId)).setScin(param_bank->getScintillator(config.fScins[0].fId));
+    (param_bank->getPM(config.fPMs[1].fId)).setScin(param_bank->getScintillator(config.fScins[0].fId));
+    (param_bank->getPM(config.fPMs[2].fId)).setScin(param_bank->getScintillator(config.fScins[1].fId));
+    (param_bank->getPM(config.fPMs[3].fId)).setScin(param_bank->getScintillator(config.fScins[1].fId));
+    assert(config.fBSlots.size()==2);
+    (param_bank->getPM(config.fPMs[0].fId)).setBarrelSlot(param_bank->getBarrelSlot(config.fBSlots[0].fId));
+    (param_bank->getPM(config.fPMs[1].fId)).setBarrelSlot(param_bank->getBarrelSlot(config.fBSlots[0].fId));
+    (param_bank->getPM(config.fPMs[2].fId)).setBarrelSlot(param_bank->getBarrelSlot(config.fBSlots[1].fId));
+    (param_bank->getPM(config.fPMs[3].fId)).setBarrelSlot(param_bank->getBarrelSlot(config.fBSlots[1].fId));
 
-    (param_bank->getPM(0)).setScin(param_bank->getScintillator(0));
-    (param_bank->getPM(1)).setScin(param_bank->getScintillator(0));
-    (param_bank->getPM(2)).setScin(param_bank->getScintillator(1));
-    (param_bank->getPM(3)).setScin(param_bank->getScintillator(1));
-
-    (param_bank->getPM(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
-    (param_bank->getPM(1)).setBarrelSlot(param_bank->getBarrelSlot(0));
-    (param_bank->getPM(2)).setBarrelSlot(param_bank->getBarrelSlot(1));
-    (param_bank->getPM(3)).setBarrelSlot(param_bank->getBarrelSlot(1));
-
-    (param_bank->getScintillator(0)).setBarrelSlot(param_bank->getBarrelSlot(0));
-    (param_bank->getScintillator(1)).setBarrelSlot(param_bank->getBarrelSlot(1));
+    (param_bank->getScintillator(config.fScins[0].fId)).setBarrelSlot(param_bank->getBarrelSlot(config.fBSlots[0].fId));
+    (param_bank->getScintillator(config.fScins[1].fId)).setBarrelSlot(param_bank->getBarrelSlot(config.fBSlots[1].fId));
     JPetScopeParamGetter::gParamCache[configName] = param_bank;
   }
   JPetParamBank* returnedParamBank = new JPetParamBank(*JPetScopeParamGetter::gParamCache[configName]);

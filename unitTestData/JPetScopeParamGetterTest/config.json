@@ -3,7 +3,7 @@
     {
         "bslot1":
         {
-            "id": "-1",
+            "id": "1",
             "active": "false",
             "name": "",
             "theta": "-1.0",
@@ -11,7 +11,7 @@
         },
         "bslot2":
         {
-            "id": "-1",
+            "id": "2",
             "active": "false",
             "name": "",
             "theta": "-1.0",
