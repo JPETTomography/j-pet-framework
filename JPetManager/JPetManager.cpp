@@ -20,7 +20,7 @@
 #include <string>
 
 #include "../JPetLoggerInclude.h"
-#include "../JPetScopeReader/JPetScopeReader.h"
+#include "../JPetScopeLoader/JPetScopeLoader.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetCmdParser/JPetCmdParser.h"
 

@@ -10,12 +10,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetScopeReader.cpp
+ *  @file JPetScopeLoader.cpp
  *  @brief Module for oscilloscope data
  *  Reads oscilloscope ASCII data and procudes JPetRecoSignal structures.
  */
 
-#include "./JPetScopeReader.h"
+#include "./JPetScopeLoader.h"
 
 #include <cassert>
 #include <cstdio>
@@ -42,7 +42,7 @@
 #include "../JPetPM/JPetPM.h"
 #include "../JPetRecoSignal/JPetRecoSignal.h"
 #include "../JPetScin/JPetScin.h"
-#include "../JPetScopeReader/JPetScopeReader.h"
+#include "../JPetScopeLoader/JPetScopeLoader.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 #include "../JPetWriter/JPetWriter.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
@@ -55,13 +55,13 @@ using namespace boost::filesystem;
 using boost::property_tree::ptree;
 
 
-JPetScopeReader::JPetScopeReader(JPetScopeTask* task): JPetTaskLoader("", "reco.sig", task)
+JPetScopeLoader::JPetScopeLoader(JPetScopeTask* task): JPetTaskLoader("", "reco.sig", task)
 {
 gSystem->Load("libTree");
   /**/
 }
 
-JPetScopeReader::~JPetScopeReader()
+JPetScopeLoader::~JPetScopeLoader()
 {
   if (fWriter != nullptr) {
     delete fWriter;
@@ -70,7 +70,7 @@ JPetScopeReader::~JPetScopeReader()
 }
 
 
-void JPetScopeReader::createInputObjects(const char* inputFileName)
+void JPetScopeLoader::createInputObjects(const char* inputFileName)
 {
   JPetScopeConfigParser confParser;
   auto config = confParser.getConfig(fOptions.getScopeConfigFile());
@@ -90,7 +90,7 @@ void JPetScopeReader::createInputObjects(const char* inputFileName)
   //fHeader->setSourcePosition((*fIter).pCollPosition);
 }
 
-std::map<std::string, int> JPetScopeReader::getPMPrefixToPMIdMap(const scope_config::Config& config) const
+std::map<std::string, int> JPetScopeLoader::getPMPrefixToPMIdMap(const scope_config::Config& config) const
 {
   std::map< std::string, int> prefixToId;
   for (const auto &  pm : config.fPMs) {
@@ -101,7 +101,7 @@ std::map<std::string, int> JPetScopeReader::getPMPrefixToPMIdMap(const scope_con
 
 /// Returns a map of list of scope input files. The key is the corresponding
 /// index of the photomultiplier in the param bank.
-std::map<std::string, int> JPetScopeReader::createInputScopeFileNames(
+std::map<std::string, int> JPetScopeLoader::createInputScopeFileNames(
                                        const std::string& inputPathToScopeFiles,
                                        std::map<std::string, int> pmPref2Id
                                      ) const
@@ -132,7 +132,7 @@ std::map<std::string, int> JPetScopeReader::createInputScopeFileNames(
   return scopeFiles;
 }
 
-std::string JPetScopeReader::getFilePrefix(const std::string& filename) const
+std::string JPetScopeLoader::getFilePrefix(const std::string& filename) const
 {
   auto pos = filename.find("_");
   if (pos != string::npos) {
@@ -142,19 +142,19 @@ std::string JPetScopeReader::getFilePrefix(const std::string& filename) const
 }
 
 /// not very effective, but at least we can test it
-bool JPetScopeReader::isCorrectScopeFileName(const std::string& filename) const
+bool JPetScopeLoader::isCorrectScopeFileName(const std::string& filename) const
 {
   boost::regex pattern("^[A-Za-z0-9]+_\\d*.txt");
   return regex_match(filename, pattern);
 }
 
-void JPetScopeReader::init(const JPetOptions::Options& opts)
+void JPetScopeLoader::init(const JPetOptions::Options& opts)
 {
-  INFO( "Initialize Scope Reader Module." );
+  INFO( "Initialize Scope Loader Module." );
   JPetTaskLoader::init(opts);
 }
 
-void JPetScopeReader::exec()
+void JPetScopeLoader::exec()
 {
   assert(fTask);
   fTask->setParamManager(fParamManager);
@@ -164,7 +164,7 @@ void JPetScopeReader::exec()
   fTask->terminate();
 }
 
-void JPetScopeReader::terminate()
+void JPetScopeLoader::terminate()
 {
   assert(fWriter);
   assert(fHeader);

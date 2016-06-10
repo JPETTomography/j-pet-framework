@@ -1,4 +1,4 @@
-#include "../JPetScopeReader/JPetScopeReader.h"
+#include "../JPetScopeLoader/JPetScopeLoader.h"
 #include "../JPetScopeTask/JPetScopeTask.h"
 
 #include <cstddef>
@@ -15,7 +15,7 @@
 // ********            Generate Single JPetRecoSignal             ******** //
 // *********************************************************************** //
 
-const char* gTest_signal_filename = "unitTestData/JPetScopeReaderTest/scope_files/0/C1_00003.txt";
+const char* gTest_signal_filename = "unitTestData/JPetScopeLoaderTest/scope_files/0/C1_00003.txt";
 
 struct reco_signal_generator {
   
