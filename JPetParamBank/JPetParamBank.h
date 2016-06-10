@@ -67,8 +67,8 @@ public:
   inline const std::map<int, JPetPM*>& getPMs() const {
     return fPMs;
   }
-  inline JPetPM& getPM(int i) const {
-    return *(fPMs.at(i));
+  inline JPetPM& getPM(int id) const {
+    return *(fPMs.at(id));
   }
   int getPMsSize() const {
     return fPMs.size();
