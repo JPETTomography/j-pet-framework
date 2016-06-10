@@ -132,50 +132,44 @@ BOOST_AUTO_TEST_CASE(getParametersFromScopeConfigFile)
   BOOST_REQUIRE(!bank.isDummy());
   auto bslots = bank.getBarrelSlots();
   BOOST_REQUIRE_EQUAL(bslots.size(), 2);
-  int i = 0;
   for(const BSlot& BSlotConf: config.fBSlots) {
-    BOOST_REQUIRE(bslots[i]);
-    BOOST_REQUIRE_EQUAL(bslots[i]->getID(), BSlotConf.fId);
-    BOOST_REQUIRE_EQUAL(bslots[i]->isActive(), BSlotConf.fActive);
-    BOOST_REQUIRE_EQUAL(bslots[i]->getName(), BSlotConf.fName);
-    BOOST_REQUIRE_EQUAL(bslots[i]->getInFrameID(), BSlotConf.fFrame);
-    BOOST_REQUIRE_EQUAL(bslots[i]->getTheta(), BSlotConf.fTheta);
-    i++;
+    BOOST_REQUIRE(bslots.at(BSlotConf.fId));
+    BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->getID(), BSlotConf.fId);
+    BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->isActive(), BSlotConf.fActive);
+    BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->getName(), BSlotConf.fName);
+    BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->getInFrameID(), BSlotConf.fFrame);
+    BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->getTheta(), BSlotConf.fTheta);
   }
   auto pms = bank.getPMs();
   BOOST_REQUIRE_EQUAL(pms.size(), 4);
-  i = 0;
   for(const PM& PMConf: config.fPMs) {
-    BOOST_REQUIRE(pms[i]);
-    BOOST_REQUIRE_EQUAL(pms[i]->getID(), PMConf.fId);
-    i++;
+    BOOST_REQUIRE(pms.at(PMConf.fId));
+    BOOST_REQUIRE_EQUAL(pms.at(PMConf.fId)->getID(), PMConf.fId);
   }
   auto scintillators = bank.getScintillators();
   BOOST_REQUIRE_EQUAL(scintillators.size(), 2);
-  i = 0;
   for(const Scin& ScinConf: config.fScins) {
-    BOOST_REQUIRE(scintillators[i]);
-    BOOST_REQUIRE_EQUAL(scintillators[i]->getID(), ScinConf.fId);
-    i++;
+    BOOST_REQUIRE(scintillators.at(ScinConf.fId));
+    BOOST_REQUIRE_EQUAL(scintillators.at(ScinConf.fId)->getID(), ScinConf.fId);
   }
+    
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[0].fId)->getSide(), JPetPM::SideA);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[1].fId)->getSide(), JPetPM::SideB);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[2].fId)->getSide(), JPetPM::SideA);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[3].fId)->getSide(), JPetPM::SideB);
 
-  BOOST_REQUIRE_EQUAL(pms[0]->getSide(), JPetPM::SideA);
-  BOOST_REQUIRE_EQUAL(pms[1]->getSide(), JPetPM::SideB);
-  BOOST_REQUIRE_EQUAL(pms[2]->getSide(), JPetPM::SideA);
-  BOOST_REQUIRE_EQUAL(pms[3]->getSide(), JPetPM::SideB);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[0].fId)->getScin().getID(), config.fScins[0].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[1].fId)->getScin().getID(), config.fScins[0].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[2].fId)->getScin().getID(), config.fScins[1].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[3].fId)->getScin().getID(), config.fScins[1].fId);
 
-  BOOST_REQUIRE_EQUAL(pms[0]->getScin().getID(), config.fScins[0].fId);
-  BOOST_REQUIRE_EQUAL(pms[1]->getScin().getID(), config.fScins[0].fId);
-  BOOST_REQUIRE_EQUAL(pms[2]->getScin().getID(), config.fScins[1].fId);
-  BOOST_REQUIRE_EQUAL(pms[3]->getScin().getID(), config.fScins[1].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[0].fId)->getBarrelSlot().getID(), config.fBSlots[0].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[1].fId)->getBarrelSlot().getID(), config.fBSlots[0].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[2].fId)->getBarrelSlot().getID(), config.fBSlots[1].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[3].fId)->getBarrelSlot().getID(), config.fBSlots[1].fId);
 
-  BOOST_REQUIRE_EQUAL(pms[0]->getBarrelSlot().getID(), config.fBSlots[0].fId);
-  BOOST_REQUIRE_EQUAL(pms[1]->getBarrelSlot().getID(), config.fBSlots[0].fId);
-  BOOST_REQUIRE_EQUAL(pms[2]->getBarrelSlot().getID(), config.fBSlots[1].fId);
-  BOOST_REQUIRE_EQUAL(pms[3]->getBarrelSlot().getID(), config.fBSlots[1].fId);
-
-  BOOST_REQUIRE_EQUAL(scintillators[0]->getBarrelSlot().getID(), config.fBSlots[0].fId);
-  BOOST_REQUIRE_EQUAL(scintillators[1]->getBarrelSlot().getID(), config.fBSlots[1].fId);
+  BOOST_REQUIRE_EQUAL(scintillators.at(config.fScins[0].fId)->getBarrelSlot().getID(), config.fBSlots[0].fId);
+  BOOST_REQUIRE_EQUAL(scintillators.at(config.fScins[1].fId)->getBarrelSlot().getID(), config.fBSlots[1].fId);
 }
 
 BOOST_AUTO_TEST_CASE(getParametersFromScopeConfigFileTwice)
@@ -199,50 +193,45 @@ BOOST_AUTO_TEST_CASE(getParametersFromScopeConfigFileTwice)
   BOOST_REQUIRE(!bank.isDummy());
   auto bslots = bank.getBarrelSlots();
   BOOST_REQUIRE_EQUAL(bslots.size(), 2);
-  int i = 0;
   for(const BSlot& BSlotConf: config.fBSlots) {
-    BOOST_REQUIRE(bslots[i]);
-    BOOST_REQUIRE_EQUAL(bslots[i]->getID(), BSlotConf.fId);
-    BOOST_REQUIRE_EQUAL(bslots[i]->isActive(), BSlotConf.fActive);
-    BOOST_REQUIRE_EQUAL(bslots[i]->getName(), BSlotConf.fName);
-    BOOST_REQUIRE_EQUAL(bslots[i]->getInFrameID(), BSlotConf.fFrame);
-    BOOST_REQUIRE_EQUAL(bslots[i]->getTheta(), BSlotConf.fTheta);
-    i++;
+    BOOST_REQUIRE(bslots.at(BSlotConf.fId));
+    BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->getID(), BSlotConf.fId);
+    BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->isActive(), BSlotConf.fActive);
+    BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->getName(), BSlotConf.fName);
+    BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->getInFrameID(), BSlotConf.fFrame);
+    BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->getTheta(), BSlotConf.fTheta);
   }
   auto pms = bank.getPMs();
   BOOST_REQUIRE_EQUAL(pms.size(), 4);
-  i = 0;
   for(const PM& PMConf: config.fPMs) {
-    BOOST_REQUIRE(pms[i]);
-    BOOST_REQUIRE_EQUAL(pms[i]->getID(), PMConf.fId);
-    i++;
+    BOOST_REQUIRE(pms.at(PMConf.fId));
+    BOOST_REQUIRE_EQUAL(pms.at(PMConf.fId)->getID(), PMConf.fId);
   }
+
   auto scintillators = bank.getScintillators();
   BOOST_REQUIRE_EQUAL(scintillators.size(), 2);
-  i = 0;
   for(const Scin& ScinConf: config.fScins) {
-    BOOST_REQUIRE(scintillators[i]);
-    BOOST_REQUIRE_EQUAL(scintillators[i]->getID(), ScinConf.fId);
-    i++;
+    BOOST_REQUIRE(scintillators.at(ScinConf.fId));
+    BOOST_REQUIRE_EQUAL(scintillators.at(ScinConf.fId)->getID(), ScinConf.fId);
   }
 
-  BOOST_REQUIRE_EQUAL(pms[0]->getSide(), JPetPM::SideA);
-  BOOST_REQUIRE_EQUAL(pms[1]->getSide(), JPetPM::SideB);
-  BOOST_REQUIRE_EQUAL(pms[2]->getSide(), JPetPM::SideA);
-  BOOST_REQUIRE_EQUAL(pms[3]->getSide(), JPetPM::SideB);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[0].fId)->getSide(), JPetPM::SideA);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[1].fId)->getSide(), JPetPM::SideB);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[2].fId)->getSide(), JPetPM::SideA);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[3].fId)->getSide(), JPetPM::SideB);
 
-  BOOST_REQUIRE_EQUAL(pms[0]->getScin().getID(), config.fScins[0].fId);
-  BOOST_REQUIRE_EQUAL(pms[1]->getScin().getID(), config.fScins[0].fId);
-  BOOST_REQUIRE_EQUAL(pms[2]->getScin().getID(), config.fScins[1].fId);
-  BOOST_REQUIRE_EQUAL(pms[3]->getScin().getID(), config.fScins[1].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[0].fId)->getScin().getID(), config.fScins[0].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[1].fId)->getScin().getID(), config.fScins[0].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[2].fId)->getScin().getID(), config.fScins[1].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[3].fId)->getScin().getID(), config.fScins[1].fId);
 
-  BOOST_REQUIRE_EQUAL(pms[0]->getBarrelSlot().getID(), config.fBSlots[0].fId);
-  BOOST_REQUIRE_EQUAL(pms[1]->getBarrelSlot().getID(), config.fBSlots[0].fId);
-  BOOST_REQUIRE_EQUAL(pms[2]->getBarrelSlot().getID(), config.fBSlots[1].fId);
-  BOOST_REQUIRE_EQUAL(pms[3]->getBarrelSlot().getID(), config.fBSlots[1].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[0].fId)->getBarrelSlot().getID(), config.fBSlots[0].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[1].fId)->getBarrelSlot().getID(), config.fBSlots[0].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[2].fId)->getBarrelSlot().getID(), config.fBSlots[1].fId);
+  BOOST_REQUIRE_EQUAL(pms.at(config.fPMs[3].fId)->getBarrelSlot().getID(), config.fBSlots[1].fId);
 
-  BOOST_REQUIRE_EQUAL(scintillators[0]->getBarrelSlot().getID(), config.fBSlots[0].fId);
-  BOOST_REQUIRE_EQUAL(scintillators[1]->getBarrelSlot().getID(), config.fBSlots[1].fId);
+  BOOST_REQUIRE_EQUAL(scintillators.at(config.fScins[0].fId)->getBarrelSlot().getID(), config.fBSlots[0].fId);
+  BOOST_REQUIRE_EQUAL(scintillators.at(config.fScins[1].fId)->getBarrelSlot().getID(), config.fBSlots[1].fId);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
