@@ -79,7 +79,7 @@ JPetScopeConfigParser::DirFileContainer JPetScopeConfigParser::getInputDirectori
   const std::string& configFileWithPath) const
 {
   auto config  = getConfig(configFileWithPath);
-  auto filenames = getFakeInputFileNames(JPetCommonTools::extractFileNameFromFullPath(configFileWithPath), config);
+  auto filenames = getFakeInputFileNames(configFileWithPath, config);
   auto directories =  getInputDirectories(JPetCommonTools::extractPathFromFile(configFileWithPath), config);
   JPetScopeConfigParser::DirFileContainer  container;
   if (filenames.size() != directories.size()) {
