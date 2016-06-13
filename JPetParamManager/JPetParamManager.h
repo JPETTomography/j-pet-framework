@@ -28,44 +28,80 @@
 #include "../JPetWriter/JPetWriter.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigPOD.h" /// for generateParametersFromScopeConfig
 
+#include "../JPetTRB/JPetTRBFactory.h"
+#include "../JPetFEB/JPetFEBFactory.h"
+#include "../JPetFrame/JPetFrameFactory.h"
+#include "../JPetLayer/JPetLayerFactory.h"
+#include "../JPetBarrelSlot/JPetBarrelSlotFactory.h"
+#include "../JPetScin/JPetScinFactory.h"
+#include "../JPetPM/JPetPMFactory.h"
+#include "../JPetTOMBChannel/JPetTOMBChannelFactory.h"
+
 class JPetParamManager
 {
- public:
-  JPetParamManager() : fParamGetter(new JPetDBParamGetter()), fBank(0), fIsNullObject(false) {}
-  JPetParamManager(JPetParamGetter* paramGetter) : fParamGetter(paramGetter), fBank(0) , fIsNullObject(false) {}
-  /// Special constructor to create NullObject.
-  /// This object can be returned if JPetParamManager is not created, 
-  /// and the const& is expected to be returned.
-  explicit JPetParamManager(bool isNull);   
-  ~JPetParamManager();
+  public:
+    JPetParamManager() : fParamGetter(new JPetDBParamGetter()), fBank(0), fIsNullObject(false) {}
+    JPetParamManager(JPetParamGetter* paramGetter) : fParamGetter(paramGetter), fBank(0) , fIsNullObject(false) {}
+    /// Special constructor to create NullObject.
+    /// This object can be returned if JPetParamManager is not created,
+    /// and the const& is expected to be returned.
+    explicit JPetParamManager(bool isNull) : fParamGetter(new JPetDBParamGetter()), fBank(0), fIsNullObject(isNull) {}
+    ~JPetParamManager();
 
-  bool fillParameterBank(const int run);
-  
-  bool readParametersFromFile(JPetReader * reader);
-  bool saveParametersToFile(JPetWriter * writer);
+    std::map<int, JPetTRB *> & getTRBs(const int runId);
+    std::map<int, JPetFEB *> & getFEBs(const int runId);
+    std::map<int, JPetFrame *> & getFrames(const int runId);
+    std::map<int, JPetLayer *> & getLayers(const int runId);
+    std::map<int, JPetBarrelSlot *> & getBarrelSlots(const int runId);
+    std::map<int, JPetScin *> & getScins(const int runId);
+    std::map<int, JPetPM *> & getPMs(const int runId);
+    std::map<int, JPetTOMBChannel *> & getTOMBChannels(const int runId);
 
-  bool readParametersFromFile(std::string filename);
-  bool saveParametersToFile(std::string filename);
-  
-  bool getParametersFromScopeConfig(const std::string& scopeConfFile);
- 
-  void clearParameters();
-  const JPetParamBank& getParamBank() const;
+    void fillParameterBank(const int run);
 
-  inline bool isNullObject() const { return fIsNullObject; }
+    bool readParametersFromFile(JPetReader * reader);
+    bool saveParametersToFile(JPetWriter * writer);
 
- private:
-  JPetParamManager(const JPetParamManager&);
-  JPetParamManager& operator=(const JPetParamManager&);
+    bool readParametersFromFile(std::string filename);
+    bool saveParametersToFile(std::string filename);
 
-  JPetScopeParamGetter fScopeParamGetter;
-  JPetParamGetter* fParamGetter;
-  JPetParamBank* fBank;
-  bool fIsNullObject;
+    bool getParametersFromScopeConfig(const std::string& scopeConfFile);
 
- protected:
-  void createXMLFile(const std::string &channelDataFileName, int channelOffset, int numberOfChannels);
-  void getTOMBDataAndCreateXMLFile(const int p_run_id);
+    void clearParameters();
+    const JPetParamBank& getParamBank() const;
+
+    inline bool isNullObject() const { return fIsNullObject; }
+
+  private:
+    JPetParamManager(const JPetParamManager&);
+    JPetParamManager& operator=(const JPetParamManager&);
+
+    JPetScopeParamGetter fScopeParamGetter;
+    JPetParamGetter* fParamGetter;
+    JPetParamBank* fBank;
+    bool fIsNullObject;
+
+    std::map<int, JPetTRBFactory> fTRBFactories;
+    std::map<int, JPetFEBFactory> fFEBFactories;
+    std::map<int, JPetFrameFactory> fFrameFactories;
+    std::map<int, JPetLayerFactory> fLayerFactories;
+    std::map<int, JPetBarrelSlotFactory> fBarrelSlotFactories;
+    std::map<int, JPetScinFactory> fScinFactories;
+    std::map<int, JPetPMFactory> fPMFactories;
+    std::map<int, JPetTOMBChannelFactory> fTOMBChannelFactories;
+
+    JPetTRBFactory & getTRBFactory(const int runId);
+    JPetFEBFactory & getFEBFactory(const int runId);
+    JPetFrameFactory & getFrameFactory(const int runId);
+    JPetLayerFactory & getLayerFactory(const int runId);
+    JPetBarrelSlotFactory & getBarrelSlotFactory(const int runId);
+    JPetScinFactory & getScinFactory(const int runId);
+    JPetPMFactory & getPMFactory(const int runId);
+    JPetTOMBChannelFactory & getTOMBChannelFactory(const int runId);
+
+  protected:
+    void createXMLFile(const std::string &channelDataFileName, int channelOffset, int numberOfChannels);
+    void getTOMBDataAndCreateXMLFile(const int p_run_id);
 };
 
 #endif
