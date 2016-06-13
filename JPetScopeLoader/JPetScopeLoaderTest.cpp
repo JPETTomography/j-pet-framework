@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE (isCorrectScopeFileName)
 BOOST_AUTO_TEST_CASE (generate_root_file) {
   JPetDBParamGetter::clearParamCache();
   JPetScopeParamGetter::clearParamCache();
-  const char* test_root_filename = "test_file_test_0.reco.sig.root";
+  const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/test_file_test_0.reco.sig.root";
   boost::filesystem::remove(test_root_filename); 
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file.json";
   auto args_char = createArgs(commandLine);
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE (position_does_not_exist) {
   JPetDBParamGetter::clearParamCache();
   JPetScopeParamGetter::clearParamCache();
 
-  const char* test_root_filename = "wrong_file_test_30.reco.sig.root";
+  const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/wrong_file_test_30.reco.sig.root";
   boost::filesystem::remove(test_root_filename); 
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/wrong_file.json"; 
   //contains a single position 30 that does not exist
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE (folder_does_not_exist)
 {
   JPetDBParamGetter::clearParamCache();
   JPetScopeParamGetter::clearParamCache();
-  const char* test_root_filename = "wrong_file2_test_0.reco.sig.root";
+  const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/wrong_file2_test_0.reco.sig.root";
   boost::filesystem::remove(test_root_filename); 
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/wrong_file2.json"; 
   //contains a wrong data folder name
@@ -145,8 +145,8 @@ BOOST_AUTO_TEST_CASE (generate_root_file2) {
   JPetDBParamGetter::clearParamCache();
   JPetScopeParamGetter::clearParamCache();
 
-  const char* test_root_filename1 = "test_file2_test_0.reco.sig.root";
-  const char* test_root_filename2 = "test_file2_test_1.reco.sig.root";
+  const char* test_root_filename1 = "unitTestData/JPetScopeLoaderTest/test_file2_test_0.reco.sig.root";
+  const char* test_root_filename2 = "unitTestData/JPetScopeLoaderTest/test_file2_test_1.reco.sig.root";
   boost::filesystem::remove(test_root_filename1); 
   boost::filesystem::remove(test_root_filename2); 
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file2.json";
