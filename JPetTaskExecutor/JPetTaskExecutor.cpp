@@ -84,8 +84,9 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
 {
   auto runNum = fOptions.getRunNumber();
   if (runNum >= 0) {
-    bool isParamBankGenerated = fParamManager->fillParameterBank(runNum);
-    if (!isParamBankGenerated) {
+    try {
+      fParamManager->fillParameterBank(runNum);
+    } catch (...) {
       ERROR("Param bank was not generated correctly.\n The run number used:" + JPetCommonTools::intToString(runNum));
       return false;
     }

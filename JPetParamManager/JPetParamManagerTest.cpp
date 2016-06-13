@@ -43,8 +43,8 @@ BOOST_AUTO_TEST_CASE(generateParamBankTest)
 
 // BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByWriterAndReaderObjectsTest)
 // {
-// 	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-// 	
+//  DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
+//
 //   JPetParamManager l_paramManagerInstance;
 //   
 //   l_paramManagerInstance.getParametersFromDatabase(1);
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
 {
   JPetDBParamGetter::clearParamCache();
   JPetScopeParamGetter::clearParamCache();
-	std::string testDatafile = dataDir+"testDataFile.txt";
+  std::string testDatafile = dataDir+"testDataFile.txt";
   JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
   
   
@@ -71,14 +71,14 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
   
   BOOST_CHECK(l_paramManagerInstance.saveParametersToFile(testDatafile) == true);
   
-		boost::filesystem::remove(testDatafile);
+  boost::filesystem::remove(testDatafile);
 }
 
 BOOST_AUTO_TEST_CASE(some_Test_that_had_no_name)
 {
   JPetDBParamGetter::clearParamCache();
   JPetScopeParamGetter::clearParamCache();
-	
+
   JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
   
   l_paramManagerInstance.fillParameterBank(1);
