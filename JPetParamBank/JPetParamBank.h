@@ -204,6 +204,7 @@ class JPetParamGetter
 {
 public:
   virtual JPetParamBank* generateParamBank(const int p_run_id) = 0;
+  virtual ~JPetParamGetter() = 0;
 };
 
 #endif /*  !JPETPARAMBANK_H */
