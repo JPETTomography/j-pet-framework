@@ -1,6 +1,8 @@
 #ifndef UnpackingModule_h
 #define UnpackingModule_h
 
+#define VERBOSE 0
+
 #include <TObject.h>
 #include <iostream>
 #include <string>

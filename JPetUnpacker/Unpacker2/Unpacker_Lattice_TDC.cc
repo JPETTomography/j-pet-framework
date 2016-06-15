@@ -41,22 +41,22 @@ Unpacker_Lattice_TDC::Unpacker_Lattice_TDC(string bT, string bA, string hA, int 
   ifstream my_file(cF.c_str());
   
   if (cF == "raw") {
-    cerr<<"Lattice_TDC: WARNING: No corrections applied"<<endl;
+    if(VERBOSE) cerr<<"Lattice_TDC: WARNING: No corrections applied"<<endl;
     useCorrections = false;
   }
   else {
     useCorrections = true;
     
     if ((cF == "none") || (cF.find(".root") == string::npos)) {
-      cerr<<"Lattice_TDC: WARNING: Linear correction applied"<<endl;
+      if(VERBOSE) cerr<<"Lattice_TDC: WARNING: Linear correction applied"<<endl;
       file = new TFile("./linearCorrection.root", "READ");
     }
     else if (!my_file.good()) {
-      cerr<<"Lattice_TDC: WARNING: Linear correction applied - file not found"<<endl; 
+      if(VERBOSE) cerr<<"Lattice_TDC: WARNING: Linear correction applied - file not found"<<endl; 
       file = new TFile("linearCorrection.root", "READ");
     }
     else {
-      cerr<<"Lattice_TDC: WARNING: Calculated corrections applied"<<endl; 
+      if(VERBOSE) cerr<<"Lattice_TDC: WARNING: Calculated corrections applied"<<endl; 
       file = new TFile(cF.c_str(), "READ");
     }
     
@@ -71,7 +71,7 @@ Unpacker_Lattice_TDC::Unpacker_Lattice_TDC(string bT, string bA, string hA, int 
     file->Close();
   }
   
-  cerr<<"Lattice_TDC: Creating Unpacker_Lattice_TDC for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<" number of channels "<<channelNumber<<endl;
+  if(VERBOSE) cerr<<"Lattice_TDC: Creating Unpacker_Lattice_TDC for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<" number of channels "<<channelNumber<<endl;
 }
 
 Unpacker_Lattice_TDC::~Unpacker_Lattice_TDC() {
