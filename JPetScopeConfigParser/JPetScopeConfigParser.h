@@ -40,6 +40,8 @@ public:
   std::vector<std::string> generateDirectories(const std::string& basePath, const std::vector<int>& positions) const;
   boost::property_tree::ptree getJsonContent(const std::string &configFileName) const;
   std::vector<int> transformToNumbers(const std::vector<std::string>& positions) const;
+
+  DirFileContainer getElementsWithExistingDirs(const JPetScopeConfigParser::DirFileContainer& dirsAndFiles) const;
   
 protected:
   scope_config::Config getConfig(std::string configName, boost::property_tree::ptree const& configContent) const;
