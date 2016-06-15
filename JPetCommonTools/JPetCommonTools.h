@@ -114,9 +114,10 @@ public:
   inline static std::string extractFileNameFromFullPath(const std::string& fileWithPath) {
     return boost::filesystem::path( fileWithPath ).filename().string();
   }
-
+  
+  inline static bool isDirectory( const std::string& dir) {
+    return boost::filesystem::is_directory(dir);
+  }
 };
-
-
 
 #endif // COMMON_TOOLS_H
