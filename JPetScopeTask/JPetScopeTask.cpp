@@ -69,28 +69,6 @@ void JPetScopeTask::exec()
       assert(fWriter);
       fWriter->write(sig);
     }
-    
-    /*  const std::vector<JPetPM*> pms = bank.getPMs(); */
-    //assert(pms.size() == 4);
-    //for(size_t i = 0u; i < pms.size(); ++i ) {
-      //JPetPM* pm = pms[i];
-      //assert(pm);
-      //if (fInputFiles.find(i) != fInputFiles.end()) {
-        //const auto& files = fInputFiles.find(i)->second; 
-        //for (const auto& file: files) {
-          //DEBUG(std::string("file to open:")+file);
-          //JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.c_str());
-          //sig.setTimeWindowIndex(getTimeWindowIndex(file));
-          //DEBUG("before setPM");
-          //sig.setPM(*pm);
-          //DEBUG("after setPM");
-          //assert(fWriter);
-          //fWriter->write(sig);
-        //}
-      //} else {
-        //ERROR("Could not find the Input Files for given set");
-      //}
-  /*  }*/
   }
 }
 
