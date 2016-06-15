@@ -6,7 +6,7 @@ using namespace std;
 //ClassImp(Unpacker_TRB3);
 
 Unpacker_TRB3::Unpacker_TRB3(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec, bool dbg) : UnpackingModule(bT, bA, hA, cN, o, r, mR, dec, dbg) {
-  cerr<<"TRB3: Creating Unpacker_TRB3 for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<endl;
+  if(VERBOSE) cerr<<"TRB3: Creating Unpacker_TRB3 for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<endl;
 }
 
 void Unpacker_TRB3::ProcessEvent(UInt_t* data, Event* evt) {
@@ -34,7 +34,7 @@ void Unpacker_TRB3::ProcessEvent(UInt_t* data, Event* evt) {
   UInt_t tdcNumber = 0;
   
   if(debugMode == true)
-    cerr<<"Unpacker_TRB3.cc: Receiving "<<dataSize<<" words to analyze"<<endl;
+    if(VERBOSE) cerr<<"Unpacker_TRB3.cc: Receiving "<<dataSize<<" words to analyze"<<endl;
   
 //  if (dataSize > 10000) {
 //    cerr<<"WARNING: event size too large, skipping event"<<endl;
@@ -68,13 +68,13 @@ void Unpacker_TRB3::ProcessEvent(UInt_t* data, Event* evt) {
       UnpackingModule* u = GetUnpacker(UIntToString(tdcNumber));
       if (u != NULL) {
 	if(debugMode == true)
-		cerr<<"Unpacker_TRB3.cc: Calling Lattice_TDC for module "<<UIntToString(tdcNumber)<<" passing "<<internalSize<<" bytes"<<endl;
+		if(VERBOSE) cerr<<"Unpacker_TRB3.cc: Calling Lattice_TDC for module "<<UIntToString(tdcNumber)<<" passing "<<internalSize<<" bytes"<<endl;
 	GetUnpacker(UIntToString(tdcNumber))->SetEntireEventSize(internalSize + 1);
 	GetUnpacker(UIntToString(tdcNumber))->ProcessEvent(data);
       }
       else {
 	if(debugMode == true)
-		cerr<<"Unpacker_TRB3.cc: No Unpacker found for module "<<UIntToString(tdcNumber)<<" skipping "<<internalSize<<" bytes"<<endl;
+		if(VERBOSE) cerr<<"Unpacker_TRB3.cc: No Unpacker found for module "<<UIntToString(tdcNumber)<<" skipping "<<internalSize<<" bytes"<<endl;
       }
       
       data += internalSize + 1;

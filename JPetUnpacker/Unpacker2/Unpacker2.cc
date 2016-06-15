@@ -71,7 +71,7 @@ void Unpacker2::ParseConfigFile(string f, string s) {
   doc.LoadFile(s.c_str());
   
   if (doc.ErrorID() != 0) {
-   cerr<<"ERROR: failed to open config file"<<endl; 
+    if(VERBOSE) cerr<<"ERROR: failed to open config file"<<endl; 
    exit(0);
   }
   
@@ -82,12 +82,12 @@ void Unpacker2::ParseConfigFile(string f, string s) {
       debugMode = true;
   }
   else {
-    cerr<<"ERROR: Incorrect config file structure"<<endl;
+    if(VERBOSE) cerr<<"ERROR: Incorrect config file structure"<<endl;
     exit(0);
   }     
   
   if (debugMode == true)
-    cerr<<"DEBUG mode on"<<endl;
+    if(VERBOSE) cerr<<"DEBUG mode on"<<endl;
   
   // get the first data source entry in the config file
   tinyxml2::XMLElement* element = doc.FirstChildElement("READOUT")->FirstChildElement("DATA_SOURCE");
@@ -266,7 +266,7 @@ void Unpacker2::ParseConfigFile(string f, string s) {
     }
     else  { // default type
 	m = new UnpackingModule(type, address, hubAddress, 0, 0, 0, "", invertBytes, debugMode);
-	cerr<<"  -- Creating UnpakingModule for unassigned type"<<endl;
+	if(VERBOSE) cerr<<"  -- Creating UnpakingModule for unassigned type"<<endl;
     }
     
     // add the module to the list
@@ -302,7 +302,7 @@ void Unpacker2::DistributeEvents(string f) {
     Int_t bsize = 64000;
     newTree->Branch("event", "Event", &event, bsize, split);
     
-    cerr<<"Starting event loop"<<endl;
+    if(VERBOSE) cerr<<"Starting event loop"<<endl;
     
     event = new Event();
 
@@ -312,7 +312,7 @@ void Unpacker2::DistributeEvents(string f) {
     while(true) {
       
       if(debugMode == true)
-	cerr<<"Unpacker2.cc: Position in file at "<<file->tellg()<<endl;
+	if(VERBOSE) cerr<<"Unpacker2.cc: Position in file at "<<file->tellg()<<endl;
     
       // read out the header of the event into hdr structure
       pHdr = (UInt_t*) &hdr;
@@ -321,7 +321,11 @@ void Unpacker2::DistributeEvents(string f) {
       eventSize = (size_t) getFullSize();
             
       if(debugMode == true)
-	cerr<<"Unpacker2.cc: Starting new event analysis, going over subevents"<<endl;
+	if(VERBOSE) cerr<<"Unpacker2.cc: Starting new event analysis, going over subevents"<<endl;
+
+      if (eventSize == 32)
+	continue;
+      
       
       while(true) {
 	subPHdr = (UInt_t*) &subHdr;
@@ -332,16 +336,18 @@ void Unpacker2::DistributeEvents(string f) {
 	file->read((char*) (pData), getDataSize());
 	
 	if(debugMode == true) {
-	  cerr<<"Unpacker2.cc: Subevent data size: "<<getDataSize()<<" starting with ";
-	  printf("%08X\n", (*pData));
-	  cerr<<"Unpacker2.cc: Subevent details: "<<((SubEventHdr*)subPHdr)->decoding<<" "<<((SubEventHdr*)subPHdr)->hubAddress<<" "<<((SubEventHdr*)subPHdr)->trgNr<<endl;
+	  if(VERBOSE){
+	    cerr<<"Unpacker2.cc: Subevent data size: "<<getDataSize()<<" starting with ";
+	    printf("%08X\n", (*pData));
+	    cerr<<"Unpacker2.cc: Subevent details: "<<((SubEventHdr*)subPHdr)->decoding<<" "<<((SubEventHdr*)subPHdr)->hubAddress<<" "<<((SubEventHdr*)subPHdr)->trgNr<<endl;
+	  }
 	}
 	
 	// call the unpacking module
 	UnpackingModule* u = GetUnpacker(getHubAddress());
 	if (u != NULL && (*pData) != 0) {
 	  if(debugMode == true)
-	    cerr<<"Unpacker2.cc: Processing event "<<analyzedEvents<<" on "<<getHubAddress()<<endl;
+	   if(VERBOSE)  cerr<<"Unpacker2.cc: Processing event "<<analyzedEvents<<" on "<<getHubAddress()<<endl;
 	  GetUnpacker(getHubAddress())->SetEntireEventSize(getDataSize());
 	  GetUnpacker(getHubAddress())->ProcessEvent(pData, event);
 	  
@@ -352,15 +358,15 @@ void Unpacker2::DistributeEvents(string f) {
 	
 	}
 	else if((*pData) == 0) {
-	  cerr<<"WARNING: First data word empty, skipping event nr "<<analyzedEvents<<endl;
+	 if(VERBOSE) cerr<<"WARNING: First data word empty, skipping event nr "<<analyzedEvents<<endl;
 	}
 	else if(u == NULL) {
-	  cerr<<"ERROR: Unpacker not found for address: "<<getHubAddress()<<endl;
+	  if(VERBOSE) cerr<<"ERROR: Unpacker not found for address: "<<getHubAddress()<<endl;
 	  exit(1);
 	}
 
 	if(debugMode == true)
-	  cerr<<"Unpacker2.cc: Ignoring "<<(getPaddedSize() - getDataSize())<<" bytes and reducing eventSize by "<<getDataSize(); 
+	  if(VERBOSE) cerr<<"Unpacker2.cc: Ignoring "<<(getPaddedSize() - getDataSize())<<" bytes and reducing eventSize by "<<getDataSize(); 
 	
 	delete pData;
 	
@@ -370,7 +376,7 @@ void Unpacker2::DistributeEvents(string f) {
 	eventSize -= getDataSize();
 	
 	if(debugMode == true)
-	  cerr<<" leaving eventSize of "<<eventSize<<endl;
+	  if(VERBOSE) cerr<<" leaving eventSize of "<<eventSize<<endl;
 	
 	if(eventSize <= 48 && fullSetup == false) { break; }
 	
@@ -378,7 +384,7 @@ void Unpacker2::DistributeEvents(string f) {
 	
 	if((eventSize <= 64) && fullSetup == true) { break; }
 
-//	if((eventSize <= 176) && fullSetup == true) { break; }
+	if((eventSize <= 176) && fullSetup == true) { break; }
       }
       
       newTree->Fill();
@@ -392,8 +398,8 @@ void Unpacker2::DistributeEvents(string f) {
       event->Clear();
       
       if(debugMode == true) {
-	cerr<<"Unpacker2.cc: Ignoring padding of the event "<<(align8(eventSize) - eventSize)<<endl;
-	cerr<<"Unpacker2.cc: File pointer at "<<file->tellg()<<" of "<<fileSize<<" bytes"<<endl;
+	if(VERBOSE) cerr<<"Unpacker2.cc: Ignoring padding of the event "<<(align8(eventSize) - eventSize)<<endl;
+	if(VERBOSE) cerr<<"Unpacker2.cc: File pointer at "<<file->tellg()<<" of "<<fileSize<<" bytes"<<endl;
       }
       
       if (fullSetup == false) {
@@ -409,7 +415,7 @@ void Unpacker2::DistributeEvents(string f) {
     
     delete newTree;
   }
-  else { cerr<<"ERROR:failed to open data file"<<endl; }
+  else { if(VERBOSE) cerr<<"ERROR:failed to open data file"<<endl; }
   
   file->close();
 
