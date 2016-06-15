@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE (position_does_not_exist) {
   JPetManager& manager = JPetManager::getManager();
   manager.parseCmdLine(argc, argv);
   manager.run();
-  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " does not exist.");
+  BOOST_REQUIRE_MESSAGE(!boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " exists.");
 }
 
 BOOST_AUTO_TEST_CASE (folder_does_not_exist) 
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE (folder_does_not_exist)
   JPetManager& manager = JPetManager::getManager();
   manager.parseCmdLine(argc, argv);
   manager.run();
-  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " does not exist.");
+  BOOST_REQUIRE_MESSAGE(!boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " exists.");
 }
 
 BOOST_AUTO_TEST_CASE (generate_root_file2) {
