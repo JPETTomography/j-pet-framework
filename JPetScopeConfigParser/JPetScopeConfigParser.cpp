@@ -91,8 +91,20 @@ JPetScopeConfigParser::DirFileContainer JPetScopeConfigParser::getInputDirectori
       [](InputDirectory dir, FakeInputFile file) { return std::make_pair(dir, file); }
     );
   }
-  return container;
+  return getElementsWithExistingDirs(container);
 }
+
+
+JPetScopeConfigParser::DirFileContainer JPetScopeConfigParser::getElementsWithExistingDirs(
+  const JPetScopeConfigParser::DirFileContainer& dirsAndFiles) const 
+{
+  JPetScopeConfigParser::DirFileContainer result;
+  std::copy_if(dirsAndFiles.begin(), dirsAndFiles.end(), std::back_inserter(result),  
+      [](const DirFilePair dirFilePair) { return JPetCommonTools::isDirectory(dirFilePair.first); }
+    );
+  return result;
+}
+
 
 // The function takes a vector of string, each string can contain one or more integers separated by
 // space and it will transform it to vector of integers.

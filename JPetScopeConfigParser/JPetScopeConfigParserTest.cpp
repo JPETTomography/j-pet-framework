@@ -77,12 +77,13 @@ BOOST_AUTO_TEST_CASE(getJsonContent)
 
 BOOST_AUTO_TEST_CASE(getInputDirectoriesAndFakeInputFile)
 {
-  using VecOfStrings = std::vector<std::string>;
   JPetScopeConfigParser parser;
   using namespace scope_config;
   Config config;
   BOOST_REQUIRE(parser.getInputDirectoriesAndFakeInputFiles("").empty()); 
-  BOOST_REQUIRE(!parser.getInputDirectoriesAndFakeInputFiles(gInputConfigJsonFilenameTest).empty()); 
+  /// The result is still empty, because now the result contains only elements with directories which actually exist
+  /// and there are no directories in this location.
+  BOOST_REQUIRE(parser.getInputDirectoriesAndFakeInputFiles(gInputConfigJsonFilenameTest).empty());
 }
 
 
@@ -135,6 +136,17 @@ BOOST_AUTO_TEST_CASE(getConfig)
     BOOST_REQUIRE_CLOSE(config.fBSlots[i].fTheta,  res.fBSlots[i].fTheta, 0.00001);
     BOOST_REQUIRE(config.fBSlots[i].fFrame == res.fBSlots[i].fFrame);
   }
+}
+
+BOOST_AUTO_TEST_CASE(getElementsWithExistingDirs)
+{
+  std::vector<std::pair<std::string, std::string> >  dirsAndFakeFiles = { std::make_pair("./", "file1"), std::make_pair("fake/directory", "file2")};
+  JPetScopeConfigParser parser;
+  auto result = parser.getElementsWithExistingDirs(dirsAndFakeFiles );
+  BOOST_REQUIRE_EQUAL(result.size(), 1); 
+  BOOST_REQUIRE_EQUAL(result.at(0).first, "./"); 
+  BOOST_REQUIRE_EQUAL(result.at(0).second, "file1"); 
+  BOOST_REQUIRE(parser.getElementsWithExistingDirs({}).empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
