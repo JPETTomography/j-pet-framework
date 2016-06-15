@@ -124,4 +124,10 @@ BOOST_AUTO_TEST_CASE(extractPathFromFileTest)
   BOOST_REQUIRE_EQUAL(result.compare(currentFullPathTest), 0);
 }
 
+BOOST_AUTO_TEST_CASE(isDirectory)
+{
+  BOOST_REQUIRE(JPetCommonTools::isDirectory(boost::filesystem::initial_path().string()));
+  BOOST_REQUIRE(!JPetCommonTools::isDirectory("fake/directory/baba"));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
