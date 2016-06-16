@@ -19,6 +19,7 @@
 #include "JPetScopeTask.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include <algorithm>
+#include <set>
 
 BOOST_AUTO_TEST_SUITE(JPetScopeTaskTestTestSuite)
 
@@ -45,4 +46,32 @@ BOOST_AUTO_TEST_CASE(getTimeWindowIndex)
   BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("C1_0003.txt"), 3);
 }
 
+
+BOOST_AUTO_TEST_CASE(getFilesInTimeWindowOrder)
+{
+  JPetScopeTask testTask("testScopeTask", "It is a test scope task");
+  BOOST_REQUIRE(testTask.getFilesInTimeWindowOrder({}).empty());
+  auto result = testTask.getFilesInTimeWindowOrder({std::make_pair("C1_0003.txt", 5)});
+  BOOST_REQUIRE_EQUAL(result.size(), 1);
+  BOOST_REQUIRE_EQUAL(result.find("C1_0003.txt")->second, 5);
+  std::map<std::string, int> inputMap = {std::make_pair("C1_0003.txt", 1), 
+                                          std::make_pair("C1_0001.txt", 7),
+                                          std::make_pair("C2_0003.txt", 5)
+                                        };
+  auto result2 = testTask.getFilesInTimeWindowOrder(inputMap);
+  BOOST_REQUIRE_EQUAL(result2.size(), 3);
+  std::set<std::string> expectedFiles = { "C1_0003.txt", "C2_0003.txt"};
+  std::set<int> expectedIds = {1, 5};
+  std::set<int> obtainedIds;
+  std::set<std::string> obtainedFiles;
+  auto iterBeg = result2.equal_range("0003").first;
+  obtainedFiles.insert(iterBeg->first);
+  obtainedIds.insert(iterBeg->second);
+  iterBeg++;
+  obtainedFiles.insert(iterBeg->first);
+  obtainedIds.insert(iterBeg->second);
+  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedFiles.begin(), obtainedFiles.end(),expectedFiles.begin(), expectedFiles.end());
+  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedIds.begin(), obtainedIds.end(),expectedIds.begin(), expectedIds.end());
+  
+}
 BOOST_AUTO_TEST_SUITE_END()
