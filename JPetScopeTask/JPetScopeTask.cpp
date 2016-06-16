@@ -19,7 +19,6 @@
 #include "../JPetParamManager/JPetParamManager.h"
 
 #include <iostream>
-#include <string>
 #include "JPetScopeTaskUtils.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 
@@ -57,7 +56,7 @@ void JPetScopeTask::exec()
   if (bank.isDummy()) {
     ERROR("bank is Dummy");
   } else {
-    auto inputFilesInTimeWindowOrder = getFilesInTimeWindowOrder(fInputFiles);   
+    auto inputFilesInTimeWindowOrder = getFilesInTimeWindowOrder(fInputFiles);
     for(const auto & file : inputFilesInTimeWindowOrder){
       DEBUG(std::string("file to open:")+file.first);
       JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.first.c_str());
@@ -73,8 +72,8 @@ void JPetScopeTask::exec()
 }
 
 
-std::map<std::string, int, cmpByTimeWindowIndex> JPetScopeTask::getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const
+std::multimap<std::string, int, cmpByTimeWindowIndex> JPetScopeTask::getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const
 {
-  std::map<std::string, int, cmpByTimeWindowIndex> orderedMap(inputFiles.begin(), inputFiles.end());
+  std::multimap<std::string, int, cmpByTimeWindowIndex> orderedMap(inputFiles.begin(), inputFiles.end());
   return orderedMap;
 }
