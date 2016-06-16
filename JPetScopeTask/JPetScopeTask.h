@@ -17,9 +17,8 @@
 #ifndef JPETSCOPETASK_H
 #define JPETSCOPETASK_H
 
-#include <vector>
 #include <string>
-#include <set>
+#include <map>
 
 #include "../JPetTask/JPetTask.h"
 #include "../JPetRawSignal/JPetRawSignal.h"
@@ -49,7 +48,7 @@ public:
     fWriter = writer;
   }
 
-  std::map<std::string, int, cmpByTimeWindowIndex> getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const;
+  std::multimap<std::string, int, cmpByTimeWindowIndex> getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const;
 
 protected:
   std::map<std::string, int> fInputFiles;
