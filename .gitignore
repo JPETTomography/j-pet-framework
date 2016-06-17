@@ -28,3 +28,8 @@ MakeFile
 /*.so
 /*.dylib
 /*.cbp
+
+#automatically downloaded files
+unitTestData/*
+Examples/*
+DBHandler/Config/*
