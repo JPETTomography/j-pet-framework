@@ -1,0 +1,6 @@
+language: cpp
+
+matrix:
+  include:
+    - compiler: gcc
+    - compiler: clang
