@@ -115,6 +115,14 @@ file(GLOB SOURCES JPet*/*.cpp)
 file(GLOB UNIT_TEST_SOURCES JPet*/*Test.cpp)
 list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
 
+##download test files and config files
+#only once
+set(DOWNLOAD_DATA ${CMAKE_CURRENT_SOURCE_DIR}/download_data.sh ${CMAKE_CURRENT_SOURCE_DIR})
+if(NOT DOWNLOAD_DATA_HAPPENED)
+  execute_process( COMMAND ${DOWNLOAD_DATA} )
+  set(DOWNLOAD_DATA_HAPPENED TRUE CACHE BOOL "Has the download data happened?" FORCE)
+endif() 
+
 generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   # exclude following sources from ROOT dictionary
   # everything else will have dictionary generated
