@@ -25,10 +25,10 @@ BOOST_AUTO_TEST_CASE(readConfigFileAndFillDBConfigDataTest)
 
   BOOST_CHECK(l_dbConfigData.m_db_configFileName == "configDB.cfg");
   BOOST_CHECK(l_dbConfigData.m_db_name == "test_db");
-  BOOST_CHECK(l_dbConfigData.m_db_username == "gruntowski");
+  BOOST_CHECK(l_dbConfigData.m_db_username == "***REMOVED***");
   BOOST_CHECK(l_dbConfigData.m_db_password == "***REMOVED***");
-  BOOST_CHECK(l_dbConfigData.m_db_hostname == "149.156.90.190");
-  BOOST_CHECK(l_dbConfigData.m_db_port == "5432");
+  BOOST_CHECK(l_dbConfigData.m_db_hostname == "***REMOVED***");
+  BOOST_CHECK(l_dbConfigData.m_db_port == "***REMOVED***");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
