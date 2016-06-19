@@ -14,4 +14,8 @@ before_install:
   - sudo apt-get install -y cmake 
   - sudo apt-get install -y libtinyxml2-dev
   - sudo apt-get install -y doxygen
-script: cmake
+before_script:  
+    - mkdir build
+    - cd build
+    - cmake ..
+script: make all tests
