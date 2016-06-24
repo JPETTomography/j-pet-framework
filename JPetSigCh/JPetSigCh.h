@@ -81,6 +81,13 @@ public:
   }
 
   /**
+   * A proxy method for quick access to DAQ channel number ignorantly of what a TOMBCHannel is
+   */
+  inline int getChannel() const {
+    return getTOMBChannel().getChannel();
+  }
+  
+  /**
    * Returns true if the value of the signal represents charge information (integral of the signal calculated by front-end board)
    */
   bool isCharge() const;
