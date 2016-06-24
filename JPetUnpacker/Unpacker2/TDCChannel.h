@@ -6,7 +6,7 @@
 #include <TClonesArray.h>
 #include <iostream>
 
-#define MAX_FULL_HITS 100
+#define MAX_FULL_HITS 50
 
 class TDCChannel : public TObject {
 
