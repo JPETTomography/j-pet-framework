@@ -65,8 +65,8 @@ class JPetPM: public TNamed
   void setBarrelSlot(JPetBarrelSlot &p_barrelSlot){ fTRefBarrelSlot = &p_barrelSlot; }
   JPetBarrelSlot& getBarrelSlot() const { return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject()); }	
   
-  inline bool operator==(const JPetPM& pm) { return getID() == pm.getID(); }
-  inline bool operator!=(const JPetPM& pm) { return getID() != pm.getID(); }
+  inline bool operator==(const JPetPM& pm) const { return getID() == pm.getID(); }
+  inline bool operator!=(const JPetPM& pm) const { return getID() != pm.getID(); }
   
   /*std::vector<TRef> getTRefKBs() const { return fTRefKBs; }
 
