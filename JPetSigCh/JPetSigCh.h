@@ -169,10 +169,9 @@ public:
    */
   static bool compareByThresholdNumber(const JPetSigCh & A,
                                        const JPetSigCh & B);
-
-ClassDef(JPetSigCh, 3)
-  ;
-
+  
+  ClassDef(JPetSigCh, 4);
+  
 protected:
   EdgeType fType; ///< type of the SigCh: Leading, Trailing (time) or Charge (charge)
   float fValue; ///< main value of the SigCh; either time [ps] (if fType is kRiging or Leading) or charge (if fType is Charge)
