@@ -88,6 +88,17 @@ public:
    */
   std::map<int, double> getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const;
 
+  /**
+   * @brief Get a map with (threshold value [mV], TOT [ps]) pairs.
+   */
+  std::map<int, double> getTOTsVsThresholdValue() const;
+  
+  /**
+   * @brief Get a map with (threshold number, TOT [ps]) pairs.
+   */
+  std::map<int, double> getTOTsVsThresholdNumber() const;
+
+  
   inline int getNumberOfLeadingEdgePoints(void) const {
     return fLeadingPoints.size();
   }
@@ -95,22 +106,22 @@ public:
     return fTrailingPoints.size();
   }
 
-  const JPetSigCh & getTOTPoint() const;
-  void setTOTPoint(const JPetSigCh & totSigCh);
+  /* const JPetSigCh & getTOTPoint() const; */
+  /* void setTOTPoint(const JPetSigCh & totSigCh); */
 
   /**
    * @brief Get the Time Over Threshold value in [ps]
    *
    * @return Time Over Threshold value in [ps] or JpetSigCh::kUnset if TOT was not registered for this signal.
    */
-  double getTOT() const;
+  /* double getTOT() const; */
 
 private:
   std::vector<JPetSigCh> fLeadingPoints; ///< vector of JPetSigCh objects from leading edge of the signal
   std::vector<JPetSigCh> fTrailingPoints; ///< vector of JPetSigCh objects from trailing edge of the signal
   JPetSigCh fTOTPoint;
 
-ClassDef(JPetRawSignal, 1)
+ClassDef(JPetRawSignal, 2)
   ;
 };
 #endif /*  !JPETRAWSIGNAL_H */
