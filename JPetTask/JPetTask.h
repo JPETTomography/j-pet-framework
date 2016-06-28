@@ -38,6 +38,7 @@ class JPetTask: public JPetTaskInterface, public TNamed
   virtual void setEvent(TNamed* ev);
   const JPetParamBank& getParamBank();
   JPetStatistics & getStatistics();
+  JPetAuxilliaryData & getAuxilliaryData();
   virtual TNamed* getEvent() {return fEvent;}
 
  protected:
