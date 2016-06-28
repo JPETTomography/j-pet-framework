@@ -64,8 +64,11 @@ JPetOptions::FileType JPetOptions::handleFileType(const std::string &fileType) c
     }
     catch(const std::out_of_range &outOfRangeFileTypeException)
     {
-      std::string errorMessage = "Out of range error in fileType container ";
-      handleErrorMessage(errorMessage, outOfRangeFileTypeException);
+      // ignore unknown file extension
+      // as the user should be able to define their own extensions
+      //
+      /* std::string errorMessage = "Out of range error in fileType container "; */
+      /* handleErrorMessage(errorMessage, outOfRangeFileTypeException); */
     }
   }
   catch(const std::out_of_range &outOfRangeOptionException)
