@@ -75,6 +75,11 @@ public:
     else return false;
   }
 
+  virtual TObject* getObject(const char* name){
+    if (fFile) return fFile->Get(name);
+    else return 0;
+  }
+  
 protected:
   virtual bool openFile(const char* filename);
   virtual bool loadData(const char* treename = "T");
