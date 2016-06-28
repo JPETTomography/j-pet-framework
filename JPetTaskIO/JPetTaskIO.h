@@ -18,6 +18,7 @@
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetStatistics/JPetStatistics.h"
+#include "../JPetAuxilliaryData/JPetAuxilliaryData.h"
 #include "../JPetOptions/JPetOptions.h"
 #include "../JPetTask/JPetTask.h"
 
@@ -25,6 +26,7 @@ class JPetWriter;
 class JPetReader;
 class JPetTreeHeader;
 class JPetStatistics;
+class JPetAuxilliaryData;
 //class JPetTask;
 
 
@@ -65,6 +67,7 @@ protected:
   JPetReaderInterface* fReader;
   JPetTreeHeader* fHeader;
   JPetStatistics* fStatistics;
+  JPetAuxilliaryData * fAuxilliaryData;
   JPetParamManager* fParamManager;
 
 };

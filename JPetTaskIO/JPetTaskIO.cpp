@@ -31,6 +31,7 @@ JPetTaskIO::JPetTaskIO():
   fReader(0),
   fHeader(0),
   fStatistics(0),
+  fAuxilliaryData(0),
   fParamManager(0)
 {
 }
@@ -81,11 +82,14 @@ void JPetTaskIO::terminate()
   assert(fWriter);
   assert(fHeader);
   assert(fStatistics);
-
+  assert(fAuxilliaryData);
+  
   fWriter->writeHeader(fHeader);
 
   fWriter->writeObject(fStatistics->getHistogramsTable(), "Stats");
 
+  fWriter->writeObject(fAuxilliaryData, "Auxilliary Data");
+  
   // store the parametric objects in the ouptut ROOT file
   getParamManager().saveParametersToFile(
     fWriter);
@@ -156,6 +160,10 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
     // create an object for storing histograms and counters during processing
     fStatistics = new JPetStatistics();
 
+    // read the Auxilliary data from input file
+    // or create it if it was non-existent
+    fAuxilliaryData = dynamic_cast<JPetAuxilliaryData*>(fReader->getObject("Auxilliary Data"));
+    
     // add info about this module to the processing stages' history in Tree header
     fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0,
                           JPetCommonTools::getTimeString());
@@ -172,7 +180,11 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
   assert(fWriter);
   if (fTask) {
     fTask->setWriter(fWriter);
+    if(!fAuxilliaryData){
+      fAuxilliaryData = new JPetAuxilliaryData();
+    }
     fTask->setStatistics(fStatistics);
+    fTask->setAuxilliaryData(fAuxilliaryData);
   } else {
     WARNING("the subTask does not exist, so Write was not passed to it");
   }
@@ -210,6 +222,15 @@ JPetTaskIO::~JPetTaskIO()
     delete fReader;
     fReader = 0;
   }
+  if (fStatistics) {
+    delete fStatistics;
+    fStatistics = 0;
+  }
+  if (fAuxilliaryData) {
+    delete fAuxilliaryData;
+    fAuxilliaryData = 0;
+  }
+
 }
 
 

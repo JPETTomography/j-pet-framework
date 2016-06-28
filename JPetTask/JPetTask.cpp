@@ -57,6 +57,11 @@ void JPetTask::setStatistics(JPetStatistics * statistics) {
   fStatistics = statistics;
 }
 
+void JPetTask::setAuxilliaryData(JPetAuxilliaryData* auxData) {
+  assert(auxData);
+  fAuxilliaryData = auxData;
+}
+
 JPetStatistics & JPetTask::getStatistics() {
   assert(fStatistics);
   return *fStatistics;
