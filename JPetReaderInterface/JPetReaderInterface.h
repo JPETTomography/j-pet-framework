@@ -29,9 +29,10 @@ class JPetReaderInterface {
   virtual bool nthEvent(int n)=0;
   virtual long long getCurrentEventNumber() const =0;
   virtual long long getNbOfAllEvents() const =0; 
-  virtual TObject* getObject(const char* name)=0;
+  virtual TObject* getObjectFromFile(const char* name)=0;
   
   virtual bool openFileAndLoadData(const char* filename, const char* treename)=0;
   virtual void closeFile()=0; 
 };
 #endif /*  !JPETREADERINTERFACE_H */
+

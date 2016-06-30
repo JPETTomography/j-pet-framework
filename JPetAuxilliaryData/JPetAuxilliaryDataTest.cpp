@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE( file_storage )
   JPetReader reader;
   reader.openFileAndLoadData("unitTestData/auxdata.root", "tree");
   
-  JPetAuxilliaryData * data2 = static_cast<JPetAuxilliaryData*>(reader.getObject("Auxilliary data 1"));
+  JPetAuxilliaryData * data2 = static_cast<JPetAuxilliaryData*>(reader.getObjectFromFile("Auxilliary data 1"));
   
   BOOST_REQUIRE_EQUAL(data2->getValue("myvec", 0), -43.0);
   BOOST_REQUIRE_EQUAL(data2->getValue("myvec", 9), -17.5);

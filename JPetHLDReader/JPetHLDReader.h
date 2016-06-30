@@ -75,7 +75,7 @@ public:
     else return false;
   }
 
-  virtual TObject* getObject(const char* name){
+  virtual TObject* getObjectFromFile(const char* name){
     if (fFile) return fFile->Get(name);
     else return 0;
   }
