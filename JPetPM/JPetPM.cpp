@@ -14,6 +14,7 @@
  */
 
 #include "JPetPM.h"
+#include <cassert>
 
 JPetPM::JPetPM():
   fSide(SideA),
@@ -51,5 +52,21 @@ JPetPM::JPetPM(Side side,
 JPetPM::~JPetPM()
 {
 }
+
+bool JPetPM::operator==(const JPetPM& pm) const {
+  if( getID() == pm.getID() ){
+    assert(getSide()==pm.getSide());
+    assert(getHVopt()==pm.getHVopt());
+    assert(getHVset()==pm.getHVset());
+    return true;
+  }
+  
+  return false;
+}
+
+bool JPetPM::operator!=(const JPetPM& pm) const {
+  return !(*this==pm);
+}
+
 
 ClassImp(JPetPM);
