@@ -9,21 +9,6 @@
 // Tests
 BOOST_AUTO_TEST_SUITE(ParamDataTS)
 
-/* BOOST_AUTO_TEST_CASE(ToTTest) { */
-/*   JPetSigCh sigch; */
-/*   sigch.setType(JPetSigCh::Charge); */
-/*   sigch.setValue(17.f); */
-/*   JPetRawSignal signal; */
-/*   signal.addPoint(sigch); */
-
-/*   BOOST_REQUIRE_EQUAL(signal.getTOT(), 17.f); */
-
-/*   JPetRawSignal signal2; */
-/*   signal2.setTOTPoint(sigch); */
-
-/*   BOOST_REQUIRE_EQUAL(signal2.getTOT(), 17.f); */
-/* } */
-
 //
 //BOOST_AUTO_TEST_CASE(QualityOfTimeTest) {
 //  JPetSignal signal;
