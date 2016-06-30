@@ -162,7 +162,7 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
 
     // read the Auxilliary data from input file
     // or create it if it was non-existent
-    fAuxilliaryData = dynamic_cast<JPetAuxilliaryData*>(fReader->getObject("Auxilliary Data"));
+    fAuxilliaryData = dynamic_cast<JPetAuxilliaryData*>(fReader->getObjectFromFile("Auxilliary Data"));
     
     // add info about this module to the processing stages' history in Tree header
     fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0,
