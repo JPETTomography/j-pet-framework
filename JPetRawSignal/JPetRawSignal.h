@@ -106,22 +106,12 @@ public:
     return fTrailingPoints.size();
   }
 
-  /* const JPetSigCh & getTOTPoint() const; */
-  /* void setTOTPoint(const JPetSigCh & totSigCh); */
-
-  /**
-   * @brief Get the Time Over Threshold value in [ps]
-   *
-   * @return Time Over Threshold value in [ps] or JpetSigCh::kUnset if TOT was not registered for this signal.
-   */
-  /* double getTOT() const; */
-
 private:
   std::vector<JPetSigCh> fLeadingPoints; ///< vector of JPetSigCh objects from leading edge of the signal
   std::vector<JPetSigCh> fTrailingPoints; ///< vector of JPetSigCh objects from trailing edge of the signal
   JPetSigCh fTOTPoint;
 
-ClassDef(JPetRawSignal, 2)
+ClassDef(JPetRawSignal, 3)
   ;
 };
 #endif /*  !JPETRAWSIGNAL_H */
