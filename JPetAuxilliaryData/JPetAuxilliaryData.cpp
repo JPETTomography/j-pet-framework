@@ -34,10 +34,18 @@ JPetAuxilliaryData::JPetAuxilliaryData(std::string name):
 }
 
 void JPetAuxilliaryData::createVector(std::string name, int initial_size){
+  if( fVectors.count(name) > 0 ){
+    WARNING("JPetAuxilliaryData: A vector with the requested name already exists and will be overwritten.");
+    fVectors[name].clear();
+  }
   fVectors[name].resize(initial_size, Unset);
 }
 
 void JPetAuxilliaryData::createMap(std::string name){
+  if( fDictionaries.count(name) > 0 ){
+    WARNING("JPetAuxilliaryData: A map with the requested name already exists and will be overwritten.");
+    fDictionaries[name].clear();
+  }
   fDictionaries[name];
 }
 
