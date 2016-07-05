@@ -137,6 +137,7 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetRecoSignal
   JPetPhysSignal
   JPetStatistics
+  JPetAuxilliaryData
   JPetTreeHeader
   JPetParamBank
   JPetHit

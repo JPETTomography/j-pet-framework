@@ -18,6 +18,7 @@
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetStatistics/JPetStatistics.h"
+#include "../JPetAuxilliaryData/JPetAuxilliaryData.h"
 #include <TNamed.h>
 
 class JPetWriter;
@@ -32,16 +33,18 @@ class JPetTask: public JPetTaskInterface, public TNamed
   virtual void addSubTask(JPetTaskInterface*) {};
   virtual void setParamManager(JPetParamManager*paramManager);
   virtual void setStatistics(JPetStatistics* statistics);
+  virtual void setAuxilliaryData(JPetAuxilliaryData* auxData);
   virtual void setWriter(JPetWriter*) {};
   virtual void setEvent(TNamed* ev);
   const JPetParamBank& getParamBank();
   JPetStatistics & getStatistics();
+  JPetAuxilliaryData & getAuxilliaryData();
   virtual TNamed* getEvent() {return fEvent;}
 
  protected:
   TNamed* fEvent;
   JPetParamManager* fParamManager;
   JPetStatistics * fStatistics;
-  
+  JPetAuxilliaryData * fAuxilliaryData;
 };
 #endif /*  !JPETTASK_H */
