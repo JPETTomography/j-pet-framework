@@ -20,7 +20,8 @@
 JPetTask::JPetTask(const char * name, const char * description):
 TNamed(name, description),
 fEvent(0),
-fParamManager(0)
+fParamManager(0),
+fAuxilliaryData(0)
 {
 }
 
@@ -55,6 +56,16 @@ const JPetParamBank& JPetTask::getParamBank() {
 void JPetTask::setStatistics(JPetStatistics * statistics) {
   assert(statistics);
   fStatistics = statistics;
+}
+
+JPetAuxilliaryData & JPetTask::getAuxilliaryData(){
+  assert(fAuxilliaryData);
+  return *fAuxilliaryData;
+}
+
+void JPetTask::setAuxilliaryData(JPetAuxilliaryData* auxData) {
+  assert(auxData);
+  fAuxilliaryData = auxData;
 }
 
 JPetStatistics & JPetTask::getStatistics() {
