@@ -11,8 +11,16 @@ SERVER=koza.if.uj.edu.pl
 
 #for wget
 WGET_DIR="unitTestData"
-WGET_INPUT="http://koza.if.uj.edu.pl/framework/"${WGET_DIR}
 WGET_OUTPUT="./"
+read -p "Select branch name for test data:" BRANCH;
+if [ -z "$BRANCH" ]; then
+  ${BRANCH}="master"
+fi
+WGET_INPUT="http://koza.if.uj.edu.pl/framework/"${WGET_DIR}"/"${BRANCH}
+echo ${WGET_INPUT}
+exit 0
+
+
 # -r  means recursive, 
 # --cut-dirs=1 ignore given level of directories (e.g. remove framework from path) 
 # -nH  Disable generation of host-prefixed directories (so save only unitTestData and not full path)
