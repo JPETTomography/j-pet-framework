@@ -12,6 +12,7 @@
 #include "../../JPetTask/JPetTask.h"
 #include "../../JPetLOR/JPetLOR.h"
 #include "../../JPetHit/JPetHit.h"
+#include "../../JPetWriter/JPetWriter.h"
 #include "TCanvas.h"
 
 class SDAMatchLORs: public JPetTask
@@ -24,11 +25,15 @@ public:
   virtual void exec();
   virtual void init(const JPetTaskInterface::Options& /* opts */);
   virtual void terminate();
-
-private:
+  virtual void setWriter(JPetWriter* writer) {
+    fWriter = writer;
+  }
+ private:
   std::vector<JPetLOR> createLORs(std::vector<JPetHit>& hits);
   void saveLORs(std::vector<JPetLOR> lors);
 
+  JPetWriter* fWriter;
+  
   std::vector<JPetHit> fHitsArray;
   int fTSlot;
   int fMatched;
