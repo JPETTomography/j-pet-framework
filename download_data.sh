@@ -12,7 +12,7 @@ SERVER=koza.if.uj.edu.pl
 #for wget
 WGET_DIR="unitTestData"
 WGET_OUTPUT="${WGET_DIR}"
-read -p "Select branch name for test data:" BRANCH;
+read -p "Select branch name for test data:[master]" BRANCH;
 if [ -z "$BRANCH" ]; then
   ${BRANCH}="master"
 fi
@@ -35,7 +35,7 @@ if [ -z $1 ]; then
 else
   mkdir -p $1/DBHandler/Config
   SCP_OUTPUT=$1/DBHandler/Config
-  WGET_OUTPUT="$1/${WG_DIR}"
+  WGET_OUTPUT="$1/${WGET_DIR}"
 fi
 
 declare -a CFG_FILES_IN=()
