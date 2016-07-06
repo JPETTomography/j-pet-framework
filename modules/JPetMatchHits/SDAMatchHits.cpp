@@ -52,7 +52,7 @@ std::vector<JPetHit> SDAMatchHits::createHits(std::vector<JPetPhysSignal>& signa
   // group the signals by barrel slot ID
   std::map<int, std::vector<JPetPhysSignal>> signalsBySlot;
   for(auto const & signal : signals){
-    int barrelSlotID = signal.getBarrelSlot().getID();
+    int barrelSlotID = signal.getRecoSignal().getBarrelSlot().getID();
     signalsBySlot[barrelSlotID].push_back(signal);
   }
 
@@ -98,6 +98,8 @@ std::vector<JPetHit> SDAMatchHits::matchHitsWithinSlot(std::vector<JPetPhysSigna
 	  hit.setSignalA(sig2);
 	  hit.setSignalB(sig1);
 	}
+	hit.setBarrelSlot(sig1.getPM().getBarrelSlot());
+	hit.setScintillator(sig1.getPM().getScin());
 	hits.push_back(hit);
       }
     }
