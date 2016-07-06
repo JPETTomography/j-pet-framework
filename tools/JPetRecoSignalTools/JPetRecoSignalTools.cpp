@@ -270,11 +270,11 @@ double JPetRecoSignalTools::calculateAreaFromStartingIndex(const JPetRecoSignal&
 
 	double JPetRecoSignalTools::calculateAmplitude(const JPetRecoSignal& signal)
 	{
-		if(signal.getOffset() == 999999)
-		{
-			std::cout<<"Bad signal in calculateAmplitude\n";
-			return 999999;
-		}
+	  if(signal.getOffset() == ERRORS::badOffset)
+	    {
+	      std::cout<<"Bad signal in calculateAmplitude\n";
+	      return ERRORS::badAmplitude;
+	    }
 		const std::vector< shapePoint > signalPoints = signal.getShape();
 		
 		std::vector<double> amplitudePoints;
