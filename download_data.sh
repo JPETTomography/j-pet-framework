@@ -17,8 +17,6 @@ if [ -z "$BRANCH" ]; then
   ${BRANCH}="master"
 fi
 WGET_INPUT="http://koza.if.uj.edu.pl/framework/"${WGET_DIR}"/"${BRANCH}
-echo ${WGET_INPUT}
-exit 0
 
 
 # -r  means recursive, 
