@@ -44,7 +44,7 @@ class JPetTask: public JPetTaskInterface, public TNamed
 
  protected:
   TNamed* fEvent;
-  JPetWriter* fWriter;
+  //  JPetWriter* fWriter;
   JPetParamManager* fParamManager;
   JPetStatistics * fStatistics;
   JPetAuxilliaryData * fAuxilliaryData;
