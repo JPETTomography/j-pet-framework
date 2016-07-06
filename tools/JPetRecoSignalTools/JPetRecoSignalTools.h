@@ -36,7 +36,7 @@ class JPetRecoSignalTools
 	static void savePNGwithMarkedOffsetsAndStartingPoints(const JPetRecoSignal& signal, int number);
 	static double min(const std::vector<double>& vector);
 	static double max(const std::vector<double>& vector);
-	enum ERRORS{ badOffset, badIndexAtMinimumSignal, badIndexAtValue, badCharge, badStartingIndex, badIndexAtMinimumValue, badTimeAtThr};
+	enum ERRORS{ badOffset, badIndexAtMinimumSignal, badIndexAtValue, badCharge, badStartingIndex, badIndexAtMinimumValue, badTimeAtThr, badAmplitude};
 		
 	private:
 	static double calculateArithmeticMean(const std::vector<double>& vector);
