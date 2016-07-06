@@ -1,9 +1,6 @@
 #include "./SDARecoDrawAllCharges.h"
 #include "../../tools/JPetRecoSignalTools/JPetRecoSignalTools.h"
 
-ClassImp(SDARecoDrawAllCharges);
-
-
 //standard constructor
 SDARecoDrawAllCharges::SDARecoDrawAllCharges(const char* name, const char* description): JPetTask(name, description)
 {
