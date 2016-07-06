@@ -11,6 +11,7 @@
 
 #include "../../JPetTask/JPetTask.h"
 #include "TCanvas.h"
+#include <map>
 
 class SDARecoDrawAllCharges: public JPetTask
 {
@@ -25,12 +26,12 @@ public:
 
 private:
   // put any custom variables (e.g. histograms) here:
-    std::vector<TH1F*> fChargeHistos;
-    std::vector<std::vector<double> > fCharges;
-    double fCharge;
-    std::vector<int> fIDs;
-    unsigned int fNumberOfPMTs;
-    std::string fFileName;
+  std::map<int,TH1F*> fChargeHistos;
+  std::map<int,std::vector<double> > fCharges;
+  double fCharge;
+  std::vector<int> fIDs;
+  unsigned int fNumberOfPMTs;
+  std::string fFileName;
 };
 
 #endif

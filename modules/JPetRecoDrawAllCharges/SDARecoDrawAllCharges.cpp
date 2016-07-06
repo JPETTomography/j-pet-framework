@@ -1,5 +1,6 @@
 #include "./SDARecoDrawAllCharges.h"
 #include "../../tools/JPetRecoSignalTools/JPetRecoSignalTools.h"
+#include <THStack.h>
 
 //standard constructor
 SDARecoDrawAllCharges::SDARecoDrawAllCharges(const char* name, const char* description): JPetTask(name, description)
@@ -17,120 +18,98 @@ void SDARecoDrawAllCharges::init()
     fNumberOfPMTs = paramBank.getPMsSize();
     std::cout<<"Found " << fNumberOfPMTs << " PMTs in paramBank\n";
 
-    for(unsigned int i = 0; i < fNumberOfPMTs; i++)
-    {   
-        fIDs.push_back( paramBank.getPM(i).getID() );
-        std::vector<double> k;
-        fCharges.push_back( k); 
-    }   
+    for(auto & id_pm_pair : getParamBank().getPMs() ){
+      fIDs.push_back( id_pm_pair.first);
+      std::vector<double> k;
+      fCharges[id_pm_pair.first] = k;
+    }
     
-
 }
 
 void SDARecoDrawAllCharges::exec()
 {
   // Cast data from the entry into JPetRecoSignal
   const JPetRecoSignal& signal = (JPetRecoSignal&)(*getEvent());
-
-    for(unsigned int j = 0; j < fNumberOfPMTs; j++)
-    {
-        if( (signal.getPM().getID()) == fIDs[j] )
-        {
-          //get offset and fill
-          fCharge = signal.getCharge();
-          fCharges[j].push_back(fCharge);
-          break;
-        }
-    }
+  
+  fCharges[signal.getPM().getID()].push_back(signal.getCharge());
+  
 }
 
 void SDARecoDrawAllCharges::terminate()
 {
+  TCanvas* c1 = new TCanvas();
 
-    TCanvas* c1 = new TCanvas();
-    std::vector<double> minimums, maximums;
-    //looking for max and min value for all offsets
-    for ( unsigned int j = 0; j < fNumberOfPMTs; j++ )
+  //looking for max and min value for all offsets  
+  double maximum = -1.e20;
+  double minimum = 1.e20;
+  
+  for ( auto & id_vec_pair : fCharges )
     {
-        minimums.push_back( JPetRecoSignalTools::min( fCharges[j] ) );
-        maximums.push_back( JPetRecoSignalTools::max( fCharges[j] ) );
+      double local_min = JPetRecoSignalTools::min( id_vec_pair.second );
+      double local_max = JPetRecoSignalTools::max( id_vec_pair.second );
+      
+      if( local_max > maximum) maximum = local_max;
+      if( local_min < minimum) minimum = local_min;
     }
-        double maximum = JPetRecoSignalTools::max( maximums );
-        double minimum = JPetRecoSignalTools::min( minimums );
-
-        maximum = maximum + maximum*0.1;
-        minimum = minimum - minimum*0.1;
-
-    maximum = 150;
-    minimum = 0;
-
+  
+  maximum = maximum + maximum*0.1;
+  minimum = minimum - minimum*0.1;
+  
+  maximum = 120;
+  minimum = 0;
+  
     if(minimum < -100)
-        minimum = -100;
-
+      minimum = -100;
+    
     int bins = maximum - minimum;
-    bins /= 2;
 
     if(bins<0)
         bins*=-1;
-
+    
     //making vector of histos
-    for( unsigned int j = 0; j < fNumberOfPMTs; j++ )
-    {
-        std::stringstream ss;
-        ss << fIDs[j];
-        std::string title = "Charge for PMT" + ss.str();
-        fChargeHistos.push_back(new TH1F( title.c_str(), title.c_str() , bins, minimum, maximum ));
-             ss.str( std::string() );
-              ss.clear();
-    }
+    for ( auto & id_vec_pair : fCharges ){
+      
+      std::stringstream ss;
+      ss << id_vec_pair.first;
+      std::string title = "Charge for PMT" + ss.str();
+      fChargeHistos[id_vec_pair.first] = new TH1F( title.c_str(), title.c_str() , bins, minimum, maximum );
+      ss.str( std::string() );
+      ss.clear();
 
     //filling histos
-    for( unsigned int j = 0; j < fNumberOfPMTs; j++ )
-    {
-        for(unsigned int i = 0; i < fCharges[j].size(); ++i)
+      for(unsigned int i = 0; i < fCharges[id_vec_pair.first].size(); ++i)
         {
-            fChargeHistos[j]->Fill(fCharges[j][i],1);
+	  fChargeHistos[id_vec_pair.first]->Fill(fCharges[id_vec_pair.first][i],1);
         }
+      
+    }
+    
+    THStack * stack = new THStack("hs1", ";Charge [pC];Counts");
+    int i=1;
+    for(auto & id_histo_pair : fChargeHistos){
+
+      id_histo_pair.second->GetXaxis()->SetTitle("Charge [pC]");
+      id_histo_pair.second->GetYaxis()->SetTitle("Counts");
+      id_histo_pair.second->SetLineWidth(2);
+      id_histo_pair.second->SetLineColor(i++);
+      
+      stack->Add(id_histo_pair.second);
     }
 
-    //looking for tallest histo
-    unsigned int tallest = 0;
-    int tallestHeight = (fChargeHistos[0]->GetBinContent( fChargeHistos[0]->GetMaximumBin() ) );
-    for(unsigned int j = 1; j < fNumberOfPMTs; j++)
-    {
-        if( fChargeHistos[j]->GetBinContent( fChargeHistos[j]->GetMaximumBin() ) > tallestHeight )
-        {
-            tallest = j;
-            tallestHeight = fChargeHistos[j]->GetBinContent(fChargeHistos[j]->GetMaximumBin());
-        }
-    }
+    stack->Draw("nostack");
+    
+    TLegend * leg = c1->BuildLegend();
+    leg->Draw();
+    
+    std::string title = "Charges.root";
+    
+    c1->SaveAs( title.c_str() ); 
 
-    //plotting tallest histo
-    fChargeHistos[tallest]->GetXaxis()->SetTitle("Charge [pC]");
-    fChargeHistos[tallest]->GetYaxis()->SetTitle("Counts");
-    fChargeHistos[tallest]->Draw();
-    fChargeHistos[tallest]->SetLineWidth(4);
+    title = "Charges.png";
 
-    TLegend* legend = new TLegend(0.4,0.6,0.89,0.89);
-        legend->AddEntry(fChargeHistos[tallest], fChargeHistos[tallest]->GetTitle(),"l");
-    //plotting the rest
-    for(unsigned int i = 0; i < fChargeHistos.size(); i++)
-    {
-        if(i == tallest)
-            continue;
-        fChargeHistos[i]->SetLineWidth(4);
-        fChargeHistos[i]->SetLineColor(i+1);
-//      fChargeHistos[i]->Draw("same");
-
-        legend->AddEntry(fChargeHistos[i], fChargeHistos[i]->GetTitle(),"l");
-
-    }
-
-//  legend->Draw();
-
-        std::string title = "fChargesForAll.root";
-
-        c1->SaveAs( title.c_str() );
-
+    c1->SaveAs( title.c_str() ); 
+    
+    delete c1;
+    delete stack;
 }
 
