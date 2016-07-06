@@ -12,7 +12,7 @@ SERVER=koza.if.uj.edu.pl
 #for wget
 WGET_DIR="unitTestData"
 WGET_OUTPUT="./"
-read -p "Select branch name for test data:" BRANCH;
+read -p "Select branch name for test data:[master]" BRANCH;
 if [ -z "$BRANCH" ]; then
   ${BRANCH}="master"
 fi
