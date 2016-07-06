@@ -11,7 +11,9 @@
 #define _JPETANALYSISMODULE_SDACHARGE_H_
 
 #include "../../JPetTask/JPetTask.h"
+#include "../../JPetWriter/JPetWriter.h"
 #include "TCanvas.h"
+
 
 class SDARecoChargeCalc: public JPetTask
 {
@@ -24,10 +26,15 @@ class SDARecoChargeCalc: public JPetTask
   virtual void exec();
   virtual void init(const JPetTaskInterface::Options& /* opts */);
   virtual void terminate();
+  virtual void setWriter(JPetWriter* writer) {
+    fWriter = writer;
+  }
 
+  
 private:
 	int fBadSignals;
 	int fCurrentEventNumber;
+	JPetWriter* fWriter;
 };
 
 #endif

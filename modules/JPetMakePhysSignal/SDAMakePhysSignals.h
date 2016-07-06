@@ -12,6 +12,7 @@
 
 #include "TCanvas.h"
 #include "../../JPetTask/JPetTask.h"
+#include "../../JPetWriter/JPetWriter.h"
 
 class SDAMakePhysSignals: public JPetTask
 {
@@ -22,10 +23,14 @@ public:
   virtual void exec();
   virtual void init(const JPetTaskInterface::Options& /* opts */);
   virtual void terminate();
+  virtual void setWriter(JPetWriter* writer) {
+    fWriter = writer;
+  }
 
+  
 private:
 
-
+    JPetWriter* fWriter;
 };
 
 #endif

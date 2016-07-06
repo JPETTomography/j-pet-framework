@@ -12,6 +12,7 @@
 
 #include "../../JPetTask/JPetTask.h"
 #include "TCanvas.h"
+#include "../../JPetWriter/JPetWriter.h"
 
 class SDARecoOffsetsCalc: public JPetTask
 {
@@ -23,9 +24,13 @@ public:
   virtual void init(const JPetTaskInterface::Options& /* opts */);
   virtual void exec();
   virtual void terminate();
-
-private:
+  virtual void setWriter(JPetWriter* writer) {
+    fWriter = writer;
+  }
+  
+ private:
   // put any custom variables (e.g. histograms) here:
+  JPetWriter* fWriter;
   int fCurrentEventNumber;
   double fOffset;
   int fBadSignals;
