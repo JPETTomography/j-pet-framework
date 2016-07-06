@@ -35,7 +35,7 @@ if [ -z $1 ]; then
 else
   mkdir -p $1/DBHandler/Config
   SCP_OUTPUT=$1/DBHandler/Config
-  WGET_OUTPUT="$1/${WG_DIR}"
+  WGET_OUTPUT="$1/${WGET_DIR}"
 fi
 
 declare -a CFG_FILES_IN=()
