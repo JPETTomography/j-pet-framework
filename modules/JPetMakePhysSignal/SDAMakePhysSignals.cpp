@@ -20,9 +20,11 @@ void SDAMakePhysSignals::exec()
 
   JPetPhysSignal physSignal;
   physSignal.setRecoSignal(signal);
-  WARNING( Form("This module currently sets number of photoelectrons equal to charge of JPetRecoSignal!") );
-  physSignal.setPhe(physSignal.getRecoSignal().getCharge() );
 
+  // NOTE: This module currently sets number of photoelectrons
+  // equal to charge of JPetRecoSignal
+  physSignal.setPhe(physSignal.getRecoSignal().getCharge() );
+  
   fWriter->write(physSignal);
 }
 
