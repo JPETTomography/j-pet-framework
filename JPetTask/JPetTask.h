@@ -20,6 +20,7 @@
 #include "../JPetStatistics/JPetStatistics.h"
 #include "../JPetAuxilliaryData/JPetAuxilliaryData.h"
 #include <TNamed.h>
+#include "../JPetWriter/JPetWriter.h"
 
 class JPetWriter;
 
@@ -31,7 +32,7 @@ class JPetTask: public JPetTaskInterface, public TNamed
   virtual void exec();
   virtual void terminate();
   virtual void addSubTask(JPetTaskInterface*) {};
-  virtual void setParamManager(JPetParamManager*paramManager);
+  virtual void setParamManager(JPetParamManager* paramManager);
   virtual void setStatistics(JPetStatistics* statistics);
   virtual void setAuxilliaryData(JPetAuxilliaryData* auxData);
   virtual void setWriter(JPetWriter*) {};
