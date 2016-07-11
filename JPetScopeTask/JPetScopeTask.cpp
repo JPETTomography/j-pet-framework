@@ -63,7 +63,9 @@ void JPetScopeTask::exec()
       sig.setTimeWindowIndex(getTimeWindowIndex(file.first));
       DEBUG("before setPM");
       const JPetPM & pm = bank.getPM(file.second);
+      const JPetBarrelSlot & bs = pm.getBarrelSlot();
       sig.setPM(pm);
+      sig.setBarrelSlot(bs);
       DEBUG("after setPM");
       assert(fWriter);
       fWriter->write(sig);

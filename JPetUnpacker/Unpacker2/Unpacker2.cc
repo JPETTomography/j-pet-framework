@@ -295,7 +295,7 @@ void Unpacker2::DistributeEvents(string f) {
     Event* event = 0;
     
     // open a new file
-    string newFileName = f + ".root"; 
+    string newFileName = f + ".raw.root";;
     TFile* newFile = new TFile(newFileName.c_str(), "RECREATE");
     TTree* newTree = new TTree("T", "Tree");
     Int_t split = 2;

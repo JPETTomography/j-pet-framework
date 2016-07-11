@@ -349,13 +349,13 @@ void JPetParamGetterAscii::fillTOMBChannelTRefs(boost::property_tree::ptree & ru
 				auto infos = * possibleInfos;
 				for (auto infoRaw : infos) {
 						auto info = infoRaw.second;
-						int id = info.get<int>("id");
+						int channel = info.get<int>("channel");
 						int relId = info.get<int>(TRBsName+"_id");
-						bank.getTOMBChannel(id).setTRB(bank.getTRB(relId));
+						bank.getTOMBChannel(channel).setTRB(bank.getTRB(relId));
 						relId = info.get<int>(FEBsName+"_id");
-						bank.getTOMBChannel(id).setFEB(bank.getFEB(relId));
+						bank.getTOMBChannel(channel).setFEB(bank.getFEB(relId));
 						relId = info.get<int>(PMsName+"_id");
-						bank.getTOMBChannel(id).setPM(bank.getPM(relId));
+						bank.getTOMBChannel(channel).setPM(bank.getPM(relId));
 				}
 		} else {
 				ERROR("No TOMB channels in the specified run.");
@@ -364,12 +364,12 @@ void JPetParamGetterAscii::fillTOMBChannelTRefs(boost::property_tree::ptree & ru
 
 JPetTOMBChannel JPetParamGetterAscii::TOMBChannelFromInfo(boost::property_tree::ptree & info)
 {
-		unsigned int id = info.get<unsigned int>("id");
+		unsigned int local_number = info.get<unsigned int>("local_number");
 		unsigned int channel = info.get<unsigned int>("channel");
 		unsigned int FEB = info.get<unsigned int>("FEB");
 		float threshold = info.get<float>("threshold");
-		JPetTOMBChannel result(id);
-		result.setLocalChannelNumber(channel);
+		JPetTOMBChannel result(channel);
+		result.setLocalChannelNumber(local_number);
 		result.setFEBInputNumber(FEB);
 		result.setThreshold(threshold);
 		return result;
