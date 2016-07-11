@@ -2,7 +2,6 @@
 #define BOOST_TEST_MODULE JPetParamGetterAsciiTest
 #include <boost/test/unit_test.hpp>
 
-#define private public
 #include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
 #include <boost/filesystem.hpp>
