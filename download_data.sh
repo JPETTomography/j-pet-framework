@@ -11,25 +11,31 @@ SERVER=koza.if.uj.edu.pl
 
 #for wget
 WGET_DIR="unitTestData"
-WGET_INPUT="http://koza.if.uj.edu.pl/framework/"${WGET_DIR}
-WGET_OUTPUT="./"
+WGET_OUTPUT="${WGET_DIR}"
+read -p "Select branch name for test data:[master]" BRANCH;
+if [ -z "$BRANCH" ]; then
+  ${BRANCH}="master"
+fi
+WGET_INPUT="http://koza.if.uj.edu.pl/framework/${WGET_DIR}/${BRANCH}/"
+
+
 # -r  means recursive, 
 # --cut-dirs=1 ignore given level of directories (e.g. remove framework from path) 
 # -nH  Disable generation of host-prefixed directories (so save only unitTestData and not full path)
 # -np no parents
 # --reject="index.html*" - do not store all index.html files
 # -e robots=off - remove some robot generated files
-declare -a WGET_FLAGS=(-r -nH -np --cut-dirs=1 --reject="index.html*" -e robots=off)
+declare -a WGET_FLAGS=(-r -nH -np --cut-dirs=3 --reject="index.html*" -e robots=off)
 
 #if there is an extra argument treat it as the output path 
 #if the argument is empty set some default paths
 if [ -z $1 ]; then
   SCP_OUTPUT=.
-  WGET_OUTPUT=.
+  WGET_OUTPUT="./${WGET_DIR}"
 else
   mkdir -p $1/DBHandler/Config
   SCP_OUTPUT=$1/DBHandler/Config
-  WGET_OUTPUT=$1
+  WGET_OUTPUT="$1/${WGET_DIR}"
 fi
 
 declare -a CFG_FILES_IN=()
@@ -45,10 +51,10 @@ do
 done
 
 #downloading test data via wget
-if [ ! -d "${WGET_OUTPUT}/${WGET_DIR}" ]; then
+if [ ! -d "${WGET_OUTPUT}" ]; then
   wget "${WGET_INPUT}" "${WGET_FLAGS[@]}" -P "${WGET_OUTPUT}" 
 else
-  echo "directory ${WGET_OUTPUT}/${WGET_DIR} already exists !"
+  echo "directory ${WGET_OUTPUT} already exists !"
   echo "downloading interrupted!"
 fi
 
