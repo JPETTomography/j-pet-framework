@@ -1,6 +1,8 @@
 
 #include "./SDARecoDrawAllOffsets.h"
 #include "../../tools/JPetRecoSignalTools/JPetRecoSignalTools.h"
+#include <sstream>
+#include <TLegend.h>
 
 //standard constructor
 SDARecoDrawAllOffsets::SDARecoDrawAllOffsets(const char* name, const char* description): JPetTask(name, description)
