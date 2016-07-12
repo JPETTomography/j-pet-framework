@@ -14,8 +14,10 @@
  */
 
 #include "./SDARecoDrawAllCharges.h"
-#include "../../tools/JPetRecoSignalTools/JPetRecoSignalTools.h"
+#include <sstream>
 #include <THStack.h>
+#include <TLegend.h>
+#include "../../tools/JPetRecoSignalTools/JPetRecoSignalTools.h"
 
 //standard constructor
 SDARecoDrawAllCharges::SDARecoDrawAllCharges(const char* name, const char* description): JPetTask(name, description)
