@@ -10,7 +10,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file SDARecoOffsetsCalc.cpp
+ *  @file SDARecoOffsetsCalc.h
  *  @brief Calculates offsets for each JPetRecoSignal from SDA
  *  Reads a TTree of JPetRecoSignals and calculates is offset value. For more info
  *  look into Monika Pawlik-Niedzwiecka master thesis. 
