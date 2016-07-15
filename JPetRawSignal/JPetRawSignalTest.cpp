@@ -9,21 +9,6 @@
 // Tests
 BOOST_AUTO_TEST_SUITE(ParamDataTS)
 
-BOOST_AUTO_TEST_CASE(ToTTest) {
-  JPetSigCh sigch;
-  sigch.setType(JPetSigCh::Charge);
-  sigch.setValue(17.f);
-  JPetRawSignal signal;
-  signal.addPoint(sigch);
-
-  BOOST_REQUIRE_EQUAL(signal.getTOT(), 17.f);
-
-  JPetRawSignal signal2;
-  signal2.setTOTPoint(sigch);
-
-  BOOST_REQUIRE_EQUAL(signal2.getTOT(), 17.f);
-}
-
 //
 //BOOST_AUTO_TEST_CASE(QualityOfTimeTest) {
 //  JPetSignal signal;
@@ -169,6 +154,61 @@ BOOST_AUTO_TEST_CASE(SetAndGetTRefBarrelSlotObjectTest) {
   BOOST_CHECK(barrelSlot.getID() == 2);
 
 }
+
+BOOST_AUTO_TEST_CASE(GetMapOfTOTsVsThrNumOrValueTest) {
+
+  JPetRawSignal signal;
+
+  JPetSigCh sigch1t(JPetSigCh::Trailing, 8.f);
+  sigch1t.setThreshold(400.f);
+  sigch1t.setThresholdNumber(1);
+  JPetSigCh sigch2t(JPetSigCh::Trailing, 17.f);
+  sigch2t.setThreshold(50.f);
+  sigch2t.setThresholdNumber(2);
+  JPetSigCh sigch3t(JPetSigCh::Trailing, 43.f);
+  sigch3t.setThreshold(100.f);
+  sigch3t.setThresholdNumber(4);
+  
+  JPetSigCh sigch1l(JPetSigCh::Leading, 8.f);
+  sigch1l.setThreshold(100.f);
+  sigch1l.setThresholdNumber(1);
+  JPetSigCh sigch2l(JPetSigCh::Leading, 17.f);
+  sigch2l.setThreshold(200.f);
+  sigch2l.setThresholdNumber(3);
+  JPetSigCh sigch3l(JPetSigCh::Leading, 43.f);
+  sigch3l.setThreshold(400.f);
+  sigch3l.setThresholdNumber(4);
+
+  
+  signal.addPoint(sigch1t);
+  signal.addPoint(sigch2t);
+  signal.addPoint(sigch3t);
+
+  signal.addPoint(sigch1l);
+  signal.addPoint(sigch2l);
+  signal.addPoint(sigch3l);
+
+  std::map<int, double> map;
+  map = signal.getTOTsVsThresholdNumber();
+
+  BOOST_REQUIRE_EQUAL( map.size(), 2 );
+  BOOST_REQUIRE_EQUAL( map[1], sigch1t.getValue() - sigch1l.getValue() );
+  BOOST_REQUIRE_EQUAL( map[4], sigch3t.getValue() - sigch3l.getValue() );
+  BOOST_REQUIRE_EQUAL( map.count(2), 0 ); 
+  BOOST_REQUIRE_EQUAL( map.count(3), 0 ); 
+  BOOST_CHECK_THROW( map.at(2), std::out_of_range);
+  
+  std::map<int, double> map2;
+  map2 = signal.getTOTsVsThresholdValue();
+
+  BOOST_REQUIRE_EQUAL( map2.size(), 2 );
+  BOOST_REQUIRE_EQUAL( map2[100.f], sigch3t.getValue() - sigch1l.getValue() );
+  BOOST_REQUIRE_EQUAL( map2[400.f], sigch1t.getValue() - sigch3l.getValue() );
+  BOOST_REQUIRE_EQUAL( map2.count(50.f), 0 ); 
+  BOOST_REQUIRE_EQUAL( map2.count(200.f), 0 ); 
+
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()
 

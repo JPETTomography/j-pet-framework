@@ -10,7 +10,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetStatustics.h
+ *  @file JPetStatistics.h
  */
 
 #ifndef _JPET_STATISTICS_H_

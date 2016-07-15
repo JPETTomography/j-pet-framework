@@ -24,9 +24,9 @@
 
   //virtual bool openFileAndLoadData(const char* filename, const char* treename = "tree");
   //virtual void closeFile();
-  //JPetTreeHeader* getHeaderClone() const;
+//   //JPetTreeHeader* getHeaderClone() const;
 
-  //virtual TObject* getObject(const char* name);
+  //virtual TObject* getObjectFromFile(const char* name);
   //virtual bool isOpen() const;
 
 BOOST_AUTO_TEST_SUITE (JPetReaderTestSuite)
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE (default_constructor)
   BOOST_REQUIRE_EQUAL(reader.getCurrentEventNumber(), -1);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), 0);
   BOOST_REQUIRE(!reader.getHeaderClone());
-  BOOST_REQUIRE(!reader.getObject("testObj"));
+  BOOST_REQUIRE(!reader.getObjectFromFile("testObj"));
 }
 
 BOOST_AUTO_TEST_CASE (bad_file)
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE (bad_file)
   BOOST_REQUIRE_EQUAL(reader.getCurrentEventNumber(), -1);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), 0);
   BOOST_REQUIRE(!reader.getHeaderClone());
-  BOOST_REQUIRE(!reader.getObject("testObj"));
+  BOOST_REQUIRE(!reader.getObjectFromFile("testObj"));
 }
 
 BOOST_AUTO_TEST_CASE (good_file_with_constructor)
@@ -86,8 +86,8 @@ BOOST_AUTO_TEST_CASE (good_file_with_constructor)
 BOOST_AUTO_TEST_CASE (good_file_getObject)
 {
   JPetReader reader("unitTestData/JPetReaderTest/small.root");
-  BOOST_REQUIRE(!reader.getObject("nonExistentObj"));
-  BOOST_REQUIRE(reader.getObject("tree"));
+  BOOST_REQUIRE(!reader.getObjectFromFile("nonExistentObj"));
+  BOOST_REQUIRE(reader.getObjectFromFile("tree"));
 }
 
 BOOST_AUTO_TEST_CASE (good_file_openFileAndLoadData)
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE (good_file_closeFile)
   BOOST_REQUIRE_EQUAL(reader.getCurrentEventNumber(), -1);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), 0);
   BOOST_REQUIRE(!reader.getHeaderClone());
-  BOOST_REQUIRE(!reader.getObject("testObj"));
+  BOOST_REQUIRE(!reader.getObjectFromFile("testObj"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

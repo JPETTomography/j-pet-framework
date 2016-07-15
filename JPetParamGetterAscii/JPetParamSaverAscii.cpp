@@ -256,8 +256,8 @@ void JPetParamSaverAscii::fillTOMBChannels(boost::property_tree::ptree & runCont
 boost::property_tree::ptree JPetParamSaverAscii::TOMBChannelToInfo(const JPetTOMBChannel & tomb)
 {
 	boost::property_tree::ptree info;
-	info.put("id", tomb.getChannel());
-	info.put("channel", tomb.getLocalChannelNumber());
+	info.put("local_number", tomb.getLocalChannelNumber());
+	info.put("channel", tomb.getChannel());
 	info.put("FEB", tomb.getFEBInputNumber());
 	info.put("threshold", tomb.getThreshold());
 
