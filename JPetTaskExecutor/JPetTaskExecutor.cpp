@@ -20,6 +20,7 @@
 #include "../JPetTaskLoader/JPetTaskLoader.h"
 #include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
+#include "../JPetLoggerInclude.h"
 
 
 JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
@@ -90,7 +91,13 @@ void JPetTaskExecutor::processFromCmdLineArgs(int)
   if (inputFileType == JPetOptions::kScope) {
     createScopeTaskAndAddToTaskList();
   } else if (inputFileType == JPetOptions::kHld) {
-    fUnpacker.setParams(fOptions.getInputFile());
+    long long nevents = fOptions.getTotalEvents();
+    if (nevents > 0) {
+      fUnpacker.setParams(fOptions.getInputFile(), nevents);
+      WARNING(std::string("Even that range of events was set, only the first ")+ JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n the unpacker always starts from the beginning of the file"));
+    } else {
+      fUnpacker.setParams(fOptions.getInputFile());
+    }
     unpackFile();
   }
 }
