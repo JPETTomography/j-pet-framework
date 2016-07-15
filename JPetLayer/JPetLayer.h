@@ -19,7 +19,7 @@
 #include <TRef.h>
 #include "../JPetFrame/JPetFrame.h"
 #include "TNamed.h"
-
+#include <cassert>
 
 /**
  * @brief Parametric class representing database information on a single cyllindrical layer of a JPetFrame.
@@ -39,9 +39,9 @@ public:
   JPetLayer();
   JPetLayer(int id, bool isActive, std::string name, float radius);
   
-  inline bool operator==(const JPetLayer& layer) { return getId() == layer.getId(); }
-  inline bool operator!=(const JPetLayer& layer) { return getId() != layer.getId(); }
-  
+  bool operator==(const JPetLayer& layer) const;
+  bool operator!=(const JPetLayer& layer) const;
+
   inline int getId() const { return fId; }
   inline bool getIsActive() const { return fIsActive; }
   inline std::string getName() const { return fName; }
@@ -56,7 +56,7 @@ protected:
   }
   
 private:
-  ClassDef(JPetLayer, 2);
+  ClassDef(JPetLayer, 3);
 };
 
 #endif // JPET_LAYER_H

@@ -49,12 +49,14 @@ BOOST_AUTO_TEST_CASE( second )
   JPetPM pm_test;
   JPetFEB feb_test(43, true, "", "", 1, 1, 8, 1);
   JPetTRB trb_test;
+  JPetTOMBChannel tomb_test(12);
   float thr_test = 210.043;
   float time_test = 1.2345;
-
+  
   test.setPM(pm_test);
   test.setTRB(trb_test);
   test.setFEB(feb_test);
+  test.setTOMBChannel(tomb_test);
   test.setThreshold(thr_test);
   test.setType(JPetSigCh::Leading);
   test.setValue(time_test);
@@ -63,6 +65,7 @@ BOOST_AUTO_TEST_CASE( second )
   BOOST_REQUIRE_EQUAL(test.isCharge(), 0);
   BOOST_REQUIRE_CLOSE(test.getValue(), time_test, epsilon);
   BOOST_REQUIRE_EQUAL(test.getType(), JPetSigCh::Leading);
+  BOOST_REQUIRE_EQUAL(test.getChannel(), 12);
   
   JPetSigCh test2(test);
   
