@@ -57,7 +57,7 @@ bool JPetParamManager::readParametersFromFile(JPetReader * reader)
     ERROR("Cannot read parameters from file. The provided JPetReader is closed.");
     return false;
   }
-  fBank = static_cast<JPetParamBank*>(reader->getObject("ParamBank"));
+  fBank = static_cast<JPetParamBank*>(reader->getObjectFromFile("ParamBank"));
 
   if (!fBank) return false;
   return true;
