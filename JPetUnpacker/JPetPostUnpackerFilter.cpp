@@ -52,8 +52,8 @@ int JPetPostUnpackerFilter::calculate_hits(int eventsNum, const char* fileName)
   string newFileName = "";
   newFileName = string(fileName);
   cerr<<"HITS:"<<newFileName<<endl;
-  newFileName = newFileName.substr(0, newFileName.size() - 5);
-  newFileName += "_hits.root";
+  newFileName = newFileName.substr(0, newFileName.size() - 10);
+  newFileName += "root";
   
   TFile* new_file = new TFile(newFileName.c_str(), "RECREATE");
   TTree* new_tree = new TTree("T", "Times converted into hit units");
@@ -158,8 +158,8 @@ int JPetPostUnpackerFilter::calculate_times(int eventsNum, const char* fileName,
   
   string newFileName = string(fileName);
   cerr<<"TIMES:"<<newFileName<<endl;
-  newFileName = newFileName.substr(0, newFileName.size() - 5);
-  newFileName += "_times.root";
+  newFileName = newFileName.substr(0, newFileName.size() - 8);
+  newFileName += "times.root";
   
   TFile* new_file = new TFile(newFileName.c_str(), "RECREATE");
   TTree* new_tree = new TTree("T", "Normalized times tree");
