@@ -112,3 +112,14 @@ void JPetOptions::resetEventRange() {
   fOptions.at("firstEvent") = "-1";
   fOptions.at("lastEvent") = "-1";
 }
+
+long long JPetOptions::getTotalEvents() const
+{
+  long long first = getFirstEvent();
+  long long last = getFirstEvent();
+  long long diff = -1;
+  if (first >=0 && last >=0){
+    diff = last -first + 1;
+  }
+  return diff; 
+}
