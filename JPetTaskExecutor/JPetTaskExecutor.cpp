@@ -94,7 +94,7 @@ void JPetTaskExecutor::processFromCmdLineArgs(int)
     long long nevents = fOptions.getTotalEvents();
     if (nevents > 0) {
       fUnpacker.setParams(fOptions.getInputFile(), nevents);
-      WARNING(std::string("Even that range of events was set, only the first ")+ JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n the unpacker always starts from the beginning of the file"));
+      WARNING(std::string("Even though the range of events was set, only the first ")+ JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
     } else {
       fUnpacker.setParams(fOptions.getInputFile());
     }
