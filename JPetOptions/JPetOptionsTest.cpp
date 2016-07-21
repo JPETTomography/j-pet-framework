@@ -3,24 +3,6 @@
 #include <boost/test/unit_test.hpp>
 #include "../JPetOptions/JPetOptions.h"
 
-
-//JPetOptions
-//public methods
-//JPetOptions();
-//explicit JPetOptions(const Options& opts);
-
-//bool areCorrect(const Options& opts) const;
-//const char* getInputFile() const;
-//const char* getOutputFile() const;
-//long long getFirstEvent() const;
-//long long getLastEvent() const;
-//int getRunNumber() const;
-//bool isProgressBar() const;
-//FileType getInputFileType() const;
-//FileType getOutputFileType() const;
-//inline Options getOptions() const;
-//static  Options getDefaultOptions();
-
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE( my_test1 )
@@ -82,4 +64,50 @@ BOOST_AUTO_TEST_CASE(petOptionsBasicTest)
     BOOST_REQUIRE_EQUAL(JPetCommonTools::mapComparator(petOptions.getDefaultOptions(), options), false);
 }
 
+BOOST_AUTO_TEST_CASE(getTotalEventsTest)
+{
+    JPetOptions::Options options = {
+        {"inputFile", "input"},
+        {"scopeConfigFile","test.json"},
+        {"scopeInputDirectory","scopeData"},
+        {"outputFile", "output"},
+        {"firstEvent", "-1"},
+        {"lastEvent", "-1"},
+        {"runId", "2001, A Space Odyssey"},
+        {"progressBar", "true"},
+        {"inputFileType", "root"},
+        {"outputFileType", "scope"}
+    };
+
+    BOOST_REQUIRE_EQUAL(JPetOptions(options).getTotalEvents(), -1);
+
+    options.at("firstEvent")="0";
+    options.at("lastEvent")="-1";
+
+    BOOST_REQUIRE_EQUAL(JPetOptions(options).getTotalEvents(), -1);
+
+    options.at("firstEvent")="0";
+    options.at("lastEvent")="-1";
+    BOOST_REQUIRE_EQUAL(JPetOptions(options).getTotalEvents(), -1);
+
+    options.at("firstEvent")= "0";
+    options.at("lastEvent")= "0";
+    BOOST_REQUIRE_EQUAL(JPetOptions(options).getTotalEvents(), 1);
+
+    options.at("firstEvent")= "0";
+    options.at("lastEvent")= "1";
+    BOOST_REQUIRE_EQUAL(JPetOptions(options).getTotalEvents(), 2);
+
+    options.at("firstEvent")= "7";
+    options.at("lastEvent")= "9";
+    BOOST_REQUIRE_EQUAL(JPetOptions(options).getTotalEvents(), 3);
+
+    options.at("firstEvent")= "6";
+    options.at("lastEvent")= "5";
+    BOOST_REQUIRE_EQUAL(JPetOptions(options).getTotalEvents(), -1);
+
+    options.at("firstEvent")= "9";
+    options.at("lastEvent")= "5";
+    BOOST_REQUIRE_EQUAL(JPetOptions(options).getTotalEvents(), -1);
+}
 BOOST_AUTO_TEST_SUITE_END()
