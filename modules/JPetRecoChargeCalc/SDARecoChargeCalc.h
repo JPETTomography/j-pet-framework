@@ -19,27 +19,18 @@
 #ifndef _JPETANALYSISMODULE_SDACHARGE_H_
 #define _JPETANALYSISMODULE_SDACHARGE_H_
 
+#include <TCanvas.h>
 #include "../../JPetTask/JPetTask.h"
 #include "../../JPetWriter/JPetWriter.h"
-#include "TCanvas.h"
 
-
-class SDARecoChargeCalc: public JPetTask
-{
-
- public:
-
-  SDARecoChargeCalc(const char* name, const char* description);
-
-  virtual ~SDARecoChargeCalc();
-  virtual void exec();
-  virtual void init(const JPetTaskInterface::Options& /* opts */);
-  virtual void terminate();
-  virtual void setWriter(JPetWriter* writer) {
-    fWriter = writer;
-  }
-
-  
+class SDARecoChargeCalc: public JPetTask{
+public:
+	SDARecoChargeCalc(const char* name, const char* description);
+	virtual ~SDARecoChargeCalc();
+	virtual void exec()override;
+	virtual void init(const JPetTaskInterface::Options&)override;
+	virtual void terminate()override;
+	virtual void setWriter(JPetWriter* writer)override;
 private:
 	int fBadSignals;
 	int fCurrentEventNumber;
