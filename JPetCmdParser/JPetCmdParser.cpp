@@ -132,18 +132,12 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
     }
   }
 
-  /// The run number option is obligatory unless it is a scope file
+  /// The run number option is neclegted if the input file is set as a  scope file
   if (isRunNumberSet(variablesMap)) {
     if (getFileType(variablesMap) =="scope") {
       WARNING("Run number was specified but the input file type is a scope!\n The run number will be ignored!");
     }
-  } else {
-    if (getFileType(variablesMap) !="scope") {
-      ERROR("No run number was specified!\n The run number must be given to correctly load parameters describing the setup!");
-      std::cerr << "No run number was specified!\n The run number must be given to correctly load parameters describing the setup!" << std::endl;
-      return false;
-    }
-  }
+  }   
   return true;
 }
 
