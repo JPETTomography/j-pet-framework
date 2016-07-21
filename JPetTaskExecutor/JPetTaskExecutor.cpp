@@ -14,6 +14,7 @@
  */
 
 #include "JPetTaskExecutor.h"
+#include <stdexcept>
 #include <cassert>
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetScopeLoader/JPetScopeLoader.h"
@@ -28,11 +29,11 @@ JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int p
   ftaskGeneratorChain(taskGeneratorChain),
   fOptions(opt)
 {
-		if (fOptions.isLocalDB()) {
-				fParamManager = new JPetParamManager(new JPetParamGetterAscii(fOptions.getLocalDB()));
-		} else {
-				fParamManager = new JPetParamManager();
-		}
+  if (fOptions.isLocalDB()) {
+    fParamManager = new JPetParamManager(new JPetParamGetterAscii(fOptions.getLocalDB()));
+  } else {
+    fParamManager = new JPetParamManager();
+  }
   if (taskGeneratorChain) {
     for (auto taskGenerator : *ftaskGeneratorChain) {
       auto task = taskGenerator();
@@ -49,7 +50,7 @@ void JPetTaskExecutor::process()
   processFromCmdLineArgs(fProcessedFile);
   for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
     // ignore the event range options for all but the first processed task
-    if(currentTask != fTasks.begin()){
+    if (currentTask != fTasks.begin()) {
       fOptions.resetEventRange();
     }
 
@@ -80,11 +81,15 @@ void JPetTaskExecutor::processFromCmdLineArgs(int)
 {
   auto runNum = fOptions.getRunNumber();
   if (runNum >= 0) {
-    fParamManager->fillParameterBank(runNum); /// @todo some error handling
-				if (fOptions.isLocalDBCreate()) {
-						JPetParamSaverAscii saver;
-						saver.saveParamBank(fParamManager->getParamBank(), runNum, fOptions.getLocalDBCreate());
-				}
+    bool isParamBankGenerated = fParamManager->fillParameterBank(runNum);
+    if (!isParamBankGenerated) {
+      ERROR("Param bank was not generated correctly.\n The run number used:" + JPetCommonTools::intToString(runNum));
+      throw std::runtime_error("Param bank was not generated correctly.\n The run number used:" + JPetCommonTools::intToString(runNum));
+    }
+    if (fOptions.isLocalDBCreate()) {
+      JPetParamSaverAscii saver;
+      saver.saveParamBank(fParamManager->getParamBank(), runNum, fOptions.getLocalDBCreate());
+    }
   }
   auto inputFileType = fOptions.getInputFileType();
   auto inputFile = fOptions.getInputFile();
@@ -94,7 +99,7 @@ void JPetTaskExecutor::processFromCmdLineArgs(int)
     long long nevents = fOptions.getTotalEvents();
     if (nevents > 0) {
       fUnpacker.setParams(fOptions.getInputFile(), nevents);
-      WARNING(std::string("Even though the range of events was set, only the first ")+ JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
+      WARNING(std::string("Even though the range of events was set, only the first ") + JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
     } else {
       fUnpacker.setParams(fOptions.getInputFile());
     }
@@ -105,8 +110,8 @@ void JPetTaskExecutor::processFromCmdLineArgs(int)
 void JPetTaskExecutor::createScopeTaskAndAddToTaskList()
 {
   JPetScopeLoader* module = new JPetScopeLoader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
-  assert(module); 
-  module->setParamManager(fParamManager); 
+  assert(module);
+  module->setParamManager(fParamManager);
   auto scopeFile = fOptions.getScopeConfigFile();
   if (!fParamManager->getParametersFromScopeConfig(scopeFile)) {
     ERROR("Unable to generate Param Bank from Scope Config");
@@ -125,7 +130,7 @@ void JPetTaskExecutor::unpackFile()
 
 JPetTaskExecutor::~JPetTaskExecutor()
 {
-  for (auto& task : fTasks) {
+  for (auto & task : fTasks) {
     if (task) {
       delete task;
       task = 0;
