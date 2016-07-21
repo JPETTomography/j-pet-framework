@@ -19,30 +19,22 @@
 #ifndef _JPETANALYSISMODULE_SDARECOOFFSETCALC_H_
 #define _JPETANALYSISMODULE_SDARECOOFFSETCALC_H_
 
+#include <TCanvas.h>
 #include "../../JPetTask/JPetTask.h"
-#include "TCanvas.h"
 #include "../../JPetWriter/JPetWriter.h"
-
-class SDARecoOffsetsCalc: public JPetTask
-{
-
+class SDARecoOffsetsCalc: public JPetTask{
 public:
-
-  SDARecoOffsetsCalc(const char* name, const char* title);
-  virtual ~SDARecoOffsetsCalc();
-  virtual void init(const JPetTaskInterface::Options& /* opts */);
-  virtual void exec();
-  virtual void terminate();
-  virtual void setWriter(JPetWriter* writer) {
-    fWriter = writer;
-  }
-  
- private:
-  // put any custom variables (e.g. histograms) here:
-  JPetWriter* fWriter;
-  int fCurrentEventNumber;
-  double fOffset;
-  int fBadSignals;
+	SDARecoOffsetsCalc(const char* name, const char* title);
+	virtual ~SDARecoOffsetsCalc();
+	virtual void init(const JPetTaskInterface::Options&)override;
+	virtual void exec()override;
+	virtual void terminate()override;
+	virtual void setWriter(JPetWriter* writer)override;
+private:
+	JPetWriter* fWriter;
+	int fCurrentEventNumber;
+	double fOffset;
+	int fBadSignals;
 };
 
 #endif
