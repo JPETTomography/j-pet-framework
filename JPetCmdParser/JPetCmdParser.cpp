@@ -132,7 +132,7 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
     }
   }
 
-  /// The run number option is neclegted if the input file is set as a  scope file
+  /// The run number option is neclegted if the input file is set as "scope" 
   if (isRunNumberSet(variablesMap)) {
     if (getFileType(variablesMap) =="scope") {
       WARNING("Run number was specified but the input file type is a scope!\n The run number will be ignored!");
