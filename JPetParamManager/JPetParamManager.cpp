@@ -41,13 +41,15 @@ JPetParamManager::~JPetParamManager()
 		}
 }
 
-void JPetParamManager::fillParameterBank(const int run)
+bool JPetParamManager::fillParameterBank(const int run)
 {
   if (fBank) {
     delete fBank;
     fBank = 0;
   }
   fBank = fParamGetter->generateParamBank(run);
+  if (!fBank) return false;
+  return true; 
 }
 
 bool JPetParamManager::readParametersFromFile(JPetReader * reader)
