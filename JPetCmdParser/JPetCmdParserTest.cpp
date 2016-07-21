@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
 
   auto rangeOptionDescription = optionDescription.find("range", true);
   //cout << rangeOptionDescription.description() << endl;
-  BOOST_REQUIRE(std::string(rangeOptionDescription.description()) == "Range of events to process.");
+  BOOST_REQUIRE(std::string(rangeOptionDescription.description()) == "Range of events to process e.g. -r 1 1000 .");
   //cout << rangeOptionDescription.format_name() << endl;
   BOOST_REQUIRE(std::string(rangeOptionDescription.format_name()) == "-r [ --range ]");
 
@@ -279,16 +279,14 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
   BOOST_REQUIRE(firstOption.isLocalDBCreate() == false);
 }
 
-BOOST_AUTO_TEST_CASE(runNumberObligatoryIfNoScopeType)
+BOOST_AUTO_TEST_CASE(runNumberNotObligatoryIfHldType)
 {
   auto args_char = createArgs("main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld");
   auto argc = args_char.size();
   auto argv = args_char.data();
 
   JPetCmdParser parser;
-  BOOST_REQUIRE_THROW(parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv)), std::exception);
-
-
+  BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv)));
 }
 
 BOOST_AUTO_TEST_CASE(runNumberNotObligatoryIfScopeType)
@@ -298,13 +296,13 @@ BOOST_AUTO_TEST_CASE(runNumberNotObligatoryIfScopeType)
   auto argv = args_char.data();
 
   JPetCmdParser parser;
-  parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv)));
 
   args_char = createArgs("main.x -t scope -f unitTestData/JPetCmdParserTest/testfile.json -i 10");
   argc = args_char.size();
   argv = args_char.data();
 
-  parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv)));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
