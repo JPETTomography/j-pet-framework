@@ -36,7 +36,7 @@ JPetManager& JPetManager::getManager()
   return instance;
 }
 
-void JPetManager::run()
+bool JPetManager::run()
 {
   INFO( "======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
   std::vector<JPetTaskExecutor*> executors;
@@ -45,7 +45,10 @@ void JPetManager::run()
   for (auto opt : fOptions) {
     JPetTaskExecutor* executor = new JPetTaskExecutor(fTaskGeneratorChain, i, opt);
     executors.push_back(executor);
-    executor->process();
+    if(!executor->process()) {
+      ERROR("While running process");
+      return false;
+    }
     //auto thr = executor->run();
     //if (thr) {
       //threads.push_back(thr);
@@ -66,6 +69,7 @@ void JPetManager::run()
   }
 
   INFO( "======== Finished processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
+  return true;
 }
 
 void JPetManager::parseCmdLine(int argc, char** argv)
