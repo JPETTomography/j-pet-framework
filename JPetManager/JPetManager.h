@@ -33,7 +33,7 @@ class JPetManager
 public:
   static JPetManager& getManager();
   ~JPetManager();
-  void run();
+  bool run();
   void registerTask(const TaskGenerator& taskGen);
   void parseCmdLine(int argc, char** argv);
   inline std::vector<JPetOptions> getOptions() const {
