@@ -14,7 +14,6 @@
  */
 
 #include "JPetTaskExecutor.h"
-#include <stdexcept>
 #include <cassert>
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetScopeLoader/JPetScopeLoader.h"
@@ -45,9 +44,12 @@ JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int p
   }
 }
 
-void JPetTaskExecutor::process()
+bool JPetTaskExecutor::process()
 {
-  processFromCmdLineArgs(fProcessedFile);
+  if(!processFromCmdLineArgs(fProcessedFile)) {
+    ERROR("Error in processFromCmdLineArgs");
+    return false;
+  }
   for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
     // ignore the event range options for all but the first processed task
     if (currentTask != fTasks.begin()) {
@@ -60,6 +62,7 @@ void JPetTaskExecutor::process()
     (*currentTask)->terminate();
     INFO(Form("Finished task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->getSubTask()->GetName()));
   }
+  return true;
 }
 
 void* JPetTaskExecutor::processProxy(void* runner)
@@ -77,14 +80,14 @@ TThread* JPetTaskExecutor::run()
   return thread;
 }
 
-void JPetTaskExecutor::processFromCmdLineArgs(int)
+bool JPetTaskExecutor::processFromCmdLineArgs(int)
 {
   auto runNum = fOptions.getRunNumber();
   if (runNum >= 0) {
     bool isParamBankGenerated = fParamManager->fillParameterBank(runNum);
     if (!isParamBankGenerated) {
       ERROR("Param bank was not generated correctly.\n The run number used:" + JPetCommonTools::intToString(runNum));
-      throw std::runtime_error("Param bank was not generated correctly.\n The run number used:" + JPetCommonTools::intToString(runNum));
+      return false;
     }
     if (fOptions.isLocalDBCreate()) {
       JPetParamSaverAscii saver;
@@ -105,6 +108,7 @@ void JPetTaskExecutor::processFromCmdLineArgs(int)
     }
     unpackFile();
   }
+  return true;
 }
 
 void JPetTaskExecutor::createScopeTaskAndAddToTaskList()
