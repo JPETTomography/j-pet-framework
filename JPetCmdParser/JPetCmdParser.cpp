@@ -18,6 +18,7 @@
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetLoggerInclude.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
+#include <stdexcept>
 
 
 JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
@@ -27,15 +28,15 @@ JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
   tmp.push_back(-1);
 
   fOptionsDescriptions.add_options()
-  ("help,h", "produce help message")
-  ("type,t", po::value<std::string>()->required()->implicit_value(""), "type of file: hld, root or scope")
-  ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open")
-  ("range,r", po::value< std::vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process.")
-  ("param,p", po::value<std::string>(), "File with TRB numbers.")
+  ("help,h", "Displays this help message.")
+  ("type,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, root or scope.")
+  ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
+  ("range,r", po::value< std::vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process e.g. -r 1 1000 .")
+  ("param,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
   ("runId,i", po::value<int>(), "Run id.")
   ("progressBar,b", "Progress bar.")
-		("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
-		("localDBCreate,L", po::value<std::string>(), "Where to save the parameter database.");
+  ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
+  ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.");
 }
 
 JPetCmdParser::~JPetCmdParser()
@@ -48,9 +49,8 @@ std::vector<JPetOptions> JPetCmdParser::parseAndGenerateOptions(int argc, const 
   po::variables_map variablesMap;
   if (argc == 1) {
     ERROR("No options provided.");
-    std::cerr << "No options provided" << "\n";
     std::cerr << getOptionsDescription() << "\n";
-    exit(-1);
+    throw std::invalid_argument("No options provided.");
   }
 
   po::store(po::parse_command_line(argc, argv, fOptionsDescriptions), variablesMap);
@@ -62,7 +62,7 @@ std::vector<JPetOptions> JPetCmdParser::parseAndGenerateOptions(int argc, const 
   }
   po::notify(variablesMap);
   if (!areCorrectOptions(variablesMap)) {
-    exit(-1);
+    throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
 
   return generateOptions(variablesMap);
@@ -97,8 +97,8 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
     int l_runId = variablesMap["runId"].as<int>();
 
     if (l_runId <= 0) {
-      ERROR("Wrong number of run id.");
-      std::cerr << "Wrong number of run id: " << l_runId << std::endl;
+      ERROR("Run id must be a number larger than 0.");
+      std::cerr << "Run id must be a number larger than 0." << l_runId << std::endl;
       return false;
     }
   }
@@ -113,14 +113,14 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
     }
   }
 
-		if (isLocalDBSet(variablesMap)) {
-				std::string localDBName = getLocalDBName(variablesMap);
+  if (isLocalDBSet(variablesMap)) {
+    std::string localDBName = getLocalDBName(variablesMap);
     if ( !JPetCommonTools::ifFileExisting(localDBName) ) {
       ERROR("File : " + localDBName + " does not exist.");
       std::cerr << "File : " << localDBName << " does not exist" << std::endl;
       return false;
     }
-		}
+  }
 
   std::vector<std::string> fileNames(variablesMap["file"].as< std::vector<std::string> >());
   for (unsigned int i = 0; i < fileNames.size(); i++) {
@@ -131,6 +131,13 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
       return false;
     }
   }
+
+  /// The run number option is neclegted if the input file is set as "scope" 
+  if (isRunNumberSet(variablesMap)) {
+    if (getFileType(variablesMap) =="scope") {
+      WARNING("Run number was specified but the input file type is a scope!\n The run number will be ignored!");
+    }
+  }   
   return true;
 }
 
@@ -147,20 +154,20 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
   if (isProgressBarSet(optsMap)) {
     options.at("progressBar") = "true";
   }
-		if (isLocalDBSet(optsMap)) {
-				options["localDB"] = getLocalDBName(optsMap);
-		}
-		if (isLocalDBCreateSet(optsMap)) {
-				options["localDBCreate"] = getLocalDBCreateName(optsMap);
-		}
+  if (isLocalDBSet(optsMap)) {
+    options["localDB"] = getLocalDBName(optsMap);
+  }
+  if (isLocalDBCreateSet(optsMap)) {
+    options["localDBCreate"] = getLocalDBCreateName(optsMap);
+  }
   auto firstEvent  = getLowerEventBound(optsMap);
   auto lastEvent  = getHigherEventBound(optsMap);
   if (firstEvent >= 0) options.at("firstEvent") = std::to_string(firstEvent);
   if (lastEvent >= 0) options.at("lastEvent") = std::to_string(lastEvent);
 
-  auto files = getFileNames(optsMap); 
+  auto files = getFileNames(optsMap);
   std::vector<JPetOptions>  optionContainer;
-  /// In case of scope there is one special input file 
+  /// In case of scope there is one special input file
   /// which is a json config file which must be parsed.
   /// Based on its content the set of input directories are generated.
   /// The input directories contain data files.
@@ -168,22 +175,22 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
   if (fileType == "scope") {
     assert(files.size() == 1); /// there should be only file which is config.
     auto configFileName = files.front();
-    options.at("scopeConfigFile") =  configFileName;  
+    options.at("scopeConfigFile") =  configFileName;
     JPetScopeConfigParser scopeConfigParser;
-    /// The scope module must use a fake input file name which will be used to 
-    /// produce the correct output file names by the following modules. 
-    /// At the same time, the input directory with true input files must be 
+    /// The scope module must use a fake input file name which will be used to
+    /// produce the correct output file names by the following modules.
+    /// At the same time, the input directory with true input files must be
     /// also added. The container of pairs <directory, fileName> is generated
     /// based on the content of the configuration file.
     JPetScopeConfigParser::DirFileContainer dirsAndFiles = scopeConfigParser.getInputDirectoriesAndFakeInputFiles(configFileName);
-    for (auto dirAndFile: dirsAndFiles) {
+    for (auto dirAndFile : dirsAndFiles) {
       options.at("scopeInputDirectory") = dirAndFile.first;
       options.at("inputFile") = dirAndFile.second;
       optionContainer.push_back(JPetOptions(options));
     }
   } else {
     /// for every single input file we create separate JPetOptions
-    for (auto file :files) {
+    for (auto file : files) {
       options.at("inputFile") = file;
       optionContainer.push_back(JPetOptions(options));
     }

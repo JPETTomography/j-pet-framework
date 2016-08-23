@@ -45,6 +45,10 @@ JPetDBParamGetter::~JPetDBParamGetter()
 
 JPetParamBank* JPetDBParamGetter::generateParamBank(const int p_run_id)
 {
+  if (p_run_id < 0) {
+    ERROR("Run number is less than 0!! Param bank cannot be generated");
+    return 0;
+  }
   TThread::Lock();
   if (JPetDBParamGetter::gParamCache.find(p_run_id) == gParamCache.end()) {
     JPetParamBank* pParamBank = new JPetParamBank;

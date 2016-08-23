@@ -39,7 +39,7 @@ class JPetParamManager
   explicit JPetParamManager(bool isNull);   
   ~JPetParamManager();
 
-  void fillParameterBank(const int run);
+  bool fillParameterBank(const int run);
   
   bool readParametersFromFile(JPetReader * reader);
   bool saveParametersToFile(JPetWriter * writer);
