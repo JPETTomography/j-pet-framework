@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE( parsing_1 )
   BOOST_REQUIRE_EQUAL(option.getFirstEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getLastEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getRunNumber(), 10);
-  BOOST_REQUIRE(!option.isProgressBar());
+  BOOST_REQUIRE(false == option.isProgressBar());
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kHld);
   
 }
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
   BOOST_REQUIRE_EQUAL(option.getFirstEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getLastEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getRunNumber(), -1);
-  BOOST_REQUIRE(!option.isProgressBar());
+  BOOST_REQUIRE(false == option.isProgressBar());
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kScope);
 }
 /*
@@ -303,14 +303,14 @@ BOOST_AUTO_TEST_CASE(progressBarTest)
 {
     JPetCmdParser cmdParser;
 
-    auto commandLine = "main.x -b 1";
+    auto commandLine = "main.x -b";
     auto args_char = createArgs(commandLine);
     auto argc = args_char.size();
     auto argv = args_char.data();
 
     po::options_description description("Allowed options");
     description.add_options()
-            ("progressBar,b", po::value<int>(), "Progress bar.")
+            ("progressBar,b", po::bool_switch()->default_value(true), "Progress bar.")
     ;
 
     po::variables_map variablesMap;
@@ -326,7 +326,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
 {
     JPetCmdParser cmdParser;
 
-    auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -b 1 -l unitTestData/JPetCmdParserTest/input.json -L output.json";
+    auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -l unitTestData/JPetCmdParserTest/input.json -L output.json";
     auto args_char = createArgs(commandLine);
     auto argc = args_char.size();
     auto argv = args_char.data();
@@ -338,7 +338,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
             ("range,r", po::value<std::vector<int>>(), "Range of events to process.")
             ("param,p", po::value<std::string>(), "File with TRB numbers.")
             ("runId,i", po::value<int>(), "Run id.")
-            ("progressBar,b", po::value<int>(), "Progress bar.")
+            ("progressBar,b", po::bool_switch()->default_value(true), "Progress bar.")
 												("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
 												("localDBCreate,L", po::value<std::string>(), "Where to save the parameter database.")
             ;
@@ -386,7 +386,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
   BOOST_REQUIRE(firstOption.getFirstEvent() == 2);
   BOOST_REQUIRE(firstOption.getLastEvent() == 4);
   BOOST_REQUIRE(firstOption.getRunNumber() == 231);
-  BOOST_REQUIRE(firstOption.isProgressBar() == false);
+  BOOST_REQUIRE(false == firstOption.isProgressBar());
 		BOOST_REQUIRE(firstOption.isLocalDB() == false);
 		BOOST_REQUIRE(firstOption.isLocalDBCreate() == true);
 		BOOST_REQUIRE(firstOption.getLocalDBCreate() == std::string("output.json"));
@@ -411,7 +411,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
   BOOST_REQUIRE(firstOption.getFirstEvent() == -1);
   BOOST_REQUIRE(firstOption.getLastEvent() == -1);
   BOOST_REQUIRE(firstOption.getRunNumber() == -1);
-  BOOST_REQUIRE(firstOption.isProgressBar() == false);
+  BOOST_REQUIRE(false == firstOption.isProgressBar());
 		BOOST_REQUIRE(firstOption.isLocalDB() == false);
 		BOOST_REQUIRE(firstOption.isLocalDBCreate() == false);
 }
