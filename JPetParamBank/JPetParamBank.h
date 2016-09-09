@@ -25,17 +25,15 @@
 #include "../JPetLayer/JPetLayer.h"
 #include "../JPetFrame/JPetFrame.h"
 #include "../JPetTOMBChannel/JPetTOMBChannel.h"
+
+#include "../JPetParamGetter/JPetParamConstants.h"
 #include "../JPetLoggerInclude.h"
 #include <map>
 #include <cassert>
-#include <algorithm> //for_each
-#include <memory> //std::default
 
 class JPetParamBank: public TObject
 {
-public:
-  enum ParamObjectType {kScintillator, kPM, kPMCalib, kFEB, kTRB, kTOMBChannel, kBarrelSlot, kLayer, kFrame, SIZE};
-
+ public:
   JPetParamBank();
   JPetParamBank(const JPetParamBank& paramBank);
   ~JPetParamBank();
@@ -172,8 +170,6 @@ public:
     return fTOMBChannels.size();
   }
 
-  static int getTOMBChannelFromDescription(std::string p_desc);
-
  private:
   void operator=(const JPetParamBank&);
   bool fDummy;
@@ -195,16 +191,6 @@ public:
           target[c.first] = new T(*c.second);
       }
   }
-};
-
-/**
- * @brief An interface classes can implement to return JPetParamBank objects.
- */
-class JPetParamGetter
-{
-public:
-  virtual JPetParamBank* generateParamBank(const int p_run_id) = 0;
-  virtual ~JPetParamGetter(){}
 };
 
 #endif /*  !JPETPARAMBANK_H */

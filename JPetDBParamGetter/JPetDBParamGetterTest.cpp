@@ -3,6 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include "../DBHandler/HeaderFiles/DBHandler.h"
 #include "../JPetDBParamGetter/JPetDBParamGetter.h"
+#include "../JPetParamManager/JPetParamManager.h"
 
 const char* gDefaultConfigFile = "../DBConfig/configDB.cfg";
 
@@ -13,521 +14,81 @@ BOOST_AUTO_TEST_CASE(defaultConstructorTest)
   JPetDBParamGetter paramGetter;
 }
 
-BOOST_AUTO_TEST_CASE(dummyFillingTest)
+BOOST_AUTO_TEST_CASE(basicDataTest)
 {
   DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
   JPetDBParamGetter paramGetter;
   int run  = 1;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-  
-  BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
-  BOOST_REQUIRE(bank->getPMsSize() == 4);
-  BOOST_REQUIRE(bank->getPMCalibsSize() == 0); // 0 due to run id == 1  // TODO Check it with DB // RESOLVED sql function returns (0 rows) for run_id=1
-  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
-  BOOST_REQUIRE(bank->getLayersSize() == 1);
-  BOOST_REQUIRE(bank->getFramesSize() == 1);
-  BOOST_REQUIRE(bank->getFEBsSize() == 1);
-  BOOST_REQUIRE(bank->getTRBsSize() == 1);
-  BOOST_REQUIRE(bank->getTOMBChannelsSize() == 4);
+  ParamObjectsDescriptions descriptions = paramGetter.getAllBasicData(ParamObjectType::kLayer, run);
+
+  BOOST_REQUIRE_EQUAL(descriptions.size(), 1);
+
+  ParamObjectDescription & description = descriptions[1];
+  BOOST_REQUIRE_EQUAL(description["id"], "1");
+  BOOST_REQUIRE_EQUAL(description["active"], "1");
+  BOOST_REQUIRE_EQUAL(description["name"], "Layer01");
+  BOOST_REQUIRE_EQUAL(description["radius"], "40");
+}
+
+BOOST_AUTO_TEST_CASE(relationalDataTest)
+{
+  DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
+  JPetDBParamGetter paramGetter;
+  int run  = 1;
+  ParamRelationalData relations = paramGetter.getAllRelationalData(ParamObjectType::kLayer, ParamObjectType::kFrame, run);
+
+  BOOST_REQUIRE_EQUAL(relations.size(), 1);
+  BOOST_REQUIRE_EQUAL(relations[1], 1);
+}
+
+BOOST_AUTO_TEST_CASE(tombRelationalDataTest)
+{
+  DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
+  JPetDBParamGetter paramGetter;
+  int run  = 1;
+  ParamRelationalData relations = paramGetter.getAllRelationalData(ParamObjectType::kTOMBChannel, ParamObjectType::kTRB, run);
+
+  BOOST_REQUIRE_EQUAL(relations.size(), 4);
+  BOOST_REQUIRE_EQUAL(relations[111], 1);
+  BOOST_REQUIRE_EQUAL(relations[112], 1);
+  BOOST_REQUIRE_EQUAL(relations[113], 1);
+  BOOST_REQUIRE_EQUAL(relations[114], 1);
+}
+
+BOOST_AUTO_TEST_CASE(run1Test)
+{
+  DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
+  JPetParamManager paramManager(new JPetDBParamGetter());
+  int run  = 1;
+  paramManager.fillParameterBank(run);
+  const JPetParamBank & bank = paramManager.getParamBank();
+  BOOST_REQUIRE_EQUAL(bank.getScintillatorsSize(), 2);
+  BOOST_REQUIRE_EQUAL(bank.getPMsSize(), 4);
+  BOOST_REQUIRE_EQUAL(bank.getPMCalibsSize(), 0);
+  BOOST_REQUIRE_EQUAL(bank.getBarrelSlotsSize(), 2);
+  BOOST_REQUIRE_EQUAL(bank.getLayersSize(), 1);
+  BOOST_REQUIRE_EQUAL(bank.getFramesSize(), 1);
+  BOOST_REQUIRE_EQUAL(bank.getFEBsSize(), 1);
+  BOOST_REQUIRE_EQUAL(bank.getTRBsSize(), 1);
+  BOOST_REQUIRE_EQUAL(bank.getTOMBChannelsSize(), 4);
 }
 
 BOOST_AUTO_TEST_CASE(run28Test)
 {
   DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-  JPetDBParamGetter paramGetter;
+  JPetParamManager paramManager(new JPetDBParamGetter());
   int run  = 28;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-  BOOST_REQUIRE(bank->getScintillatorsSize() > 0);
-  BOOST_REQUIRE(bank->getPMsSize() > 0);
-  BOOST_REQUIRE(bank->getPMCalibsSize() == 0); // 0 due to run id == 26  // TODO Check it with DB // RESOLVED sql function returns (0 rows) for run_id=26
-  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
-  BOOST_REQUIRE(bank->getLayersSize() == 1);
-  BOOST_REQUIRE(bank->getFramesSize() == 1);
-  BOOST_REQUIRE(bank->getFEBsSize() > 0);
-  BOOST_REQUIRE(bank->getTRBsSize() > 0);
-  BOOST_REQUIRE(bank->getTOMBChannelsSize() > 0);
-}
-
-BOOST_AUTO_TEST_CASE(runWithBadRunNumber)
-{
-  DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-  JPetDBParamGetter paramGetter;
-  int run  = -1;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-  BOOST_REQUIRE(!bank);
-}
-
-//ToDo: remake this tests without calling private methods
-/*
-BOOST_AUTO_TEST_CASE(fillTRefsTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-  JPetDBParamGetter paramGetter;
-  int run  = 1;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-
-  BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
-  BOOST_REQUIRE(bank->getPMsSize() == 4);
-  BOOST_REQUIRE(bank->getFEBsSize() == 1);
-  BOOST_REQUIRE(bank->getTRBsSize() == 1);
-  BOOST_REQUIRE(bank->getTOMBChannelsSize() == 4);
-  
-  paramGetter.fillPMsTRefs(run, *bank);
-  paramGetter.fillFEBsTRefs(run, *bank);
-  paramGetter.fillTOMBChannelsTRefs(run, *bank);
-  
-  // PM TRef to Scint
-  JPetPM& pm_ref = bank->getPM(54);
-  BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(2).getID());
-  pm_ref = bank->getPM(55);
-  BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(1).getID());
-  pm_ref = bank->getPM(57);
-  BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(1).getID());
-  pm_ref = bank->getPM(59);
-  BOOST_REQUIRE(pm_ref.getScin().getID()== bank->getScintillator(2).getID());
-  
-		for (auto & cs : bank->getPMs()) {
-				BOOST_REQUIRE(cs.second->getFEB().isActive());
-		}
-
-  // Consistency of TRefs from TOMBChannels
-  for (auto & cs : bank->getTOMBChannels()){
-    JPetTOMBChannel & TOMBChannel_ref = *cs.second;
-    BOOST_REQUIRE(TOMBChannel_ref.getFEB().isActive());
-    BOOST_REQUIRE_EQUAL(TOMBChannel_ref.getFEB().getID() ,TOMBChannel_ref.getPM().getFEB().getID());
-    BOOST_REQUIRE_EQUAL(TOMBChannel_ref.getTRB().getID() ,TOMBChannel_ref.getFEB().getTRB().getID());
-  }
-  
- 
-  // Possible bug in implementation - for the same TOMBChannel two PMs are possible?
-  //TOMBChannel_ref = bank->getTOMBChannel(1);
-  //PM_ref = bank->getPM(2);
-}  
-
-BOOST_AUTO_TEST_CASE(fillBarrelSlotTRefTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-  JPetDBParamGetter paramGetter;
-  int run  = 1;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-
-  BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
-  BOOST_REQUIRE(bank->getPMsSize() == 4);
-  BOOST_REQUIRE(bank->getFEBsSize() == 1);
-  BOOST_REQUIRE(bank->getTRBsSize() == 1);
-  BOOST_REQUIRE(bank->getTOMBChannelsSize() == 4);
-  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
-  BOOST_REQUIRE(bank->getLayersSize() == 1);
-  
-  paramGetter.fillBarrelSlotTRefs(run, *bank);
-  
-  // BarrelSlot TRef for Layer
-  JPetBarrelSlot& barrelSlot = *(bank->getBarrelSlots().begin()->second);
-  BOOST_REQUIRE(barrelSlot.getLayer().getId() == 1);
-}
-
-BOOST_AUTO_TEST_CASE(fillLayerTRefTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-  JPetDBParamGetter paramGetter;
-  int run  = 1;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-  BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
-  BOOST_REQUIRE(bank->getPMsSize() == 4);
-  BOOST_REQUIRE(bank->getFEBsSize() == 1);
-  BOOST_REQUIRE(bank->getTRBsSize() == 1);
-  BOOST_REQUIRE(bank->getTOMBChannelsSize() == 4);
-  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
-  BOOST_REQUIRE(bank->getLayersSize() == 1);
-  
-  paramGetter.fillLayerTRefs(run, *bank);
-  
-  // Layer TRef for Frame
-  JPetLayer& layer = *(bank->getLayers().begin()->second);
-  BOOST_REQUIRE(layer.getFrame().getId() == 1);
-}
-BOOST_AUTO_TEST_CASE(fillPMTRefsWithBarrelSlotTest)
-{
-  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-  int run  = 1;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-  
-  std::cout << "PM size:" << bank->getPMsSize() <<std::endl;
-  std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl;
-
-  BOOST_REQUIRE(bank->getPMsSize() == 4);
-  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
-  
-  // PM TRef for BarrelSlot
-  JPetPM& l_PM = bank->getPM(0);
-  std::cout << l_PM.getBarrelSlot().getID() << std::endl;
-}
-
-BOOST_AUTO_TEST_CASE(fillScintillatorTRefsWithBarrelSlotTest)
-{
-  JPetDBParamGetter paramGetter(gDefaultConfigFile);
-  int run  = 1;
-  JPetParamBank* bank = paramGetter.generateParamBank(run);
-  
-  std::cout << "Scintillators size:" << bank->getScintillatorsSize() <<std::endl;
-  std::cout << "Barrel slot size:" << bank->getBarrelSlotsSize() <<std::endl;
-
-  BOOST_REQUIRE(bank->getScintillatorsSize() == 2);
-  BOOST_REQUIRE(bank->getBarrelSlotsSize() == 2);
-  
-  // Scintillator TRef for BarrelSlot
-  JPetScin& l_scintillator = bank->getScintillator(0);
-  std::cout << l_scintillator.getBarrelSlot().getID() << std::endl;
-}
-BOOST_AUTO_TEST_CASE(getDataFromDBTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-  JPetDBParamGetter paramGetter;
-  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromPhotoMultipliers", "1");
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-
-  BOOST_REQUIRE(l_sizeResultQuerry > 0);
-}
-
-BOOST_AUTO_TEST_CASE(generateSelectQueryTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-  JPetDBParamGetter paramGetter;
-  std::string selectQuerry = paramGetter.generateSelectQuery("getDataFromTRBs", "1");
-  BOOST_REQUIRE(selectQuerry == "SELECT * FROM getDataFromTRBs(1);");
-}
-
-BOOST_AUTO_TEST_CASE(fillContainersTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetDBParamGetter paramGetter;
-  int run  = 1;
-  JPetParamBank bank;
-  
-  BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
-  BOOST_REQUIRE(bank.getPMsSize() == 0);
+  paramManager.fillParameterBank(run);
+  const JPetParamBank & bank = paramManager.getParamBank();
+  BOOST_REQUIRE(bank.getScintillatorsSize() > 0);
+  BOOST_REQUIRE(bank.getPMsSize() > 0);
   BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
-  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 0);
-  BOOST_REQUIRE(bank.getLayersSize() == 0);
-  BOOST_REQUIRE(bank.getFramesSize() == 0);
-  BOOST_REQUIRE(bank.getFEBsSize() == 0);
-  BOOST_REQUIRE(bank.getTRBsSize() == 0);
-  BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
-  
-  paramGetter.fillScintillators(run, bank);
-  paramGetter.fillPMs(run, bank);
-  paramGetter.fillPMCalibs(run, bank);
-  paramGetter.fillBarrelSlot(run, bank);
-  paramGetter.fillLayer(run, bank);
-  paramGetter.fillFrame(run, bank);
-  paramGetter.fillFEBs(run, bank);
-  paramGetter.fillTRBs(run, bank);
-  paramGetter.fillTOMBChannels(run, bank);
-  
-  BOOST_REQUIRE(bank.getScintillatorsSize() == 2);
-  BOOST_REQUIRE(bank.getPMsSize() == 4);
-  BOOST_REQUIRE(bank.getPMCalibsSize() == 0); // 0 due to run id == 1  // TODO Check it with DB // RESOLVED sql function returns (0 rows) for run_id=1
   BOOST_REQUIRE(bank.getBarrelSlotsSize() == 2);
   BOOST_REQUIRE(bank.getLayersSize() == 1);
   BOOST_REQUIRE(bank.getFramesSize() == 1);
-  BOOST_REQUIRE(bank.getFEBsSize() == 1);
-  BOOST_REQUIRE(bank.getTRBsSize() == 1);
-  BOOST_REQUIRE(bank.getTOMBChannelsSize() == 4);
-  
-  bank.clear();
-  
-  BOOST_REQUIRE(bank.getScintillatorsSize() == 0);
-  BOOST_REQUIRE(bank.getPMsSize() == 0);
-  BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
-  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 0);
-  BOOST_REQUIRE(bank.getLayersSize() == 0);
-  BOOST_REQUIRE(bank.getFramesSize() == 0);
-  BOOST_REQUIRE(bank.getFEBsSize() == 0);
-  BOOST_REQUIRE(bank.getTRBsSize() == 0);
-  BOOST_REQUIRE(bank.getTOMBChannelsSize() == 0);
+  BOOST_REQUIRE(bank.getFEBsSize() > 0);
+  BOOST_REQUIRE(bank.getTRBsSize() > 0);
+  BOOST_REQUIRE(bank.getTOMBChannelsSize() > 0);
 }
 
-BOOST_AUTO_TEST_CASE(generateScintillatorTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetDBParamGetter paramGetter;
-  JPetParamBank bank;
-  
-  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromScintillators", "1");
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-  
-  if(l_sizeResultQuerry) 
-  {
-    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
-    {
-      JPetScin l_scin = paramGetter.generateScintillator(row);
-      bank.addScintillator(l_scin);
-    }
-  }
-  BOOST_REQUIRE(bank.getScintillatorsSize() == 2);
-}
-
-BOOST_AUTO_TEST_CASE(generatePMTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetDBParamGetter paramGetter;
-  JPetParamBank bank;
-  
-  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromPhotoMultipliers", "1");
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-  
-  if(l_sizeResultQuerry) 
-  {
-    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
-    {
-      JPetPM l_pm = paramGetter.generatePM(row);
-      bank.addPM(l_pm);
-    }
-  }
-  BOOST_REQUIRE(bank.getPMsSize() == 4);
-}
-
-BOOST_AUTO_TEST_CASE(generatePMCalibTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetDBParamGetter paramGetter;
-  JPetParamBank bank;
-  
-  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getPmCalibration", "2"); // TODO Check it with DB // RESOLVED - correct
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-  
-  if(l_sizeResultQuerry) 
-  {
-    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
-    {
-      JPetPMCalib l_pmCalib = paramGetter.generatePMCalib(row);
-      bank.addPMCalib(l_pmCalib);
-    }
-  }
-  BOOST_REQUIRE(bank.getPMCalibsSize() == 4); // TODO Check it with DB // RESOLVED sql function returns (1 rows) for run_id=2
-}
-
-BOOST_AUTO_TEST_CASE(generateBarrelSlotTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetDBParamGetter paramGetter;
-  JPetParamBank bank;
-  
-  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getBarrelSlot", "1");
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-  
-  if(l_sizeResultQuerry) 
-  {
-    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
-    { 
-      JPetBarrelSlot l_barrelSlot = paramGetter.generateBarrelSlot(row);
-      bank.addBarrelSlot(l_barrelSlot);
-    }
-  }
-  BOOST_REQUIRE(bank.getBarrelSlotsSize() == 2);
-}
-
-BOOST_AUTO_TEST_CASE(generateLayerTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetDBParamGetter paramGetter;
-  JPetParamBank bank;
-  
-  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getLayer", "1");
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-  
-  if(l_sizeResultQuerry) 
-  {
-    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
-    { 
-      JPetLayer l_layer = paramGetter.generateLayer(row);
-      bank.addLayer(l_layer);
-    }
-  }
-  BOOST_REQUIRE(bank.getLayersSize() == 1);
-}
-
-BOOST_AUTO_TEST_CASE(generateFrameTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetDBParamGetter paramGetter;
-  JPetParamBank bank;
-  
-  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getFrame", "1");
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-  
-  if(l_sizeResultQuerry) 
-  {
-    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
-    {
-      JPetFrame l_frame = paramGetter.generateFrame(row);
-      bank.addFrame(l_frame);
-    }
-  }
-  BOOST_REQUIRE(bank.getFramesSize() == 1);
-}
-
-BOOST_AUTO_TEST_CASE(generateFEBTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetDBParamGetter paramGetter;
-  JPetParamBank bank;
-  
-  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromKonradBoards", "1");
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-  
-  if(l_sizeResultQuerry) 
-  {
-    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
-    {
-      JPetFEB l_FEB = paramGetter.generateFEB(row);
-      bank.addFEB(l_FEB);
-    }
-  }
-  BOOST_REQUIRE(bank.getFEBsSize() == 1);
-}
-
-BOOST_AUTO_TEST_CASE(generateTRBTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetDBParamGetter paramGetter;
-  JPetParamBank bank;
-  
-  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getDataFromTRBs", "1");
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-  
-  if(l_sizeResultQuerry) 
-  {
-    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
-    {
-      JPetTRB l_TRB = paramGetter.generateTRB(row);
-      bank.addTRB(l_TRB);
-    }
-  }
-  BOOST_REQUIRE(bank.getTRBsSize() == 1);
-}
-
-BOOST_AUTO_TEST_CASE(generateTOMBChannelTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetDBParamGetter paramGetter;
-  JPetParamBank bank;
-  
-  pqxx::result l_runDbResults = paramGetter.getDataFromDB("getEverythingVsTOMB", "1");
-  size_t l_sizeResultQuerry = l_runDbResults.size();
-  
-  if(l_sizeResultQuerry) 
-  {
-    for(pqxx::result::const_iterator row = l_runDbResults.begin(); row != l_runDbResults.end(); ++row) 
-    {
-      JPetTOMBChannel l_TOMBChannel = paramGetter.generateTOMBChannel(row);
-      bank.addTOMBChannel(l_TOMBChannel);
-    }
-  }
-  BOOST_REQUIRE(bank.getTOMBChannelsSize() == 4);
-}
-
-BOOST_AUTO_TEST_CASE(GetDataFromDBAndFillPMCalibsTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetDBParamGetter paramGetter;
-  int run  = 2;
-  JPetParamBank bank;
-
-  BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
-  
-  paramGetter.fillPMCalibs(run, bank);
-  
-  BOOST_REQUIRE(bank.getPMCalibsSize() == 4); // 0 due to run id == 1  // TODO Check it with DB // RESOLVED sql function returns (4 rows) for run_id=2
-
-		auto calibs = bank.getPMCalibs().begin();
-
-		JPetPMCalib & calib1 = *(calibs->second);
-  
-  BOOST_REQUIRE(calib1.GetId() == 1);
-  BOOST_REQUIRE(calib1.GetNamePM() == "dummy");
-  BOOST_REQUIRE(calib1.GetOpthv() == 0);
-  BOOST_REQUIRE(calib1.GetECalConst1() == 0);
-  BOOST_REQUIRE(calib1.GetECalConst2() == 0);
-  BOOST_REQUIRE(calib1.GetGainalpha() == 0);
-  BOOST_REQUIRE(calib1.GetGainbeta() == 0);
-  
-  BOOST_REQUIRE(calib1.GetPMCalibAssignment().id == 2);
-  BOOST_REQUIRE(calib1.GetPMCalibAssignment().photomultiplier_id == 3);
-  
-		calibs++;
-		JPetPMCalib & calib2 = *(calibs->second);
-
-  BOOST_REQUIRE(calib2.GetId() == 1);
-  BOOST_REQUIRE(calib2.GetNamePM() == "dummy");
-  BOOST_REQUIRE(calib2.GetOpthv() == 0);
-  BOOST_REQUIRE(calib2.GetECalConst1() == 0);
-  BOOST_REQUIRE(calib2.GetECalConst2() == 0);
-  BOOST_REQUIRE(calib2.GetGainalpha() == 0);
-  BOOST_REQUIRE(calib2.GetGainbeta() == 0);
-  
-  BOOST_REQUIRE(calib2.GetPMCalibAssignment().id == 1);
-  BOOST_REQUIRE(calib2.GetPMCalibAssignment().photomultiplier_id == 1);
-  
-		calibs++;
-		JPetPMCalib & calib3 = *(calibs->second);
-
-  BOOST_REQUIRE(calib3.GetId() == 1);
-  BOOST_REQUIRE(calib3.GetNamePM() == "dummy");
-  BOOST_REQUIRE(calib3.GetOpthv() == 0);
-  BOOST_REQUIRE(calib3.GetECalConst1() == 0);
-  BOOST_REQUIRE(calib3.GetECalConst2() == 0);
-  BOOST_REQUIRE(calib3.GetGainalpha() == 0);
-  BOOST_REQUIRE(calib3.GetGainbeta() == 0);
-  
-  BOOST_REQUIRE(calib3.GetPMCalibAssignment().id == 3);
-  BOOST_REQUIRE(calib3.GetPMCalibAssignment().photomultiplier_id == 7);
-  
-		calibs++;
-		JPetPMCalib & calib4 = *(calibs->second);
-
-  BOOST_REQUIRE(calib4.GetId() == 1);
-  BOOST_REQUIRE(calib4.GetNamePM() == "dummy");
-  BOOST_REQUIRE(calib4.GetOpthv() == 0);
-  BOOST_REQUIRE(calib4.GetECalConst1() == 0);
-  BOOST_REQUIRE(calib4.GetECalConst2() == 0);
-  BOOST_REQUIRE(calib4.GetGainalpha() == 0);
-  BOOST_REQUIRE(calib4.GetGainbeta() == 0);
-  
-  BOOST_REQUIRE(calib4.GetPMCalibAssignment().id == 4);
-  BOOST_REQUIRE(calib4.GetPMCalibAssignment().photomultiplier_id == 4);
-  
-  bank.clear();
-
-  BOOST_REQUIRE(bank.getPMCalibsSize() == 0);
-}
-
-BOOST_AUTO_TEST_CASE(paramBankCopyTest)
-{
-	DB::SERVICES::DBHandler::createDBConnection(gDefaultConfigFile);
-	
-  JPetDBParamGetter paramGetter;
-  int run  = 1;
-  JPetParamBank*bank1 = paramGetter.generateParamBank(run);
-  JPetParamBank*bank2 = paramGetter.generateParamBank(run);
-
-  ((JPetScin*)bank1->fScintillators[0])->getBarrelSlot().fId = 111;
-  ((JPetScin*)bank2->fScintillators[0])->getBarrelSlot().fId = 666;
-
-  BOOST_REQUIRE(((JPetTOMBChannel*)bank1->fTOMBChannels[0])->fTRB != ((JPetTOMBChannel*)bank2->fTOMBChannels[0])->fTRB );
-  BOOST_REQUIRE(((JPetScin*)bank1->getScintillators()[0])->getBarrelSlot() != ((JPetScin*)bank2->getScintillators()[0])->getBarrelSlot());
-
-}
-*/
 BOOST_AUTO_TEST_SUITE_END()
