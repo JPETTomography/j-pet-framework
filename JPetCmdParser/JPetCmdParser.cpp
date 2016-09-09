@@ -30,10 +30,11 @@ JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
   ("help,h", "produce help message")
   ("type,t", po::value<std::string>()->required()->implicit_value(""), "type of file: hld, root or scope")
   ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open")
+  ("outputFileDirectory,o", po::value<std::string>(), "Output file directory")
   ("range,r", po::value< std::vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process.")
   ("param,p", po::value<std::string>(), "File with TRB numbers.")
   ("runId,i", po::value<int>(), "Run id.")
-  ("progressBar,b", "Progress bar.")
+  ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
 		("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
 		("localDBCreate,L", po::value<std::string>(), "Where to save the parameter database.");
 }
@@ -103,16 +104,6 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
     }
   }
 
-  if (isProgressBarSet(variablesMap)) {
-    int l_progressBar = variablesMap["progressBar"].as<int>();
-
-    if (l_progressBar != 0 && l_progressBar != 1) {
-      ERROR("Wrong parameter of progressbar.");
-      std::cerr << "Wrong parameter of progressbar: " << l_progressBar << std::endl;
-      return false;
-    }
-  }
-
 		if (isLocalDBSet(variablesMap)) {
 				std::string localDBName = getLocalDBName(variablesMap);
     if ( !JPetCommonTools::ifFileExisting(localDBName) ) {
@@ -146,6 +137,9 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
   }
   if (isProgressBarSet(optsMap)) {
     options.at("progressBar") = "true";
+  }
+  if(isOutputFileDirectorySet(optsMap)) {
+      options.at("outputFileDirectory") = getOutputFileDirectory(optsMap);
   }
 		if (isLocalDBSet(optsMap)) {
 				options["localDB"] = getLocalDBName(optsMap);

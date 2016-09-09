@@ -53,6 +53,7 @@ class JPetWriter : private boost::noncopyable
 {
 public:
   JPetWriter(const char* p_fileName);
+  JPetWriter(const char* p_fileName, const char* p_outputFileDirectory);
   virtual ~JPetWriter(void);
 
   template <class T>

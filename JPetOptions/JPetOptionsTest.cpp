@@ -39,6 +39,7 @@ BOOST_AUTO_TEST_CASE(petOptionsDefaultConstrutorTest)
         {"scopeInputDirectory",""},
         {"outputFile", "root"},
         {"outputFileType", "test.root"},
+        {"outputFileDirectory", ""},
         {"firstEvent", "-1"},
         {"lastEvent", "-1"},
         {"progressBar", "false"},

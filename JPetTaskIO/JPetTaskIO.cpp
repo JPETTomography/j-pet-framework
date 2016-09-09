@@ -174,9 +174,9 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
   }
 }
 
-void JPetTaskIO::createOutputObjects(const char* outputFilename)
+void JPetTaskIO::createOutputObjects(const char* outputFilename, const char* outputFileDirectory)
 {
-  fWriter = new JPetWriter( outputFilename );
+  fWriter = new JPetWriter( outputFilename, outputFileDirectory );
   assert(fWriter);
   if (fTask) {
     fTask->setWriter(fWriter);
@@ -192,7 +192,7 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
 
 void JPetTaskIO::manageProgressBar(long long done, long long end)
 {
-  printf("\r[%6.4f%% %%]", setProgressBar(done, end));
+  printf("\r[%6.4f%%]", setProgressBar(done, end));
 }
 
 float JPetTaskIO::setProgressBar(int currentEventNumber, int numberOfEvents)
