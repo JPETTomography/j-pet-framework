@@ -1,41 +1,10 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE JPetPMTest
+#define BOOST_TEST_MODULE JPetTOMBChannelTest
 #include <boost/test/unit_test.hpp>
-#include "JPetPM.h"
-#include "JPetPMFactory.h"
+#include "JPetTOMBChannel.h"
+#include "JPetTOMBChannelFactory.h"
 
-
-
-//  public:
-//  JPetPM();
-//  inline Side getSide() const { return fSide; }
-//  inline int getID() const { return fID; }
-//  inline int getHVset() const { return fHVset; }
-//  inline int getHVopt() const { return fHVopt; }
-//  inline float getHVgain(GainNumber nr) { return (nr == kFirst) ? fHVgain.first : fHVgain.second; }
-//  inline std::pair<float, float> getHVgain() { return fHVgain; }
-//  inline void setSide(Side side) { fSide = side; }
-//  inline void setID(int id) { fID = id; }
-//  inline void setHVset(int set) { fHVset = set; }
-//  inline void setHVopt(int opt) { fHVopt= opt; }
-//  inline void setHVgain(float g1, float g2) { fHVgain.first = g1; fHVgain.second = g2; }
-//  inline void setHVgain(const std::pair<float,float>& gain) { fHVgain = gain; }
-
-BOOST_AUTO_TEST_SUITE(FirstSuite)
-
-BOOST_AUTO_TEST_CASE( default_constructor )
-{
-  JPetPM pm;
-  float epsilon = 0.0001; 
-  BOOST_REQUIRE_EQUAL(pm.getSide(), JPetPM::SideA);
-  BOOST_REQUIRE_EQUAL(pm.getID(), 0);
-  BOOST_REQUIRE_EQUAL(pm.getHVset(), 0);
-  BOOST_REQUIRE_EQUAL(pm.getHVopt(), 0);
-  BOOST_REQUIRE_CLOSE(pm.getHVgain(JPetPM::kFirst), 0, epsilon);
-  BOOST_REQUIRE_CLOSE(pm.getHVgain(JPetPM::kSecond), 0, epsilon);
-}
-
-BOOST_AUTO_TEST_SUITE_END()
+const float epsilon = 0.0001;
 
 BOOST_AUTO_TEST_SUITE(FactorySuite)
 
@@ -45,18 +14,20 @@ class TestParamGetter : public JPetParamGetter
   {
     ParamObjectsDescriptions result;
     switch (type) {
-      case ParamObjectType::kPM:
+      case ParamObjectType::kTOMBChannel:
         switch (runId) {
-          case 0: //No PMs
+          case 0: //No TOMBChannels
             break;
           case 1: //Simple single object
           case 5: //Wrong FEB relation
-          case 6: //Wrong scin relation
-          case 7: //Wrong barrel slot relation
+          case 6: //Wrong TRB relation
+          case 7: //Wrong PM relation
             result = {
               {1, {
-                    {"id", "1"},
-                    {"is_right_side", "1"}
+                    {"channel", "1"},
+                    {"local_number", "2"},
+                    {"FEB", "3"},
+                    {"threshold", "4"}
                   }
               }
             };
@@ -64,13 +35,17 @@ class TestParamGetter : public JPetParamGetter
           case 2: //Simple two objects
             result = {
               {1, {
-                    {"id", "1"},
-                    {"is_right_side", "1"}
+                    {"channel", "1"},
+                    {"local_number", "2"},
+                    {"FEB", "3"},
+                    {"threshold", "4"}
                   }
               },
               {5, {
-                    {"id", "5"},
-                    {"is_right_side", "0"}
+                    {"channel", "5"},
+                    {"local_number", "3"},
+                    {"FEB", "4"},
+                    {"threshold", "5"}
                   }
               }
             };
@@ -78,7 +53,9 @@ class TestParamGetter : public JPetParamGetter
           case 3: //Object with missing field
             result = {
               {1, {
-                    {"id", "1"},
+                    {"channel", "1"},
+                    {"FEB", "3"},
+                    {"threshold", "4"}
                   }
               }
             };
@@ -86,13 +63,24 @@ class TestParamGetter : public JPetParamGetter
           case 4: //Object with wrong field
             result = {
               {1, {
-                    {"id", "1"},
-                    {"is_right_side", "probably"}
+                    {"channel", "1"},
+                    {"local_number", "TVP"},
+                    {"FEB", "3"},
+                    {"threshold", "4"}
                   }
               }
             };
             break;
         }
+        break;
+      case ParamObjectType::kPM:
+        result = {
+          {1, {
+                {"id", "1"},
+                {"is_right_side", "1"}
+              }
+          }
+        };
         break;
       case ParamObjectType::kFEB:
         result = {
@@ -176,7 +164,7 @@ class TestParamGetter : public JPetParamGetter
   {
     ParamRelationalData result;
     switch (type1) {
-      case ParamObjectType::kPM:
+      case ParamObjectType::kTOMBChannel:
         switch (runId) {
           case 0: //No relations
             break;
@@ -204,9 +192,9 @@ class TestParamGetter : public JPetParamGetter
                 };
                 break;
             }
-          case 6: //Wrong scin relation
+          case 6: //Wrong TRB relation
             switch (type2) {
-              case ParamObjectType::kScintillator:
+              case ParamObjectType::kTRB:
                 result = {
                   {1, 43}
                 };
@@ -217,9 +205,9 @@ class TestParamGetter : public JPetParamGetter
                 };
                 break;
             }
-          case 7: //Wrong barrel slot relation
+          case 7: //Wrong PM relation
             switch (type2) {
-              case ParamObjectType::kBarrelSlot:
+              case ParamObjectType::kPM:
                 result = {
                   {1, 43}
                 };
@@ -244,7 +232,7 @@ class TestParamGetter : public JPetParamGetter
 
 TestParamGetter paramGetter;
 
-BOOST_AUTO_TEST_CASE( no_pms )
+BOOST_AUTO_TEST_CASE( no_tombChannels )
 {
   JPetTRBFactory trbFactory(paramGetter, 0);
   JPetFEBFactory febFactory(paramGetter, 0, trbFactory);
@@ -252,9 +240,10 @@ BOOST_AUTO_TEST_CASE( no_pms )
   JPetLayerFactory layerFactory(paramGetter, 0, frameFactory);
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 0, layerFactory);
   JPetScinFactory scinFactory(paramGetter, 0, barrelSlotFactory);
-  JPetPMFactory factory(paramGetter, 0, febFactory, scinFactory, barrelSlotFactory);
-  auto & pms = factory.getPMs();
-  BOOST_REQUIRE_EQUAL(pms.size(), 0);
+  JPetPMFactory pmFactory(paramGetter, 0, febFactory, scinFactory, barrelSlotFactory);
+  JPetTOMBChannelFactory factory(paramGetter, 0, febFactory, trbFactory, pmFactory);
+  auto & tombChannels = factory.getTOMBChannels();
+  BOOST_REQUIRE_EQUAL(tombChannels.size(), 0);
 }
 
 BOOST_AUTO_TEST_CASE( single_object )
@@ -265,16 +254,19 @@ BOOST_AUTO_TEST_CASE( single_object )
   JPetLayerFactory layerFactory(paramGetter, 1, frameFactory);
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 1, layerFactory);
   JPetScinFactory scinFactory(paramGetter, 1, barrelSlotFactory);
-  JPetPMFactory factory(paramGetter, 1, febFactory, scinFactory, barrelSlotFactory);
-  auto & pms = factory.getPMs();
-  BOOST_REQUIRE_EQUAL(pms.size(), 1);
-  auto pm = pms[1];
-  BOOST_REQUIRE_EQUAL(pm->getID(), 1);
-  BOOST_REQUIRE_EQUAL(pm->getSide(), JPetPM::SideB);
+  JPetPMFactory pmFactory(paramGetter, 1, febFactory, scinFactory, barrelSlotFactory);
+  JPetTOMBChannelFactory factory(paramGetter, 1, febFactory, trbFactory, pmFactory);
+  auto & tombChannels = factory.getTOMBChannels();
+  BOOST_REQUIRE_EQUAL(tombChannels.size(), 1);
+  auto tombChannel = tombChannels[1];
+  BOOST_REQUIRE_EQUAL(tombChannel->getChannel(), 1);
+  BOOST_REQUIRE_EQUAL(tombChannel->getLocalChannelNumber(), 2);
+  BOOST_REQUIRE_EQUAL(tombChannel->getFEBInputNumber(), 3);
+  BOOST_REQUIRE_CLOSE(tombChannel->getThreshold(), 4, epsilon);
 
-  BOOST_REQUIRE_EQUAL(pm->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
-  BOOST_REQUIRE_EQUAL(pm->getScin().getID(), scinFactory.getScins().at(1)->getID());
-  BOOST_REQUIRE_EQUAL(pm->getBarrelSlot().getID(), barrelSlotFactory.getBarrelSlots().at(1)->getID());
+  BOOST_REQUIRE_EQUAL(tombChannel->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
+  BOOST_REQUIRE_EQUAL(tombChannel->getTRB().getID(), trbFactory.getTRBs().at(1)->getID());
+  BOOST_REQUIRE_EQUAL(tombChannel->getPM().getID(), pmFactory.getPMs().at(1)->getID());
 }
 
 BOOST_AUTO_TEST_CASE( two_objects )
@@ -285,24 +277,29 @@ BOOST_AUTO_TEST_CASE( two_objects )
   JPetLayerFactory layerFactory(paramGetter, 2, frameFactory);
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 2, layerFactory);
   JPetScinFactory scinFactory(paramGetter, 2, barrelSlotFactory);
-  JPetPMFactory factory(paramGetter, 2, febFactory, scinFactory, barrelSlotFactory);
-  auto & pms = factory.getPMs();
-  BOOST_REQUIRE_EQUAL(pms.size(), 2);
-  auto pm = pms[1];
-  BOOST_REQUIRE_EQUAL(pm->getID(), 1);
-  BOOST_REQUIRE_EQUAL(pm->getSide(), JPetPM::SideB);
+  JPetPMFactory pmFactory(paramGetter, 2, febFactory, scinFactory, barrelSlotFactory);
+  JPetTOMBChannelFactory factory(paramGetter, 2, febFactory, trbFactory, pmFactory);
+  auto & tombChannels = factory.getTOMBChannels();
+  BOOST_REQUIRE_EQUAL(tombChannels.size(), 2);
+  auto tombChannel = tombChannels[1];
+  BOOST_REQUIRE_EQUAL(tombChannel->getChannel(), 1);
+  BOOST_REQUIRE_EQUAL(tombChannel->getLocalChannelNumber(), 2);
+  BOOST_REQUIRE_EQUAL(tombChannel->getFEBInputNumber(), 3);
+  BOOST_REQUIRE_CLOSE(tombChannel->getThreshold(), 4, epsilon);
 
-  BOOST_REQUIRE_EQUAL(pm->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
-  BOOST_REQUIRE_EQUAL(pm->getScin().getID(), scinFactory.getScins().at(1)->getID());
-  BOOST_REQUIRE_EQUAL(pm->getBarrelSlot().getID(), barrelSlotFactory.getBarrelSlots().at(1)->getID());
+  BOOST_REQUIRE_EQUAL(tombChannel->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
+  BOOST_REQUIRE_EQUAL(tombChannel->getTRB().getID(), trbFactory.getTRBs().at(1)->getID());
+  BOOST_REQUIRE_EQUAL(tombChannel->getPM().getID(), pmFactory.getPMs().at(1)->getID());
 
-  pm = pms[5];
-  BOOST_REQUIRE_EQUAL(pm->getID(), 5);
-  BOOST_REQUIRE_EQUAL(pm->getSide(), JPetPM::SideA);
+  tombChannel = tombChannels[5];
+  BOOST_REQUIRE_EQUAL(tombChannel->getChannel(), 5);
+  BOOST_REQUIRE_EQUAL(tombChannel->getLocalChannelNumber(), 3);
+  BOOST_REQUIRE_EQUAL(tombChannel->getFEBInputNumber(), 4);
+  BOOST_REQUIRE_CLOSE(tombChannel->getThreshold(), 5, epsilon);
 
-  BOOST_REQUIRE_EQUAL(pm->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
-  BOOST_REQUIRE_EQUAL(pm->getScin().getID(), scinFactory.getScins().at(1)->getID());
-  BOOST_REQUIRE_EQUAL(pm->getBarrelSlot().getID(), barrelSlotFactory.getBarrelSlots().at(1)->getID());
+  BOOST_REQUIRE_EQUAL(tombChannel->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
+  BOOST_REQUIRE_EQUAL(tombChannel->getTRB().getID(), trbFactory.getTRBs().at(1)->getID());
+  BOOST_REQUIRE_EQUAL(tombChannel->getPM().getID(), pmFactory.getPMs().at(1)->getID());
 }
 
 BOOST_AUTO_TEST_CASE( missing_field )
@@ -313,8 +310,9 @@ BOOST_AUTO_TEST_CASE( missing_field )
   JPetLayerFactory layerFactory(paramGetter, 3, frameFactory);
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 3, layerFactory);
   JPetScinFactory scinFactory(paramGetter, 3, barrelSlotFactory);
-  JPetPMFactory factory(paramGetter, 3, febFactory, scinFactory, barrelSlotFactory);
-  BOOST_REQUIRE_THROW(factory.getPMs(), std::out_of_range);
+  JPetPMFactory pmFactory(paramGetter, 3, febFactory, scinFactory, barrelSlotFactory);
+  JPetTOMBChannelFactory factory(paramGetter, 3, febFactory, trbFactory, pmFactory);
+  BOOST_REQUIRE_THROW(factory.getTOMBChannels(), std::out_of_range);
 }
 
 BOOST_AUTO_TEST_CASE( wrong_field )
@@ -325,8 +323,9 @@ BOOST_AUTO_TEST_CASE( wrong_field )
   JPetLayerFactory layerFactory(paramGetter, 4, frameFactory);
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 4, layerFactory);
   JPetScinFactory scinFactory(paramGetter, 4, barrelSlotFactory);
-  JPetPMFactory factory(paramGetter, 4, febFactory, scinFactory, barrelSlotFactory);
-  BOOST_REQUIRE_THROW(factory.getPMs(), std::bad_cast);
+  JPetPMFactory pmFactory(paramGetter, 4, febFactory, scinFactory, barrelSlotFactory);
+  JPetTOMBChannelFactory factory(paramGetter, 4, febFactory, trbFactory, pmFactory);
+  BOOST_REQUIRE_THROW(factory.getTOMBChannels(), std::bad_cast);
 }
 
 BOOST_AUTO_TEST_CASE( wrong_feb_relation )
@@ -337,11 +336,12 @@ BOOST_AUTO_TEST_CASE( wrong_feb_relation )
   JPetLayerFactory layerFactory(paramGetter, 5, frameFactory);
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 5, layerFactory);
   JPetScinFactory scinFactory(paramGetter, 5, barrelSlotFactory);
-  JPetPMFactory factory(paramGetter, 5, febFactory, scinFactory, barrelSlotFactory);
-  BOOST_REQUIRE_THROW(factory.getPMs(), std::out_of_range);
+  JPetPMFactory pmFactory(paramGetter, 5, febFactory, scinFactory, barrelSlotFactory);
+  JPetTOMBChannelFactory factory(paramGetter, 5, febFactory, trbFactory, pmFactory);
+  BOOST_REQUIRE_THROW(factory.getTOMBChannels(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE( wrong_scin_relation )
+BOOST_AUTO_TEST_CASE( wrong_trb_relation )
 {
   JPetTRBFactory trbFactory(paramGetter, 6);
   JPetFEBFactory febFactory(paramGetter, 6, trbFactory);
@@ -349,11 +349,12 @@ BOOST_AUTO_TEST_CASE( wrong_scin_relation )
   JPetLayerFactory layerFactory(paramGetter, 6, frameFactory);
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 6, layerFactory);
   JPetScinFactory scinFactory(paramGetter, 6, barrelSlotFactory);
-  JPetPMFactory factory(paramGetter, 6, febFactory, scinFactory, barrelSlotFactory);
-  BOOST_REQUIRE_THROW(factory.getPMs(), std::out_of_range);
+  JPetPMFactory pmFactory(paramGetter, 6, febFactory, scinFactory, barrelSlotFactory);
+  JPetTOMBChannelFactory factory(paramGetter, 6, febFactory, trbFactory, pmFactory);
+  BOOST_REQUIRE_THROW(factory.getTOMBChannels(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE( wrong_barrelSlot_relation )
+BOOST_AUTO_TEST_CASE( wrong_pm_relation )
 {
   JPetTRBFactory trbFactory(paramGetter, 7);
   JPetFEBFactory febFactory(paramGetter, 7, trbFactory);
@@ -361,8 +362,9 @@ BOOST_AUTO_TEST_CASE( wrong_barrelSlot_relation )
   JPetLayerFactory layerFactory(paramGetter, 7, frameFactory);
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 7, layerFactory);
   JPetScinFactory scinFactory(paramGetter, 7, barrelSlotFactory);
-  JPetPMFactory factory(paramGetter, 7, febFactory, scinFactory, barrelSlotFactory);
-  BOOST_REQUIRE_THROW(factory.getPMs(), std::out_of_range);
+  JPetPMFactory pmFactory(paramGetter, 7, febFactory, scinFactory, barrelSlotFactory);
+  JPetTOMBChannelFactory factory(paramGetter, 7, febFactory, trbFactory, pmFactory);
+  BOOST_REQUIRE_THROW(factory.getTOMBChannels(), std::out_of_range);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
