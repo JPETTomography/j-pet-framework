@@ -30,6 +30,7 @@ JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
   ("help,h", "produce help message")
   ("type,t", po::value<std::string>()->required()->implicit_value(""), "type of file: hld, root or scope")
   ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open")
+  ("outputFileDirectory,o", po::value<std::string>(), "Output file directory")
   ("range,r", po::value< std::vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process.")
   ("param,p", po::value<std::string>(), "File with TRB numbers.")
   ("runId,i", po::value<int>(), "Run id.")
@@ -136,6 +137,9 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
   }
   if (isProgressBarSet(optsMap)) {
     options.at("progressBar") = "true";
+  }
+  if(isOutputFileDirectorySet(optsMap)) {
+      options.at("outputFileDirectory") = getOutputFileDirectory(optsMap);
   }
 		if (isLocalDBSet(optsMap)) {
 				options["localDB"] = getLocalDBName(optsMap);

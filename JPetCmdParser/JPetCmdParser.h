@@ -41,6 +41,12 @@ public:
   inline const std::vector<std::string>& getFileNames(const po::variables_map& variablesMap) const {
     return variablesMap["file"].as< std::vector<std::string> >();
   }
+  inline bool isOutputFileDirectorySet(const po::variables_map &variablesMap) const {
+      return variablesMap.count("outputFileDirectory") > 0;
+  }
+  inline std::string getOutputFileDirectory(const po::variables_map &variableMap) const {
+      return variableMap["outputFileDirectory"].as<std::string>();
+  }
   inline bool isCorrectFileType(const std::string& type) const {
     if (type == "hld" || type == "root" || type == "scope") {
       return true;

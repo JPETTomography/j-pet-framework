@@ -15,6 +15,7 @@
 
 #include "JPetWriter.h"
 #include "../JPetUserInfoStructure/JPetUserInfoStructure.h"
+#include <boost/filesystem/operations.hpp>
 
 
 JPetWriter::JPetWriter(const char* p_fileName) :
@@ -24,6 +25,39 @@ JPetWriter::JPetWriter(const char* p_fileName) :
   fTree(0)
 {
   fFile = new TFile(fFileName.c_str(), "RECREATE");
+  if (!isOpen()) {
+    ERROR("Could not open file to write.");
+  } else {
+    fTree = new TTree("tree", "tree");
+    fTree->SetAutoSave(10000);
+  }
+}
+
+JPetWriter::JPetWriter(const char* p_fileName, const char *p_outputFileDirectory) :
+  fFileName(p_fileName),
+  fFile(0),
+  fIsBranchCreated(false),
+  fTree(0)
+{
+  std::string outputFileAndDirectory = std::string(p_outputFileDirectory);
+
+  if(false == outputFileAndDirectory.empty())
+  {
+    boost::filesystem::path outputFileDirectory(p_outputFileDirectory);
+
+    if(false == boost::filesystem::exists(outputFileDirectory))
+    {
+      boost::filesystem::create_directory(outputFileDirectory);
+    }
+
+    outputFileAndDirectory = std::string(p_outputFileDirectory) + "/" + std::string(p_fileName);
+    fFile = new TFile(outputFileAndDirectory.c_str(), "RECREATE");
+  }
+  else
+  {
+      fFile = new TFile(fFileName.c_str(), "RECREATE");
+  }
+
   if (!isOpen()) {
     ERROR("Could not open file to write.");
   } else {

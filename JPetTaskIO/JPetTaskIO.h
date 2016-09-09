@@ -54,7 +54,7 @@ public:
 
 protected:
   virtual void createInputObjects(const char* inputFilename);
-  virtual void createOutputObjects(const char* outputFilename);
+  virtual void createOutputObjects(const char* outputFilename, const char* outputFileDirectory = "");
   void setUserLimits(const JPetOptions& opts,const long long totEventsFromReader, long long& firstEvent, long long& lastEvent) const;
 
   const JPetParamBank& getParamBank();

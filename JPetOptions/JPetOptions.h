@@ -47,6 +47,9 @@ public:
   const char* getOutputFile() const {
     return fOptions.at("outputFile").c_str();
   }
+  const char* getOutputFileDirectory() const {
+      return fOptions.at("outputFileDirectory").c_str();
+  }
   long long getFirstEvent() const {
     return std::stoll(fOptions.at("firstEvent"));
   }

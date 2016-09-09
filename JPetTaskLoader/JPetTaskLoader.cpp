@@ -49,8 +49,9 @@ void JPetTaskLoader::init(const JPetOptions::Options& opts)
   //here we should call some function to parse options
   auto inputFilename = fOptions.getInputFile();
   auto outputFilename = fOptions.getOutputFile();
+  auto outputFileDirectory = fOptions.getOutputFileDirectory();
   createInputObjects(inputFilename);
-  createOutputObjects(outputFilename);
+  createOutputObjects(outputFilename, outputFileDirectory);
 }
 
 std::string JPetTaskLoader::generateProperNameFile(const std::string& srcFilename, const std::string& fileType) const
