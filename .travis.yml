@@ -8,6 +8,7 @@ os:
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y git
+  - sudo apt-get install -y sshpass
   - sudo apt-get install -y libboost-all-dev 
   - sudo apt-get install -y libpqxx-3.1 libpqxx3-dev 
   - sudo apt-get install -y libconfig++ 
@@ -15,7 +16,10 @@ before_install:
   - sudo apt-get install -y libtinyxml2-dev
   - sudo apt-get install -y doxygen
   - sudo apt-get install -y root-system
-before_script:  
+before_script:
+    - sshpass -p "${KOZA_PASSWORD}" scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg ./DBHandler/Config/
+    - sshpass -p "${KOZA_PASSWORD}" scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg.koza ./DBHandler/Config/
+    - sshpass -p "${KOZA_PASSWORD}" scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/ReadMe.txt ./DBHandler/Config/
     - mkdir build
     - cd build
     - cmake ..
