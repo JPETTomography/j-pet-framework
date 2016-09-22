@@ -21,11 +21,9 @@ before_script:
     - mkdir -p DBHandler/Config/
     - ls DBHandler/Config/
     - pwd
-    - echo ${KOZA_PASSWORD}
-    - echo ${PASSWORD_PASSWORD}
-    - sshpass -p ${KOZA_PASSWORD} scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg DBHandler/Config/
-    - sshpass -p ${KOZA_PASSWORD} scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg.koza DBHandler/Config/
-    - sshpass -p ${KOZA_PASSWORD} scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/ReadMe.txt DBHandler/Config/
+    - echo $KOZA_PASSWORD
+    - echo $KOZA_USERNAME
+    - sshpass -p $KOZA_PASSWORD scp $KOZA_USERNAME@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg DBHandler/Config/
     - mkdir build
     - cd build
     - cmake ..
