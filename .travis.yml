@@ -20,6 +20,7 @@ install:
   - sudo apt-get install -y doxygen
   - sudo apt-get install -y root-system
 script:
+    - mkdir -p DBHandler/Config
     - export SSHPASS=$KOZA_PASSWORD
     - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $KOZA_USERNAME@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg DBHandler/Config/
     - ls DBHandler/Config/
