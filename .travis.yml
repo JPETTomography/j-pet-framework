@@ -18,7 +18,7 @@ before_install:
   - sudo apt-get install -y root-system
 before_script:
     - pwd
-    - mkdir -r DBHandler/Config/
+    - mkdir -p DBHandler/Config/
     - sshpass -p "${KOZA_PASSWORD}" scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg ./DBHandler/Config/
     - sshpass -p "${KOZA_PASSWORD}" scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg.koza ./DBHandler/Config/
     - sshpass -p "${KOZA_PASSWORD}" scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/ReadMe.txt ./DBHandler/Config/
