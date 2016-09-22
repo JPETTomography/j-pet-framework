@@ -19,16 +19,10 @@ install:
   - sudo apt-get install -y libtinyxml2-dev
   - sudo apt-get install -y doxygen
   - sudo apt-get install -y root-system
-before_script:
-    - pwd
-    - mkdir -p DBHandler/Config/
-    - ls DBHandler/Config/
-    - pwd
+script:
     - export SSHPASS=$KOZA_PASSWORD
-    - echo $KOZA_PASSWORD
-    - echo $KOZA_USERNAME
     - sshpass -e scp $KOZA_USERNAME@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg DBHandler/Config/
     - mkdir build
     - cd build
     - cmake ..
-script: make all tests
+    - make all tests
