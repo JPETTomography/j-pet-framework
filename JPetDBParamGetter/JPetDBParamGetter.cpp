@@ -204,7 +204,9 @@ ParamObjectsDescriptions JPetDBParamGetter::getAllBasicData(ParamObjectType type
       }
       // Fix id for TOMBChannel
       if (type == ParamObjectType::kTOMBChannel) {
-        description["id"] = boost::lexical_cast<std::string>(JPetParamGetter::getTOMBChannelFromDescription(description["id"]));
+        description["channel"] = boost::lexical_cast<std::string>(JPetParamGetter::getTOMBChannelFromDescription(description["channel"]));
+        //The id field is needed for caching
+        description["id"] = description["channel"];
       }
       // Workarounds because of missing stuff in DB.
       // Scintillator -- no attenuation_length
@@ -244,7 +246,9 @@ ParamRelationalData JPetDBParamGetter::getAllRelationalData(ParamObjectType type
         description[translation.second] = row[translation.first].as<std::string>();
       }
       if (type1 == ParamObjectType::kTOMBChannel) {
-        description["id"] = boost::lexical_cast<std::string>(JPetParamGetter::getTOMBChannelFromDescription(description["id"]));
+        description["channel"] = boost::lexical_cast<std::string>(JPetParamGetter::getTOMBChannelFromDescription(description["channel"]));
+        //The id field is needed for caching
+        description["id"] = description["channel"];
         switch (type2) {
           case ParamObjectType::kTRB:
             thisCache[boost::lexical_cast<int>(description["id"])] = boost::lexical_cast<int>(description["trb_id"]);
