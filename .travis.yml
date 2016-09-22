@@ -5,7 +5,7 @@ compiler:
 - gcc
 os:
 - linux
-before_install:
+install:
   - sudo apt-get -qq update
   - sudo apt-get install -y git
   - sudo apt-get install -y sshpass
@@ -19,9 +19,13 @@ before_install:
 before_script:
     - pwd
     - mkdir -p DBHandler/Config/
-    - sshpass -p "${KOZA_PASSWORD}" scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg ./DBHandler/Config/
-    - sshpass -p "${KOZA_PASSWORD}" scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg.koza ./DBHandler/Config/
-    - sshpass -p "${KOZA_PASSWORD}" scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/ReadMe.txt ./DBHandler/Config/
+    - ls DBHandler/Config/
+    - pwd
+    - echo ${KOZA_PASSWORD}
+    - echo ${PASSWORD_PASSWORD}
+    - sshpass -p ${KOZA_PASSWORD} scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg DBHandler/Config/
+    - sshpass -p ${KOZA_PASSWORD} scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg.koza DBHandler/Config/
+    - sshpass -p ${KOZA_PASSWORD} scp ${KOZA_USERNAME}@koza.if.uj.edu.pl:/home/framework_configs/ReadMe.txt DBHandler/Config/
     - mkdir build
     - cd build
     - cmake ..
