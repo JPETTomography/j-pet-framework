@@ -19,6 +19,7 @@ BOOST_AUTO_TEST_CASE(petOptionsDefaultConstrutorTest)
         {"inputFileType", ""},
         {"scopeConfigFile",""},
         {"scopeInputDirectory",""},
+	{"outputPath", ""},
         {"outputFile", "root"},
         {"outputFileType", "test.root"},
         {"firstEvent", "-1"},
@@ -37,6 +38,7 @@ BOOST_AUTO_TEST_CASE(petOptionsBasicTest)
         {"inputFile", "input"},
         {"scopeConfigFile","test.json"},
         {"scopeInputDirectory","scopeData"},
+	{"outputPath", "/home/test"},
         {"outputFile", "output"},
         {"firstEvent", "8246821 0xffff 020"},
         {"lastEvent", "8246821 0xffff 020"},
@@ -50,6 +52,7 @@ BOOST_AUTO_TEST_CASE(petOptionsBasicTest)
     BOOST_REQUIRE_EQUAL(petOptions.getInputFile(), "input");
     BOOST_REQUIRE_EQUAL(petOptions.getScopeConfigFile(), "test.json");
     BOOST_REQUIRE_EQUAL(petOptions.getScopeInputDirectory(), "scopeData");
+    BOOST_REQUIRE_EQUAL(petOptions.getOutputPath(), "/home/test");
     BOOST_REQUIRE_EQUAL(petOptions.getOutputFile(), "output");
     auto firstEvent = petOptions.getFirstEvent();
     BOOST_REQUIRE_EQUAL(firstEvent, 8246821);

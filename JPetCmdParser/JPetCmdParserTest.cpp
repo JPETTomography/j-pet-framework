@@ -57,6 +57,7 @@ BOOST_AUTO_TEST_CASE( parsing_1 )
   BOOST_REQUIRE_EQUAL(option.getLastEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getRunNumber(), 10);
   BOOST_REQUIRE(!option.isProgressBar());
+  BOOST_REQUIRE_EQUAL(option.getOutputPath(), "");
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kHld);
 
 }
@@ -78,6 +79,7 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
   BOOST_REQUIRE_EQUAL(option.getFirstEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getLastEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getRunNumber(), -1);
+  BOOST_REQUIRE_EQUAL(option.getOutputPath(), "");
   BOOST_REQUIRE(!option.isProgressBar());
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kScope);
 }
@@ -274,6 +276,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
   BOOST_REQUIRE(firstOption.getFirstEvent() == -1);
   BOOST_REQUIRE(firstOption.getLastEvent() == -1);
   BOOST_REQUIRE(firstOption.getRunNumber() == 4);
+  BOOST_REQUIRE_EQUAL(firstOption.getOutputPath(), "");
   BOOST_REQUIRE(firstOption.isProgressBar() == false);
   BOOST_REQUIRE(firstOption.isLocalDB() == false);
   BOOST_REQUIRE(firstOption.isLocalDBCreate() == false);
@@ -303,6 +306,19 @@ BOOST_AUTO_TEST_CASE(runNumberNotObligatoryIfScopeType)
   argv = args_char.data();
 
   BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv)));
+}
+
+
+BOOST_AUTO_TEST_CASE(checkOutputPath)
+{
+  auto args_char = createArgs("main.x -o ./ -f unitTestData/JPetCmdParserTest/data.hld -t hld");
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetCmdParser parser;
+  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  auto option = options.at(0);
+  BOOST_REQUIRE_EQUAL(option.getOutputPath(), "./");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

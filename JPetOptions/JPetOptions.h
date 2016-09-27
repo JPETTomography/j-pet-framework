@@ -46,6 +46,9 @@ public:
   inline const char* getOutputFile() const {
     return fOptions.at("outputFile").c_str();
   }
+  inline const char* getOutputPath() const {
+    return fOptions.at("outputPath").c_str();
+  }
   inline long long getFirstEvent() const {
     return std::stoll(fOptions.at("firstEvent"));
   }
