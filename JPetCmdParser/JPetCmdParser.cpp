@@ -136,6 +136,16 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
       WARNING("Run number was specified but the input file type is a scope!\n The run number will be ignored!");
     }
   }
+
+  /// Check if output path exists
+  if (isOutputPath(variablesMap)) {
+      auto dir = getOutputPath(variablesMap);
+      if (!JPetCommonTools::isDirectory(dir)) {
+        ERROR("Output directory : " + dir + " does not exist.");
+        std::cerr << "Output directory: " << dir << " does not exist" << std::endl;
+        return false;
+      }
+  } 
   return true;
 }
 
@@ -147,7 +157,7 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
     options.at("inputFileType") = fileType;
   }
   if (isOutputPath(optsMap)) {
-    options.at("outputPath") = getOutputPath(optsMap);
+    options.at("outputPath") = JPetCommonTools::appendSlashToPathIfAbsent(getOutputPath(optsMap));
   }
   if (isRunNumberSet(optsMap)) {
     options.at("runId") = std::to_string(getRunNumber(optsMap));
