@@ -23,15 +23,11 @@
 
 JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
 {
-  std::vector<int> tmp;
-  tmp.push_back(-1);
-  tmp.push_back(-1);
-
   fOptionsDescriptions.add_options()
   ("help,h", "Displays this help message.")
   ("type,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, root or scope.")
   ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
-  ("range,r", po::value< std::vector<int> >()->multitoken()->default_value(tmp, ""), "Range of events to process e.g. -r 1 1000 .")
+  ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
   ("param,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
   ("runId,i", po::value<int>(), "Run id.")
   ("progressBar,b", "Progress bar.")
@@ -132,12 +128,12 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
     }
   }
 
-  /// The run number option is neclegted if the input file is set as "scope" 
+  /// The run number option is neclegted if the input file is set as "scope"
   if (isRunNumberSet(variablesMap)) {
-    if (getFileType(variablesMap) =="scope") {
+    if (getFileType(variablesMap) == "scope") {
       WARNING("Run number was specified but the input file type is a scope!\n The run number will be ignored!");
     }
-  }   
+  }
   return true;
 }
 
