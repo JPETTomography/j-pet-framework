@@ -23,9 +23,11 @@
 #include <iostream>
 #include <string>
 
+#ifndef __CINT__
 #include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+#endif
 
 class JPetLogger {
  public:
@@ -62,9 +64,11 @@ class JPetLogger {
   JPetLogger(const JPetLogger&);
   JPetLogger& operator=(const JPetLogger&);
 
+  #ifndef __CINT__
   inline static const std::string generateFilename(){
     return std::string("JPet_") + to_string(boost::uuids::random_generator()()) + std::string(".log");
   }
+  #endif
   
   static void logMessage(const char* func, const char* msg, MessageType type);
 
