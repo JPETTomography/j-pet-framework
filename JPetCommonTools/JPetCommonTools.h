@@ -114,6 +114,11 @@ public:
   inline static std::string extractFileNameFromFullPath(const std::string& fileWithPath) {
     return boost::filesystem::path( fileWithPath ).filename().string();
   }
+
+  inline static std::string appendSlashToPathIfAbsent(const std::string& path) {
+    if (!path.empty() && path.back() != '/') return path +'/';
+    else return path;
+  }
   
   inline static bool isDirectory( const std::string& dir) {
     return boost::filesystem::is_directory(dir);
