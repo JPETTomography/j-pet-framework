@@ -39,10 +39,11 @@ JPetTaskIO::JPetTaskIO():
 void JPetTaskIO::init(const JPetOptions::Options& opts)
 {
   setOptions(JPetOptions(opts));
-  auto inputFilename = fOptions.getInputFile();
-  auto outputFilename = fOptions.getOutputFile();
-  createInputObjects(inputFilename);
-  createOutputObjects(outputFilename);
+  std::string inputFilename(fOptions.getInputFile());
+  std::string outputPath(fOptions.getOutputPath());
+  auto outputFilename = outputPath + std::string(fOptions.getOutputFile());
+  createInputObjects(inputFilename.c_str());
+  createOutputObjects(outputFilename.c_str());
 }
 
 
