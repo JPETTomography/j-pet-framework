@@ -109,6 +109,14 @@ void JPetOptions::resetEventRange()
   fOptions.at("lastEvent") = "-1";
 }
 
+JPetOptions::Options JPetOptions::resetEventRange(const Options& srcOpts)
+{
+  Options opts(srcOpts);
+  opts.at("firstEvent") = "-1";
+  opts.at("lastEvent") = "-1";
+  return opts; 
+}
+
 /// It returns the total number of events calculated from
 /// first and last event given in the range of events to calculate.
 /// If first or last event is set to -1 then the -1 is returned.
