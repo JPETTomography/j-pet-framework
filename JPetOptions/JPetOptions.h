@@ -92,6 +92,8 @@ public:
   }
 
   void resetEventRange();
+  static Options resetEventRange(const Options& srcOpts);
+  
 
   static  Options getDefaultOptions() {
     return kDefaultOptions;
