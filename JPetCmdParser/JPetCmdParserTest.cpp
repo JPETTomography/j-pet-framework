@@ -57,6 +57,7 @@ BOOST_AUTO_TEST_CASE( parsing_1 )
   BOOST_REQUIRE_EQUAL(option.getLastEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getRunNumber(), 10);
   BOOST_REQUIRE(!option.isProgressBar());
+  BOOST_REQUIRE_EQUAL(option.getOutputPath(), "");
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kHld);
 
 }
@@ -78,6 +79,7 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
   BOOST_REQUIRE_EQUAL(option.getFirstEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getLastEvent(), -1);
   BOOST_REQUIRE_EQUAL(option.getRunNumber(), -1);
+  BOOST_REQUIRE_EQUAL(option.getOutputPath(), "");
   BOOST_REQUIRE(!option.isProgressBar());
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kScope);
 }
@@ -274,6 +276,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
   BOOST_REQUIRE(firstOption.getFirstEvent() == -1);
   BOOST_REQUIRE(firstOption.getLastEvent() == -1);
   BOOST_REQUIRE(firstOption.getRunNumber() == 4);
+  BOOST_REQUIRE_EQUAL(firstOption.getOutputPath(), "");
   BOOST_REQUIRE(firstOption.isProgressBar() == false);
   BOOST_REQUIRE(firstOption.isLocalDB() == false);
   BOOST_REQUIRE(firstOption.isLocalDBCreate() == false);
@@ -303,6 +306,45 @@ BOOST_AUTO_TEST_CASE(runNumberNotObligatoryIfScopeType)
   argv = args_char.data();
 
   BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv)));
+}
+
+
+BOOST_AUTO_TEST_CASE(checkOutputPath)
+{
+  auto args_char = createArgs("main.x -o ./ -f unitTestData/JPetCmdParserTest/data.hld -t hld");
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetCmdParser parser;
+  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  auto option = options.at(0);
+  BOOST_REQUIRE_EQUAL(option.getOutputPath(), "./");
+}
+
+BOOST_AUTO_TEST_CASE(checkWrongOutputPath)
+{
+  auto args_char = createArgs("main.x -o ./blebel/blaba33/bob -f unitTestData/JPetCmdParserTest/data.hld -t hld");
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  po::options_description description("Allowed options");
+  description.add_options()
+  ("help,h", "Displays this help message.")
+  ("type,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, root or scope.")
+  ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
+  ("outputPath,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
+  ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
+  ("param,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
+  ("runId,i", po::value<int>(), "Run id.")
+  ("progressBar,b", "Progress bar.")
+  ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
+  ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.");
+
+  po::variables_map variablesMap;
+  po::store(po::parse_command_line(argc, argv, description), variablesMap);
+  po::notify(variablesMap);
+  JPetCmdParser parser;
+  BOOST_REQUIRE(!parser.areCorrectOptions(variablesMap));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

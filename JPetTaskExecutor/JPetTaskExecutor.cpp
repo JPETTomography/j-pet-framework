@@ -51,13 +51,22 @@ bool JPetTaskExecutor::process()
     return false;
   }
   for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
-    // ignore the event range options for all but the first processed task
+    JPetOptions::Options currOpts = fOptions.getOptions();
     if (currentTask != fTasks.begin()) {
-      fOptions.resetEventRange();
+    /// Ignore the event range options for all but the first task.
+      currOpts = JPetOptions::resetEventRange(currOpts);
+   /// For all but the first task, 
+   /// the input path must be changed if 
+   /// the output path argument -o was given, because the input
+   /// data for them will lay in the location defined by -o.
+      auto outPath  = currOpts.at("outputPath");
+      if (!outPath.empty()) {
+        currOpts.at("inputFile") = outPath + JPetCommonTools::extractPathFromFile(currOpts.at("inputFile")) + JPetCommonTools::extractFileNameFromFullPath(currOpts.at("inputFile"));
+      }
     }
 
     INFO(Form("Starting task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->getSubTask()->GetName()));
-    (*currentTask)->init(fOptions.getOptions());
+    (*currentTask)->init(currOpts);
     (*currentTask)->exec();
     (*currentTask)->terminate();
     INFO(Form("Finished task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->getSubTask()->GetName()));

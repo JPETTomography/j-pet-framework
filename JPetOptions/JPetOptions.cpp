@@ -21,6 +21,7 @@ JPetOptions::Options JPetOptions::kDefaultOptions = {
   {"inputFileType", ""},
   {"scopeConfigFile", ""},
   {"scopeInputDirectory", ""},
+  {"outputPath", ""},
   {"outputFile", "root"},
   {"outputFileType", "test.root"},
   {"firstEvent", "-1"},
@@ -106,6 +107,14 @@ void JPetOptions::resetEventRange()
 {
   fOptions.at("firstEvent") = "-1";
   fOptions.at("lastEvent") = "-1";
+}
+
+JPetOptions::Options JPetOptions::resetEventRange(const Options& srcOpts)
+{
+  Options opts(srcOpts);
+  opts.at("firstEvent") = "-1";
+  opts.at("lastEvent") = "-1";
+  return opts; 
 }
 
 /// It returns the total number of events calculated from
