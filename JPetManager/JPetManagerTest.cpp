@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE( manager_getOptions )
 BOOST_AUTO_TEST_CASE( emptyRun )
 {
   JPetManager& manager = JPetManager::getManager();
-  manager.run();
+  BOOST_REQUIRE(manager.run());
   auto options = manager.getOptions();
   BOOST_REQUIRE_EQUAL(options.size(), 0);
 }

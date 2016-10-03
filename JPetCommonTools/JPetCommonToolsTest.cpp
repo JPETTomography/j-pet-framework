@@ -130,4 +130,14 @@ BOOST_AUTO_TEST_CASE(isDirectory)
   BOOST_REQUIRE(!JPetCommonTools::isDirectory("fake/directory/baba"));
 }
 
+BOOST_AUTO_TEST_CASE(appendSlashToPathIfAbsent)
+{
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent(""), "");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("./"), "./");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("/home/"), "/home/");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("/home"), "/home/");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("home/bbl/be"), "home/bbl/be/");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("test"), "test/");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
