@@ -19,8 +19,9 @@
 JPetOptions::Options JPetOptions::kDefaultOptions = {
   {"inputFile", ""},
   {"inputFileType", ""},
-  {"scopeConfigFile",""},
-  {"scopeInputDirectory",""},
+  {"scopeConfigFile", ""},
+  {"scopeInputDirectory", ""},
+  {"outputPath", ""},
   {"outputFile", "root"},
   {"outputFileType", "test.root"},
   {"firstEvent", "-1"},
@@ -46,32 +47,26 @@ JPetOptions::JPetOptions(const Options& opts):
   }
 }
 
-void JPetOptions::handleErrorMessage(const std::string &errorMessage, const std::out_of_range &outOfRangeException) const
+void JPetOptions::handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException) const
 {
   std::cerr << errorMessage << outOfRangeException.what() << '\n';
   ERROR(errorMessage);
 }
 
-JPetOptions::FileType JPetOptions::handleFileType(const std::string &fileType) const 
+JPetOptions::FileType JPetOptions::handleFileType(const std::string& fileType) const
 {
-  try
-  {
+  try {
     auto option = fOptions.at(fileType);
-    
-    try
-    {
+
+    try {
       return fStringToFileType.at(option);
+    } catch (const std::out_of_range& outOfRangeFileTypeException) {
     }
-    catch(const std::out_of_range &outOfRangeFileTypeException)
-    {
-    }
-  }
-  catch(const std::out_of_range &outOfRangeOptionException)
-  {
+  } catch (const std::out_of_range& outOfRangeOptionException) {
     std::string errorMessage = "Out of range error in Options container ";
     handleErrorMessage(errorMessage, outOfRangeOptionException);
   }
-  
+
   return FileType::kUndefinedFileType;
 }
 
@@ -98,17 +93,42 @@ bool JPetOptions::areCorrect(const Options&) const
   return true;
 }
 
-JPetOptions::FileType JPetOptions::getInputFileType() const 
+JPetOptions::FileType JPetOptions::getInputFileType() const
 {
   return handleFileType("inputFileType");
 }
 
-JPetOptions::FileType JPetOptions::getOutputFileType() const 
+JPetOptions::FileType JPetOptions::getOutputFileType() const
 {
   return handleFileType("outputFileType");
 }
 
-void JPetOptions::resetEventRange() {
+void JPetOptions::resetEventRange()
+{
   fOptions.at("firstEvent") = "-1";
   fOptions.at("lastEvent") = "-1";
+}
+
+JPetOptions::Options JPetOptions::resetEventRange(const Options& srcOpts)
+{
+  Options opts(srcOpts);
+  opts.at("firstEvent") = "-1";
+  opts.at("lastEvent") = "-1";
+  return opts; 
+}
+
+/// It returns the total number of events calculated from
+/// first and last event given in the range of events to calculate.
+/// If first or last event is set to -1 then the -1 is returned.
+/// If last - first < 0 then -1 is returned.
+/// Otherwise last - first +1 is returned.
+long long JPetOptions::getTotalEvents() const
+{
+  long long first = getFirstEvent();
+  long long last = getLastEvent();
+  long long diff = -1;
+  if ((first >= 0) && (last >= 0) && ((last - first) >= 0)) {
+    diff = last - first + 1;
+  }
+  return diff;
 }

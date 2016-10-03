@@ -20,6 +20,7 @@
 #include "../JPetTaskLoader/JPetTaskLoader.h"
 #include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
+#include "../JPetLoggerInclude.h"
 
 
 JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
@@ -27,11 +28,11 @@ JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int p
   ftaskGeneratorChain(taskGeneratorChain),
   fOptions(opt)
 {
-		if (fOptions.isLocalDB()) {
-				fParamManager = new JPetParamManager(new JPetParamGetterAscii(fOptions.getLocalDB()));
-		} else {
-				fParamManager = new JPetParamManager();
-		}
+  if (fOptions.isLocalDB()) {
+    fParamManager = new JPetParamManager(new JPetParamGetterAscii(fOptions.getLocalDB()));
+  } else {
+    fParamManager = new JPetParamManager();
+  }
   if (taskGeneratorChain) {
     for (auto taskGenerator : *ftaskGeneratorChain) {
       auto task = taskGenerator();
@@ -43,21 +44,34 @@ JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int p
   }
 }
 
-void JPetTaskExecutor::process()
+bool JPetTaskExecutor::process()
 {
-  processFromCmdLineArgs(fProcessedFile);
+  if(!processFromCmdLineArgs(fProcessedFile)) {
+    ERROR("Error in processFromCmdLineArgs");
+    return false;
+  }
   for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
-    // ignore the event range options for all but the first processed task
-    if(currentTask != fTasks.begin()){
-      fOptions.resetEventRange();
+    JPetOptions::Options currOpts = fOptions.getOptions();
+    if (currentTask != fTasks.begin()) {
+    /// Ignore the event range options for all but the first task.
+      currOpts = JPetOptions::resetEventRange(currOpts);
+   /// For all but the first task, 
+   /// the input path must be changed if 
+   /// the output path argument -o was given, because the input
+   /// data for them will lay in the location defined by -o.
+      auto outPath  = currOpts.at("outputPath");
+      if (!outPath.empty()) {
+        currOpts.at("inputFile") = outPath + JPetCommonTools::extractPathFromFile(currOpts.at("inputFile")) + JPetCommonTools::extractFileNameFromFullPath(currOpts.at("inputFile"));
+      }
     }
 
     INFO(Form("Starting task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->getSubTask()->GetName()));
-    (*currentTask)->init(fOptions.getOptions());
+    (*currentTask)->init(currOpts);
     (*currentTask)->exec();
     (*currentTask)->terminate();
     INFO(Form("Finished task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->getSubTask()->GetName()));
   }
+  return true;
 }
 
 void* JPetTaskExecutor::processProxy(void* runner)
@@ -75,31 +89,43 @@ TThread* JPetTaskExecutor::run()
   return thread;
 }
 
-void JPetTaskExecutor::processFromCmdLineArgs(int)
+bool JPetTaskExecutor::processFromCmdLineArgs(int)
 {
   auto runNum = fOptions.getRunNumber();
   if (runNum >= 0) {
-    fParamManager->fillParameterBank(runNum); /// @todo some error handling
-				if (fOptions.isLocalDBCreate()) {
-						JPetParamSaverAscii saver;
-						saver.saveParamBank(fParamManager->getParamBank(), runNum, fOptions.getLocalDBCreate());
-				}
+    try {
+      fParamManager->fillParameterBank(runNum);
+    } catch (...) {
+      ERROR("Param bank was not generated correctly.\n The run number used:" + JPetCommonTools::intToString(runNum));
+      return false;
+    }
+    if (fOptions.isLocalDBCreate()) {
+      JPetParamSaverAscii saver;
+      saver.saveParamBank(fParamManager->getParamBank(), runNum, fOptions.getLocalDBCreate());
+    }
   }
   auto inputFileType = fOptions.getInputFileType();
   auto inputFile = fOptions.getInputFile();
   if (inputFileType == JPetOptions::kScope) {
     createScopeTaskAndAddToTaskList();
   } else if (inputFileType == JPetOptions::kHld) {
-    fUnpacker.setParams(fOptions.getInputFile());
+    long long nevents = fOptions.getTotalEvents();
+    if (nevents > 0) {
+      fUnpacker.setParams(fOptions.getInputFile(), nevents);
+      WARNING(std::string("Even though the range of events was set, only the first ") + JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
+    } else {
+      fUnpacker.setParams(fOptions.getInputFile());
+    }
     unpackFile();
   }
+  return true;
 }
 
 void JPetTaskExecutor::createScopeTaskAndAddToTaskList()
 {
   JPetScopeLoader* module = new JPetScopeLoader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
-  assert(module); 
-  module->setParamManager(fParamManager); 
+  assert(module);
+  module->setParamManager(fParamManager);
   auto scopeFile = fOptions.getScopeConfigFile();
   if (!fParamManager->getParametersFromScopeConfig(scopeFile)) {
     ERROR("Unable to generate Param Bank from Scope Config");
@@ -118,7 +144,7 @@ void JPetTaskExecutor::unpackFile()
 
 JPetTaskExecutor::~JPetTaskExecutor()
 {
-  for (auto& task : fTasks) {
+  for (auto & task : fTasks) {
     if (task) {
       delete task;
       task = 0;

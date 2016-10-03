@@ -46,6 +46,7 @@ public:
   virtual JPetTask* getSubTask() const;
 
   void setOptions(const JPetOptions& opts);
+  inline JPetOptions getOptions() const { return fOptions; }
 
   void manageProgressBar(long long done, long long end);
   float setProgressBar(int currentEventNumber, int numberOfEvents);

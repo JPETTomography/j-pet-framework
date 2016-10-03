@@ -47,9 +47,19 @@ public:
     }
     return false;
   }
+
+  inline const std::string& getOutputPath(const po::variables_map& variablesMap) const {
+    return variablesMap["outputPath"].as<std::string>();
+  }
+
+  inline bool isOutputPath(const po::variables_map& variablesMap) const {
+    return (bool)variablesMap.count("outputPath");
+  }
+
   inline const std::string& getFileType(const po::variables_map& variablesMap) const {
     return variablesMap["type"].as<std::string>();
   }
+
   inline bool IsFileTypeSet(const po::variables_map& variablesMap) const {
     return (bool)variablesMap.count("type");
   }

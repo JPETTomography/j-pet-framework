@@ -24,8 +24,7 @@ class JPetOptions
 {
 
 public:
-  enum FileType
-  {
+  enum FileType {
     kNoType, kScope, kRaw, kRoot, kHld, kPhysEve, kPhysHit, kPhysSig, kRawSig, kRecoSig, kTslotCal, kTslotRaw, kUndefinedFileType
   };
   typedef std::map<std::string, std::string> Options;
@@ -35,59 +34,66 @@ public:
   explicit JPetOptions(const Options& opts);
 
   bool areCorrect(const Options&) const;
-  const char* getInputFile() const {
+  inline const char* getInputFile() const {
     return fOptions.at("inputFile").c_str();
   }
-  const char* getScopeConfigFile() const {
+  inline const char* getScopeConfigFile() const {
     return fOptions.at("scopeConfigFile").c_str();
   }
-  const char* getScopeInputDirectory() const {
+  inline const char* getScopeInputDirectory() const {
     return fOptions.at("scopeInputDirectory").c_str();
   }
-  const char* getOutputFile() const {
+  inline const char* getOutputFile() const {
     return fOptions.at("outputFile").c_str();
   }
-  long long getFirstEvent() const {
+  inline const char* getOutputPath() const {
+    return fOptions.at("outputPath").c_str();
+  }
+  inline long long getFirstEvent() const {
     return std::stoll(fOptions.at("firstEvent"));
   }
-  long long getLastEvent() const {
+  inline long long getLastEvent() const {
     return std::stoll(fOptions.at("lastEvent"));
   }
-  int getRunNumber() const {
+  long long getTotalEvents() const;
+  
+  inline int getRunNumber() const {
     return std::stoi(fOptions.at("runId"));
   }
-  bool isProgressBar() const {
+  inline bool isProgressBar() const {
     return JPetCommonTools::to_bool(fOptions.at("progressBar"));
   }
-		bool isLocalDB() const {
-				return fOptions.count("localDB") > 0;
-		}
-		std::string getLocalDB() const {
-				std::string result("");
-				if (isLocalDB()) {
-						result = fOptions.at("localDB");
-				}
-				return result;
-		}
-		bool isLocalDBCreate() const {
-				return fOptions.count("localDBCreate") > 0;
-		}
-		std::string getLocalDBCreate() const {
-				std::string result("");
-				if (isLocalDBCreate()) {
-						result = fOptions.at("localDBCreate");
-				}
-				return result;
-		}
-  
+  inline bool isLocalDB() const {
+    return fOptions.count("localDB") > 0;
+  }
+  inline std::string getLocalDB() const {
+    std::string result("");
+    if (isLocalDB()) {
+      result = fOptions.at("localDB");
+    }
+    return result;
+  }
+  inline bool isLocalDBCreate() const {
+    return fOptions.count("localDBCreate") > 0;
+  }
+  inline std::string getLocalDBCreate() const {
+    std::string result("");
+    if (isLocalDBCreate()) {
+      result = fOptions.at("localDBCreate");
+    }
+    return result;
+  }
+
   FileType getInputFileType() const;
   FileType getOutputFileType() const;
-  
+
   inline Options getOptions() const {
     return fOptions;
   }
 
   void resetEventRange();
+  static Options resetEventRange(const Options& srcOpts);
+  
 
   static  Options getDefaultOptions() {
     return kDefaultOptions;
@@ -96,8 +102,8 @@ public:
 protected:
   static Options kDefaultOptions;
 
-  void handleErrorMessage(const std::string &errorMessage, const std::out_of_range &outOfRangeException) const;
-  FileType handleFileType(const std::string &fileType) const;
+  void handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException) const;
+  FileType handleFileType(const std::string& fileType) const;
   void setOptions(const Options& opts) {
     fOptions = opts;
   }

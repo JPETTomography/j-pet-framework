@@ -13,8 +13,8 @@
  *  @file SDAMatchLORs.cpp
  */
 
-#include "./SDAMatchLORs.h"
-
+#include "SDAMatchLORs.h"
+using namespace std;
 SDAMatchLORs::SDAMatchLORs(const char* name, const char* description) : 
   JPetTask(name, description),
   fMatched(0),
@@ -22,58 +22,46 @@ SDAMatchLORs::SDAMatchLORs(const char* name, const char* description) :
 {
 }
 
-SDAMatchLORs::~SDAMatchLORs()
-{
-	
-}
+SDAMatchLORs::~SDAMatchLORs(){}
 
-void SDAMatchLORs::init(const JPetTaskInterface::Options& /* opts */)
+void SDAMatchLORs::init(const JPetTaskInterface::Options&)
 {
   fMatched=0;
   fCurrentEventNumber=0;  
 }
 
-void SDAMatchLORs::exec()
-{
-
-  JPetHit currHit = (JPetHit&)(*getEvent());
-  
-  if (fHitsArray.empty()) {
-    fHitsArray.push_back(currHit);
-  } else {
-    if (fHitsArray[0].getTimeWindowIndex() == currHit.getTimeWindowIndex()) {
-      fHitsArray.push_back(currHit);
-    } else {
-      saveLORs(createLORs(fHitsArray)); //create LORs from Hits from the same Time Window
-      fHitsArray.clear();
-      fHitsArray.push_back(currHit);
-    }
-  }
-  
-  fCurrentEventNumber++;
-
+void SDAMatchLORs::exec(){
+	if(auto currHit = dynamic_cast<const JPetHit*const>(getEvent())){
+		if (fHitsArray.empty()) {
+			fHitsArray.push_back(*currHit);
+		} else {
+			if (fHitsArray[0].getTimeWindowIndex() == currHit->getTimeWindowIndex()) {
+				fHitsArray.push_back(*currHit);
+			} else {
+				saveLORs(createLORs(fHitsArray)); //create LORs from Hits from the same Time Window
+				fHitsArray.clear();
+				fHitsArray.push_back(*currHit);
+			}
+		}
+		fCurrentEventNumber++;
+	}
 }
 
 
 void SDAMatchLORs::terminate()
 {
   int fEventNb = fCurrentEventNumber;
-  INFO(
-       Form("Matching complete \nAmount of LORs mathed: %d out of %d hits" , fMatched, fEventNb) );
+  INFO(Form("Matching complete \nAmount of LORs mathed: %d out of %d hits" , fMatched, fEventNb) );
   double goodPercent = fMatched* 100.0 /fEventNb ;
-  INFO(
-       Form("%f %% of data was matched \n " , goodPercent) );
+  INFO(Form("%f %% of data was matched \n " , goodPercent) );
 }
 
-
-std::vector<JPetLOR> SDAMatchLORs::createLORs(std::vector<JPetHit>& hits){
-
-  std::vector<JPetLOR> lors;
+vector<JPetLOR> SDAMatchLORs::createLORs(vector<JPetHit>& hits){
+  vector<JPetLOR> lors;
   for (auto i = hits.begin(); i != hits.end(); ++i) {
     for (auto j = i + 1; j != hits.end(); ++j ) {
       JPetHit & hit1 = *i;
       JPetHit & hit2 = *j;
-
       // @ todo: add more strict rules for deciding whether two hits constitute a LOR
       if (hit1.getScintillator() != hit2.getScintillator()) {
 	// found 2 hits in different scintillators -> an event!
@@ -99,7 +87,10 @@ std::vector<JPetLOR> SDAMatchLORs::createLORs(std::vector<JPetHit>& hits){
 void SDAMatchLORs::saveLORs(std::vector<JPetLOR> lors){
   assert(fWriter);
   fMatched += lors.size();
-  for (auto lor : lors) {
+  for (auto&lor : lors) {
     fWriter->write(lor);
   }
+}
+void SDAMatchLORs::setWriter(JPetWriter* writer) {
+	fWriter = writer;
 }

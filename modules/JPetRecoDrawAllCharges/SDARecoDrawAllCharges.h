@@ -18,30 +18,23 @@
 #ifndef _JPETANALYSISMODULE_DRAWALLCHARGES_H_
 #define _JPETANALYSISMODULE_DRAWALLCHARGES_H_
 
-#include "../../JPetTask/JPetTask.h"
-#include "TCanvas.h"
 #include <map>
+#include <TCanvas.h>
+#include "../../JPetTask/JPetTask.h"
 
-class SDARecoDrawAllCharges: public JPetTask
-{
-
+class SDARecoDrawAllCharges: public JPetTask{
 public:
-
-  SDARecoDrawAllCharges(const char* name, const char* description);
-  virtual ~SDARecoDrawAllCharges();
-  virtual void exec();
-  virtual void init();
-  virtual void terminate();
-
+	SDARecoDrawAllCharges(const char* name, const char* description);
+	virtual ~SDARecoDrawAllCharges();
+	virtual void exec()override;
+	virtual void init(const JPetTaskInterface::Options&)override;
+	virtual void terminate()override;
 private:
-  // put any custom variables (e.g. histograms) here:
-  std::map<int,TH1F*> fChargeHistos;
-  std::map<int,std::vector<double> > fCharges;
-  double fCharge;
-  std::vector<int> fIDs;
-  unsigned int fNumberOfPMTs;
-  std::string fFileName;
+	std::map<int,TH1F*> fChargeHistos;
+	std::map<int,std::vector<double> > fCharges;
+	double fCharge;
+	std::vector<int> fIDs;
+	unsigned int fNumberOfPMTs;
+	std::string fFileName;
 };
-
 #endif
-

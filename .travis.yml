@@ -5,7 +5,11 @@ compiler:
 - gcc
 os:
 - linux
-before_install:
+addons:
+  apt:
+    packages:
+      - sshpass
+install:
   - sudo apt-get -qq update
   - sudo apt-get install -y git
   - sudo apt-get install -y libboost-all-dev 
@@ -14,8 +18,18 @@ before_install:
   - sudo apt-get install -y cmake 
   - sudo apt-get install -y libtinyxml2-dev
   - sudo apt-get install -y doxygen
-before_script:  
+  - sudo apt-get install -y root-system
+script:
+    - mkdir -p DBHandler/Config
+    - export SSHPASS=$KOZA_PASSWORD
+    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $KOZA_USERNAME@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg DBHandler/Config/
+    - ls DBHandler/Config/
+    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $KOZA_USERNAME@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg.koza DBHandler/Config/
+    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $KOZA_USERNAME@koza.if.uj.edu.pl:/home/framework_configs/ReadMe.txt DBHandler/Config/
     - mkdir build
     - cd build
     - cmake ..
-script: make all tests
+    - cp ../DBHandler/Config/configDB.cfg.koza ../DBHandler/Config/configDB.cfg;
+    - make all tests
+    - cd tests
+    - ./run_tests.pl

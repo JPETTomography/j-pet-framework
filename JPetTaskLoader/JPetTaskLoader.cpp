@@ -38,7 +38,7 @@ void JPetTaskLoader::init(const JPetOptions::Options& opts)
 {
   auto newOpts(opts);
   auto inFile = newOpts.at("inputFile");
-  auto outFile = inFile;
+  auto outFile = inFile; /// @todo This line is potentially dangerous if the output directory is different than the input one.
   inFile = generateProperNameFile(inFile, fInFileType);
   outFile = generateProperNameFile(outFile, fOutFileType);
   newOpts.at("inputFile") = inFile;
@@ -46,17 +46,22 @@ void JPetTaskLoader::init(const JPetOptions::Options& opts)
   newOpts.at("outputFile") = outFile;
   newOpts.at("outputFileType") = fOutFileType;
   setOptions(JPetOptions(newOpts));
+  
   //here we should call some function to parse options
-  auto inputFilename = fOptions.getInputFile();
-  auto outputFilename = fOptions.getOutputFile();
-  createInputObjects(inputFilename);
-  createOutputObjects(outputFilename);
+  std::string inputFilename(fOptions.getInputFile());
+  std::string outputPath(fOptions.getOutputPath());
+  auto outputFilename = outputPath + std::string(fOptions.getOutputFile());
+  createInputObjects(inputFilename.c_str());
+  createOutputObjects(outputFilename.c_str());
 }
 
 std::string JPetTaskLoader::generateProperNameFile(const std::string& srcFilename, const std::string& fileType) const
 {
-  auto baseFileName = getBaseFilePath(srcFilename);
-  return baseFileName + "." + fileType + ".root";
+  auto baseFileName = getBaseFilePath(srcFilename); 
+  if (!fileType.empty()) {
+    baseFileName = baseFileName + "." + fileType;
+  }
+  return baseFileName + ".root";
 }
 
 std::string JPetTaskLoader::getBaseFilePath(const std::string& srcName) const
