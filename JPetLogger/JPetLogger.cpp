@@ -18,16 +18,17 @@
 #include "./JPetLogger.h"
 #include "../JPetLoggerInclude.h"
 
+
 #if JPET_SCREEN_OUTPUT == 1
 bool JPetLogger::fIsLogFile = false;
 #else
 bool JPetLogger::fIsLogFile = true;
 #endif
-const char* JPetLogger::fFileName = "JPet.log";
 
+const std::string JPetLogger::fFileName = JPetLogger::generateFilename();
 
 void JPetLogger::dateAndTime() {
-  std::ofstream log(fFileName, std::ios_base::app);
+  std::ofstream log(fFileName.c_str(), std::ios_base::app);
   std::streambuf* originalCoutBuffer = 0; 
   // we redirect std::cout to a file 
   if (fIsLogFile) {
@@ -54,7 +55,7 @@ void JPetLogger::dateAndTime() {
 
 
 void JPetLogger::logMessage(const char* func, const char* msg, MessageType type) {
-  std::ofstream log(fFileName, std::ios_base::app);
+  std::ofstream log(fFileName.c_str(), std::ios_base::app);
   std::streambuf* originalCoutBuffer = 0; 
   // we redirect std::cout to a file 
   if (fIsLogFile) {

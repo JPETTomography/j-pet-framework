@@ -14,10 +14,6 @@
  */
 
 #include "./JPetParamBank.h"
-#include <boost/lexical_cast.hpp>
-#include <boost/regex.hpp>
-#include <algorithm>
-#include <memory>
 
 ClassImp (JPetParamBank);
 
@@ -25,7 +21,6 @@ JPetParamBank::JPetParamBank():fDummy(false){}
 JPetParamBank::JPetParamBank(const bool d):fDummy(d){}
 const bool JPetParamBank::isDummy()const{return fDummy;}
 JPetParamBank::JPetParamBank(const JPetParamBank& paramBank):fDummy(false){
-
   copyMapValues(fScintillators, paramBank.fScintillators);
   copyMapValues(fPMs, paramBank.fPMs);
   copyMapValues(fPMCalibs, paramBank.fPMCalibs);
@@ -39,16 +34,6 @@ JPetParamBank::JPetParamBank(const JPetParamBank& paramBank):fDummy(false){
 
 JPetParamBank::~JPetParamBank()
 {
-  DEBUG("destructor of JPetParamBank");
-  //std::for_each(fScintillators.begin(), fScintillators.end(), std::default_delete<JPetScin>());
-  //std::for_each(fPMs.begin(), fPMs.end(), std::default_delete<JPetPM>());
-  //std::for_each(fPMCalibs.begin(), fPMCalibs.end(), std::default_delete<JPetPMCalib>());
-  //std::for_each(fFEBs.begin(), fFEBs.end(), std::default_delete<JPetFEB>());
-  //std::for_each(fBarrelSlots.begin(), fBarrelSlots.end(), std::default_delete<JPetBarrelSlot>());
-  //std::for_each(fLayers.begin(), fLayers.end(), std::default_delete<JPetLayer>());
-  //std::for_each(fFrames.begin(), fFrames.end(), std::default_delete<JPetFrame>());
-  //std::for_each(fTOMBChannels.begin(), fTOMBChannels.end(), std::default_delete<JPetTOMBChannel>());
-  //clear();
 }
 
 void JPetParamBank::clear()
@@ -65,61 +50,40 @@ void JPetParamBank::clear()
 }
 
 
-int JPetParamBank::getSize(JPetParamBank::ParamObjectType type) const
+int JPetParamBank::getSize(ParamObjectType type) const
 {
   int size = -1;
   switch (type) {
-  case kScintillator:
-    size = getScintillatorsSize();
-    break;
-  case kPM:
-    size = getPMsSize();
-    break;
-  case kPMCalib:
-    size = getPMCalibsSize();
-    break;
-  case kBarrelSlot:
-    size = getBarrelSlotsSize();
-    break;
-  case kLayer:
-    size = getLayersSize();
-    break;
-  case kFrame:
-    size = getFramesSize();
-    break;
-  case kFEB:
-    size = getFEBsSize();
-    break;
-  case kTRB:
-    size = getTRBsSize();
-    break;
-  case kTOMBChannel:
-    size = getTOMBChannelsSize();
-    break;
-  default:
-    ERROR("bad type");
-    break;
+    case kScintillator:
+      size = getScintillatorsSize();
+      break;
+    case kPM:
+      size = getPMsSize();
+      break;
+    case kPMCalib:
+      size = getPMCalibsSize();
+      break;
+    case kBarrelSlot:
+      size = getBarrelSlotsSize();
+      break;
+    case kLayer:
+      size = getLayersSize();
+      break;
+    case kFrame:
+      size = getFramesSize();
+      break;
+    case kFEB:
+      size = getFEBsSize();
+      break;
+    case kTRB:
+      size = getTRBsSize();
+      break;
+    case kTOMBChannel:
+      size = getTOMBChannelsSize();
+      break;
+    default:
+      ERROR("bad type");
+      break;
   }
   return size;
-}
-
-int JPetParamBank::getTOMBChannelFromDescription(std::string p_desc)
-{
-  // parsing the string description of a TOMB channel to extract the channel number
-  // convention: tast 4 characters of the description represent the number
-  const char * l_pattern = ".*\\s(\\d{1,4}).*";
-  boost::regex l_regex(l_pattern);
-  boost::smatch l_matches;
-
-  int l_TOMB_no = -1;
-
-  if (boost::regex_match(p_desc, l_matches, l_regex))
-  {
-    l_TOMB_no = boost::lexical_cast<int>( l_matches[1] );
-  } else
-  {
-    // @todo: handle parsing error somehow
-    ERROR( "Unable to parse TOMBInput description to get channel number." );
-  }
-  return l_TOMB_no;
 }
