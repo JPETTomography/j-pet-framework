@@ -36,7 +36,7 @@
  *
  */
 class JPetTreeHeader: public TObject{
- protected:
+ public:
   struct ProcessingStageInfo
   {
     std::string fModuleName;
@@ -56,10 +56,10 @@ class JPetTreeHeader: public TObject{
 
   inline int getRunNumber()  const { return fRunNo; }
   inline void setRunNumber(int p_run_no) { fRunNo = p_run_no; }
-  
+
   inline std::string getBaseFileName() const {return fBaseFilename;}
   inline void setBaseFileName(const char * p_name){ fBaseFilename = p_name; }
-  
+
   /// set source position in mm or -1 of no source was used
   inline double getSourcePosition() const { return fSourcePosition; }
   /// get source position in mm; -1 means no source was used
@@ -73,7 +73,7 @@ class JPetTreeHeader: public TObject{
 
   void setVariable(std::string name, std::string value);
   std::string getVariable(std::string name) const;
-  
+
 protected:
 
   /// auxilliary methods for the Print() functionality
