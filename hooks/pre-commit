@@ -1,0 +1,30 @@
+#!/bin/bash
+
+files=$(git diff --cached --name-only --diff-filter=ACM)
+
+fixedFiles=""
+for file in $files; do
+  if [[ $file =~ \.h$|\.cpp$ ]]; then
+    if extras/fix_style.pl $file; then
+      oldFile=$file".orig"
+      if [ -f $oldFile ]; then
+        fixedFiles+=$oldFile$'\n'
+      fi
+    else
+      echo "Failed to run style fixer, aborting commit."
+      exit 1
+    fi
+  fi
+done
+if [[ ! -z $fixedFiles ]]; then
+  echo "Some files from your commit have been fixed by astyle."
+  echo "The original files are listed below. Please verify the"
+  echo "changes are fine, add the changed files, remove originals"
+  echo "and try commiting again."
+  echo "The original files are:"
+  echo $fixedFiles
+  exit 1
+fi
+
+#Do not delete this line
+./hooks/run_local_hook.sh $@
