@@ -192,7 +192,7 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
 
 void JPetTaskIO::manageProgressBar(long long done, long long end)
 {
-  printf("\r[%6.4f%% %%]", setProgressBar(done, end));
+  printf("\r[%6.4f%%]", setProgressBar(done, end));
 }
 
 float JPetTaskIO::setProgressBar(int currentEventNumber, int numberOfEvents)
