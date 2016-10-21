@@ -31,7 +31,7 @@ JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
   ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
   ("param,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
   ("runId,i", po::value<int>(), "Run id.")
-  ("progressBar,b", "Progress bar.")
+  ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
   ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
   ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.");
 }
@@ -100,16 +100,6 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
     }
   }
 
-  if (isProgressBarSet(variablesMap)) {
-    int l_progressBar = variablesMap["progressBar"].as<int>();
-
-    if (l_progressBar != 0 && l_progressBar != 1) {
-      ERROR("Wrong parameter of progressbar.");
-      std::cerr << "Wrong parameter of progressbar: " << l_progressBar << std::endl;
-      return false;
-    }
-  }
-
   if (isLocalDBSet(variablesMap)) {
     std::string localDBName = getLocalDBName(variablesMap);
     if ( !JPetCommonTools::ifFileExisting(localDBName) ) {
@@ -139,13 +129,13 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
 
   /// Check if output path exists
   if (isOutputPath(variablesMap)) {
-      auto dir = getOutputPath(variablesMap);
-      if (!JPetCommonTools::isDirectory(dir)) {
-        ERROR("Output directory : " + dir + " does not exist.");
-        std::cerr << "Output directory: " << dir << " does not exist" << std::endl;
-        return false;
-      }
-  } 
+    auto dir = getOutputPath(variablesMap);
+    if (!JPetCommonTools::isDirectory(dir)) {
+      ERROR("Output directory : " + dir + " does not exist.");
+      std::cerr << "Output directory: " << dir << " does not exist" << std::endl;
+      return false;
+    }
+  }
   return true;
 }
 
