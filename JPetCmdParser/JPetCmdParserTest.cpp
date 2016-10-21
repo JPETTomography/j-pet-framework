@@ -203,7 +203,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
   ("range,r", po::value<std::vector<int>>(), "Range of events to process.")
   ("param,p", po::value<std::string>(), "File with TRB numbers.")
   ("runId,i", po::value<int>(), "Run id.")
-  ("progressBar,b", po::value<int>(), "Progress bar.")
+  ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
   ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
   ("localDBCreate,L", po::value<std::string>(), "Where to save the parameter database.")
   ;
@@ -225,10 +225,10 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
   BOOST_REQUIRE(firstOption.getFirstEvent() == 2);
   BOOST_REQUIRE(firstOption.getLastEvent() == 4);
   BOOST_REQUIRE(firstOption.getRunNumber() == 231);
-  BOOST_REQUIRE(firstOption.isProgressBar() == true);
-  BOOST_REQUIRE(firstOption.isLocalDB() == true);
+  BOOST_REQUIRE(firstOption.isProgressBar());
+  BOOST_REQUIRE(firstOption.isLocalDB());
   BOOST_REQUIRE(firstOption.getLocalDB() == std::string("unitTestData/JPetCmdParserTest/input.json"));
-  BOOST_REQUIRE(firstOption.isLocalDBCreate() == true);
+  BOOST_REQUIRE(firstOption.isLocalDBCreate());
   BOOST_REQUIRE(firstOption.getLocalDBCreate() == std::string("output.json"));
 }
 
@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
   BOOST_REQUIRE(firstOption.getRunNumber() == 231);
   BOOST_REQUIRE(firstOption.isProgressBar() == false);
   BOOST_REQUIRE(firstOption.isLocalDB() == false);
-  BOOST_REQUIRE(firstOption.isLocalDBCreate() == true);
+  BOOST_REQUIRE(firstOption.isLocalDBCreate());
   BOOST_REQUIRE(firstOption.getLocalDBCreate() == std::string("output.json"));
 }
 
@@ -336,7 +336,7 @@ BOOST_AUTO_TEST_CASE(checkWrongOutputPath)
   ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
   ("param,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
   ("runId,i", po::value<int>(), "Run id.")
-  ("progressBar,b", "Progress bar.")
+  ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
   ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
   ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.");
 
