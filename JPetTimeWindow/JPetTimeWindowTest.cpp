@@ -29,7 +29,6 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetTimeWindow test;
-  BOOST_REQUIRE(test.size() == 0);
   BOOST_REQUIRE(test.getNumberOfSigCh() == 0);
   BOOST_REQUIRE(test.getSigChVect().size() == 0);
 
@@ -43,7 +42,6 @@ BOOST_AUTO_TEST_CASE( some_channels )
   test.addCh(ch_test2);
   test.addCh(ch_test3);
 
-  BOOST_REQUIRE(test.size() == 3);
   BOOST_REQUIRE(test.getNumberOfSigCh() == 3);
   BOOST_REQUIRE(test.getSigChVect().size() == 3);
   double epsilon = 0.001;
