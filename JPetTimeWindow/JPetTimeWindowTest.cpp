@@ -13,15 +13,6 @@
 //  gErrorIgnoreLevel = 7000;
 
 
-/// class JPetTimeWindow:
-///  JPetTimeWindow();
-///  void AddCh(JPetSigCh& new_ch);
-///  inline size_t size() const ;
-///  inline size_t getNumberOfSigCh() const;
-///  inline const std::vector<JPetSigCh> & getSigChVect() const;
-///  inline JPetSigCh & operator[](int i) const;
-///  virtual JPetTimeWindow();
-
 
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
