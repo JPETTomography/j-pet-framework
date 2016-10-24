@@ -38,7 +38,7 @@ public :
 
   bool process(); /// That was private. I made it public to run without threads.
 private:
-  void createScopeTaskAndAddToTaskList();
+  bool createScopeTaskAndAddToTaskList();
   static void* processProxy(void*);
   bool processFromCmdLineArgs(int);
   void unpackFile();
