@@ -46,19 +46,19 @@ JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int p
 
 bool JPetTaskExecutor::process()
 {
-  if(!processFromCmdLineArgs(fProcessedFile)) {
+  if (!processFromCmdLineArgs(fProcessedFile)) {
     ERROR("Error in processFromCmdLineArgs");
     return false;
   }
   for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
     JPetOptions::Options currOpts = fOptions.getOptions();
     if (currentTask != fTasks.begin()) {
-    /// Ignore the event range options for all but the first task.
+      /// Ignore the event range options for all but the first task.
       currOpts = JPetOptions::resetEventRange(currOpts);
-   /// For all but the first task, 
-   /// the input path must be changed if 
-   /// the output path argument -o was given, because the input
-   /// data for them will lay in the location defined by -o.
+      /// For all but the first task,
+      /// the input path must be changed if
+      /// the output path argument -o was given, because the input
+      /// data for them will lay in the location defined by -o.
       auto outPath  = currOpts.at("outputPath");
       if (!outPath.empty()) {
         currOpts.at("inputFile") = outPath + JPetCommonTools::extractPathFromFile(currOpts.at("inputFile")) + JPetCommonTools::extractFileNameFromFullPath(currOpts.at("inputFile"));
@@ -107,7 +107,10 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
   auto inputFileType = fOptions.getInputFileType();
   auto inputFile = fOptions.getInputFile();
   if (inputFileType == JPetOptions::kScope) {
-    createScopeTaskAndAddToTaskList();
+    if (!createScopeTaskAndAddToTaskList()) {
+      ERROR("Scope task not added correctly!!!");
+      return false;
+    }
   } else if (inputFileType == JPetOptions::kHld) {
     long long nevents = fOptions.getTotalEvents();
     if (nevents > 0) {
@@ -121,7 +124,7 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
   return true;
 }
 
-void JPetTaskExecutor::createScopeTaskAndAddToTaskList()
+bool JPetTaskExecutor::createScopeTaskAndAddToTaskList()
 {
   JPetScopeLoader* module = new JPetScopeLoader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
   assert(module);
@@ -129,8 +132,10 @@ void JPetTaskExecutor::createScopeTaskAndAddToTaskList()
   auto scopeFile = fOptions.getScopeConfigFile();
   if (!fParamManager->getParametersFromScopeConfig(scopeFile)) {
     ERROR("Unable to generate Param Bank from Scope Config");
+    return false;
   }
   fTasks.push_front(module);
+  return true;
 }
 
 void JPetTaskExecutor::unpackFile()
