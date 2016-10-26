@@ -84,13 +84,13 @@ void JPetTaskIO::terminate()
   assert(fHeader);
   assert(fStatistics);
   assert(fAuxilliaryData);
-  
+
   fWriter->writeHeader(fHeader);
 
   fWriter->writeObject(fStatistics->getHistogramsTable(), "Stats");
 
   fWriter->writeObject(fAuxilliaryData, "Auxilliary Data");
-  
+
   // store the parametric objects in the ouptut ROOT file
   getParamManager().saveParametersToFile(
     fWriter);
@@ -164,7 +164,7 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
     // read the Auxilliary data from input file
     // or create it if it was non-existent
     fAuxilliaryData = dynamic_cast<JPetAuxilliaryData*>(fReader->getObjectFromFile("Auxilliary Data"));
-    
+
     // add info about this module to the processing stages' history in Tree header
     fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0,
                           JPetCommonTools::getTimeString());
@@ -181,7 +181,7 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
   assert(fWriter);
   if (fTask) {
     fTask->setWriter(fWriter);
-    if(!fAuxilliaryData){
+    if (!fAuxilliaryData) {
       fAuxilliaryData = new JPetAuxilliaryData();
     }
     fTask->setStatistics(fStatistics);
@@ -193,7 +193,7 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
 
 void JPetTaskIO::manageProgressBar(long long done, long long end)
 {
-  printf("\r[%6.4f%% %%]", setProgressBar(done, end));
+  printf("\r[%6.1f%%]", setProgressBar(done, end));
 }
 
 float JPetTaskIO::setProgressBar(int currentEventNumber, int numberOfEvents)
