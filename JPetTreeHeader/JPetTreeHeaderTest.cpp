@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE(emptyHeader){
 	BOOST_REQUIRE_EQUAL(treeHeader.getProcessingStageInfo(10).fModuleDescription, "description not set");
 	BOOST_REQUIRE_EQUAL(treeHeader.getProcessingStageInfo(12).fModuleVersion, -1);
 	BOOST_REQUIRE_EQUAL(treeHeader.getProcessingStageInfo(12).fCreationTime, "-1");
-	BOOST_REQUIRE_EQUAL(treeHeader.getVariable( " " ), " "); 
+	BOOST_REQUIRE_EQUAL(treeHeader.getVariable( "" ), ""); 
 }
 
 BOOST_AUTO_TEST_CASE(checkingEmptyStage){
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(headerWithVariable){
 	JPetTreeHeader treeHeader;
 	treeHeader.setVariable("name", "value");
 	BOOST_REQUIRE_EQUAL(treeHeader.getVariable("name"), "value");
-	BOOST_REQUIRE_EQUAL(treeHeader.getVariable("blank name"), " ");
+	BOOST_REQUIRE_EQUAL(treeHeader.getVariable("blank name"), "");
 }
 
 

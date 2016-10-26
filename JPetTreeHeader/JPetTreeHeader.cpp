@@ -123,5 +123,5 @@ void JPetTreeHeader::setVariable(std::string name, std::string value){
  */
 std::string JPetTreeHeader::getVariable(std::string name) const {
 	if(fDictionary.find(name)!= fDictionary.end()) return fDictionary.at(name);
-	else return " ";
+	else return "";
 }
