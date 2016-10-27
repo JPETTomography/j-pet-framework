@@ -38,9 +38,6 @@ public:
 
   void addCh(JPetSigCh& new_ch);
 
-  inline size_t size() const {
-    return fSigChannels.size();
-  }
   inline size_t getNumberOfSigCh() const {
     return fSigChannels.size();
   }
