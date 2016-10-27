@@ -13,15 +13,6 @@
 //  gErrorIgnoreLevel = 7000;
 
 
-/// class JPetTimeWindow:
-///  JPetTimeWindow();
-///  void AddCh(JPetSigCh& new_ch);
-///  inline size_t size() const ;
-///  inline size_t getNumberOfSigCh() const;
-///  inline const std::vector<JPetSigCh> & getSigChVect() const;
-///  inline JPetSigCh & operator[](int i) const;
-///  virtual JPetTimeWindow();
-
 
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
@@ -29,7 +20,6 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetTimeWindow test;
-  BOOST_REQUIRE(test.size() == 0);
   BOOST_REQUIRE(test.getNumberOfSigCh() == 0);
   BOOST_REQUIRE(test.getSigChVect().size() == 0);
 
@@ -43,7 +33,6 @@ BOOST_AUTO_TEST_CASE( some_channels )
   test.addCh(ch_test2);
   test.addCh(ch_test3);
 
-  BOOST_REQUIRE(test.size() == 3);
   BOOST_REQUIRE(test.getNumberOfSigCh() == 3);
   BOOST_REQUIRE(test.getSigChVect().size() == 3);
   double epsilon = 0.001;
