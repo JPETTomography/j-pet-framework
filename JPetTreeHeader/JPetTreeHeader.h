@@ -93,7 +93,7 @@ protected:
   std::vector<ProcessingStageInfo> fStages;
   std::map<std::string, std::string> fDictionary;
 
-  ClassDef(JPetTreeHeader, 3);
+  ClassDef(JPetTreeHeader, 4);
 };
 
 #endif
