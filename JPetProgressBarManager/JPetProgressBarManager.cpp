@@ -14,6 +14,7 @@
  */
 
 #include "JPetProgressBarManager.h"
+#include <stdio.h>
 
 void JPetProgressBarManager::display(long long done, long long end) const
 {
