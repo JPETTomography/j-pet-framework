@@ -68,7 +68,7 @@ public:
 
   inline void setIndex(unsigned int index) { fIndex = index; }
 
-  ClassDef(JPetTimeWindow, 1);
+  ClassDef(JPetTimeWindow, 2);
 
 private:
   std::vector<JPetSigCh> fSigChannels; 
