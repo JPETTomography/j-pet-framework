@@ -16,8 +16,6 @@
 #ifndef JPETPROGRESSBARMANAGER_H
 #define JPETPROGRESSBARMANAGER_H
 
-#include <stdio.h>
-
 /**
  * @brief Class managing the progress bar used in while processing events.
  *
