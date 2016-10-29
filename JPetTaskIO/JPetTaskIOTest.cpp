@@ -15,7 +15,7 @@ char* convertStringToCharP(const std::string& s)
   return pc;
 }
 
-std::vector<char*> createArgs(const std::string& commandLine) 
+std::vector<char*> createArgs(const std::string& commandLine)
 {
   std::istringstream iss(commandLine);
   std::vector<std::string> args {std::istream_iterator<std::string>{iss},
@@ -26,20 +26,18 @@ std::vector<char*> createArgs(const std::string& commandLine)
   return args_char;
 }
 
-
-
 BOOST_AUTO_TEST_CASE(progressBarTest)
 {
-    JPetTaskIO taskIO;
-    BOOST_REQUIRE_EQUAL(taskIO.setProgressBar(5, 100), 5);
-    taskIO.manageProgressBar(5, 100);
+  JPetTaskIO taskIO;
+  taskIO.displayProgressBar(5, 100);
 }
-class JPetTaskIO_test:public JPetTaskIO{
+class JPetTaskIO_test: public JPetTaskIO
+{
 public:
-	JPetTaskIO_test(){}
-	virtual ~JPetTaskIO_test(){}
-	
-	using JPetTaskIO::setUserLimits;
+  JPetTaskIO_test() {}
+  virtual ~JPetTaskIO_test() {}
+
+  using JPetTaskIO::setUserLimits;
 };
 BOOST_AUTO_TEST_CASE( setUserLimits)
 {
@@ -55,7 +53,7 @@ BOOST_AUTO_TEST_CASE( setUserLimits)
   auto opt = options.front().getOptions();
   JPetOptions optObject(opt);
   JPetTaskIO_test task;
-  task.setUserLimits(optObject,10000, first,last); 
+  task.setUserLimits(optObject, 10000, first, last);
   BOOST_REQUIRE_EQUAL(first, 1000);
   BOOST_REQUIRE_EQUAL(last, 1001);
 }
@@ -74,10 +72,9 @@ BOOST_AUTO_TEST_CASE( setUserLimits2 )
   auto opt = options.front().getOptions();
   JPetOptions optObject(opt);
   JPetTaskIO_test task;
-  task.setUserLimits(optObject,1, first,last); 
+  task.setUserLimits(optObject, 1, first, last);
   BOOST_REQUIRE_EQUAL(first, 0);
   BOOST_REQUIRE_EQUAL(last, 0);
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()
