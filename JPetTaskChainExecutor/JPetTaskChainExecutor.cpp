@@ -36,7 +36,8 @@ JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorCh
   if (taskGeneratorChain) {
     for (auto taskGenerator : *ftaskGeneratorChain) {
       auto task = taskGenerator();
-      task->setParamManager(fParamManager); // maybe that should not be here
+      ///@todo change it
+      (dynamic_cast<JPetTaskIO*>(task))->setParamManager(fParamManager);
       fTasks.push_back(task);
     }
   } else {
@@ -67,9 +68,11 @@ bool JPetTaskChainExecutor::process()
     auto taskCurr = dynamic_cast<JPetTask*> (dynamic_cast<JPetTaskLoader*>(*currentTask)->getTask());
     auto taskName = taskCurr->GetName();
     INFO(Form("Starting task: %s", taskName));
-    (*currentTask)->init(currOpts);
-    (*currentTask)->exec();
-    (*currentTask)->terminate();
+    /// @todo fix it
+    auto taskRunnerCurr =  dynamic_cast<JPetTaskIO*> (*currentTask);
+    taskRunnerCurr->init(currOpts);
+    taskRunnerCurr->exec();
+    taskRunnerCurr->terminate();
     INFO(Form("Finished task: %s", taskName));
   }
   return true;
