@@ -91,4 +91,11 @@ void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long neve
     unpacker.exec();
 }
 
-
+JPetParamManager* JPetTaskChainExecutorUtils::generateParamManager(const JPetOptions& options)
+{
+  if (options.isLocalDB()) {
+    return new JPetParamManager(new JPetParamGetterAscii(options.getLocalDB()));
+  } else {
+    return new JPetParamManager();
+  }
+}
