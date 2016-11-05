@@ -21,12 +21,9 @@
 #include <functional> // for TaskGenerator declaration
 #include <vector> // for TaskGeneratorChain declaration
 #include "../JPetParamManager/JPetParamManager.h"
-#include "../JPetUnpacker/JPetUnpacker.h"
 #include "../JPetOptions/JPetOptions.h"
 
 #include "../JPetTaskRunnerInterface/JPetTaskRunnerInterface.h"
-//class JPetTaskInterface;
-//using TaskGenerator = std::function< JPetTaskInterface* () >;
 using TaskGenerator = std::function< JPetTaskRunnerInterface* () >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
@@ -43,15 +40,11 @@ public :
 
   bool process(); /// That was private. I made it public to run without threads.
 private:
-  bool createScopeTaskAndAddToTaskList();
   static void* processProxy(void*);
-  bool processFromCmdLineArgs();
-  void unpackFile(const char* filename, const long long nevents);
+  bool preprocessing(const JPetOptions& options, JPetParamManager* manager, std::list<JPetTaskRunnerInterface*>& tasks);
 
   int fInputSeqId;
   JPetParamManager* fParamManager;
-  JPetUnpacker fUnpacker;
-  //std::list<JPetTaskInterface*> fTasks;
   std::list<JPetTaskRunnerInterface*> fTasks;
   TaskGeneratorChain* ftaskGeneratorChain;
   JPetOptions fOptions;

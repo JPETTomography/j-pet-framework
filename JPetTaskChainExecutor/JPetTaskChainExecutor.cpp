@@ -16,11 +16,10 @@
 #include "JPetTaskChainExecutor.h"
 #include <cassert>
 #include "../JPetTaskInterface/JPetTaskInterface.h"
-#include "../JPetScopeLoader/JPetScopeLoader.h"
-#include "../JPetTaskLoader/JPetTaskLoader.h"
 #include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
 #include "../JPetLoggerInclude.h"
+#include "JPetTaskChainExecutorUtils.h"
 
 
 JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
@@ -45,10 +44,16 @@ JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorCh
   }
 }
 
+bool JPetTaskChainExecutor::preprocessing(const JPetOptions& options, JPetParamManager* manager, std::list<JPetTaskRunnerInterface*>& tasks)
+{
+  JPetTaskChainExecutorUtils utils;
+  return utils.process(options, manager, tasks);
+}
+
 bool JPetTaskChainExecutor::process()
 {
-  if (!processFromCmdLineArgs()) {
-    ERROR("Error in processFromCmdLineArgs");
+  if (!preprocessing(fOptions, fParamManager, fTasks)) {
+    ERROR("Error in preprocessing");
     return false;
   }
   for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
@@ -91,74 +96,6 @@ TThread* JPetTaskChainExecutor::run()
   assert(thread);
   thread->Run();
   return thread;
-}
-
-bool JPetTaskChainExecutor::processFromCmdLineArgs()
-{
-  auto runNum = fOptions.getRunNumber();
-  if (runNum >= 0) {
-    try {
-      fParamManager->fillParameterBank(runNum);
-    } catch (...) {
-      ERROR("Param bank was not generated correctly.\n The run number used:" + JPetCommonTools::intToString(runNum));
-      return false;
-    }
-    if (fOptions.isLocalDBCreate()) {
-      JPetParamSaverAscii saver;
-      saver.saveParamBank(fParamManager->getParamBank(), runNum, fOptions.getLocalDBCreate());
-    }
-  }
-
-  auto inputFileType = fOptions.getInputFileType();
-  auto inputFile = fOptions.getInputFile();
-  if (inputFileType == JPetOptions::kScope) {
-    if (!createScopeTaskAndAddToTaskList()) {
-      ERROR("Scope task not added correctly!!!");
-      return false;
-    }
-  } else if (inputFileType == JPetOptions::kHld) {
-    long long nevents = fOptions.getTotalEvents();
-    unpackFile(inputFile, nevents);
-  }
-  //Assumption that only HLD files can be zipped!!!!!! - Sz.N.
-  else if ( inputFileType == JPetOptions::kZip) {
-    INFO( std::string("Unzipping file before unpacking") );
-    if ( !JPetCommonTools::unzipFile(inputFile) )
-      ERROR( std::string("Problem with unpacking file: ") + inputFile );
-    long long nevents = fOptions.getTotalEvents();
-    INFO( std::string("Unpacking") );
-    unpackFile( JPetCommonTools::stripFileNameSuffix( std::string(inputFile) ).c_str(), nevents);
-  }
-
-  if (fOptions.getInputFileType() == JPetOptions::kUndefinedFileType)
-    ERROR( Form("Unknown file type provided for file: %s", fOptions.getInputFile()) );
-
-  return true;
-}
-
-bool JPetTaskChainExecutor::createScopeTaskAndAddToTaskList()
-{
-  JPetScopeLoader* module = new JPetScopeLoader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
-  assert(module);
-  module->setParamManager(fParamManager);
-  auto scopeFile = fOptions.getScopeConfigFile();
-  if (!fParamManager->getParametersFromScopeConfig(scopeFile)) {
-    ERROR("Unable to generate Param Bank from Scope Config");
-    return false;
-  }
-  fTasks.push_front(module);
-  return true;
-}
-
-void JPetTaskChainExecutor::unpackFile(const char* filename, const long long nevents)
-{
-  if (nevents > 0) {
-    fUnpacker.setParams( filename, nevents);
-    WARNING(std::string("Even though the range of events was set, only the first ") + JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
-  } else {
-    fUnpacker.setParams( filename );
-  }
-  fUnpacker.exec();
 }
 
 JPetTaskChainExecutor::~JPetTaskChainExecutor()
