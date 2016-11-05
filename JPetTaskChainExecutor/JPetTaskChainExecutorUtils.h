@@ -34,5 +34,6 @@ public:
   bool process(const JPetOptions& options, JPetParamManager* fParamManager, std::list<JPetTaskRunnerInterface*>& tasks);
   void unpackFile(const char* filename, long long nevents);
   bool createScopeTaskAndAddToTaskList(const JPetOptions& options, JPetParamManager* paramMgr, std::list<JPetTaskRunnerInterface*>& tasks);
+  static JPetParamManager* generateParamManager(const  JPetOptions& options);
 };
 #endif /*  !JPETTASKCHAINEXECUTORUTILS_H */
