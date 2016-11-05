@@ -44,7 +44,7 @@ public:
   virtual void exec();
   virtual void terminate();
   virtual ~JPetTaskIO();
-  virtual void addSubTask(JPetTaskInterface* subtask);
+  virtual void addTask(JPetTaskInterface* subtask);
   virtual JPetTask* getSubTask() const;
 
   void setOptions(const JPetOptions& opts);

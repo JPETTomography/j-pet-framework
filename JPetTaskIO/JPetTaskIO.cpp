@@ -100,7 +100,7 @@ void JPetTaskIO::terminate()
   fReader->closeFile();
 
 }
-void JPetTaskIO::addSubTask(JPetTaskInterface* subtask)
+void JPetTaskIO::addTask(JPetTaskInterface* subtask)
 {
   fTask = dynamic_cast<JPetTask*>(subtask);
 }
