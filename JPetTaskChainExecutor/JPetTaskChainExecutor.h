@@ -24,8 +24,10 @@
 #include "../JPetUnpacker/JPetUnpacker.h"
 #include "../JPetOptions/JPetOptions.h"
 
-class JPetTaskInterface;
-using TaskGenerator = std::function< JPetTaskInterface* () >;
+#include "../JPetTaskRunnerInterface/JPetTaskRunnerInterface.h"
+//class JPetTaskInterface;
+//using TaskGenerator = std::function< JPetTaskInterface* () >;
+using TaskGenerator = std::function< JPetTaskRunnerInterface* () >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
 /**
@@ -49,7 +51,8 @@ private:
   int fInputSeqId;
   JPetParamManager* fParamManager;
   JPetUnpacker fUnpacker;
-  std::list<JPetTaskInterface*> fTasks;
+  //std::list<JPetTaskInterface*> fTasks;
+  std::list<JPetTaskRunnerInterface*> fTasks;
   TaskGeneratorChain* ftaskGeneratorChain;
   JPetOptions fOptions;
 };
