@@ -99,11 +99,13 @@ void JPetTaskIO::terminate()
   fReader->closeFile();
 
 }
-void JPetTaskIO::addTask(JPetTaskInterface* subtask)
+
+void JPetTaskIO::setTask(JPetTaskInterface* subtask)
 {
   fTask = dynamic_cast<JPetTask*>(subtask);
 }
-JPetTask* JPetTaskIO::getSubTask() const
+
+JPetTaskInterface* JPetTaskIO::getTask() const
 {
   return fTask;
 }
