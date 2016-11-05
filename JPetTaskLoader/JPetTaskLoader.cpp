@@ -29,7 +29,7 @@ JPetTaskLoader::JPetTaskLoader(const char* in_file_type,
   fInFileType(in_file_type),
   fOutFileType(out_file_type)
 {
-  addTask(taskToExecute);
+  setTask(taskToExecute);
 }
 
 
