@@ -64,12 +64,13 @@ bool JPetTaskChainExecutor::process()
         currOpts.at("inputFile") = outPath + JPetCommonTools::extractPathFromFile(currOpts.at("inputFile")) + JPetCommonTools::extractFileNameFromFullPath(currOpts.at("inputFile"));
       }
     }
-
-    INFO(Form("Starting task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->getSubTask()->GetName()));
+    auto taskCurr = dynamic_cast<JPetTask*> (dynamic_cast<JPetTaskLoader*>(*currentTask)->getTask());
+    auto taskName = taskCurr->GetName();
+    INFO(Form("Starting task: %s", taskName));
     (*currentTask)->init(currOpts);
     (*currentTask)->exec();
     (*currentTask)->terminate();
-    INFO(Form("Finished task: %s", dynamic_cast<JPetTaskLoader*>(*currentTask)->getSubTask()->GetName()));
+    INFO(Form("Finished task: %s", taskName));
   }
   return true;
 }
