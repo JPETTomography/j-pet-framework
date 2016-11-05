@@ -88,8 +88,7 @@ void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long neve
   } else {
     unpacker.setParams(filename);
   }
-<<<<<<< HEAD
-  unpacker.exec();
+    unpacker.exec();
 }
 
 JPetParamManager* JPetTaskChainExecutorUtils::generateParamManager(const JPetOptions& options)
@@ -100,9 +99,3 @@ JPetParamManager* JPetTaskChainExecutorUtils::generateParamManager(const JPetOpt
     return new JPetParamManager();
   }
 }
-=======
-    unpacker.exec();
-}
-
-
->>>>>>> Add JPeTaskChainExecutorUtils
