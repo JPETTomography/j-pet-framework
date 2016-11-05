@@ -22,6 +22,6 @@ class JPetTaskRunnerInterface
 {
 public:
   virtual ~JPetTaskRunnerInterface() {};
-  virtual void addSubTask(JPetTaskInterface*) = 0;
+  virtual void addTask(JPetTaskInterface*) = 0;
 };
 #endif /*  !JPETTASKRUNNERINTERFACE_H */
