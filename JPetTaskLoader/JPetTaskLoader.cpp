@@ -29,7 +29,7 @@ JPetTaskLoader::JPetTaskLoader(const char* in_file_type,
   fInFileType(in_file_type),
   fOutFileType(out_file_type)
 {
-  addSubTask(taskToExecute);
+  addTask(taskToExecute);
 }
 
 
@@ -46,7 +46,7 @@ void JPetTaskLoader::init(const JPetOptions::Options& opts)
   newOpts.at("outputFile") = outFile;
   newOpts.at("outputFileType") = fOutFileType;
   setOptions(JPetOptions(newOpts));
-  
+
   //here we should call some function to parse options
   std::string inputFilename(fOptions.getInputFile());
   std::string outputPath(fOptions.getOutputPath());
@@ -57,7 +57,7 @@ void JPetTaskLoader::init(const JPetOptions::Options& opts)
 
 std::string JPetTaskLoader::generateProperNameFile(const std::string& srcFilename, const std::string& fileType) const
 {
-  auto baseFileName = getBaseFilePath(srcFilename); 
+  auto baseFileName = getBaseFilePath(srcFilename);
   if (!fileType.empty()) {
     baseFileName = baseFileName + "." + fileType;
   }
@@ -76,7 +76,7 @@ std::string JPetTaskLoader::getBaseFilePath(const std::string& srcName) const
     name.erase( pos );
   }
   boost::filesystem::path bare_name(name);
-  
+
   return (dir / bare_name).native();
 }
 
