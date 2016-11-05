@@ -24,14 +24,11 @@
 
 JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
   fInputSeqId(processedFileId),
+  fParamManager(0),
   ftaskGeneratorChain(taskGeneratorChain),
   fOptions(opt)
 {
-  if (fOptions.isLocalDB()) {
-    fParamManager = new JPetParamManager(new JPetParamGetterAscii(fOptions.getLocalDB()));
-  } else {
-    fParamManager = new JPetParamManager();
-  }
+  fParamManager = JPetTaskChainExecutorUtils::generateParamManager(fOptions);
   if (taskGeneratorChain) {
     for (auto taskGenerator : *ftaskGeneratorChain) {
       auto task = taskGenerator();
@@ -107,3 +104,4 @@ JPetTaskChainExecutor::~JPetTaskChainExecutor()
     }
   }
 }
+
