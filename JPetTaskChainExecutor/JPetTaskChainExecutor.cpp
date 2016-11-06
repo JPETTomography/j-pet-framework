@@ -20,6 +20,7 @@
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
 #include "../JPetLoggerInclude.h"
 #include "JPetTaskChainExecutorUtils.h"
+#include <memory>
 
 
 JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
@@ -67,7 +68,8 @@ bool JPetTaskChainExecutor::process()
         currOpts.at("inputFile") = outPath + JPetCommonTools::extractPathFromFile(currOpts.at("inputFile")) + JPetCommonTools::extractFileNameFromFullPath(currOpts.at("inputFile"));
       }
     }
-    auto taskCurr = dynamic_cast<JPetTask*> (dynamic_cast<JPetTaskLoader*>(*currentTask)->getTask());
+    //auto taskCurr = dynamic_cast<JPetTask*> (dynamic_cast<JPetTaskLoader*>(*currentTask)->getTask());
+    auto taskCurr = std::dynamic_pointer_cast<JPetTask>((*currentTask)->getTask());
     auto taskName = taskCurr->GetName();
     INFO(Form("Starting task: %s", taskName));
     /// @todo fix it
