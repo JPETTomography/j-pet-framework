@@ -16,8 +16,6 @@
 #ifndef JPETTASK_H
 #define JPETTASK_H
 #include "../JPetTaskInterface/JPetTaskInterface.h"
-#include "../JPetTaskRunnerInterface/JPetTaskRunnerInterface.h"
-//#include "../JPetTaskInterfaceTmp/JPetTaskInterfaceTmp.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetStatistics/JPetStatistics.h"
 #include "../JPetAuxilliaryData/JPetAuxilliaryData.h"
