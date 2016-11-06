@@ -14,6 +14,7 @@
  */
 
 #include "JPetTaskIO.h"
+#include <memory>
 #include <cassert>
 #include "../JPetReader/JPetReader.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
@@ -24,7 +25,6 @@
 
 
 JPetTaskIO::JPetTaskIO():
-  fTask(0),
   fEventNb(-1),
   fWriter(0),
   fReader(0),
@@ -66,7 +66,8 @@ void JPetTaskIO::exec()
   setUserLimits(fOptions, totalEvents,  firstEvent, lastEvent);
   assert(lastEvent >= 0);
   for (auto i = firstEvent; i <= lastEvent; i++) {
-    fTask->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
+
+    (std::dynamic_pointer_cast<JPetTask>(fTask))->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
     if (fOptions.isProgressBar()) {
       displayProgressBar(i, lastEvent);
     }
@@ -98,16 +99,6 @@ void JPetTaskIO::terminate()
   fWriter->closeFile();
   fReader->closeFile();
 
-}
-
-void JPetTaskIO::setTask(JPetTaskInterface* subtask)
-{
-  fTask = dynamic_cast<JPetTask*>(subtask);
-}
-
-JPetTaskInterface* JPetTaskIO::getTask() const
-{
-  return fTask;
 }
 
 void JPetTaskIO::setOptions(const JPetOptions& opts)
@@ -166,7 +157,8 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
     fAuxilliaryData = dynamic_cast<JPetAuxilliaryData*>(fReader->getObjectFromFile("Auxilliary Data"));
 
     // add info about this module to the processing stages' history in Tree header
-    fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0,
+    auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
+    fHeader->addStageInfo(task->GetName(), task->GetTitle(), 0,
                           JPetCommonTools::getTimeString());
 
   } else {
@@ -180,12 +172,13 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
   if (fTask) {
-    fTask->setWriter(fWriter);
+    auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
+    task->setWriter(fWriter);
     if (!fAuxilliaryData) {
       fAuxilliaryData = new JPetAuxilliaryData();
     }
-    fTask->setStatistics(fStatistics);
-    fTask->setAuxilliaryData(fAuxilliaryData);
+    task->setStatistics(fStatistics);
+    task->setAuxilliaryData(fAuxilliaryData);
   } else {
     WARNING("the subTask does not exist, so Write was not passed to it");
   }
@@ -207,10 +200,6 @@ const JPetParamBank& JPetTaskIO::getParamBank()
 
 JPetTaskIO::~JPetTaskIO()
 {
-  if (fTask) {
-    delete fTask;
-    fTask = 0;
-  }
   if (fWriter) {
     delete fWriter;
     fWriter = 0;

@@ -36,7 +36,6 @@ bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamMa
     }
   }
   auto inputFileType = options.getInputFileType();
-  auto inputFile = options.getInputFile();
   if (inputFileType == JPetOptions::kScope) {
     if (!createScopeTaskAndAddToTaskList(options, paramMgr, tasks)) {
       ERROR("Scope task not added correctly!!!");
