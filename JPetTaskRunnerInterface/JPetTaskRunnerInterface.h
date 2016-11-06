@@ -17,13 +17,14 @@
 #define JPETTASKRUNNERINTERFACE_H
 
 #include "../JPetTaskInterface/JPetTaskInterface.h"
+#include <memory>
 
 class JPetTaskRunnerInterface
 {
 public:
   virtual ~JPetTaskRunnerInterface() {};
-  virtual void setTask(JPetTaskInterface*) = 0;
-  virtual JPetTaskInterface* getTask() const = 0;
+  virtual void setTask(std::shared_ptr<JPetTaskInterface>) = 0;
+  virtual std::shared_ptr<JPetTaskInterface> getTask() const = 0;
   virtual void runTask() = 0;
 };
 #endif /*  !JPETTASKRUNNERINTERFACE_H */
