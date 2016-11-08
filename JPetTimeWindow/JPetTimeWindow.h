@@ -38,9 +38,6 @@ public:
 
   void addCh(JPetSigCh& new_ch);
 
-  inline size_t size() const {
-    return fSigChannels.size();
-  }
   inline size_t getNumberOfSigCh() const {
     return fSigChannels.size();
   }
@@ -71,7 +68,7 @@ public:
 
   inline void setIndex(unsigned int index) { fIndex = index; }
 
-  ClassDef(JPetTimeWindow, 1);
+  ClassDef(JPetTimeWindow, 2);
 
 private:
   std::vector<JPetSigCh> fSigChannels; 

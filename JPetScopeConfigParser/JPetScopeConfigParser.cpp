@@ -35,7 +35,7 @@ scope_config::Config JPetScopeConfigParser::getConfig(const std::string& configF
   using boost::property_tree::ptree;
   Config config;
   auto prop_tree = getJsonContent(configFileName);
-  if(prop_tree.size() > 1 ) {
+  if (prop_tree.size() > 1 ) {
     ERROR("More than one config found in the configuration file! Only the last set will be used!");
   }
   for (ptree::const_iterator it = prop_tree.begin(); it != prop_tree.end(); ++it) {
@@ -56,13 +56,13 @@ scope_config::Config JPetScopeConfigParser::getConfig(std::string configName, bo
   config.fBSlots = getBSlots(configContent);
   config.fPMs = getPMs(configContent);
   config.fScins = getScins(configContent);
-  return config; 
+  return config;
 }
 
 std::vector<JPetScopeConfigParser::InputDirectory> JPetScopeConfigParser::getInputDirectories(const std::string& configFileLocation, const scope_config::Config& config) const
 {
   std::vector<std::string> directories;
-  auto path = configFileLocation + "/" +config.fLocation;
+  auto path = configFileLocation + "/" + config.fLocation;
   auto currDir = generateDirectories(path, transformToNumbers(config.fCollimatorPositions));
   directories.insert(directories.end(), currDir.begin(), currDir.end());
   return directories;
@@ -88,7 +88,9 @@ JPetScopeConfigParser::DirFileContainer JPetScopeConfigParser::getInputDirectori
     container.reserve(filenames.size());
     std::transform(
       directories.begin(), directories.end(), filenames.begin(), std::back_inserter(container),
-      [](InputDirectory dir, FakeInputFile file) { return std::make_pair(dir, file); }
+    [](InputDirectory dir, FakeInputFile file) {
+      return std::make_pair(dir, file);
+    }
     );
   }
   return getElementsWithExistingDirs(container);
@@ -96,12 +98,14 @@ JPetScopeConfigParser::DirFileContainer JPetScopeConfigParser::getInputDirectori
 
 
 JPetScopeConfigParser::DirFileContainer JPetScopeConfigParser::getElementsWithExistingDirs(
-  const JPetScopeConfigParser::DirFileContainer& dirsAndFiles) const 
+  const JPetScopeConfigParser::DirFileContainer& dirsAndFiles) const
 {
   JPetScopeConfigParser::DirFileContainer result;
-  std::copy_if(dirsAndFiles.begin(), dirsAndFiles.end(), std::back_inserter(result),  
-      [](const DirFilePair dirFilePair) { return JPetCommonTools::isDirectory(dirFilePair.first); }
-    );
+  std::copy_if(dirsAndFiles.begin(), dirsAndFiles.end(), std::back_inserter(result),
+  [](const DirFilePair dirFilePair) {
+    return JPetCommonTools::isDirectory(dirFilePair.first);
+  }
+              );
   return result;
 }
 
@@ -125,7 +129,7 @@ std::vector<int> JPetScopeConfigParser::transformToNumbers(const std::vector<std
 }
 
 /// The directory is generated according to the following pattern:
-/// base_path/position 
+/// base_path/position
 /// e.g. "unittests/data/1"
 std::vector<std::string>  JPetScopeConfigParser::generateDirectories(
   const std::string& basePath,
@@ -268,4 +272,32 @@ boost::property_tree::ptree JPetScopeConfigParser::getJsonContent(const std::str
     ERROR(message);
   }
   return propTree;
+}
+
+
+
+/// We store id of given types in a set. Set can contain only unique id, therefore in case of
+/// duplication the set size will be smaller that orginal vector size.
+bool JPetScopeConfigParser::areObjectsWithDuplicatedIds(const scope_config::Config& config) const
+{
+  using namespace scope_config;
+  std::set<int> bSlotIdSet;
+  for (const auto &  bslot : config.fBSlots) {
+    bSlotIdSet.insert(bslot.fId);
+  }
+  if (bSlotIdSet.size() < config.fBSlots.size()) return true;
+
+  std::set<int> pmIdSet;
+  for (const auto &  pm : config.fPMs) {
+    pmIdSet.insert(pm.fId);
+  }
+  if (pmIdSet.size() < config.fPMs.size()) return true;
+
+  std::set<int> scinIdSet;
+  for (const auto &  scin : config.fScins) {
+    scinIdSet.insert(scin.fId);
+  }
+  if (scinIdSet.size() < config.fScins.size()) return true;
+
+  return false;
 }

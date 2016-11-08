@@ -84,7 +84,7 @@ public:
   }
 
   inline bool isProgressBarSet(const po::variables_map& variablesMap) const {
-    return (bool)variablesMap.count("progressBar");
+    return variablesMap["progressBar"].as<bool>();
   }
 
   static inline bool isLocalDBSet(const po::variables_map& variablesMap) {
