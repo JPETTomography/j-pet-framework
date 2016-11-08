@@ -69,7 +69,7 @@ void JPetTaskIO::exec()
   for (auto i = firstEvent; i <= lastEvent; i++) {
     fTask->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
     if (fOptions.isProgressBar()) {
-      manageProgressBar(i, lastEvent);
+      displayProgressBar(i, lastEvent);
     }
     fTask->exec();
     fReader->nextEvent();
@@ -191,14 +191,10 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
   }
 }
 
-void JPetTaskIO::manageProgressBar(long long done, long long end)
-{
-  printf("\r[%6.1f%%]", setProgressBar(done, end));
-}
 
-float JPetTaskIO::setProgressBar(int currentEventNumber, int numberOfEvents)
+void JPetTaskIO::displayProgressBar(int currentEventNumber, int numberOfEvents) const
 {
-  return ( ((float)currentEventNumber) / numberOfEvents ) * 100;
+  return fProgressBar.display(currentEventNumber, numberOfEvents);
 }
 
 
