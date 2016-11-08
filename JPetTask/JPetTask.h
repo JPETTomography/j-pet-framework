@@ -10,11 +10,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetTask.h 
+ *  @file JPetTask.h
  */
 
-#ifndef JPETTASK_H 
-#define JPETTASK_H 
+#ifndef JPETTASK_H
+#define JPETTASK_H
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetStatistics/JPetStatistics.h"
@@ -24,10 +24,10 @@
 
 class JPetWriter;
 
-class JPetTask: public JPetTaskInterface, public TNamed
+class JPetTask: public JPetTaskInterface
 {
- public:
-  JPetTask(const char * name="", const char * description="");
+public:
+  JPetTask(const char* name = "", const char* description = "");
   virtual void init(const JPetTaskInterface::Options&);
   virtual void exec();
   virtual void terminate();
@@ -38,14 +38,24 @@ class JPetTask: public JPetTaskInterface, public TNamed
   virtual void setWriter(JPetWriter*) {};
   virtual void setEvent(TNamed* ev);
   const JPetParamBank& getParamBank();
-  JPetStatistics & getStatistics();
-  JPetAuxilliaryData & getAuxilliaryData();
-  virtual TNamed* getEvent() {return fEvent;}
+  JPetStatistics& getStatistics();
+  JPetAuxilliaryData& getAuxilliaryData();
+  virtual TNamed* getEvent() {
+    return fEvent;
+  }
 
- protected:
+  virtual const char* GetName() {
+    return fName.GetName();
+  }
+  virtual const char* GetTitle() {
+    return fName.GetTitle();
+  }
+
+protected:
+  TNamed fName;
   TNamed* fEvent;
   JPetParamManager* fParamManager;
-  JPetStatistics * fStatistics;
-  JPetAuxilliaryData * fAuxilliaryData;
+  JPetStatistics* fStatistics;
+  JPetAuxilliaryData* fAuxilliaryData;
 };
 #endif /*  !JPETTASK_H */

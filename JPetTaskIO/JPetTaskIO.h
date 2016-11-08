@@ -21,6 +21,8 @@
 #include "../JPetAuxilliaryData/JPetAuxilliaryData.h"
 #include "../JPetOptions/JPetOptions.h"
 #include "../JPetTask/JPetTask.h"
+#include "../JPetProgressBarManager/JPetProgressBarManager.h"
+
 
 class JPetWriter;
 class JPetReader;
@@ -46,17 +48,18 @@ public:
   virtual JPetTask* getSubTask() const;
 
   void setOptions(const JPetOptions& opts);
-  inline JPetOptions getOptions() const { return fOptions; }
+  inline JPetOptions getOptions() const {
+    return fOptions;
+  }
 
-  void manageProgressBar(long long done, long long end);
-  float setProgressBar(int currentEventNumber, int numberOfEvents);
+  void displayProgressBar(int currentEventNumber, int numberOfEvents) const;
 
   void setParamManager(JPetParamManager* paramManager);
 
 protected:
   virtual void createInputObjects(const char* inputFilename);
   virtual void createOutputObjects(const char* outputFilename);
-  void setUserLimits(const JPetOptions& opts,const long long totEventsFromReader, long long& firstEvent, long long& lastEvent) const;
+  void setUserLimits(const JPetOptions& opts, const long long totEventsFromReader, long long& firstEvent, long long& lastEvent) const;
 
   const JPetParamBank& getParamBank();
   JPetParamManager& getParamManager();
@@ -68,8 +71,8 @@ protected:
   JPetReaderInterface* fReader;
   JPetTreeHeader* fHeader;
   JPetStatistics* fStatistics;
-  JPetAuxilliaryData * fAuxilliaryData;
+  JPetAuxilliaryData* fAuxilliaryData;
   JPetParamManager* fParamManager;
-
+  JPetProgressBarManager fProgressBar;
 };
 #endif /*  !JPETTASKIO_H */
