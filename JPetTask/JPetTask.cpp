@@ -17,12 +17,12 @@
 #include "./JPetTask.h"
 
 
-JPetTask::JPetTask(const char * name, const char * description):
-TNamed(name, description),
-fEvent(0),
-fParamManager(0),
-fStatistics(0),
-fAuxilliaryData(0)
+JPetTask::JPetTask(const char* name, const char* description):
+  fName(name, description),
+  fEvent(0),
+  fParamManager(0),
+  fStatistics(0),
+  fAuxilliaryData(0)
 {
 }
 
@@ -31,45 +31,52 @@ void JPetTask::init(const JPetTaskInterface::Options&)
 {
 }
 
-void JPetTask::exec() 
+void JPetTask::exec()
 {
   // do something with event
 }
 
-void JPetTask::terminate() 
+void JPetTask::terminate()
 {
 }
 
-void JPetTask::setEvent(TNamed* ev){
+void JPetTask::setEvent(TNamed* ev)
+{
   fEvent = ev;
 }
 
-void JPetTask::setParamManager(JPetParamManager* paramManager) {
+void JPetTask::setParamManager(JPetParamManager* paramManager)
+{
   fParamManager = paramManager;
 }
 
-const JPetParamBank& JPetTask::getParamBank() {
+const JPetParamBank& JPetTask::getParamBank()
+{
   DEBUG("JPetTask");
   assert(fParamManager);
   return fParamManager->getParamBank();
 }
 
-void JPetTask::setStatistics(JPetStatistics * statistics) {
+void JPetTask::setStatistics(JPetStatistics* statistics)
+{
   assert(statistics);
   fStatistics = statistics;
 }
 
-JPetAuxilliaryData & JPetTask::getAuxilliaryData(){
+JPetAuxilliaryData& JPetTask::getAuxilliaryData()
+{
   assert(fAuxilliaryData);
   return *fAuxilliaryData;
 }
 
-void JPetTask::setAuxilliaryData(JPetAuxilliaryData* auxData) {
+void JPetTask::setAuxilliaryData(JPetAuxilliaryData* auxData)
+{
   assert(auxData);
   fAuxilliaryData = auxData;
 }
 
-JPetStatistics & JPetTask::getStatistics() {
+JPetStatistics& JPetTask::getStatistics()
+{
   assert(fStatistics);
   return *fStatistics;
 }
