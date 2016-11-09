@@ -42,7 +42,7 @@ public:
     return variablesMap["file"].as< std::vector<std::string> >();
   }
   inline bool isCorrectFileType(const std::string& type) const {
-    if (type == "hld" || type == "root" || type == "scope" || type == "gate") {
+    if (type == "hld" || type == "detector" || type == "scope" || type == "gate") {
       return true;
     }
     return false;

@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(petOptionsBasicTest)
         {"lastEvent", "8246821 0xffff 020"},
         {"runId", "2001, A Space Odyssey"},
         {"progressBar", "true"},
-        {"inputFileType", "root"},
+        {"inputFileType", "detector"},
         {"outputFileType", "scope"}
     };
 
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(petOptionsBasicTest)
     int runNumberHex = petOptions.getRunNumber();
     BOOST_REQUIRE_EQUAL(runNumberHex, 2001);
     BOOST_REQUIRE_EQUAL(petOptions.isProgressBar(), true);
-    BOOST_REQUIRE_EQUAL(petOptions.getInputFileType(), JPetOptions::FileType::kRoot);
+    BOOST_REQUIRE_EQUAL(petOptions.getInputFileType(), JPetOptions::FileType::kDetector);
     BOOST_REQUIRE_EQUAL(petOptions.getOutputFileType(), JPetOptions::FileType::kScope);
     BOOST_REQUIRE_EQUAL(JPetCommonTools::mapComparator(petOptions.getOptions(), options), true);
     BOOST_REQUIRE_EQUAL(JPetCommonTools::mapComparator(petOptions.getDefaultOptions(), options), false);
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(getTotalEventsTest)
         {"lastEvent", "-1"},
         {"runId", "2001, A Space Odyssey"},
         {"progressBar", "true"},
-        {"inputFileType", "root"},
+        {"inputFileType", "detector"},
         {"outputFileType", "scope"}
     };
 
