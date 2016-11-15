@@ -78,6 +78,7 @@ void JPetOptions::setStringToFileTypeConversion()
     {"scope", kScope},
     {"raw", kRaw},
     {"hld", kHld},
+    {"zip", kZip},
     {"phys.eve", kPhysEve},
     {"phys.hit", kPhysHit},
     {"phys.sig", kPhysSig},
