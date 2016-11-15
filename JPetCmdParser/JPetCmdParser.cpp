@@ -86,7 +86,7 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
   if (!isCorrectFileType(getFileType(variablesMap))) {
     ERROR("Wrong type of file.");
     std::cerr << "Wrong type of file: " << getFileType(variablesMap) << std::endl;
-    std::cerr << "Possible options: hld, root or scope" << std::endl;
+    std::cerr << "Possible options: hld, zip, root or scope" << std::endl;
     return false;
   }
 
