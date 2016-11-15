@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
 
   auto typeOptionDescription = optionDescription.find("type", true);
   //cout << typeOptionDescription.description() << endl;
-  BOOST_REQUIRE(std::string(typeOptionDescription.description()) == "Type of file: hld, root or scope.");
+  BOOST_REQUIRE(std::string(typeOptionDescription.description()) == "Type of file: hld, zip, root or scope.");
   //cout << typeOptionDescription.format_name() << endl;
   BOOST_REQUIRE(std::string(typeOptionDescription.format_name()) == "-t [ --type ]");
 
