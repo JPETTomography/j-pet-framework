@@ -15,6 +15,7 @@
 
 #include "JPetTaskExecutor.h"
 #include <cassert>
+#include <stdlib.h>
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetScopeLoader/JPetScopeLoader.h"
 #include "../JPetTaskLoader/JPetTaskLoader.h"
@@ -104,6 +105,7 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
       saver.saveParamBank(fParamManager->getParamBank(), runNum, fOptions.getLocalDBCreate());
     }
   }
+  
   auto inputFileType = fOptions.getInputFileType();
   auto inputFile = fOptions.getInputFile();
   if (inputFileType == JPetOptions::kScope) {
@@ -121,7 +123,12 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
   else if( inputFileType == JPetOptions::kZip){
     INFO( std::string("Unzipping file before unpacking") );
     unzipFile();
+    
   }
+  
+  if(fOptions.getInputFileType() == JPetOptions::kUndefinedFileType)
+    ERROR( Form("Unknown file type provided for file: %s", fOptions.getInputFile()) );
+  
   return true;
 }
 
@@ -148,8 +155,10 @@ void JPetTaskExecutor::unpackFile()
 
 void JPetTaskExecutor::unzipFile()
 {
+  
   if( (fOptions.getInputFileType() == JPetOptions::kZip) ) {
-    std::cout<<"This should unzip"<<std::endl;
+    system(Form("gzip -d %s", fOptions.getInputFile() ) );
+    
   }
   else {
     WARNING("Input file is not zip and cannot be unzipped");
