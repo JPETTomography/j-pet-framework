@@ -100,6 +100,21 @@ BOOST_AUTO_TEST_CASE( parsingGate )
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kGate);
 }
 
+BOOST_AUTO_TEST_CASE( rootType )
+{
+  auto commandLine = "main.x -t root -f unitTestData/JPetCmdParserTest/test_384strips.root";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetCmdParser parser;
+  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  auto option = options.at(0);
+  BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCmdParserTest/test_384strips.root");
+  BOOST_REQUIRE(option.getInputFileType() == JPetOptions::kDetector);
+}
+
 ////ToDo: remake unit tests without calling private methods
 
 BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)

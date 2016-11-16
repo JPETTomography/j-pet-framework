@@ -20,6 +20,7 @@ class JPetCmdParser;
 
 #include "boost/program_options.hpp" // Library parsing command line arguments
 #include <string>
+#include <iostream>
 #include "../JPetOptions/JPetOptions.h"
 
 
@@ -42,6 +43,9 @@ public:
     return variablesMap["file"].as< std::vector<std::string> >();
   }
   inline bool isCorrectFileType(const std::string& type) const {
+    if (type == "root") {
+      std::cout << "The filetype \'root\' is deprecated! Use option detector instead e.g. -t detector" << std::endl;
+    }
     if (type == "hld" || type == "detector" || type == "scope" || type == "gate") {
       return true;
     }
