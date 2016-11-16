@@ -118,6 +118,10 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
     }
     unpackFile();
   }
+  else if( inputFileType == JPetOptions::kZip){
+    INFO( std::string("Unzipping file before unpacking") );
+    unzipFile();
+  }
   return true;
 }
 
@@ -141,6 +145,17 @@ void JPetTaskExecutor::unpackFile()
     WARNING("Input file is not hld and unpacker was supposed to be called!");
   }
 }
+
+void JPetTaskExecutor::unzipFile()
+{
+  if( (fOptions.getInputFileType() == JPetOptions::kZip) ) {
+    std::cout<<"This should unzip"<<std::endl;
+  }
+  else {
+    WARNING("Input file is not zip and cannot be unzipped");
+  }
+}
+
 
 JPetTaskExecutor::~JPetTaskExecutor()
 {
