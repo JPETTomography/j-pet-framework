@@ -31,8 +31,7 @@ class JPetTimeWindow: public TNamed
 {
 public:
 /// @todo think about changing TClonesArray to something else ? what about cleaning
-  JPetTimeWindow()
-  {
+  JPetTimeWindow(): fIndex(-1) {
     SetName("JPetTimeWindow");
   }
 
@@ -64,14 +63,18 @@ public:
    * Each TSlot (time window) in a HLD file is assigned an index number, counting from first TSlot in the file. This number may be useful if empty TSlots are skipped during analysis.
    * @oaram index a squential number of this TSlot counting from sirst TSlot in a HLD file
    */
-  inline unsigned int getIndex() const { return fIndex; }
+  inline unsigned int getIndex() const {
+    return fIndex;
+  }
 
-  inline void setIndex(unsigned int index) { fIndex = index; }
+  inline void setIndex(unsigned int index) {
+    fIndex = index;
+  }
 
   ClassDef(JPetTimeWindow, 2);
 
 private:
-  std::vector<JPetSigCh> fSigChannels; 
+  std::vector<JPetSigCh> fSigChannels;
   unsigned int fIndex; ///< sequential number of this TSlot in the HLD file
 };
 
