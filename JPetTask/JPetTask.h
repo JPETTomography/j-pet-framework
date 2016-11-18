@@ -28,10 +28,10 @@ class JPetTask: public JPetTaskInterface
 {
 public:
   JPetTask(const char* name = "", const char* description = "");
-  virtual void init(const JPetTaskInterface::Options&);
-  virtual void exec();
-  virtual void terminate();
-  virtual void setParamManager(JPetParamManager* paramManager);
+  virtual void init (const JPetTaskInterface::Options&) override;
+  virtual void exec() override;
+  virtual void terminate() override;
+  virtual void setParamManager(JPetParamManager* paramManager) override;
   virtual void setStatistics(JPetStatistics* statistics);
   virtual void setAuxilliaryData(JPetAuxilliaryData* auxData);
   virtual void setWriter(JPetWriter*) {};
