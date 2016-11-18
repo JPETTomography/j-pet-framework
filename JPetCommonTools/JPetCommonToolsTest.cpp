@@ -140,4 +140,9 @@ BOOST_AUTO_TEST_CASE(appendSlashToPathIfAbsent)
   BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("test"), "test/");
 }
 
+BOOST_AUTO_TEST_CASE(tryToUnzipSomethingNotExistingFile)
+{
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::unzipFile("kiko.gz"), false);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
