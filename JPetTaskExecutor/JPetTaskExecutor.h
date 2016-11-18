@@ -42,7 +42,6 @@ private:
   static void* processProxy(void*);
   bool processFromCmdLineArgs(int);
   void unpackFile();
-  void unzipFile();
   int fProcessedFile;
   JPetParamManager* fParamManager;
   JPetUnpacker fUnpacker;
