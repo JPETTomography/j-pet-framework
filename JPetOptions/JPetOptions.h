@@ -19,8 +19,9 @@
 #include <string>
 #include <map>
 #include "../JPetCommonTools/JPetCommonTools.h"
+#include "../JPetOptionsInterface/JPetOptionsInterface.h"
 
-class JPetOptions
+class JPetOptions: public JPetOptionsInterface
 {
 
 public:
@@ -56,7 +57,7 @@ public:
     return std::stoll(fOptions.at("lastEvent"));
   }
   long long getTotalEvents() const;
-  
+
   inline int getRunNumber() const {
     return std::stoi(fOptions.at("runId"));
   }
@@ -93,7 +94,7 @@ public:
 
   void resetEventRange();
   static Options resetEventRange(const Options& srcOpts);
-  
+
 
   static  Options getDefaultOptions() {
     return kDefaultOptions;
