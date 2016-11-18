@@ -118,8 +118,7 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
     JPetCommonTools::unzipFile(inputFile);
     long long nevents = fOptions.getTotalEvents();
     INFO( std::string("Unpacking") );
-    unpackFile(inputFile, nevents);
-    
+    unpackFile( JPetCommonTools::stripFileNameSuffix( std::string(inputFile) ).c_str(), nevents);    
   }
   
   if(fOptions.getInputFileType() == JPetOptions::kUndefinedFileType)
@@ -142,8 +141,6 @@ void JPetTaskExecutor::createScopeTaskAndAddToTaskList()
 
 void JPetTaskExecutor::unpackFile(const char* filename, const long long nevents)
 {
-  if (fOptions.getInputFileType() == JPetOptions::kHld) {
-    long long nevents = fOptions.getTotalEvents();
     if (nevents > 0) {
       fUnpacker.setParams( filename, nevents);
       WARNING(std::string("Even though the range of events was set, only the first ") + JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
@@ -151,9 +148,6 @@ void JPetTaskExecutor::unpackFile(const char* filename, const long long nevents)
       fUnpacker.setParams( filename );
     }
     fUnpacker.exec();
-  } else {
-    WARNING("Input file is not hld and unpacker was supposed to be called!");
-  }
 }
 
 
