@@ -113,6 +113,7 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
     long long nevents = fOptions.getTotalEvents();
     unpackFile(inputFile, nevents);
   }
+  //Assumption that only HLD files can be zipped!!!!!! - Sz.N.
   else if( inputFileType == JPetOptions::kZip){
     INFO( std::string("Unzipping file before unpacking") );
     JPetCommonTools::unzipFile(inputFile);
