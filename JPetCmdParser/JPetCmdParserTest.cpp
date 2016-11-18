@@ -84,6 +84,21 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kScope);
 }
 
+BOOST_AUTO_TEST_CASE( parsing_zip_file )
+{
+  auto commandLine = "main.x -t zip -f unitTestData/JPetCommonToolsTest/goodZip.gz";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+  
+  JPetCmdParser parser;
+  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  auto option = options.at(0);
+  BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCommonToolsTest/goodZip.gz");
+  BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kZip);
+}
+
 ////ToDo: remake unit tests without calling private methods
 
 BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
