@@ -111,31 +111,15 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
     createScopeTaskAndAddToTaskList();
   } else if (inputFileType == JPetOptions::kHld) {
     long long nevents = fOptions.getTotalEvents();
-    if (nevents > 0) {
-      fUnpacker.setParams(fOptions.getInputFile(), nevents);
-      WARNING(std::string("Even though the range of events was set, only the first ") + JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
-    } else {
-      fUnpacker.setParams(fOptions.getInputFile());
-    }
-    unpackFile();
+    unpackFile(inputFile, nevents);
   }
   else if( inputFileType == JPetOptions::kZip){
     INFO( std::string("Unzipping file before unpacking") );
     JPetCommonTools::unzipFile(inputFile);
-    //Changing file name to proper one after unzipping
-    std::string  sInputFile = inputFile;
-    sInputFile = sInputFile.substr(0, sInputFile.find(".gz"));
-    
-    inputFile = sInputFile.c_str();
-    // copied from above, since one cannot 
     long long nevents = fOptions.getTotalEvents();
-    if (nevents > 0) {
-      fUnpacker.setParams( inputFile, nevents);
-      WARNING(std::string("Even though the range of events was set, only the first ") + JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
-    } else {
-      fUnpacker.setParams( inputFile );
-    }
-    fUnpacker.exec();
+    INFO( std::string("Unpacking") );
+    unpackFile(inputFile, nevents);
+    
   }
   
   if(fOptions.getInputFileType() == JPetOptions::kUndefinedFileType)
@@ -156,9 +140,16 @@ void JPetTaskExecutor::createScopeTaskAndAddToTaskList()
   fTasks.push_front(module);
 }
 
-void JPetTaskExecutor::unpackFile()
+void JPetTaskExecutor::unpackFile(const char* filename, const long long nevents)
 {
   if (fOptions.getInputFileType() == JPetOptions::kHld) {
+    long long nevents = fOptions.getTotalEvents();
+    if (nevents > 0) {
+      fUnpacker.setParams( filename, nevents);
+      WARNING(std::string("Even though the range of events was set, only the first ") + JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
+    } else {
+      fUnpacker.setParams( filename );
+    }
     fUnpacker.exec();
   } else {
     WARNING("Input file is not hld and unpacker was supposed to be called!");
