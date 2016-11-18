@@ -15,7 +15,6 @@
 
 #include "JPetTaskExecutor.h"
 #include <cassert>
-#include <stdlib.h>
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetScopeLoader/JPetScopeLoader.h"
 #include "../JPetTaskLoader/JPetTaskLoader.h"
@@ -122,7 +121,7 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
   }
   else if( inputFileType == JPetOptions::kZip){
     INFO( std::string("Unzipping file before unpacking") );
-    unzipFile();
+    JPetCommonTools::unzipFile(inputFile);
     //Changing file name to proper one after unzipping
     std::string  sInputFile = inputFile;
     sInputFile = sInputFile.substr(0, sInputFile.find(".gz"));
@@ -164,11 +163,6 @@ void JPetTaskExecutor::unpackFile()
   } else {
     WARNING("Input file is not hld and unpacker was supposed to be called!");
   }
-}
-
-void JPetTaskExecutor::unzipFile()
-{  
-    system(Form("gzip -d %s", fOptions.getInputFile() ) );   
 }
 
 
