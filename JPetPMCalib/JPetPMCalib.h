@@ -47,7 +47,7 @@ public:
   
   virtual ~JPetPMCalib(void);
   
-  virtual int GetId(void) const { return id; };
+  virtual int GetID(void) const { return id; };
   virtual std::string GetNamePM(void) const { return name; };
   virtual float GetOpthv(void) const { return opthv; };
   virtual float GetECalConst1(void) const { return ECalConst1; };
