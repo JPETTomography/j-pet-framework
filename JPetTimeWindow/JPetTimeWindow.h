@@ -31,7 +31,7 @@ class JPetTimeWindow: public TNamed
 {
 public:
 /// @todo think about changing TClonesArray to something else ? what about cleaning
-  JPetTimeWindow(): fIndex(-1) {
+  JPetTimeWindow() {
     SetName("JPetTimeWindow");
   }
 
@@ -75,7 +75,7 @@ public:
 
 private:
   std::vector<JPetSigCh> fSigChannels;
-  unsigned int fIndex; ///< sequential number of this TSlot in the HLD file
+  unsigned int fIndex = 0; ///< sequential number of this TSlot in the HLD file
 };
 
 #endif
