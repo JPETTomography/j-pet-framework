@@ -134,7 +134,7 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
       fUnpacker.setParams( inputFile, nevents);
       WARNING(std::string("Even though the range of events was set, only the first ") + JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
     } else {
-      fUnpacker.setParams(inputFile);
+      fUnpacker.setParams( inputFile );
     }
     fUnpacker.exec();
   }
@@ -168,12 +168,7 @@ void JPetTaskExecutor::unpackFile()
 
 void JPetTaskExecutor::unzipFile()
 {  
-  if( (fOptions.getInputFileType() == JPetOptions::kZip) ) {
     system(Form("gzip -d %s", fOptions.getInputFile() ) );   
-  }
-  else {
-    WARNING("Input file is not zip and cannot be unzipped");
-  }
 }
 
 
