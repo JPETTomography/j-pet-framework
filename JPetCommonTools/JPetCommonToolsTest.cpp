@@ -142,11 +142,11 @@ BOOST_AUTO_TEST_CASE(appendSlashToPathIfAbsent)
 
 BOOST_AUTO_TEST_CASE(tryToUnzipSomethingNotExistingFile)
 {
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::unzipFile("kiko.gz"), true);
+  BOOST_REQUIRE(JPetCommonTools::unzipFile("kiko.gz"));
   std::string initialPath= boost::filesystem::path(boost::filesystem::current_path()).string();
   initialPath = initialPath.substr(0, initialPath.find("build") );
   std::string wrongZipPath = initialPath + "j-pet-framework/unitTestData/JPetCommonToolsTest/wrongZip.gz";
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::unzipFile( wrongZipPath.c_str() ), true);
+  BOOST_REQUIRE(JPetCommonTools::unzipFile( wrongZipPath.c_str() ));
     
 }
 
