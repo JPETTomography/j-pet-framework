@@ -31,7 +31,6 @@ class boost::noncopyable;
 #include <algorithm>
 #include <cctype>
 #include <stdlib.h>
-#include <TString.h>
 
 class JPetCommonTools : public boost::noncopyable
 {
@@ -125,7 +124,7 @@ public:
   }
   
   inline static bool unzipFile(const char* filename){
-    if( system( Form("gzip -d %s", filename ) ) )
+    if( system( ( std::string("gzip -d ") + std::string(filename) ).c_str() ) )
       return false;
     else
       return true;
