@@ -125,7 +125,10 @@ public:
   }
   
   inline static bool unzipFile(const char* filename){
-    return system( Form("gzip -d %s", filename ) );   
+    if( system( Form("gzip -d %s", filename ) ) )
+      return false;
+    else
+      return true;
   }
 };
 
