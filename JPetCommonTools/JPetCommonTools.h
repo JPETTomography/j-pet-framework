@@ -30,8 +30,8 @@ class boost::noncopyable;
 #include <iomanip>
 #include <algorithm>
 #include <cctype>
-
-
+#include <stdlib.h>
+#include <TString.h>
 
 class JPetCommonTools : public boost::noncopyable
 {
@@ -122,6 +122,10 @@ public:
   
   inline static bool isDirectory( const std::string& dir) {
     return boost::filesystem::is_directory(dir);
+  }
+  
+  inline static bool unzipFile(const char* filename){
+    return system( Form("gzip -d %s", filename ) );   
   }
 };
 
