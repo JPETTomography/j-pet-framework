@@ -158,12 +158,12 @@ void JPetParamManager::fillParameterBank(const int run)
   for (auto & layerp : getLayers(run)) {
     auto & layer = *layerp.second;
     fBank->addLayer(layer);
-    fBank->getLayer(layer.getId()).setFrame(fBank->getFrame(layer.getFrame().getId()));
+    fBank->getLayer(layer.getID()).setFrame(fBank->getFrame(layer.getFrame().getId()));
   }
   for (auto & barrelSlotp : getBarrelSlots(run)) {
     auto & barrelSlot = *barrelSlotp.second;
     fBank->addBarrelSlot(barrelSlot);
-    fBank->getBarrelSlot(barrelSlot.getID()).setLayer(fBank->getLayer(barrelSlot.getLayer().getId()));
+    fBank->getBarrelSlot(barrelSlot.getID()).setLayer(fBank->getLayer(barrelSlot.getLayer().getID()));
   }
   for (auto & scinp : getScins(run)) {
     auto & scin = *scinp.second;
