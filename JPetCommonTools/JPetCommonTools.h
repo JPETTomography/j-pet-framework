@@ -124,6 +124,8 @@ public:
   }
   
   inline static bool unzipFile(const char* filename){
+    //system(...) is returning integer, 0 when everything went smoothly and error code when not
+    //here I just convert return value into boolean type - Sz.N.
     if( system( ( std::string("gzip -d ") + std::string(filename) ).c_str() ) )
       return false;
     else
