@@ -150,7 +150,7 @@ boost::property_tree::ptree JPetParamSaverAscii::barrelSlotToInfo(const JPetBarr
   info.put("theta1", bs.getTheta());
   info.put("frame_id", bs.getInFrameID());
 
-  info.put(objectsNames.at(ParamObjectType::kLayer)+"_id", bs.getLayer().getId());
+  info.put(objectsNames.at(ParamObjectType::kLayer)+"_id", bs.getLayer().getID());
   return info;
 }
 
