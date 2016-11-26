@@ -7,7 +7,8 @@
 SCP_INPUT=/home/framework_configs
 SCP_OUTPUT=./DBHandler/Config
 declare -a CFG_FILES=("configDB.cfg" "configDB.cfg.koza" "ReadMe.txt")
-SERVER=sphinx.if.uj.edu.pl
+#SERVER=sphinx.if.uj.edu.pl
+SERVER=koza.if.uj.edu.pl
 
 #for wget
 WGET_DIR="unitTestData"
