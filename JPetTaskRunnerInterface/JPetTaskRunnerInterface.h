@@ -17,7 +17,6 @@
 #define JPETTASKRUNNERINTERFACE_H
 
 #include "../JPetTaskInterface/JPetTaskInterface.h"
-#include <memory>
 
 class JPetTaskRunnerInterface
 {
