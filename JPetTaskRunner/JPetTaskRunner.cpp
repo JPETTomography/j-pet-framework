@@ -25,12 +25,12 @@ JPetTaskRunner::~JPetTaskRunner()
 {
 }
 
-void JPetTaskRunner::setTask(std::shared_ptr<JPetTaskInterface> subtask)
+void JPetTaskRunner::setTask(JPetTaskInterface* subtask)
 {
   fTask = subtask;
 }
 
-std::shared_ptr<JPetTaskInterface> JPetTaskRunner::getTask() const
+JPetTaskInterface* JPetTaskRunner::getTask() const
 {
   return fTask;
 }
