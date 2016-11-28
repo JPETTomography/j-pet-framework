@@ -209,7 +209,7 @@ BOOST_AUTO_TEST_CASE( single_object )
   BOOST_REQUIRE_CLOSE(barrelSlot->getTheta(), 5.5, epsilon);
   BOOST_REQUIRE_EQUAL(barrelSlot->getInFrameID(), 6);
 
-  BOOST_REQUIRE_EQUAL(barrelSlot->getLayer().getId(), layerFactory.getLayers().at(1)->getId());
+  BOOST_REQUIRE_EQUAL(barrelSlot->getLayer().getID(), layerFactory.getLayers().at(1)->getID());
 }
 
 BOOST_AUTO_TEST_CASE( two_objects )
@@ -226,7 +226,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   BOOST_REQUIRE_CLOSE(barrelSlot->getTheta(), 5.5, epsilon);
   BOOST_REQUIRE_EQUAL(barrelSlot->getInFrameID(), 6);
 
-  BOOST_REQUIRE_EQUAL(barrelSlot->getLayer().getId(), layerFactory.getLayers().at(1)->getId());
+  BOOST_REQUIRE_EQUAL(barrelSlot->getLayer().getID(), layerFactory.getLayers().at(1)->getID());
 
   barrelSlot = barrelSlots[5];
   BOOST_REQUIRE_EQUAL(barrelSlot->getID(), 5);
@@ -235,7 +235,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   BOOST_REQUIRE_CLOSE(barrelSlot->getTheta(), 6.5, epsilon);
   BOOST_REQUIRE_EQUAL(barrelSlot->getInFrameID(), 7);
 
-  BOOST_REQUIRE_EQUAL(barrelSlot->getLayer().getId(), layerFactory.getLayers().at(1)->getId());
+  BOOST_REQUIRE_EQUAL(barrelSlot->getLayer().getID(), layerFactory.getLayers().at(1)->getID());
 }
 
 BOOST_AUTO_TEST_CASE( missing_field )

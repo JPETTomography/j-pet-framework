@@ -149,7 +149,7 @@ public:
   /// Adds Layer to the Param Bank. If the Layer with the same id already exists in the Param Bank,
   /// the new element will not be added.
   inline void addLayer(JPetLayer layer) {
-    if (fLayers.insert(std::make_pair(layer.getId(), new JPetLayer(layer))).second == false) {
+    if (fLayers.insert(std::make_pair(layer.getID(), new JPetLayer(layer))).second == false) {
       WARNING("the layer with this id already exists in the ParamBank. It will not be added.");
     }
   }
