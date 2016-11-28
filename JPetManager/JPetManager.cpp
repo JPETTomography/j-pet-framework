@@ -16,16 +16,14 @@
 #include "./JPetManager.h"
 
 #include <cassert>
-#include <ctime>
 #include <string>
 
 #include "../JPetLoggerInclude.h"
-#include "../JPetScopeLoader/JPetScopeLoader.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetCmdParser/JPetCmdParser.h"
 
-#include <TDSet.h>
 #include <TThread.h>
+#include <TDSet.h>
 
 
 
@@ -39,29 +37,31 @@ JPetManager& JPetManager::getManager()
 bool JPetManager::run()
 {
   INFO( "======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
-  std::vector<JPetTaskExecutor*> executors;
+  std::vector<JPetTaskChainExecutor*> executors;
   std::vector<TThread*> threads;
-  auto i = 0;
+  auto inputDataSeq = 0;
+  /// For every input option, new TaskChainExecutor is created, which creates the chain of previously
+  /// registered tasks. The inputDataSeq is the identifier of given chain.
   for (auto opt : fOptions) {
-    JPetTaskExecutor* executor = new JPetTaskExecutor(fTaskGeneratorChain, i, opt);
+    JPetTaskChainExecutor* executor = new JPetTaskChainExecutor(fTaskGeneratorChain, inputDataSeq, opt);
     executors.push_back(executor);
-    if(!executor->process()) {
+    if (!executor->process()) {
       ERROR("While running process");
       return false;
     }
     //auto thr = executor->run();
     //if (thr) {
-      //threads.push_back(thr);
+    //threads.push_back(thr);
     //} else {
-      //ERROR("thread pointer is null");
+    //ERROR("thread pointer is null");
     //}
-    i++;
+    inputDataSeq++;
   }
   //for (auto thread : threads) {
-    //assert(thread);
-    //thread->Join();
+  //assert(thread);
+  //thread->Join();
   //}
-  for (auto& executor : executors) {
+  for (auto & executor : executors) {
     if (executor) {
       delete executor;
       executor = 0;
@@ -80,7 +80,7 @@ void JPetManager::parseCmdLine(int argc, char** argv)
 
 JPetManager::~JPetManager()
 {
-  /// delete shared caches for paramBanks  
+  /// delete shared caches for paramBanks
   /// @todo I think that should be changed
   JPetDBParamGetter::clearParamCache();
   JPetScopeParamGetter::clearParamCache();
