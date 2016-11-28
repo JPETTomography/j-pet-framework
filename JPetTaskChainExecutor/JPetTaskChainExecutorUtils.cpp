@@ -49,7 +49,7 @@ bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamMa
   /// and we will also unpack if from hld  after unzipping.
   else if ( inputFileType == JPetOptions::kZip) {
     INFO( std::string("Unzipping file before unpacking") );
-    if ( !JPetCommonTools::unzipFile(inputFile) ) {
+    if ( !unzipFile(inputFile) ) {
       ERROR( std::string("Problem with unpacking file: ") + inputFile );
       return false;
     } else {
