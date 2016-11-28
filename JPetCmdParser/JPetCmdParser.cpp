@@ -25,7 +25,7 @@ JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
 {
   fOptionsDescriptions.add_options()
   ("help,h", "Displays this help message.")
-  ("type,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, root or scope.")
+  ("type,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, zip, root or scope.")
   ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
   ("outputPath,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
   ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
@@ -86,7 +86,7 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
   if (!isCorrectFileType(getFileType(variablesMap))) {
     ERROR("Wrong type of file.");
     std::cerr << "Wrong type of file: " << getFileType(variablesMap) << std::endl;
-    std::cerr << "Possible options: hld, root or scope" << std::endl;
+    std::cerr << "Possible options: hld, zip, root or scope" << std::endl;
     return false;
   }
 
