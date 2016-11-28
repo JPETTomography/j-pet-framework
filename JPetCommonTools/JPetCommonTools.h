@@ -48,9 +48,9 @@ public:
     out << x;
     return out.str();
   }
-  
+
   static std::string doubleToString(double x);
-  
+
   static int stringToInt(const std::string& str);
 
   static bool to_bool(std::string str) {
@@ -74,8 +74,7 @@ public:
   /**
     * @brief returns the time std::string in the format dd.mm.yyyy HH:MM
     */
-  static std::string getTimeString()
-  {
+  static std::string getTimeString() {
     time_t _tm = time(NULL );
     struct tm* curtime = localtime ( &_tm );
     char buf[100];
@@ -83,23 +82,20 @@ public:
 
     return std::string( buf );
   }
-  
-  template <typename Map>
-  static bool mapComparator(Map const &lhs, Map const &rhs)
-  {
-      auto pred = [](decltype(*lhs.begin()) a, decltype(a) b)
-		      {
-			  return a.first == b.first
-			      && a.second == b.second;
-		      };
 
-      return lhs.size() == rhs.size()
-	  && std::equal(lhs.begin(), lhs.end(), rhs.begin(), pred);
+  template <typename Map>
+  static bool mapComparator(Map const& lhs, Map const& rhs) {
+    auto pred = [](decltype(*lhs.begin()) a, decltype(a) b) {
+      return a.first == b.first
+             && a.second == b.second;
+    };
+
+    return lhs.size() == rhs.size()
+           && std::equal(lhs.begin(), lhs.end(), rhs.begin(), pred);
   }
 
   ///removes the suffix of the file
-  inline static std::string stripFileNameSuffix(const std::string& filename)
-  {
+  inline static std::string stripFileNameSuffix(const std::string& filename) {
     return  boost::filesystem::change_extension(filename, "").string();
   }
   inline static std::string currentFullPath() {
@@ -115,21 +111,12 @@ public:
   }
 
   inline static std::string appendSlashToPathIfAbsent(const std::string& path) {
-    if (!path.empty() && path.back() != '/') return path +'/';
+    if (!path.empty() && path.back() != '/') return path + '/';
     else return path;
   }
-  
+
   inline static bool isDirectory( const std::string& dir) {
     return boost::filesystem::is_directory(dir);
-  }
-  
-  inline static bool unzipFile(const char* filename){
-    //system(...) is returning integer, 0 when everything went smoothly and error code when not
-    //here I just convert return value into boolean type - Sz.N.
-    if( system( ( std::string("gzip -d ") + std::string(filename) ).c_str() ) )
-      return false;
-    else
-      return true;
   }
 };
 
