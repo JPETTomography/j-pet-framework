@@ -35,13 +35,10 @@ public:
   void unpackFile(const char* filename, long long nevents);
   bool createScopeTaskAndAddToTaskList(const JPetOptions& options, JPetParamManager* paramMgr, std::list<JPetTaskRunnerInterface*>& tasks);
   static JPetParamManager* generateParamManager(const  JPetOptions& options);
-<<<<<<< HEAD
   /// system(...) is returning integer, 0 when everything went smoothly and error code when not.
   /// Here I just convert return value into boolean type - Sz.N.
   inline static bool unzipFile(const char* filename) {
     return !( system( ( std::string("gzip -d ") + std::string(filename) ).c_str() ) );
   }
-=======
->>>>>>> Extract generateParamManager method to JPetTaskExecutorUtils
 };
 #endif /*  !JPETTASKCHAINEXECUTORUTILS_H */
