@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   BOOST_CHECK_CLOSE(HVgain.first, 16.f, epsilon);
   BOOST_CHECK_CLOSE(HVgain.second, 32.f, epsilon);
 
-  BOOST_REQUIRE(bank.getPMCalib(256).GetId() == 256);
+  BOOST_REQUIRE(bank.getPMCalib(256).getID() == 256);
   BOOST_REQUIRE(bank.getPMCalib(256).GetNamePM() == "JPetPMCalibTest");
   BOOST_CHECK_CLOSE(bank.getPMCalib(256).GetOpthv(), 2.f, epsilon);
   BOOST_CHECK_CLOSE(bank.getPMCalib(256).GetECalConst1(), 4.f, epsilon);

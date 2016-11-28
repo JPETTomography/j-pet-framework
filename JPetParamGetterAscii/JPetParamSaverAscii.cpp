@@ -118,7 +118,7 @@ void JPetParamSaverAscii::fillPMCalibs(boost::property_tree::ptree & runContents
 boost::property_tree::ptree JPetParamSaverAscii::PMCalibToInfo(const JPetPMCalib & pmCalib)
 {
   boost::property_tree::ptree info;
-  info.put("id", pmCalib.GetId());
+  info.put("id", pmCalib.getID());
   info.put("name", pmCalib.GetNamePM());
   info.put("opthv", pmCalib.GetOpthv());
   info.put("c2e1", pmCalib.GetECalConst1());

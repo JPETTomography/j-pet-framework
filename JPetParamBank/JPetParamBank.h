@@ -81,7 +81,7 @@ public:
   /// Adds PMCalib to Param Bank. If the PMCalib with the same id already exists in the Param Bank,
   /// the new element will not be added.
   inline void addPMCalib(JPetPMCalib pmCalib) {
-    if (fPMCalibs.insert(std::make_pair(pmCalib.GetId(), new JPetPMCalib(pmCalib))).second == false) {
+    if (fPMCalibs.insert(std::make_pair(pmCalib.getID(), new JPetPMCalib(pmCalib))).second == false) {
       WARNING("the pmCalib with this id already exists in the ParamBank. It will not be added.");
     }
   }
