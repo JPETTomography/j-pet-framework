@@ -10,10 +10,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetTaskExecutor.cpp
+ *  @file JPetTaskChainExecutor.cpp
  */
 
-#include "JPetTaskExecutor.h"
+#include "JPetTaskChainExecutor.h"
 #include <cassert>
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetScopeLoader/JPetScopeLoader.h"
@@ -23,8 +23,8 @@
 #include "../JPetLoggerInclude.h"
 
 
-JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
-  fProcessedFile(processedFileId),
+JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
+  fInputSeqId(processedFileId),
   ftaskGeneratorChain(taskGeneratorChain),
   fOptions(opt)
 {
@@ -40,13 +40,13 @@ JPetTaskExecutor::JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int p
       fTasks.push_back(task);
     }
   } else {
-    ERROR("taskGeneratorChain is null while constructing JPetTaskExecutor");
+    ERROR("taskGeneratorChain is null while constructing JPetTaskChainExecutor");
   }
 }
 
-bool JPetTaskExecutor::process()
+bool JPetTaskChainExecutor::process()
 {
-  if (!processFromCmdLineArgs(fProcessedFile)) {
+  if (!processFromCmdLineArgs()) {
     ERROR("Error in processFromCmdLineArgs");
     return false;
   }
@@ -74,22 +74,22 @@ bool JPetTaskExecutor::process()
   return true;
 }
 
-void* JPetTaskExecutor::processProxy(void* runner)
+void* JPetTaskChainExecutor::processProxy(void* runner)
 {
   assert(runner);
-  static_cast<JPetTaskExecutor*>(runner)->process();
+  static_cast<JPetTaskChainExecutor*>(runner)->process();
   return 0;
 }
 
-TThread* JPetTaskExecutor::run()
+TThread* JPetTaskChainExecutor::run()
 {
-  TThread* thread = new TThread(to_string(fProcessedFile).c_str(), processProxy, (void*)this);
+  TThread* thread = new TThread(to_string(fInputSeqId).c_str(), processProxy, (void*)this);
   assert(thread);
   thread->Run();
   return thread;
 }
 
-bool JPetTaskExecutor::processFromCmdLineArgs(int)
+bool JPetTaskChainExecutor::processFromCmdLineArgs()
 {
   auto runNum = fOptions.getRunNumber();
   if (runNum >= 0) {
@@ -104,7 +104,7 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
       saver.saveParamBank(fParamManager->getParamBank(), runNum, fOptions.getLocalDBCreate());
     }
   }
-  
+
   auto inputFileType = fOptions.getInputFileType();
   auto inputFile = fOptions.getInputFile();
   if (inputFileType == JPetOptions::kScope) {
@@ -117,22 +117,22 @@ bool JPetTaskExecutor::processFromCmdLineArgs(int)
     unpackFile(inputFile, nevents);
   }
   //Assumption that only HLD files can be zipped!!!!!! - Sz.N.
-  else if( inputFileType == JPetOptions::kZip){
+  else if ( inputFileType == JPetOptions::kZip) {
     INFO( std::string("Unzipping file before unpacking") );
-    if( !JPetCommonTools::unzipFile(inputFile) )
+    if ( !JPetCommonTools::unzipFile(inputFile) )
       ERROR( std::string("Problem with unpacking file: ") + inputFile );
     long long nevents = fOptions.getTotalEvents();
     INFO( std::string("Unpacking") );
-    unpackFile( JPetCommonTools::stripFileNameSuffix( std::string(inputFile) ).c_str(), nevents);    
+    unpackFile( JPetCommonTools::stripFileNameSuffix( std::string(inputFile) ).c_str(), nevents);
   }
-  
-  if(fOptions.getInputFileType() == JPetOptions::kUndefinedFileType)
+
+  if (fOptions.getInputFileType() == JPetOptions::kUndefinedFileType)
     ERROR( Form("Unknown file type provided for file: %s", fOptions.getInputFile()) );
-  
+
   return true;
 }
 
-bool JPetTaskExecutor::createScopeTaskAndAddToTaskList()
+bool JPetTaskChainExecutor::createScopeTaskAndAddToTaskList()
 {
   JPetScopeLoader* module = new JPetScopeLoader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
   assert(module);
@@ -146,19 +146,18 @@ bool JPetTaskExecutor::createScopeTaskAndAddToTaskList()
   return true;
 }
 
-void JPetTaskExecutor::unpackFile(const char* filename, const long long nevents)
+void JPetTaskChainExecutor::unpackFile(const char* filename, const long long nevents)
 {
-    if (nevents > 0) {
-      fUnpacker.setParams( filename, nevents);
-      WARNING(std::string("Even though the range of events was set, only the first ") + JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
-    } else {
-      fUnpacker.setParams( filename );
-    }
-    fUnpacker.exec();
+  if (nevents > 0) {
+    fUnpacker.setParams( filename, nevents);
+    WARNING(std::string("Even though the range of events was set, only the first ") + JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
+  } else {
+    fUnpacker.setParams( filename );
+  }
+  fUnpacker.exec();
 }
 
-
-JPetTaskExecutor::~JPetTaskExecutor()
+JPetTaskChainExecutor::~JPetTaskChainExecutor()
 {
   for (auto & task : fTasks) {
     if (task) {

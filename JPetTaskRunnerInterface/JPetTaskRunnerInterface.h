@@ -10,25 +10,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetTaskInterface.h
+ *  @file JPetTaskRunnerInterface.h
  */
 
-#ifndef JPETTASKINTERFACE_H
-#define JPETTASKINTERFACE_H
+#ifndef JPETTASKRUNNERINTERFACE_H
+#define JPETTASKRUNNERINTERFACE_H
 
-#include <map>
-#include <string>
+#include "../JPetTaskInterface/JPetTaskInterface.h"
 
-class JPetParamManager;
-
-class JPetTaskInterface
+class JPetTaskRunnerInterface
 {
 public:
-  typedef std::map<std::string, std::string> Options;
-  virtual ~JPetTaskInterface() {}
-  virtual void init(const Options& options) = 0;
-  virtual void exec() = 0;
-  virtual void terminate() = 0;
-  virtual void setParamManager(JPetParamManager* paramManager) = 0;
+  virtual ~JPetTaskRunnerInterface() {};
+  virtual void addSubTask(JPetTaskInterface*) = 0;
 };
-#endif /*  !JPETTASKINTERFACE_H */
+#endif /*  !JPETTASKRUNNERINTERFACE_H */
