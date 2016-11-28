@@ -53,7 +53,7 @@ bool JPetUnpacker::exec()
 {
   if ( !boost::filesystem::exists(getHldFile())) 
   {
-    ERROR("The hld file doesnt exist");
+    ERROR(std::string( "The hld file doesnt exist: ") + getHldFile() );
     return false;
   }
   if (!boost::filesystem::exists(getCfgFile())) 

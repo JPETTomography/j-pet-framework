@@ -41,8 +41,7 @@ private:
   bool createScopeTaskAndAddToTaskList();
   static void* processProxy(void*);
   bool processFromCmdLineArgs(int);
-  void unpackFile();
-
+  void unpackFile(const char* filename, const long long nevents);
   int fProcessedFile;
   JPetParamManager* fParamManager;
   JPetUnpacker fUnpacker;
