@@ -67,7 +67,8 @@ void JPetTaskIO::exec()
   assert(lastEvent >= 0);
   for (auto i = firstEvent; i <= lastEvent; i++) {
 
-    (std::dynamic_pointer_cast<JPetTask>(fTask))->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
+    //(std::dynamic_pointer_cast<JPetTask>(fTask))->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
+    (dynamic_cast<JPetTask*>(fTask))->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
     if (fOptions.isProgressBar()) {
       displayProgressBar(i, lastEvent);
     }
@@ -157,7 +158,8 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
     fAuxilliaryData = dynamic_cast<JPetAuxilliaryData*>(fReader->getObjectFromFile("Auxilliary Data"));
 
     // add info about this module to the processing stages' history in Tree header
-    auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
+    //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
+    auto task = dynamic_cast<JPetTask*>(fTask);
     fHeader->addStageInfo(task->GetName(), task->GetTitle(), 0,
                           JPetCommonTools::getTimeString());
 
@@ -172,7 +174,8 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
   if (fTask) {
-    auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
+    //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
+    auto task = dynamic_cast<JPetTask*>(fTask);
     task->setWriter(fWriter);
     if (!fAuxilliaryData) {
       fAuxilliaryData = new JPetAuxilliaryData();

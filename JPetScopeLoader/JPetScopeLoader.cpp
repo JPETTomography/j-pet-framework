@@ -77,7 +77,7 @@ void JPetScopeLoader::createInputObjects(const char* inputFileName)
 
   auto prefix2PM =  getPMPrefixToPMIdMap(config);
   std::map<std::string, int> inputScopeFiles = createInputScopeFileNames(fOptions.getScopeInputDirectory(), prefix2PM);
-  auto task = std::dynamic_pointer_cast<JPetScopeTask>(fTask);
+  auto task = dynamic_cast<JPetScopeTask*>(fTask);
   task->setInputFiles(inputScopeFiles);
 
 
