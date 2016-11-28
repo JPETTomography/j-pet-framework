@@ -16,6 +16,8 @@
 #ifndef JPETTASK_H
 #define JPETTASK_H
 #include "../JPetTaskInterface/JPetTaskInterface.h"
+#include "../JPetTaskRunnerInterface/JPetTaskRunnerInterface.h"
+//#include "../JPetTaskInterfaceTmp/JPetTaskInterfaceTmp.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetStatistics/JPetStatistics.h"
 #include "../JPetAuxilliaryData/JPetAuxilliaryData.h"
@@ -31,7 +33,6 @@ public:
   virtual void init(const JPetTaskInterface::Options&);
   virtual void exec();
   virtual void terminate();
-  virtual void addSubTask(JPetTaskInterface*) {};
   virtual void setParamManager(JPetParamManager* paramManager);
   virtual void setStatistics(JPetStatistics* statistics);
   virtual void setAuxilliaryData(JPetAuxilliaryData* auxData);

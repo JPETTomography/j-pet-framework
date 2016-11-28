@@ -36,7 +36,7 @@ class JPetAuxilliaryData;
  * @brief Class representing computing task with input/output operations.
  *
  */
-class JPetTaskIO: public JPetTaskInterface
+class JPetTaskIO: public JPetTaskInterface, public JPetTaskRunnerInterface
 {
 public:
   JPetTaskIO();
