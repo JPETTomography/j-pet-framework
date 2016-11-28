@@ -18,14 +18,14 @@
 #define JPETMANAGER_H
 
 #include "../JPetOptions/JPetOptions.h"
-#include "../JPetTaskExecutor/JPetTaskExecutor.h"
+#include "../JPetTaskChainExecutor/JPetTaskChainExecutor.h"
 
 /**
  * @brief Main manager of the analysis performed with the J-PET Framework.
  *
  * Each analysis program needs an instance of the JPetManager which is responsible for parsing the command line arguments
  * registering processing tasks, and
- * sending it to JPetExecutor which executes the registered tasks in threads.
+ * sending it to JPetExecutor which executes the chain of registered tasks in threads.
  */
 
 class JPetManager
@@ -47,7 +47,8 @@ private:
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&);
 
-  std::vector<JPetOptions> fOptions;
-  TaskGeneratorChain* fTaskGeneratorChain;
+  std::vector<JPetOptions> fOptions; /// fOptions are input options.
+  /// Its number corresponds to the number of independent input files.
+  TaskGeneratorChain* fTaskGeneratorChain; /// fTaskGeneratorChain is a sequences of registered computing tasks.
 };
 #endif /*  !JPETMANAGER_H */
