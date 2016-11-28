@@ -286,7 +286,7 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   BOOST_REQUIRE(bank2.getFEBs().size() == 1);
   BOOST_REQUIRE(bank2.getTRBs().size() == 1);
 
-  BOOST_REQUIRE(bank2.getPMCalib(256).GetId() == 256);
+  BOOST_REQUIRE(bank2.getPMCalib(256).getID() == 256);
   BOOST_REQUIRE(bank2.getBarrelSlot(1).getID() == 1);
   BOOST_REQUIRE(bank2.getLayer(1).getId() == 1);
   BOOST_REQUIRE(bank2.getFrame(1).getId() == 1);
