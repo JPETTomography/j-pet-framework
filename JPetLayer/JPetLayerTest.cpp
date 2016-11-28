@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetLayer layer;
-  BOOST_REQUIRE_EQUAL(layer.getId(), -1);
+  BOOST_REQUIRE_EQUAL(layer.getID(), -1);
   BOOST_REQUIRE(!layer.getIsActive());
   BOOST_REQUIRE(layer.getName().empty());
   BOOST_REQUIRE_CLOSE(layer.getRadius(), -1, epsilon);
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 BOOST_AUTO_TEST_CASE( second_constructor )
 {
   JPetLayer layer(1, true, "ala", 10.5);
-  BOOST_REQUIRE_EQUAL(layer.getId(), 1);
+  BOOST_REQUIRE_EQUAL(layer.getID(), 1);
   BOOST_REQUIRE(layer.getIsActive());
   BOOST_REQUIRE(layer.getName()=="ala");
   BOOST_REQUIRE_CLOSE(layer.getRadius(), 10.5, epsilon);
@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE( single_object )
   auto & layers = factory.getLayers();
   BOOST_REQUIRE_EQUAL(layers.size(), 1);
   auto layer = layers[1];
-  BOOST_REQUIRE_EQUAL(layer->getId(), 1);
+  BOOST_REQUIRE_EQUAL(layer->getID(), 1);
   BOOST_REQUIRE(layer->getIsActive());
   BOOST_REQUIRE(layer->getName()=="ala");
   BOOST_REQUIRE_CLOSE(layer->getRadius(), 10.5, epsilon);
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   auto & layers = factory.getLayers();
   BOOST_REQUIRE_EQUAL(layers.size(), 2);
   auto layer = layers[1];
-  BOOST_REQUIRE_EQUAL(layer->getId(), 1);
+  BOOST_REQUIRE_EQUAL(layer->getID(), 1);
   BOOST_REQUIRE(layer->getIsActive());
   BOOST_REQUIRE(layer->getName()=="ala");
   BOOST_REQUIRE_CLOSE(layer->getRadius(), 10.5, epsilon);
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   BOOST_REQUIRE_EQUAL(layer->getFrame().getId(), frameFactory.getFrames().at(1)->getId());
 
   layer = layers[5];
-  BOOST_REQUIRE_EQUAL(layer->getId(), 5);
+  BOOST_REQUIRE_EQUAL(layer->getID(), 5);
   BOOST_REQUIRE(!layer->getIsActive());
   BOOST_REQUIRE(layer->getName()=="alfred");
   BOOST_REQUIRE_CLOSE(layer->getRadius(), 11.5, epsilon);

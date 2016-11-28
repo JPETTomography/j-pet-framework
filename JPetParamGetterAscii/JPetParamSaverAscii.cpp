@@ -118,7 +118,7 @@ void JPetParamSaverAscii::fillPMCalibs(boost::property_tree::ptree & runContents
 boost::property_tree::ptree JPetParamSaverAscii::PMCalibToInfo(const JPetPMCalib & pmCalib)
 {
   boost::property_tree::ptree info;
-  info.put("id", pmCalib.GetId());
+  info.put("id", pmCalib.getID());
   info.put("name", pmCalib.GetNamePM());
   info.put("opthv", pmCalib.GetOpthv());
   info.put("c2e1", pmCalib.GetECalConst1());
@@ -150,7 +150,7 @@ boost::property_tree::ptree JPetParamSaverAscii::barrelSlotToInfo(const JPetBarr
   info.put("theta1", bs.getTheta());
   info.put("frame_id", bs.getInFrameID());
 
-  info.put(objectsNames.at(ParamObjectType::kLayer)+"_id", bs.getLayer().getId());
+  info.put(objectsNames.at(ParamObjectType::kLayer)+"_id", bs.getLayer().getID());
   return info;
 }
 
@@ -167,7 +167,7 @@ void JPetParamSaverAscii::fillLayers(boost::property_tree::ptree & runContents, 
 boost::property_tree::ptree JPetParamSaverAscii::layerToInfo(const JPetLayer & layer)
 {
   boost::property_tree::ptree info;
-  info.put("id", layer.getId());
+  info.put("id", layer.getID());
   info.put("active", layer.getIsActive());
   info.put("name", layer.getName());
   info.put("radius", layer.getRadius());

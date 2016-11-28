@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE( minimal_example_write )
 
   JPetLayer & layer = paramBank.getLayer(1);
   JPetLayer & relayer = reparamBank.getLayer(1);
-  BOOST_REQUIRE(layer.getId() == relayer.getId());
+  BOOST_REQUIRE(layer.getID() == relayer.getID());
   BOOST_REQUIRE(layer.getIsActive() == relayer.getIsActive());
   BOOST_REQUIRE(layer.getName() == relayer.getName());
   BOOST_REQUIRE(layer.getRadius() == relayer.getRadius());

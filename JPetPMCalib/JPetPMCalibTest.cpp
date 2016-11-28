@@ -12,7 +12,7 @@ BOOST_AUTO_TEST_SUITE(JPetPMCalibTestSuite)
 BOOST_AUTO_TEST_CASE(DefaultConstructorTest)
 {
   JPetPMCalib pmCalib(256, "PMCalib", 2.f, 4.f, 8.f, 16.f, 32.f, 64, 128);
-  BOOST_REQUIRE_EQUAL(pmCalib.GetId(), 256);
+  BOOST_REQUIRE_EQUAL(pmCalib.getID(), 256);
   BOOST_REQUIRE_EQUAL(pmCalib.GetNamePM(), "PMCalib");
   BOOST_REQUIRE_CLOSE(pmCalib.GetOpthv(), 2.f, epsilon);
   BOOST_REQUIRE_CLOSE(pmCalib.GetECalConst1(), 4.f, epsilon);
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE( single_object )
   auto & pmCalibs = factory.getPMCalibs();
   BOOST_REQUIRE_EQUAL(pmCalibs.size(), 1);
   auto pmCalib = pmCalibs[1];
-  BOOST_REQUIRE_EQUAL(pmCalib->GetId(), 1);
+  BOOST_REQUIRE_EQUAL(pmCalib->getID(), 1);
   BOOST_REQUIRE_EQUAL(pmCalib->GetNamePM(), "PMCalib");
   BOOST_REQUIRE_CLOSE(pmCalib->GetOpthv(), 2.f, epsilon);
   BOOST_REQUIRE_CLOSE(pmCalib->GetECalConst1(), 4.f, epsilon);
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   auto & pmCalibs = factory.getPMCalibs();
   BOOST_REQUIRE_EQUAL(pmCalibs.size(), 2);
   auto pmCalib = pmCalibs[1];
-  BOOST_REQUIRE_EQUAL(pmCalib->GetId(), 1);
+  BOOST_REQUIRE_EQUAL(pmCalib->getID(), 1);
   BOOST_REQUIRE_EQUAL(pmCalib->GetNamePM(), "PMCalib");
   BOOST_REQUIRE_CLOSE(pmCalib->GetOpthv(), 2.f, epsilon);
   BOOST_REQUIRE_CLOSE(pmCalib->GetECalConst1(), 4.f, epsilon);
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   BOOST_REQUIRE_EQUAL(pmCalib->GetPMCalibAssignment().id, 64);
   BOOST_REQUIRE_EQUAL(pmCalib->GetPMCalibAssignment().photomultiplier_id, 128);
   pmCalib = pmCalibs[5];
-  BOOST_REQUIRE_EQUAL(pmCalib->GetId(), 5);
+  BOOST_REQUIRE_EQUAL(pmCalib->getID(), 5);
   BOOST_REQUIRE_EQUAL(pmCalib->GetNamePM(), "PMMorab");
   BOOST_REQUIRE_CLOSE(pmCalib->GetOpthv(), 3.f, epsilon);
   BOOST_REQUIRE_CLOSE(pmCalib->GetECalConst1(), 5.f, epsilon);

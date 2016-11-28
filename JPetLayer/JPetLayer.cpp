@@ -37,7 +37,7 @@ JPetLayer::JPetLayer(int id, bool isActive, std::string name, float radius) :
 }
 
 bool JPetLayer::operator==(const JPetLayer& layer) const {
-  if( getId() == layer.getId() ){
+  if( getID() == layer.getID() ){
     // assure consistency
     assert( getRadius() == layer.getRadius() );
     assert( getName() == layer.getName() );
