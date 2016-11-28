@@ -10,11 +10,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetTaskExecutor.h
+ *  @file JPetTaskChainExecutor.h
  */
 
-#ifndef FRAMEWORK_JPETTASKEXECUTOR_H
-#define FRAMEWORK_JPETTASKEXECUTOR_H
+#ifndef FRAMEWORK_JPETTASCHAINKEXECUTOR_H
+#define FRAMEWORK_JPETTASKCHAINEXECUTOR_H
 
 #include <list>
 #include <TThread.h>
@@ -28,21 +28,25 @@ class JPetTaskInterface;
 using TaskGenerator = std::function< JPetTaskInterface* () >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
-
-class JPetTaskExecutor
+/**
+ * JPetTaskChainExecutor generates the previously registered chain of tasks.
+ * One chain can be run as a thread independently
+ */
+class JPetTaskChainExecutor
 {
 public :
-  JPetTaskExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFile, JPetOptions opts);
+  JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFile, JPetOptions opts);
   TThread* run();
-  virtual ~JPetTaskExecutor();
+  virtual ~JPetTaskChainExecutor();
 
   bool process(); /// That was private. I made it public to run without threads.
 private:
   bool createScopeTaskAndAddToTaskList();
   static void* processProxy(void*);
-  bool processFromCmdLineArgs(int);
+  bool processFromCmdLineArgs();
   void unpackFile(const char* filename, const long long nevents);
-  int fProcessedFile;
+
+  int fInputSeqId;
   JPetParamManager* fParamManager;
   JPetUnpacker fUnpacker;
   std::list<JPetTaskInterface*> fTasks;
@@ -51,4 +55,4 @@ private:
 };
 
 
-#endif //FRAMEWORK_JPETTASKEXECUTOR_H
+#endif //FRAMEWORK_JPETTASCHAINKEXECUTOR_H
