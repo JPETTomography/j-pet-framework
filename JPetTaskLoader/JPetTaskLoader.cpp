@@ -30,7 +30,8 @@ JPetTaskLoader::JPetTaskLoader(const char* in_file_type,
   fInFileType(in_file_type),
   fOutFileType(out_file_type)
 {
-  setTask(std::shared_ptr<JPetTaskInterface>(taskToExecute));
+  //setTask(std::shared_ptr<JPetTaskInterface>(taskToExecute));
+  setTask(dynamic_cast<JPetTaskInterface*>(taskToExecute));
 }
 
 

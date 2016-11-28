@@ -35,6 +35,7 @@ bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamMa
       saver.saveParamBank(paramMgr->getParamBank(), runNum, options.getLocalDBCreate());
     }
   }
+  auto inputFile = options.getInputFile();
   auto inputFileType = options.getInputFileType();
   if (inputFileType == JPetOptions::kScope) {
     if (!createScopeTaskAndAddToTaskList(options, paramMgr, tasks)) {
@@ -43,19 +44,19 @@ bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamMa
     }
   } else if (inputFileType == JPetOptions::kHld) {
     unpackFile(inputFile, options.getTotalEvents());
-  } 
-    /// Assumption that if the file is zipped than it is in the hld format
-    /// and we will also unpack if from hld  after unzipping.
-    else if ( inputFileType == JPetOptions::kZip) {
-      INFO( std::string("Unzipping file before unpacking") );
-      if ( !JPetCommonTools::unzipFile(inputFile) ) {
-        ERROR( std::string("Problem with unpacking file: ") + inputFile );
-        return false; 
-      } else {
-        INFO( std::string("Unpacking") );
-        auto unzippedFilename = JPetCommonTools::stripFileNameSuffix(std::string(inputFile)).c_str();
-        unpackFile(unzippedFilename, options.getTotalEvents());
-      }
+  }
+  /// Assumption that if the file is zipped than it is in the hld format
+  /// and we will also unpack if from hld  after unzipping.
+  else if ( inputFileType == JPetOptions::kZip) {
+    INFO( std::string("Unzipping file before unpacking") );
+    if ( !JPetCommonTools::unzipFile(inputFile) ) {
+      ERROR( std::string("Problem with unpacking file: ") + inputFile );
+      return false;
+    } else {
+      INFO( std::string("Unpacking") );
+      auto unzippedFilename = JPetCommonTools::stripFileNameSuffix(std::string(inputFile)).c_str();
+      unpackFile(unzippedFilename, options.getTotalEvents());
+    }
   }
 
   if (options.getInputFileType() == JPetOptions::kUndefinedFileType)
@@ -87,7 +88,7 @@ void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long neve
   } else {
     unpacker.setParams(filename);
   }
-    unpacker.exec();
+  unpacker.exec();
 }
 
 JPetParamManager* JPetTaskChainExecutorUtils::generateParamManager(const JPetOptions& options)
