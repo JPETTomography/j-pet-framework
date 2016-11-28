@@ -24,11 +24,11 @@ class JPetTaskRunner: public JPetTaskRunnerInterface
 public:
   JPetTaskRunner();
   virtual ~JPetTaskRunner();
-  virtual void setTask(std::shared_ptr<JPetTaskInterface> task);
-  virtual std::shared_ptr<JPetTaskInterface> getTask() const;
+  virtual void setTask(JPetTaskInterface* task);
+  virtual JPetTaskInterface* getTask() const;
   virtual void runTask() = 0;
 protected:
-  std::shared_ptr<JPetTaskInterface> fTask; /// maybe as unique_ptr ?
+  JPetTaskInterface* fTask; /// maybe as unique_ptr ?
 private:
   void operator=(const JPetTaskRunner&);
   JPetTaskRunner(const JPetTaskRunner&);
