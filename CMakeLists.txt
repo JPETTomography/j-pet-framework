@@ -154,7 +154,6 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetFEB
   JPetUser
   JPetUnpacker
-  JPetEvent
   )
 add_library(JPetFramework SHARED ${SOURCES} ${HEADERS} ${DICTIONARIES})
 
