@@ -22,16 +22,19 @@ ClassImp(JPetHit);
 
 JPetHit::JPetHit() :
     TNamed("JPetHit","Hit Structure"), fEnergy(0.0f), fQualityOfEnergy(0.0f), fTime(0.0f),
-    fQualityOfTime(0.0f),
-    fBarrelSlot(NULL), fScintillator(NULL) { 
+    fQualityOfTime(0.0f), fTimeDiff(0.0f), fQualityOfTimeDiff(0.0f), fPosAlongStrip(0.0f),
+    fBarrelSlot(NULL), fScintillator(NULL),
+    fScinID(0) {
   fIsSignalAset = false;
   fIsSignalBset = false;
 }
 
 JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSignal& siga, JPetPhysSignal& sigb,
-                  JPetBarrelSlot& bslot, JPetScin& scin) : 
+                  JPetBarrelSlot& bslot, JPetScin& scin) :
     TNamed("JPetHit","Hit Structure") ,fEnergy(e), fQualityOfEnergy(qe), fTime(t),
-    fQualityOfTime(qt), fPos(pos), fSignalA(siga), fSignalB(sigb), fBarrelSlot(&bslot), fScintillator(&scin) {
+    fQualityOfTime(qt), fTimeDiff(0.0f), fQualityOfTimeDiff(0.0f), fPosAlongStrip(0.0f),
+    fPos(pos), fSignalA(siga), fSignalB(sigb), fBarrelSlot(&bslot), fScintillator(&scin),
+    fScinID(0) {
 
   fIsSignalAset = true ;
   fIsSignalBset = true ;
@@ -89,13 +92,13 @@ const bool JPetHit::checkConsistency() const{
 
   const int slot_a = getSignalA().getPM().getBarrelSlot().getID();
   const int slot_b = getSignalB().getPM().getBarrelSlot().getID();
-  
+
   if( slot_a != slot_b ){
     ERROR( Form("Signals added to Hit come from different barrel slots: %d and %d." ,
 		slot_a, slot_b) );
     return false;
   }
-  
+
   if( getSignalA().getPM().getSide() == getSignalB().getPM().getSide() ){
     ERROR( Form("Signals added to Hit come from PMTs at the same side. PMTs: %d and %d." ,
 		getSignalA().getPM().getID(), getSignalB().getPM().getID()) );
@@ -106,7 +109,7 @@ const bool JPetHit::checkConsistency() const{
     ERROR( Form("Signals added to Hit come from different time windows: %d and %d." ,
 		getSignalA().getTimeWindowIndex(), getSignalB().getTimeWindowIndex()) );
   }
-  
+
   return true;
 }
 
@@ -126,7 +129,7 @@ void JPetHit::setSignalA(JPetPhysSignal & p_sig) {
 void JPetHit::setSignalB(JPetPhysSignal & p_sig) {
   fSignalB=p_sig;
   fIsSignalBset=true;
-  checkConsistency();  
+  checkConsistency();
 }
 
 unsigned int JPetHit::getTimeWindowIndex() const{
