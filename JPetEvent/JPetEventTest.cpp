@@ -32,6 +32,68 @@ BOOST_AUTO_TEST_CASE(constructor)
   BOOST_REQUIRE_EQUAL(event.getHits().size(), 2);
 }
 
+BOOST_AUTO_TEST_CASE(constructor_orderedHits)
+{
+  std::vector<JPetHit> hits(4);
+  hits[0].setTime(2);
+  hits[1].setTime(1);
+  hits[2].setTime(4);
+  hits[3].setTime(3);
+  JPetEvent event(0, 0, hits);
+  auto results = event.getHits();
+  BOOST_REQUIRE_EQUAL(results[0].getTime(), 1);
+  BOOST_REQUIRE_EQUAL(results[1].getTime(), 2);
+  BOOST_REQUIRE_EQUAL(results[2].getTime(), 3);
+  BOOST_REQUIRE_EQUAL(results[3].getTime(), 4);
+}
+
+BOOST_AUTO_TEST_CASE(constructor_unorderedHits)
+{
+  std::vector<JPetHit> hits(4);
+  hits[0].setTime(2);
+  hits[1].setTime(1);
+  hits[2].setTime(4);
+  hits[3].setTime(3);
+  JPetEvent event(0, 0, hits, false);
+  auto results = event.getHits();
+  BOOST_REQUIRE_EQUAL(results[0].getTime(), 2);
+  BOOST_REQUIRE_EQUAL(results[1].getTime(), 1);
+  BOOST_REQUIRE_EQUAL(results[2].getTime(), 4);
+  BOOST_REQUIRE_EQUAL(results[3].getTime(), 3);
+}
+
+BOOST_AUTO_TEST_CASE(set_unorderedHits)
+{
+  JPetEvent event;
+  std::vector<JPetHit> hits(4);
+  hits[0].setTime(2);
+  hits[1].setTime(1);
+  hits[2].setTime(4);
+  hits[3].setTime(3);
+  event.setHits(hits, false);
+  auto results = event.getHits();
+  BOOST_REQUIRE_EQUAL(results[0].getTime(), 2);
+  BOOST_REQUIRE_EQUAL(results[1].getTime(), 1);
+  BOOST_REQUIRE_EQUAL(results[2].getTime(), 4);
+  BOOST_REQUIRE_EQUAL(results[3].getTime(), 3);
+}
+
+BOOST_AUTO_TEST_CASE(set_orderedHits)
+{
+  JPetEvent event;
+  std::vector<JPetHit> hits(4);
+  hits[0].setTime(2);
+  hits[1].setTime(1);
+  hits[2].setTime(4);
+  hits[3].setTime(3);
+  event.setHits(hits);
+  auto results = event.getHits();
+  BOOST_REQUIRE_EQUAL(results[0].getTime(), 1);
+  BOOST_REQUIRE_EQUAL(results[1].getTime(), 2);
+  BOOST_REQUIRE_EQUAL(results[2].getTime(), 3);
+  BOOST_REQUIRE_EQUAL(results[3].getTime(), 4);
+}
+
 BOOST_AUTO_TEST_CASE(TimeAndqualityOfTimeTest)
 {
   JPetEvent event;
@@ -56,17 +118,5 @@ BOOST_AUTO_TEST_CASE(addHit)
 
 BOOST_AUTO_TEST_CASE(getHitsOrderedByTime)
 {
-  JPetEvent event;
-  std::vector<JPetHit> hits(4);
-  hits[0].setTime(2);
-  hits[1].setTime(1);
-  hits[2].setTime(4);
-  hits[3].setTime(3);
-  event.setHits(hits);
-  auto results = event.getHitsOrderedByTime();
-  BOOST_REQUIRE_EQUAL(results[0].getTime(), 1);
-  BOOST_REQUIRE_EQUAL(results[1].getTime(), 2);
-  BOOST_REQUIRE_EQUAL(results[2].getTime(), 3);
-  BOOST_REQUIRE_EQUAL(results[3].getTime(), 4);
 }
 BOOST_AUTO_TEST_SUITE_END()
