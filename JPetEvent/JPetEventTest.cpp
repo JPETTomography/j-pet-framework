@@ -70,4 +70,3 @@ BOOST_AUTO_TEST_CASE(getHitsOrderedByTime)
   BOOST_REQUIRE_EQUAL(results[3].getTime(), 4);
 }
 BOOST_AUTO_TEST_SUITE_END()
-

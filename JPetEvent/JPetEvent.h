@@ -46,7 +46,7 @@ public:
   ClassDef(JPetEvent, 1);
 
 private:
-  float fTime = 0.0f; ///< reconstructed absolute time of the event wrt to beginning of the run [ps]
+  float fTime = 0.0f; /// < reconstructed absolute time of the event wrt to beginning of the run [ps]
   float fQualityOfTime = 0.0f;
   std::vector<JPetHit> fHits;
 
