@@ -24,28 +24,32 @@
 /**
  * @brief Data class representing an event from a single emission.
  *
- * An event consists of one or more  hits (JPetHit objects) registered in barel slots.
- * The appropriate time order of the hits is not guaranteed! Special methods are provided for it.
+ * An event consists of one or more  hits (JPetHit objects) registered in barrel slots.
+ * The class constructor and setHits by default order hits in the ascending time order.
+ * This behaviour can be turned off by the orderedByTime flag.
+ * Also, when using addHit method the order is not guaranteed anymore.
+ * It Is the user responsability to assure it when using addHit method.
  */
 class JPetEvent : public TNamed
 {
 
 public:
   JPetEvent();
-  JPetEvent(float time, float qualityOfTime, const std::vector<JPetHit>& hits);
+  JPetEvent(float time, float qualityOfTime, const std::vector<JPetHit>& hits, bool orderedByTime = true);
 
-  void setHits(const std::vector<JPetHit>& hits);
+  void setHits(const std::vector<JPetHit>& hits, bool orderedByTime = true);
   void addHit(const JPetHit& hit);
   void setTimeAndQuality(float time, float qualityOfTime);
-  const std::vector<JPetHit> getHits() const;
+  std::vector<JPetHit> getHits() const;
   /// Returns the vector of hits ordered by the hit time. Ascending time.
-  const std::vector<JPetHit> getHitsOrderedByTime() const;
   float getTime() const;
   float getQualityOfTime() const;
 
   ClassDef(JPetEvent, 1);
 
 private:
+  std::vector<JPetHit> getHitsOrderedByTime(const std::vector<JPetHit>& hits) const;
+
   float fTime = 0.0f; /// < reconstructed absolute time of the event wrt to beginning of the run [ps]
   float fQualityOfTime = 0.0f;
   std::vector<JPetHit> fHits;
