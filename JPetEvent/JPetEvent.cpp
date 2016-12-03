@@ -22,17 +22,20 @@ JPetEvent::JPetEvent()
   /**/
 }
 
-JPetEvent::JPetEvent(float time, float qualityOfTime, const std::vector<JPetHit>& hits):
+JPetEvent::JPetEvent(float time, float qualityOfTime, const std::vector<JPetHit>& hits, bool orderedByTime):
   fTime(time),
-  fQualityOfTime(qualityOfTime),
-  fHits(hits)
+  fQualityOfTime(qualityOfTime)
 {
-  /**/
+  setHits(hits, orderedByTime);
 }
 
-void JPetEvent::setHits(const std::vector<JPetHit>& hits)
+void JPetEvent::setHits(const std::vector<JPetHit>& hits, bool orderedByTime)
 {
-  fHits = hits;
+  if (orderedByTime) {
+    fHits = getHitsOrderedByTime(hits);
+  } else {
+    fHits = hits;
+  }
 }
 
 void JPetEvent::addHit(const JPetHit& hit)
@@ -46,14 +49,14 @@ void JPetEvent::setTimeAndQuality(float time, float qualityOfTime)
   fQualityOfTime = qualityOfTime;
 }
 
-const std::vector<JPetHit> JPetEvent::getHits() const
+std::vector<JPetHit> JPetEvent::getHits() const
 {
   return fHits;
 }
 
-const std::vector<JPetHit> JPetEvent::getHitsOrderedByTime() const
+std::vector<JPetHit> JPetEvent::getHitsOrderedByTime(const std::vector<JPetHit>& oldHits) const
 {
-  auto hits = getHits();
+  auto hits(oldHits);
   std::sort(hits.begin(), hits.end(),
   [] (const JPetHit & h1, const JPetHit & h2) {
     return h1.getTime() < h2.getTime();
