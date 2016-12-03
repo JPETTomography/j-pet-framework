@@ -21,10 +21,7 @@
 ClassImp(JPetHit);
 
 JPetHit::JPetHit() :
-    TNamed("JPetHit","Hit Structure"), fEnergy(0.0f), fQualityOfEnergy(0.0f), fTime(0.0f),
-    fQualityOfTime(0.0f), fTimeDiff(0.0f), fQualityOfTimeDiff(0.0f), fPosAlongStrip(0.0f),
-    fBarrelSlot(NULL), fScintillator(NULL),
-    fScinID(0) {
+    TNamed("JPetHit","Hit Structure"){
   fIsSignalAset = false;
   fIsSignalBset = false;
 }
@@ -32,10 +29,7 @@ JPetHit::JPetHit() :
 JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSignal& siga, JPetPhysSignal& sigb,
                   JPetBarrelSlot& bslot, JPetScin& scin) :
     TNamed("JPetHit","Hit Structure") ,fEnergy(e), fQualityOfEnergy(qe), fTime(t),
-    fQualityOfTime(qt), fTimeDiff(0.0f), fQualityOfTimeDiff(0.0f), fPosAlongStrip(0.0f),
-    fPos(pos), fSignalA(siga), fSignalB(sigb), fBarrelSlot(&bslot), fScintillator(&scin),
-    fScinID(0) {
-
+    fQualityOfTime(qt), fPos(pos), fSignalA(siga), fSignalB(sigb), fBarrelSlot(&bslot), fScintillator(&scin){
   fIsSignalAset = true ;
   fIsSignalBset = true ;
   checkConsistency();
