@@ -19,7 +19,7 @@ ClassImp(JPetEvent);
 
 JPetEvent::JPetEvent()
 {
-  /* */
+  /**/
 }
 
 JPetEvent::JPetEvent(float time, float qualityOfTime, const std::vector<JPetHit>& hits):
@@ -27,7 +27,7 @@ JPetEvent::JPetEvent(float time, float qualityOfTime, const std::vector<JPetHit>
   fQualityOfTime(qualityOfTime),
   fHits(hits)
 {
-  /* */
+  /**/
 }
 
 void JPetEvent::setHits(const std::vector<JPetHit>& hits)
