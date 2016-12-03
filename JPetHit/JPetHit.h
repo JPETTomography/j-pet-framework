@@ -41,11 +41,11 @@ class JPetTimeWindow;
 class JPetHit : public TNamed {
 
   public:
-  
+
   enum Signal {SideA,SideB};
-  
+
   JPetHit();
-  JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime, TVector3& Position, 
+  JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime, TVector3& Position,
           JPetPhysSignal& SignalA, JPetPhysSignal& SignalB, JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator);
   virtual ~JPetHit();
   const float getEnergy() const;
@@ -73,7 +73,7 @@ class JPetHit : public TNamed {
   const JPetBarrelSlot& getBarrelSlot() const;
   const bool isSignalASet()const;
   const bool isSignalBSet()const;
-  
+
   void setEnergy(float energy);
   void setQualityOfEnergy(float qualityOfEnergy);
   void setTime(float time);
@@ -93,27 +93,27 @@ class JPetHit : public TNamed {
   void setBarrelSlot( JPetBarrelSlot& bs) ;
   void setScintillator(JPetScin& sc) ;
   void setScinID (const int scinID);
-  
+
   void setSignals(JPetPhysSignal & p_sigA, JPetPhysSignal & p_sigB);
   void setSignalA(JPetPhysSignal & p_sig);
   void setSignalB(JPetPhysSignal & p_sig);
   unsigned int getTimeWindowIndex()const;
-  
+
   ClassDef(JPetHit,1);
   /** @brief Checks whether information contained in both Signal objects
    *  set in this Hit object is consistent and logs an error message if
    *  it is not.
    *
    *  Pairing two signals originating from photomultipliers belonging to
-   *  two different barrel slots or the same barrel side (i.e. attached 
-   *  to different scintillators) would make no physical sense. This method 
+   *  two different barrel slots or the same barrel side (i.e. attached
+   *  to different scintillators) would make no physical sense. This method
    *  ensures that it is not the case.
-   * 
+   *
    *  This method checks the following:
    *  - if both signals come from the same barrel slot
    *  - if the two signals come from opposite-side PMTs
    *  - if both signals belong to the same time window
-   * 
+   *
    *  If all the above conditions are met, this method only returns 'true'.
    *  If any of these conditions is violated, 'false' is returned and
    *  an appropriate message is written to the log file.
@@ -123,26 +123,25 @@ class JPetHit : public TNamed {
   const bool checkConsistency() const;
 
   private:
-  float fEnergy; ///< reconstructed energy of the hit [keV]
-  float fQualityOfEnergy;
-  float fTime; ///< reconstructed time of the hit [ps]
-  float fQualityOfTime;
-  float fTimeDiff; ///< reconstructed time difference between signals at two ends of scintillator [ps]
-  float fQualityOfTimeDiff;
-  float fPosAlongStrip; ///< reconstructed position along scintillator strip (from "Side A" to "Side B") [cm]
+  float fEnergy = 0.0f; ///< reconstructed energy of the hit [keV]
+  float fQualityOfEnergy = 0.0f;
+  float fTime = 0.0f; ///< reconstructed time of the hit [ps]
+  float fQualityOfTime = 0.0f;
+  float fTimeDiff = 0.0f; ///< reconstructed time difference between signals at two ends of scintillator [ps]
+  float fQualityOfTimeDiff = 0.0f;
+  float fPosAlongStrip = 0.0f; ///< reconstructed position along scintillator strip (from "Side A" to "Side B") [cm]
   TVector3 fPos;
   JPetPhysSignal fSignalA;
   JPetPhysSignal fSignalB;
-  bool fIsSignalAset;
-  bool fIsSignalBset;
-  
-  int fScinID; ///< For simple reconstruction
+  bool fIsSignalAset = false;
+  bool fIsSignalBset = false;
+
+  int fScinID = 0; ///< For simple reconstruction
 
   // references to parametric objects
-  TRef fBarrelSlot; ///< BarrelSlot in which the hit was recorded
-  TRef fScintillator; ///< Scintillator strip which was hit
+  TRef fBarrelSlot = NULL; ///< BarrelSlot in which the hit was recorded
+  TRef fScintillator = NULL; ///< Scintillator strip which was hit
 
 };
-  
-#endif
 
+#endif
