@@ -48,8 +48,6 @@ public:
   ClassDef(JPetEvent, 1);
 
 private:
-  std::vector<JPetHit> getHitsOrderedByTime(const std::vector<JPetHit>& hits) const;
-
   float fTime = 0.0f; /// < reconstructed absolute time of the event wrt to beginning of the run [ps]
   float fQualityOfTime = 0.0f;
   std::vector<JPetHit> fHits;

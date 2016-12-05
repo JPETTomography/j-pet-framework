@@ -14,6 +14,8 @@
  */
 
 #include "./JPetEvent.h"
+#include "../JPetAnalysisTools/JPetAnalysisTools.h"
+#include "./JPetEvent.h"
 
 ClassImp(JPetEvent);
 
@@ -32,7 +34,7 @@ JPetEvent::JPetEvent(float time, float qualityOfTime, const std::vector<JPetHit>
 void JPetEvent::setHits(const std::vector<JPetHit>& hits, bool orderedByTime)
 {
   if (orderedByTime) {
-    fHits = getHitsOrderedByTime(hits);
+    fHits = JPetAnalysisTools::getHitsOrderedByTime(hits);
   } else {
     fHits = hits;
   }
@@ -52,16 +54,6 @@ void JPetEvent::setTimeAndQuality(float time, float qualityOfTime)
 std::vector<JPetHit> JPetEvent::getHits() const
 {
   return fHits;
-}
-
-std::vector<JPetHit> JPetEvent::getHitsOrderedByTime(const std::vector<JPetHit>& oldHits) const
-{
-  auto hits(oldHits);
-  std::sort(hits.begin(), hits.end(),
-  [] (const JPetHit & h1, const JPetHit & h2) {
-    return h1.getTime() < h2.getTime();
-  });
-  return hits;
 }
 
 float JPetEvent::getTime() const
