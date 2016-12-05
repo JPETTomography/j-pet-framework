@@ -15,7 +15,6 @@
 
 #include "./JPetEvent.h"
 #include "../JPetAnalysisTools/JPetAnalysisTools.h"
-#include "./JPetEvent.h"
 
 ClassImp(JPetEvent);
 
