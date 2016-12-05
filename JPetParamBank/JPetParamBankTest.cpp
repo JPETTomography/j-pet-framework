@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   BOOST_REQUIRE(bank.getLayer(1).getName() == "layerTest");
   BOOST_CHECK_CLOSE(bank.getLayer(1).getRadius(), 35.f, epsilon);
 
-  BOOST_REQUIRE(bank.getFrame(1).getId() == 1);
+  BOOST_REQUIRE(bank.getFrame(1).getID() == 1);
   BOOST_REQUIRE(bank.getFrame(1).getIsActive() == true);
   BOOST_REQUIRE(bank.getFrame(1).getStatus() == "OKTEST");
   BOOST_REQUIRE(bank.getFrame(1).getDescription() == "FrameTest");
@@ -289,7 +289,7 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   BOOST_REQUIRE(bank2.getPMCalib(256).getID() == 256);
   BOOST_REQUIRE(bank2.getBarrelSlot(1).getID() == 1);
   BOOST_REQUIRE(bank2.getLayer(1).getID() == 1);
-  BOOST_REQUIRE(bank2.getFrame(1).getId() == 1);
+  BOOST_REQUIRE(bank2.getFrame(1).getID() == 1);
 
   BOOST_REQUIRE(bank2.getFEB(1).getID() == 1);
   BOOST_REQUIRE(bank2.getFEB(1).isActive());
