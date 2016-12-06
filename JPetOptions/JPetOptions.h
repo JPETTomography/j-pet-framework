@@ -25,7 +25,7 @@ class JPetOptions
 
 public:
   enum FileType {
-    kNoType, kScope, kRaw, kDetector, kHld, kGate, kPhysEve, kPhysHit, kPhysSig, kRawSig, kRecoSig, kTslotCal, kTslotRaw, kUndefinedFileType
+    kNoType, kScope, kRaw, kDetector, kHld, kZip, kGate, kPhysEve, kPhysHit, kPhysSig, kRawSig, kRecoSig, kTslotCal, kTslotRaw, kUndefinedFileType
   };
   typedef std::map<std::string, std::string> Options;
   typedef std::vector<std::string> InputFileNames;

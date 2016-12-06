@@ -78,7 +78,11 @@ void JPetOptions::setStringToFileTypeConversion()
     {"scope", kScope},
     {"raw", kRaw},
     {"hld", kHld},
+<<<<<<< HEAD
     {"gate", kGate},
+=======
+    {"zip", kZip},
+>>>>>>> 23af863e32afabe525b6b9c23bc4b17bc750474d
     {"phys.eve", kPhysEve},
     {"phys.hit", kPhysHit},
     {"phys.sig", kPhysSig},

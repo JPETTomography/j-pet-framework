@@ -46,7 +46,7 @@ public:
     if (type == "root") {
       std::cout << "The filetype \'root\' is deprecated! Use option detector instead e.g. -t detector" << std::endl;
     }
-    if (type == "hld" || type == "detector" || type == "scope" || type == "gate") {
+    if (type == "hld" || type == "detector" || type == "scope" || type == "gate" || type == "zip") {
       return true;
     }
     return false;
