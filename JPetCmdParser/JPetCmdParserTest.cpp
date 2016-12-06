@@ -16,8 +16,10 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetCmdParserTest
 #include <boost/test/unit_test.hpp>
+#include <boost/test/output_test_stream.hpp>
 #include <cstdlib>
 #include "../JPetCmdParser/JPetCmdParser.h"
+#include "../../STIR/STIR/src/include/stir/getopt.h"
 
 using namespace std;
 
@@ -100,19 +102,22 @@ BOOST_AUTO_TEST_CASE( parsingGate )
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kGate);
 }
 
-BOOST_AUTO_TEST_CASE( rootType )
+BOOST_AUTO_TEST_CASE(checkWrongFileType)
 {
-  auto commandLine = "main.x -t root -f unitTestData/JPetCmdParserTest/test_384strips.root";
-  auto args_char = createArgs(commandLine);
-  auto argc = args_char.size();
-  auto argv = args_char.data();
+    auto commandLine = "main.x -t root -f unitTestData/JPetCmdParserTest/test_384strips.root";
+    auto args_char = createArgs(commandLine);
+    auto argc = args_char.size();
+    auto argv = args_char.data();
 
-  JPetCmdParser parser;
-  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
-  BOOST_REQUIRE_EQUAL(options.size(), 1);
-  auto option = options.at(0);
-  BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCmdParserTest/test_384strips.root");
-  BOOST_REQUIRE(option.getInputFileType() == JPetOptions::kDetector);
+    JPetCmdParser parser;
+    try {
+      auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+    }
+    catch (const std::invalid_argument& e) {
+      boost::test_tools::output_test_stream output;
+      output << "Wrong user options provided! Check the log!";
+      BOOST_CHECK(output.is_equal(e.what()));
+    }
 }
 
 ////ToDo: remake unit tests without calling private methods
