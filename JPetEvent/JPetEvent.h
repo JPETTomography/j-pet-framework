@@ -29,22 +29,34 @@
  * This behaviour can be turned off by the orderedByTime flag.
  * Also, when using addHit method the order is not guaranteed anymore.
  * It Is the user responsability to assure it when using addHit method.
+ * The event type corresponds to the category of physical process e.g. 2 gamma or 3 gamma decay
+ * A given type can be a logical combination of several types by using bit OR operators
+ * e.g. (JPetEventType::kGamma2|JPetEventType::kScattered) This means, that at given moment
+ * we dont know to which type it belongs.
  */
+
+#include "../JPetEventType/JPetEventType.h"
+
 class JPetEvent : public TNamed
 {
 
 public:
   JPetEvent();
-  JPetEvent(const std::vector<JPetHit>& hits, bool orderedByTime = true);
+  JPetEvent(const std::vector<JPetHit>& hits, JPetEventType eventType = JPetEventType::kUnknown, bool orderedByTime = true);
 
+  std::vector<JPetHit> getHits() const;
   void setHits(const std::vector<JPetHit>& hits, bool orderedByTime = true);
   void addHit(const JPetHit& hit);
-  std::vector<JPetHit> getHits() const;
+
+  JPetEventType getEventType() const; /// The event type can be a combination of several types
+  void setEventType(JPetEventType type);
+  bool isTypeOf(JPetEventType type) const; /// check if the event is of a given type. It can belong to more than one category!
 
   ClassDef(JPetEvent, 1);
 
-private:
+protected:
   std::vector<JPetHit> fHits;
+  JPetEventType fType = JPetEventType::kUnknown;
 
 };
 #endif /*  !JPETEVENT_H */
