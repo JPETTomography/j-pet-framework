@@ -35,21 +35,15 @@ class JPetEvent : public TNamed
 
 public:
   JPetEvent();
-  JPetEvent(float time, float qualityOfTime, const std::vector<JPetHit>& hits, bool orderedByTime = true);
+  JPetEvent(const std::vector<JPetHit>& hits, bool orderedByTime = true);
 
   void setHits(const std::vector<JPetHit>& hits, bool orderedByTime = true);
   void addHit(const JPetHit& hit);
-  void setTimeAndQuality(float time, float qualityOfTime);
   std::vector<JPetHit> getHits() const;
-  /// Returns the vector of hits ordered by the hit time. Ascending time.
-  float getTime() const;
-  float getQualityOfTime() const;
 
   ClassDef(JPetEvent, 1);
 
 private:
-  float fTime = 0.0f; /// < reconstructed absolute time of the event wrt to beginning of the run [ps]
-  float fQualityOfTime = 0.0f;
   std::vector<JPetHit> fHits;
 
 };
