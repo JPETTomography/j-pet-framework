@@ -1,24 +1,33 @@
+/**
+ *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file BarrelExtensions.cpp
+ */
+
 #include <algorithm>
 #include <sstream>
 #include "BarrelExtensions.h"
 using namespace std;
 const string Layer(const size_t layer){
-    stringstream stream;
-    stream<<"layer"<<layer;
-    return stream.str();
+    return "layer"+to_string(layer);
 }
 const string LayerSlot(const size_t layer, const size_t slot){
-    stringstream stream;
-    stream<<"layer"<<layer<<"-slot"<<slot;
-    return stream.str();
+    return "layer"+to_string(layer)+"-slot"+to_string(slot);
 }
 const string LayerSlotThr(const size_t layer, const size_t slot, const size_t thr){
-    stringstream stream;
-    stream<<"layer"<<layer<<"-slot"<<slot<<"-thr"<<thr;
-    return stream.str();
+    return "layer"+to_string(layer)+"-slot"+to_string(slot)+"-thr"+to_string(thr);
 }
 
-const StripPos AbstractBarrelMapping::getStripPos(const JPetBarrelSlot & slot) const {
+const StripPos AbstractBarrelMapping::getStripPos(const JPetBarrelSlot & slot)const{
     return {.layer=getLayerNumber(slot.getLayer()),.slot=getSlotNumber(slot)};
 }
 const vector< size_t > AbstractBarrelMapping::getLayersSizes() const{
@@ -27,8 +36,6 @@ const vector< size_t > AbstractBarrelMapping::getLayersSizes() const{
 	res.push_back(getSlotsCount(i));
     return res;
 }
-
-const double degFullCircle = 360.;
 LargeBarrelMapping::LargeBarrelMapping(const JPetParamBank& paramBank){
     for(auto & layer : paramBank.getLayers() ){
 	double radius = layer.second->getRadius();
