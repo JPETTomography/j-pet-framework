@@ -49,11 +49,6 @@ find_package(Config++ REQUIRED)
 include_directories(${CONFIG++_INCLUDE_DIRS})
 add_definitions(${CONFIG++_DEFINITIONS})
 
-# find_package(TinyXML REQUIRED)
-# include_directories(${TINYXML_INCLUDE_DIRS})
-# add_definitions(${CONFIG++_DEFINITIONS})
-
-
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
@@ -208,7 +203,6 @@ target_link_libraries(JPetFramework
   dbhandler
   ${ROOT_LIBRARIES}
   ${Boost_LIBRARIES}
-  ${TINYXML_LIBRARIES}
   )
 
 # extra files, so they are visible in your editor
