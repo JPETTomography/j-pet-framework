@@ -8,9 +8,6 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetEvent event;
-  auto epsilon = 0.0001;
-  BOOST_REQUIRE_CLOSE(event.getTime(), 0.0f, epsilon);
-  BOOST_REQUIRE_CLOSE(event.getQualityOfTime(), 0.0f, epsilon);
   BOOST_REQUIRE(event.getHits().empty());
 }
 
@@ -23,11 +20,8 @@ BOOST_AUTO_TEST_CASE(constructor)
   JPetHit secondHit;
   firstHit.setBarrelSlot(slot1);
   secondHit.setBarrelSlot(slot2);
-  JPetEvent event(8.5f, 4.5f, {firstHit, secondHit});
+  JPetEvent event({firstHit, secondHit});
 
-  float epsilon = 0.0001f;
-  BOOST_REQUIRE_CLOSE(event.getTime(), 8.5f, epsilon);
-  BOOST_REQUIRE_CLOSE(event.getQualityOfTime(), 4.5f, epsilon);
   BOOST_REQUIRE(!event.getHits().empty());
   BOOST_REQUIRE_EQUAL(event.getHits().size(), 2);
 }
@@ -39,7 +33,7 @@ BOOST_AUTO_TEST_CASE(constructor_orderedHits)
   hits[1].setTime(1);
   hits[2].setTime(4);
   hits[3].setTime(3);
-  JPetEvent event(0, 0, hits);
+  JPetEvent event(hits);
   auto results = event.getHits();
   BOOST_REQUIRE_EQUAL(results[0].getTime(), 1);
   BOOST_REQUIRE_EQUAL(results[1].getTime(), 2);
@@ -54,7 +48,7 @@ BOOST_AUTO_TEST_CASE(constructor_unorderedHits)
   hits[1].setTime(1);
   hits[2].setTime(4);
   hits[3].setTime(3);
-  JPetEvent event(0, 0, hits, false);
+  JPetEvent event(hits, false);
   auto results = event.getHits();
   BOOST_REQUIRE_EQUAL(results[0].getTime(), 2);
   BOOST_REQUIRE_EQUAL(results[1].getTime(), 1);
@@ -94,29 +88,17 @@ BOOST_AUTO_TEST_CASE(set_orderedHits)
   BOOST_REQUIRE_EQUAL(results[3].getTime(), 4);
 }
 
-BOOST_AUTO_TEST_CASE(TimeAndqualityOfTimeTest)
-{
-  JPetEvent event;
-  event.setTimeAndQuality(111.f, 222.f);
-  float epsilon = 0.0001f;
-  BOOST_REQUIRE_CLOSE(event.getQualityOfTime(), 222.f, epsilon);
-  BOOST_REQUIRE_CLOSE(event.getTime(), 111.f, epsilon);
-}
-
 BOOST_AUTO_TEST_CASE(addHit)
 {
   JPetEvent event;
   JPetHit firstHit;
   JPetHit secondHit;
   JPetHit thirdHit;
-  event.setHits( { firstHit, secondHit});
+  event.setHits( {firstHit, secondHit});
   BOOST_REQUIRE(!event.getHits().empty());
   BOOST_REQUIRE_EQUAL(event.getHits().size(), 2);
   event.addHit(thirdHit);
   BOOST_REQUIRE_EQUAL(event.getHits().size(), 3);
 }
 
-BOOST_AUTO_TEST_CASE(getHitsOrderedByTime)
-{
-}
 BOOST_AUTO_TEST_SUITE_END()

@@ -23,9 +23,7 @@ JPetEvent::JPetEvent()
   /**/
 }
 
-JPetEvent::JPetEvent(float time, float qualityOfTime, const std::vector<JPetHit>& hits, bool orderedByTime):
-  fTime(time),
-  fQualityOfTime(qualityOfTime)
+JPetEvent::JPetEvent(const std::vector<JPetHit>& hits, bool orderedByTime)
 {
   setHits(hits, orderedByTime);
 }
@@ -44,23 +42,7 @@ void JPetEvent::addHit(const JPetHit& hit)
   fHits.push_back(hit);
 }
 
-void JPetEvent::setTimeAndQuality(float time, float qualityOfTime)
-{
-  fTime = time;
-  fQualityOfTime = qualityOfTime;
-}
-
 std::vector<JPetHit> JPetEvent::getHits() const
 {
   return fHits;
-}
-
-float JPetEvent::getTime() const
-{
-  return fTime;
-}
-
-float JPetEvent::getQualityOfTime() const
-{
-  return fQualityOfTime;
 }
