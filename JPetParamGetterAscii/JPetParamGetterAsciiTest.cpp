@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE( minimal_example_write )
 
   JPetFrame& frame = paramBank.getFrame(1);
   JPetFrame& reframe = reparamBank.getFrame(1);
-  BOOST_REQUIRE(frame.getId() == reframe.getId());
+  BOOST_REQUIRE(frame.getID() == reframe.getID());
   BOOST_REQUIRE(frame.getIsActive() == reframe.getIsActive());
   BOOST_REQUIRE(frame.getStatus() == reframe.getStatus());
   BOOST_REQUIRE(frame.getDescription() == reframe.getDescription());

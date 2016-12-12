@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE( single_object )
   BOOST_REQUIRE(layer->getName() == "ala");
   BOOST_REQUIRE_CLOSE(layer->getRadius(), 10.5, epsilon);
 
-  BOOST_REQUIRE_EQUAL(layer->getFrame().getId(), frameFactory.getFrames().at(1)->getId());
+  BOOST_REQUIRE_EQUAL(layer->getFrame().getID(), frameFactory.getFrames().at(1)->getID());
 }
 
 BOOST_AUTO_TEST_CASE( two_objects )
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   BOOST_REQUIRE(layer->getName() == "ala");
   BOOST_REQUIRE_CLOSE(layer->getRadius(), 10.5, epsilon);
 
-  BOOST_REQUIRE_EQUAL(layer->getFrame().getId(), frameFactory.getFrames().at(1)->getId());
+  BOOST_REQUIRE_EQUAL(layer->getFrame().getID(), frameFactory.getFrames().at(1)->getID());
 
   layer = layers[5];
   BOOST_REQUIRE_EQUAL(layer->getID(), 5);
@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   BOOST_REQUIRE(layer->getName() == "alfred");
   BOOST_REQUIRE_CLOSE(layer->getRadius(), 11.5, epsilon);
 
-  BOOST_REQUIRE_EQUAL(layer->getFrame().getId(), frameFactory.getFrames().at(1)->getId());
+  BOOST_REQUIRE_EQUAL(layer->getFrame().getID(), frameFactory.getFrames().at(1)->getID());
 }
 
 BOOST_AUTO_TEST_CASE( missing_field )
