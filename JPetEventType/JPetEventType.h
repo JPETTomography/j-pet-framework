@@ -16,73 +16,12 @@
 #ifndef JPETEVENTTYPE_H
 #define JPETEVENTTYPE_H
 
-#include<type_traits>
 
-enum JPetEventType : unsigned {
+enum JPetEventType {
   kUnknown = 1,
   k2Gamma = 2,
   k3Gamma = 4,
   kPrompt = 8,
   kScattered = 16
 };
-
-
-inline JPetEventType operator |(JPetEventType lhs, JPetEventType rhs)
-{
-  return static_cast<JPetEventType> (
-           static_cast<std::underlying_type<JPetEventType>::type>(lhs) |
-           static_cast<std::underlying_type<JPetEventType>::type>(rhs)
-         );
-}
-
-inline JPetEventType operator &(JPetEventType lhs, JPetEventType rhs)
-{
-  return static_cast<JPetEventType> (
-           static_cast<std::underlying_type<JPetEventType>::type>(lhs) &
-           static_cast<std::underlying_type<JPetEventType>::type>(rhs)
-         );
-}
-
-inline JPetEventType operator ^(JPetEventType lhs, JPetEventType rhs)
-{
-  return static_cast<JPetEventType> (
-           static_cast<std::underlying_type<JPetEventType>::type>(lhs) ^
-           static_cast<std::underlying_type<JPetEventType>::type>(rhs)
-         );
-}
-
-inline JPetEventType operator ~(JPetEventType rhs)
-{
-  return static_cast<JPetEventType> (
-           ~static_cast<std::underlying_type<JPetEventType>::type>(rhs)
-         );
-}
-
-inline JPetEventType& operator |=(JPetEventType& lhs, JPetEventType rhs)
-{
-  lhs = static_cast<JPetEventType> (
-          static_cast<std::underlying_type<JPetEventType>::type>(lhs) |
-          static_cast<std::underlying_type<JPetEventType>::type>(rhs)
-        );
-
-  return lhs;
-}
-
-inline JPetEventType& operator &=(JPetEventType& lhs, JPetEventType rhs)
-{
-  lhs = static_cast<JPetEventType> (
-          static_cast<std::underlying_type<JPetEventType>::type>(lhs) &
-          static_cast<std::underlying_type<JPetEventType>::type>(rhs)
-        );
-  return lhs;
-}
-
-inline JPetEventType& operator ^=(JPetEventType& lhs, JPetEventType rhs)
-{
-  lhs = static_cast<JPetEventType> (
-          static_cast<std::underlying_type<JPetEventType>::type>(lhs) ^
-          static_cast<std::underlying_type<JPetEventType>::type>(rhs)
-        );
-  return lhs;
-}
 #endif /*  !JPETEVENTTYPE_H */

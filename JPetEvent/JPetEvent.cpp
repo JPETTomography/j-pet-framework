@@ -23,7 +23,8 @@ JPetEvent::JPetEvent()
   /**/
 }
 
-JPetEvent::JPetEvent(const std::vector<JPetHit>& hits, JPetEventType eventType, bool orderedByTime)
+JPetEvent::JPetEvent(const std::vector<JPetHit>& hits, JPetEventType eventType, bool orderedByTime):
+  fType(eventType)
 {
   setHits(hits, orderedByTime);
 }
