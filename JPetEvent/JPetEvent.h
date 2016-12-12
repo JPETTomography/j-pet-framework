@@ -31,8 +31,8 @@
  * It Is the user responsability to assure it when using addHit method.
  * The event type corresponds to the category of physical process e.g. 2 gamma or 3 gamma decay
  * A given type can be a logical combination of several types by using bit OR operators
- * e.g. (JPetEventType::kGamma2|JPetEventType::kScattered) This means, that at given moment
- * we dont know to which type it belongs.
+ * e.g. static_cast<JPetEventType>(JPetEventType::kGamma2|JPetEventType::kScattered).
+ * This means, that at given moment we don't know to which type it belongs.
  */
 
 #include "../JPetEventType/JPetEventType.h"

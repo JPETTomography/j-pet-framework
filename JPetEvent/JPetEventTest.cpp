@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(eventTypes2)
 BOOST_AUTO_TEST_CASE(eventTypes3)
 {
   JPetHit firstHit;
-  JPetEvent event( {firstHit}, (JPetEventType::kPrompt | JPetEventType::k2Gamma));
+  JPetEvent event( {firstHit}, static_cast<JPetEventType>(JPetEventType::kPrompt | JPetEventType::k2Gamma));
   auto type = event.getEventType();
   BOOST_REQUIRE((type & JPetEventType::kPrompt) == JPetEventType::kPrompt);
   BOOST_REQUIRE((type & JPetEventType::k2Gamma) == JPetEventType::k2Gamma);
@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE(eventTypes3)
 BOOST_AUTO_TEST_CASE(isTypeOf)
 {
   JPetHit firstHit;
-  JPetEvent event( {firstHit}, (JPetEventType::kPrompt | JPetEventType::k2Gamma));
+  JPetEvent event( {firstHit}, static_cast<JPetEventType>(JPetEventType::kPrompt | JPetEventType::k2Gamma));
   BOOST_REQUIRE(event.isTypeOf(JPetEventType::k2Gamma));
   BOOST_REQUIRE(!event.isTypeOf(JPetEventType::k3Gamma));
   BOOST_REQUIRE(event.isTypeOf(JPetEventType::kPrompt));
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(setGetType)
 {
   JPetHit firstHit;
   JPetEvent event( {firstHit}, JPetEventType::kPrompt);
-  event.setEventType(JPetEventType::k2Gamma | JPetEventType::k3Gamma);
+  event.setEventType(static_cast<JPetEventType>(JPetEventType::k2Gamma | JPetEventType::k3Gamma));
   auto type = event.getEventType();
   BOOST_REQUIRE((type & JPetEventType::kPrompt) != JPetEventType::kPrompt);
   BOOST_REQUIRE((type & JPetEventType::kUnknown) != JPetEventType::kUnknown);
