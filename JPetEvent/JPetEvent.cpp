@@ -23,7 +23,7 @@ JPetEvent::JPetEvent()
   /**/
 }
 
-JPetEvent::JPetEvent(const std::vector<JPetHit>& hits, bool orderedByTime)
+JPetEvent::JPetEvent(const std::vector<JPetHit>& hits, JPetEventType eventType, bool orderedByTime)
 {
   setHits(hits, orderedByTime);
 }
@@ -45,4 +45,19 @@ void JPetEvent::addHit(const JPetHit& hit)
 std::vector<JPetHit> JPetEvent::getHits() const
 {
   return fHits;
+}
+
+JPetEventType JPetEvent::getEventType() const
+{
+  return fType;
+}
+
+void JPetEvent::setEventType(JPetEventType type)
+{
+  fType = type;
+}
+
+bool JPetEvent::isTypeOf(JPetEventType type) const
+{
+  return (fType & type) == type;
 }
