@@ -166,7 +166,7 @@ public:
   /// Adds Frame to the Param Bank. If the Frame with the same id already exists in the Param Bank,
   /// the new element will not be added.
   inline void addFrame(JPetFrame frame) {
-    if (fFrames.insert(std::make_pair(frame.getId(), new JPetFrame(frame))).second == false) {
+    if (fFrames.insert(std::make_pair(frame.getID(), new JPetFrame(frame))).second == false) {
       WARNING("the frame with this id already exists in the ParamBank. It will not be added.");
     }
   }
