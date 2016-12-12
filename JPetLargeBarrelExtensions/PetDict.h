@@ -82,8 +82,8 @@ public:
     const StripPos positionOfGlobalNumber(const size_t gl_num)const{
 	size_t index=gl_num;
 	size_t l=1;
-	while(LayerSize(l)<=index){
-	    index-=LayerSize(l);l++;
+	while(layerSize(l)<=index){
+	    index-=layerSize(l);l++;
 	}
 	return {.layer=l,.slot=index+1};
     }
@@ -107,12 +107,12 @@ public:
 };
 template<class DataType>
 inline std::istream&operator>>(std::istream&str,JPetMap<DataType>&item){
-  item.Read(str);
+  item.read(str);
   return str;
 }
 template<class DataType>
 inline std::ostream&operator<<(std::ostream&str,const JPetMap<DataType>&item){
-  item.Save(str);
+  item.save(str);
   return str;
 }
 #endif
