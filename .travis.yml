@@ -21,11 +21,11 @@ install:
   - sudo apt-get install -y root-system
 script:
     - mkdir -p DBHandler/Config
-    - export SSHPASS=$KOZA_PASSWORD
-    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $KOZA_USERNAME@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg DBHandler/Config/
+    - export SSHPASS=$SPHINX_PASSWORD
+    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SPHINX_USERNAME@sphinx.if.uj.edu.pl:/home/framework_configs/configDB.cfg DBHandler/Config/
     - ls DBHandler/Config/
-    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $KOZA_USERNAME@koza.if.uj.edu.pl:/home/framework_configs/configDB.cfg.koza DBHandler/Config/
-    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $KOZA_USERNAME@koza.if.uj.edu.pl:/home/framework_configs/ReadMe.txt DBHandler/Config/
+    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SPHINX_USERNAME@sphinx.if.uj.edu.pl:/home/framework_configs/configDB.cfg.koza DBHandler/Config/
+    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SPHINX_USERNAME@sphinx.if.uj.edu.pl:/home/framework_configs/ReadMe.txt DBHandler/Config/
     - mkdir build
     - cd build
     - cmake ..

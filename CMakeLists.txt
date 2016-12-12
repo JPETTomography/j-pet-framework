@@ -49,11 +49,6 @@ find_package(Config++ REQUIRED)
 include_directories(${CONFIG++_INCLUDE_DIRS})
 add_definitions(${CONFIG++_DEFINITIONS})
 
-find_package(TinyXML REQUIRED)
-include_directories(${TINYXML_INCLUDE_DIRS})
-add_definitions(${CONFIG++_DEFINITIONS})
-
-
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
@@ -109,6 +104,9 @@ set(CMAKE_SKIP_BUILD_RPATH OFF)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
+
+# add Unpacker subdirectory
+add_subdirectory(Unpacker2/Unpacker2)
 
 file(GLOB HEADERS JPet*/*.h tools/JPet*/*.h modules/JPet*/*.h)
 file(GLOB SOURCES JPet*/*.cpp tools/JPet*/*.cpp modules/JPet*/*.cpp)
@@ -183,26 +181,6 @@ add_custom_command(OUTPUT ${TESTS_DIR}/unitTestData
   COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/unitTestData ${TESTS_DIR}/unitTestData
   )
 
-# - Unpacker
-file(GLOB UNPACKER2_HEADERS JPetUnpacker/Unpacker2/*.h)
-file(GLOB UNPACKER2_SOURCES JPetUnpacker/Unpacker2/*.cc)
-generate_root_dictionaries(UNPACKER_DICTIONARIES SOURCES ${UNPACKER2_SOURCES}
-  INCLUDE # generate ROOT dictionaries for following sources
-  TDCHit
-  TDCHitExtended
-  ADCHit
-  Event
-  EventIII
-  TDCChannel
-  )
-add_library(Unpacker2 ${UNPACKER2_HEADERS} ${UNPACKER2_SOURCES}
-  ${UNPACKER_DICTIONARIES}
-  )
-
-target_link_libraries(Unpacker2
-  ${TINYXML_LIBRARIES}
-  )
-
 # - DBHandler
 file(GLOB DBHANDLER_HEADERS DBHandler/HeaderFiles/*.h)
 file(GLOB DBHANDLER_SOURCES DBHandler/SourceFiles/*.cpp)
@@ -225,7 +203,6 @@ target_link_libraries(JPetFramework
   dbhandler
   ${ROOT_LIBRARIES}
   ${Boost_LIBRARIES}
-  ${TINYXML_LIBRARIES}
   )
 
 # extra files, so they are visible in your editor

@@ -18,7 +18,6 @@
 #include "../JPetReader/JPetReader.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 #include "../JPetTask/JPetTask.h"
-#include "../JPetHLDReader/JPetHLDReader.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 
 #include "../JPetLoggerInclude.h"
@@ -135,11 +134,10 @@ JPetParamManager& JPetTaskIO::getParamManager()
 void JPetTaskIO::createInputObjects(const char* inputFilename)
 {
   auto treeName = "";
+  fReader = new JPetReader;
   if (fOptions.getInputFileType() == JPetOptions::kHld ) {
-    fReader = new JPetHLDReader;
     treeName = "T";
   } else {
-    fReader = new JPetReader;
     treeName = "tree";
   }
   if ( fReader->openFileAndLoadData( inputFilename, treeName )) {
