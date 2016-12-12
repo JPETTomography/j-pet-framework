@@ -83,7 +83,7 @@ void* JPetTaskExecutor::processProxy(void* runner)
 
 TThread* JPetTaskExecutor::run()
 {
-  TThread* thread = new TThread(to_string(fProcessedFile).c_str(), processProxy, (void*)this);
+  TThread* thread = new TThread(std::to_string(fProcessedFile).c_str(), processProxy, (void*)this);
   assert(thread);
   thread->Run();
   return thread;
