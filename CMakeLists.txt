@@ -110,8 +110,8 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
-file(GLOB HEADERS JPet*/*.h tools/JPet*/*.h modules/JPet*/*.h LargeBarrelExtensions/*.h)
-file(GLOB SOURCES JPet*/*.cpp tools/JPet*/*.cpp modules/JPet*/*.cpp LargeBarrelExtensions/*.cpp)
+file(GLOB HEADERS JPet*/*.h tools/JPet*/*.h modules/JPet*/*.h)
+file(GLOB SOURCES JPet*/*.cpp tools/JPet*/*.cpp modules/JPet*/*.cpp)
 file(GLOB UNIT_TEST_SOURCES JPet*/*Test.cpp)
 list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
 
