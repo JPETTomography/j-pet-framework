@@ -28,16 +28,19 @@ inline std::istream&operator>>(std::istream&str,SynchroStrip&item){
 inline std::ostream&operator<<(std::ostream&str,const SynchroStrip&item){
   return str<<item.A<<"\t"<<item.B;
 }
+
+//This class provides adding deltas obtained after time synchronization
+//can work with different algorithms of signal time calculation
 class Synchronization{
 public:
   typedef std::function<double(const std::vector<double>&)> TimeCalculation;
   Synchronization(const std::shared_ptr<AbstractBarrelMapping>map,std::istream&str,const TimeCalculation timecalc);
   virtual ~Synchronization();
-  const SynchroStrip GetTimes(const JPetHit&hit)const;
+  const SynchroStrip get_times(const JPetHit&hit)const;
 private:
   std::shared_ptr<AbstractBarrelMapping> f_mapping;
   std::shared_ptr<JPetMap<SynchroStrip>> f_offsets;
   TimeCalculation f_time_calc;
 };
-const double DefaultTimeCalculation(const std::vector<double>&P);
+const double defaultTimeCalculation(const std::vector<double>&P);
 #endif

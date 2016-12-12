@@ -44,32 +44,32 @@ public:
 	}
     }
     virtual ~JPetMap(){}
-    void Read(std::istream&str){
+    void read(std::istream&str){
 	for(auto&layer:f_data)
 	    for(auto&item:layer)
 		str>>item;
     }
-    void Save(std::ostream&str)const{
+    void save(std::ostream&str)const{
 	for(const auto&layer:f_data)
 	    for(const auto&item:layer)
 		str<<item<<"\n";
     }
-    const size_t LayersCount()const{
+    const size_t layersCount()const{
 	return f_data.size();
     }
-    const size_t LayerSize(const size_t layer)const{
+    const size_t layerSize(const size_t layer)const{
 	if(layer==0)throw Exception<JPetMap>("Invalid layer index");
 	if(layer>f_data.size())throw Exception<JPetMap>("Invalid layer index");
 	return f_data[layer-1].size();
     }
-    const size_t SlotsCount()const{
+    const size_t slotsCount()const{
 	size_t res=0;
 	for(const auto&L:f_data)
 	    res+=L.size();
 	return res;
     }
-    inline const size_t size()const{return SlotsCount();}
-    const size_t GlobalSlotNumber(const StripPos&pos)const{
+    inline const size_t size()const{return slotsCount();}
+    const size_t globalSlotNumber(const StripPos&pos)const{
 	if(pos.layer==0)throw Exception<JPetMap>("Invalid layer index");
 	if(pos.layer>f_data.size())throw Exception<JPetMap>("Invalid layer index");
 	if(pos.slot==0)throw Exception<JPetMap>("Invalid slot index");
@@ -79,7 +79,7 @@ public:
 	    res+=f_data[i-1].size();
 	return res+pos.slot-1;
     }
-    const StripPos PositionOfGlobalNumber(const size_t gl_num)const{
+    const StripPos positionOfGlobalNumber(const size_t gl_num)const{
 	size_t index=gl_num;
 	size_t l=1;
 	while(LayerSize(l)<=index){
@@ -95,7 +95,7 @@ public:
     if(pos.slot>f_data[pos.layer-1].size())throw Exception<JPetMap>("Invalid slot index");
     return f_data[pos.layer-1][pos.slot-1];
   }
-  const DataType&operator[](const size_t&pos)const{return operator[](PositionOfGlobalNumber(pos));}
+  const DataType&operator[](const size_t&pos)const{return operator[](positionOfGlobalNumber(pos));}
   DataType&item(const StripPos&pos){
     if(pos.layer==0)throw Exception<JPetMap>("Invalid layer index");
     if(pos.layer>f_data.size())throw Exception<JPetMap>("Invalid layer index");
@@ -103,8 +103,7 @@ public:
     if(pos.slot>f_data[pos.layer-1].size())throw Exception<JPetMap>("Invalid slot index");
     return f_data[pos.layer-1][pos.slot-1];
   }
-  DataType&item(const size_t&pos){return item(PositionOfGlobalNumber(pos));}
-
+  DataType&item(const size_t&pos){return item(positionOfGlobalNumber(pos));}
 };
 template<class DataType>
 inline std::istream&operator>>(std::istream&str,JPetMap<DataType>&item){
