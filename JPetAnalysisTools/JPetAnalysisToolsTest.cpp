@@ -15,10 +15,11 @@ BOOST_AUTO_TEST_CASE(constructor_getHitsOrderedByTime)
   hits[2].setTime(4);
   hits[3].setTime(3);
   auto results = JPetAnalysisTools::getHitsOrderedByTime(hits);
-  BOOST_REQUIRE_EQUAL(results[0].getTime(), 1);
-  BOOST_REQUIRE_EQUAL(results[1].getTime(), 2);
-  BOOST_REQUIRE_EQUAL(results[2].getTime(), 3);
-  BOOST_REQUIRE_EQUAL(results[3].getTime(), 4);
+  double epsilon = 0.0001;
+  BOOST_REQUIRE_CLOSE(results[0].getTime(), 1, epsilon );
+  BOOST_REQUIRE_CLOSE(results[1].getTime(), 2, epsilon );
+  BOOST_REQUIRE_CLOSE(results[2].getTime(), 3, epsilon );
+  BOOST_REQUIRE_CLOSE(results[3].getTime(), 4, epsilon );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
