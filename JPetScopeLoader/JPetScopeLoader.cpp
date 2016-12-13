@@ -57,7 +57,7 @@ using boost::property_tree::ptree;
 
 JPetScopeLoader::JPetScopeLoader(JPetScopeTask* task): JPetTaskLoader("", "reco.sig", task)
 {
-gSystem->Load("libTree");
+  gSystem->Load("libTree");
   /**/
 }
 
@@ -77,7 +77,8 @@ void JPetScopeLoader::createInputObjects(const char* inputFileName)
 
   auto prefix2PM =  getPMPrefixToPMIdMap(config);
   std::map<std::string, int> inputScopeFiles = createInputScopeFileNames(fOptions.getScopeInputDirectory(), prefix2PM);
-  (static_cast<JPetScopeTask*>(fTask))->setInputFiles(inputScopeFiles);
+  auto task = dynamic_cast<JPetScopeTask*>(fTask);
+  task->setInputFiles(inputScopeFiles);
 
 
   // create an object for storing histograms and counters during processing
@@ -86,7 +87,7 @@ void JPetScopeLoader::createInputObjects(const char* inputFileName)
   fHeader = new JPetTreeHeader(fOptions.getRunNumber());
   assert(fHeader);
   fHeader->setBaseFileName(fOptions.getInputFile());
-  fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0, JPetCommonTools::getTimeString());
+  fHeader->addStageInfo(task->GetName(), task->GetTitle(), 0, JPetCommonTools::getTimeString());
   //fHeader->setSourcePosition((*fIter).pCollPosition);
 }
 
@@ -102,11 +103,11 @@ std::map<std::string, int> JPetScopeLoader::getPMPrefixToPMIdMap(const scope_con
 /// Returns a map of list of scope input files. The key is the corresponding
 /// index of the photomultiplier in the param bank.
 std::map<std::string, int> JPetScopeLoader::createInputScopeFileNames(
-                                       const std::string& inputPathToScopeFiles,
-                                       std::map<std::string, int> pmPref2Id
-                                     ) const
+  const std::string& inputPathToScopeFiles,
+  std::map<std::string, int> pmPref2Id
+) const
 {
-  for (auto el:pmPref2Id){
+  for (auto el : pmPref2Id) {
   }
   std::map<std::string, int> scopeFiles;
   path current_dir(inputPathToScopeFiles);
@@ -171,7 +172,7 @@ void JPetScopeLoader::terminate()
   assert(fStatistics);
   fWriter->writeHeader(fHeader);
   fWriter->writeObject(fStatistics->getHistogramsTable(), "Stats");
-   //store the parametric objects in the ouptut ROOT file
+  //store the parametric objects in the ouptut ROOT file
   getParamManager().saveParametersToFile(fWriter);
   getParamManager().clearParameters();
   fWriter->closeFile();
