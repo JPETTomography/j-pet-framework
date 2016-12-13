@@ -10,22 +10,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetPostUnpackerFilter.h
+ *  @file JPetAnalysisTools.cpp
  */
 
-#ifndef _POST_UNPACKER_FILTER_
-#define _POST_UNPACKER_FILTER_
+#include "./JPetAnalysisTools.h"
 
-class JPetPostUnpackerFilter{
-
- public:
-
-  static int calculate_hits(int eventsNum, const char* fileName);
-
-  static int calculate_times(int eventsNum, const char* fileName, int refChannelOffset, const char* calibFile);
-  
- private:
-  
-};
-
-#endif
+std::vector<JPetHit> JPetAnalysisTools::getHitsOrderedByTime(const std::vector<JPetHit>& oldHits)
+{
+  auto hits(oldHits);
+  std::sort(hits.begin(), hits.end(),
+  [] (const JPetHit & h1, const JPetHit & h2) {
+    return h1.getTime() < h2.getTime();
+  });
+  return hits;
+}
