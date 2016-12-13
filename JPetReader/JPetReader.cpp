@@ -22,7 +22,7 @@ JPetReader::JPetReader() :
   fBranch(0),
   fEvent(0),
   fTree(0),
-  fFile(0),
+  fFile(NULL),
   fCurrentEventNumber(-1)
 {/**/}
 
