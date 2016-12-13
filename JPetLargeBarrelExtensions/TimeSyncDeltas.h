@@ -31,6 +31,10 @@ inline std::ostream&operator<<(std::ostream&str,const SynchroStrip&item){
 
 //This class provides adding deltas obtained after time synchronization
 //can work with different algorithms of signal time calculation
+//it's considered that deltas are stored in text file but constructor
+//accepts any std::istream instance and reads data from it
+//stream must be opened correctly before calling the constructor and 
+//should be closed after constructor call by user if it's a file
 class Synchronization{
 public:
   typedef std::function<double(const std::vector<double>&)> TimeCalculation;
