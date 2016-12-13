@@ -50,7 +50,13 @@ public:
 
   JPetEventType getEventType() const; /// The event type can be a combination of several types
   void setEventType(JPetEventType type);
-  bool isTypeOf(JPetEventType type) const; /// check if the event is of a given type. It can belong to more than one category!
+  /** AddEventType Adds next event type to existing types e.g. if type is set to k2Gamma
+  *   and we call event.addEventType(kPrompt) the type will be set to k2Gamma|K2Prompt.
+  *   If the event type was only kUnknown then it is reset to the new type
+  */
+  void addEventType(JPetEventType type);
+  bool isTypeOf(JPetEventType type) const; /// check if the event is of a given type. Event can belong to more than one category e.g. k2Gamma|kScattered.
+  bool isOnlyTypeOf(JPetEventType type) const;/// check if the event is of only given type e.g. isOnlyTypeOf(k2Gamma) will return false if the type is k2Gamma|kScattered.
 
   ClassDef(JPetEvent, 1);
 
