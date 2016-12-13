@@ -172,7 +172,7 @@ boost::property_tree::ptree JPetParamSaverAscii::layerToInfo(const JPetLayer& la
   info.put("name", layer.getName());
   info.put("radius", layer.getRadius());
 
-  info.put(objectsNames.at(ParamObjectType::kFrame) + "_id", layer.getFrame().getId());
+  info.put(objectsNames.at(ParamObjectType::kFrame) + "_id", layer.getFrame().getID());
   return info;
 }
 
@@ -189,7 +189,7 @@ void JPetParamSaverAscii::fillFrames(boost::property_tree::ptree& runContents, c
 boost::property_tree::ptree JPetParamSaverAscii::frameToInfo(const JPetFrame& frame)
 {
   boost::property_tree::ptree info;
-  info.put("id", frame.getId());
+  info.put("id", frame.getID());
   info.put("active", frame.getIsActive());
   info.put("status", frame.getStatus());
   info.put("description", frame.getDescription());
