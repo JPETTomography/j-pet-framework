@@ -62,3 +62,17 @@ bool JPetEvent::isTypeOf(JPetEventType type) const
 {
   return (fType & type) == type;
 }
+
+bool JPetEvent::isOnlyTypeOf(JPetEventType type) const
+{
+  return fType == type;
+}
+
+void JPetEvent::addEventType(JPetEventType type)
+{
+  if (isOnlyTypeOf(JPetEventType::kUnknown)) {
+    setEventType(type);
+  } else {
+    fType = static_cast<JPetEventType>(fType | type); /// adding flag to the existing one
+  }
+}
