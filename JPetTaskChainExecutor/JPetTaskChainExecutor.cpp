@@ -91,7 +91,7 @@ void* JPetTaskChainExecutor::processProxy(void* runner)
 
 TThread* JPetTaskChainExecutor::run()
 {
-  TThread* thread = new TThread(to_string(fInputSeqId).c_str(), processProxy, (void*)this);
+  TThread* thread = new TThread(std::to_string(fInputSeqId).c_str(), processProxy, (void*)this);
   assert(thread);
   thread->Run();
   return thread;
