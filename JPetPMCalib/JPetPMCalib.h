@@ -24,7 +24,7 @@
  */
 class JPetPMCalib: public TNamed
 {
-protected:
+public:
   struct JPetPMCalibAssignment {
     JPetPMCalibAssignment(int id, int photomultiplier_id);
 

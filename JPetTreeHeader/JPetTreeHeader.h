@@ -36,7 +36,7 @@
  *
  */
 class JPetTreeHeader: public TObject{
- protected:
+ public:
   struct ProcessingStageInfo
   {
     std::string fModuleName;
