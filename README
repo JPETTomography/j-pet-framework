@@ -11,7 +11,7 @@ The Latest Version
 
 The latest stable version can be downloaded from the github repository. You must have git client istalled and do:
 
-git clone https://github.com/JPETTomography/j-pet-framework.git myFramework
+git clone --recursive https://github.com/JPETTomography/j-pet-framework.git myFramework
 
 Documentation
 -------------
