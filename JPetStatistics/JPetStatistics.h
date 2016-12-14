@@ -32,7 +32,8 @@
 class JPetStatistics: public TObject{
   
  public:
-  
+  JPetStatistics(){}
+  ~JPetStatistics();
   void createHistogram(TObject * object);
   void createGraph(TObject * object);
   void createCanvas(TObject * object);
@@ -45,7 +46,7 @@ class JPetStatistics: public TObject{
 
   const THashTable * getHistogramsTable() const;
   
-  ClassDef(JPetStatistics,1); 
+  ClassDef(JPetStatistics,2); 
     
  protected:
   THashTable fHistos;
