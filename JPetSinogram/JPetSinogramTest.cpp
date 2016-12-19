@@ -46,6 +46,13 @@ BOOST_AUTO_TEST_CASE( sinogram )
   res << width << " " << height << std::endl;
   res << "255" << std::endl;
 
+  for (int i = 0; i < 180; i++ ) {
+    for (int j = 0; j < 256; j++ ) {
+      res << (int)result[i][j] << " "; //barray[i + j * views] = (byte) projection[i][j];
+    }
+    res << std::endl;
+  }
+
   for(std::vector<double> p : result) {
     for(double r : p)
       res << (int)r << " ";
