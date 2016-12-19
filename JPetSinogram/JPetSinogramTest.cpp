@@ -39,15 +39,17 @@ BOOST_AUTO_TEST_CASE( sinogram )
   }
   //m(30, 30) = 100;
   JPetSinogram sin;
-  std::vector<std::vector<double>> result = sin.sinogram(m, 180, 256); // value, theta, s
+  int views = 180;
+  int scans = 256;
+  std::vector<std::vector<double>> result = sin.sinogram(m, views, scans); // value, theta, s
   std::ofstream res;
   res.open("image.ppm");
   res << "P2" << std::endl;
-  res << width << " " << height << std::endl;
+  res << scans << " " << views << std::endl;
   res << "255" << std::endl;
 
-  for (int i = 0; i < 180; i++ ) {
-    for (int j = 0; j < 256; j++ ) {
+  for (int i = 0; i < views; i++ ) {
+    for (int j = 0; j < scans; j++ ) {
       res << (int)result[i][j] << " "; //barray[i + j * views] = (byte) projection[i][j];
     }
     res << std::endl;
