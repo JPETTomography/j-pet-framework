@@ -18,7 +18,7 @@ public:
   //is mapped as i*n + j element
   resultType sinogram(matrix<int> emissionMatrix, int views, int scans);
 private:
-  void normalize2DArray(resultType &data, int imax, int jmax, double min, double max);
+
 };
 
 

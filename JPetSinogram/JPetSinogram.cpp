@@ -180,24 +180,30 @@ resultType JPetSinogram::sinogram(matrix<int> emissionMatrix, int views, int sca
       } i++;
   }
   i=0;
-  normalize2DArray(proj, views, scans, 0, 255);
+
+  int min = 0;
+  int max = 255;
+
+  double datamax = proj[0][0];
+  double datamin = proj[0][0];
+  for (unsigned int k = 0; k < proj.size(); k++ ) {
+    for (unsigned int j = 0; j < proj[0].size(); j++ ) {
+      if(proj[k][j] < 0) proj[k][j] = 0;
+      if(proj[k][j] > datamax) datamax = proj[k][j];
+      if(proj[k][j] < datamin) datamin = proj[k][j];
+    }
+  }
+  std::cout << "datamax: " << datamax  << "datamin: " << datamin << std::endl;
+  for (unsigned int k = 0; k < proj.size(); k++ ) {
+    for (unsigned int j = 0; j < proj[0].size(); j++ ) {
+      //std::cout << proj[i][j] << " ";
+      double factor = max/datamax;
+      //std::cout << "factor: " << factor << " res: " << ((proj[k][j]-datamin) * factor) << " val: " << proj[k][j] <<std::endl;
+      
+      proj[k][j] = ((proj[k][j]-datamin) * factor);
+      //std::cout << proj[i][j] << " " << (((proj[i][j]-datamin) * (max))/datamax) << std::endl;
+    }
+  }
   
   return proj;
-}
-
-void JPetSinogram::normalize2DArray(resultType &data, int imax, int jmax, double min, double max) {
-  double datamax = data[0][0];
-  double datamin = data[0][0];
-  for (int i = 0; i < imax; i++ ) {
-    for ( int j = 0; j < jmax; j++ ) {
-      if(data[i][j] < 0) data[i][j] = 0;
-      if(data[i][j] > max) datamax = data[i][j];
-      if(data[i][j] < min) datamin = data[i][j];
-    }
-  }
-  for ( int i = 0; i < imax; i++ ) {
-    for ( int j = 0; j < jmax; j++ ) {
-      data[i][j] = (double) (((data[i][j]-datamin) * (max))/datamax);
-    }
-  }
 }
