@@ -16,13 +16,14 @@
 #ifndef JPETTASKIO_H
 #define JPETTASKIO_H
 #include "../JPetTaskInterface/JPetTaskInterface.h"
+#include "../JPetTaskRunner/JPetTaskRunner.h"
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetStatistics/JPetStatistics.h"
 #include "../JPetAuxilliaryData/JPetAuxilliaryData.h"
 #include "../JPetOptions/JPetOptions.h"
 #include "../JPetTask/JPetTask.h"
 #include "../JPetProgressBarManager/JPetProgressBarManager.h"
-
+#include <memory>
 
 class JPetWriter;
 class JPetReader;
@@ -36,7 +37,7 @@ class JPetAuxilliaryData;
  * @brief Class representing computing task with input/output operations.
  *
  */
-class JPetTaskIO: public JPetTaskInterface
+class JPetTaskIO: public JPetTaskRunner
 {
 public:
   JPetTaskIO();
@@ -44,8 +45,7 @@ public:
   virtual void exec();
   virtual void terminate();
   virtual ~JPetTaskIO();
-  virtual void addSubTask(JPetTaskInterface* subtask);
-  virtual JPetTask* getSubTask() const;
+  virtual void runTask() {};
 
   void setOptions(const JPetOptions& opts);
   inline JPetOptions getOptions() const {
@@ -64,7 +64,6 @@ protected:
   const JPetParamBank& getParamBank();
   JPetParamManager& getParamManager();
 
-  JPetTask* fTask;
   int fEventNb;
   JPetOptions fOptions; //options like max num of events, first event, last event, inputFileType, outputFileType
   JPetWriter* fWriter;
