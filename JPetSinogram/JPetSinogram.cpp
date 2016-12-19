@@ -82,16 +82,17 @@ long long JPetSinogram::forwardProjection(float s, float theta, matrix<int> emis
 //   return result;
 // }
   typedef std::shared_ptr<double[]> ManagedDouble;
-  typedef std::shared_ptr<ManagedDouble[]> resultType;
+  typedef std::vector<std::vector<double>> resultType;
 
 resultType JPetSinogram::sinogram(matrix<int> emissionMatrix, int views, int scans) {
   int i;
   i=0;
-  auto proj = std::shared_ptr<ManagedDouble[]>(new ManagedDouble[views]);
+  std::vector<std::vector<double>> proj(views, std::vector<double>(scans));
+  //resultType proj = resultType(new ManagedDouble[views]);
   //std::shared_ptr<double**> proj(new double*[views]);
-  for(int k = 0; k < views; k++) {
-    (*proj)[k] = ManagedDouble(new double[scans]);
-  }
+  //for(int k = 0; k < views; k++) {
+  //  proj[k] = ManagedDouble(new double[scans]);
+  //}
 
   double pos, val, Aleft, Aright;
   int x, y, Xcenter, Ycenter, Ileft, Iright;
@@ -103,7 +104,7 @@ resultType JPetSinogram::sinogram(matrix<int> emissionMatrix, int views, int sca
 
   float phi = 0., stepsize = 0.;
   int ang1 = 0, ang2 = 180;
-
+  stepsize = (ang2 - ang1) / views;
   for (phi=ang1;phi<ang2;phi=phi+stepsize){
       sintab[i] = std::sin((double) phi * M_PI / 180 - M_PI/2);
       costab[i] = std::cos((double) phi * M_PI / 180 - M_PI/2);
@@ -148,7 +149,7 @@ resultType JPetSinogram::sinogram(matrix<int> emissionMatrix, int views, int sca
                                   + weight * emissionMatrix((x+Xcenter), (y+Ycenter+1));
                       
                   }
-              } (*(*proj)[i])[S] = val/std::abs(sintab[i]); val=0;
+              } proj[i][S] = val/std::abs(sintab[i]); val=0;
               
           }
       }
@@ -172,7 +173,7 @@ resultType JPetSinogram::sinogram(matrix<int> emissionMatrix, int views, int sca
                                   + weight * emissionMatrix((x+Xcenter+1), (y+Ycenter));
                       
                   }
-              } (*(*proj)[i])[S] = val/std::abs(costab[i]); val=0;
+              } proj[i][S] = val/std::abs(costab[i]); val=0;
               
           }
           
@@ -184,19 +185,19 @@ resultType JPetSinogram::sinogram(matrix<int> emissionMatrix, int views, int sca
   return proj;
 }
 
-void JPetSinogram::normalize2DArray(resultType data, int imax, int jmax, double min, double max) {
-  double datamax = (*(*data)[0])[0];
-  double datamin = (*(*data)[0])[0];
+void JPetSinogram::normalize2DArray(resultType &data, int imax, int jmax, double min, double max) {
+  double datamax = data[0][0];
+  double datamin = data[0][0];
   for (int i = 0; i < imax; i++ ) {
     for ( int j = 0; j < jmax; j++ ) {
-      if((*(*data)[i])[j] < 0) (*(*data)[i])[j] = 0;
-      if((*(*data)[i])[j] > max) datamax = (*(*data)[i])[j];
-      if ((*(*data)[i])[j] < min) datamin = (*(*data)[i])[j];
+      if(data[i][j] < 0) data[i][j] = 0;
+      if(data[i][j] > max) datamax = data[i][j];
+      if(data[i][j] < min) datamin = data[i][j];
     }
   }
   for ( int i = 0; i < imax; i++ ) {
     for ( int j = 0; j < jmax; j++ ) {
-      (*(*data)[i])[j] = (double) ((((*(*data)[i])[j]-datamin) * (max))/datamax);
+      data[i][j] = (double) (((data[i][j]-datamin) * (max))/datamax);
     }
   }
 }
