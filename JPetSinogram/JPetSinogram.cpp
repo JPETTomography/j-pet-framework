@@ -41,6 +41,9 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
 
   float phi = 0., stepsize = 0.;
   stepsize = (ang2 - ang1) / views;
+
+  assert(stepsize > 0); //maybe != 0 ?
+
   for (phi = ang1; phi < ang2; phi = phi + stepsize) {
       sintab[i] = std::sin((double) phi * M_PI / 180 - M_PI/2);
       costab[i] = std::cos((double) phi * M_PI / 180 - M_PI/2);
@@ -50,16 +53,16 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
   Xcenter = inputMatrixSize / 2;
   Ycenter = inputMatrixSize / 2;
   i=0;
+
   //if no. scans is greater than the image width, then scale will be <1
-  
   double scale = inputMatrixSize*1.42/scans;
   
   int N=0;
   double value = 0.;
-  double weight = 0;
+  double weight = 0.;
   double sang = std::sqrt(2)/2;
   for (phi=ang1;phi<ang2;phi=phi+stepsize){
-      double a = -costab[i]/sintab[i] ;
+      double a = -costab[i]/sintab[i];
       double aa = 1/a;
       if (std::abs(sintab[i]) > sang){
           for (scanNumber=0;scanNumber<scans;scanNumber++){
@@ -123,6 +126,10 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
       if(proj[k][j] < datamin) datamin = proj[k][j];
     }
   }
+
+  if(datamax == 0.)
+    datamax = 1.;
+
   for (unsigned int k = 0; k < proj.size(); k++ ) {
     for (unsigned int j = 0; j < proj[0].size(); j++ ) {
       proj[k][j] = (double) ((proj[k][j]-datamin) * max/datamax);
