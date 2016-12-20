@@ -26,8 +26,6 @@ BOOST_AUTO_TEST_CASE( sinogram )
   unsigned int height;
   in >> width;
   in >> height;
-  std::cout << line << std::endl;
-  std::cout << width << " " << height << std::endl;
   int val;
   in >> val; // skip max val
   matrix<int> m (width, height);

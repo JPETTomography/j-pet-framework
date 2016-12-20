@@ -2,7 +2,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <vector>
 #include <utility>
-#include <cmath> //for sin and cos
+#include <cmath>
 using namespace boost::numeric::ublas;
 
 JPetSinogram::JPetSinogram() { }
@@ -10,18 +10,19 @@ JPetSinogram::JPetSinogram() { }
 JPetSinogram::~JPetSinogram() { }
 
 /*! \brief Function returning vector of vectors with value of sinogram(180/views degree step and emissionMatrix.size1()/scans size) scaled to <min,max> 
- *  \param emissionMatrix matrix
+ *  \param emissionMatrix matrix, need to by NxN
  *  \param views number of views on object, degree step is calculated as (ang2 - ang1) / views
  *  \param scans number of scans on object, step is calculated as emissionMatrix.size(1) / scans
  *  \param fast if true use nearest neighbour interpolation instead linear interpolation in calculation (Optional, default false)
  *  \param min minimum value in returned sinogram (Optional, default 0)
  *  \param max maximum value in returned sinogram (Optional, default 255)
  *  \param ang1 start angle for projection (Optional, default 0)
- *  \param ang2 end angle for projection (Optional, defautl 180) 
+ *  \param ang2 end angle for projection (Optional, default 180) 
 */
 
 std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatrix, int views, int scans, 
                                                       bool fast, int min, int max, float ang1, float ang2) {
+  assert(emissionMatrix.size1() == emissionMatrix.size2());
   int i = 0;
   std::vector<std::vector<double>> proj(views, std::vector<double>(scans)); //create vector of size views, initialize it with vector of size scans
 
@@ -117,7 +118,6 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
       if(proj[k][j] < datamin) datamin = proj[k][j];
     }
   }
-  std::cout << "datamax: " << datamax  << "datamin: " << datamin << std::endl;
   for (unsigned int k = 0; k < proj.size(); k++ ) {
     for (unsigned int j = 0; j < proj[0].size(); j++ ) {
       proj[k][j] = (double) ((proj[k][j]-datamin) * max/datamax);
