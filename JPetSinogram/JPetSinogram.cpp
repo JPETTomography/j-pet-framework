@@ -23,6 +23,11 @@ JPetSinogram::~JPetSinogram() { }
 std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatrix, int views, int scans, 
                                                       bool fast, int min, int max, float ang1, float ang2) {
   assert(emissionMatrix.size1() == emissionMatrix.size2());
+  assert(emissionMatrix.size1() > 0);
+  assert(views > 0);
+  assert(scans > 0);
+  assert(min < max);
+  assert(ang1 < ang2);
   int i = 0;
   std::vector<std::vector<double>> proj(views, std::vector<double>(scans)); //create vector of size views, initialize it with vector of size scans
 
