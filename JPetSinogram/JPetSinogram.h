@@ -11,12 +11,7 @@ public:
   JPetSinogram();
   ~JPetSinogram();
 
-  typedef std::shared_ptr<double[]> ManagedDouble;
-  typedef std::vector<std::vector<double>> resultType;
-
-  long long forwardProjection(float s, float theta, matrix<int> emissionMatrix); //row major orientation, element m[i,j]
-  //is mapped as i*n + j element
-  resultType sinogram(matrix<int> emissionMatrix, int views, int scans);
+  std::vector<std::vector<double>> sinogram(matrix<int> emissionMatrix, int views, int scans, bool fast = false, int min = 0, int max = 255, float ang1 = 0, float ang2 = 180);
 private:
 
 };
