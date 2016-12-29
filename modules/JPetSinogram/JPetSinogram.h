@@ -8,12 +8,11 @@
 using namespace boost::numeric::ublas;
 class JPetSinogram {
 public:
+  static std::vector<std::vector<double>> sinogram(matrix<int> emissionMatrix, int views, int scans, 
+            bool fast = false, float ang1 = 0, float ang2 = 180, bool scaleResult = false, int min = 0, int max = 255);
+private:
   JPetSinogram();
   ~JPetSinogram();
-
-  std::vector<std::vector<double>> sinogram(matrix<int> emissionMatrix, int views, int scans, bool fast = false, int min = 0, int max = 255, float ang1 = 0, float ang2 = 180);
-private:
-
 };
 
 
