@@ -5,6 +5,8 @@
 #include <cmath>
 using namespace boost::numeric::ublas;
 
+#define sang std::sqrt(2)/2
+
 JPetSinogram::JPetSinogram() { }
 
 JPetSinogram::~JPetSinogram() { }
@@ -14,45 +16,43 @@ JPetSinogram::~JPetSinogram() { }
  *  \param views number of views on object, degree step is calculated as (ang2 - ang1) / views
  *  \param scans number of scans on object, step is calculated as emissionMatrix.size(1) / scans
  *  \param fast if true use nearest neighbour interpolation instead linear interpolation in calculation (Optional, default false)
- *  \param min minimum value in returned sinogram (Optional, default 0)
- *  \param max maximum value in returned sinogram (Optional, default 255)
  *  \param ang1 start angle for projection (Optional, default 0)
  *  \param ang2 end angle for projection (Optional, default 180) 
+ *  \param scaleResult if set to true, scale result to <min, max> (Optional, default false)
+ *  \param min minimum value in returned sinogram (Optional, default 0)
+ *  \param max maximum value in returned sinogram (Optional, default 255)
 */
 
 std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatrix, int views, int scans, 
-                                                      bool fast, int min, int max, float ang1, float ang2) {
+                                                      bool fast, float ang1, float ang2, bool scaleResult, int min, int max) {
   assert(emissionMatrix.size1() == emissionMatrix.size2());
   assert(emissionMatrix.size1() > 0);
   assert(views > 0);
   assert(scans > 0);
   assert(min < max);
   assert(ang1 < ang2);
-  int i = 0;
-  std::vector<std::vector<double>> proj(views, std::vector<double>(scans)); //create vector of size views, initialize it with vector of size scans
 
-  int x = 0, y = 0, Xcenter = 0, Ycenter = 0;
-
-  std::unique_ptr<double[]>  sintab(new double[views]);
-  std::unique_ptr<double[]>  costab(new double[views]);
+  //create vector of size views, initialize it with vector of size scans
+  std::vector<std::vector<double>> proj(views, std::vector<double>(scans)); 
+  std::unique_ptr<double[]> sintab(new double[views]);
+  std::unique_ptr<double[]> costab(new double[views]);
   
-  int scanNumber=0;
-  int inputMatrixSize = emissionMatrix.size1();
-
   float phi = 0., stepsize = 0.;
   stepsize = (ang2 - ang1) / views;
 
   assert(stepsize > 0); //maybe != 0 ?
-
+  int i = 0;
   for (phi = ang1; phi < ang2; phi = phi + stepsize) {
       sintab[i] = std::sin((double) phi * M_PI / 180 - M_PI/2);
       costab[i] = std::cos((double) phi * M_PI / 180 - M_PI/2);
       i++;
-  }
-  
+  } i=0;
+
+  int scanNumber=0;
+  int inputMatrixSize = emissionMatrix.size1();
+  int x = 0, y = 0, Xcenter = 0, Ycenter = 0;
   Xcenter = inputMatrixSize / 2;
   Ycenter = inputMatrixSize / 2;
-  i=0;
 
   //if no. scans is greater than the image width, then scale will be <1
   double scale = inputMatrixSize*1.42/scans;
@@ -60,7 +60,6 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
   int N=0;
   double value = 0.;
   double weight = 0.;
-  double sang = std::sqrt(2)/2;
   for (phi=ang1;phi<ang2;phi=phi+stepsize){
       double a = -costab[i]/sintab[i];
       double aa = 1/a;
@@ -116,23 +115,24 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
       } i++;
   }
   i=0;
-
-  double datamax = proj[0][0];
-  double datamin = proj[0][0];
-  for (unsigned int k = 0; k < proj.size(); k++ ) {
-    for (unsigned int j = 0; j < proj[0].size(); j++ ) {
-      if(proj[k][j] < min) proj[k][j] = min;
-      if(proj[k][j] > datamax) datamax = proj[k][j];
-      if(proj[k][j] < datamin) datamin = proj[k][j];
+  if(scaleResult) {
+    double datamax = proj[0][0];
+    double datamin = proj[0][0];
+    for (unsigned int k = 0; k < proj.size(); k++ ) {
+        for (unsigned int j = 0; j < proj[0].size(); j++ ) {
+        if(proj[k][j] < min) proj[k][j] = min;
+        if(proj[k][j] > datamax) datamax = proj[k][j];
+        if(proj[k][j] < datamin) datamin = proj[k][j];
+        }
     }
-  }
 
-  if(datamax == 0.)
-    datamax = 1.;
+    if(datamax == 0.)
+        datamax = 1.;
 
-  for (unsigned int k = 0; k < proj.size(); k++ ) {
-    for (unsigned int j = 0; j < proj[0].size(); j++ ) {
-      proj[k][j] = (double) ((proj[k][j]-datamin) * max/datamax);
+    for (unsigned int k = 0; k < proj.size(); k++ ) {
+        for (unsigned int j = 0; j < proj[0].size(); j++ ) {
+        proj[k][j] = (double) ((proj[k][j]-datamin) * max/datamax);
+        }
     }
   }
   
