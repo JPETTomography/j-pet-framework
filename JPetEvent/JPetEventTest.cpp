@@ -219,6 +219,7 @@ BOOST_AUTO_TEST_CASE(addEventType3)
   BOOST_REQUIRE((type & JPetEventType::kScattered) != JPetEventType::kScattered);
 
   event.addEventType(JPetEventType::k3Gamma);
+  type = event.getEventType();
   BOOST_REQUIRE((type & JPetEventType::k2Gamma) == JPetEventType::k2Gamma);
   BOOST_REQUIRE((type & JPetEventType::k3Gamma) == JPetEventType::k3Gamma);
   BOOST_REQUIRE((type & JPetEventType::kUnknown) != JPetEventType::kUnknown);
