@@ -113,6 +113,8 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 file(GLOB HEADERS JPet*/*.h tools/JPet*/*.h modules/JPet*/*.h)
 file(GLOB SOURCES JPet*/*.cpp tools/JPet*/*.cpp modules/JPet*/*.cpp)
 file(GLOB UNIT_TEST_SOURCES JPet*/*Test.cpp)
+file(GLOB MODULES_UNIT_TEST_SOURCES modules/JPet*/*Test.cpp)
+list(APPEND UNIT_TEST_SOURCES ${MODULES_UNIT_TEST_SOURCES})
 list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
 
 ##download test files and config files
