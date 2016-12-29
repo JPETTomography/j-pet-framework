@@ -12,7 +12,36 @@ using namespace boost::numeric::ublas;
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX)
+BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_IN_CENTER)
+{
+  matrix<int> m(10, 10);
+  for (unsigned int i = 0; i < 10; i++)
+  {
+    for (unsigned int j = 0; j < 10; j++)
+    {
+      m(i, j) = 0;
+    }
+  }
+
+  m(5, 5) = 100;
+  int views = 2;
+  int scans = 10;
+  std::vector<std::vector<double>> result = JPetSinogram::sinogram(m, views, scans);
+  for (int i = 0; i < views; i++)
+  {
+    for (int j = 0; j < scans; j++)
+    {
+      std::cout << result[i][j] << " ";
+      //if(j == 4) 
+      //  BOOST_REQUIRE_EQUAL((int)result[i][j], 100);
+      //else 
+      //  BOOST_REQUIRE_EQUAL((int)result[i][j], 0);
+    }
+    std::cout << std::endl;
+  }
+}
+
+BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_NOT_IN_CENTER)
 {
   matrix<int> m(10, 10);
   for (unsigned int i = 0; i < 10; i++)
@@ -24,7 +53,7 @@ BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX)
   }
 
   m(3, 3) = 100;
-  int views = 180;
+  int views = 2;
   int scans = 10;
   std::vector<std::vector<double>> result = JPetSinogram::sinogram(m, views, scans);
   for (int i = 0; i < views; i++)
