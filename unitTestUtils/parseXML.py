@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 import glob
 
 def parse():
-	return 1
+    return 1
     for infile in glob.glob('*.xml'):
         try:
             tree = ET.parse(infile)
