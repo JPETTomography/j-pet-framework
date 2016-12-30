@@ -7,15 +7,15 @@ import glob
 
 def parse():
     for infile in glob.glob('*.xml'):
-	try:
+        try:
             tree = ET.parse(infile)
-        except ParseError:
-    	    print "The file xml isn't correct. There were some mistakes in the tests "
+            except ParseError:
+            print "The file xml isn't correct. There were some mistakes in the tests "
             return 1
-	else:
+        else:
             root = tree.getroot()
-	    if ((root.findall('.//FatalError'))!=[]):
+            if ((root.findall('.//FatalError'))!=[]):
                 print "Error detected"
-	        return 1
+                return 1
 
 parse()
