@@ -9,7 +9,7 @@ def parse():
     for infile in glob.glob('*.xml'):
         try:
             tree = ET.parse(infile)
-            except ParseError:
+        except ParseError:
             print "The file xml isn't correct. There were some mistakes in the tests "
             return 1
         else:
