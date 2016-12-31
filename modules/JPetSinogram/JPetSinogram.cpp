@@ -15,7 +15,7 @@ JPetSinogram::~JPetSinogram() { }
  *  \param emissionMatrix matrix, need to by NxN
  *  \param views number of views on object, degree step is calculated as (ang2 - ang1) / views
  *  \param scans number of scans on object, step is calculated as emissionMatrix.size(1) / scans
- *  \param fast if true use nearest neighbour interpolation instead linear interpolation in calculation (Optional, default false)
+ *  \param nearest if true use nearest neighbour interpolation instead linear interpolation in calculation (Optional, default false)
  *  \param ang1 start angle for projection (Optional, default 0)
  *  \param ang2 end angle for projection (Optional, default 180) 
  *  \param scaleResult if set to true, scale result to <min, max> (Optional, default false)
@@ -24,7 +24,7 @@ JPetSinogram::~JPetSinogram() { }
 */
 
 std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatrix, int views, int scans, 
-                                                      bool fast, float ang1, float ang2, bool scaleResult, int min, int max) {
+                                                      bool nearest, float ang1, float ang2, bool scaleResult, int min, int max) {
   assert(emissionMatrix.size1() == emissionMatrix.size2());
   assert(emissionMatrix.size1() > 0);
   assert(views > 0);
@@ -70,7 +70,7 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
               b =  b * scale;
               
               for (x = -Xcenter; x < Xcenter; x++){
-                  if (fast == true){ //nearest neighbour interpolation
+                  if (nearest){ //nearest neighbour interpolation
                       y = (int) std::round(a*x + b);
                       
                       if (y >= -Xcenter && y < Xcenter )
@@ -95,7 +95,7 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
               double bb = (N - costab[i] - sintab[i]) / costab[i];
               bb = bb * scale;
               for (y = -Ycenter; y < Ycenter; y++) {
-                  if (fast ==true){ //nearest neighbour interpolation
+                  if (nearest){ //nearest neighbour interpolation
                       x = (int) std::round(aa*y + bb);
                       if (x >= -Xcenter && x < Xcenter )
                           value += emissionMatrix(x+Xcenter, y+Ycenter);
