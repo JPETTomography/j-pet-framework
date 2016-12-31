@@ -5,8 +5,6 @@
 #include <cmath>
 using namespace boost::numeric::ublas;
 
-#define sang std::sqrt(2)/2
-
 JPetSinogram::JPetSinogram() { }
 
 JPetSinogram::~JPetSinogram() { }
@@ -58,6 +56,8 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
 
   //if no. scans is greater than the image width, then scale will be <1
   double scale = inputMatrixSize*1.42/scans;
+
+  const double sang = std::sqrt(2)/2;
   
   int N=0;
   double value = 0.;
