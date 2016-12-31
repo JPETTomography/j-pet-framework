@@ -37,8 +37,8 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
   std::unique_ptr<double[]> sintab(new double[views]);
   std::unique_ptr<double[]> costab(new double[views]);
   
-  float phi = 0., stepsize = 0.;
-  stepsize = (ang2 - ang1) / views;
+  float phi = 0.;
+  float stepsize = (ang2 - ang1) / views;
 
   assert(stepsize > 0); //maybe != 0 ?
   int i = 0;
@@ -50,9 +50,11 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
 
   int scanNumber=0;
   int inputMatrixSize = emissionMatrix.size1();
-  int x = 0, y = 0, Xcenter = 0, Ycenter = 0;
-  Xcenter = inputMatrixSize / 2;
-  Ycenter = inputMatrixSize / 2;
+  int x = 0, y = 0;
+  int center = inputMatrixSize / 2;
+  //Xcenter = 0, Ycenter = 0;
+  //Xcenter = inputMatrixSize / 2;
+  //Ycenter = inputMatrixSize / 2;
 
   //if no. scans is greater than the image width, then scale will be <1
   double scale = inputMatrixSize*1.42/scans;
@@ -69,20 +71,20 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
               double b = (N - costab[i] - sintab[i]) / sintab[i];
               b =  b * scale;
               
-              for (x = -Xcenter; x < Xcenter; x++){
+              for (x = -center; x < center; x++){
                   if (nearest){ //nearest neighbour interpolation
                       y = (int) std::round(a*x + b);
                       
-                      if (y >= -Xcenter && y < Xcenter )
-                          value += emissionMatrix((x+Xcenter),(y+Ycenter));
+                      if (y >= -center && y < center )
+                          value += emissionMatrix((x+center),(y+center));
                       
                   } else {
                       y = (int) std::round(a*x + b); //linear interpolation
                       weight = std::abs((a*x + b) - std::ceil(a*x + b));
                       
-                      if (y >= -Xcenter && y+1 < Xcenter )
-                          value += (1-weight) * emissionMatrix((x+Xcenter),(y+Ycenter))
-                                  + weight * emissionMatrix((x+Xcenter), (y+Ycenter+1));
+                      if (y >= -center && y+1 < center )
+                          value += (1-weight) * emissionMatrix((x+center),(y+center))
+                                  + weight * emissionMatrix((x+center), (y+center+1));
                       
                   }
               } proj[i][scanNumber] = value/std::abs(sintab[i]); value=0;
@@ -94,18 +96,18 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
               N = scanNumber - scans/2;
               double bb = (N - costab[i] - sintab[i]) / costab[i];
               bb = bb * scale;
-              for (y = -Ycenter; y < Ycenter; y++) {
+              for (y = -center; y < center; y++) {
                   if (nearest){ //nearest neighbour interpolation
                       x = (int) std::round(aa*y + bb);
-                      if (x >= -Xcenter && x < Xcenter )
-                          value += emissionMatrix(x+Xcenter, y+Ycenter);
+                      if (x >= -center && x < center )
+                          value += emissionMatrix(x+center, y+center);
                   } else { //linear interpolation
                       x = (int) std::round(aa*y + bb);
                       weight = std::abs((aa*y + bb) - std::ceil(aa*y + bb));
                       
-                      if (x >= -Xcenter && x+1 < Xcenter )
-                          value += (1-weight) * emissionMatrix((x+Xcenter), (y+Ycenter))
-                                  + weight * emissionMatrix((x+Xcenter+1), (y+Ycenter));
+                      if (x >= -center && x+1 < center )
+                          value += (1-weight) * emissionMatrix((x+center), (y+center))
+                                  + weight * emissionMatrix((x+center+1), (y+center));
                       
                   }
               } proj[i][scanNumber] = value/std::abs(costab[i]); value=0;
