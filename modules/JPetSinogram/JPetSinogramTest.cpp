@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(sinogram)
   }
   int views = 180;
   int scans = 256;
-  std::vector<std::vector<double>> result = JPetSinogram::sinogram(m, views, scans); // value, theta, s
+  std::vector<std::vector<double>> result = JPetSinogram::sinogram(m, views, scans, false, 0, 180, true, 0, 255); // value, theta, s
   std::ofstream res;
   res.open("image.ppm");
   res << "P2" << std::endl;
