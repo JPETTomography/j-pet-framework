@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(sinogram)
 {
 
   std::ifstream in;
-  in.open("unitTestData/JPetSinogram/phantom.pgm");
+  in.open("unitTestData/JPetSinogramTest/phantom.pgm");
   std::string line;
   getline(in, line);
   if (line != "P2")
