@@ -12,7 +12,7 @@ using namespace boost::numeric::ublas;
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_IN_CENTER)
+/*BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_IN_CENTER)
 {
   matrix<int> m(10, 10);
   for (unsigned int i = 0; i < 10; i++)
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_NOT_IN_CENTER)
     std::cout << std::endl;
   }
 }
-
+*/
 BOOST_AUTO_TEST_CASE(sinogram)
 {
 
@@ -83,18 +83,21 @@ BOOST_AUTO_TEST_CASE(sinogram)
   in >> height;
   int val;
   in >> val; // skip max val
-  matrix<int> m(width, height);
+  std::vector<std::vector<int>> m(width, std::vector<int>(height));
   for (unsigned int i = 0; i < width; i++)
   {
     for (unsigned int j = 0; j < height; j++)
     {
       in >> val;
-      m(i, j) = val;
+      m[i][j] = val;
+      std::cout << val << " ";
     }
+
+    std::cout << std::endl;
   }
   int views = 180;
   int scans = 256;
-  std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram(m, views, scans, false, 0, 180, true, 0, 255); // value, theta, s
+  std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram(m, views, scans, JPetRecoImageTools::linear, 0, 180, true, 0, 255);
   std::ofstream res;
   res.open("unitTestData/JPetRecoImageToolsTest/sinogram.ppm");
   res << "P2" << std::endl;
@@ -105,17 +108,11 @@ BOOST_AUTO_TEST_CASE(sinogram)
   {
     for (int j = 0; j < scans; j++)
     {
-      res << (int)result[i][j] << " "; //barray[i + j * views] = (byte) projection[i][j];
+      res << (int)result[i][j] << " ";
     }
     res << std::endl;
   }
 
-  for (std::vector<double> p : result)
-  {
-    for (double r : p)
-      res << (int)r << " ";
-    res << std::endl;
-  }
   res.close();
 }
 
