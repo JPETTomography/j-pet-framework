@@ -49,9 +49,9 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
   } i=0;
 
   int scanNumber=0;
-  int inputMatrixSize = emissionMatrix.size1();
+  const int inputMatrixSize = emissionMatrix.size1();
+  const int center = inputMatrixSize / 2;
   int x = 0, y = 0;
-  int center = inputMatrixSize / 2;
   //Xcenter = 0, Ycenter = 0;
   //Xcenter = inputMatrixSize / 2;
   //Ycenter = inputMatrixSize / 2;
