@@ -118,25 +118,29 @@ std::vector<std::vector<double>> JPetSinogram::sinogram(matrix<int> emissionMatr
   }
   i=0;
   if(scaleResult) {
-    double datamax = proj[0][0];
-    double datamin = proj[0][0];
-    for (unsigned int k = 0; k < proj.size(); k++ ) {
-        for (unsigned int j = 0; j < proj[0].size(); j++ ) {
-        if(proj[k][j] < min) proj[k][j] = min;
-        if(proj[k][j] > datamax) datamax = proj[k][j];
-        if(proj[k][j] < datamin) datamin = proj[k][j];
-        }
-    }
-
-    if(datamax == 0.)
-        datamax = 1.;
-
-    for (unsigned int k = 0; k < proj.size(); k++ ) {
-        for (unsigned int j = 0; j < proj[0].size(); j++ ) {
-        proj[k][j] = (double) ((proj[k][j]-datamin) * max/datamax);
-        }
-    }
+    JPetSinogram::scale(proj, min, max);
   }
   
   return proj;
+}
+
+void JPetSinogram::scale(std::vector<std::vector<double>>& v, int min, int max) {
+    double datamax = v[0][0];
+    double datamin = v[0][0];
+    for (unsigned int k = 0; k < v.size(); k++ ) {
+        for (unsigned int j = 0; j < v[0].size(); j++ ) {
+        if(v[k][j] < min) v[k][j] = min;
+        if(v[k][j] > datamax) datamax = v[k][j];
+        if(v[k][j] < datamin) datamin = v[k][j];
+        }
+    }
+
+    if(datamax == 0.) // if max value is 0, no need to scale
+        return;
+
+    for (unsigned int k = 0; k < v.size(); k++ ) {
+        for (unsigned int j = 0; j < v[0].size(); j++ ) {
+        v[k][j] = (double) ((v[k][j]-datamin) * max/datamax);
+        }
+    }
 }
