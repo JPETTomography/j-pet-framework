@@ -16,6 +16,6 @@ def parse():
                 root = tree.getroot()
             if ((root.findall('.//FatalError'))!=[]):
                     print "Error detected"
-                return 1
+                    return 1
 
 parse()
