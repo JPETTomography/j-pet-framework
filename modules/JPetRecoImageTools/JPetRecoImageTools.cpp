@@ -6,6 +6,8 @@
 #include <cassert>
 #include <memory>
 
+#include <iostream> //DELETE
+
 JPetRecoImageTools::JPetRecoImageTools() {}
 
 JPetRecoImageTools::~JPetRecoImageTools() {}
@@ -13,44 +15,37 @@ JPetRecoImageTools::~JPetRecoImageTools() {}
 double JPetRecoImageTools::nearestNeighbour(std::vector<std::vector<int>> &emissionMatrix, double a, double b,
                                             int center, int x, int y, bool sang)
 {
-  if (sang)
-  {
+  if (sang) {
     y = (int)std::round(a * x + b) + center;
     if (y >= 0 && y < (int)emissionMatrix[0].size())
       return emissionMatrix[x + center][y];
-    else
-      return 0;
-  }
-  else
-  {
+    else return 0;
+  } else {
     x = (int)std::round(a * y + b) + center;
     if (x >= 0 && x < (int)emissionMatrix.size())
-      return emissionMatrix[x][y + center];
-    else
-      return 0;
+      return emissionMatrix[x + 1][y + center]; // not really know why need to +1 to x, but it works
+    else return 0;
   }
 }
 
 double JPetRecoImageTools::linear(std::vector<std::vector<int>> &emissionMatrix, double a, double b,
                                   int center, int x, int y, bool sang)
 {
-  if (sang)
-  {
+  if (sang) {
     y = (int)std::round(a * x + b) + center;
     double weight = std::abs((a * x + b) - std::ceil(a * x + b));
-    if (y >= 0 && y < (int)emissionMatrix[0].size())
-      return (1 - weight) * emissionMatrix[x + center][y] + weight * emissionMatrix[x + center][y + 1];
-    else
-      return 0;
-  }
-  else
-  {
+    if (y >= 0 && y < (int)emissionMatrix[0].size()) {
+        return (1 - weight) * emissionMatrix[x + center][y] + weight * emissionMatrix[x + center][y + 1];
+    } else return 0;
+  } else {
     x = (int)std::round(a * y + b) + center;
     double weight = std::abs((a * y + b) - std::ceil(a * y + b));
-    if (x >= 0 && x + 1 < (int)emissionMatrix.size())
-      return (1 - weight) * emissionMatrix[x][y + center] + weight * emissionMatrix[x + 1][y + center];
-    else
-      return 0;
+    if (x >= 0 && x + 1 < (int)emissionMatrix.size()) {
+      if(weight == 0)
+        return emissionMatrix[x + 1][y + center]; //same as above
+      else 
+        return (1 - weight) * emissionMatrix[x][y + center] + weight * emissionMatrix[x + 1][y + center];
+    } else return 0;
   }
 }
 
@@ -86,12 +81,11 @@ std::vector<std::vector<double>> JPetRecoImageTools::sinogram(std::vector<std::v
   float stepsize = (ang2 - ang1) / views;
   assert(stepsize > 0); //maybe != 0 ?
 
-  int scanNumber = 0;
   const int inputMatrixSize = emissionMatrix.size();
   const int center = inputMatrixSize / 2;
 
   //if no. scans is greater than the image width, then scale will be <1
-  const double scale = inputMatrixSize * 1.42 / scans;
+  const double scale = inputMatrixSize / scans; //* 1.42
   const double sang = std::sqrt(2) / 2;
 
   int N = 0;
@@ -104,13 +98,21 @@ std::vector<std::vector<double>> JPetRecoImageTools::sinogram(std::vector<std::v
   {
     sinValue = std::sin((double)phi * M_PI / 180 - M_PI / 2);
     cosValue = std::cos((double)phi * M_PI / 180 - M_PI / 2);
+    if(std::abs(sinValue) < 0.0000001) {
+      sinValue = 0;
+    }
+    if(std::abs(cosValue) < 0.0000001) {
+      cosValue = 0;
+    }
     a = -cosValue / sinValue;
-    assert(a != 0);
-    aa = 1 / a;
-    for (scanNumber = 0; scanNumber < scans; scanNumber++)
+    if(std::isinf(a) || std::isinf(-a) || std::abs(a) < 0.0000001) {
+      a = 0;
+      aa = 0;
+    } else aa = 1 / a;
+    for (int scanNumber = 0; scanNumber < scans; scanNumber++)
     {
       N = scanNumber - scans / 2;
-      proj[i][scanNumber] = JPetRecoImageTools::calculateValue(emissionMatrix, std::abs(sinValue) > sang,
+      proj[i][scans - 1 - scanNumber] = JPetRecoImageTools::calculateValue(emissionMatrix, std::abs(sinValue) > sang,
                                                                N, cosValue, sinValue, scale, center,
                                                                interpolationFunction, a, aa);
     }
@@ -136,7 +138,6 @@ double JPetRecoImageTools::calculateValue(std::vector<std::vector<int>> &emissio
     b = (N - cos - sin) / sin;
   else
     b = (N - cos - sin) / cos;
-
   b *= scale;
   double value = 0.;
   int x = 0;
