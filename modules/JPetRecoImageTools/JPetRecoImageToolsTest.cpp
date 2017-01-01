@@ -1,12 +1,10 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetRecoImageToolsTests
 #include <boost/test/unit_test.hpp>
-#include <boost/numeric/ublas/matrix.hpp>
 #include <vector>
 #include <utility>
 #include <fstream>
 #include <iostream>
-using namespace boost::numeric::ublas;
 
 #include "./JPetRecoImageTools.h"
 
