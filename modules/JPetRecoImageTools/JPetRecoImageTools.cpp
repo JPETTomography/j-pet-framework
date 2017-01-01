@@ -19,9 +19,9 @@ double JPetRecoImageTools::nearestNeighbour(std::vector<std::vector<int>> &emiss
       return emissionMatrix[x + center][y];
     else return 0;
   } else {
-    x = (int)std::round(a * y + b) + center;
+    x = (int)std::round(a * y + b) + center + 1; // not really know why need to +1 to x, but it works
     if (x >= 0 && x < (int)emissionMatrix.size())
-      return emissionMatrix[x + 1][y + center]; // not really know why need to +1 to x, but it works
+      return emissionMatrix[x][y + center]; 
     else return 0;
   }
 }
@@ -36,11 +36,11 @@ double JPetRecoImageTools::linear(std::vector<std::vector<int>> &emissionMatrix,
         return (1 - weight) * emissionMatrix[x + center][y] + weight * emissionMatrix[x + center][y + 1];
     } else return 0;
   } else {
-    x = (int)std::round(a * y + b) + center;
+    x = (int)std::round(a * y + b) + center + 1; // not really know why need to +1 to x, but it works
     double weight = std::abs((a * y + b) - std::ceil(a * y + b));
     if (x >= 0 && x + 1 < (int)emissionMatrix.size()) {
       if(weight == 0)
-        return emissionMatrix[x + 1][y + center]; //same as above
+        return emissionMatrix[x][y + center];
       else 
         return (1 - weight) * emissionMatrix[x][y + center] + weight * emissionMatrix[x + 1][y + center];
     } else return 0;
