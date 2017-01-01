@@ -10,7 +10,7 @@ JPetRecoImageTools::JPetRecoImageTools() {}
 
 JPetRecoImageTools::~JPetRecoImageTools() {}
 
-double JPetRecoImageTools::nearestNeighbour(std::vector<std::vector<int>> &emissionMatrix, double a, double b, 
+double JPetRecoImageTools::nearestNeighbour(std::vector<std::vector<int>> &emissionMatrix, double a, double b,
                                             int center, int x, int y, bool sang)
 {
   if (sang)
@@ -31,7 +31,7 @@ double JPetRecoImageTools::nearestNeighbour(std::vector<std::vector<int>> &emiss
   }
 }
 
-double JPetRecoImageTools::linear(std::vector<std::vector<int>> &emissionMatrix, double a, double b, 
+double JPetRecoImageTools::linear(std::vector<std::vector<int>> &emissionMatrix, double a, double b,
                                   int center, int x, int y, bool sang)
 {
   if (sang)
@@ -66,8 +66,10 @@ double JPetRecoImageTools::linear(std::vector<std::vector<int>> &emissionMatrix,
  *  \param max maximum value in returned sinogram (Optional, default 255)
 */
 
-std::vector<std::vector<double>> JPetRecoImageTools::sinogram(std::vector<std::vector<int>> &emissionMatrix, int views, int scans,
-                                                              std::function<double(std::vector<std::vector<int>> &, double, double, int, int, int, bool)> interpolationFunction,
+std::vector<std::vector<double>> JPetRecoImageTools::sinogram(std::vector<std::vector<int>> &emissionMatrix,
+                                                              int views,int scans, 
+                                                              std::function<double(std::vector<std::vector<int>>&,
+                                                              double, double, int, int, int, bool)> interpolationFunction,
                                                               float ang1, float ang2, bool scaleResult, int min, int max)
 {
   assert(emissionMatrix.size() > 0);
@@ -108,7 +110,7 @@ std::vector<std::vector<double>> JPetRecoImageTools::sinogram(std::vector<std::v
     {
       N = scanNumber - scans / 2;
       proj[i][scanNumber] = JPetRecoImageTools::calculateValue(emissionMatrix, std::abs(sinValue) > sang,
-                                                               N, cosValue, sinValue, scale, center, 
+                                                               N, cosValue, sinValue, scale, center,
                                                                interpolationFunction, a, aa);
     }
     i++;
@@ -122,9 +124,10 @@ std::vector<std::vector<double>> JPetRecoImageTools::sinogram(std::vector<std::v
   return proj;
 }
 
-double JPetRecoImageTools::calculateValue(std::vector<std::vector<int>> &emissionMatrix, bool sang, int N, double cos, 
+double JPetRecoImageTools::calculateValue(std::vector<std::vector<int>> &emissionMatrix, bool sang, int N, double cos,
                                           double sin, double scale, int center,
-                                          std::function<double(std::vector<std::vector<int>> &, double, double, int, int, int, bool)> &interpolationFunction,
+                                          std::function<double(std::vector<std::vector<int>> &,
+                                          double, double, int, int, int, bool)> &interpolationFunction,
                                           double a, double aa)
 {
   double b = 0.;
