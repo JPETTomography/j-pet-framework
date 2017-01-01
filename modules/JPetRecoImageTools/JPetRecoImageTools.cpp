@@ -6,6 +6,7 @@
 #include <cassert>
 #include <memory>
 
+
 JPetRecoImageTools::JPetRecoImageTools() { }
 
 JPetRecoImageTools::~JPetRecoImageTools() { }
@@ -13,32 +14,32 @@ JPetRecoImageTools::~JPetRecoImageTools() { }
 
 double JPetRecoImageTools::nearestNeighbour(std::vector<std::vector<int>> & emissionMatrix, double a, double b, int center, int x, int y, bool sang) {
     if(sang) {
-        y = (int) std::round(a*x + b);           
-        if (y >= -center && y < center )
-            return emissionMatrix[x+center][y+center];
+        y = (int) std::round(a*x + b) + center;           
+        if (y >= 0 && y < emissionMatrix[0].size())
+            return emissionMatrix[x+center][y];
         else return 0; 
     } else {
-        x = (int) std::round(a*y + b);
-        if (x >= -center && x < center )
-            return emissionMatrix[x+center][y+center];
+        x = (int) std::round(a*y + b) + center;
+        if (x >= 0 && x < emissionMatrix.size())
+            return emissionMatrix[x][y+center];
         else return 0;
     }
 }
 
 double JPetRecoImageTools::linear(std::vector<std::vector<int>> & emissionMatrix, double a, double b, int center, int x, int y, bool sang) {
     if(sang) {
-        y = (int) std::round(a*x + b); 
+        y = (int) std::round(a*x + b) + center; 
         double weight = std::abs((a*x + b) - std::ceil(a*x + b));
-        if (y >= -center && y+1 < center )
-            return (1-weight) * emissionMatrix[x+center][y+center]
-                    + weight * emissionMatrix[x+center][y+center+1];
+        if (y >= 0 && y < emissionMatrix[0].size())
+            return (1-weight) * emissionMatrix[x+center][y]
+                    + weight * emissionMatrix[x+center][y+1];
         else return 0;
     } else {
-        x = (int) std::round(a*y + b);
+        x = (int) std::round(a*y + b) + center;
         double weight = std::abs((a*y + b) - std::ceil(a*y + b));
-        if (x >= -center && x+1 < center )
-          return (1-weight) * emissionMatrix[x+center][y+center]
-                  + weight * emissionMatrix[x+center+1][y+center];
+        if (x >= 0 && x + 1 < emissionMatrix.size())
+          return (1-weight) * emissionMatrix[x][y+center]
+                  + weight * emissionMatrix[x+1][y+center];
         else return 0;
         
     }
@@ -100,43 +101,7 @@ std::vector<std::vector<double>> JPetRecoImageTools::sinogram(std::vector<std::v
           N = scanNumber - scans/2;
           proj[i][scanNumber] = JPetRecoImageTools::calculateValue(emissionMatrix, std::abs(sintab[i]) > sang, N, costab[i], sintab[i], scale, center, interpolationFunction, a, aa );
       }
-      /*if (std::abs(sintab[i]) > sang){
-          for (scanNumber=0;scanNumber<scans;scanNumber++){
-              N = scanNumber - scans/2;
-              double b = (N - costab[i] - sintab[i]) / sintab[i];
-              b =  b * scale;
-              for (x = -center; x < center; x++){
-                  value += interpolationFunction(emissionMatrix, a, b, center, x, y);
-              } 
-              proj[i][scanNumber] = value/std::abs(sintab[i]); value=0;
-          }
-      }
-      bool nearest = false; // DELETE, JUST FOR TEST
-      if (std::abs(sintab[i]) <= sang){
-          for (scanNumber=0;scanNumber<scans;scanNumber++){
-              N = scanNumber - scans/2;
-              double bb = (N - costab[i] - sintab[i]) / costab[i];
-              bb = bb * scale;
-              for (y = -center; y < center; y++) {
-                  value += interpolationFunction(emissionMatrix, aa)
-                  if (nearest){ //nearest neighbour interpolation
-                      x = (int) std::round(aa*y + bb);
-                      if (x >= -center && x < center )
-                          value += emissionMatrix(x+center, y+center);
-                  } else { //linear interpolation
-                      x = (int) std::round(aa*y + bb);
-                      weight = std::abs((aa*y + bb) - std::ceil(aa*y + bb));
-                      
-                      if (x >= -center && x+1 < center )
-                          value += (1-weight) * emissionMatrix((x+center), (y+center))
-                                  + weight * emissionMatrix((x+center+1), (y+center));
-                      
-                  }
-              } proj[i][scanNumber] = value/std::abs(costab[i]); value=0;
-              
-          }
-          
-      }*/ i++;
+      i++;
   }
   i=0;
 
@@ -164,12 +129,12 @@ double JPetRecoImageTools::calculateValue(std::vector<std::vector<int>>& emissio
       for (x = -center; x < center; x++){
         value += interpolationFunction(emissionMatrix, a, b, center, x, y, sang);
       }
-      value /= sin;
+      value /= std::abs(sin);
     } else {
       for (y = -center; y < center; y++){
         value += interpolationFunction(emissionMatrix, aa, b, center, x, y, sang);
       }
-      value /= cos;
+      value /= std::abs(cos);
     }
     return value;
 }

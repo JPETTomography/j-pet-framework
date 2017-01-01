@@ -90,10 +90,10 @@ BOOST_AUTO_TEST_CASE(sinogram)
     {
       in >> val;
       m[i][j] = val;
-      std::cout << val << " ";
+      //std::cout << val << " ";
     }
 
-    std::cout << std::endl;
+    //std::cout << std::endl;
   }
   int views = 180;
   int scans = 256;
