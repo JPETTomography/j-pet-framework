@@ -6,8 +6,6 @@
 #include <cassert>
 #include <memory>
 
-#include <iostream> //DELETE
-
 JPetRecoImageTools::JPetRecoImageTools() {}
 
 JPetRecoImageTools::~JPetRecoImageTools() {}
