@@ -105,6 +105,7 @@ std::vector<std::vector<double>> JPetRecoImageTools::sinogram(std::vector<std::v
     sinValue = std::sin((double)phi * M_PI / 180 - M_PI / 2);
     cosValue = std::cos((double)phi * M_PI / 180 - M_PI / 2);
     a = -cosValue / sinValue;
+    assert(a != 0);
     aa = 1 / a;
     for (scanNumber = 0; scanNumber < scans; scanNumber++)
     {
