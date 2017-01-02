@@ -20,4 +20,9 @@ def parse():
         except ParseError:
             eprint("The file xml isn't correct. There were some mistakes in the tests ")
 
-parse()
+def main():
+  parse()
+
+if __name__ == '__main__':
+  main()
+
