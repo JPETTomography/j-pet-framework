@@ -64,7 +64,7 @@ std::vector<JPetOptions> JPetCmdParser::parseAndGenerateOptions(int argc, const 
     throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
   if(variablesMap.count("json")){
-    JPetOptions optionsFromJson JPetOptionsJson::createOptionsFromFile(variablesMap["json"].as<std::string>());
+    JPetOptions optionsFromJson = JPetOptionsJson::createOptionsFromFile(variablesMap["json"].as<std::string>());
     for(auto const& iter : optionsFromJson){
       if((variablesMap.insert((std::pair<std::string, std::string>(iter.first, iter.second)).second==false) && (iter.second != variablesMap[iter.first].as< std::vector<std::string> >()))){
 	  ERROR("Options from json and from command line are invalid");
