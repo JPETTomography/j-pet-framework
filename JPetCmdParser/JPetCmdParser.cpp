@@ -18,6 +18,7 @@
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetLoggerInclude.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
+#include "../JPetOptionsJson/JPetOptionsJson.h"
 #include <stdexcept>
 
 
@@ -33,7 +34,8 @@ JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
   ("runId,i", po::value<int>(), "Run id.")
   ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
   ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
-  ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.");
+  ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.")
+  ("json,j", po::value<std::string>(), "Json file with options.");
 }
 
 JPetCmdParser::~JPetCmdParser()
@@ -61,6 +63,16 @@ std::vector<JPetOptions> JPetCmdParser::parseAndGenerateOptions(int argc, const 
   if (!areCorrectOptions(variablesMap)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
+  if(variablesMap.count("json")){
+    JPetOptions optionsFromJson JPetOptionsJson::createOptionsFromFile(variablesMap["json"].as< std::vector<std::string> >());
+    for(auto const& iter : optionsFromJson){
+      if((variablesMap.insert((std::pair<std::string, std::string>(iter.first, iter.second)).second==false) && (iter.second != variablesMap[iter.first].as< std::vector<std::string> >()))){
+	  ERROR("Options from json and from command line are invalid");
+	  throw std::invalid_argument("Check the json file and options from command line");
+      }	
+    }
+  }
+
 
   return generateOptions(variablesMap);
 }
