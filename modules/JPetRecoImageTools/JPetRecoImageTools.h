@@ -32,14 +32,18 @@ public:
                                InterpolationFunc interpolationFunction = linear,
                                float ang1 = 0, float ang2 = 180, bool scaleResult = false,
                                int min = 0, int max = 255);
-
+  /// Rescale the Matrix in the following way:
+  /// 1. All the values less than minCutoff are set to minCutoff
+  /// 2. Removes the common backgroud term. So the values start at zero
+  /// 3. Rescales all values by rescaleFactor/maxElement
+  /// The final value range is from 0 to rescaleFactor
+  static void rescale(Matrix2DProj& v, double minCutoff, double rescaleFactor);
 private:
   JPetRecoImageTools();
   ~JPetRecoImageTools();
   JPetRecoImageTools(const JPetRecoImageTools&) = delete;
   JPetRecoImageTools& operator=(const JPetRecoImageTools&) = delete;
 
-  static void scale(Matrix2DProj& v, int min, int max);
   static double calculateValue(Matrix2D& emissionMatrix, bool sang, int N, double cos, double sin,
                                double scale, int center,
                                InterpolationFunc& interpolationFunction, double a, double aa);
