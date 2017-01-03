@@ -156,15 +156,15 @@ void JPetRecoImageTools::rescale(Matrix2DProj& matrix, double minCutoff, double 
         datamin = matrix[k][j];
     }
   }
-
-  if (datamax == 0.) {
+  /// datamin represents the constant background factor.
+  if ((datamax - datamin) == 0.) {
     WARNING("Maximum value in the matrix to rescale is 0. No rescaling performed.");
     return;
   }
 
   for (unsigned int k = 0; k < matrix.size(); k++) {
     for (unsigned int j = 0; j < matrix[0].size(); j++) {
-      matrix[k][j] = (matrix[k][j] - datamin) * rescaleFactor / datamax;
+      matrix[k][j] = (matrix[k][j] - datamin) * rescaleFactor / (datamax - datamin);
     }
   }
 }
