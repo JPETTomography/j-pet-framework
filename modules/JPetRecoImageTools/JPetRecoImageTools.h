@@ -3,35 +3,46 @@
 #define _JPetRecoImageTools_H_
 
 #include <vector>
-#include <utility>
 #include <functional>
 
 class JPetRecoImageTools
 {
 public:
-  static double nearestNeighbour(std::vector<std::vector<int>> &emissionMatrix,
+  using Matrix2D = std::vector<std::vector<int>>;
+  using Matrix2DProj = std::vector<std::vector<double>>;
+  using InterpolationFunc = std::function<double(Matrix2D&, double, double, int, int, int, bool)>;
+  static double nearestNeighbour(Matrix2D& emissionMatrix,
                                  double a, double b, int center, int x, int y, bool sang);
-  static double linear(std::vector<std::vector<int>> &emissionMatrix,
+  static double linear(Matrix2D& emissionMatrix,
                        double a, double b, int center, int x, int y, bool sang);
 
-  static std::vector<std::vector<double>> sinogram(std::vector<std::vector<int>> &emissionMatrix,
-                                                   int views, int scans,
-                                                   std::function<double(std::vector<std::vector<int>> &,
-                                                   double, double, int, int, int, bool)> interpolationFunction = linear,
-                                                   float ang1 = 0, float ang2 = 180, bool scaleResult = false,
-                                                   int min = 0, int max = 255);
+  /*! \brief Function returning vector of vectors with value of sinogram
+   *  \param emissionMatrix matrix, need to be NxN
+   *  \param views number of views on object, degree step is calculated as (ang2 - ang1) / views
+   *  \param scans number of scans on object, step is calculated as emissionMatrix[0].size() / scans
+   *  \param interpolationFunction function to interpolate values (Optional, default linear)
+   *  \param ang1 start angle for projection (Optional, default 0)
+   *  \param ang2 end angle for projection (Optional, default 180)
+   *  \param scaleResult if set to true, scale result to <min, max> (Optional, default false)
+   *  \param min minimum value in returned sinogram (Optional, default 0)
+   *  \param max maximum value in returned sinogram (Optional, default 255)
+  */
+  static Matrix2DProj sinogram(Matrix2D& emissionMatrix,
+                               int views, int scans,
+                               InterpolationFunc interpolationFunction = linear,
+                               float ang1 = 0, float ang2 = 180, bool scaleResult = false,
+                               int min = 0, int max = 255);
 
 private:
   JPetRecoImageTools();
   ~JPetRecoImageTools();
-  JPetRecoImageTools(const JPetRecoImageTools &) = delete;
-  JPetRecoImageTools &operator=(const JPetRecoImageTools &) = delete;
+  JPetRecoImageTools(const JPetRecoImageTools&) = delete;
+  JPetRecoImageTools& operator=(const JPetRecoImageTools&) = delete;
 
-  static void scale(std::vector<std::vector<double>> &v, int min, int max);
-  static double calculateValue(std::vector<std::vector<int>> &emissionMatrix, bool sang, int N, double cos, double sin,
+  static void scale(Matrix2DProj& v, int min, int max);
+  static double calculateValue(Matrix2D& emissionMatrix, bool sang, int N, double cos, double sin,
                                double scale, int center,
-                               std::function<double(std::vector<std::vector<int>> &,
-                               double, double, int, int, int, bool)> &interpolationFunction, double a, double aa);
+                               InterpolationFunc& interpolationFunction, double a, double aa);
 };
 
 #endif
