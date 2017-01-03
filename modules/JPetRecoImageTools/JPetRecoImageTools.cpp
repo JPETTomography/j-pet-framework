@@ -73,8 +73,8 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
   assert(emissionMatrix.size() == emissionMatrix[0].size());
   assert(nViews > 0);
   assert(nScans > 0);
-  assert(min < max);
   assert(angleBeg < angleEnd);
+  assert(min < max);
 
   //create vector of size nViews, initialize it with vector of size nScans
   Matrix2DProj proj(nViews, std::vector<double>(nScans));
@@ -82,12 +82,10 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
   float stepsize = (angleEnd - angleBeg) / nViews;
   assert(stepsize > 0); //maybe != 0 ?
 
-  const int inputMatrixSize = emissionMatrix.size();
-  const int center = inputMatrixSize / 2;
+  const int kInputMatrixSize = emissionMatrix.size();
 
   //if no. nScans is greater than the image width, then scale will be <1
-  const double scale = inputMatrixSize / nScans;
-  const double kSin45deg = std::sqrt(2) / 2; /// sin(45) deg
+  const double scale = kInputMatrixSize / nScans;
 
   int N = 0;
   int i = 0;
@@ -95,24 +93,26 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
   double sinValue = 0., cosValue = 0.;
   double a = 0., aa = 0.;
 
+  const double kEpsilon = 0.0000001;
+  const double kDegToRad = M_PI / 180.;
   for (auto phi = angleBeg; phi < angleEnd; phi = phi + stepsize) {
-    sinValue = std::sin((double)phi * M_PI / 180 - M_PI / 2);
-    if (std::abs(sinValue) < 0.0000001) {
+    sinValue = std::sin((double)phi * kDegToRad - M_PI / 2.);
+    if (std::abs(sinValue) < kEpsilon) {
       sinValue = 0;
     }
-    cosValue = std::cos((double)phi * M_PI / 180 - M_PI / 2);
-    if (std::abs(cosValue) < 0.0000001) {
+    cosValue = std::cos((double)phi * kDegToRad - M_PI / 2.);
+    if (std::abs(cosValue) < kEpsilon) {
       cosValue = 0;
     }
     a = -cosValue / sinValue;
-    if (std::isinf(a) || std::isinf(-a) || std::abs(a) < 0.0000001) {
+    if (std::isinf(a) || std::isinf(-a) || std::abs(a) < kEpsilon) {
       a = 0;
       aa = 0;
     } else aa = 1 / a;
     for (auto scanNumber = 0; scanNumber < nScans; scanNumber++) {
       N = scanNumber - nScans / 2;
-      proj[i][nScans - 1 - scanNumber] = JPetRecoImageTools::calculateProjection(emissionMatrix, std::abs(sinValue) > kSin45deg,
-                                         N, cosValue, sinValue, scale, center,
+      proj[i][nScans - 1 - scanNumber] = JPetRecoImageTools::calculateProjection(emissionMatrix,
+                                         N, cosValue, sinValue, scale,
                                          interpolationFunction, a, aa);
     }
     i++;
@@ -125,13 +125,17 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
   return proj;
 }
 
-double JPetRecoImageTools::calculateProjection(Matrix2D& emissionMatrix, bool sang, int N, double cos,
-    double sin, double scale, int center,
+double JPetRecoImageTools::calculateProjection(Matrix2D& emissionMatrix, int N, double cos,
+    double sin, double scale,
     InterpolationFunc& interpolationFunction,
     double a, double aa)
 {
+  const double kSin45deg = std::sqrt(2) / 2; /// sin(45) deg
+  const int kMatrixCenter = emissionMatrix.size() / 2;
+  bool angleLargerThan45 = std::abs(sin) > kSin45deg;
+
   double b = 0.;
-  if (sang)
+  if (angleLargerThan45)
     b = (N - cos - sin) / sin;
   else
     b = (N - cos - sin) / cos;
@@ -139,14 +143,14 @@ double JPetRecoImageTools::calculateProjection(Matrix2D& emissionMatrix, bool sa
   double value = 0.;
   int x = 0;
   int y = 0;
-  if (sang) {
-    for (x = -center; x < center; x++) {
-      value += interpolationFunction(emissionMatrix, a, b, center, x, y, sang);
+  if (angleLargerThan45) {
+    for (x = -kMatrixCenter; x < kMatrixCenter; x++) {
+      value += interpolationFunction(emissionMatrix, a, b, kMatrixCenter, x, y, angleLargerThan45);
     }
     value /= std::abs(sin);
   } else {
-    for (y = -center; y < center; y++) {
-      value += interpolationFunction(emissionMatrix, aa, b, center, x, y, sang);
+    for (y = -kMatrixCenter; y < kMatrixCenter; y++) {
+      value += interpolationFunction(emissionMatrix, aa, b, kMatrixCenter, x, y, angleLargerThan45);
     }
     value /= std::abs(cos);
   }

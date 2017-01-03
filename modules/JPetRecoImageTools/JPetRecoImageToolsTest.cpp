@@ -63,6 +63,17 @@ BOOST_AUTO_TEST_CASE(rescale_3)
   BOOST_REQUIRE_CLOSE(matrix[1][1], 0, epsilon );
 }
 
+BOOST_AUTO_TEST_CASE(nearestNeighbours)
+{
+  JPetRecoImageTools::Matrix2D matrix = { {1, 2}, {3, 4}};
+  auto result = JPetRecoImageTools::nearestNeighbour(matrix, 0, 0, 0, 0 , 0, true);
+  std::cout << "result=" << result << std::endl;
+  result = JPetRecoImageTools::nearestNeighbour(matrix, 0, 0, 0, 0 , 0, false);
+  std::cout << "result=" << result << std::endl;
+  result = JPetRecoImageTools::nearestNeighbour(matrix, 1, 1, 1, 1 , 1, true);
+  std::cout << "result=" << result << std::endl;
+}
+
 BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_NOT_IN_CENTER)
 {
   std::vector<std::vector<int>> m(4, std::vector<int>(4));
