@@ -36,16 +36,14 @@
  *
  */
 class JPetTreeHeader: public TObject{
- protected:
+ public:
   struct ProcessingStageInfo
   {
     std::string fModuleName;
     std::string fModuleDescription;
     int fModuleVersion;
     std::string fCreationTime;
-  };
-
-
+   }; 
  public:
   JPetTreeHeader();
   JPetTreeHeader(int run);
@@ -69,7 +67,13 @@ class JPetTreeHeader: public TObject{
   void addStageInfo(std::string name, std::string title, int version, std::string time_stamp);
   int getStagesNb()const{ return fStages.size(); }
 
-  const ProcessingStageInfo & getProcessingStageInfo(int i)const{ return fStages.at(i); }
+  const ProcessingStageInfo &emptyProcessingStageInfo()const{
+	return emptyStage;
+  }
+  const ProcessingStageInfo &getProcessingStageInfo(unsigned int i)const{ 
+	  if ( i < fStages.size() ) return fStages.at(i);
+	  else return emptyProcessingStageInfo();
+  }
 
   void setVariable(std::string name, std::string value);
   std::string getVariable(std::string name) const;
@@ -84,10 +88,12 @@ protected:
   std::string fBaseFilename;
   double fSourcePosition;
 
+  ProcessingStageInfo emptyStage;
+  
   std::vector<ProcessingStageInfo> fStages;
   std::map<std::string, std::string> fDictionary;
 
-  ClassDef(JPetTreeHeader, 3);
+  ClassDef(JPetTreeHeader, 4);
 };
 
 #endif

@@ -49,11 +49,6 @@ find_package(Config++ REQUIRED)
 include_directories(${CONFIG++_INCLUDE_DIRS})
 add_definitions(${CONFIG++_DEFINITIONS})
 
-find_package(TinyXML REQUIRED)
-include_directories(${TINYXML_INCLUDE_DIRS})
-add_definitions(${CONFIG++_DEFINITIONS})
-
-
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
@@ -110,9 +105,14 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
+# add Unpacker subdirectory
+add_subdirectory(Unpacker2/Unpacker2)
+
 file(GLOB HEADERS JPet*/*.h tools/JPet*/*.h modules/JPet*/*.h)
 file(GLOB SOURCES JPet*/*.cpp tools/JPet*/*.cpp modules/JPet*/*.cpp)
 file(GLOB UNIT_TEST_SOURCES JPet*/*Test.cpp)
+file(GLOB MODULES_UNIT_TEST_SOURCES modules/JPet*/*Test.cpp)
+list(APPEND UNIT_TEST_SOURCES ${MODULES_UNIT_TEST_SOURCES})
 list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
 
 ##download test files and config files
@@ -154,6 +154,7 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetFEB
   JPetUser
   JPetUnpacker
+  JPetEvent
   )
 add_library(JPetFramework SHARED ${SOURCES} ${HEADERS} ${DICTIONARIES})
 
@@ -161,6 +162,7 @@ add_library(JPetFramework SHARED ${SOURCES} ${HEADERS} ${DICTIONARIES})
 set(TESTS_DIR ${CMAKE_CURRENT_BINARY_DIR}/tests)
 file(MAKE_DIRECTORY ${TESTS_DIR})
 file(COPY unitTestUtils/run_tests.pl DESTINATION ${TESTS_DIR})
+file(COPY unitTestUtils/parseXML.py DESTINATION ${TESTS_DIR})
 foreach(test_source ${UNIT_TEST_SOURCES})
   get_filename_component(test ${test_source} NAME_WE)
   generate_root_dictionaries(test_dictionaries SOURCES ${test_source})
@@ -180,26 +182,6 @@ add_custom_target(tests DEPENDS ${test_binaries} ${TESTS_DIR}/unitTestData)
 # create a symlink to the directory with data necessary for some unit tests
 add_custom_command(OUTPUT ${TESTS_DIR}/unitTestData
   COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/unitTestData ${TESTS_DIR}/unitTestData
-  )
-
-# - Unpacker
-file(GLOB UNPACKER2_HEADERS JPetUnpacker/Unpacker2/*.h)
-file(GLOB UNPACKER2_SOURCES JPetUnpacker/Unpacker2/*.cc)
-generate_root_dictionaries(UNPACKER_DICTIONARIES SOURCES ${UNPACKER2_SOURCES}
-  INCLUDE # generate ROOT dictionaries for following sources
-  TDCHit
-  TDCHitExtended
-  ADCHit
-  Event
-  EventIII
-  TDCChannel
-  )
-add_library(Unpacker2 ${UNPACKER2_HEADERS} ${UNPACKER2_SOURCES}
-  ${UNPACKER_DICTIONARIES}
-  )
-
-target_link_libraries(Unpacker2
-  ${TINYXML_LIBRARIES}
   )
 
 # - DBHandler
@@ -224,7 +206,6 @@ target_link_libraries(JPetFramework
   dbhandler
   ${ROOT_LIBRARIES}
   ${Boost_LIBRARIES}
-  ${TINYXML_LIBRARIES}
   )
 
 # extra files, so they are visible in your editor

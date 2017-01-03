@@ -30,12 +30,12 @@ JPetParamManager::~JPetParamManager()
   }
 }
 
-std::map<int, JPetTRB *> & JPetParamManager::getTRBs(const int runId)
+std::map<int, JPetTRB*>& JPetParamManager::getTRBs(const int runId)
 {
   return getTRBFactory(runId).getTRBs();
 }
 
-JPetTRBFactory & JPetParamManager::getTRBFactory(const int runId)
+JPetTRBFactory& JPetParamManager::getTRBFactory(const int runId)
 {
   if (fTRBFactories.count(runId) == 0) {
     fTRBFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId));
@@ -43,12 +43,12 @@ JPetTRBFactory & JPetParamManager::getTRBFactory(const int runId)
   return fTRBFactories.at(runId);
 }
 
-std::map<int, JPetFEB *> & JPetParamManager::getFEBs(const int runId)
+std::map<int, JPetFEB*>& JPetParamManager::getFEBs(const int runId)
 {
   return getFEBFactory(runId).getFEBs();
 }
 
-JPetFEBFactory & JPetParamManager::getFEBFactory(const int runId)
+JPetFEBFactory& JPetParamManager::getFEBFactory(const int runId)
 {
   if (fFEBFactories.count(runId) == 0) {
     fFEBFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getTRBFactory(runId)));
@@ -56,12 +56,12 @@ JPetFEBFactory & JPetParamManager::getFEBFactory(const int runId)
   return fFEBFactories.at(runId);
 }
 
-std::map<int, JPetFrame *> & JPetParamManager::getFrames(const int runId)
+std::map<int, JPetFrame*>& JPetParamManager::getFrames(const int runId)
 {
   return getFrameFactory(runId).getFrames();
 }
 
-JPetFrameFactory & JPetParamManager::getFrameFactory(const int runId)
+JPetFrameFactory& JPetParamManager::getFrameFactory(const int runId)
 {
   if (fFrameFactories.count(runId) == 0) {
     fFrameFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId));
@@ -69,12 +69,12 @@ JPetFrameFactory & JPetParamManager::getFrameFactory(const int runId)
   return fFrameFactories.at(runId);
 }
 
-std::map<int, JPetLayer *> & JPetParamManager::getLayers(const int runId)
+std::map<int, JPetLayer*>& JPetParamManager::getLayers(const int runId)
 {
   return getLayerFactory(runId).getLayers();
 }
 
-JPetLayerFactory & JPetParamManager::getLayerFactory(const int runId)
+JPetLayerFactory& JPetParamManager::getLayerFactory(const int runId)
 {
   if (fLayerFactories.count(runId) == 0) {
     fLayerFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getFrameFactory(runId)));
@@ -82,12 +82,12 @@ JPetLayerFactory & JPetParamManager::getLayerFactory(const int runId)
   return fLayerFactories.at(runId);
 }
 
-std::map<int, JPetBarrelSlot *> & JPetParamManager::getBarrelSlots(const int runId)
+std::map<int, JPetBarrelSlot*>& JPetParamManager::getBarrelSlots(const int runId)
 {
   return getBarrelSlotFactory(runId).getBarrelSlots();
 }
 
-JPetBarrelSlotFactory & JPetParamManager::getBarrelSlotFactory(const int runId)
+JPetBarrelSlotFactory& JPetParamManager::getBarrelSlotFactory(const int runId)
 {
   if (fBarrelSlotFactories.count(runId) == 0) {
     fBarrelSlotFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getLayerFactory(runId)));
@@ -96,12 +96,12 @@ JPetBarrelSlotFactory & JPetParamManager::getBarrelSlotFactory(const int runId)
   return fBarrelSlotFactories.at(runId);
 }
 
-std::map<int, JPetScin *> & JPetParamManager::getScins(const int runId)
+std::map<int, JPetScin*>& JPetParamManager::getScins(const int runId)
 {
   return getScinFactory(runId).getScins();
 }
 
-JPetScinFactory & JPetParamManager::getScinFactory(const int runId)
+JPetScinFactory& JPetParamManager::getScinFactory(const int runId)
 {
   if (fScinFactories.count(runId) == 0) {
     fScinFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getBarrelSlotFactory(runId)));
@@ -109,12 +109,12 @@ JPetScinFactory & JPetParamManager::getScinFactory(const int runId)
   return fScinFactories.at(runId);
 }
 
-std::map<int, JPetPM *> & JPetParamManager::getPMs(const int runId)
+std::map<int, JPetPM*>& JPetParamManager::getPMs(const int runId)
 {
   return getPMFactory(runId).getPMs();
 }
 
-JPetPMFactory & JPetParamManager::getPMFactory(const int runId)
+JPetPMFactory& JPetParamManager::getPMFactory(const int runId)
 {
   if (fPMFactories.count(runId) == 0) {
     fPMFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getFEBFactory(runId), getScinFactory(runId), getBarrelSlotFactory(runId)));
@@ -122,12 +122,12 @@ JPetPMFactory & JPetParamManager::getPMFactory(const int runId)
   return fPMFactories.at(runId);
 }
 
-std::map<int, JPetTOMBChannel *> & JPetParamManager::getTOMBChannels(const int runId)
+std::map<int, JPetTOMBChannel*>& JPetParamManager::getTOMBChannels(const int runId)
 {
   return getTOMBChannelFactory(runId).getTOMBChannels();
 }
 
-JPetTOMBChannelFactory & JPetParamManager::getTOMBChannelFactory(const int runId)
+JPetTOMBChannelFactory& JPetParamManager::getTOMBChannelFactory(const int runId)
 {
   if (fTOMBChannelFactories.count(runId) == 0) {
     fTOMBChannelFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getFEBFactory(runId), getTRBFactory(runId), getPMFactory(runId)));
@@ -143,42 +143,42 @@ void JPetParamManager::fillParameterBank(const int run)
   }
   fBank = new JPetParamBank();
   for (auto & trbp : getTRBs(run)) {
-    auto & trb = *trbp.second;
+    auto& trb = *trbp.second;
     fBank->addTRB(trb);
   }
   for (auto & febp : getFEBs(run)) {
-    auto & feb = *febp.second;
+    auto& feb = *febp.second;
     fBank->addFEB(feb);
     fBank->getFEB(feb.getID()).setTRB(fBank->getTRB(feb.getTRB().getID()));
   }
   for (auto & framep : getFrames(run)) {
-    auto & frame = *framep.second;
+    auto& frame = *framep.second;
     fBank->addFrame(frame);
   }
   for (auto & layerp : getLayers(run)) {
-    auto & layer = *layerp.second;
+    auto& layer = *layerp.second;
     fBank->addLayer(layer);
-    fBank->getLayer(layer.getId()).setFrame(fBank->getFrame(layer.getFrame().getId()));
+    fBank->getLayer(layer.getID()).setFrame(fBank->getFrame(layer.getFrame().getID()));
   }
   for (auto & barrelSlotp : getBarrelSlots(run)) {
-    auto & barrelSlot = *barrelSlotp.second;
+    auto& barrelSlot = *barrelSlotp.second;
     fBank->addBarrelSlot(barrelSlot);
-    fBank->getBarrelSlot(barrelSlot.getID()).setLayer(fBank->getLayer(barrelSlot.getLayer().getId()));
+    fBank->getBarrelSlot(barrelSlot.getID()).setLayer(fBank->getLayer(barrelSlot.getLayer().getID()));
   }
   for (auto & scinp : getScins(run)) {
-    auto & scin = *scinp.second;
+    auto& scin = *scinp.second;
     fBank->addScintillator(scin);
     fBank->getScintillator(scin.getID()).setBarrelSlot(fBank->getBarrelSlot(scin.getBarrelSlot().getID()));
   }
   for (auto & pmp : getPMs(run)) {
-    auto & pm = *pmp.second;
+    auto& pm = *pmp.second;
     fBank->addPM(pm);
     fBank->getPM(pm.getID()).setFEB(fBank->getFEB(pm.getFEB().getID()));
     fBank->getPM(pm.getID()).setScin(fBank->getScintillator(pm.getScin().getID()));
     fBank->getPM(pm.getID()).setBarrelSlot(fBank->getBarrelSlot(pm.getBarrelSlot().getID()));
   }
   for (auto & tombChannelp : getTOMBChannels(run)) {
-    auto & tombChannel = *tombChannelp.second;
+    auto& tombChannel = *tombChannelp.second;
     fBank->addTOMBChannel(tombChannel);
     fBank->getTOMBChannel(tombChannel.getChannel()).setFEB(fBank->getFEB(tombChannel.getFEB().getID()));
     fBank->getTOMBChannel(tombChannel.getChannel()).setTRB(fBank->getTRB(tombChannel.getTRB().getID()));
@@ -186,7 +186,7 @@ void JPetParamManager::fillParameterBank(const int run)
   }
 }
 
-bool JPetParamManager::readParametersFromFile(JPetReader * reader)
+bool JPetParamManager::readParametersFromFile(JPetReader* reader)
 {
   assert(reader);
   if (!reader->isOpen()) {
@@ -199,7 +199,7 @@ bool JPetParamManager::readParametersFromFile(JPetReader * reader)
   return true;
 }
 
-bool JPetParamManager::saveParametersToFile(JPetWriter * writer)
+bool JPetParamManager::saveParametersToFile(JPetWriter* writer)
 {
   assert(writer);
   if (!writer->isOpen()) {
@@ -227,7 +227,7 @@ const JPetParamBank& JPetParamManager::getParamBank() const
 {
   DEBUG("getParamBank() from JPetParamManager");
   static JPetParamBank DummyResult(true);
-  if(fBank) return *fBank;
+  if (fBank) return *fBank;
   else return DummyResult;
 }
 
@@ -261,7 +261,7 @@ void JPetParamManager::clearParameters()
   fBank->clear();
 }
 
-void JPetParamManager::createXMLFile(const std::string &channelDataFileName, int channelOffset, int numberOfChannels)
+void JPetParamManager::createXMLFile(const std::string& channelDataFileName, int channelOffset, int numberOfChannels)
 {
   using boost::property_tree::ptree;
   ptree pt;
@@ -280,9 +280,9 @@ void JPetParamManager::createXMLFile(const std::string &channelDataFileName, int
   pt.put("READOUT.DATA_SOURCE.REFERENCE_CHANNEL", dataSourceReferenceChannel);
   pt.put("READOUT.DATA_SOURCE.CORRECTION_FILE", dataSourceCorrectionFile);
 
-  ptree &externalNode = pt.add("READOUT.DATA_SOURCE.MODULES", "");
+  ptree& externalNode = pt.add("READOUT.DATA_SOURCE.MODULES", "");
 
-  ptree &internalNode = externalNode.add("MODULE", "");
+  ptree& internalNode = externalNode.add("MODULE", "");
   internalNode.put("TYPE", "LATTICE_TDC");
   internalNode.put("TRBNET_ADDRESS", "e000");
   internalNode.put("NUMBER_OF_CHANNELS", numberOfChannels);
@@ -300,12 +300,9 @@ void JPetParamManager::getTOMBDataAndCreateXMLFile(const int p_run_id)
   int channelOffset = 0;
   int numberOfChannels = 0;
 
-  if(TOMBChannelsSize)
-  {
-    for(int i=0;i<TOMBChannelsSize;++i)
-    {
-      if(i==0)
-      {
+  if (TOMBChannelsSize) {
+    for (int i = 0; i < TOMBChannelsSize; ++i) {
+      if (i == 0) {
         std::string description = fBank->getTOMBChannel(i).getDescription();
         channelOffset = JPetParamGetter::getTOMBChannelFromDescription(description);
       }

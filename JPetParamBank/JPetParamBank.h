@@ -33,7 +33,7 @@
 
 class JPetParamBank: public TObject
 {
- public:
+public:
   JPetParamBank();
   JPetParamBank(const JPetParamBank& paramBank);
   ~JPetParamBank();
@@ -44,9 +44,12 @@ class JPetParamBank: public TObject
 
   int getSize(ParamObjectType type) const;
 
-  // Scintillators
+  /// Adds scintillator to Param Bank. If the scintillator with the same id already exists in the Param Bank,
+  /// the new element will not be added.
   inline void addScintillator(JPetScin scintillator) {
-    fScintillators[scintillator.getID()] = new JPetScin(scintillator);
+    if (fScintillators.insert(std::make_pair(scintillator.getID(), new JPetScin(scintillator))).second == false) {
+      WARNING("the scintillator with this id already exists in the ParamBank. It will not be added.");
+    }
   }
   inline const std::map<int, JPetScin*>& getScintillators() const {
     return fScintillators;
@@ -58,9 +61,12 @@ class JPetParamBank: public TObject
     return fScintillators.size();
   }
 
-  // PMs
+  /// Adds photomultipliers(PM) to Param Bank. If the PM with the same id already exists in the Param Bank,
+  /// the new element will not be added.
   inline void addPM(JPetPM pm) {
-    fPMs[pm.getID()] = new JPetPM(pm);
+    if (fPMs.insert(std::make_pair(pm.getID(), new JPetPM(pm))).second == false) {
+      WARNING("the pm with this id already exists in the ParamBank. It will not be added.");
+    }
   }
   inline const std::map<int, JPetPM*>& getPMs() const {
     return fPMs;
@@ -72,9 +78,12 @@ class JPetParamBank: public TObject
     return fPMs.size();
   }
 
-  // PMCalibs
+  /// Adds PMCalib to Param Bank. If the PMCalib with the same id already exists in the Param Bank,
+  /// the new element will not be added.
   inline void addPMCalib(JPetPMCalib pmCalib) {
-    fPMCalibs[pmCalib.GetId()] = new JPetPMCalib(pmCalib);
+    if (fPMCalibs.insert(std::make_pair(pmCalib.getID(), new JPetPMCalib(pmCalib))).second == false) {
+      WARNING("the pmCalib with this id already exists in the ParamBank. It will not be added.");
+    }
   }
   inline const std::map<int, JPetPMCalib*>& getPMCalibs() const {
     return fPMCalibs;
@@ -86,9 +95,12 @@ class JPetParamBank: public TObject
     return fPMCalibs.size();
   }
 
-  // FEBs
+  /// Adds FEB to the Param Bank. If the FEB with the same id already exists in the Param Bank,
+  /// the new element will not be added.
   inline void addFEB(JPetFEB feb) {
-    fFEBs[feb.getID()] = new JPetFEB(feb);
+    if (fFEBs.insert(std::make_pair(feb.getID(), new JPetFEB(feb))).second == false) {
+      WARNING("the feb with this id already exists in the ParamBank. It will not be added.");
+    }
   }
   inline const std::map<int, JPetFEB*>& getFEBs() const {
     return fFEBs;
@@ -100,9 +112,12 @@ class JPetParamBank: public TObject
     return fFEBs.size();
   }
 
-  // TRBs
+  /// Adds TRB to the Param Bank. If the TRB with the same id already exists in the Param Bank,
+  /// the new element will not be added.
   inline void addTRB(JPetTRB trb) {
-    fTRBs[trb.getID()] = new JPetTRB(trb);
+    if (fTRBs.insert(std::make_pair(trb.getID(), new JPetTRB(trb))).second == false) {
+      WARNING("the trb with this id already exists in the ParamBank. It will not be added.");
+    }
   }
   inline const std::map<int, JPetTRB*>& getTRBs() const {
     return fTRBs;
@@ -114,9 +129,12 @@ class JPetParamBank: public TObject
     return fTRBs.size();
   }
 
-  // Barrel Slot
+  /// Adds BarrelSlot to the Param Bank. If the BarrelSlot with the same id already exists in the Param Bank,
+  /// the new element will not be added.
   inline void addBarrelSlot(JPetBarrelSlot slot) {
-    fBarrelSlots[slot.getID()] = new JPetBarrelSlot(slot);
+    if (fBarrelSlots.insert(std::make_pair(slot.getID(), new JPetBarrelSlot(slot))).second == false) {
+      WARNING("the barrelslot with this id already exists in the ParamBank. It will not be added.");
+    }
   }
   inline const std::map<int, JPetBarrelSlot*>& getBarrelSlots() const {
     return fBarrelSlots;
@@ -128,9 +146,12 @@ class JPetParamBank: public TObject
     return fBarrelSlots.size();
   }
 
-  // Layer
+  /// Adds Layer to the Param Bank. If the Layer with the same id already exists in the Param Bank,
+  /// the new element will not be added.
   inline void addLayer(JPetLayer layer) {
-    fLayers[layer.getId()] = new JPetLayer(layer);
+    if (fLayers.insert(std::make_pair(layer.getID(), new JPetLayer(layer))).second == false) {
+      WARNING("the layer with this id already exists in the ParamBank. It will not be added.");
+    }
   }
   inline const std::map<int, JPetLayer*>& getLayers() const {
     return fLayers;
@@ -142,9 +163,12 @@ class JPetParamBank: public TObject
     return fLayers.size();
   }
 
-  // Frame
+  /// Adds Frame to the Param Bank. If the Frame with the same id already exists in the Param Bank,
+  /// the new element will not be added.
   inline void addFrame(JPetFrame frame) {
-    fFrames[frame.getId()] = new JPetFrame(frame);
+    if (fFrames.insert(std::make_pair(frame.getID(), new JPetFrame(frame))).second == false) {
+      WARNING("the frame with this id already exists in the ParamBank. It will not be added.");
+    }
   }
   inline const std::map<int, JPetFrame*>& getFrames() const {
     return fFrames;
@@ -156,9 +180,12 @@ class JPetParamBank: public TObject
     return fFrames.size();
   }
 
-  // TOMB Channels
+  /// Adds TOMB to the Param Bank. If the TOMB with the same id already exists in the Param Bank,
+  /// the new element will not be added.
   inline void addTOMBChannel(JPetTOMBChannel tombchannel) {
-    fTOMBChannels[tombchannel.getChannel()] = new JPetTOMBChannel(tombchannel);
+    if (fTOMBChannels.insert(std::make_pair(tombchannel.getChannel(), new JPetTOMBChannel(tombchannel))).second == false) {
+      WARNING("the tombchannel with this id already exists in the ParamBank. It will not be added.");
+    }
   }
   inline const std::map<int, JPetTOMBChannel*>& getTOMBChannels() const {
     return fTOMBChannels;
@@ -170,7 +197,7 @@ class JPetParamBank: public TObject
     return fTOMBChannels.size();
   }
 
- private:
+private:
   void operator=(const JPetParamBank&);
   bool fDummy;
   std::map<int, JPetScin*> fScintillators;
@@ -185,11 +212,10 @@ class JPetParamBank: public TObject
   ClassDef (JPetParamBank, 3);
 
   template <typename T>
-  void copyMapValues(std::map<int, T*>& target, const std::map<int, T*>& source)
-  {
-      for (auto & c : source) {
-          target[c.first] = new T(*c.second);
-      }
+  void copyMapValues(std::map<int, T*>& target, const std::map<int, T*>& source) {
+    for (auto & c : source) {
+      target[c.first] = new T(*c.second);
+    }
   }
 };
 

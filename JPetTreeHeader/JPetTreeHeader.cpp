@@ -22,14 +22,16 @@ ClassImp(JPetTreeHeader);
 JPetTreeHeader::JPetTreeHeader():
   fRunNo(-1),
   fBaseFilename("filename not set"),
-  fSourcePosition(-1)
+  fSourcePosition(-1),
+  emptyStage({"module not set", "description not set", -1, "-1"})
 {
 }
 
 JPetTreeHeader::JPetTreeHeader(int run):
   fRunNo(run),
   fBaseFilename("filename not set"),
-  fSourcePosition(-1)
+  fSourcePosition(-1),
+  emptyStage({"module not set", "description not set", -1, "-1"})
 {
 }
 
@@ -120,5 +122,6 @@ void JPetTreeHeader::setVariable(std::string name, std::string value){
  *
  */
 std::string JPetTreeHeader::getVariable(std::string name) const {
-  return fDictionary.at(name); 
+	if(fDictionary.find(name)!= fDictionary.end()) return fDictionary.at(name);
+	else return "";
 }

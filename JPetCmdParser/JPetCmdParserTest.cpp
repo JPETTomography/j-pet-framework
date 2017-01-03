@@ -84,6 +84,21 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kScope);
 }
 
+BOOST_AUTO_TEST_CASE( parsing_zip_file )
+{
+  auto commandLine = "main.x -t zip -f unitTestData/JPetCommonToolsTest/goodZip.gz";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+  
+  JPetCmdParser parser;
+  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  auto option = options.at(0);
+  BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCommonToolsTest/goodZip.gz");
+  BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kZip);
+}
+
 ////ToDo: remake unit tests without calling private methods
 
 BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
@@ -100,7 +115,7 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
 
   auto typeOptionDescription = optionDescription.find("type", true);
   //cout << typeOptionDescription.description() << endl;
-  BOOST_REQUIRE(std::string(typeOptionDescription.description()) == "Type of file: hld, root or scope.");
+  BOOST_REQUIRE(std::string(typeOptionDescription.description()) == "Type of file: hld, zip, root or scope.");
   //cout << typeOptionDescription.format_name() << endl;
   BOOST_REQUIRE(std::string(typeOptionDescription.format_name()) == "-t [ --type ]");
 
@@ -199,11 +214,11 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
   po::options_description description("Allowed options");
   description.add_options()
   ("file,f", po::value<std::vector<std::string>>(), "File(s) to open")
-  ("type,t", po::value<std::string>(), "type of file: hld, root or scope")
+  ("type,t", po::value<std::string>(), "type of file: hld, zip, root or scope")
   ("range,r", po::value<std::vector<int>>(), "Range of events to process.")
   ("param,p", po::value<std::string>(), "File with TRB numbers.")
   ("runId,i", po::value<int>(), "Run id.")
-  ("progressBar,b", po::value<int>(), "Progress bar.")
+  ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
   ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
   ("localDBCreate,L", po::value<std::string>(), "Where to save the parameter database.")
   ;
@@ -225,10 +240,10 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
   BOOST_REQUIRE(firstOption.getFirstEvent() == 2);
   BOOST_REQUIRE(firstOption.getLastEvent() == 4);
   BOOST_REQUIRE(firstOption.getRunNumber() == 231);
-  BOOST_REQUIRE(firstOption.isProgressBar() == true);
-  BOOST_REQUIRE(firstOption.isLocalDB() == true);
+  BOOST_REQUIRE(firstOption.isProgressBar());
+  BOOST_REQUIRE(firstOption.isLocalDB());
   BOOST_REQUIRE(firstOption.getLocalDB() == std::string("unitTestData/JPetCmdParserTest/input.json"));
-  BOOST_REQUIRE(firstOption.isLocalDBCreate() == true);
+  BOOST_REQUIRE(firstOption.isLocalDBCreate());
   BOOST_REQUIRE(firstOption.getLocalDBCreate() == std::string("output.json"));
 }
 
@@ -253,7 +268,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
   BOOST_REQUIRE(firstOption.getRunNumber() == 231);
   BOOST_REQUIRE(firstOption.isProgressBar() == false);
   BOOST_REQUIRE(firstOption.isLocalDB() == false);
-  BOOST_REQUIRE(firstOption.isLocalDBCreate() == true);
+  BOOST_REQUIRE(firstOption.isLocalDBCreate());
   BOOST_REQUIRE(firstOption.getLocalDBCreate() == std::string("output.json"));
 }
 
@@ -330,13 +345,13 @@ BOOST_AUTO_TEST_CASE(checkWrongOutputPath)
   po::options_description description("Allowed options");
   description.add_options()
   ("help,h", "Displays this help message.")
-  ("type,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, root or scope.")
+  ("type,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, zip, root or scope.")
   ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
   ("outputPath,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
   ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
   ("param,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
   ("runId,i", po::value<int>(), "Run id.")
-  ("progressBar,b", "Progress bar.")
+  ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
   ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
   ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.");
 
