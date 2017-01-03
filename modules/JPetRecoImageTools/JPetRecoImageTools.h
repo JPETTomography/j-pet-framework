@@ -25,10 +25,10 @@ class JPetRecoImageTools
 public:
   using Matrix2D = std::vector<std::vector<int>>;
   using Matrix2DProj = std::vector<std::vector<double>>;
-  using InterpolationFunc = std::function<double(Matrix2D&, double, double, int, int, int, bool)>;
-  static double nearestNeighbour(Matrix2D& emissionMatrix,
+  using InterpolationFunc = std::function<double(const Matrix2D&, double, double, int, int, int, bool)>;
+  static double nearestNeighbour(const Matrix2D& emissionMatrix,
                                  double a, double b, int center, int x, int y, bool sang);
-  static double linear(Matrix2D& emissionMatrix,
+  static double linear(const Matrix2D& emissionMatrix,
                        double a, double b, int center, int x, int y, bool sang);
 
   /*! \brief Function returning sinogram matrix.
