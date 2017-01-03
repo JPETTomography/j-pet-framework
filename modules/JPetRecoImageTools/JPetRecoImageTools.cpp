@@ -1,4 +1,5 @@
 #include "./JPetRecoImageTools.h"
+#include "../../JPetLoggerInclude.h"
 #include <vector>
 #include <utility>
 #include <cmath>
@@ -61,7 +62,7 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
   assert(ang1 < ang2);
 
   //create vector of size views, initialize it with vector of size scans
-  std::vector<std::vector<double>> proj(views, std::vector<double>(scans));
+  Matrix2DProj proj(views, std::vector<double>(scans));
 
   float phi = 0.;
   float stepsize = (ang2 - ang1) / views;
@@ -104,7 +105,7 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
   }
 
   if (scaleResult) {
-    JPetRecoImageTools::scale(proj, min, max);
+    JPetRecoImageTools::rescale(proj, min, max);
   }
 
   return proj;
@@ -138,29 +139,32 @@ double JPetRecoImageTools::calculateValue(Matrix2D& emissionMatrix, bool sang, i
   return value;
 }
 
-void JPetRecoImageTools::scale(Matrix2DProj& v, int min, int max)
+void JPetRecoImageTools::rescale(Matrix2DProj& matrix, double minCutoff, double rescaleFactor)
 {
 
-  double datamax = v[0][0];
-  double datamin = v[0][0];
-  //auto datamin = *std::min(v.begin(), v.end(), [] (const std::vector<double> & a, const std::vector<double>& b) { return std::min(a.begin(), a.end()) <std::min(b.begin(), b.end());});
-  for (unsigned int k = 0; k < v.size(); k++) {
-    for (unsigned int j = 0; j < v[0].size(); j++) {
-      if (v[k][j] < min)
-        v[k][j] = min;
-      if (v[k][j] > datamax)
-        datamax = v[k][j];
-      if (v[k][j] < datamin)
-        datamin = v[k][j];
+  double datamax = matrix[0][0];
+  double datamin = matrix[0][0];
+  for (unsigned int k = 0; k < matrix.size(); k++) {
+    for (unsigned int j = 0; j < matrix[k].size(); j++) {
+      ///Applying min Cutoff
+      if (matrix[k][j] < minCutoff)
+        matrix[k][j] = minCutoff;
+      /// Finding the largest and the smallest element in the matrix.
+      if (matrix[k][j] > datamax)
+        datamax = matrix[k][j];
+      if (matrix[k][j] < datamin)
+        datamin = matrix[k][j];
     }
   }
 
-  if (datamax == 0.) // if max value is 0, no need to scale
+  if (datamax == 0.) {
+    WARNING("Maximum value in the matrix to rescale is 0. No rescaling performed.");
     return;
+  }
 
-  for (unsigned int k = 0; k < v.size(); k++) {
-    for (unsigned int j = 0; j < v[0].size(); j++) {
-      v[k][j] = (double)((v[k][j] - datamin) * max / datamax);
+  for (unsigned int k = 0; k < matrix.size(); k++) {
+    for (unsigned int j = 0; j < matrix[0].size(); j++) {
+      matrix[k][j] = (matrix[k][j] - datamin) * rescaleFactor / datamax;
     }
   }
 }
