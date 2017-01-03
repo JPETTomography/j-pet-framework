@@ -16,7 +16,7 @@ double JPetRecoImageTools::nearestNeighbour(Matrix2D& emissionMatrix, double a, 
 {
   if (sang) {
     y = (int)std::round(a * x + b) + center;
-    if (y >= 0 && y < (int)emissionMatrix[0].size())
+    if (y >= 0 && y < (int) emissionMatrix[0].size())
       return emissionMatrix[x + center][y];
     else return 0;
   } else {
@@ -50,30 +50,29 @@ double JPetRecoImageTools::linear(Matrix2D& emissionMatrix, double a, double b,
 
 
 JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emissionMatrix,
-    int views, int scans,
+    int nViews, int nScans,
     InterpolationFunc interpolationFunction,
-    float ang1, float ang2, bool scaleResult, int min, int max)
+    float angleBeg, float angleEnd, bool scaleResult, int min, int max)
 {
   assert(emissionMatrix.size() > 0);
   assert(emissionMatrix.size() == emissionMatrix[0].size());
-  assert(views > 0);
-  assert(scans > 0);
+  assert(nViews > 0);
+  assert(nScans > 0);
   assert(min < max);
-  assert(ang1 < ang2);
+  assert(angleBeg < angleEnd);
 
-  //create vector of size views, initialize it with vector of size scans
-  Matrix2DProj proj(views, std::vector<double>(scans));
+  //create vector of size nViews, initialize it with vector of size nScans
+  Matrix2DProj proj(nViews, std::vector<double>(nScans));
 
-  float phi = 0.;
-  float stepsize = (ang2 - ang1) / views;
+  float stepsize = (angleEnd - angleBeg) / nViews;
   assert(stepsize > 0); //maybe != 0 ?
 
   const int inputMatrixSize = emissionMatrix.size();
   const int center = inputMatrixSize / 2;
 
-  //if no. scans is greater than the image width, then scale will be <1
-  const double scale = inputMatrixSize / scans; //* 1.42
-  const double sang = std::sqrt(2) / 2;
+  //if no. nScans is greater than the image width, then scale will be <1
+  const double scale = inputMatrixSize / nScans;
+  const double kSin45deg = std::sqrt(2) / 2; /// sin(45) deg
 
   int N = 0;
   int i = 0;
@@ -81,12 +80,12 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
   double sinValue = 0., cosValue = 0.;
   double a = 0., aa = 0.;
 
-  for (phi = ang1; phi < ang2; phi = phi + stepsize) {
+  for (auto phi = angleBeg; phi < angleEnd; phi = phi + stepsize) {
     sinValue = std::sin((double)phi * M_PI / 180 - M_PI / 2);
-    cosValue = std::cos((double)phi * M_PI / 180 - M_PI / 2);
     if (std::abs(sinValue) < 0.0000001) {
       sinValue = 0;
     }
+    cosValue = std::cos((double)phi * M_PI / 180 - M_PI / 2);
     if (std::abs(cosValue) < 0.0000001) {
       cosValue = 0;
     }
@@ -95,11 +94,11 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
       a = 0;
       aa = 0;
     } else aa = 1 / a;
-    for (int scanNumber = 0; scanNumber < scans; scanNumber++) {
-      N = scanNumber - scans / 2;
-      proj[i][scans - 1 - scanNumber] = JPetRecoImageTools::calculateValue(emissionMatrix, std::abs(sinValue) > sang,
-                                        N, cosValue, sinValue, scale, center,
-                                        interpolationFunction, a, aa);
+    for (auto scanNumber = 0; scanNumber < nScans; scanNumber++) {
+      N = scanNumber - nScans / 2;
+      proj[i][nScans - 1 - scanNumber] = JPetRecoImageTools::calculateProjection(emissionMatrix, std::abs(sinValue) > kSin45deg,
+                                         N, cosValue, sinValue, scale, center,
+                                         interpolationFunction, a, aa);
     }
     i++;
   }
@@ -111,7 +110,7 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
   return proj;
 }
 
-double JPetRecoImageTools::calculateValue(Matrix2D& emissionMatrix, bool sang, int N, double cos,
+double JPetRecoImageTools::calculateProjection(Matrix2D& emissionMatrix, bool sang, int N, double cos,
     double sin, double scale, int center,
     InterpolationFunc& interpolationFunction,
     double a, double aa)
