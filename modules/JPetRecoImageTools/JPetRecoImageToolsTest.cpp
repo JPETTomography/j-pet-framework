@@ -10,6 +10,19 @@
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
+BOOST_AUTO_TEST_CASE(rescale_0)
+{
+  JPetRecoImageTools::Matrix2DProj matrix = { {3, 0}, {0, 0}};
+  double resFact = 5;
+  double minCutoff = 0;
+  double epsilon = 0.00001;
+  JPetRecoImageTools::rescale(matrix, minCutoff, resFact);
+  BOOST_REQUIRE_CLOSE(matrix[0][0], 5, epsilon );
+  BOOST_REQUIRE_CLOSE(matrix[0][1], 0, epsilon );
+  BOOST_REQUIRE_CLOSE(matrix[1][0], 0, epsilon );
+  BOOST_REQUIRE_CLOSE(matrix[1][1], 0, epsilon );
+}
+
 BOOST_AUTO_TEST_CASE(rescale)
 {
   JPetRecoImageTools::Matrix2DProj matrix = { {2, 1}, {1, 1}};
@@ -17,15 +30,10 @@ BOOST_AUTO_TEST_CASE(rescale)
   double minCutoff = 0;
   double epsilon = 0.00001;
   JPetRecoImageTools::rescale(matrix, minCutoff, resFact);
-  BOOST_REQUIRE_CLOSE(matrix[0][0], 1, epsilon );
+  BOOST_REQUIRE_CLOSE(matrix[0][0], 2, epsilon );
   BOOST_REQUIRE_CLOSE(matrix[0][1], 0, epsilon );
   BOOST_REQUIRE_CLOSE(matrix[1][0], 0, epsilon );
   BOOST_REQUIRE_CLOSE(matrix[1][1], 0, epsilon );
-  for (const auto & col : matrix) {
-    for (const auto & el : col) {
-      std::cout << el << std::endl;
-    }
-  }
 }
 
 BOOST_AUTO_TEST_CASE(rescale_2)
@@ -38,12 +46,21 @@ BOOST_AUTO_TEST_CASE(rescale_2)
   BOOST_REQUIRE_CLOSE(matrix[0][0], 2, epsilon );
   BOOST_REQUIRE_CLOSE(matrix[0][1], 0.5, epsilon );
   BOOST_REQUIRE_CLOSE(matrix[1][0], 0., epsilon );
-  BOOST_REQUIRE_CLOSE(matrix[1][1], 0., epsilon );
-  for (const auto & col : matrix) {
-    for (const auto & el : col) {
-      std::cout << el << std::endl;
-    }
-  }
+  BOOST_REQUIRE_CLOSE(matrix[1][1], 0.5, epsilon );
+}
+
+BOOST_AUTO_TEST_CASE(rescale_3)
+{
+  JPetRecoImageTools::Matrix2DProj matrix = { {5, 3}, {1, 2}};
+  double resFact = 8;
+  double minCutoff = 2; /// -> 5, 3 , 2, 2
+  /// after background subtraction 3, 1, 0,0
+  double epsilon = 0.00001;
+  JPetRecoImageTools::rescale(matrix, minCutoff, resFact);
+  BOOST_REQUIRE_CLOSE(matrix[0][0], 8, epsilon );
+  BOOST_REQUIRE_CLOSE(matrix[0][1], 1. * 8. / 3., epsilon );
+  BOOST_REQUIRE_CLOSE(matrix[1][0], 0 * 8. / 3., epsilon );
+  BOOST_REQUIRE_CLOSE(matrix[1][1], 0, epsilon );
 }
 
 BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_NOT_IN_CENTER)
