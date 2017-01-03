@@ -26,7 +26,7 @@ JPetRecoImageTools::JPetRecoImageTools() {}
 
 JPetRecoImageTools::~JPetRecoImageTools() {}
 
-double JPetRecoImageTools::nearestNeighbour(Matrix2D& emissionMatrix, double a, double b,
+double JPetRecoImageTools::nearestNeighbour(const Matrix2D& emissionMatrix, double a, double b,
     int center, int x, int y, bool sang)
 {
   if (sang) {
@@ -42,7 +42,7 @@ double JPetRecoImageTools::nearestNeighbour(Matrix2D& emissionMatrix, double a, 
   }
 }
 
-double JPetRecoImageTools::linear(Matrix2D& emissionMatrix, double a, double b,
+double JPetRecoImageTools::linear(const Matrix2D& emissionMatrix, double a, double b,
                                   int center, int x, int y, bool sang)
 {
   if (sang) {
