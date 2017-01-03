@@ -1,3 +1,4 @@
+
 /**
  *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,8 +59,8 @@ private:
   JPetRecoImageTools(const JPetRecoImageTools&) = delete;
   JPetRecoImageTools& operator=(const JPetRecoImageTools&) = delete;
 
-  static double calculateProjection(Matrix2D& emissionMatrix, bool sang, int N, double cos, double sin,
-                                    double scale, int center,
+  static double calculateProjection(Matrix2D& emissionMatrix, int N, double cos, double sin,
+                                    double scale,
                                     InterpolationFunc& interpolationFunction, double a, double aa);
 };
 
