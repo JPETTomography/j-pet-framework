@@ -21,7 +21,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-void JPetParamSaverAscii::saveParamBank(const JPetParamBank & bank, const int runNumber, const std::string & filename)
+void JPetParamSaverAscii::saveParamBank(const JPetParamBank& bank, const int runNumber, const std::string& filename)
 {
   std::string runNumberS = boost::lexical_cast<std::string>(runNumber);
   auto fileTree = getTreeFromFile(filename);
@@ -29,7 +29,7 @@ void JPetParamSaverAscii::saveParamBank(const JPetParamBank & bank, const int ru
   write_json(filename, fileTree);
 }
 
-boost::property_tree::ptree JPetParamSaverAscii::getTreeFromFile(const std::string & filename)
+boost::property_tree::ptree JPetParamSaverAscii::getTreeFromFile(const std::string& filename)
 {
   boost::property_tree::ptree result;
   if (boost::filesystem::exists(filename)) {
@@ -38,7 +38,7 @@ boost::property_tree::ptree JPetParamSaverAscii::getTreeFromFile(const std::stri
   return result;
 }
 
-void JPetParamSaverAscii::addToTree(boost::property_tree::ptree & tree, const JPetParamBank & bank, const std::string & runNumber)
+void JPetParamSaverAscii::addToTree(boost::property_tree::ptree& tree, const JPetParamBank& bank, const std::string& runNumber)
 {
   if (tree.count(runNumber) != 0) {
     WARNING("Overwriting parameters in run number " + runNumber + ". I hope you wanted to do that.");
@@ -60,7 +60,7 @@ void JPetParamSaverAscii::addToTree(boost::property_tree::ptree & tree, const JP
 }
 
 
-void JPetParamSaverAscii::fillScintillators(boost::property_tree::ptree & runContents, const JPetParamBank & bank)
+void JPetParamSaverAscii::fillScintillators(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
 {
   boost::property_tree::ptree infos;
   for (auto scin : bank.getScintillators()) {
@@ -69,7 +69,7 @@ void JPetParamSaverAscii::fillScintillators(boost::property_tree::ptree & runCon
   runContents.add_child(objectsNames.at(ParamObjectType::kScintillator), infos);
 }
 
-boost::property_tree::ptree JPetParamSaverAscii::scintillatorToInfo(const JPetScin & scin)
+boost::property_tree::ptree JPetParamSaverAscii::scintillatorToInfo(const JPetScin& scin)
 {
   boost::property_tree::ptree info;
   info.put("id", scin.getID());
@@ -79,12 +79,12 @@ boost::property_tree::ptree JPetParamSaverAscii::scintillatorToInfo(const JPetSc
   info.put("width", dimensions.fWidth);
   info.put("height", dimensions.fHeight);
 
-  info.put(objectsNames.at(ParamObjectType::kBarrelSlot)+"_id", scin.getBarrelSlot().getID());
+  info.put(objectsNames.at(ParamObjectType::kBarrelSlot) + "_id", scin.getBarrelSlot().getID());
   return info;
 }
 
 
-void JPetParamSaverAscii::fillPMs(boost::property_tree::ptree & runContents, const JPetParamBank & bank)
+void JPetParamSaverAscii::fillPMs(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
 {
   boost::property_tree::ptree infos;
   for (auto pm : bank.getPMs()) {
@@ -93,20 +93,20 @@ void JPetParamSaverAscii::fillPMs(boost::property_tree::ptree & runContents, con
   runContents.add_child(objectsNames.at(ParamObjectType::kPM), infos);
 }
 
-boost::property_tree::ptree JPetParamSaverAscii::PMToInfo(const JPetPM & pm)
+boost::property_tree::ptree JPetParamSaverAscii::PMToInfo(const JPetPM& pm)
 {
   boost::property_tree::ptree info;
   info.put("id", pm.getID());
   info.put("is_right_side", (pm.getSide() == JPetPM::Side::SideB));
 
-  info.put(objectsNames.at(ParamObjectType::kBarrelSlot)+"_id", pm.getBarrelSlot().getID());
-  info.put(objectsNames.at(ParamObjectType::kFEB)+"_id", pm.getFEB().getID());
-  info.put(objectsNames.at(ParamObjectType::kScintillator)+"_id", pm.getScin().getID());
+  info.put(objectsNames.at(ParamObjectType::kBarrelSlot) + "_id", pm.getBarrelSlot().getID());
+  info.put(objectsNames.at(ParamObjectType::kFEB) + "_id", pm.getFEB().getID());
+  info.put(objectsNames.at(ParamObjectType::kScintillator) + "_id", pm.getScin().getID());
   return info;
 }
 
 
-void JPetParamSaverAscii::fillPMCalibs(boost::property_tree::ptree & runContents, const JPetParamBank & bank)
+void JPetParamSaverAscii::fillPMCalibs(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
 {
   boost::property_tree::ptree infos;
   for (auto pmCalib : bank.getPMCalibs()) {
@@ -115,10 +115,10 @@ void JPetParamSaverAscii::fillPMCalibs(boost::property_tree::ptree & runContents
   runContents.add_child(objectsNames.at(ParamObjectType::kPMCalib), infos);
 }
 
-boost::property_tree::ptree JPetParamSaverAscii::PMCalibToInfo(const JPetPMCalib & pmCalib)
+boost::property_tree::ptree JPetParamSaverAscii::PMCalibToInfo(const JPetPMCalib& pmCalib)
 {
   boost::property_tree::ptree info;
-  info.put("id", pmCalib.GetId());
+  info.put("id", pmCalib.getID());
   info.put("name", pmCalib.GetNamePM());
   info.put("opthv", pmCalib.GetOpthv());
   info.put("c2e1", pmCalib.GetECalConst1());
@@ -132,7 +132,7 @@ boost::property_tree::ptree JPetParamSaverAscii::PMCalibToInfo(const JPetPMCalib
 }
 
 
-void JPetParamSaverAscii::fillBarrelSlots(boost::property_tree::ptree & runContents, const JPetParamBank & bank)
+void JPetParamSaverAscii::fillBarrelSlots(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
 {
   boost::property_tree::ptree infos;
   for (auto bs : bank.getBarrelSlots()) {
@@ -141,7 +141,7 @@ void JPetParamSaverAscii::fillBarrelSlots(boost::property_tree::ptree & runConte
   runContents.add_child(objectsNames.at(ParamObjectType::kBarrelSlot), infos);
 }
 
-boost::property_tree::ptree JPetParamSaverAscii::barrelSlotToInfo(const JPetBarrelSlot & bs)
+boost::property_tree::ptree JPetParamSaverAscii::barrelSlotToInfo(const JPetBarrelSlot& bs)
 {
   boost::property_tree::ptree info;
   info.put("id", bs.getID());
@@ -150,12 +150,12 @@ boost::property_tree::ptree JPetParamSaverAscii::barrelSlotToInfo(const JPetBarr
   info.put("theta1", bs.getTheta());
   info.put("frame_id", bs.getInFrameID());
 
-  info.put(objectsNames.at(ParamObjectType::kLayer)+"_id", bs.getLayer().getId());
+  info.put(objectsNames.at(ParamObjectType::kLayer) + "_id", bs.getLayer().getID());
   return info;
 }
 
 
-void JPetParamSaverAscii::fillLayers(boost::property_tree::ptree & runContents, const JPetParamBank & bank)
+void JPetParamSaverAscii::fillLayers(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
 {
   boost::property_tree::ptree infos;
   for (auto layer : bank.getLayers()) {
@@ -164,20 +164,20 @@ void JPetParamSaverAscii::fillLayers(boost::property_tree::ptree & runContents, 
   runContents.add_child(objectsNames.at(ParamObjectType::kLayer), infos);
 }
 
-boost::property_tree::ptree JPetParamSaverAscii::layerToInfo(const JPetLayer & layer)
+boost::property_tree::ptree JPetParamSaverAscii::layerToInfo(const JPetLayer& layer)
 {
   boost::property_tree::ptree info;
-  info.put("id", layer.getId());
+  info.put("id", layer.getID());
   info.put("active", layer.getIsActive());
   info.put("name", layer.getName());
   info.put("radius", layer.getRadius());
 
-  info.put(objectsNames.at(ParamObjectType::kFrame)+"_id", layer.getFrame().getId());
+  info.put(objectsNames.at(ParamObjectType::kFrame) + "_id", layer.getFrame().getID());
   return info;
 }
 
 
-void JPetParamSaverAscii::fillFrames(boost::property_tree::ptree & runContents, const JPetParamBank & bank)
+void JPetParamSaverAscii::fillFrames(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
 {
   boost::property_tree::ptree infos;
   for (auto frame : bank.getFrames()) {
@@ -186,10 +186,10 @@ void JPetParamSaverAscii::fillFrames(boost::property_tree::ptree & runContents, 
   runContents.add_child(objectsNames.at(ParamObjectType::kFrame), infos);
 }
 
-boost::property_tree::ptree JPetParamSaverAscii::frameToInfo(const JPetFrame & frame)
+boost::property_tree::ptree JPetParamSaverAscii::frameToInfo(const JPetFrame& frame)
 {
   boost::property_tree::ptree info;
-  info.put("id", frame.getId());
+  info.put("id", frame.getID());
   info.put("active", frame.getIsActive());
   info.put("status", frame.getStatus());
   info.put("description", frame.getDescription());
@@ -199,7 +199,7 @@ boost::property_tree::ptree JPetParamSaverAscii::frameToInfo(const JPetFrame & f
 }
 
 
-void JPetParamSaverAscii::fillFEBs(boost::property_tree::ptree & runContents, const JPetParamBank & bank)
+void JPetParamSaverAscii::fillFEBs(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
 {
   boost::property_tree::ptree infos;
   for (auto feb : bank.getFEBs()) {
@@ -208,7 +208,7 @@ void JPetParamSaverAscii::fillFEBs(boost::property_tree::ptree & runContents, co
   runContents.add_child(objectsNames.at(ParamObjectType::kFEB), infos);
 }
 
-boost::property_tree::ptree JPetParamSaverAscii::FEBToInfo(const JPetFEB & feb)
+boost::property_tree::ptree JPetParamSaverAscii::FEBToInfo(const JPetFEB& feb)
 {
   boost::property_tree::ptree info;
   info.put("id", feb.getID());
@@ -220,12 +220,12 @@ boost::property_tree::ptree JPetParamSaverAscii::FEBToInfo(const JPetFEB & feb)
   info.put("time_outputs_per_input", feb.getNtimeOutsPerInput());
   info.put("no_time_outputs_per_input", feb.getNnotimeOutsPerInput());
 
-  info.put(objectsNames.at(ParamObjectType::kTRB)+"_id", feb.getTRB().getID());
+  info.put(objectsNames.at(ParamObjectType::kTRB) + "_id", feb.getTRB().getID());
   return info;
 }
 
 
-void JPetParamSaverAscii::fillTRBs(boost::property_tree::ptree & runContents, const JPetParamBank & bank)
+void JPetParamSaverAscii::fillTRBs(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
 {
   boost::property_tree::ptree infos;
   for (auto trb : bank.getTRBs()) {
@@ -234,7 +234,7 @@ void JPetParamSaverAscii::fillTRBs(boost::property_tree::ptree & runContents, co
   runContents.add_child(objectsNames.at(ParamObjectType::kTRB), infos);
 }
 
-boost::property_tree::ptree JPetParamSaverAscii::TRBToInfo(const JPetTRB & trb)
+boost::property_tree::ptree JPetParamSaverAscii::TRBToInfo(const JPetTRB& trb)
 {
   boost::property_tree::ptree info;
   info.put("id", trb.getID());
@@ -244,7 +244,7 @@ boost::property_tree::ptree JPetParamSaverAscii::TRBToInfo(const JPetTRB & trb)
 }
 
 
-void JPetParamSaverAscii::fillTOMBChannels(boost::property_tree::ptree & runContents, const JPetParamBank & bank)
+void JPetParamSaverAscii::fillTOMBChannels(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
 {
   boost::property_tree::ptree infos;
   for (auto tomb : bank.getTOMBChannels()) {
@@ -253,7 +253,7 @@ void JPetParamSaverAscii::fillTOMBChannels(boost::property_tree::ptree & runCont
   runContents.add_child(objectsNames.at(ParamObjectType::kTOMBChannel), infos);
 }
 
-boost::property_tree::ptree JPetParamSaverAscii::TOMBChannelToInfo(const JPetTOMBChannel & tomb)
+boost::property_tree::ptree JPetParamSaverAscii::TOMBChannelToInfo(const JPetTOMBChannel& tomb)
 {
   boost::property_tree::ptree info;
   info.put("local_number", tomb.getLocalChannelNumber());
@@ -261,8 +261,8 @@ boost::property_tree::ptree JPetParamSaverAscii::TOMBChannelToInfo(const JPetTOM
   info.put("FEB", tomb.getFEBInputNumber());
   info.put("threshold", tomb.getThreshold());
 
-  info.put(objectsNames.at(ParamObjectType::kTRB)+"_id", tomb.getTRB().getID());
-  info.put(objectsNames.at(ParamObjectType::kFEB)+"_id", tomb.getFEB().getID());
-  info.put(objectsNames.at(ParamObjectType::kPM)+"_id", tomb.getPM().getID());
+  info.put(objectsNames.at(ParamObjectType::kTRB) + "_id", tomb.getTRB().getID());
+  info.put(objectsNames.at(ParamObjectType::kFEB) + "_id", tomb.getFEB().getID());
+  info.put(objectsNames.at(ParamObjectType::kPM) + "_id", tomb.getPM().getID());
   return info;
 }

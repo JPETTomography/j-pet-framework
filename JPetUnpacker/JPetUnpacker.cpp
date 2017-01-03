@@ -19,8 +19,6 @@
 #include <boost/filesystem.hpp>
 #include <cassert>
 
-#include "JPetPostUnpackerFilter.h"
-
 ClassImp(JPetUnpacker);
 
 JPetUnpacker::JPetUnpacker():
@@ -53,7 +51,7 @@ bool JPetUnpacker::exec()
 {
   if ( !boost::filesystem::exists(getHldFile())) 
   {
-    ERROR("The hld file doesnt exist");
+    ERROR(std::string( "The hld file doesnt exist: ") + getHldFile() );
     return false;
   }
   if (!boost::filesystem::exists(getCfgFile())) 
@@ -70,20 +68,11 @@ bool JPetUnpacker::exec()
     delete fUnpacker;
     fUnpacker = 0;
   }
-  fUnpacker = new Unpacker2(fHldFile.c_str(), fCfgFile.c_str(), fEventsToProcess);
 
-  // apply post-unpacking filters
-  string newFileName = fHldFile + ".raw.root";
+  fUnpacker = new Unpacker2();
 
-  // @todo: handle the following parameters needed by calculate_times
-  //const char * calibFileName = "";
   int refChannelOffset = 65;
-  JPetPostUnpackerFilter::calculate_times(fEventsToProcess, newFileName.c_str(), refChannelOffset, "");
-
-  newFileName = newFileName.substr(0, newFileName.size() - 8);
-  newFileName += "times.root";
-  
-  JPetPostUnpackerFilter::calculate_hits(fEventsToProcess, newFileName.c_str());
+  fUnpacker->UnpackSingleStep(fHldFile.c_str(), fCfgFile.c_str(), fEventsToProcess, refChannelOffset, "");
   
   return true;
 }

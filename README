@@ -11,7 +11,7 @@ The Latest Version
 
 The latest stable version can be downloaded from the github repository. You must have git client istalled and do:
 
-git clone https://github.com/JPETTomography/j-pet-framework.git myFramework
+git clone --recursive https://github.com/JPETTomography/j-pet-framework.git myFramework
 
 Documentation
 -------------
@@ -31,8 +31,8 @@ Please see the file called INSTALL.
 Authors
 -------
 
-J-PET Analysis Framework is being developed by Wojciech Krzemien, Aleksander Gajos, Andrzej Gruntowski, Szymon Niedźwiecki, Oleksandr Rundel and Tomasz Kisielewski.
-The former developers are Karol Stola and Damian Trybek.
+J-PET Analysis Framework is being developed by Wojciech Krzemien, Aleksander Gajos, Szymon Niedźwiecki, Oleksandr Rundel, Tomasz Kisielewski, Nikodem Krawczyk and Klara Muzalewska.
+The former developers are Karol Stola, Damian Trybek and Andrzej Gruntowski.
 
 Citation:
 ---------

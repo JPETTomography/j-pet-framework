@@ -40,9 +40,9 @@ class JPetFrame: public TNamed
   JPetFrame();
   JPetFrame(int id, bool isActive, std::string status, std::string description, int version, int creator_id);
 
-  inline bool operator==(const JPetFrame& frame) { return getId() == frame.getId(); }
-  inline bool operator!=(const JPetFrame& frame) { return getId() != frame.getId(); }
-  int getId() const { return fId; }
+  inline bool operator==(const JPetFrame& frame) { return getID() == frame.getID(); }
+  inline bool operator!=(const JPetFrame& frame) { return getID() != frame.getID(); }
+  int getID() const { return fId; }
   bool getIsActive() const { return fIsActive; }
   std::string getStatus() const { return fStatus; }
   std::string getDescription() const { return fDescription; }

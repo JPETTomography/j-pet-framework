@@ -17,6 +17,12 @@
 
 ClassImp(JPetStatistics);
 
+JPetStatistics::~JPetStatistics(){
+  fHistos.Clear("nodelete");
+  fGraphs.Clear("nodelete");
+  fCanvas.Clear("nodelete");
+}
+
 void JPetStatistics::createHistogram(TObject * object){
   fHistos.Add(object);
 }

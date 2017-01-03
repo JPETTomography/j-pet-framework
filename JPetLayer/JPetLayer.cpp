@@ -16,7 +16,7 @@
 #include "JPetLayer.h"
 
 
-JPetLayer::JPetLayer() : 
+JPetLayer::JPetLayer() :
   fId(-1),
   fIsActive(false),
   fName(std::string("")),
@@ -36,20 +36,22 @@ JPetLayer::JPetLayer(int id, bool isActive, std::string name, float radius) :
   SetName("JPetLayer");
 }
 
-bool JPetLayer::operator==(const JPetLayer& layer) const {
-  if( getId() == layer.getId() ){
+bool JPetLayer::operator==(const JPetLayer& layer) const
+{
+  if ( getID() == layer.getID() ) {
     // assure consistency
     assert( getRadius() == layer.getRadius() );
     assert( getName() == layer.getName() );
     assert( getIsActive() == layer.getIsActive() );
     return true;
   }
-  
+
   return false;
 }
 
-bool JPetLayer::operator!=(const JPetLayer& layer) const {
-  return ! (*this==layer);
+bool JPetLayer::operator!=(const JPetLayer& layer) const
+{
+  return ! (*this == layer);
 }
 
 

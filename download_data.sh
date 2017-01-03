@@ -7,11 +7,12 @@
 SCP_INPUT=/home/framework_configs
 SCP_OUTPUT=./DBHandler/Config
 declare -a CFG_FILES=("configDB.cfg" "configDB.cfg.koza" "ReadMe.txt")
-SERVER=koza.if.uj.edu.pl
+SERVER=sphinx.if.uj.edu.pl
+
 
 #for wget
 WGET_DIR="unitTestData"
-WGET_INPUT="http://koza.if.uj.edu.pl/framework/"${WGET_DIR}
+WGET_INPUT="http://sphinx.if.uj.edu.pl/framework/"${WGET_DIR}
 WGET_OUTPUT="./"
 # -r  means recursive, 
 # --cut-dirs=1 ignore given level of directories (e.g. remove framework from path) 
