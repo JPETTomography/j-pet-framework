@@ -7,10 +7,10 @@
 
 // JPetLayer();
 // JPetLayer(int id, bool isActive, std::string name, float radius);
-// 
+//
 // inline bool operator==(const JPetLayer& layer) { return getId() == layer.getId(); }
 // inline bool operator!=(const JPetLayer& layer) { return getId() != layer.getId(); }
-// 
+//
 // inline int getId() const { return fId; }
 // inline bool getIsActive() const { return fIsActive; }
 // inline std::string getName() const { return fName; }
@@ -18,14 +18,14 @@
 // inline const JPetFrame& getFrame() { return static_cast<JPetFrame&>(*(fTRefFrame.GetObject())); }
 // inline void setFrame(JPetFrame &frame) { fTRefFrame = &frame; }
 
-const double epsilon =0.00001;
+const double epsilon = 0.00001;
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetLayer layer;
-  BOOST_REQUIRE_EQUAL(layer.getId(), -1);
+  BOOST_REQUIRE_EQUAL(layer.getID(), -1);
   BOOST_REQUIRE(!layer.getIsActive());
   BOOST_REQUIRE(layer.getName().empty());
   BOOST_REQUIRE_CLOSE(layer.getRadius(), -1, epsilon);
@@ -34,9 +34,9 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 BOOST_AUTO_TEST_CASE( second_constructor )
 {
   JPetLayer layer(1, true, "ala", 10.5);
-  BOOST_REQUIRE_EQUAL(layer.getId(), 1);
+  BOOST_REQUIRE_EQUAL(layer.getID(), 1);
   BOOST_REQUIRE(layer.getIsActive());
-  BOOST_REQUIRE(layer.getName()=="ala");
+  BOOST_REQUIRE(layer.getName() == "ala");
   BOOST_REQUIRE_CLOSE(layer.getRadius(), 10.5, epsilon);
 }
 
@@ -46,107 +46,111 @@ BOOST_AUTO_TEST_SUITE(FactorySuite)
 
 class TestParamGetter : public JPetParamGetter
 {
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId)
-  {
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId) {
     ParamObjectsDescriptions result;
     switch (type) {
-      case ParamObjectType::kLayer:
-        switch (runId) {
-          case 0: //No layers
-            break;
-          case 1: //Simple single object
-          case 5: //Wrong relation
-            result = {
-              {1, {
-                    {"id", "1"},
-                    {"active", "1"},
-                    {"name", "ala"},
-                    {"radius", "10.5"}
-                  }
-              }
-            };
-            break;
-          case 2: //Simple two objects
-            result = {
-              {1, {
-                    {"id", "1"},
-                    {"active", "1"},
-                    {"name", "ala"},
-                    {"radius", "10.5"}
-                  }
-              },
-              {5, {
-                    {"id", "5"},
-                    {"active", "0"},
-                    {"name", "alfred"},
-                    {"radius", "11.5"}
-                  }
-              }
-            };
-            break;
-          case 3: //Object with missing field
-            result = {
-              {1, {
-                    {"id", "1"},
-                    {"active", "1"},
-                    {"radius", "10.5"}
-                  }
-              }
-            };
-            break;
-          case 4: //Object with wrong field
-            result = {
-              {1, {
-                    {"id", "1"},
-                    {"active", "probably"},
-                    {"name", "ala"},
-                    {"radius", "10.5"}
-                  }
-              }
-            };
-            break;
-        }
-        break;
-      case ParamObjectType::kFrame:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"status", "ok"},
-                {"description", "descr1"},
-                {"version", "2"},
-                {"creator_id", "1"}
-              }
-          }
-        };
-        break;
-      default: //Other cases not needed.
-        break;
-    }
-    return result;
-  }
-  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int runId)
-  {
-    ParamRelationalData result;
-    switch (runId) {
-      case 0: //No relations
+    case ParamObjectType::kLayer:
+      switch (runId) {
+      case 0: //No layers
         break;
       case 1: //Simple single object
+      case 5: //Wrong relation
         result = {
-          {1, 1}
+          {
+            1, {
+              {"id", "1"},
+              {"active", "1"},
+              {"name", "ala"},
+              {"radius", "10.5"}
+            }
+          }
         };
         break;
       case 2: //Simple two objects
         result = {
-          {1, 1},
-          {5, 1}
+          {
+            1, {
+              {"id", "1"},
+              {"active", "1"},
+              {"name", "ala"},
+              {"radius", "10.5"}
+            }
+          },
+          {
+            5, {
+              {"id", "5"},
+              {"active", "0"},
+              {"name", "alfred"},
+              {"radius", "11.5"}
+            }
+          }
         };
         break;
-      case 5: //Wrong relation
+      case 3: //Object with missing field
         result = {
-          {1, 43}
+          {
+            1, {
+              {"id", "1"},
+              {"active", "1"},
+              {"radius", "10.5"}
+            }
+          }
         };
         break;
+      case 4: //Object with wrong field
+        result = {
+          {
+            1, {
+              {"id", "1"},
+              {"active", "probably"},
+              {"name", "ala"},
+              {"radius", "10.5"}
+            }
+          }
+        };
+        break;
+      }
+      break;
+    case ParamObjectType::kFrame:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"active", "1"},
+            {"status", "ok"},
+            {"description", "descr1"},
+            {"version", "2"},
+            {"creator_id", "1"}
+          }
+        }
+      };
+      break;
+    default: //Other cases not needed.
+      break;
+    }
+    return result;
+  }
+  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int runId) {
+    ParamRelationalData result;
+    switch (runId) {
+    case 0: //No relations
+      break;
+    case 1: //Simple single object
+      result = {
+        {1, 1}
+      };
+      break;
+    case 2: //Simple two objects
+      result = {
+        {1, 1},
+        {5, 1}
+      };
+      break;
+    case 5: //Wrong relation
+      result = {
+        {1, 43}
+      };
+      break;
     }
     return result;
   }
@@ -158,7 +162,7 @@ BOOST_AUTO_TEST_CASE( no_layers )
 {
   JPetFrameFactory frameFactory(paramGetter, 0);
   JPetLayerFactory factory(paramGetter, 0, frameFactory);
-  auto & layers = factory.getLayers();
+  auto& layers = factory.getLayers();
   BOOST_REQUIRE_EQUAL(layers.size(), 0);
 }
 
@@ -166,38 +170,38 @@ BOOST_AUTO_TEST_CASE( single_object )
 {
   JPetFrameFactory frameFactory(paramGetter, 1);
   JPetLayerFactory factory(paramGetter, 1, frameFactory);
-  auto & layers = factory.getLayers();
+  auto& layers = factory.getLayers();
   BOOST_REQUIRE_EQUAL(layers.size(), 1);
   auto layer = layers[1];
-  BOOST_REQUIRE_EQUAL(layer->getId(), 1);
+  BOOST_REQUIRE_EQUAL(layer->getID(), 1);
   BOOST_REQUIRE(layer->getIsActive());
-  BOOST_REQUIRE(layer->getName()=="ala");
+  BOOST_REQUIRE(layer->getName() == "ala");
   BOOST_REQUIRE_CLOSE(layer->getRadius(), 10.5, epsilon);
 
-  BOOST_REQUIRE_EQUAL(layer->getFrame().getId(), frameFactory.getFrames().at(1)->getId());
+  BOOST_REQUIRE_EQUAL(layer->getFrame().getID(), frameFactory.getFrames().at(1)->getID());
 }
 
 BOOST_AUTO_TEST_CASE( two_objects )
 {
   JPetFrameFactory frameFactory(paramGetter, 2);
   JPetLayerFactory factory(paramGetter, 2, frameFactory);
-  auto & layers = factory.getLayers();
+  auto& layers = factory.getLayers();
   BOOST_REQUIRE_EQUAL(layers.size(), 2);
   auto layer = layers[1];
-  BOOST_REQUIRE_EQUAL(layer->getId(), 1);
+  BOOST_REQUIRE_EQUAL(layer->getID(), 1);
   BOOST_REQUIRE(layer->getIsActive());
-  BOOST_REQUIRE(layer->getName()=="ala");
+  BOOST_REQUIRE(layer->getName() == "ala");
   BOOST_REQUIRE_CLOSE(layer->getRadius(), 10.5, epsilon);
 
-  BOOST_REQUIRE_EQUAL(layer->getFrame().getId(), frameFactory.getFrames().at(1)->getId());
+  BOOST_REQUIRE_EQUAL(layer->getFrame().getID(), frameFactory.getFrames().at(1)->getID());
 
   layer = layers[5];
-  BOOST_REQUIRE_EQUAL(layer->getId(), 5);
+  BOOST_REQUIRE_EQUAL(layer->getID(), 5);
   BOOST_REQUIRE(!layer->getIsActive());
-  BOOST_REQUIRE(layer->getName()=="alfred");
+  BOOST_REQUIRE(layer->getName() == "alfred");
   BOOST_REQUIRE_CLOSE(layer->getRadius(), 11.5, epsilon);
 
-  BOOST_REQUIRE_EQUAL(layer->getFrame().getId(), frameFactory.getFrames().at(1)->getId());
+  BOOST_REQUIRE_EQUAL(layer->getFrame().getID(), frameFactory.getFrames().at(1)->getID());
 }
 
 BOOST_AUTO_TEST_CASE( missing_field )

@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(findSubstringTest)
 {
   std::string str("There are two needles in this haystack with needles.");
   std::string str2("needle");
-  
+
   std::size_t found = JPetCommonTools::findSubstring(str, str2);
   BOOST_REQUIRE_EQUAL(found != std::string::npos, true);
 }
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(findSubstringTest)
 BOOST_AUTO_TEST_CASE(ItoaTest)
 {
   int testNumber = 64;
-  
+
   std::string intAsASting = JPetCommonTools::Itoa(testNumber);
   BOOST_REQUIRE_EQUAL(intAsASting == "64", true);
 }
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(ItoaTest)
 BOOST_AUTO_TEST_CASE(intToStringTest)
 {
   int testNumber = 64;
-  
+
   std::string intAsASting = JPetCommonTools::intToString(testNumber);
   BOOST_REQUIRE_EQUAL(intAsASting == "64", true);
 }
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(intToStringTest)
 BOOST_AUTO_TEST_CASE(doubleToStringTest)
 {
   double testNumber = 256.3264;
-  
+
   std::string doubleAsASting = JPetCommonTools::doubleToString(testNumber);
   BOOST_REQUIRE_EQUAL(doubleAsASting == "256.326", true);
 }
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(doubleToStringTest)
 BOOST_AUTO_TEST_CASE(stringToIntTest)
 {
   std::string testString = "1024";
-  
+
   int stringAsAInt = JPetCommonTools::stringToInt(testString);
   BOOST_REQUIRE_EQUAL(stringAsAInt == 1024, true);
 }
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(stringToIntTest)
 BOOST_AUTO_TEST_CASE(toBoolTest)
 {
   std::string testString = "0";
-  
+
   bool stringAsABool = JPetCommonTools::to_bool(testString);
   BOOST_REQUIRE_EQUAL(stringAsABool == false, true);
 }
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(toBoolTest)
 BOOST_AUTO_TEST_CASE(ifFileExistingTest)
 {
   std::string fileTest = "run_tests.pl";
-  
+
   bool ifFileExisting = JPetCommonTools::ifFileExisting(fileTest);
   BOOST_REQUIRE_EQUAL(ifFileExisting, true);
 }
@@ -88,13 +88,13 @@ BOOST_AUTO_TEST_CASE(mapAreEqualTest)
 
 BOOST_AUTO_TEST_CASE(mapAreNotEqualTest)
 {
-  std::map<char,int> first;
-  first['a']=10;
-  first['b']=30;
-  first['c']=50;
-  first['d']=70;
-  std::map<char,int> second;
-  
+  std::map<char, int> first;
+  first['a'] = 10;
+  first['b'] = 30;
+  first['c'] = 50;
+  first['d'] = 70;
+  std::map<char, int> second;
+
   bool areMapsEqual = JPetCommonTools::mapComparator(first, second);
   BOOST_REQUIRE_EQUAL(areMapsEqual, false);
 }
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(mapAreNotEqualTest)
 BOOST_AUTO_TEST_CASE(stripFileNameSuffixTest)
 {
   std::string fileTest = "run_tests.pl";
-  
+
   std::string stripFileNameSuffix = JPetCommonTools::stripFileNameSuffix(fileTest);
   BOOST_REQUIRE_EQUAL(stripFileNameSuffix == "run_tests", true);
 }
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(stripFileNameSuffixTest)
 BOOST_AUTO_TEST_CASE(currentFullPathTest)
 {
   std::string currentFullPathTest = boost::filesystem::path(boost::filesystem::current_path()).string();
-  
+
   std::string currentFullPath = JPetCommonTools::currentFullPath();
   BOOST_REQUIRE_EQUAL(currentFullPath == currentFullPathTest, true);
 }
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(extractPathFromFileTest)
 {
   std::string currentFullPathTest = boost::filesystem::path(boost::filesystem::current_path()).string();
   std::string currentFullPathTestWithFileName = currentFullPathTest + "/" + "run_tests.pl";
-  
+
   std::string result = JPetCommonTools::extractPathFromFile(currentFullPathTestWithFileName);
   BOOST_REQUIRE_EQUAL(result.compare(currentFullPathTest), 0);
 }
@@ -140,4 +140,6 @@ BOOST_AUTO_TEST_CASE(appendSlashToPathIfAbsent)
   BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("test"), "test/");
 }
 
+
 BOOST_AUTO_TEST_SUITE_END()
+

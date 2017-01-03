@@ -15,7 +15,7 @@ namespace JPetCalibration {
 	private:
 		string m_msg;
 	};
-	
+
 	using namespace std;
 	using namespace pqxx;
 	using namespace DB::SERVICES;
@@ -24,26 +24,26 @@ namespace JPetCalibration {
 	const char* Exception::what() const throw(){
 		return m_msg.c_str();
 	}
-	
+
 	CalibrationType::CalibrationType(const CalibrationType& source)
-	:m_name(source.m_name),m_id(source.m_id),m_count(source.m_count),m_formula(source.m_formula){}
-	
+	:m_id(source.m_id), m_count(source.m_count), m_name(source.m_name),m_formula(source.m_formula){}
+
 	CalibrationType::CalibrationType(const result::const_iterator&row)
-	:m_name(row["name"].as<string>()),m_id(row["type_id"].as<size_t>())
-	,m_count(row["param_count"].as<size_t>()),m_formula(row["formula"].as<string>()){}
-	
+	:m_id(row["type_id"].as<size_t>()), m_count(row["param_count"].as<size_t>()),
+  m_name(row["name"].as<string>()), m_formula(row["formula"].as<string>()){}
+
 	CalibrationType::CalibrationType(const string& n,const size_t count, const string& f)
-	:m_name(n),m_id(0),m_count(count),m_formula(f){}
-	
+	:m_id(0), m_count(count), m_name(n), m_formula(f){}
+
 	CalibrationType::CalibrationType(const string&&n,const size_t count,const string&&f)
-	:m_name(n),m_id(0),m_count(count),m_formula(f){}
-	
+	:m_id(0), m_count(count), m_name(n), m_formula(f){}
+
 	CalibrationType::~CalibrationType(){}
 	const size_t CalibrationType::id()const{return m_id;}
 	const string& CalibrationType::name()const{return m_name;}
 	const size_t CalibrationType::param_count()const{return m_count;}
 	const string& CalibrationType::formula()const{return m_formula;}
-	
+
 	CalibrationTypeEdit::CalibrationTypeEdit(){}
 	CalibrationTypeEdit::~CalibrationTypeEdit(){}
 	const vector<CalibrationType> CalibrationTypeEdit::GetTypes()const{
@@ -59,8 +59,8 @@ namespace JPetCalibration {
 		DBHandler::getInstance().querry(req);
 	}
 	void CalibrationTypeEdit::AddType(const CalibrationType&& type){AddType(type);}
-	
-	
+
+
 	Calibration::Calibration(const string&n,const size_t count,const string& f,const string&params)
 	:m_name(n),m_formula(f),m_encoded_params(params){
 		stringstream ss(params);
@@ -114,19 +114,20 @@ namespace JPetCalibration {
 		return m_tformula->EvalPar(x,buf);
 	}
 	double Calibration::operator()(const parameter_set&& X) const{return operator()(X);}
-	
-	
+
+
 	CalibrationForEquipment::CalibrationForEquipment(const id_set&eq_id,const result::const_iterator&row,const vector<string>&field_names)
-	:Calibration(row, field_names){for(const auto&item:eq_id)m_eq_id.push_back(item);}
+	:Calibration(row, field_names), m_type_id(0), m_cal_id(0){for(const auto&item:eq_id)m_eq_id.push_back(item);}
 	CalibrationForEquipment::CalibrationForEquipment(const id_set&eq_id,const result::const_iterator&row,const vector<string>&&field_names)
 	:CalibrationForEquipment(eq_id,row,field_names){}
 	CalibrationForEquipment::CalibrationForEquipment(const id_set&eq_id,const CalibrationType&type,const parameter_set&values)
-	:Calibration(type, values){for(const auto&item:eq_id)m_eq_id.push_back(item);}
+	:Calibration(type, values), m_type_id(0), m_cal_id(0){for(const auto&item:eq_id)m_eq_id.push_back(item);}
 	CalibrationForEquipment::CalibrationForEquipment(const id_set& eq_id,const CalibrationType&type,const parameter_set&&values)
 	:CalibrationForEquipment(eq_id,type,values){}
 	CalibrationForEquipment::CalibrationForEquipment(const CalibrationForEquipment&source)
-	:Calibration(source){for(const auto&item:source.m_eq_id)m_eq_id.push_back(item);}
+	:Calibration(source),m_type_id(0), m_cal_id(0){for(const auto&item:source.m_eq_id)m_eq_id.push_back(item);}
 	CalibrationForEquipment::~CalibrationForEquipment(){}
+
 	const size_t CalibrationForEquipment::calibration_id()const{return m_cal_id;}
 	const id_set& CalibrationForEquipment::equipment_ids()const{return m_eq_id;}
 	const size_t CalibrationForEquipment::type_id()const{return m_type_id;}
@@ -140,7 +141,7 @@ namespace JPetCalibration {
 	CalibrationForEquipmentAndRun::~CalibrationForEquipmentAndRun(){}
 	const id_set&CalibrationForEquipmentAndRun::equipment_ids()const{return m_eq_id;}
 	const size_t CalibrationForEquipmentAndRun::run_id()const{return m_run_id;}
-	
+
 	AmplificationCalibrationEdit::AmplificationCalibrationEdit()
 	:m_fields{"name","param_count","formula","param_values"}{}
 	AmplificationCalibrationEdit::~AmplificationCalibrationEdit(){}

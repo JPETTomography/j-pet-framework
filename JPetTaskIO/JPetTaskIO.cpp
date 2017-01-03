@@ -14,18 +14,17 @@
  */
 
 #include "JPetTaskIO.h"
+#include <memory>
 #include <cassert>
 #include "../JPetReader/JPetReader.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 #include "../JPetTask/JPetTask.h"
-#include "../JPetHLDReader/JPetHLDReader.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 
 #include "../JPetLoggerInclude.h"
 
 
 JPetTaskIO::JPetTaskIO():
-  fTask(0),
   fEventNb(-1),
   fWriter(0),
   fReader(0),
@@ -67,9 +66,11 @@ void JPetTaskIO::exec()
   setUserLimits(fOptions, totalEvents,  firstEvent, lastEvent);
   assert(lastEvent >= 0);
   for (auto i = firstEvent; i <= lastEvent; i++) {
-    fTask->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
+
+    //(std::dynamic_pointer_cast<JPetTask>(fTask))->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
+    (dynamic_cast<JPetTask*>(fTask))->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
     if (fOptions.isProgressBar()) {
-      manageProgressBar(i, lastEvent);
+      displayProgressBar(i, lastEvent);
     }
     fTask->exec();
     fReader->nextEvent();
@@ -84,13 +85,13 @@ void JPetTaskIO::terminate()
   assert(fHeader);
   assert(fStatistics);
   assert(fAuxilliaryData);
-  
+
   fWriter->writeHeader(fHeader);
 
   fWriter->writeObject(fStatistics->getHistogramsTable(), "Stats");
 
   fWriter->writeObject(fAuxilliaryData, "Auxilliary Data");
-  
+
   // store the parametric objects in the ouptut ROOT file
   getParamManager().saveParametersToFile(
     fWriter);
@@ -99,14 +100,6 @@ void JPetTaskIO::terminate()
   fWriter->closeFile();
   fReader->closeFile();
 
-}
-void JPetTaskIO::addSubTask(JPetTaskInterface* subtask)
-{
-  fTask = dynamic_cast<JPetTask*>(subtask);
-}
-JPetTask* JPetTaskIO::getSubTask() const
-{
-  return fTask;
 }
 
 void JPetTaskIO::setOptions(const JPetOptions& opts)
@@ -135,11 +128,10 @@ JPetParamManager& JPetTaskIO::getParamManager()
 void JPetTaskIO::createInputObjects(const char* inputFilename)
 {
   auto treeName = "";
+  fReader = new JPetReader;
   if (fOptions.getInputFileType() == JPetOptions::kHld ) {
-    fReader = new JPetHLDReader;
     treeName = "T";
   } else {
-    fReader = new JPetReader;
     treeName = "tree";
   }
   if ( fReader->openFileAndLoadData( inputFilename, treeName )) {
@@ -164,9 +156,11 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
     // read the Auxilliary data from input file
     // or create it if it was non-existent
     fAuxilliaryData = dynamic_cast<JPetAuxilliaryData*>(fReader->getObjectFromFile("Auxilliary Data"));
-    
+
     // add info about this module to the processing stages' history in Tree header
-    fHeader->addStageInfo(fTask->GetName(), fTask->GetTitle(), 0,
+    //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
+    auto task = dynamic_cast<JPetTask*>(fTask);
+    fHeader->addStageInfo(task->GetName(), task->GetTitle(), 0,
                           JPetCommonTools::getTimeString());
 
   } else {
@@ -180,25 +174,23 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
   if (fTask) {
-    fTask->setWriter(fWriter);
-    if(!fAuxilliaryData){
+    //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
+    auto task = dynamic_cast<JPetTask*>(fTask);
+    task->setWriter(fWriter);
+    if (!fAuxilliaryData) {
       fAuxilliaryData = new JPetAuxilliaryData();
     }
-    fTask->setStatistics(fStatistics);
-    fTask->setAuxilliaryData(fAuxilliaryData);
+    task->setStatistics(fStatistics);
+    task->setAuxilliaryData(fAuxilliaryData);
   } else {
     WARNING("the subTask does not exist, so Write was not passed to it");
   }
 }
 
-void JPetTaskIO::manageProgressBar(long long done, long long end)
-{
-  printf("\r[%6.4f%% %%]", setProgressBar(done, end));
-}
 
-float JPetTaskIO::setProgressBar(int currentEventNumber, int numberOfEvents)
+void JPetTaskIO::displayProgressBar(int currentEventNumber, int numberOfEvents) const
 {
-  return ( ((float)currentEventNumber) / numberOfEvents ) * 100;
+  return fProgressBar.display(currentEventNumber, numberOfEvents);
 }
 
 
@@ -211,10 +203,6 @@ const JPetParamBank& JPetTaskIO::getParamBank()
 
 JPetTaskIO::~JPetTaskIO()
 {
-  if (fTask) {
-    delete fTask;
-    fTask = 0;
-  }
   if (fWriter) {
     delete fWriter;
     fWriter = 0;
