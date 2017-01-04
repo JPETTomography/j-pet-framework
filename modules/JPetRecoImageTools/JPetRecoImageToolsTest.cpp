@@ -63,16 +63,16 @@ BOOST_AUTO_TEST_CASE(rescale_3)
   BOOST_REQUIRE_CLOSE(matrix[1][1], 0, epsilon );
 }
 
-BOOST_AUTO_TEST_CASE(nearestNeighbours)
-{
-  JPetRecoImageTools::Matrix2D matrix = { {1, 2}, {3, 4}};
-  auto result = JPetRecoImageTools::nearestNeighbour(matrix, 0, 0, 0, 0 , 0, true);
-  std::cout << "result=" << result << std::endl;
-  result = JPetRecoImageTools::nearestNeighbour(matrix, 0, 0, 0, 0 , 0, false);
-  std::cout << "result=" << result << std::endl;
-  result = JPetRecoImageTools::nearestNeighbour(matrix, 1, 1, 1, 1 , 1, true);
-  std::cout << "result=" << result << std::endl;
-}
+//BOOST_AUTO_TEST_CASE(nearestNeighbours)
+//{
+//JPetRecoImageTools::Matrix2D matrix = { {1, 2}, {3, 4}};
+//auto result = JPetRecoImageTools::nearestNeighbour(matrix, 0, 0, 0, 0 , 0, true);
+//std::cout << "result=" << result << std::endl;
+//result = JPetRecoImageTools::nearestNeighbour(matrix, 0, 0, 0, 0 , 0, false);
+//std::cout << "result=" << result << std::endl;
+//result = JPetRecoImageTools::nearestNeighbour(matrix, 1, 1, 1, 1 , 1, true);
+//std::cout << "result=" << result << std::endl;
+//}
 
 BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_NOT_IN_CENTER)
 {
@@ -106,51 +106,46 @@ BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_NOT_IN_CENTER)
   }
 }
 
-//BOOST_AUTO_TEST_CASE(sinogram)
-//{
+BOOST_AUTO_TEST_CASE(sinogram)
+{
 
-//std::ifstream in;
-//in.open("unitTestData/JPetRecoImageToolsTest/phantom.pgm");
-//std::string line;
-//getline(in, line);
-//if (line != "P2")
-//{
-//}
+  std::ifstream in;
+  in.open("unitTestData/JPetRecoImageToolsTest/phantom.pgm");
+  std::string line;
+  getline(in, line);
+  if (line != "P2") {
+  }
 
-//unsigned int width;
-//unsigned int height;
-//in >> width;
-//in >> height;
-//int val;
-//in >> val; // skip max val
-//std::vector<std::vector<int>> m(width, std::vector<int>(height));
-//for (unsigned int i = 0; i < width; i++)
-//{
-//for (unsigned int j = 0; j < height; j++)
-//{
-//in >> val;
-//m[i][j] = val;
-//}
-//}
-//int views = 180;
-//int scans = 256;
-//std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram(m, views, scans, JPetRecoImageTools::linear, 0, 180, true, 0, 255);
-//std::ofstream res;
-//res.open("unitTestData/JPetRecoImageToolsTest/sinogram.ppm");
-//res << "P2" << std::endl;
-//res << scans << " " << views << std::endl;
-//res << "255" << std::endl;
+  unsigned int width;
+  unsigned int height;
+  in >> width;
+  in >> height;
+  int val;
+  in >> val; // skip max val
+  std::vector<std::vector<int>> m(width, std::vector<int>(height));
+  for (unsigned int i = 0; i < width; i++) {
+    for (unsigned int j = 0; j < height; j++) {
+      in >> val;
+      m[i][j] = val;
+    }
+  }
+  int views = 180;
+  int scans = 256;
+  std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram(m, views, scans, JPetRecoImageTools::linear, 0, 180, true, 0, 255);
+  std::ofstream res;
+  res.open("unitTestData/JPetRecoImageToolsTest/sinogram.ppm");
+  res << "P2" << std::endl;
+  res << scans << " " << views << std::endl;
+  res << "255" << std::endl;
 
-//for (int i = 0; i < views; i++)
-//{
-//for (int j = 0; j < scans; j++)
-//{
-//res << (int)result[i][j] << " ";
-//}
-//res << std::endl;
-//}
+  for (int i = 0; i < views; i++) {
+    for (int j = 0; j < scans; j++) {
+      res << (int)result[i][j] << " ";
+    }
+    res << std::endl;
+  }
 
-//res.close();
-//}
+  res.close();
+}
 
 BOOST_AUTO_TEST_SUITE_END()
