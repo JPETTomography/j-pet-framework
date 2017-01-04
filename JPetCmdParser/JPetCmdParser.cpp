@@ -20,6 +20,7 @@
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include "../JPetOptionsJson/JPetOptionsJson.h"
 #include <stdexcept>
+#include <map>
 
 
 JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
