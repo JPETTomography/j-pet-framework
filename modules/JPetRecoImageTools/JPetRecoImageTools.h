@@ -18,6 +18,7 @@
 #define _JPetRecoImageTools_H_
 
 #include <vector>
+#include <cmath>
 #include <functional>
 
 class JPetRecoImageTools
@@ -45,7 +46,7 @@ public:
   static Matrix2DProj sinogram(Matrix2D& emissionMatrix,
                                int nViews, int nScans,
                                InterpolationFunc interpolationFunction = linear,
-                               float angleBeg = 0, float angleEnd = 180, bool scaleResult = false,
+                               double angleBeg = 0, double angleEnd = 180, bool scaleResult = false,
                                int min = 0, int max = 255);
   /// Rescale the Matrix in the following way:
   /// 1. All the values less than minCutoff are set to minCutoff
@@ -59,9 +60,19 @@ private:
   JPetRecoImageTools(const JPetRecoImageTools&) = delete;
   JPetRecoImageTools& operator=(const JPetRecoImageTools&) = delete;
 
-  static double calculateProjection(Matrix2D& emissionMatrix, int N, double cos, double sin,
+  static double calculateProjection(Matrix2D& emissionMatrix,
+                                    int N,
+                                    double cos,
+                                    double sin,
                                     double scale,
-                                    InterpolationFunc& interpolationFunction, double a, double aa);
+                                    InterpolationFunc& interpolationFunction,
+                                    double a,
+                                    double aa
+                                   );
+  static inline double setToZeroIfSmall(double value, double epsilon) {
+    if (std::abs(value) < epsilon) return 0;
+    else return value;
+  }
 };
 
 #endif
