@@ -17,6 +17,7 @@ def parse():
             root = tree.getroot()
             if root.findall('.//FatalError'):
                 eprint("Error detected")
+                print(infile)
                 sys.exit(1)
         except ParseError:
             eprint("The file xml isn't correct. There were some mistakes in the tests ")
