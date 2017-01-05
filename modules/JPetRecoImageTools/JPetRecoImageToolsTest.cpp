@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "./JPetRecoImageTools.h"
+#include "../../JPetCommonTools/JPetCommonTools.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
@@ -94,7 +95,19 @@ BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_NOT_IN_CENTER)
         BOOST_REQUIRE_EQUAL(result[i][j], 0);
     }
   }
+}
 
+BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_NOT_IN_CENTER_2)
+{
+  std::vector<std::vector<int>> m(4, std::vector<int>(4));
+  for (unsigned int i = 0; i < 4; i++) {
+    for (unsigned int j = 0; j < 4; j++) {
+      m[i][j] = 0;
+    }
+  }
+  m[2][2] = 100;
+  int views = 2;
+  int scans = 4;
   std::vector<std::vector<double>> result2 = JPetRecoImageTools::sinogram(m, views, scans, JPetRecoImageTools::nearestNeighbour);
   for (int i = 0; i < views; i++) {
     for (int j = 0; j < scans; j++) {
@@ -106,16 +119,16 @@ BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_NOT_IN_CENTER)
   }
 }
 
+/// This test takes a Shepp-Logan phantom and creates a sinogram.
 BOOST_AUTO_TEST_CASE(sinogram)
 {
-
-  std::ifstream in;
-  in.open("unitTestData/JPetRecoImageToolsTest/phantom.pgm");
+  const auto inFile = "unitTestData/JPetSinogramTest/phantom.pgm";
+  const auto outFile = "sinogram.ppm";
+  /// read phantom
+  std::ifstream in(inFile);
+  BOOST_REQUIRE(in);
   std::string line;
   getline(in, line);
-  if (line != "P2") {
-  }
-
   unsigned int width;
   unsigned int height;
   in >> width;
@@ -132,20 +145,18 @@ BOOST_AUTO_TEST_CASE(sinogram)
   int views = 180;
   int scans = 256;
   std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram(m, views, scans, JPetRecoImageTools::linear, 0, 180, true, 0, 255);
-  std::ofstream res;
-  res.open("unitTestData/JPetRecoImageToolsTest/sinogram.ppm");
+  /// save sinogram
+  std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << scans << " " << views << std::endl;
   res << "255" << std::endl;
-
   for (int i = 0; i < views; i++) {
     for (int j = 0; j < scans; j++) {
-      res << (int)result[i][j] << " ";
+      res << static_cast<int>(result[i][j]) << " ";
     }
     res << std::endl;
   }
-
   res.close();
+  BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
 }
-
 BOOST_AUTO_TEST_SUITE_END()
