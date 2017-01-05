@@ -21,6 +21,7 @@
 #include "../JPetOptionsJson/JPetOptionsJson.h"
 #include <stdexcept>
 #include <map>
+#include <boost/program_options/variables_map.hpp>
 
 
 JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
