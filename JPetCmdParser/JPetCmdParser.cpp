@@ -21,7 +21,7 @@
 #include "../JPetOptionsJson/JPetOptionsJson.h"
 #include <stdexcept>
 #include <map>
-#include <boost/program_options/variables_map.hpp>
+#include <boost/program_options/variables_value.hpp>
 
 
 JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
@@ -69,8 +69,8 @@ std::vector<JPetOptions> JPetCmdParser::parseAndGenerateOptions(int argc, const 
     JPetOptions optionsFromJson = JPetOptionsJson::createOptionsFromFile(variablesMap["json"].as<std::string>());
     std::pair<std::map<char,int>::iterator,bool> ret;
     for(auto const& iter : optionsFromJson.getOptions()){
-      ret = variablesMap.insert( std::pair<std::string, variables_value>(iter.first,iter.second) ); 
-      if((!ret.second) && (iter.second != variablesMap[iter.first].as< std::vector<std::string> >())){
+      ret = variablesMap.insert( std::pair<std::string, po::variables_value>(iter.first,iter.second) ); 
+      if((!ret.second) && (iter.second != variablesMap[iter.first].as<std::string>())){
 	  ERROR("Options from json and from command line are invalid");
 	  throw std::invalid_argument("Check the json file and options from command line");
       }	
