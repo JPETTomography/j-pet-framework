@@ -81,7 +81,7 @@ else
   echo "Fetching database config files."
   echo "To avoid downloading leave the username empty."
   read -p "username at ${CFG_SERVER}:" USERNM;
-  if [ ! -z USERNM ]; then
+  if [ ! -z $USERNM ]; then
     scp ${USERNM}@${CFG_SERVER}:"${CFG_FILES_IN}" ${CFG_OUTPUT}
   fi
 fi
