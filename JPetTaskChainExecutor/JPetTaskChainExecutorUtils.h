@@ -40,9 +40,9 @@ public:
   /// Here I just convert return value into boolean type - Sz.N.
   inline static bool unzipFile(const char* filename) {
     if( JPetCommonTools::exctractFileNameSuffix(filename) == ".gz")
-      return !( system( ( std::string("gzip -d ") + std::string(filename) ).c_str() ) );
+      return !( system( ( std::string("gzip -dk ") + std::string(filename) ).c_str() ) );
     else if( JPetCommonTools::exctractFileNameSuffix(filename) == ".xz" )
-      return !( system( (std::string("xz -d ") + std::string(filename) ).c_str() ) );
+      return !( system( (std::string("xz -dk ") + std::string(filename) ).c_str() ) );
     else
       return false;
   }
