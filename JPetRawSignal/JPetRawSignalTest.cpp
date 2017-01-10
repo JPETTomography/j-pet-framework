@@ -27,9 +27,6 @@ BOOST_AUTO_TEST_CASE(GetNumberOfPointsTest) {
 
   BOOST_REQUIRE_EQUAL(signal.getNumberOfPoints(JPetSigCh::Trailing), 0);
   BOOST_REQUIRE_EQUAL(signal.getNumberOfPoints(JPetSigCh::Leading), 0);
-  BOOST_REQUIRE_EQUAL(signal.getNumberOfLeadingEdgePoints(), 0);
-  BOOST_REQUIRE_EQUAL(signal.getNumberOfTrailingEdgePoints(), 0);
-
 }
 
 BOOST_AUTO_TEST_CASE(AddLeadingPointTest) {
@@ -38,7 +35,7 @@ BOOST_AUTO_TEST_CASE(AddLeadingPointTest) {
 
   signal.addPoint(sigCh);
   BOOST_REQUIRE_EQUAL(signal.getNumberOfPoints(JPetSigCh::Leading), 1);
-  BOOST_REQUIRE_EQUAL(signal.getNumberOfLeadingEdgePoints(), 1);
+
 }
 
 BOOST_AUTO_TEST_CASE(AddTrailingPointTest) {
@@ -47,7 +44,7 @@ BOOST_AUTO_TEST_CASE(AddTrailingPointTest) {
 
   signal.addPoint(sigCh);
   BOOST_REQUIRE_EQUAL(signal.getNumberOfPoints(JPetSigCh::Trailing), 1);
-  BOOST_REQUIRE_EQUAL(signal.getNumberOfTrailingEdgePoints(), 1);
+
 }
 
 BOOST_AUTO_TEST_CASE(GetVectorOfPointsTest) {
