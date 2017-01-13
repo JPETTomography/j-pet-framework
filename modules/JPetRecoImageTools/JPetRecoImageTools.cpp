@@ -26,6 +26,7 @@ JPetRecoImageTools::JPetRecoImageTools() {}
 
 JPetRecoImageTools::~JPetRecoImageTools() {}
 
+
 double JPetRecoImageTools::nearestNeighbour(const Matrix2D& emissionMatrix, double a, double b,
     int center, int x, int y, bool sang)
 {
@@ -107,52 +108,46 @@ double JPetRecoImageTools::calculateProjection(Matrix2D& emissionMatrix, double 
   const int kInputMatrixSize = emissionMatrix.size();
   //if no. nScans is greater than the image width, then scale will be <1
   const double scale = kInputMatrixSize / nScans;
-  const double kSin45deg = std::sqrt(2) / 2; /// sin(45) deg
+  const double kSin45or125deg = std::sqrt(2) / 2; /// sin(45) deg
   const double kEpsilon = 0.0000001;
   const double kDegToRad = M_PI / 180.;
-  double sin = 0., cos = 0.;
-  double a = 0., aa = 0.;
-  sin = std::sin(phi * kDegToRad - M_PI / 2.);
+
+  double sin = std::sin(phi * kDegToRad - M_PI / 2.);
   sin = setToZeroIfSmall(sin, kEpsilon);
-  cos = std::cos(phi * kDegToRad - M_PI / 2.);
+  double cos = std::cos(phi * kDegToRad - M_PI / 2.);
   cos = setToZeroIfSmall(cos, kEpsilon);
 
 
-  a = -cos / sin;
-  if (std::isinf(a) || std::isinf(-a) || std::abs(a) < kEpsilon) {
-    a = 0;
-    aa = 0;
-  } else {
-    aa = 1 / a;
-  }
-
-  bool angleLargerThan45 = std::abs(sin) > kSin45deg;
-  if (angleLargerThan45) {
-    a = -cos / sin;
-
-  } else {
-    a = -sin / cos;
-  }
-
-  const int kMatrixCenter = emissionMatrix.size() / 2;
-
-  double b = 0.;
-  if (angleLargerThan45)
-    b = (N - cos - sin) / sin;
-  else
-    b = (N - cos - sin) / cos;
-  b *= scale;
   double value = 0.;
   int x = 0;
   int y = 0;
-  if (angleLargerThan45) {
+  const int kMatrixCenter = emissionMatrix.size() / 2;
+  double a = 0.;
+  double b = 0.;
+
+  /// If the angle is between [0 to 45 ] or [125 to 180] w use y = a* x +b
+  /// otherwise we use  x =a' * y + b'
+  bool angleRange45To125 = std::abs(sin) > kSin45or125deg;
+  if (angleRange45To125) {
+    assert(sin);
+    a = -cos / sin;
+    b = (N - cos - sin) / sin;
+
+  } else {
+    assert(cos);
+    a = -sin / cos;
+    b = (N - cos - sin) / cos;
+  }
+  b *= scale;
+
+  if (angleRange45To125) {
     for (x = -kMatrixCenter; x < kMatrixCenter; x++) {
-      value += interpolationFunction(emissionMatrix, a, b, kMatrixCenter, x, y, angleLargerThan45);
+      value += interpolationFunction(emissionMatrix, a, b, kMatrixCenter, x, y, angleRange45To125);
     }
     value /= std::abs(sin);
   } else {
     for (y = -kMatrixCenter; y < kMatrixCenter; y++) {
-      value += interpolationFunction(emissionMatrix, aa, b, kMatrixCenter, x, y, angleLargerThan45);
+      value += interpolationFunction(emissionMatrix, a, b, kMatrixCenter, x, y, angleRange45To125);
     }
     value /= std::abs(cos);
   }
