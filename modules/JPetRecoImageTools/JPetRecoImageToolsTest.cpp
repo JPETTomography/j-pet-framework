@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(sinogram)
   }
   int views = 180;
   int scans = 256;
-  std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram(m, views, scans, 0, 180, JPetRecoImageTools::linear);
+  std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram(m, views, scans, 0, 180, JPetRecoImageTools::linear, JPetRecoImageTools::rescale);
   /// save sinogram
   std::ofstream res(outFile);
   res << "P2" << std::endl;
