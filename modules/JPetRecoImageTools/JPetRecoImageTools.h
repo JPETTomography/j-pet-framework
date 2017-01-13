@@ -69,12 +69,9 @@ private:
 
   static double calculateProjection(Matrix2D& emissionMatrix,
                                     int N,
-                                    double cos,
-                                    double sin,
+                                    double phi,
                                     double scale,
-                                    InterpolationFunc& interpolationFunction,
-                                    double a,
-                                    double aa
+                                    InterpolationFunc& interpolationFunction
                                    );
   static inline double setToZeroIfSmall(double value, double epsilon) {
     if (std::abs(value) < epsilon) return 0;
