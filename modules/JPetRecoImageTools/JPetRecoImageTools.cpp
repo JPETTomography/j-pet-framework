@@ -27,34 +27,19 @@ JPetRecoImageTools::JPetRecoImageTools() {}
 JPetRecoImageTools::~JPetRecoImageTools() {}
 
 //nearest neighbour
-double JPetRecoImageTools::nearestNeighbour2( int i, double y, std::function<double(int, int)>& func)
+double JPetRecoImageTools::nearestNeighbour( int i, double y, std::function<double(int, int)>& func)
 {
   int j = std::round(y);
   return func (i, j);
 }
 
-double JPetRecoImageTools::linear2(int i, double y, std::function<double(int, int)>& func)
+double JPetRecoImageTools::linear(int i, double y, std::function<double(int, int)>& func)
 {
   int j = std::round(y);
   double weight = std::abs(y - std::ceil(y));
   return (1 - weight) * func(i, j) + weight * func(i, j + 1);
 }
 
-double JPetRecoImageTools::nearestNeighbour(const Matrix2D& emissionMatrix, double a, double b,
-    int center, int x, int y, bool sang)
-{
-  if (sang) {
-    y = (int)std::round(a * x + b) + center;
-    if (y >= 0 && y < (int) emissionMatrix[0].size())
-      return emissionMatrix[x + center][y];
-    else return 0;
-  } else {
-    x = (int)std::round(a * y + b) + center + 1; // not really know why need to +1 to x, but it works
-    if (x >= 0 && x < (int)emissionMatrix.size())
-      return emissionMatrix[x][y + center];
-    else return 0;
-  }
-}
 
 std::function<double(int, int)> JPetRecoImageTools::getValue(const Matrix2D& emissionMatrix)
 {
@@ -78,57 +63,10 @@ std::function<double(int, int)> JPetRecoImageTools::getValue2(const Matrix2D& em
   };
 }
 
-double JPetRecoImageTools::linear3(std::function<double(int, int)>& matrixGet, double a, double b,
-                                   int center, int i)
-{
-  //if (sang) {
-  return linear2(i + center , a * i + b + center, matrixGet);
-  //y = (int)std::round(a * x + b) + center;
-  //double weight = std::abs((a * x + b) - std::ceil(a * x + b));
-  //if (y >= 0 && y < (int)emissionMatrix[0].size()) {
-  //return (1 - weight) * emissionMatrix[x + center][y] + weight * emissionMatrix[x + center][y + 1];
-  //} else return 0;
-
-  //} else {
-  //return linear2(y + center, a * y + b + center , matrixGet);
-  //x = (int)std::round(a * y + b) + center + 1; // not really know why need to +1 to x, but it works
-  //double weight = std::abs((a * y + b) - std::ceil(a * y + b));
-  //if (x >= 0 && x + 1 < (int)emissionMatrix.size()) {
-  //if (weight == 0)
-  //return emissionMatrix[x][y + center];
-  //else
-  //return (1 - weight) * emissionMatrix[x][y + center] + weight * emissionMatrix[x + 1][y + center];
-  //} else return 0;
-  //}
-}
-
-double JPetRecoImageTools::linear(const Matrix2D& emissionMatrix, double a, double b,
-                                  int center, int x, int y, bool sang)
-{
-  if (sang) {
-    y = (int)std::round(a * x + b) + center;
-    double weight = std::abs((a * x + b) - std::ceil(a * x + b));
-    if (y >= 0 && y < (int)emissionMatrix[0].size()) {
-      return (1 - weight) * emissionMatrix[x + center][y] + weight * emissionMatrix[x + center][y + 1];
-    } else return 0;
-  } else {
-    x = (int)std::round(a * y + b) + center + 1; // not really know why need to +1 to x, but it works
-    double weight = std::abs((a * y + b) - std::ceil(a * y + b));
-    if (x >= 0 && x + 1 < (int)emissionMatrix.size()) {
-      if (weight == 0)
-        return emissionMatrix[x][y + center];
-      else
-        return (1 - weight) * emissionMatrix[x][y + center] + weight * emissionMatrix[x + 1][y + center];
-    } else return 0;
-  }
-}
-
-
-
 JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emissionMatrix,
     int nViews, int nScans,
     double angleBeg, double angleEnd,
-    InterpolationFunc2 interpolationFunction,
+    InterpolationFunc interpolationFunction,
     RescaleFunc rescaleFunc,
     int minCutoff,
     int scaleFactor
@@ -162,7 +100,7 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
 }
 
 double JPetRecoImageTools::calculateProjection(Matrix2D& emissionMatrix, double phi, int scanNumber, int nScans,
-    InterpolationFunc2& interpolationFunction)
+    InterpolationFunc& interpolationFunction)
 {
   int N = scanNumber - nScans / 2;
   const int kInputMatrixSize = emissionMatrix.size();
