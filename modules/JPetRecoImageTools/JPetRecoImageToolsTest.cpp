@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_NOT_IN_CENTER_2)
   m[2][2] = 100;
   int views = 2;
   int scans = 4;
-  std::vector<std::vector<double>> result2 = JPetRecoImageTools::sinogram(m, views, scans, 0, 180,  JPetRecoImageTools::nearestNeighbour);
+  std::vector<std::vector<double>> result2 = JPetRecoImageTools::sinogram(m, views, scans, 0, 180,  JPetRecoImageTools::nearestNeighbour2);
   for (int i = 0; i < views; i++) {
     for (int j = 0; j < scans; j++) {
       if ((i == 0 && j == 2) || (i == 1 && j == 1))
@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(sinogram)
   }
   int views = 180;
   int scans = 256;
-  std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram(m, views, scans, 0, 180, JPetRecoImageTools::linear, JPetRecoImageTools::rescale);
+  std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram(m, views, scans, 0, 180, JPetRecoImageTools::linear2, JPetRecoImageTools::rescale);
   /// save sinogram
   std::ofstream res(outFile);
   res << "P2" << std::endl;

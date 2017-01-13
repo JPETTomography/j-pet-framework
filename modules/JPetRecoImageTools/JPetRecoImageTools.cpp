@@ -26,6 +26,19 @@ JPetRecoImageTools::JPetRecoImageTools() {}
 
 JPetRecoImageTools::~JPetRecoImageTools() {}
 
+//nearest neighbour
+double JPetRecoImageTools::nearestNeighbour2( int i, double y, std::function<double(int, int)>& func)
+{
+  int j = std::round(y);
+  return func (i, j);
+}
+
+double JPetRecoImageTools::linear2(int i, double y, std::function<double(int, int)>& func)
+{
+  int j = std::round(y);
+  double weight = std::abs(y - std::ceil(y));
+  return (1 - weight) * func(i, j) + weight * func(i, j + 1);
+}
 
 double JPetRecoImageTools::nearestNeighbour(const Matrix2D& emissionMatrix, double a, double b,
     int center, int x, int y, bool sang)
@@ -41,6 +54,52 @@ double JPetRecoImageTools::nearestNeighbour(const Matrix2D& emissionMatrix, doub
       return emissionMatrix[x][y + center];
     else return 0;
   }
+}
+
+std::function<double(int, int)> JPetRecoImageTools::getValue(const Matrix2D& emissionMatrix)
+{
+  return [& emissionMatrix](int i, int j) {
+    if (i >= 0 && i < (int) emissionMatrix[0].size() && j >= 0 && j < (int) emissionMatrix.size() ) {
+      return emissionMatrix[i][j];
+    } else {
+      return 0;
+    }
+  };
+}
+
+std::function<double(int, int)> JPetRecoImageTools::getValue2(const Matrix2D& emissionMatrix)
+{
+  return [& emissionMatrix](int i, int j) {
+    if (i >= 0 && i < (int) emissionMatrix[0].size() && j >= 0 && j < (int) emissionMatrix.size() ) {
+      return emissionMatrix[j][i];
+    } else {
+      return 0;
+    }
+  };
+}
+
+double JPetRecoImageTools::linear3(std::function<double(int, int)>& matrixGet, double a, double b,
+                                   int center, int i)
+{
+  //if (sang) {
+  return linear2(i + center , a * i + b + center, matrixGet);
+  //y = (int)std::round(a * x + b) + center;
+  //double weight = std::abs((a * x + b) - std::ceil(a * x + b));
+  //if (y >= 0 && y < (int)emissionMatrix[0].size()) {
+  //return (1 - weight) * emissionMatrix[x + center][y] + weight * emissionMatrix[x + center][y + 1];
+  //} else return 0;
+
+  //} else {
+  //return linear2(y + center, a * y + b + center , matrixGet);
+  //x = (int)std::round(a * y + b) + center + 1; // not really know why need to +1 to x, but it works
+  //double weight = std::abs((a * y + b) - std::ceil(a * y + b));
+  //if (x >= 0 && x + 1 < (int)emissionMatrix.size()) {
+  //if (weight == 0)
+  //return emissionMatrix[x][y + center];
+  //else
+  //return (1 - weight) * emissionMatrix[x][y + center] + weight * emissionMatrix[x + 1][y + center];
+  //} else return 0;
+  //}
 }
 
 double JPetRecoImageTools::linear(const Matrix2D& emissionMatrix, double a, double b,
@@ -65,10 +124,11 @@ double JPetRecoImageTools::linear(const Matrix2D& emissionMatrix, double a, doub
 }
 
 
+
 JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emissionMatrix,
     int nViews, int nScans,
     double angleBeg, double angleEnd,
-    InterpolationFunc interpolationFunction,
+    InterpolationFunc2 interpolationFunction,
     RescaleFunc rescaleFunc,
     int minCutoff,
     int scaleFactor
@@ -102,7 +162,7 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
 }
 
 double JPetRecoImageTools::calculateProjection(Matrix2D& emissionMatrix, double phi, int scanNumber, int nScans,
-    InterpolationFunc& interpolationFunction)
+    InterpolationFunc2& interpolationFunction)
 {
   int N = scanNumber - nScans / 2;
   const int kInputMatrixSize = emissionMatrix.size();
@@ -117,40 +177,36 @@ double JPetRecoImageTools::calculateProjection(Matrix2D& emissionMatrix, double 
   double cos = std::cos(phi * kDegToRad - M_PI / 2.);
   cos = setToZeroIfSmall(cos, kEpsilon);
 
-
-  double value = 0.;
-  int x = 0;
-  int y = 0;
-  const int kMatrixCenter = emissionMatrix.size() / 2;
   double a = 0.;
   double b = 0.;
 
   /// If the angle is between [0 to 45 ] or [125 to 180] w use y = a* x +b
   /// otherwise we use  x =a' * y + b'
   bool angleRange45To125 = std::abs(sin) > kSin45or125deg;
+  double divided = 1.;
+  std::function<double(int, int)> matrixGet;
+
   if (angleRange45To125) {
     assert(sin);
     a = -cos / sin;
     b = (N - cos - sin) / sin;
-
+    b *= scale;
+    matrixGet  = getValue(emissionMatrix);
+    divided = std::abs(sin);
   } else {
     assert(cos);
     a = -sin / cos;
     b = (N - cos - sin) / cos;
+    b *= scale;
+    matrixGet  = getValue2(emissionMatrix);
+    divided = std::abs(cos);
   }
-  b *= scale;
-
-  if (angleRange45To125) {
-    for (x = -kMatrixCenter; x < kMatrixCenter; x++) {
-      value += interpolationFunction(emissionMatrix, a, b, kMatrixCenter, x, y, angleRange45To125);
-    }
-    value /= std::abs(sin);
-  } else {
-    for (y = -kMatrixCenter; y < kMatrixCenter; y++) {
-      value += interpolationFunction(emissionMatrix, a, b, kMatrixCenter, x, y, angleRange45To125);
-    }
-    value /= std::abs(cos);
+  const int kMatrixCenter = emissionMatrix.size() / 2;
+  double value = 0.;
+  for (auto i = -kMatrixCenter; i < kMatrixCenter; i++) {
+    value += interpolationFunction(i + kMatrixCenter , a * i + b + kMatrixCenter, matrixGet);
   }
+  value /= divided;
   return value;
 }
 

@@ -27,7 +27,16 @@ public:
   using Matrix2D = std::vector<std::vector<int>>;
   using Matrix2DProj = std::vector<std::vector<double>>;
   using InterpolationFunc = std::function<double(const Matrix2D&, double, double, int, int, int, bool)>;
+  using InterpolationFunc2 = std::function<double(int i, double y, std::function<double(int, int)>&)>;
   using RescaleFunc = std::function<void(Matrix2DProj& v, double minCutoff, double rescaleFactor)>;
+
+  static double nearestNeighbour2(int i, double y, std::function<double(int, int)>& func);
+  static double linear2(int i, double y, std::function<double(int, int)>& func);
+
+  static double linear3(std::function<double(int, int)>& getValue, double a, double b,
+                        int center, int i);
+  static std::function<double(int, int)> getValue(const Matrix2D& emissionMatrix);
+  static std::function<double(int, int)> getValue2(const Matrix2D& emissionMatrix);
 
   static double nearestNeighbour(const Matrix2D& emissionMatrix,
                                  double a, double b, int center, int x, int y, bool sang);
@@ -56,7 +65,7 @@ public:
   static Matrix2DProj sinogram(Matrix2D& emissionMatrix,
                                int nViews, int nScans,
                                double angleBeg = 0, double angleEnd = 180,
-                               InterpolationFunc interpolationFunction = linear,
+                               InterpolationFunc2 interpolationFunction = linear2,
                                RescaleFunc rescaleFunc = nonRescale,
                                int rescaleMinCutoff = 0,
                                int rescaleFactor = 255
@@ -71,7 +80,7 @@ private:
                                     double phi,
                                     int scanNumber,
                                     int nScans,
-                                    InterpolationFunc& interpolationFunction
+                                    InterpolationFunc2& interpolationFunction
                                    );
   static inline double setToZeroIfSmall(double value, double epsilon) {
     if (std::abs(value) < epsilon) return 0;
