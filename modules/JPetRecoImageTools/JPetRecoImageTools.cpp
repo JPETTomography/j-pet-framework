@@ -66,8 +66,12 @@ double JPetRecoImageTools::linear(const Matrix2D& emissionMatrix, double a, doub
 
 JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emissionMatrix,
     int nViews, int nScans,
+    double angleBeg, double angleEnd,
     InterpolationFunc interpolationFunction,
-    double angleBeg, double angleEnd, bool scaleResult, int min, int max)
+    RescaleFunc rescaleFunc,
+    int min,
+    int max
+                                                             )
 {
   assert(emissionMatrix.size() > 0);
   assert(emissionMatrix.size() == emissionMatrix[0].size());
@@ -128,10 +132,7 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
     viewIndex++;
   }
 
-  if (scaleResult) {
-    JPetRecoImageTools::rescale(proj, min, max);
-  }
-
+  rescaleFunc(proj, min, max);
   return proj;
 }
 
