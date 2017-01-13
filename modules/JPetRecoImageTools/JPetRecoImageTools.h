@@ -68,9 +68,9 @@ private:
   JPetRecoImageTools& operator=(const JPetRecoImageTools&) = delete;
 
   static double calculateProjection(Matrix2D& emissionMatrix,
-                                    int N,
                                     double phi,
-                                    double scale,
+                                    int scanNumber,
+                                    int nScans,
                                     InterpolationFunc& interpolationFunction
                                    );
   static inline double setToZeroIfSmall(double value, double epsilon) {
