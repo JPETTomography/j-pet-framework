@@ -26,7 +26,6 @@ JPetRecoImageTools::JPetRecoImageTools() {}
 
 JPetRecoImageTools::~JPetRecoImageTools() {}
 
-//nearest neighbour
 double JPetRecoImageTools::nearestNeighbour( int i, double y, std::function<double(int, int)>& func)
 {
   int j = std::round(y);
@@ -35,32 +34,30 @@ double JPetRecoImageTools::nearestNeighbour( int i, double y, std::function<doub
 
 double JPetRecoImageTools::linear(int i, double y, std::function<double(int, int)>& func)
 {
-  int j = std::round(y);
-  double weight = std::abs(y - std::ceil(y));
+  int j = std::floor(y);
+  double weight = std::abs(y - std::floor(y));
   return (1 - weight) * func(i, j) + weight * func(i, j + 1);
 }
 
-
-std::function<double(int, int)> JPetRecoImageTools::getValue(const Matrix2D& emissionMatrix)
+std::function<double(int, int)> JPetRecoImageTools::matrixGetterFactory(const Matrix2D& emissionMatrix, bool isTransposed)
 {
-  return [& emissionMatrix](int i, int j) {
-    if (i >= 0 && i < (int) emissionMatrix[0].size() && j >= 0 && j < (int) emissionMatrix.size() ) {
-      return emissionMatrix[i][j];
-    } else {
-      return 0;
-    }
-  };
-}
-
-std::function<double(int, int)> JPetRecoImageTools::getValue2(const Matrix2D& emissionMatrix)
-{
-  return [& emissionMatrix](int i, int j) {
-    if (i >= 0 && i < (int) emissionMatrix[0].size() && j >= 0 && j < (int) emissionMatrix.size() ) {
-      return emissionMatrix[j][i];
-    } else {
-      return 0;
-    }
-  };
+  if (!isTransposed) {
+    return [& emissionMatrix](int i, int j) {
+      if (i >= 0 && i < (int) emissionMatrix[0].size() && j >= 0 && j < (int) emissionMatrix.size() ) {
+        return emissionMatrix[i][j];
+      } else {
+        return 0;
+      }
+    };
+  } else {
+    return [& emissionMatrix](int i, int j) {
+      if (i >= 0 && i < (int) emissionMatrix.size() && j >= 0 && j < (int) emissionMatrix[0].size() ) {
+        return emissionMatrix[j][i];
+      } else {
+        return 0;
+      }
+    };
+  }
 }
 
 JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emissionMatrix,
@@ -94,12 +91,11 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
     }
     viewIndex++;
   }
-
   rescaleFunc(proj, minCutoff, scaleFactor);
   return proj;
 }
 
-double JPetRecoImageTools::calculateProjection(Matrix2D& emissionMatrix, double phi, int scanNumber, int nScans,
+double JPetRecoImageTools::calculateProjection(const Matrix2D& emissionMatrix, double phi, int scanNumber, int nScans,
     InterpolationFunc& interpolationFunction)
 {
   int N = scanNumber - nScans / 2;
@@ -117,9 +113,8 @@ double JPetRecoImageTools::calculateProjection(Matrix2D& emissionMatrix, double 
 
   double a = 0.;
   double b = 0.;
-
-  /// If the angle is between [0 to 45 ] or [125 to 180] w use y = a* x +b
-  /// otherwise we use  x =a' * y + b'
+  /// If the angle is between [0 to 45 ] or [125 to 180] w use y = a* x +b, and we iterate over rows of the matrix (x)
+  /// otherwise we use  x = a * y + b, and we iterate over columns of the matrix (y).
   bool angleRange45To125 = std::abs(sin) > kSin45or125deg;
   double divided = 1.;
   std::function<double(int, int)> matrixGet;
@@ -129,14 +124,14 @@ double JPetRecoImageTools::calculateProjection(Matrix2D& emissionMatrix, double 
     a = -cos / sin;
     b = (N - cos - sin) / sin;
     b *= scale;
-    matrixGet  = getValue(emissionMatrix);
+    matrixGet  = matrixGetterFactory(emissionMatrix, false); // The matrix  elements will be taken as (x,y).
     divided = std::abs(sin);
   } else {
     assert(cos);
     a = -sin / cos;
     b = (N - cos - sin) / cos;
     b *= scale;
-    matrixGet  = getValue2(emissionMatrix);
+    matrixGet  = matrixGetterFactory(emissionMatrix, true); // The matrix  elements will be taken as (y, x) - transposed.
     divided = std::abs(cos);
   }
   const int kMatrixCenter = emissionMatrix.size() / 2;
