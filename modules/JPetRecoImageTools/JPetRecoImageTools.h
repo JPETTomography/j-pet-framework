@@ -1,4 +1,3 @@
-
 /**
  *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,11 +28,27 @@ public:
   using InterpolationFunc = std::function<double(int i, double y, std::function<double(int, int)>&)>;
   using RescaleFunc = std::function<void(Matrix2DProj& v, double minCutoff, double rescaleFactor)>;
 
+  /// Returns a matrixGetter, that can be used to return matrix elements in the following way:
+  /// if isTransposed is set to false, matrixGetter returns matrix[i][j]
+  /// else matrixGetter returns matrix[j][i].
+  /// In addition if the indices goes outside of the matrix range 0 is retuned.
+  /// It is assumed that the input matrix is quadratic.
+  /// The produced functions can be used as an input to interpolation functions.
+  static std::function<double(int, int)> matrixGetterFactory(const Matrix2D& emissionMatrix, bool isTransposed = false);
+
+  /*! \brief function returning func(i,j) where j is the  nearest neighbour index with respect to y.
+   *  \param i discrete index being the first parameter of the function func.
+   *  \param y the double value for which the nearste neighoubring discrete index is calculated.
+   *  \param func function that returns double value based on two discrete i,j.
+  */
   static double nearestNeighbour(int i, double y, std::function<double(int, int)>& func);
+  /*! \brief Linear interpolation function returning (1-t)*func(i,j) + t* func(i,j+1).
+   *  \param i discrete index being the first parameter of the function func.
+   *  \param y the double value for which the j index  and t parameters are calculated.
+   *  \param func function that returns double value based on two discrete i,j.
+  */
   static double linear(int i, double y, std::function<double(int, int)>& func);
 
-  static std::function<double(int, int)> getValue(const Matrix2D& emissionMatrix);
-  static std::function<double(int, int)> getValue2(const Matrix2D& emissionMatrix);
 
   /// Rescale the Matrix in the following way:
   /// 1. All the values less than minCutoff are set to minCutoff
@@ -63,18 +78,18 @@ public:
                                int rescaleMinCutoff = 0,
                                int rescaleFactor = 255
                               );
+  static double calculateProjection(const Matrix2D& emissionMatrix,
+                                    double phi,
+                                    int scanNumber,
+                                    int nScans,
+                                    InterpolationFunc& interpolationFunction
+                                   );
 private:
   JPetRecoImageTools();
   ~JPetRecoImageTools();
   JPetRecoImageTools(const JPetRecoImageTools&) = delete;
   JPetRecoImageTools& operator=(const JPetRecoImageTools&) = delete;
 
-  static double calculateProjection(Matrix2D& emissionMatrix,
-                                    double phi,
-                                    int scanNumber,
-                                    int nScans,
-                                    InterpolationFunc& interpolationFunction
-                                   );
   static inline double setToZeroIfSmall(double value, double epsilon) {
     if (std::abs(value) < epsilon) return 0;
     else return value;
