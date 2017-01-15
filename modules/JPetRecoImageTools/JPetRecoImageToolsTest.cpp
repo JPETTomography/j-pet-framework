@@ -103,7 +103,6 @@ BOOST_AUTO_TEST_CASE(nearestNeighbour)
   BOOST_REQUIRE_CLOSE(JPetRecoImageTools::nearestNeighbour(1, 0.8, getterT), 4, epsilon); // (1,1)
 }
 
-
 BOOST_AUTO_TEST_CASE(linear)
 {
   double epsilon = 0.00001;
@@ -138,70 +137,83 @@ BOOST_AUTO_TEST_CASE(linear)
 //BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,0,0,1, func), 4, epsilon);
 //}
 
+
 //BOOST_AUTO_TEST_CASE(calculateProjection2)
 //{
 //double epsilon = 0.00001;
 //JPetRecoImageTools::Matrix2D matrix = {{1, 2}, {3, 4}};
-////static double calculateProjection(const Matrix2D& emissionMatrix,
-////double phi,
-////int scanNumber,
-////int nScans,
-////InterpolationFunc& interpolationFunction
-////);
-///// first argument is i second j  (i,j)
-//JPetRecoImageTools::InterpolationFunc func = JPetRecoImageTools::linear;
-//BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,0,0,1, func), 4, epsilon);
+///// 1 2
+///// 3 4
+///// angle = 0
+///// nScans = 2
+//JPetRecoImageTools::InterpolationFunc func = JPetRecoImageTools::nearestNeighbour;
+//const int kNScans = 2;
+//auto angle = 0.0;
+//BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,angle,0,kNScans, func), 4, epsilon);
+//BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,angle,1,kNScans, func), 4, epsilon);
+////BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,angle,1,kNScans, func), 6, epsilon);
+////BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,45,0,1, func), 4, epsilon);
+////BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,90,0,kNScans, func), 3, epsilon);
+////BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,125,0,1, func), 4, epsilon);
+////BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,180,0,1, func), 4, epsilon);
 //}
 
-
-//BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_NOT_IN_CENTER)
+//BOOST_AUTO_TEST_CASE(calculateProjection3)
 //{
-//std::vector<std::vector<int>> m(4, std::vector<int>(4));
-//for (unsigned int i = 0; i < 4; i++) {
-//for (unsigned int j = 0; j < 4; j++) {
-//m[i][j] = 0;
-//}
-//}
-//m[2][2] = 100;
-//int views = 2;
-//int scans = 4;
-//std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram(m, views, scans);
-//for (int i = 0; i < views; i++) {
-//for (int j = 0; j < scans; j++) {
-//if ((i == 0 && j == 2) || (i == 1 && j == 1))
-//BOOST_REQUIRE_EQUAL(result[i][j], 100);
-//else
-//BOOST_REQUIRE_EQUAL(result[i][j], 0);
-//}
-//}
+//double epsilon = 0.00001;
+//JPetRecoImageTools::Matrix2D matrix = {{1, 2, 3}, {4, 5, 6}, {7,8,9}};
+///// 1 2 3
+///// 4 5 6
+///// 7 8 9
+///// angle = 0
+///// nScans = 3
+//JPetRecoImageTools::InterpolationFunc func = JPetRecoImageTools::nearestNeighbour;
+//const int kNScans = 3;
+//auto angle = 0.0;
+////BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,angle,0,kNScans, func), 12, epsilon);
+//BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,angle,1,kNScans, func), 15, epsilon);
+////BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,angle,1,kNScans, func), 6, epsilon);
+////BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,45,0,1, func), 4, epsilon);
+////BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,90,0,kNScans, func), 3, epsilon);
+////BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,125,0,1, func), 4, epsilon);
+////BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,180,0,1, func), 4, epsilon);
 //}
 
-//BOOST_AUTO_TEST_CASE(ONE_POINT_MATRIX_NOT_IN_CENTER_2)
+//BOOST_AUTO_TEST_CASE(sinogram1)
 //{
-//std::vector<std::vector<int>> m(4, std::vector<int>(4));
-//for (unsigned int i = 0; i < 4; i++) {
-//for (unsigned int j = 0; j < 4; j++) {
-//m[i][j] = 0;
-//}
-//}
-//m[2][2] = 100;
-//int views = 2;
-//int scans = 4;
-//std::vector<std::vector<double>> result2 = JPetRecoImageTools::sinogram(m, views, scans, 0, 180,  JPetRecoImageTools::nearestNeighbour);
-//for (int i = 0; i < views; i++) {
-//for (int j = 0; j < scans; j++) {
-//if ((i == 0 && j == 2) || (i == 1 && j == 1))
-//BOOST_REQUIRE_EQUAL(result2[i][j], 100);
-//else
-//BOOST_REQUIRE_EQUAL(result2[i][j], 0);
-//}
-//}
+//double epsilon = 0.00001;
+//JPetRecoImageTools::Matrix2D matrix = {{1, 2, 3}, {4, 5, 6}, {7,8,9}};
+///// 1 2 3
+///// 4 5 6
+///// 7 8 9
+//JPetRecoImageTools::InterpolationFunc func = JPetRecoImageTools::nearestNeighbour;
+//JPetRecoImageTools::RescaleFunc func2= JPetRecoImageTools::nonRescale;
+//const int kNScans = 3;
+//const int kNViews = 2;
+//auto results = JPetRecoImageTools::sinogram(matrix,kNViews,kNScans, 0 , 90,  func, func2);
+//for (auto i: results)
+//for (auto j: i)
+//std::cout <<j <<std::endl;
 //}
 
-/// This test takes a Shepp-Logan phantom and creates a sinogram.
+//BOOST_AUTO_TEST_CASE(sinogram2)
+//{
+//double epsilon = 0.00001;
+//JPetRecoImageTools::Matrix2D matrix = {{0, 0, 0}, {0, 10, 0}, {0,0,0}};
+//JPetRecoImageTools::InterpolationFunc func = JPetRecoImageTools::nearestNeighbour;
+//JPetRecoImageTools::RescaleFunc func2= JPetRecoImageTools::nonRescale;
+//const int kNScans = 3;
+//const int kNViews = 4;
+//auto results = JPetRecoImageTools::sinogram(matrix,kNViews,kNScans, 0 , 180,  func, func2);
+//for (auto i: results)
+//for (auto j: i)
+//std::cout <<j <<std::endl;
+//}
+
+// This test takes a Shepp-Logan phantom and creates a sinogram.
 BOOST_AUTO_TEST_CASE(sinogram)
 {
-  const auto inFile = "unitTestData/JPetSinogramTest/phantom.pgm";
+  const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
   const auto outFile = "sinogram.ppm";
   /// read phantom
   std::ifstream in(inFile);
