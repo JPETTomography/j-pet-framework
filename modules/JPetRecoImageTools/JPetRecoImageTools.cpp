@@ -83,22 +83,21 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
   assert(stepsize > 0); //maybe != 0 ?
 
   int viewIndex = 0;
-  for (auto phi = angleBeg; phi < angleEnd; phi = phi + stepsize) {
+  for (auto phi = angleBeg; phi < angleEnd; phi = phi + stepsize, viewIndex++) {
     for (auto scanNumber = 0; scanNumber < nScans; scanNumber++) {
-      proj[viewIndex][nScans - 1 - scanNumber] = JPetRecoImageTools::calculateProjection(emissionMatrix,
+      proj[viewIndex][nScans  - 1 - scanNumber] = JPetRecoImageTools::calculateProjection(emissionMatrix,
           phi, scanNumber, nScans,
           interpolationFunction);
     }
-    viewIndex++;
   }
   rescaleFunc(proj, minCutoff, scaleFactor);
   return proj;
 }
 
-double JPetRecoImageTools::calculateProjection(const Matrix2D& emissionMatrix, double phi, int scanNumber, int nScans,
+double JPetRecoImageTools::calculateProjection(const Matrix2D& emissionMatrix, double angle, int scanNumber, int nScans,
     InterpolationFunc& interpolationFunction)
 {
-  int N = scanNumber - nScans / 2;
+  int N = scanNumber - nScans / 2 ;
   const int kInputMatrixSize = emissionMatrix.size();
   //if no. nScans is greater than the image width, then scale will be <1
   const double scale = kInputMatrixSize / nScans;
@@ -106,15 +105,18 @@ double JPetRecoImageTools::calculateProjection(const Matrix2D& emissionMatrix, d
   const double kEpsilon = 0.0000001;
   const double kDegToRad = M_PI / 180.;
 
-  double sin = std::sin(phi * kDegToRad - M_PI / 2.);
+  double sin = std::sin(angle * kDegToRad - M_PI / 2.);
   sin = setToZeroIfSmall(sin, kEpsilon);
-  double cos = std::cos(phi * kDegToRad - M_PI / 2.);
+  double cos = std::cos(angle * kDegToRad - M_PI / 2.);
   cos = setToZeroIfSmall(cos, kEpsilon);
 
   double a = 0.;
   double b = 0.;
-  /// If the angle is between [0 to 45 ] or [125 to 180] w use y = a* x +b, and we iterate over rows of the matrix (x)
-  /// otherwise we use  x = a * y + b, and we iterate over columns of the matrix (y).
+  /// The line over which we integrate is perpendicular to any line with the slope = tg(angle), so it is always  -1/tg(angle).
+  /// If the angle is between (45 to 125)
+  /// we use  y = a * x + b, and we iterate over rows of the matrix (x).
+  /// If the angle is between [0 to 45 ] or [125 to 180]
+  /// we use x = a* y +b, and we iterate over columns of the matrix (y)
   bool angleRange45To125 = std::abs(sin) > kSin45or125deg;
   double divided = 1.;
   std::function<double(int, int)> matrixGet;
