@@ -18,6 +18,7 @@
 #include <iostream>
 #include <memory>
 #include <functional>
+#include <list>
 #include "../JPetHit/JPetHit.h"
 #include "BarrelExtensions.h"
 #include "PetDict.h"
@@ -46,5 +47,9 @@ private:
   std::shared_ptr<JPetMap<SynchroStrip>> f_offsets;
   TimeCalculation f_time_calc;
 };
-const double defaultTimeCalculation(const std::vector<double>&P);
+//returns function needed for measured signal time estimation
+//if list contains one number it means that one threshold will
+//be used. Otherwise the average of given thresholds will be taken
+//ATTENTION: threshold numbers begin FROM ZERO
+const Synchronization::TimeCalculation Thr(const std::list<size_t>&lst);
 #endif
