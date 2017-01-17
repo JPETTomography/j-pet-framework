@@ -39,7 +39,7 @@ static void JPetOptionsJson::createFileFromOptions(const JPetOptions& options){
 	}
 }
 
-static JPetOptions JPetOptionsJson::createOptionsFromFile(const std::string& filename){
+static std::map<std::string, std::string> JPetOptions::createOptionsFromFile(const std::string& filename){
 	pt::ptree optionsTree;
 	auto mapOptions = JPetOptions:: getDefaultOptions().getOptions();
 	if(JPetCommonTools::ifFileExisting(filename)){
@@ -55,5 +55,5 @@ static JPetOptions JPetOptionsJson::createOptionsFromFile(const std::string& fil
 	}else{
 		ERROR("JSON FILE DO NOT EXISTS! Dofault options will be returned ");
 	}
-	return JPetOptions( mapOptions);
+	return mapOptions;
 }

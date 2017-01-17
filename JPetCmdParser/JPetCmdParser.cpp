@@ -65,20 +65,28 @@ std::vector<JPetOptions> JPetCmdParser::parseAndGenerateOptions(int argc, const 
   if (!areCorrectOptions(variablesMap)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
+  std::map<std::string, std::string> optionsFromJson; 
   if(variablesMap.count("json")){
-    JPetOptions optionsFromJson = JPetOptionsJson::createOptionsFromFile(variablesMap["json"].as<std::string>());
-    std::pair<std::map<char,int>::iterator,bool> ret;
-    for(auto const& iter : optionsFromJson.getOptions()){
-      ret = variablesMap.insert( std::pair<std::string, po::variable_value>(std::string(iter.first),po::variable_value(iter.second)) ); 
-      if((!ret.second) && (iter.second != variablesMap[iter.first].as<std::string>())){
-	  ERROR("Options from json and from command line are invalid");
-	  throw std::invalid_argument("Check the json file and options from command line");
-      }	
-    }
+    auto jsonCfgFile = variablesMap["json"].as<std::string>();
+    optionsFromJson = JPetOptionsJson::createOptionsFromFile(jsonCfgFile);
   }
-
-
-  return generateOptions(variablesMap);
+  try{
+    auto mergedOptions = mergeOptions(optionsFromJson, variableMap);
+    return generateOptions(mergedOptions);
+  }
+  catch(const std::invalid_argument&){
+     ERROR("Options from json and from command line are invalid");
+  }
+}
+po::variables_map JPetCmdParser::mergeOptions(const&std::map<std::string, std::string> options, po::variables_map variableMap){
+  std::pair<std::map<std::string,std::string>::iterator,bool> ret;
+  for(auto const& iter : options){
+    ret = variableMap.insert( std::pair<std::string, po::variable_value>(std::string(iter.first),po::variable_value(iter.second)) ); 
+    if((!(ret->second)) && (iter.second != variableMap[iter->first].as<std::string>())){
+      throw std::invalid_argument("Check the json file and options from command line");
+    }	
+  }
+  return variableMap;
 }
 
 bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) const

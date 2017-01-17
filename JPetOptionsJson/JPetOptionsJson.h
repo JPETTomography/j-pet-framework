@@ -24,6 +24,6 @@ class JPetOptionsJson{
 public:
 	JPetOptionsJson();
 	static void createFileFromOptions(JPetOptions options);
-	static JPetOptions createOptionsFromFile(std::string filename);
+	static std::map<std::string, std::string> createOptionsFromFile(const std::string& filename);
 };
 #endif
