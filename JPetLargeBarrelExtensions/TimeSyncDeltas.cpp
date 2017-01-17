@@ -36,6 +36,13 @@ const SynchroStrip Synchronization::get_times(const JPetHit & hit) const{
     res.B=f_time_calc(B)+offsets.B;
     return res;
 }
-const double defaultTimeCalculation(const vector<double>&P){
-    return P[0];//This algorithm should be discussed
+
+const Synchronization::TimeCalculation Thr(const std::list<size_t>&lst){
+    return [lst](const vector<double>&P)->const double{
+	double res=0;
+	for(const size_t i:lst)res+=P[i];
+	res/=lst.size();
+	return res;
+    };
 }
+
