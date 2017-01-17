@@ -27,21 +27,21 @@ namespace pt = boost::property_tree;
 
 JPetOptionsJson::JPetOptionsJson(){	
 }
-static void JPetOptionsJson::createFileFromOptions(const JPetOptions& options){
+void JPetOptionsJson::createFileFromOptions(const JPetOptions& options){
 	JPetOptions::Options optionsToJson = options.getOptions(); 
 	pt::ptree optionsTree;
   	for (auto& entry: optionsToJson) 
     		optionsTree.put (entry.first, entry.second);
  	try{
 		pt::write_json("options.json", optionsTree); 
-	}catch(json_parser_error){
+	}catch(pt::json_parser_error){
 		ERROR("ERROR IN WRITING OPTIONS TO JSON FILE");
 	}
 }
 
-static std::map<std::string, std::string> JPetOptions::createOptionsFromFile(const std::string& filename){
+std::map<std::string, std::string> JPetOptionsJson::createOptionsFromFile(const std::string& filename){
 	pt::ptree optionsTree;
-	auto mapOptions = JPetOptions:: getDefaultOptions().getOptions();
+	auto mapOptions = JPetOptions:: getDefaultOptions();
 	if(JPetCommonTools::ifFileExisting(filename)){
 		try{
 			pt::read_json(filename, optionsTree);
@@ -49,7 +49,7 @@ static std::map<std::string, std::string> JPetOptions::createOptionsFromFile(con
 				std::string stringIt = it->first;
 				mapOptions.at( (stringIt))=optionsTree.get<std::string>(stringIt,0);
 			}
-		}catch(json_parser_error){
+		}catch(pt::json_parser_error){
 			ERROR("ERROR IN READINIG OPTIONS FROM JSON FILE! Dofault options will be returned" );
 		}
 	}else{

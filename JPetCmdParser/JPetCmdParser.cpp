@@ -70,19 +70,16 @@ std::vector<JPetOptions> JPetCmdParser::parseAndGenerateOptions(int argc, const 
     auto jsonCfgFile = variablesMap["json"].as<std::string>();
     optionsFromJson = JPetOptionsJson::createOptionsFromFile(jsonCfgFile);
   }
-  try{
-    auto mergedOptions = mergeOptions(optionsFromJson, variableMap);
-    return generateOptions(mergedOptions);
-  }
-  catch(const std::invalid_argument&){
-     ERROR("Options from json and from command line are invalid");
-  }
+  auto mergedOptions = mergeOptions(optionsFromJson, variablesMap);
+  return generateOptions(mergedOptions);
 }
-po::variables_map JPetCmdParser::mergeOptions(const&std::map<std::string, std::string> options, po::variables_map variableMap){
-  std::pair<std::map<std::string,std::string>::iterator,bool> ret;
+po::variables_map JPetCmdParser::mergeOptions(const std::map<std::string, std::string>& options, po::variables_map variableMap){
+  std::pair<po::variables_map::iterator,bool> ret;
+  //variableMap.at("bla").value()="ble";
   for(auto const& iter : options){
-    ret = variableMap.insert( std::pair<std::string, po::variable_value>(std::string(iter.first),po::variable_value(iter.second)) ); 
-    if((!(ret->second)) && (iter.second != variableMap[iter->first].as<std::string>())){
+    ret = variableMap.insert( std::make_pair(iter.first, po::variable_value(iter.second, false))); 
+    if((!(ret.second)) && (iter.second != variableMap[iter.first].as<std::string>())){
+      ERROR("Options from json and from command line are invalid");
       throw std::invalid_argument("Check the json file and options from command line");
     }	
   }

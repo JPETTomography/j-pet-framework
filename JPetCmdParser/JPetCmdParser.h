@@ -31,7 +31,7 @@ public:
   JPetCmdParser();
   ~JPetCmdParser();
   std::vector<JPetOptions> parseAndGenerateOptions(int argc, const char** argv);
-  po::variables_map mergeOptions(const&std::map<std::string, std::string> options, po::variables_map variableMap);
+  po::variables_map mergeOptions(const std::map<std::string, std::string>& options, po::variables_map variableMap);
 
   inline const po::options_description getOptionsDescription() const {
     return fOptionsDescriptions;
