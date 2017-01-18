@@ -13,7 +13,7 @@
  *  @file JPetTaskChainExecutor.h
  */
 
-#ifndef FRAMEWORK_JPETTASCHAINKEXECUTOR_H
+#ifndef FRAMEWORK_JPETTASKCHAINEXECUTOR_H
 #define FRAMEWORK_JPETTASKCHAINEXECUTOR_H
 
 #include <list>
