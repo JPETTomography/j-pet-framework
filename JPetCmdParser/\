@@ -37,8 +37,10 @@ public:
 
   std::vector<std::string> getKeysFromVariableMap(po::variables_map optionMap) const;
   
-  std::vector<std::string> substractDwoVectors(std::vector<std::string>&, std::vector<std::string>&) const;
-  
+  std::vector<std::string> substractDwoVectors(std::vector<std::string>&, std::vector<std:string>&) const;
+std::vector<int> vints;
+for(auto const& imap: mapints)
+    vints.push_back(imap.first);
   inline const po::options_description getOptionsDescription() const {
     return fOptionsDescriptions;
   }
