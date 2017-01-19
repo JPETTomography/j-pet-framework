@@ -42,6 +42,7 @@ class JPetPM: public TNamed
 	 int HVset,
 	 int HVopt,
 	 std::pair<float, float> HVgainNumber);
+  JPetPM(bool isNull);
   ~JPetPM();
 
   inline Side getSide() const { return fSide; }
@@ -57,13 +58,30 @@ class JPetPM: public TNamed
   inline void setHVgain(const std::pair<float,float>& gain) { fHVgain = gain; }
 
   void setFEB(JPetFEB &p_FEB) { fTRefFEB = &p_FEB; }
-  const JPetFEB& getFEB() const { return (JPetFEB&)*(fTRefFEB.GetObject()); }
-  
-  void setScin(JPetScin &p_scin) { fTRefScin = &p_scin; }
-  JPetScin & getScin() const { return (JPetScin&)*(fTRefScin.GetObject()); }
+  const JPetFEB &getFEB() const
+  {
+    static JPetFEB DummyResult(true);
+    if (fTRefFEB.GetObject()) return (JPetFEB &)*(fTRefFEB.GetObject());
+    else return DummyResult;
+  }
 
-  void setBarrelSlot(JPetBarrelSlot &p_barrelSlot){ fTRefBarrelSlot = &p_barrelSlot; }
-  JPetBarrelSlot& getBarrelSlot() const { return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject()); }	
+  void setScin(JPetScin &p_scin) { fTRefScin = &p_scin; }
+  JPetScin &getScin() const
+  {
+    static JPetScin DummyResult(true);
+    if (fTRefScin.GetObject()) return (JPetScin &)*(fTRefScin.GetObject());
+    else return DummyResult;
+  }
+
+  void setBarrelSlot(JPetBarrelSlot &p_barrelSlot) { fTRefBarrelSlot = &p_barrelSlot; }
+  JPetBarrelSlot &getBarrelSlot() const 
+  {
+    static JPetBarrelSlot DummyResult(true);
+    if(fTRefBarrelSlot.GetObject()) return (JPetBarrelSlot &)*(fTRefBarrelSlot.GetObject());
+    else return DummyResult;
+  }
+
+  inline bool isNullObject() const { return fIsNullObject; }
   
   bool operator==(const JPetPM& pm) const;
   bool operator!=(const JPetPM& pm) const;
@@ -102,6 +120,7 @@ protected:
   TRef fTRefFEB;
   TRef fTRefScin;
   TRef fTRefBarrelSlot;
+  bool fIsNullObject = false;
 
   void clearTRefFEBs() { fTRefFEB = NULL; }
   void clearTRefScin() { fTRefScin = NULL; }

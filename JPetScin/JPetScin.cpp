@@ -44,6 +44,15 @@ fScinSize(length, height, width)
   SetName("JPetScin");
 }
 
+JPetScin::JPetScin(bool isNull) : 
+fID(0),
+fAttenLen(0.0),
+fScinSize(0., 0., 0.),
+fIsNullObject(isNull)
+{
+  SetName("JPetScin");
+}
+
 JPetScin::~JPetScin()
 {
 }
