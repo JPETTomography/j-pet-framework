@@ -103,11 +103,21 @@ const JPetPhysSignal& JPetHit::getSignalB() const
 }
 const JPetScin& JPetHit::getScintillator() const
 {
-  return (JPetScin&) * fScintillator.GetObject();
+  static JPetScin DummyResult(true);
+  if(fScintillator.GetObject()) return (JPetScin&) * fScintillator.GetObject();
+  else {
+    ERROR("No JPetScin slot set, Null object will be returned");
+    return DummyResult;
+  }
 }
 const JPetBarrelSlot& JPetHit::getBarrelSlot() const
 {
-  return (JPetBarrelSlot&) * fBarrelSlot.GetObject();
+  static JPetBarrelSlot DummyResult(true);
+  if(fBarrelSlot.GetObject()) return (JPetBarrelSlot&) * fBarrelSlot.GetObject();
+  else {
+    ERROR("No JPetBarrelSlot slot set, Null object will be returned");
+    return DummyResult
+  }
 }
 bool JPetHit::isSignalASet() const
 {

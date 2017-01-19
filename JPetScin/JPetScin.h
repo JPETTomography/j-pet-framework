@@ -57,7 +57,10 @@ class JPetScin: public TNamed
   JPetBarrelSlot& getBarrelSlot() const { 
     static JPetBarrelSlot DummyResult(true);
     if(fTRefBarrelSlot.GetObject()) return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject());
-    else return DummyResult;
+    else {
+      ERROR("No JPetBarrelSlot slot set, Null object will be returned");
+      return DummyResult;
+    }
   }
 
   inline bool isNullObject() const { return fIsNullObject; }
