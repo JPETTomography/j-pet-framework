@@ -58,11 +58,10 @@ public:
   }
   inline const JPetFrame& getFrame() const 
   {
-    static JPetFrame DummyResult(true);
     if(fTRefFrame.GetObject()) return static_cast<JPetFrame&>(*(fTRefFrame.GetObject()));
     else { 
       ERROR("No JPetFrame slot set, Null object will be returned");
-      return DummyResult;
+      return JPetFrame::getDummyResult();
     }
   }
   inline void setFrame(JPetFrame& frame) {
@@ -70,6 +69,11 @@ public:
   }
 
   inline bool isNullObject() const { return fIsNullObject; }
+
+  static inline JPetLayer& getDummyResult() {
+    static JPetLayer DummyResult(true);
+    return DummyResult; 
+  }
 
 protected:
   void clearTRefFrame() {

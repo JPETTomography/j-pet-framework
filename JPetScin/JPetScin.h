@@ -55,16 +55,20 @@ class JPetScin: public TNamed
   void setScinSize(Dimension dim, float value);
 
   void setBarrelSlot(JPetBarrelSlot &p_barrelSlot){ fTRefBarrelSlot = &p_barrelSlot; }
-  JPetBarrelSlot& getBarrelSlot() const { 
-    static JPetBarrelSlot DummyResult(true);
+  JPetBarrelSlot& getBarrelSlot() const {
     if(fTRefBarrelSlot.GetObject()) return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject());
     else {
       ERROR("No JPetBarrelSlot slot set, Null object will be returned");
-      return DummyResult;
+      return JPetBarrelSlot::getDummyResult();
     }
   }
 
   inline bool isNullObject() const { return fIsNullObject; }
+
+  static inline JPetScin& getDummyResult() {
+    static JPetScin DummyResult(true);
+    return DummyResult;
+  }
   
   inline bool operator==(const JPetScin& scin) const { return getID() == scin.getID(); }
   inline bool operator!=(const JPetScin& scin) const { return getID() != scin.getID(); }

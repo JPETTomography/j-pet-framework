@@ -33,7 +33,6 @@ public:
   JPetBarrelSlot();
   JPetBarrelSlot(int id, bool isActive, std::string name, float theta, int inFrameID);
   JPetBarrelSlot(bool isNull);
-  
   inline bool operator==(const JPetBarrelSlot& bslot) const { return getID() == bslot.getID(); }
   inline bool operator!=(const JPetBarrelSlot& bslot) const { return getID() != bslot.getID(); }
 
@@ -43,15 +42,18 @@ public:
   inline std::string getName() const { return fName; }
   inline int getInFrameID() const {return fInFrameID; }
   inline const JPetLayer & getLayer() const {
-    static JPetLayer DummyResult(true);
     if(fTRefLayer.GetObject()) return static_cast<JPetLayer&>(*(fTRefLayer.GetObject()));
     else  {
       ERROR("No JPetLayer slot set, Null object will be returned");
-      return DummyResult;
+      return JPetLayer::getDummyResult();
     }
   }
 
   inline bool isNullObject() const { return fIsNullObject; }
+  static inline JPetBarrelSlot& getDummyResult() {
+    static JPetBarrelSlot DummyResult(true);
+    return DummyResult; 
+  }
   
   void setLayer(JPetLayer &p_layer)
   {
@@ -59,6 +61,7 @@ public:
   }
 
 private:
+  
   int fId;
   bool fIsActive;
   std::string fName;

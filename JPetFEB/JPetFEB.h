@@ -87,12 +87,11 @@ public:
   virtual int getNnotimeOutsPerInput(void) const;
   
   const JPetTRB & getTRB() const
-  { 
-    static JPetTRB DummyResult(true);
+  {
     if(fTRefTRBs.GetObject()) return (JPetTRB&)*fTRefTRBs.GetObject();
     else {
       ERROR("No JPetTRB slot set, Null object will be returned");
-      return DummyResult;
+      return JPetTRB::getDummyResult();
     }
   }
   
@@ -103,6 +102,13 @@ public:
 
   inline bool operator==(const JPetFEB& feb) { return getID() == feb.getID(); }
   inline bool operator!=(const JPetFEB& feb) { return getID() != feb.getID(); }
+
+  inline bool isNullObject() const { return fIsNullObject; }
+
+  static inline JPetFEB& getDummyResult() {
+    static JPetFEB DummyResult(true);
+    return DummyResult;
+  }
 
 
 protected:
