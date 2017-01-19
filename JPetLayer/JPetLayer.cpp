@@ -36,6 +36,17 @@ JPetLayer::JPetLayer(int id, bool isActive, std::string name, float radius) :
   SetName("JPetLayer");
 }
 
+JPetLayer::JPetLayer(bool isNull) : 
+  fId(-1),
+  fIsActive(false),
+  fName(std::string("")),
+  fRadius(-1.f),
+  fTRefFrame(NULL),
+  fIsNullObject(isNull)
+{
+  SetName("JPetLayer");
+}
+
 bool JPetLayer::operator==(const JPetLayer& layer) const
 {
   if ( getID() == layer.getID() ) {

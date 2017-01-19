@@ -42,6 +42,7 @@ class JPetScin: public TNamed
   JPetScin();
   JPetScin(int id);
   JPetScin(int id, float attenLen, float length, float height, float width);
+  JPetScin(bool isNull);
   ~JPetScin();
 
   inline int getID() const { return fID; }
@@ -53,7 +54,13 @@ class JPetScin: public TNamed
   void setScinSize(Dimension dim, float value);
 
   void setBarrelSlot(JPetBarrelSlot &p_barrelSlot){ fTRefBarrelSlot = &p_barrelSlot; }
-  JPetBarrelSlot& getBarrelSlot() const { return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject()); }	
+  JPetBarrelSlot& getBarrelSlot() const { 
+    static JPetBarrelSlot DummyResult(true);
+    if(fTRefBarrelSlot.GetObject()) return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject());
+    else return DummyResult;
+  }
+
+  inline bool isNullObject() const { return fIsNullObject; }
   
   inline bool operator==(const JPetScin& scin) const { return getID() == scin.getID(); }
   inline bool operator!=(const JPetScin& scin) const { return getID() != scin.getID(); }
@@ -80,6 +87,7 @@ class JPetScin: public TNamed
   int fID;
   float fAttenLen;  /// attenuation length
   ScinDimensions fScinSize; /// @todo check if there is no problem with the ROOT dictionnary
+  bool fIsNullObject = false;
   ClassDef(JPetScin, 3);
   
 protected:

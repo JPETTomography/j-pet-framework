@@ -36,4 +36,15 @@ JPetBarrelSlot::JPetBarrelSlot(int id, bool isActive, std::string name, float th
   SetName("JPetBarrelSlot");
 }
 
+JPetBarrelSlot::JPetBarrelSlot(bool isNull) :
+  fId(-1),
+  fIsActive(false),
+  fName(""),
+  fTheta(-1.f),
+  fInFrameID(-1),
+  fIsNullObject(isNull)
+{
+  SetName("JPetBarrelSlot");
+}
+
 ClassImp(JPetBarrelSlot);

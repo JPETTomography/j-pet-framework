@@ -68,17 +68,26 @@ public:
   }
 
   inline const JPetPM & getPM() const {
-    return (JPetPM&) *fPM.GetObject();
+    static JPetPM DummyResult(true);
+    if(fPM.GetObject()) return (JPetPM&) *fPM.GetObject();
+    else return DummyResult;
+    
   }
   inline const JPetTRB & getTRB() const {
-    return (JPetTRB&) *fTRB.GetObject();
+    static JPetTRB DummyResult(true);
+    if(fTRB.GetObject()) return (JPetTRB&) *fTRB.GetObject();
+    else return DummyResult;
   }
   inline const JPetFEB & getFEB() const {
-    return (JPetFEB&) *fFEB.GetObject();
+    static JPetFEB DummyResult(true);
+    if(fFEB.GetObject()) return (JPetFEB&) *fFEB.GetObject();
+    else return DummyResult;
   }
   inline const JPetTOMBChannel & getTOMBChannel() const {
-    return (JPetTOMBChannel&) *fTOMBChannel.GetObject();
-  }
+    static JPetTOMBChannel DummyResult(true);
+    if(fTOMBChannel.GetObject()) return (JPetTOMBChannel&) *fTOMBChannel.GetObject();
+    else return DummyResult;
+}
 
   /**
    * A proxy method for quick access to DAQ channel number ignorantly of what a TOMBCHannel is
