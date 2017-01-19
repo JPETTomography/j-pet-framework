@@ -22,6 +22,7 @@
 #include "../JPetFEB/JPetFEB.h"
 #include "../JPetScin/JPetScin.h"
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
+#include "../JPetLoggerInclude.h"
 
 class JPetScin;
 

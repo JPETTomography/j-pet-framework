@@ -116,7 +116,7 @@ const JPetBarrelSlot& JPetHit::getBarrelSlot() const
   if(fBarrelSlot.GetObject()) return (JPetBarrelSlot&) * fBarrelSlot.GetObject();
   else {
     ERROR("No JPetBarrelSlot slot set, Null object will be returned");
-    return DummyResult
+    return DummyResult;
   }
 }
 bool JPetHit::isSignalASet() const
