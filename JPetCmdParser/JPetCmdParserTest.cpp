@@ -16,8 +16,10 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetCmdParserTest
 #include <boost/test/unit_test.hpp>
+#include <boost/test/output_test_stream.hpp>
 #include <cstdlib>
 #include "../JPetCmdParser/JPetCmdParser.h"
+#include "../../STIR/STIR/src/include/stir/getopt.h"
 
 using namespace std;
 
@@ -59,7 +61,6 @@ BOOST_AUTO_TEST_CASE( parsing_1 )
   BOOST_REQUIRE(!option.isProgressBar());
   BOOST_REQUIRE_EQUAL(option.getOutputPath(), "");
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kHld);
-
 }
 
 BOOST_AUTO_TEST_CASE( parsing_2 )
@@ -84,19 +85,54 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kScope);
 }
 
+BOOST_AUTO_TEST_CASE( parsingGate )
+{
+  auto commandLine = "main.x -t gate -f unitTestData/JPetCmdParserTest/test_384strips.root";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetCmdParser parser;
+  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  auto option = options.at(0);  
+  BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCmdParserTest/test_384strips.root");
+  BOOST_REQUIRE(!option.isProgressBar());
+  BOOST_REQUIRE_EQUAL(option.getOutputPath(), "");
+  BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kGate);
+}
+
 BOOST_AUTO_TEST_CASE( parsing_zip_file )
 {
   auto commandLine = "main.x -t zip -f unitTestData/JPetCommonToolsTest/goodZip.gz";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
-  
+
   JPetCmdParser parser;
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
   BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCommonToolsTest/goodZip.gz");
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kZip);
+}
+
+BOOST_AUTO_TEST_CASE(checkWrongFileType)
+{
+    auto commandLine = "main.x -t root -f unitTestData/JPetCmdParserTest/test_384strips.root";
+    auto args_char = createArgs(commandLine);
+    auto argc = args_char.size();
+    auto argv = args_char.data();
+
+    JPetCmdParser parser;
+    try {
+      auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+    }
+    catch (const std::invalid_argument& e) {
+      boost::test_tools::output_test_stream output;
+      output << "Wrong user options provided! Check the log!";
+      BOOST_CHECK(output.is_equal(e.what()));
+    }
 }
 
 ////ToDo: remake unit tests without calling private methods
@@ -114,8 +150,7 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
   BOOST_REQUIRE(std::string(helpOptionDescription.format_name()) == "-h [ --help ]");
 
   auto typeOptionDescription = optionDescription.find("type", true);
-  //cout << typeOptionDescription.description() << endl;
-  BOOST_REQUIRE(std::string(typeOptionDescription.description()) == "Type of file: hld, zip, root or scope.");
+  BOOST_REQUIRE(std::string(typeOptionDescription.description()) == "Type of file: hld, zip, detector (earlier root), scope or gate.");
   //cout << typeOptionDescription.format_name() << endl;
   BOOST_REQUIRE(std::string(typeOptionDescription.format_name()) == "-t [ --type ]");
 
@@ -214,7 +249,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
   po::options_description description("Allowed options");
   description.add_options()
   ("file,f", po::value<std::vector<std::string>>(), "File(s) to open")
-  ("type,t", po::value<std::string>(), "type of file: hld, zip, root or scope")
+  ("type,t", po::value<std::string>(), "type of file: hld, zip, detector, scope or gate")
   ("range,r", po::value<std::vector<int>>(), "Range of events to process.")
   ("param,p", po::value<std::string>(), "File with TRB numbers.")
   ("runId,i", po::value<int>(), "Run id.")
@@ -345,7 +380,7 @@ BOOST_AUTO_TEST_CASE(checkWrongOutputPath)
   po::options_description description("Allowed options");
   description.add_options()
   ("help,h", "Displays this help message.")
-  ("type,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, zip, root or scope.")
+  ("type,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, zip, detector (earlier root), scope or gate.")
   ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
   ("outputPath,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
   ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")

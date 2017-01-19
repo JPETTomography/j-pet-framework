@@ -74,11 +74,15 @@ void JPetOptions::setStringToFileTypeConversion()
 {
   fStringToFileType = {
     {"", kNoType},
-    {"root", kRoot},
+    {"detector", kDetector},
     {"scope", kScope},
     {"raw", kRaw},
     {"hld", kHld},
+<<<<<<< HEAD
+    {"gate", kGate},
+=======
     {"zip", kZip},
+>>>>>>> 23af863e32afabe525b6b9c23bc4b17bc750474d
     {"phys.eve", kPhysEve},
     {"phys.hit", kPhysHit},
     {"phys.sig", kPhysSig},
@@ -115,7 +119,7 @@ JPetOptions::Options JPetOptions::resetEventRange(const Options& srcOpts)
   Options opts(srcOpts);
   opts.at("firstEvent") = "-1";
   opts.at("lastEvent") = "-1";
-  return opts; 
+  return opts;
 }
 
 /// It returns the total number of events calculated from
