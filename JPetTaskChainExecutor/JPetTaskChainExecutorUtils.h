@@ -20,6 +20,7 @@
 #include "../JPetOptions/JPetOptions.h"
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetScopeLoader/JPetScopeLoader.h"
+#include <boost/concept_check.hpp>
 
 /**
  * JPetTaskChainExecutorUtils contains methods that can be used by JPetTaskExecutor
@@ -38,7 +39,12 @@ public:
   /// system(...) is returning integer, 0 when everything went smoothly and error code when not.
   /// Here I just convert return value into boolean type - Sz.N.
   inline static bool unzipFile(const char* filename) {
-    return !( system( ( std::string("gzip -d ") + std::string(filename) ).c_str() ) );
+    if( JPetCommonTools::exctractFileNameSuffix(filename) == ".gz")
+      return !( system( ( std::string("gzip -dk ") + std::string(filename) ).c_str() ) );
+    else if( JPetCommonTools::exctractFileNameSuffix(filename) == ".xz" )
+      return !( system( (std::string("xz -dk ") + std::string(filename) ).c_str() ) );
+    else
+      return false;
   }
 };
 #endif /*  !JPETTASKCHAINEXECUTORUTILS_H */
