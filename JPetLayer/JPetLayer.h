@@ -38,6 +38,7 @@ protected:
 public:
   JPetLayer();
   JPetLayer(int id, bool isActive, std::string name, float radius);
+  JPetLayer(bool isNull);
 
   bool operator==(const JPetLayer& layer) const;
   bool operator!=(const JPetLayer& layer) const;
@@ -54,12 +55,17 @@ public:
   inline float getRadius() const {
     return fRadius;
   }
-  inline const JPetFrame& getFrame() const {
-    return static_cast<JPetFrame&>(*(fTRefFrame.GetObject()));
+  inline const JPetFrame& getFrame() const 
+  {
+    static JPetFrame DummyResult(true);
+    if(fTRefFrame.GetObject()) return static_cast<JPetFrame&>(*(fTRefFrame.GetObject()));
+    else return DummyResult;
   }
   inline void setFrame(JPetFrame& frame) {
     fTRefFrame = &frame;
   }
+
+  inline bool isNullObject() const { return fIsNullObject; }
 
 protected:
   void clearTRefFrame() {
@@ -67,6 +73,7 @@ protected:
   }
 
 private:
+  bool fIsNullObject = false;
   ClassDef(JPetLayer, 3);
 };
 

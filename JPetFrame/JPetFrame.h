@@ -39,6 +39,7 @@ class JPetFrame: public TNamed
   /// The default constructor sets fId, fVersion, fCreator_id to -1.  
   JPetFrame();
   JPetFrame(int id, bool isActive, std::string status, std::string description, int version, int creator_id);
+  JPetFrame(bool isNull);
 
   inline bool operator==(const JPetFrame& frame) { return getID() == frame.getID(); }
   inline bool operator!=(const JPetFrame& frame) { return getID() != frame.getID(); }
@@ -49,7 +50,10 @@ class JPetFrame: public TNamed
   int getVersion() const { return fVersion; }
   int getCreator() const { return fCreator_id; }
 
+  inline bool isNullObject() const { return fIsNullObject; }
+
  private:
+ bool fIsNullObject = false;
   ClassDef(JPetFrame, 1);
 };
 

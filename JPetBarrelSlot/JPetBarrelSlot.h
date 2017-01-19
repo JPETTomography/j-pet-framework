@@ -31,6 +31,7 @@ public:
   /// Default constructor sets fId, fTheta to -1. 
   JPetBarrelSlot();
   JPetBarrelSlot(int id, bool isActive, std::string name, float theta, int inFrameID);
+  JPetBarrelSlot(bool isNull);
   
   inline bool operator==(const JPetBarrelSlot& bslot) const { return getID() == bslot.getID(); }
   inline bool operator!=(const JPetBarrelSlot& bslot) const { return getID() != bslot.getID(); }
@@ -40,7 +41,13 @@ public:
   inline bool isActive() const { return fIsActive; }
   inline std::string getName() const { return fName; }
   inline int getInFrameID() const {return fInFrameID; }
-  inline const JPetLayer & getLayer() const { return static_cast<JPetLayer&>(*(fTRefLayer.GetObject())); }
+  inline const JPetLayer & getLayer() const {
+    static JPetLayer DummyResult(true);
+    if(fTRefLayer.GetObject()) return static_cast<JPetLayer&>(*(fTRefLayer.GetObject()));
+    else return DummyResult;
+  }
+
+  inline bool isNullObject() const { return fIsNullObject; }
   
   void setLayer(JPetLayer &p_layer)
   {
@@ -54,6 +61,7 @@ private:
   float fTheta;
   int fInFrameID;
   TRef fTRefLayer;
+  bool fIsNullObject = false;
   
 protected:
   void clearTRefLayer()

@@ -33,6 +33,7 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_REQUIRE_EQUAL(pm.getHVopt(), 0);
   BOOST_REQUIRE_CLOSE(pm.getHVgain(JPetPM::kFirst), 0, epsilon);
   BOOST_REQUIRE_CLOSE(pm.getHVgain(JPetPM::kSecond), 0, epsilon);
+  BOOST_CHECK_EQUAL(pm.isNullObject(), false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
