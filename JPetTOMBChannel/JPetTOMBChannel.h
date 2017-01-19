@@ -50,27 +50,24 @@ public:
   void setThreshold(float p_threshold){ fThreshold = p_threshold; }
   
   const JPetFEB & getFEB()const{
-    static JPetFEB DummyResult(true);
     if(fFEB.GetObject()) return (JPetFEB&)*fFEB.GetObject();
     else {
       ERROR("No JPetFEB slot set, Null object will be returned");
-      return DummyResult;
+      return JPetFEB::getDummyResult();
     }
   }
-  const JPetTRB & getTRB()const{ 
-    static JPetTRB DummyResult(true);
+  const JPetTRB & getTRB()const{
     if(fTRB.GetObject()) return (JPetTRB&)*fTRB.GetObject();
     else {
       ERROR("No JPetTRB slot set, Null object will be returned");
-      return DummyResult;
+      return JPetTRB::getDummyResult();
     }
   }
-  const JPetPM & getPM()const{ 
-    static JPetPM DummyResult(true);
+  const JPetPM & getPM()const{
     if(fPM.GetObject()) return (JPetPM&)*fPM.GetObject();
     else {
       ERROR("No JPetPM slot set, Null object will be returned");
-      return DummyResult;
+      return JPetPM::getDummyResult();
     }
   }
   float getThreshold()const{ return fThreshold; }
@@ -100,6 +97,11 @@ public:
   void setFEBInputNumber(unsigned int fin) { fFEBInputNumber = fin; }
 
   inline bool isNullObject() const { return fIsNullObject; }
+
+  static inline JPetTOMBChannel& getDummyResult() {
+    static JPetTOMBChannel DummyResult(true);
+    return DummyResult;
+  }
   
 private:
   unsigned int fChannel;

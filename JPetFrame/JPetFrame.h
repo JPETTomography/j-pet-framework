@@ -52,6 +52,11 @@ class JPetFrame: public TNamed
 
   inline bool isNullObject() const { return fIsNullObject; }
 
+  static inline JPetFrame& getDummyResult() {
+    static JPetFrame DummyResult(true);
+    return DummyResult;
+  }
+
  private:
  bool fIsNullObject = false;
   ClassDef(JPetFrame, 1);
