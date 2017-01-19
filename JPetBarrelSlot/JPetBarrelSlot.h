@@ -44,7 +44,10 @@ public:
   inline const JPetLayer & getLayer() const {
     static JPetLayer DummyResult(true);
     if(fTRefLayer.GetObject()) return static_cast<JPetLayer&>(*(fTRefLayer.GetObject()));
-    else return DummyResult;
+    else  {
+      ERROR("No JPetLayer slot set, Null object will be returned");
+      return DummyResult;
+    }
   }
 
   inline bool isNullObject() const { return fIsNullObject; }

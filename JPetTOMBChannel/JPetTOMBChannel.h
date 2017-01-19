@@ -39,6 +39,8 @@ protected:
 public:
   JPetTOMBChannel();
   JPetTOMBChannel(unsigned int p_channel);
+  JPetTOMBChannel(int p_channel);
+  JPetTOMBChannel(bool isNull);
   virtual ~JPetTOMBChannel(void);
   
   void setFEB(JPetFEB& p_FEB){ fFEB = &p_FEB; }
@@ -46,9 +48,30 @@ public:
   void setPM(JPetPM& p_PM){ fPM = &p_PM; }
   void setThreshold(float p_threshold){ fThreshold = p_threshold; }
   
-  const JPetFEB & getFEB()const{ return (JPetFEB&)*fFEB.GetObject(); }
-  const JPetTRB & getTRB()const{ return (JPetTRB&)*fTRB.GetObject(); }
-  const JPetPM & getPM()const{ return (JPetPM&)*fPM.GetObject(); }
+  const JPetFEB & getFEB()const{
+    static JPetFEB DummyResult(true);
+    if(fFEB.GetObject()) return (JPetFEB&)*fFEB.GetObject();
+    else {
+      ERROR("No JPetFEB slot set, Null object will be returned");
+      return DummyResult;
+    }
+  }
+  const JPetTRB & getTRB()const{ 
+    static JPetTRB DummyResult(true);
+    if(fTRB.GetObject()) return (JPetTRB&)*fTRB.GetObject();
+    else {
+      ERROR("No JPetTRB slot set, Null object will be returned");
+      return DummyResult;
+    }
+  }
+  const JPetPM & getPM()const{ 
+    static JPetPM DummyResult(true);
+    if(fPM.GetObject()) return (JPetPM&)*fPM.GetObject();
+    else {
+      ERROR("No JPetPM slot set, Null object will be returned");
+      return DummyResult;
+    }
+  }
   float getThreshold()const{ return fThreshold; }
   int getChannel()const{ return fChannel; }
   std::string getDescription()const{ return m_description; }
@@ -75,6 +98,7 @@ public:
    */
   void setFEBInputNumber(unsigned int fin) { fFEBInputNumber = fin; }
 
+  inline bool isNullObject() const { return fIsNullObject; }
   
 private:
   unsigned int fChannel;
@@ -86,6 +110,7 @@ private:
   float fThreshold;
   unsigned int fLocalChannelNumber; ///< number of the threshold
   unsigned int fFEBInputNumber; ///< number of input of the FEB from which this channel comes
+  bool fIsNullObject = false;
   
   ClassDef(JPetTOMBChannel, 3);
 };
