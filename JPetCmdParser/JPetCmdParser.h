@@ -35,9 +35,7 @@ public:
 
   po::variables_map mergeOptions(const std::map<std::string, std::string>& options, po::variables_map variableMap);
 
-  std::vector<std::string> getKeysFromVariableMap(po::variables_map optionMap) const;
-  
-  std::vector<std::string> substractDwoVectors(std::vector<std::string>&, std::vector<std::string>&) const;
+  std::vector<std::string> getKeysFromVariableMap(const po::variables_map& optionMap) const;
   
   inline const po::options_description getOptionsDescription() const {
     return fOptionsDescriptions;
