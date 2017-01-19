@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(extractFileNameSuffixTest)
   std::string fileTest = "run_tests.pl";
 
   std::string stripFileNameSuffix = JPetCommonTools::stripFileNameSuffix(fileTest);
-  BOOST_REQUIRE_EQUAL(stripFileNameSuffix == ".pl", true);
+  BOOST_REQUIRE_EQUAL(stripFileNameSuffix, ".pl");
 }
 
 BOOST_AUTO_TEST_CASE(currentFullPathTest)
