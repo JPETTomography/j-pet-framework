@@ -28,7 +28,7 @@ class JPetTRB: public TNamed
   JPetTRB();
   JPetTRB(int id);
   JPetTRB(int id, int type, int channel);
-  JPetTRB(bool isNull)
+  JPetTRB(bool isNull);
   ~JPetTRB();
 
   inline int getID() const { return fID; }

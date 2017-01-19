@@ -18,6 +18,7 @@
 
 #include <TRef.h>
 #include "../JPetLayer/JPetLayer.h"
+#include "../JPetLoggerInclude.h"
 #include "TNamed.h"
 
 /**

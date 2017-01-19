@@ -22,6 +22,7 @@
 #include "../JPetPM/JPetPM.h"
 #include "../JPetScin/JPetScin.h"
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
+#include "../JPetLoggerInclude.h"
 
 
 /**
