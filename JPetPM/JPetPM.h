@@ -62,7 +62,10 @@ class JPetPM: public TNamed
   {
     static JPetFEB DummyResult(true);
     if (fTRefFEB.GetObject()) return (JPetFEB &)*(fTRefFEB.GetObject());
-    else return DummyResult;
+    else {
+      ERROR("No JPetFEB slot set, Null object will be returned");
+      return DummyResult;
+    }
   }
 
   void setScin(JPetScin &p_scin) { fTRefScin = &p_scin; }
@@ -70,7 +73,10 @@ class JPetPM: public TNamed
   {
     static JPetScin DummyResult(true);
     if (fTRefScin.GetObject()) return (JPetScin &)*(fTRefScin.GetObject());
-    else return DummyResult;
+    else {
+      ERROR("No JPetScin slot set, Null object will be returned");
+      return DummyResult;
+    }
   }
 
   void setBarrelSlot(JPetBarrelSlot &p_barrelSlot) { fTRefBarrelSlot = &p_barrelSlot; }
@@ -78,7 +84,10 @@ class JPetPM: public TNamed
   {
     static JPetBarrelSlot DummyResult(true);
     if(fTRefBarrelSlot.GetObject()) return (JPetBarrelSlot &)*(fTRefBarrelSlot.GetObject());
-    else return DummyResult;
+    else {
+      ERROR("No JPetBarrelSlot slot set, Null object will be returned");
+      return DummyResult;
+    } 
   }
 
   inline bool isNullObject() const { return fIsNullObject; }

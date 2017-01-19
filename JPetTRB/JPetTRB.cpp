@@ -40,6 +40,15 @@ JPetTRB::JPetTRB(int id, int type, int ch):
   SetName("JPetTRB");
 }
 
+JPetTRB::JPetTRB(bool isNull):
+  fID(0), 
+  fType(0),
+  fChannel(0),
+  fIsNullObject(isNull)
+{
+  SetName("JPetTRB");
+}
+
 JPetTRB::~JPetTRB()
 {
 }

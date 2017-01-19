@@ -70,23 +70,35 @@ public:
   inline const JPetPM & getPM() const {
     static JPetPM DummyResult(true);
     if(fPM.GetObject()) return (JPetPM&) *fPM.GetObject();
-    else return DummyResult;
+    else {
+      ERROR("No JPetPM slot set, Null object will be returned");
+      return DummyResult;
+    }
     
   }
   inline const JPetTRB & getTRB() const {
     static JPetTRB DummyResult(true);
     if(fTRB.GetObject()) return (JPetTRB&) *fTRB.GetObject();
-    else return DummyResult;
+    else {
+      ERROR("No JPetTRB slot set, Null object will be returned");
+      return DummyResult;
+    }
   }
   inline const JPetFEB & getFEB() const {
     static JPetFEB DummyResult(true);
     if(fFEB.GetObject()) return (JPetFEB&) *fFEB.GetObject();
-    else return DummyResult;
+    else {
+      ERROR("No JPetFEB slot set, Null object will be returned");
+      return DummyResult;
+    }
   }
   inline const JPetTOMBChannel & getTOMBChannel() const {
     static JPetTOMBChannel DummyResult(true);
     if(fTOMBChannel.GetObject()) return (JPetTOMBChannel&) *fTOMBChannel.GetObject();
-    else return DummyResult;
+    else {
+      ERROR("No JPetTOMBChannel slot set, Null object will be returned");
+      return DummyResult;
+    }
 }
 
   /**

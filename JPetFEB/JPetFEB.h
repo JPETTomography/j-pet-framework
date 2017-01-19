@@ -73,6 +73,7 @@ public:
   JPetFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description,
 	  int p_version, int p_userId, int p_n_time_outputs_per_input,
 	  int p_n_notime_outputs_per_input);
+  JPetFEB(bool isNull);
   virtual ~JPetFEB(void);
   
   virtual int getID(void) const;
@@ -86,7 +87,12 @@ public:
   
   const JPetTRB & getTRB() const
   { 
-    return (JPetTRB&)*fTRefTRBs.GetObject(); 
+    static JPetTRB DummyResult(true);
+    if(fTRefTRBs.GetObject()) return (JPetTRB&)*fTRefTRBs.GetObject();
+    else {
+      ERROR("No JPetTRB slot set, Null object will be returned");
+      return DummyResult;
+    }
   }
   
   void setTRB(JPetTRB &p_TRB)
@@ -108,6 +114,7 @@ protected:
   
   
 private:
+  bool fIsNullObject = false;
   ClassDef(JPetFEB, 1);
   
   friend class JPetParamManager;

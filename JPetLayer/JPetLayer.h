@@ -59,7 +59,10 @@ public:
   {
     static JPetFrame DummyResult(true);
     if(fTRefFrame.GetObject()) return static_cast<JPetFrame&>(*(fTRefFrame.GetObject()));
-    else return DummyResult;
+    else { 
+      ERROR("No JPetFrame slot set, Null object will be returned");
+      return DummyResult;
+    }
   }
   inline void setFrame(JPetFrame& frame) {
     fTRefFrame = &frame;
