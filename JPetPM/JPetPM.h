@@ -72,26 +72,29 @@ class JPetPM: public TNamed
   void setScin(JPetScin &p_scin) { fTRefScin = &p_scin; }
   JPetScin &getScin() const
   {
-    static JPetScin DummyResult(true);
     if (fTRefScin.GetObject()) return (JPetScin &)*(fTRefScin.GetObject());
     else {
       ERROR("No JPetScin slot set, Null object will be returned");
-      return DummyResult;
+      return JPetScin::getDummyResult();
     }
   }
 
   void setBarrelSlot(JPetBarrelSlot &p_barrelSlot) { fTRefBarrelSlot = &p_barrelSlot; }
   JPetBarrelSlot &getBarrelSlot() const 
   {
-    static JPetBarrelSlot DummyResult(true);
     if(fTRefBarrelSlot.GetObject()) return (JPetBarrelSlot &)*(fTRefBarrelSlot.GetObject());
     else {
       ERROR("No JPetBarrelSlot slot set, Null object will be returned");
-      return DummyResult;
+      return JPetBarrelSlot::getDummyResult();
     } 
   }
 
   inline bool isNullObject() const { return fIsNullObject; }
+
+  static inline JPetPM& getDummyResult() {
+    static JPetPM DummyResult(true);
+    return DummyResult;
+  }
   
   bool operator==(const JPetPM& pm) const;
   bool operator!=(const JPetPM& pm) const;

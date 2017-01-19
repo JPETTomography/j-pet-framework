@@ -42,6 +42,11 @@ class JPetTRB: public TNamed
   
   inline bool isNullObject() const { return fIsNullObject; }
 
+  static inline JPetTRB& getDummyResult() {
+    static JPetTRB DummyResult(true);
+    return DummyResult;
+  }
+
  private:
   int fID;
   int fType;
