@@ -61,11 +61,10 @@ class JPetPM: public TNamed
   void setFEB(JPetFEB &p_FEB) { fTRefFEB = &p_FEB; }
   const JPetFEB &getFEB() const
   {
-    static JPetFEB DummyResult(true);
     if (fTRefFEB.GetObject()) return (JPetFEB &)*(fTRefFEB.GetObject());
     else {
       ERROR("No JPetFEB slot set, Null object will be returned");
-      return DummyResult;
+      return JPetFEB::getDummyResult();
     }
   }
 
