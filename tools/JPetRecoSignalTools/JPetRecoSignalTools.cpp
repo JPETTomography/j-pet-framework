@@ -75,13 +75,11 @@ void JPetRecoSignalTools::savePNGwithMarkedOffsetsAndStartingPoints(const JPetRe
   badSignal->Draw("ALP");
   double offset = signal.getOffset();
   const std::vector< shapePoint > signalPoints = signal.getShape();
-  int startingIndex = findStartingIndex(signal);
   std::vector<double> amplitudePoints;
   for (unsigned int i = 0; i < signalPoints.size(); ++i) {
     amplitudePoints.push_back(signalPoints[i].amplitude - offset);
   }
 
-  double dev = calculateStandardDeviation( amplitudePoints, 20 );
   TLine* offsetLine = new TLine(signalPoints[0].time / 1000, offset - 100, signal.getRecoTimeAtThreshold(-100) / 1000, offset - 100);
   std::cout << "Time at thr: " << signal.getRecoTimeAtThreshold(-100) / 1000 << std::endl;
   offsetLine->SetLineWidth(2);
@@ -411,7 +409,7 @@ std::vector<double> JPetRecoSignalTools::copyVectorWithNumbersUpToIndex(std::vec
 double JPetRecoSignalTools::calculateArithmeticMean(const std::vector<double>& vector)
 {
   double mean = 0;
-  for ( int index = 0; index < vector.size(); ++index) {
+  for ( auto index = 0u; index < vector.size(); ++index) {
     mean += vector[index];
   }
   return mean / vector.size();
