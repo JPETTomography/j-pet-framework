@@ -45,7 +45,23 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE(merge)
 {
-  
+  JPetCmdParser parser;
+  auto commandLine = "main.x -t hld -f unitTestData/JPetCmdParserTest/testfile.hld -i 10";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+  po::variables_map variablesMap;
+  po::store(po::parse_command_line(argc, argv, parser.getOptionsDescription()), variablesMap);
+  auto commandLine2 = "main.x -t hld -f unitTestData/JPetCmdParserTest/testfile.hld -i 10 l example L saveExample";
+  auto args_char2 = createArgs(commandLine2);
+  auto argc2 = args_char2.size();
+  auto argv2 = args_char2.data();
+  po::variables_map variablesMap2;
+  po::store(po::parse_command_line(argc2, argv2, parser.getOptionsDescription()), variablesMap2);
+  std::map<std::string, std::string> options;
+  options["l"] = "example";
+  options["L"] = "saveExample";
+  //BOOST_REQUIRE_EQUAL( parser.mergeOptions(options, variablesMap), variablesMap2);
 }
 
 
