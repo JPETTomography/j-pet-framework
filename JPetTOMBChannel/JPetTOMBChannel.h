@@ -104,18 +104,18 @@ public:
   }
   
 private:
-  unsigned int fChannel;
-  TRef fFEB;
-  TRef fTRB;
-  TRef fPM;
+  unsigned int fChannel = 0;
+  TRef fFEB = NULL;
+  TRef fTRB = NULL;
+  TRef fPM = NULL;
   TRef fScin; // @todo: add setters && getters for scin and slot
   TRef fBarrelSlot;
-  float fThreshold;
-  unsigned int fLocalChannelNumber; ///< number of the threshold
-  unsigned int fFEBInputNumber; ///< number of input of the FEB from which this channel comes
+  float fThreshold = -1;
+  unsigned int fLocalChannelNumber = 0; ///< number of the threshold
+  unsigned int fFEBInputNumber = 0; ///< number of input of the FEB from which this channel comes
   bool fIsNullObject = false;
   
-  ClassDef(JPetTOMBChannel, 3);
+  ClassDef(JPetTOMBChannel, 4);
 };
 
 #endif // JPET_TOMB_CHANNEL_H

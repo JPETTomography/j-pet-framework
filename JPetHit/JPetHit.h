@@ -96,8 +96,7 @@ public:
   void setSignalA(JPetPhysSignal& p_sig);
   void setSignalB(JPetPhysSignal& p_sig);
   unsigned int getTimeWindowIndex()const;
-
-  ClassDef(JPetHit, 2);
+  
   /** @brief Checks whether information contained in both Signal objects
    *  set in this Hit object is consistent and logs an error message if
    *  it is not.
@@ -139,6 +138,7 @@ private:
   TRef fBarrelSlot = NULL; ///< BarrelSlot in which the hit was recorded
   TRef fScintillator = NULL; ///< Scintillator strip which was hit
 
+  ClassDef(JPetHit, 3);
 };
 
 #endif

@@ -18,17 +18,17 @@
 
 ClassImp(JPetTOMBChannel);
 
-JPetTOMBChannel::JPetTOMBChannel(): fChannel(0), fFEB(NULL), fTRB(NULL), fPM(NULL), fThreshold(-1), fLocalChannelNumber(0), fFEBInputNumber(0)
+JPetTOMBChannel::JPetTOMBChannel()
 {
   SetName("JPetTOMBChannel");
 }
 
-JPetTOMBChannel::JPetTOMBChannel(unsigned int p_channel): fChannel(p_channel), fFEB(NULL), fTRB(NULL), fPM(NULL), fThreshold(-1), fLocalChannelNumber(0), fFEBInputNumber(0)
+JPetTOMBChannel::JPetTOMBChannel(unsigned int p_channel): fChannel(p_channel)
 {
   SetName("JPetTOMBChannel");
 }
 
-JPetTOMBChannel::JPetTOMBChannel(int p_channel): fChannel(p_channel), fFEB(NULL), fTRB(NULL), fPM(NULL), fThreshold(-1), fLocalChannelNumber(0), fFEBInputNumber(0)
+JPetTOMBChannel::JPetTOMBChannel(int p_channel): fChannel(p_channel)
 {
   if(p_channel < 0) {
     ERROR("p_channel cannot be negative"); //
@@ -36,7 +36,7 @@ JPetTOMBChannel::JPetTOMBChannel(int p_channel): fChannel(p_channel), fFEB(NULL)
   SetName("JPetTOMBChannel");
 }
 
-JPetTOMBChannel::JPetTOMBChannel(bool isNull): fChannel(0), fFEB(NULL), fTRB(NULL), fPM(NULL), fThreshold(-1), fLocalChannelNumber(0), fFEBInputNumber(0), fIsNullObject(isNull)
+JPetTOMBChannel::JPetTOMBChannel(bool isNull): fIsNullObject(isNull)
 {
   SetName("JPetTOMBChannel");
 }

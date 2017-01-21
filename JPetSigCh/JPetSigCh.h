@@ -187,7 +187,7 @@ public:
   static bool compareByThresholdNumber(const JPetSigCh & A,
                                        const JPetSigCh & B);
   
-  ClassDef(JPetSigCh, 4);
+  ClassDef(JPetSigCh, 5);
   
 protected:
   EdgeType fType; ///< type of the SigCh: Leading, Trailing (time) or Charge (charge)

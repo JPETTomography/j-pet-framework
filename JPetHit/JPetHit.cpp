@@ -23,8 +23,6 @@ ClassImp(JPetHit);
 JPetHit::JPetHit() :
   TNamed("JPetHit", "Hit Structure")
 {
-  fIsSignalAset = false;
-  fIsSignalBset = false;
 }
 
 JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSignal& siga, JPetPhysSignal& sigb,
