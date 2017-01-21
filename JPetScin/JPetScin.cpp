@@ -19,28 +19,32 @@
 
 ClassImp(JPetScin);
 
-JPetScin::JPetScin():
-fID(0),
-fAttenLen(0.0),
-fScinSize(0., 0., 0.)
+JPetScin::JPetScin() :
+  fScinSize(0., 0., 0.)
 {
   /* */
   SetName("JPetScin");
 }
 
 JPetScin::JPetScin(int id) : fID(id),
-                 fAttenLen(0.0),
-                 fScinSize(0., 0., 0.)
+  fScinSize(0., 0., 0.)
 {
   SetName("JPetScin");
 }
 
 JPetScin::JPetScin(int id, float attenLen, float length, float height, float width):
-fID(id),
-fAttenLen(attenLen),
-fScinSize(length, height, width)
+  fID(id),
+  fAttenLen(attenLen),
+  fScinSize(length, height, width)
 {
   /* */
+  SetName("JPetScin");
+}
+
+JPetScin::JPetScin(bool isNull) :
+  fScinSize(0., 0., 0.),
+  fIsNullObject(isNull)
+{
   SetName("JPetScin");
 }
 

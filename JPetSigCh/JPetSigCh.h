@@ -68,17 +68,34 @@ public:
   }
 
   inline const JPetPM & getPM() const {
-    return (JPetPM&) *fPM.GetObject();
+    if(fPM.GetObject()) return (JPetPM&) *fPM.GetObject();
+    else {
+      ERROR("No JPetPM slot set, Null object will be returned");
+      return JPetPM::getDummyResult();
+    }
+    
   }
   inline const JPetTRB & getTRB() const {
-    return (JPetTRB&) *fTRB.GetObject();
+    if(fTRB.GetObject()) return (JPetTRB&) *fTRB.GetObject();
+    else {
+      ERROR("No JPetTRB slot set, Null object will be returned");
+      return JPetTRB::getDummyResult();
+    }
   }
   inline const JPetFEB & getFEB() const {
-    return (JPetFEB&) *fFEB.GetObject();
+    if(fFEB.GetObject()) return (JPetFEB&) *fFEB.GetObject();
+    else {
+      ERROR("No JPetFEB slot set, Null object will be returned");
+      return JPetFEB::getDummyResult();
+    }
   }
   inline const JPetTOMBChannel & getTOMBChannel() const {
-    return (JPetTOMBChannel&) *fTOMBChannel.GetObject();
-  }
+    if(fTOMBChannel.GetObject()) return (JPetTOMBChannel&) *fTOMBChannel.GetObject();
+    else {
+      ERROR("No JPetTOMBChannel slot set, Null object will be returned");
+      return JPetTOMBChannel::getDummyResult();
+    }
+}
 
   /**
    * A proxy method for quick access to DAQ channel number ignorantly of what a TOMBCHannel is
@@ -170,7 +187,7 @@ public:
   static bool compareByThresholdNumber(const JPetSigCh & A,
                                        const JPetSigCh & B);
   
-  ClassDef(JPetSigCh, 4);
+  ClassDef(JPetSigCh, 5);
   
 protected:
   EdgeType fType; ///< type of the SigCh: Leading, Trailing (time) or Charge (charge)

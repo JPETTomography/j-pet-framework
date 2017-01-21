@@ -15,12 +15,7 @@
 
 #include "JPetBarrelSlot.h"
 
-JPetBarrelSlot::JPetBarrelSlot():
-  fId(-1),
-  fIsActive(false),
-  fName(""),
-  fTheta(-1.f),
-  fInFrameID(-1)
+JPetBarrelSlot::JPetBarrelSlot()
 {
   SetName("JPetBarrelSlot");
 }
@@ -32,6 +27,12 @@ JPetBarrelSlot::JPetBarrelSlot(int id, bool isActive, std::string name, float th
   fName(name),
   fTheta(theta),
   fInFrameID(inFrameID)
+{
+  SetName("JPetBarrelSlot");
+}
+
+JPetBarrelSlot::JPetBarrelSlot(bool isNull) :
+  fIsNullObject(isNull)
 {
   SetName("JPetBarrelSlot");
 }
