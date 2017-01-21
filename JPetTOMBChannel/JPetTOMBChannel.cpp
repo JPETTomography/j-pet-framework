@@ -13,7 +13,6 @@
  *  @file JPetTOMBChannel.cpp
  */
 
-
 #include "JPetTOMBChannel.h"
 
 ClassImp(JPetTOMBChannel);
@@ -30,7 +29,7 @@ JPetTOMBChannel::JPetTOMBChannel(unsigned int p_channel): fChannel(p_channel)
 
 JPetTOMBChannel::JPetTOMBChannel(int p_channel): fChannel(p_channel)
 {
-  if(p_channel < 0) {
+  if (p_channel < 0) {
     ERROR("p_channel cannot be negative"); //
   }
   SetName("JPetTOMBChannel");
@@ -45,3 +44,105 @@ JPetTOMBChannel::~JPetTOMBChannel()
 {
 }
 
+void JPetTOMBChannel::setFEB(JPetFEB& p_FEB)
+{
+  fFEB = &p_FEB;
+}
+
+void JPetTOMBChannel::setTRB(JPetTRB& p_TRB)
+{
+  fTRB = &p_TRB;
+}
+
+void JPetTOMBChannel::setPM(JPetPM& p_PM)
+{
+  fPM = &p_PM;
+}
+
+void JPetTOMBChannel::setThreshold(float p_threshold)
+{
+  fThreshold = p_threshold;
+}
+
+const JPetFEB& JPetTOMBChannel::getFEB()const
+{
+  if (fFEB.GetObject()) return (JPetFEB&) * fFEB.GetObject();
+  else {
+    ERROR("No JPetFEB slot set, Null object will be returned");
+    return JPetFEB::getDummyResult();
+  }
+}
+
+const JPetTRB& JPetTOMBChannel::getTRB()const
+{
+  if (fTRB.GetObject()) return (JPetTRB&) * fTRB.GetObject();
+  else {
+    ERROR("No JPetTRB slot set, Null object will be returned");
+    return JPetTRB::getDummyResult();
+  }
+}
+
+const JPetPM& JPetTOMBChannel::getPM()const
+{
+  if (fPM.GetObject()) return (JPetPM&) * fPM.GetObject();
+  else {
+    ERROR("No JPetPM slot set, Null object will be returned");
+    return JPetPM::getDummyResult();
+  }
+}
+
+float JPetTOMBChannel::getThreshold()const
+{
+  return fThreshold;
+}
+
+int JPetTOMBChannel::getChannel()const
+{
+  return fChannel;
+}
+
+std::string JPetTOMBChannel::getDescription()const
+{
+  return m_description;
+}
+
+bool JPetTOMBChannel::operator==(const JPetTOMBChannel& channel)
+{
+  return getChannel() == channel.getChannel();
+}
+
+bool JPetTOMBChannel::operator!=(const JPetTOMBChannel& channel)
+{
+  return getChannel() != channel.getChannel();
+}
+
+unsigned int JPetTOMBChannel::getLocalChannelNumber() const
+{
+  return fLocalChannelNumber;
+}
+
+void JPetTOMBChannel::setLocalChannelNumber(unsigned int lcn)
+{
+  fLocalChannelNumber = lcn;
+}
+
+unsigned int JPetTOMBChannel::getFEBInputNumber() const
+{
+  return fFEBInputNumber;
+}
+
+void JPetTOMBChannel::setFEBInputNumber(unsigned int fin)
+{
+  fFEBInputNumber = fin;
+}
+
+bool JPetTOMBChannel::isNullObject() const
+{
+  return fIsNullObject;
+}
+
+JPetTOMBChannel& JPetTOMBChannel::getDummyResult()
+{
+  static JPetTOMBChannel DummyResult(true);
+  return DummyResult;
+}

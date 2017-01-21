@@ -27,8 +27,8 @@ JPetTRB::JPetTRB(int id) : fID(id)
   SetName("JPetTRB");
 }
 
-JPetTRB::JPetTRB(int id, int type, int ch): 
-  fID(id), 
+JPetTRB::JPetTRB(int id, int type, int ch):
+  fID(id),
   fType(type),
   fChannel(ch)
 {
@@ -43,4 +43,45 @@ JPetTRB::JPetTRB(bool isNull):
 
 JPetTRB::~JPetTRB()
 {
+}
+
+int JPetTRB::getID() const
+{
+  return fID;
+}
+int JPetTRB::getType() const
+{
+  return fType;
+}
+int JPetTRB::getChannel() const
+{
+  return fChannel;
+}
+void JPetTRB::setType(int type)
+{
+  fType = type;
+}
+void JPetTRB::setChannel(int ch)
+{
+  fChannel = ch;
+}
+
+bool JPetTRB::operator==(const JPetTRB& trb) const
+{
+  return getID() == trb.getID();
+}
+bool JPetTRB::operator!=(const JPetTRB& trb) const
+{
+  return getID() != trb.getID();
+}
+
+bool JPetTRB::isNullObject() const
+{
+  return fIsNullObject;
+}
+
+JPetTRB& JPetTRB::getDummyResult()
+{
+  static JPetTRB DummyResult(true);
+  return DummyResult;
 }

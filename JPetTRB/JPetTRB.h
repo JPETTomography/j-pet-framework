@@ -24,44 +24,40 @@
  */
 class JPetTRB: public TNamed
 {
- public:
+public:
+
+  static  JPetTRB& getDummyResult();
+
   JPetTRB();
-  JPetTRB(int id);
+  explicit JPetTRB(int id);
+  explicit JPetTRB(bool isNull);
   JPetTRB(int id, int type, int channel);
-  JPetTRB(bool isNull);
   ~JPetTRB();
 
-  inline int getID() const { return fID; }
-  inline int getType() const { return fType; }
-  inline int getChannel() const { return fChannel; }
-  inline void setType(int type) { fType = type; }
-  inline void setChannel(int ch) { fChannel = ch; }
+  bool operator==(const JPetTRB& trb) const;
+  bool operator!=(const JPetTRB& trb) const;
+  int getID() const;
+  int getType() const;
+  int getChannel() const;
+  void setType(int type);
+  void setChannel(int ch);
+  bool isNullObject() const;
 
-  inline bool operator==(const JPetTRB& trb) const { return getID() == trb.getID(); }
-  inline bool operator!=(const JPetTRB& trb) const { return getID() != trb.getID(); }
-  
-  inline bool isNullObject() const { return fIsNullObject; }
-
-  static inline JPetTRB& getDummyResult() {
-    static JPetTRB DummyResult(true);
-    return DummyResult;
-  }
-
- private:
+protected:
+#ifndef __CINT__
   int fID = 0;
   int fType = 0;
   int fChannel = 0;
   bool fIsNullObject = false;
-  /// @todo do implementacji
-  //JPetFEB* KBId;
-  //KBType;
-  //KBChan;
-  //
-  ClassDef(JPetTRB, 3);
-  
-protected:
-  
+#else
+  int fID;
+  int fType;
+  int fChannel;
+  bool fIsNullObject;
+#endif
+
   friend class JPetParamManager;
+  ClassDef(JPetTRB, 3);
 };
 
 #endif

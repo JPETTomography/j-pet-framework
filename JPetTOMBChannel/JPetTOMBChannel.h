@@ -32,50 +32,28 @@
  */
 class JPetTOMBChannel: public TNamed
 {
-protected:
-  
-  int m_id;
-  std::string m_description;
-  
+
 public:
   JPetTOMBChannel();
-  JPetTOMBChannel(unsigned int p_channel);
-  JPetTOMBChannel(int p_channel);
-  JPetTOMBChannel(bool isNull);
+  explicit JPetTOMBChannel(unsigned int p_channel);
+  explicit JPetTOMBChannel(int p_channel);
+  explicit JPetTOMBChannel(bool isNull);
   virtual ~JPetTOMBChannel(void);
-  
-  void setFEB(JPetFEB& p_FEB){ fFEB = &p_FEB; }
-  void setTRB(JPetTRB& p_TRB){ fTRB = &p_TRB; }
-  void setPM(JPetPM& p_PM){ fPM = &p_PM; }
-  void setThreshold(float p_threshold){ fThreshold = p_threshold; }
-  
-  const JPetFEB & getFEB()const{
-    if(fFEB.GetObject()) return (JPetFEB&)*fFEB.GetObject();
-    else {
-      ERROR("No JPetFEB slot set, Null object will be returned");
-      return JPetFEB::getDummyResult();
-    }
-  }
-  const JPetTRB & getTRB()const{
-    if(fTRB.GetObject()) return (JPetTRB&)*fTRB.GetObject();
-    else {
-      ERROR("No JPetTRB slot set, Null object will be returned");
-      return JPetTRB::getDummyResult();
-    }
-  }
-  const JPetPM & getPM()const{
-    if(fPM.GetObject()) return (JPetPM&)*fPM.GetObject();
-    else {
-      ERROR("No JPetPM slot set, Null object will be returned");
-      return JPetPM::getDummyResult();
-    }
-  }
-  float getThreshold()const{ return fThreshold; }
-  int getChannel()const{ return fChannel; }
-  std::string getDescription()const{ return m_description; }
 
-  inline bool operator==(const JPetTOMBChannel& channel) { return getChannel() == channel.getChannel(); }
-  inline bool operator!=(const JPetTOMBChannel& channel) { return getChannel() != channel.getChannel(); }
+  void setFEB(JPetFEB& p_FEB);
+  void setTRB(JPetTRB& p_TRB);
+  void setPM(JPetPM& p_PM);
+  void setThreshold(float p_threshold);
+
+  const JPetFEB& getFEB() const;
+  const JPetTRB& getTRB() const;
+  const JPetPM& getPM() const;
+  float getThreshold() const;
+  int getChannel() const;
+  std::string getDescription() const;
+
+  bool operator==(const JPetTOMBChannel& channel);
+  bool operator!=(const JPetTOMBChannel& channel);
 
   /**
    * @brief Get a local number of the channel corresponding to this TOMBChannel, w.r.t. a single PM.
@@ -83,27 +61,25 @@ public:
    * All thresholds (together on leading and trailing edge) applied to a single PM signal can be ordered starting from 1, with an order corresponding to ascending order of DAQ channels assigned to the thresholds.
    * Therefore, if there are 4 thresholds applied to each signal edge, the local channel number should be between 1 and 8.
    */
-  unsigned int getLocalChannelNumber() const { return fLocalChannelNumber; }
-  void setLocalChannelNumber(unsigned int lcn) { fLocalChannelNumber = lcn; }
+  unsigned int getLocalChannelNumber() const;
+  void setLocalChannelNumber(unsigned int lcn);
 
   /**
    * @brief Get the number of input channel (Numbering starts from 1) of the FEB which corresponds to this TOMB channel
    */
-  unsigned int getFEBInputNumber() const { return fFEBInputNumber; }
+  unsigned int getFEBInputNumber() const;
 
   /**
    * @brief Set the number of input channel (Numbering starts from 1) of the FEB which corresponds to this TOMB channel
    */
-  void setFEBInputNumber(unsigned int fin) { fFEBInputNumber = fin; }
+  void setFEBInputNumber(unsigned int fin);
+  bool isNullObject() const;
+  static  JPetTOMBChannel& getDummyResult();
 
-  inline bool isNullObject() const { return fIsNullObject; }
-
-  static inline JPetTOMBChannel& getDummyResult() {
-    static JPetTOMBChannel DummyResult(true);
-    return DummyResult;
-  }
-  
-private:
+protected:
+  int m_id;
+  std::string m_description;
+#ifndef __CINT__
   unsigned int fChannel = 0;
   TRef fFEB = NULL;
   TRef fTRB = NULL;
@@ -114,7 +90,19 @@ private:
   unsigned int fLocalChannelNumber = 0; ///< number of the threshold
   unsigned int fFEBInputNumber = 0; ///< number of input of the FEB from which this channel comes
   bool fIsNullObject = false;
-  
+#else
+  unsigned int fChannel;
+  TRef fFEB;
+  TRef fTRB;
+  TRef fPM;
+  TRef fScin; // @todo: add setters && getters for scin and slot
+  TRef fBarrelSlot;
+  float fThreshold;
+  unsigned int fLocalChannelNumber; ///< number of the threshold
+  unsigned int fFEBInputNumber; ///< number of input of the FEB from which this channel comes
+  bool fIsNullObject;
+#endif
+
   ClassDef(JPetTOMBChannel, 4);
 };
 
