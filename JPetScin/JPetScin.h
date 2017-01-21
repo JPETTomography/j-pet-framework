@@ -92,11 +92,11 @@ class JPetScin: public TNamed
   }
   */
  private:
-  int fID;
-  float fAttenLen;  /// attenuation length
+  int fID = 0;
+  float fAttenLen = 0.0;  /// attenuation length
   ScinDimensions fScinSize; /// @todo check if there is no problem with the ROOT dictionnary
   bool fIsNullObject = false;
-  ClassDef(JPetScin, 3);
+  ClassDef(JPetScin, 4);
   
 protected:
   TRef fTRefBarrelSlot;

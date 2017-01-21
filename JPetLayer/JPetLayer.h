@@ -30,11 +30,11 @@
 class JPetLayer: public TNamed
 {
 protected:
-  const int fId;
-  bool fIsActive;
-  std::string fName;
-  float fRadius;
-  TRef fTRefFrame;
+  const int fId = -1;
+  bool fIsActive = false;
+  std::string fName = "";
+  float fRadius = -1.f;
+  TRef fTRefFrame = NULL;
 
 public:
   JPetLayer();
@@ -82,7 +82,7 @@ protected:
 
 private:
   bool fIsNullObject = false;
-  ClassDef(JPetLayer, 3);
+  ClassDef(JPetLayer, 4);
 };
 
 #endif // JPET_LAYER_H

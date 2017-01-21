@@ -48,16 +48,16 @@ class JPetTRB: public TNamed
   }
 
  private:
-  int fID;
-  int fType;
-  int fChannel;
+  int fID = 0;
+  int fType = 0;
+  int fChannel = 0;
   bool fIsNullObject = false;
   /// @todo do implementacji
   //JPetFEB* KBId;
   //KBType;
   //KBChan;
   //
-  ClassDef(JPetTRB, 2);
+  ClassDef(JPetTRB, 3);
   
 protected:
   

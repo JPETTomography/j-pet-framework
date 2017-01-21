@@ -120,13 +120,13 @@ class JPetPM: public TNamed
   }*/
   
  private:
-  Side fSide;
-  int fID;
-  int fHVset;
-  int fHVopt;
+  Side fSide = SideA;
+  int fID = 0;
+  int fHVset = 0;
+  int fHVopt = 0;
   std::pair<float, float> fHVgain;
 
-  ClassDef(JPetPM, 4);
+  ClassDef(JPetPM, 5);
   
 protected:
   TRef fTRefFEB;

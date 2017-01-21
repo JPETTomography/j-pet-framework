@@ -16,12 +16,7 @@
 #include "JPetLayer.h"
 
 
-JPetLayer::JPetLayer() :
-  fId(-1),
-  fIsActive(false),
-  fName(std::string("")),
-  fRadius(-1.f),
-  fTRefFrame(NULL)
+JPetLayer::JPetLayer()
 {
   SetName("JPetLayer");
 }
@@ -36,12 +31,7 @@ JPetLayer::JPetLayer(int id, bool isActive, std::string name, float radius) :
   SetName("JPetLayer");
 }
 
-JPetLayer::JPetLayer(bool isNull) : 
-  fId(-1),
-  fIsActive(false),
-  fName(std::string("")),
-  fRadius(-1.f),
-  fTRefFrame(NULL),
+JPetLayer::JPetLayer(bool isNull) :
   fIsNullObject(isNull)
 {
   SetName("JPetLayer");
