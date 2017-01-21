@@ -16,13 +16,7 @@
 #include "JPetFrame.h"
 
 
-JPetFrame::JPetFrame() :
-  fId(-1),
-  fIsActive(false),
-  fStatus(std::string("")),
-  fDescription(std::string("")),
-  fVersion(-1),
-  fCreator_id(-1)
+JPetFrame::JPetFrame()
 {
   SetName("JPetFrame");
 }
@@ -34,6 +28,12 @@ JPetFrame::JPetFrame(int id, bool isActive, std::string status, std::string desc
   fDescription(description),
   fVersion(version),
   fCreator_id(creator_id)
+{
+  SetName("JPetFrame");
+}
+
+JPetFrame::JPetFrame(bool isNull) :
+  fIsNullObject(isNull)
 {
   SetName("JPetFrame");
 }

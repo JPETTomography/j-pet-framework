@@ -16,35 +16,38 @@
 #include "JPetPM.h"
 #include <cassert>
 
-JPetPM::JPetPM():
-  fSide(SideA),
-  fID(0),
-  fHVset(0),
-  fHVopt(0),
+JPetPM::JPetPM() :
+  fHVgain(std::make_pair(0.0, 0.0)) // it is possible to initialize pair in header by 
+                                    // std::pair<float, float> fHVgain {0.0 , 0.0}; 
+                                    // but then there is some error generating dictionary for file
+{
+  SetName("JPetPM");
+}
+
+JPetPM::JPetPM(int id) :
+  fID(id),
   fHVgain(std::make_pair(0.0, 0.0))
 {
   SetName("JPetPM");
 }
 
-JPetPM::JPetPM(int id) : fSide(SideA),
-			 fID(id),
-			 fHVset(0),
-			 fHVopt(0),
-			 fHVgain(std::make_pair(0.0, 0.0))
-{
-  SetName("JPetPM");
-}
-
 JPetPM::JPetPM(Side side, 
-	       int id, 
-	       int HVset, 
-	       int HVopt, 
-	       std::pair<float, float> HVgainNumber):
+         int id, 
+         int HVset, 
+         int HVopt, 
+         std::pair<float, float> HVgainNumber):
   fSide(side),
   fID(id),
   fHVset(HVset),
   fHVopt(HVopt),
   fHVgain(HVgainNumber)
+{
+  SetName("JPetPM");
+}
+
+JPetPM::JPetPM(bool isNull) :
+  fHVgain(std::make_pair(0.0, 0.0)),
+  fIsNullObject(isNull) 
 {
   SetName("JPetPM");
 }

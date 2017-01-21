@@ -28,6 +28,7 @@ class JPetTRB: public TNamed
   JPetTRB();
   JPetTRB(int id);
   JPetTRB(int id, int type, int channel);
+  JPetTRB(bool isNull);
   ~JPetTRB();
 
   inline int getID() const { return fID; }
@@ -39,16 +40,24 @@ class JPetTRB: public TNamed
   inline bool operator==(const JPetTRB& trb) const { return getID() == trb.getID(); }
   inline bool operator!=(const JPetTRB& trb) const { return getID() != trb.getID(); }
   
+  inline bool isNullObject() const { return fIsNullObject; }
+
+  static inline JPetTRB& getDummyResult() {
+    static JPetTRB DummyResult(true);
+    return DummyResult;
+  }
+
  private:
-  int fID;
-  int fType;
-  int fChannel;
+  int fID = 0;
+  int fType = 0;
+  int fChannel = 0;
+  bool fIsNullObject = false;
   /// @todo do implementacji
   //JPetFEB* KBId;
   //KBType;
   //KBChan;
   //
-  ClassDef(JPetTRB, 2);
+  ClassDef(JPetTRB, 3);
   
 protected:
   

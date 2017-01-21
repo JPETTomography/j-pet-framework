@@ -19,6 +19,7 @@
 #include "TNamed.h"
 #include <TRef.h>
 #include "../JPetTRB/JPetTRB.h"
+#include "../JPetLoggerInclude.h"
 
 /**
  * @brief Parametric class representing database information on parameters of a front-end board (FEB).
@@ -55,16 +56,16 @@ protected:
     int m_FEBInputId;
   };
   
-  int m_id;
-  bool m_isActive;
-  std::string m_status;
-  std::string m_description;
-  const int m_version;
+  int m_id = 0;
+  bool m_isActive = false;
+  std::string m_status = "";
+  std::string m_description = "";
+  const int m_version = 0;
   //JPetUser &m_JPetUser;		//creatorId
-  const int m_userId;		// creatorId 
+  const int m_userId = 0;		// creatorId 
   /// @todo userId is inaccesible!!!
-  int m_n_time_outputs_per_input;
-  int m_n_notime_outputs_per_input;
+  int m_n_time_outputs_per_input = 0;
+  int m_n_notime_outputs_per_input = 0;
   
   
 public:
@@ -73,6 +74,7 @@ public:
   JPetFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description,
 	  int p_version, int p_userId, int p_n_time_outputs_per_input,
 	  int p_n_notime_outputs_per_input);
+  JPetFEB(bool isNull);
   virtual ~JPetFEB(void);
   
   virtual int getID(void) const;
@@ -85,8 +87,12 @@ public:
   virtual int getNnotimeOutsPerInput(void) const;
   
   const JPetTRB & getTRB() const
-  { 
-    return (JPetTRB&)*fTRefTRBs.GetObject(); 
+  {
+    if(fTRefTRBs.GetObject()) return (JPetTRB&)*fTRefTRBs.GetObject();
+    else {
+      ERROR("No JPetTRB slot set, Null object will be returned");
+      return JPetTRB::getDummyResult();
+    }
   }
   
   void setTRB(JPetTRB &p_TRB)
@@ -96,6 +102,13 @@ public:
 
   inline bool operator==(const JPetFEB& feb) { return getID() == feb.getID(); }
   inline bool operator!=(const JPetFEB& feb) { return getID() != feb.getID(); }
+
+  inline bool isNullObject() const { return fIsNullObject; }
+
+  static inline JPetFEB& getDummyResult() {
+    static JPetFEB DummyResult(true);
+    return DummyResult;
+  }
 
 
 protected:
@@ -108,7 +121,8 @@ protected:
   
   
 private:
-  ClassDef(JPetFEB, 1);
+  bool fIsNullObject = false;
+  ClassDef(JPetFEB, 2);
   
   friend class JPetParamManager;
 };
