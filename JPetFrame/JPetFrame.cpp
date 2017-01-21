@@ -20,7 +20,7 @@ JPetFrame::JPetFrame()
 {
   SetName("JPetFrame");
 }
-  
+
 JPetFrame::JPetFrame(int id, bool isActive, std::string status, std::string description, int version, int creator_id) :
   fId(id),
   fIsActive(isActive),
@@ -36,6 +36,49 @@ JPetFrame::JPetFrame(bool isNull) :
   fIsNullObject(isNull)
 {
   SetName("JPetFrame");
+}
+bool JPetFrame::operator==(const JPetFrame& frame)
+{
+  return getID() == frame.getID();
+}
+bool JPetFrame::operator!=(const JPetFrame& frame)
+{
+  return getID() != frame.getID();
+}
+int JPetFrame::getID() const
+{
+  return fId;
+}
+bool JPetFrame::getIsActive() const
+{
+  return fIsActive;
+}
+std::string JPetFrame::getStatus() const
+{
+  return fStatus;
+}
+std::string JPetFrame::getDescription() const
+{
+  return fDescription;
+}
+int JPetFrame::getVersion() const
+{
+  return fVersion;
+}
+int JPetFrame::getCreator() const
+{
+  return fCreator_id;
+}
+
+bool JPetFrame::isNullObject() const
+{
+  return fIsNullObject;
+}
+
+JPetFrame& JPetFrame::getDummyResult()
+{
+  static JPetFrame DummyResult(true);
+  return DummyResult;
 }
 
 ClassImp(JPetFrame);
