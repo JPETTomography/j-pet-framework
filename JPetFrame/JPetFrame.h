@@ -26,40 +26,42 @@
  */
 class JPetFrame: public TNamed
 {
- protected:
+public:
+
+  JPetFrame();
+  JPetFrame(int id, bool isActive, std::string status, std::string description, int version, int creator_id);
+  explicit JPetFrame(bool isNull);
+
+  bool operator==(const JPetFrame& frame);
+  bool operator!=(const JPetFrame& frame);
+  int getID() const;
+  bool getIsActive() const;
+  std::string getStatus() const;
+  std::string getDescription() const;
+  int getVersion() const;
+  int getCreator() const;
+  bool isNullObject() const;
+  static JPetFrame& getDummyResult();
+
+protected:
+#ifndef __CINT__
   const int fId = -1;
   bool fIsActive = false;
   std::string fStatus = "";
   std::string fDescription = "";
   const int fVersion = -1;
   const int fCreator_id = -1;
-  
- public:
+  bool fIsNullObject = false;
+#else
+  const int fId;
+  bool fIsActive;
+  std::string fStatus;
+  std::string fDescription;
+  const int fVersion;
+  const int fCreator_id;
+  bool fIsNullObject;
+#endif
 
-  /// The default constructor sets fId, fVersion, fCreator_id to -1.  
-  JPetFrame();
-  JPetFrame(int id, bool isActive, std::string status, std::string description, int version, int creator_id);
-  JPetFrame(bool isNull);
-
-  inline bool operator==(const JPetFrame& frame) { return getID() == frame.getID(); }
-  inline bool operator!=(const JPetFrame& frame) { return getID() != frame.getID(); }
-  int getID() const { return fId; }
-  bool getIsActive() const { return fIsActive; }
-  std::string getStatus() const { return fStatus; }
-  std::string getDescription() const { return fDescription; }
-  int getVersion() const { return fVersion; }
-  int getCreator() const { return fCreator_id; }
-
-  inline bool isNullObject() const { return fIsNullObject; }
-
-  static inline JPetFrame& getDummyResult() {
-    static JPetFrame DummyResult(true);
-    return DummyResult;
-  }
-
- private:
- bool fIsNullObject = false;
   ClassDef(JPetFrame, 2);
 };
-
 #endif // JPET_FRAME_H

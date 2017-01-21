@@ -55,5 +55,49 @@ bool JPetLayer::operator!=(const JPetLayer& layer) const
   return ! (*this == layer);
 }
 
+int JPetLayer::getID() const
+{
+  return fId;
+}
+bool JPetLayer::getIsActive() const
+{
+  return fIsActive;
+}
+std::string JPetLayer::getName() const
+{
+  return fName;
+}
+float JPetLayer::getRadius() const
+{
+  return fRadius;
+}
+const JPetFrame& JPetLayer::getFrame() const
+{
+  if (fTRefFrame.GetObject()) return static_cast<JPetFrame&>(*(fTRefFrame.GetObject()));
+  else {
+    ERROR("No JPetFrame slot set, Null object will be returned");
+    return JPetFrame::getDummyResult();
+  }
+}
+void JPetLayer::setFrame(JPetFrame& frame)
+{
+  fTRefFrame = &frame;
+}
+
+bool JPetLayer::isNullObject() const
+{
+  return fIsNullObject;
+}
+
+JPetLayer& JPetLayer::getDummyResult()
+{
+  static JPetLayer DummyResult(true);
+  return DummyResult;
+}
+
+void JPetLayer::clearTRefFrame()
+{
+  fTRefFrame = NULL;
+}
 
 ClassImp(JPetLayer);
