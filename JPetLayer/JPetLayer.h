@@ -18,6 +18,7 @@
 
 #include <TRef.h>
 #include "../JPetFrame/JPetFrame.h"
+#include "../JPetLoggerInclude.h"
 #include "TNamed.h"
 #include <cassert>
 
@@ -29,15 +30,16 @@
 class JPetLayer: public TNamed
 {
 protected:
-  const int fId;
-  bool fIsActive;
-  std::string fName;
-  float fRadius;
-  TRef fTRefFrame;
+  const int fId = -1;
+  bool fIsActive = false;
+  std::string fName = "";
+  float fRadius = -1.f;
+  TRef fTRefFrame = NULL;
 
 public:
   JPetLayer();
   JPetLayer(int id, bool isActive, std::string name, float radius);
+  JPetLayer(bool isNull);
 
   bool operator==(const JPetLayer& layer) const;
   bool operator!=(const JPetLayer& layer) const;
@@ -54,11 +56,23 @@ public:
   inline float getRadius() const {
     return fRadius;
   }
-  inline const JPetFrame& getFrame() const {
-    return static_cast<JPetFrame&>(*(fTRefFrame.GetObject()));
+  inline const JPetFrame& getFrame() const 
+  {
+    if(fTRefFrame.GetObject()) return static_cast<JPetFrame&>(*(fTRefFrame.GetObject()));
+    else { 
+      ERROR("No JPetFrame slot set, Null object will be returned");
+      return JPetFrame::getDummyResult();
+    }
   }
   inline void setFrame(JPetFrame& frame) {
     fTRefFrame = &frame;
+  }
+
+  inline bool isNullObject() const { return fIsNullObject; }
+
+  static inline JPetLayer& getDummyResult() {
+    static JPetLayer DummyResult(true);
+    return DummyResult; 
   }
 
 protected:
@@ -67,7 +81,8 @@ protected:
   }
 
 private:
-  ClassDef(JPetLayer, 3);
+  bool fIsNullObject = false;
+  ClassDef(JPetLayer, 4);
 };
 
 #endif // JPET_LAYER_H

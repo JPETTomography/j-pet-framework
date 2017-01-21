@@ -19,6 +19,7 @@
 #include "TNamed.h"
 #include <TRef.h>
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
+#include "../JPetLoggerInclude.h"
 //#include "../JPetPM/JPetPM.h"
 
 
@@ -42,6 +43,7 @@ class JPetScin: public TNamed
   JPetScin();
   JPetScin(int id);
   JPetScin(int id, float attenLen, float length, float height, float width);
+  JPetScin(bool isNull);
   ~JPetScin();
 
   inline int getID() const { return fID; }
@@ -53,7 +55,20 @@ class JPetScin: public TNamed
   void setScinSize(Dimension dim, float value);
 
   void setBarrelSlot(JPetBarrelSlot &p_barrelSlot){ fTRefBarrelSlot = &p_barrelSlot; }
-  JPetBarrelSlot& getBarrelSlot() const { return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject()); }	
+  JPetBarrelSlot& getBarrelSlot() const {
+    if(fTRefBarrelSlot.GetObject()) return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject());
+    else {
+      ERROR("No JPetBarrelSlot slot set, Null object will be returned");
+      return JPetBarrelSlot::getDummyResult();
+    }
+  }
+
+  inline bool isNullObject() const { return fIsNullObject; }
+
+  static inline JPetScin& getDummyResult() {
+    static JPetScin DummyResult(true);
+    return DummyResult;
+  }
   
   inline bool operator==(const JPetScin& scin) const { return getID() == scin.getID(); }
   inline bool operator!=(const JPetScin& scin) const { return getID() != scin.getID(); }
@@ -77,10 +92,11 @@ class JPetScin: public TNamed
   }
   */
  private:
-  int fID;
-  float fAttenLen;  /// attenuation length
+  int fID = 0;
+  float fAttenLen = 0.0;  /// attenuation length
   ScinDimensions fScinSize; /// @todo check if there is no problem with the ROOT dictionnary
-  ClassDef(JPetScin, 3);
+  bool fIsNullObject = false;
+  ClassDef(JPetScin, 4);
   
 protected:
   TRef fTRefBarrelSlot;

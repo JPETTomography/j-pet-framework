@@ -23,8 +23,6 @@ ClassImp(JPetHit);
 JPetHit::JPetHit() :
   TNamed("JPetHit", "Hit Structure")
 {
-  fIsSignalAset = false;
-  fIsSignalBset = false;
 }
 
 JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSignal& siga, JPetPhysSignal& sigb,
@@ -103,11 +101,19 @@ const JPetPhysSignal& JPetHit::getSignalB() const
 }
 const JPetScin& JPetHit::getScintillator() const
 {
-  return (JPetScin&) * fScintillator.GetObject();
+  if(fScintillator.GetObject()) return (JPetScin&) * fScintillator.GetObject();
+  else {
+    ERROR("No JPetScin slot set, Null object will be returned");
+    return JPetScin::getDummyResult();
+  }
 }
 const JPetBarrelSlot& JPetHit::getBarrelSlot() const
 {
-  return (JPetBarrelSlot&) * fBarrelSlot.GetObject();
+  if(fBarrelSlot.GetObject()) return (JPetBarrelSlot&) * fBarrelSlot.GetObject();
+  else {
+    ERROR("No JPetBarrelSlot slot set, Null object will be returned");
+    return JPetBarrelSlot::getDummyResult();
+  }
 }
 bool JPetHit::isSignalASet() const
 {
