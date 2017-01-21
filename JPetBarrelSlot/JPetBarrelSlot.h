@@ -62,11 +62,11 @@ public:
 
 private:
   
-  int fId;
-  bool fIsActive;
-  std::string fName;
-  float fTheta;
-  int fInFrameID;
+  int fId = -1;
+  bool fIsActive = false;
+  std::string fName = "";
+  float fTheta = -1.f;
+  int fInFrameID = -1;
   TRef fTRefLayer;
   bool fIsNullObject = false;
   
@@ -76,7 +76,7 @@ protected:
     fTRefLayer = NULL;
   }
 
-  ClassDef(JPetBarrelSlot, 3);
+  ClassDef(JPetBarrelSlot, 4);
 };
 
 #endif

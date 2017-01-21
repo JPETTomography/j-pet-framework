@@ -27,12 +27,12 @@
 class JPetFrame: public TNamed
 {
  protected:
-  const int fId;
-  bool fIsActive;
-  std::string fStatus;
-  std::string fDescription;
-  const int fVersion;
-  const int fCreator_id;
+  const int fId = -1;
+  bool fIsActive = false;
+  std::string fStatus = "";
+  std::string fDescription = "";
+  const int fVersion = -1;
+  const int fCreator_id = -1;
   
  public:
 
@@ -59,7 +59,7 @@ class JPetFrame: public TNamed
 
  private:
  bool fIsNullObject = false;
-  ClassDef(JPetFrame, 1);
+  ClassDef(JPetFrame, 2);
 };
 
 #endif // JPET_FRAME_H

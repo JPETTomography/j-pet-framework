@@ -56,16 +56,16 @@ protected:
     int m_FEBInputId;
   };
   
-  int m_id;
-  bool m_isActive;
-  std::string m_status;
-  std::string m_description;
-  const int m_version;
+  int m_id = 0;
+  bool m_isActive = false;
+  std::string m_status = "";
+  std::string m_description = "";
+  const int m_version = 0;
   //JPetUser &m_JPetUser;		//creatorId
-  const int m_userId;		// creatorId 
+  const int m_userId = 0;		// creatorId 
   /// @todo userId is inaccesible!!!
-  int m_n_time_outputs_per_input;
-  int m_n_notime_outputs_per_input;
+  int m_n_time_outputs_per_input = 0;
+  int m_n_notime_outputs_per_input = 0;
   
   
 public:
@@ -122,7 +122,7 @@ protected:
   
 private:
   bool fIsNullObject = false;
-  ClassDef(JPetFEB, 1);
+  ClassDef(JPetFEB, 2);
   
   friend class JPetParamManager;
 };

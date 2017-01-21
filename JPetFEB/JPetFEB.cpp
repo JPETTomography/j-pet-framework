@@ -36,27 +36,12 @@ JPetFEB::JPetFEBOutput::JPetFEBOutput(bool p_passedInformationIsTime,
 {
 }
 
-JPetFEB::JPetFEB() :
-				      m_id(0),
-				      m_isActive(false),
-				      m_status(""),
-				      m_description(""),
-				      m_version(0),
-				      m_userId(0),
-				      m_n_time_outputs_per_input(0),
-				      m_n_notime_outputs_per_input(0)
+JPetFEB::JPetFEB()
 {
   SetName("JPetFEB");
 }
 
-JPetFEB::JPetFEB(int id) : m_id(id),
-			   m_isActive(false),
-			   m_status(""),
-			   m_description(""),
-			   m_version(0),
-			   m_userId(0),
-			   m_n_time_outputs_per_input(0),
-			   m_n_notime_outputs_per_input(0)
+JPetFEB::JPetFEB(int id) : m_id(id)
 {
   SetName("JPetFEB");
 }
@@ -82,14 +67,6 @@ JPetFEB::JPetFEB(int p_id,
 }
 
 JPetFEB::JPetFEB(bool isNull) :
-				      m_id(0),
-				      m_isActive(false),
-				      m_status(""),
-				      m_description(""),
-				      m_version(0),
-				      m_userId(0),
-				      m_n_time_outputs_per_input(0),
-				      m_n_notime_outputs_per_input(0),
 							fIsNullObject(isNull)
 {
   SetName("JPetFEB");

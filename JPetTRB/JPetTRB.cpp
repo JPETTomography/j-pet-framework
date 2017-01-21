@@ -17,17 +17,12 @@
 
 ClassImp(JPetTRB);
 
-JPetTRB::JPetTRB():
-  fID(0), 
-  fType(0),
-  fChannel(0)
+JPetTRB::JPetTRB()
 {
   SetName("JPetTRB");
 }
 
-JPetTRB::JPetTRB(int id) : fID(id),
-               fType(0),
-               fChannel(0)
+JPetTRB::JPetTRB(int id) : fID(id)
 {
   SetName("JPetTRB");
 }
@@ -41,9 +36,6 @@ JPetTRB::JPetTRB(int id, int type, int ch):
 }
 
 JPetTRB::JPetTRB(bool isNull):
-  fID(0), 
-  fType(0),
-  fChannel(0),
   fIsNullObject(isNull)
 {
   SetName("JPetTRB");
