@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE( parsing_zip_file )
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
-  
+
   JPetCmdParser parser;
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
   BOOST_REQUIRE_EQUAL(options.size(), 1);
@@ -362,4 +362,23 @@ BOOST_AUTO_TEST_CASE(checkWrongOutputPath)
   BOOST_REQUIRE(!parser.areCorrectOptions(variablesMap));
 }
 
+BOOST_AUTO_TEST_CASE(checkOptionsWithAddedFromJson)
+{
+  auto args_char = createArgs("main.x -o ./ -f unitTestData/JPetCmdParserTest/data.hld -t hld -j unitTestData/JPetOptionsToolsTest/inputTestCfg.json");
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetCmdParser parser;
+  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  auto option = options.at(0);
+  auto allOptions = option.getOptions();
+  BOOST_REQUIRE(allOptions.count("myOption"));
+  BOOST_REQUIRE_EQUAL(allOptions.at("myOption"), "great");
+  BOOST_REQUIRE(allOptions.count("myAnotherOption"));
+  BOOST_REQUIRE_EQUAL(allOptions.at("myAnotherOption"), "wat");
+  BOOST_REQUIRE(allOptions.count("boolOption"));
+  BOOST_REQUIRE_EQUAL(allOptions.at("boolOption"), "true");
+  BOOST_REQUIRE(allOptions.count("NumberOption"));
+  BOOST_REQUIRE_EQUAL(allOptions.at("NumberOption"), "12.2");
+}
 BOOST_AUTO_TEST_SUITE_END()
