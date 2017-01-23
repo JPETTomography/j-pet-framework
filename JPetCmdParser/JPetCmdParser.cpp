@@ -149,7 +149,6 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
 
 std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map& optsMap, const std::map<std::string, std::string>& additionalOptions) const
 {
-
   std::map<std::string, std::string> options = JPetOptions::getDefaultOptions();
   auto fileType = getFileType(optsMap);
   if (isCorrectFileType(fileType)) {
