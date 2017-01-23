@@ -52,10 +52,10 @@ Options createOptionsFromConfFile(const std::string& filename)
         mapOptions.insert(std::make_pair(key, value));
       }
     } catch (pt::json_parser_error) {
-      ERROR("ERROR IN READINIG OPTIONS FROM JSON FILE!" );
+      ERROR("ERROR IN READINIG OPTIONS FROM JSON FILE! FILENAME:" + filename );
     }
   } else {
-    ERROR("JSON CONFIG FILE DOES NOT EXIST!");
+    ERROR("JSON CONFIG FILE DOES NOT EXIST! FILENAME:" + filename);
   }
   return mapOptions;
 }
