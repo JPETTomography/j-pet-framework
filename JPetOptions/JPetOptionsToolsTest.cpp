@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptions )
 
 BOOST_AUTO_TEST_CASE(createOptionsFromConfFile)
 {
-  auto inFile = "inputTestCfg.json";
+  auto inFile = "unitTestData/JPetOptionsToolsTest/inputTestCfg.json";
   std::map<std::string, std::string> options = jpet_options_tools::createOptionsFromConfFile(inFile);
   std::map<std::string, std::string> expected = {{"MyOption", "great"}, {"myAnotherOption", "wat"}, {"boolOption", "true"}, {"NumberOption", "12.2"}};
   BOOST_REQUIRE_EQUAL(options.size(), 4u);
