@@ -70,7 +70,7 @@ JPetScopeLoader::~JPetScopeLoader()
 }
 
 
-void JPetScopeLoader::createInputObjects(const char* inputFileName)
+void JPetScopeLoader::createInputObjects(const char*)
 {
   JPetScopeConfigParser confParser;
   auto config = confParser.getConfig(fOptions.getScopeConfigFile());
