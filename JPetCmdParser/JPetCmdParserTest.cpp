@@ -373,7 +373,7 @@ BOOST_AUTO_TEST_CASE(checkOptionsWithAddedFromJson)
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
   auto option = options.at(0);
   auto allOptions = option.getOptions();
-  BOOST_REQUIRE(allOptions.count("MyOption"));
+  BOOST_REQUIRE_EQUAL(allOptions.count("MyOption"), 1);
   BOOST_REQUIRE_EQUAL(allOptions.at("MyOption"), "great");
   BOOST_REQUIRE(allOptions.count("myAnotherOption"));
   BOOST_REQUIRE_EQUAL(allOptions.at("myAnotherOption"), "wat");
