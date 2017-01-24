@@ -17,6 +17,7 @@
 #define BOOST_TEST_MODULE JPetCmdParserTest
 #include <boost/test/unit_test.hpp>
 #include <cstdlib>
+#include <iostream>
 #include "../JPetCmdParser/JPetCmdParser.h"
 
 using namespace std;
@@ -41,15 +42,38 @@ std::vector<char*> createArgs(const std::string& commandLine)
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
+
+BOOST_AUTO_TEST_CASE(merge)
+{
+  JPetCmdParser parser;
+  auto commandLine = "main.x -t hld -f unitTestData/JPetCmdParserTest/testfile.hld -i 10";
+  auto args_char = createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+  po::variables_map variablesMap;
+  po::store(po::parse_command_line(argc, argv, parser.getOptionsDescription()), variablesMap);
+  auto commandLine2 = "main.x -t hld -f unitTestData/JPetCmdParserTest/testfile.hld -i 10 l example L saveExample";
+  auto args_char2 = createArgs(commandLine2);
+  auto argc2 = args_char2.size();
+  auto argv2 = args_char2.data();
+  po::variables_map variablesMap2;
+  po::store(po::parse_command_line(argc2, argv2, parser.getOptionsDescription()), variablesMap2);
+  std::map<std::string, std::string> options;
+  options["l"] = "example";
+  options["L"] = "saveExample";
+  //BOOST_REQUIRE_EQUAL( parser.mergeOptions(options, variablesMap), variablesMap2);
+}
+
+
 BOOST_AUTO_TEST_CASE( parsing_1 )
 {
   auto commandLine = "main.x -t hld -f unitTestData/JPetCmdParserTest/testfile.hld -i 10";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
-
   JPetCmdParser parser;
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
   BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCmdParserTest/testfile.hld");
