@@ -29,60 +29,42 @@
  */
 class JPetLayer: public TNamed
 {
+public:
+  JPetLayer();
+  JPetLayer(int id, bool isActive, std::string name, float radius);
+  explicit JPetLayer(bool isNull);
+
+  bool operator==(const JPetLayer& layer) const;
+  bool operator!=(const JPetLayer& layer) const;
+
+  int getID() const;
+  bool getIsActive() const;
+  std::string getName() const;
+  float getRadius() const;
+  const JPetFrame& getFrame() const;
+  void setFrame(JPetFrame& frame);
+  bool isNullObject() const;
+  static  JPetLayer& getDummyResult();
+
 protected:
+  void clearTRefFrame();
+
+#ifndef __CINT__
   const int fId = -1;
   bool fIsActive = false;
   std::string fName = "";
   float fRadius = -1.f;
   TRef fTRefFrame = NULL;
-
-public:
-  JPetLayer();
-  JPetLayer(int id, bool isActive, std::string name, float radius);
-  JPetLayer(bool isNull);
-
-  bool operator==(const JPetLayer& layer) const;
-  bool operator!=(const JPetLayer& layer) const;
-
-  inline int getID() const {
-    return fId;
-  }
-  inline bool getIsActive() const {
-    return fIsActive;
-  }
-  inline std::string getName() const {
-    return fName;
-  }
-  inline float getRadius() const {
-    return fRadius;
-  }
-  inline const JPetFrame& getFrame() const 
-  {
-    if(fTRefFrame.GetObject()) return static_cast<JPetFrame&>(*(fTRefFrame.GetObject()));
-    else { 
-      ERROR("No JPetFrame slot set, Null object will be returned");
-      return JPetFrame::getDummyResult();
-    }
-  }
-  inline void setFrame(JPetFrame& frame) {
-    fTRefFrame = &frame;
-  }
-
-  inline bool isNullObject() const { return fIsNullObject; }
-
-  static inline JPetLayer& getDummyResult() {
-    static JPetLayer DummyResult(true);
-    return DummyResult; 
-  }
-
-protected:
-  void clearTRefFrame() {
-    fTRefFrame = NULL;
-  }
-
-private:
   bool fIsNullObject = false;
+#else
+  const int fId;
+  bool fIsActive;
+  std::string fName;
+  float fRadius;
+  TRef fTRefFrame;
+  bool fIsNullObject;
+#endif
+
   ClassDef(JPetLayer, 4);
 };
-
 #endif // JPET_LAYER_H
