@@ -3,6 +3,9 @@
 #include <boost/test/unit_test.hpp>
 #include "JPetOptionsTools.h"
 #include <boost/filesystem.hpp>
+#include<iostream>
+
+const std::string dataDir = "unitTestData/JPetOptionsToolsTest/";
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
@@ -12,16 +15,16 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptions )
   std::map<std::string, std::string> options = {{"TimeWindow", "10"}, {"SomeOption", "true"}, {"AnotherOption", "4.5"}};
   std::string outFile = "test_cfg.json";
   BOOST_REQUIRE(jpet_options_tools::createConfigFileFromOptions(options, outFile));
-  /// todo remove created file
+  boost::filesystem::remove("test_cfg.json");
 }
 
 
 BOOST_AUTO_TEST_CASE(createOptionsFromConfFile)
 {
   auto inFile = "inputTestCfg.json";
-  std::map<std::string, std::string> options = jpet_options_tools::createOptionsFromConfFile(inFile);
+  std::map<std::string, std::string> options = jpet_options_tools::createOptionsFromConfFile(dataDir + inFile);
   std::map<std::string, std::string> expected = {{"MyOption", "great"}, {"myAnotherOption", "wat"}, {"boolOption", "true"}, {"NumberOption", "12.2"}};
-  BOOST_REQUIRE_EQUAL(options.size(), 4u);
+  BOOST_REQUIRE_EQUAL(options.size(), 4);
 
   std::vector<std::string> keys_expected;
   std::vector<std::string> values_expected;
@@ -39,9 +42,8 @@ BOOST_AUTO_TEST_CASE(createOptionsFromConfFile)
   std::sort(values.begin(), values.end());
   std::sort(keys_expected.begin(), keys_expected.end());
   std::sort(values_expected.begin(), values_expected.end());
-  /// I dont understand why it is not ordered correctly, anyway all elements seem to be present only reversed
-  //BOOST_REQUIRE_EQUAL_COLLECTIONS(keys.begin(), keys.end(), keys_expected.begin(), keys_expected.end());
-  //BOOST_REQUIRE_EQUAL_COLLECTIONS(values.begin(), values.end(), values_expected.begin(), values_expected.end());
+  BOOST_REQUIRE_EQUAL_COLLECTIONS(keys.begin(), keys.end(), keys_expected.begin(), keys_expected.end());
+  BOOST_REQUIRE_EQUAL_COLLECTIONS(values.begin(), values.end(), values_expected.begin(), values_expected.end());
 }
 
 BOOST_AUTO_TEST_CASE( createConfigFileFromOptionsAndReadItBack )
@@ -69,6 +71,8 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptionsAndReadItBack )
   std::sort(values_expected.begin(), values_expected.end());
   BOOST_REQUIRE_EQUAL_COLLECTIONS(keys.begin(), keys.end(), keys_expected.begin(), keys_expected.end());
   BOOST_REQUIRE_EQUAL_COLLECTIONS(values.begin(), values.end(), values_expected.begin(), values_expected.end());
+  boost::filesystem::remove("test_cfg2.json");
+
 }
 
 BOOST_AUTO_TEST_CASE( createOptionsFromConfFileThatDoesNotExist )
@@ -80,10 +84,18 @@ BOOST_AUTO_TEST_CASE( createOptionsFromConfFileThatDoesNotExist )
 
 BOOST_AUTO_TEST_CASE( createConfigFileFromEmptyMap )
 {
-}
+  jpet_options_tools::Options options = {};
+  std::string cfgFile = "test_cfg3.json";
+  BOOST_REQUIRE(jpet_options_tools::createConfigFileFromOptions(options, cfgFile));
+  boost::filesystem::remove("test_cfg3.json");
+} 
+
 
 BOOST_AUTO_TEST_CASE( createOptionsFromConfFileThatHasWrongFormat )
 {
+  auto inFile = "wrongInputFile.json";
+  auto options = jpet_options_tools::createOptionsFromConfFile(inFile);
+  BOOST_REQUIRE_EQUAL(options.size(),  0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
