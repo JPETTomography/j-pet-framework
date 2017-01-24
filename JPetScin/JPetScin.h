@@ -20,7 +20,6 @@
 #include <TRef.h>
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
 #include "../JPetLoggerInclude.h"
-//#include "../JPetPM/JPetPM.h"
 
 
 /**
@@ -29,91 +28,56 @@
  */
 class JPetScin: public TNamed
 {
- public:
+public:
   enum Dimension {kLength, kHeight, kWidth};
-  struct ScinDimensions
-  {
-    ScinDimensions():fLength(0), fHeight(0), fWidth(0) { }
-    ScinDimensions(float len, float h, float w):fLength(len), fHeight(h), fWidth(w) { }
+  struct ScinDimensions {
+    ScinDimensions(): fLength(0), fHeight(0), fWidth(0) { }
+    ScinDimensions(float len, float h, float w): fLength(len), fHeight(h), fWidth(w) { }
     float fLength;
     float fHeight;
     float fWidth;
   };
 
   JPetScin();
-  JPetScin(int id);
+  explicit JPetScin(int id);
   JPetScin(int id, float attenLen, float length, float height, float width);
-  JPetScin(bool isNull);
+  explicit JPetScin(bool isNull);
   ~JPetScin();
 
-  inline int getID() const { return fID; }
-  inline float getAttenLen() const { return fAttenLen; }
-  inline ScinDimensions getScinSize() const { return fScinSize; }
+  bool operator==(const JPetScin& scin) const;
+  bool operator!=(const JPetScin& scin) const;
+
+  int getID() const;
+  float getAttenLen() const;
+  ScinDimensions getScinSize() const;
   float getScinSize(Dimension dim) const;
-  inline void setAttenLen(float attenLen) { fAttenLen = attenLen; }
-  inline void setScinSize(ScinDimensions size) { fScinSize = size; }
+  void setAttenLen(float attenLen);
+  void setScinSize(ScinDimensions size);
   void setScinSize(Dimension dim, float value);
+  void setBarrelSlot(JPetBarrelSlot& p_barrelSlot);
+  JPetBarrelSlot& getBarrelSlot() const;
+  bool isNullObject() const;
+  static JPetScin& getDummyResult();
 
-  void setBarrelSlot(JPetBarrelSlot &p_barrelSlot){ fTRefBarrelSlot = &p_barrelSlot; }
-  JPetBarrelSlot& getBarrelSlot() const {
-    if(fTRefBarrelSlot.GetObject()) return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject());
-    else {
-      ERROR("No JPetBarrelSlot slot set, Null object will be returned");
-      return JPetBarrelSlot::getDummyResult();
-    }
-  }
+protected:
+  void clearTRefBarrelSlot();
 
-  inline bool isNullObject() const { return fIsNullObject; }
-
-  static inline JPetScin& getDummyResult() {
-    static JPetScin DummyResult(true);
-    return DummyResult;
-  }
-  
-  inline bool operator==(const JPetScin& scin) const { return getID() == scin.getID(); }
-  inline bool operator!=(const JPetScin& scin) const { return getID() != scin.getID(); }
-
-  /*
-  JPetPM* getTRefPMLeft() { return (JPetPM*)fTRefPMLeft.GetObject(); }
-  JPetPM* getTRefPMRight(){ return (JPetPM*)fTRefPMRight.GetObject(); }
-  
-  void setTRefPMs(JPetPM &p_leftPM, JPetPM &p_rightPM)
-  {    
-    fTRefPMLeft = &p_leftPM;
-    fTRefPMRight = &p_rightPM;
-  }
-  void setLeftTRefPM(JPetPM &p_PM)
-  {
-    fTRefPMLeft = &p_PM;
-  }
-  void setRightTRefPM(JPetPM &p_PM)
-  {
-    fTRefPMRight = &p_PM;
-  }
-  */
- private:
+#ifndef __CINT__
   int fID = 0;
   float fAttenLen = 0.0;  /// attenuation length
   ScinDimensions fScinSize; /// @todo check if there is no problem with the ROOT dictionnary
   bool fIsNullObject = false;
-  ClassDef(JPetScin, 4);
-  
-protected:
+#else
+  int fID;
+  float fAttenLen;  /// attenuation length
+  ScinDimensions fScinSize; /// @todo check if there is no problem with the ROOT dictionnary
+  bool fIsNullObject;
+#endif
   TRef fTRefBarrelSlot;
-  
-  void clearTRefBarrelSlot() { fTRefBarrelSlot = NULL; }
-  /*
-  TRef fTRefPMLeft;
-  TRef fTRefPMRight;
-  
-  void clearTRefPMs()
-  {
-    fTRefPMLeft = NULL;
-    fTRefPMRight = NULL;
-  }
-  */
 
   friend class JPetParamManager;
+
+  ClassDef(JPetScin, 4);
 };
 
 #endif
