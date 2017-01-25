@@ -39,6 +39,7 @@ public :
   virtual ~JPetTaskChainExecutor();
 
   bool process(); /// That was private. I made it public to run without threads.
+  static void printCurrentOptionsToLog(const JPetOptions::Options& currOpts);
 private:
   static void* processProxy(void*);
   bool preprocessing(const JPetOptions& options, JPetParamManager* manager, std::list<JPetTaskRunnerInterface*>& tasks);

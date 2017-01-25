@@ -72,6 +72,7 @@ bool JPetTaskChainExecutor::process()
     //auto taskCurr = std::dynamic_pointer_cast<JPetTask>((*currentTask)->getTask());
     auto taskName = taskCurr->GetName();
     INFO(Form("Starting task: %s", taskName));
+    JPetTaskChainExecutor::printCurrentOptionsToLog(currOpts);
     /// @todo fix it
     auto taskRunnerCurr =  dynamic_cast<JPetTaskIO*> (*currentTask);
     taskRunnerCurr->init(currOpts);
@@ -80,6 +81,14 @@ bool JPetTaskChainExecutor::process()
     INFO(Form("Finished task: %s", taskName));
   }
   return true;
+}
+
+void JPetTaskChainExecutor::printCurrentOptionsToLog(const JPetOptions::Options& currOpts)
+{
+  INFO("Current options:");
+  for (const auto & el : currOpts) {
+    INFO("key:" + el.first + " value:" + el.second);
+  }
 }
 
 void* JPetTaskChainExecutor::processProxy(void* runner)
