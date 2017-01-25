@@ -353,7 +353,8 @@ BOOST_AUTO_TEST_CASE(checkWrongOutputPath)
   ("runId,i", po::value<int>(), "Run id.")
   ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
   ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
-  ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.");
+  ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.")
+  ("userCfg,u", po::value<std::string>(), "Json file with optional user parameters.");
 
   po::variables_map variablesMap;
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
@@ -364,7 +365,7 @@ BOOST_AUTO_TEST_CASE(checkWrongOutputPath)
 
 BOOST_AUTO_TEST_CASE(checkOptionsWithAddedFromJson)
 {
-  auto args_char = createArgs("main.x -o ./ -f unitTestData/JPetCmdParserTest/data.hld -t hld -j unitTestData/JPetOptionsToolsTest/inputTestCfg.json");
+  auto args_char = createArgs("main.x -o ./ -f unitTestData/JPetCmdParserTest/data.hld -t hld -u unitTestData/JPetOptionsToolsTest/inputTestCfg.json");
   auto argc = args_char.size();
   auto argv = args_char.data();
 
@@ -372,7 +373,7 @@ BOOST_AUTO_TEST_CASE(checkOptionsWithAddedFromJson)
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
   auto option = options.at(0);
   auto allOptions = option.getOptions();
-  BOOST_REQUIRE(allOptions.count("myOption"));
+  BOOST_REQUIRE_EQUAL(allOptions.count("myOption"), 1);
   BOOST_REQUIRE_EQUAL(allOptions.at("myOption"), "great");
   BOOST_REQUIRE(allOptions.count("myAnotherOption"));
   BOOST_REQUIRE_EQUAL(allOptions.at("myAnotherOption"), "wat");
