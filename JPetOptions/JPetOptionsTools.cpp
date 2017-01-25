@@ -42,7 +42,7 @@ bool createConfigFileFromOptions(const Options& options, const std::string& outF
 Options createOptionsFromConfFile(const std::string& filename)
 {
   pt::ptree optionsTree;
-  Options mapOptions;
+  Options mapOptions, emptyMap;
   if (JPetCommonTools::ifFileExisting(filename)) {
     try {
       pt::read_json(filename, optionsTree);
@@ -53,6 +53,7 @@ Options createOptionsFromConfFile(const std::string& filename)
       }
     } catch (pt::json_parser_error) {
       ERROR("ERROR IN READINIG OPTIONS FROM JSON FILE! FILENAME:" + filename );
+      return emptyMap;
     }
   } else {
     ERROR("JSON CONFIG FILE DOES NOT EXIST! FILENAME:" + filename);
