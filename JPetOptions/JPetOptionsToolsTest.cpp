@@ -21,9 +21,9 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptions )
 
 BOOST_AUTO_TEST_CASE(createOptionsFromConfFile)
 {
-  auto inFile = "inputTestCfg.json";
-  std::map<std::string, std::string> options = jpet_options_tools::createOptionsFromConfFile(dataDir + inFile);
-  std::map<std::string, std::string> expected = {{"MyOption", "great"}, {"myAnotherOption", "wat"}, {"boolOption", "true"}, {"NumberOption", "12.2"}};
+  auto inFile = "unitTestData/JPetOptionsToolsTest/inputTestCfg.json";
+  std::map<std::string, std::string> options = jpet_options_tools::createOptionsFromConfFile(inFile);
+  std::map<std::string, std::string> expected = {{"myOption", "great"}, {"myAnotherOption", "wat"}, {"boolOption", "true"}, {"NumberOption", "12.2"}};
   BOOST_REQUIRE_EQUAL(options.size(), 4);
 
   std::vector<std::string> keys_expected;
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromEmptyMap )
 
 BOOST_AUTO_TEST_CASE( createOptionsFromConfFileThatHasWrongFormat )
 {
-  auto inFile = "wrongInputFile.json";
+  auto inFile = "unitTestData/JPetOptionsToolsTest/wrongInputFile.json";
   auto options = jpet_options_tools::createOptionsFromConfFile(inFile);
   BOOST_REQUIRE_EQUAL(options.size(),  0);
 }
