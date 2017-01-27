@@ -87,7 +87,7 @@ void JPetTaskChainExecutor::printCurrentOptionsToLog(const JPetOptions::Options&
 {
   INFO("Current options:");
   for (const auto & el : currOpts) {
-    INFO("key:" + el.first + " value:" + el.second);
+    INFO(el.first + "=" + el.second);
   }
 }
 
