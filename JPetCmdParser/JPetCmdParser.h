@@ -35,7 +35,7 @@ public:
   inline const po::options_description getOptionsDescription() const {
     return fOptionsDescriptions;
   }
-  std::vector<JPetOptions> generateOptions(const po::variables_map& cmdLineOptions) const;
+  std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap, const std::map<std::string, std::string>& additionalOptions = {}) const;
 
   bool areCorrectOptions(const po::variables_map& options) const;
   inline const std::vector<std::string>& getFileNames(const po::variables_map& variablesMap) const {
