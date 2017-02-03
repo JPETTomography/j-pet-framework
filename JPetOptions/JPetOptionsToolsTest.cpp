@@ -19,10 +19,10 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptions )
 }
 
 
-BOOST_AUTO_TEST_CASE(createOptionsFromConfFile)
+BOOST_AUTO_TEST_CASE(createOptionsFromConfigFile)
 {
   auto inFile = "unitTestData/JPetOptionsToolsTest/inputTestCfg.json";
-  std::map<std::string, std::string> options = jpet_options_tools::createOptionsFromConfFile(inFile);
+  std::map<std::string, std::string> options = jpet_options_tools::createOptionsFromConfigFile(inFile);
   std::map<std::string, std::string> expected = {{"myOption", "great"}, {"myAnotherOption", "wat"}, {"boolOption", "true"}, {"NumberOption", "12.2"}};
   BOOST_REQUIRE_EQUAL(options.size(), 4);
 
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptionsAndReadItBack )
   jpet_options_tools::Options options = {{"TimeWindow", "11"}, {"SomeOption", "false"}, {"AnotherOption", "4.5"}};
   std::string cfgFile = "test_cfg2.json";
   BOOST_REQUIRE(jpet_options_tools::createConfigFileFromOptions(options, cfgFile));
-  auto loadedOptions = jpet_options_tools::createOptionsFromConfFile(cfgFile);
+  auto loadedOptions = jpet_options_tools::createOptionsFromConfigFile(cfgFile);
   BOOST_REQUIRE_EQUAL(options.size(), loadedOptions.size());
   std::vector<std::string> keys_expected;
   std::vector<std::string> values_expected;
@@ -75,10 +75,10 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptionsAndReadItBack )
 
 }
 
-BOOST_AUTO_TEST_CASE( createOptionsFromConfFileThatDoesNotExist )
+BOOST_AUTO_TEST_CASE( createOptionsFromConfigFileThatDoesNotExist )
 {
   auto inFile = "nonExistingTestCfg.json";
-  auto options = jpet_options_tools::createOptionsFromConfFile(inFile);
+  auto options = jpet_options_tools::createOptionsFromConfigFile(inFile);
   BOOST_REQUIRE(options.empty());
 }
 
@@ -88,13 +88,13 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromEmptyMap )
   std::string cfgFile = "test_cfg3.json";
   BOOST_REQUIRE(jpet_options_tools::createConfigFileFromOptions(options, cfgFile));
   boost::filesystem::remove("test_cfg3.json");
-} 
+}
 
 
-BOOST_AUTO_TEST_CASE( createOptionsFromConfFileThatHasWrongFormat )
+BOOST_AUTO_TEST_CASE( createOptionsFromConfigFileThatHasWrongFormat )
 {
   auto inFile = "unitTestData/JPetOptionsToolsTest/wrongInputFile.json";
-  auto options = jpet_options_tools::createOptionsFromConfFile(inFile);
+  auto options = jpet_options_tools::createOptionsFromConfigFile(inFile);
   BOOST_REQUIRE_EQUAL(options.size(),  0);
 }
 
