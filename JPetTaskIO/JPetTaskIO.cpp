@@ -52,8 +52,7 @@ void JPetTaskIO::exec()
   assert(fReader);
   assert(fParamManager);
   fTask->setParamManager(fParamManager);
-  JPetTaskInterface::Options emptyOpts;
-  fTask->init(emptyOpts); //prepare current task for file
+  fTask->init(fOptions.getOptions()); //prepare current task for file
   auto totalEvents = 0ll;
   if (fReader) {
     totalEvents = fReader->getNbOfAllEvents();
