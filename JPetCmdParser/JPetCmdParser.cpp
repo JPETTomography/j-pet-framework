@@ -68,7 +68,7 @@ std::vector<JPetOptions> JPetCmdParser::parseAndGenerateOptions(int argc, const 
   /// If json config file with user options was specified we must add the options from it.
   if (variablesMap.count("userCfg")) {
     auto jsonCfgFile = variablesMap["userCfg"].as<std::string>();
-    optionsFromJson = jpet_options_tools::createOptionsFromConfFile(jsonCfgFile);
+    optionsFromJson = jpet_options_tools::createOptionsFromConfigFile(jsonCfgFile);
   }
   return generateOptions(variablesMap, optionsFromJson);
 }
