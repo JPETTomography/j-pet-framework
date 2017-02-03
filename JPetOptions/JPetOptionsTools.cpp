@@ -39,7 +39,7 @@ bool createConfigFileFromOptions(const Options& options, const std::string& outF
   return true;
 }
 
-Options createOptionsFromConfFile(const std::string& filename)
+Options createOptionsFromConfigFile(const std::string& filename)
 {
   pt::ptree optionsTree;
   Options mapOptions, emptyMap;
