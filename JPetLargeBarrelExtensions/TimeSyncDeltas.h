@@ -22,12 +22,12 @@
 #include "../JPetHit/JPetHit.h"
 #include "BarrelExtensions.h"
 #include "PetDict.h"
-struct SynchroStrip{double A,B;};
+struct SynchroStrip{double A,B,dA,dB;};
 inline std::istream&operator>>(std::istream&str,SynchroStrip&item){
-  return str>>item.A>>item.B;
+  return str>>item.A>>item.dA>>item.B>>item.dB;
 }
 inline std::ostream&operator<<(std::ostream&str,const SynchroStrip&item){
-  return str<<item.A<<"\t"<<item.B;
+  return str<<item.A<<" "<<item.dA<<"\t"<<item.B<<" "<<item.dB;
 }
 
 //This class provides adding deltas obtained after time synchronization
