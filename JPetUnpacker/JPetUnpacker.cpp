@@ -61,6 +61,11 @@ bool JPetUnpacker::exec()
     ERROR("The config file doesnt exist");
     return false;
   }
+  if (getCalibFile()!="" && !boost::filesystem::exists(getCalibFile())) 
+  {
+    ERROR("The provided calib file doesnt exist");
+    return false;
+  }
   if(getEventsToProcess() <= 0)
   {
     ERROR("No events to process");
