@@ -30,7 +30,8 @@ JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
   ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
   ("outputPath,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
   ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
-  ("param,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
+  ("unpackerConfigFile,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
+  ("unpackerCalibFile,c", po::value<std::string>(), "ROOT file with TRB calibration used by the unpacker program.")
   ("runId,i", po::value<int>(), "Run id.")
   ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
   ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
@@ -117,6 +118,24 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
     }
   }
 
+  if(isUnpackerConfigFileSet(variablesMap)){
+    std::string unpackerConfigFileName = getUnpackerConfigFile(variablesMap);
+    if ( !JPetCommonTools::ifFileExisting(unpackerConfigFileName) ) {
+      ERROR("The provided Unpacker config file : " + unpackerConfigFileName + " does not exist.");
+      std::cerr << "The provided Unpacker cofig file : " << unpackerConfigFileName << " does not exist" << std::endl;
+      return false;
+    }
+  }
+
+  if(isUnpackerCalibFileSet(variablesMap)){
+    std::string unpackerCalibFileName = getUnpackerCalibFile(variablesMap);
+    if ( !JPetCommonTools::ifFileExisting(unpackerCalibFileName) ) {
+      ERROR("The provided Unpacker calibration file : " + unpackerCalibFileName + " does not exist.");
+      std::cerr << "The provided Unpacker calibration file : " << unpackerCalibFileName << " does not exist" << std::endl;
+      return false;
+    }
+  }
+  
   std::vector<std::string> fileNames(variablesMap["file"].as< std::vector<std::string> >());
   for (unsigned int i = 0; i < fileNames.size(); i++) {
     if ( ! JPetCommonTools::ifFileExisting(fileNames[i]) ) {
@@ -169,6 +188,13 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
   if (isLocalDBCreateSet(optsMap)) {
     options["localDBCreate"] = getLocalDBCreateName(optsMap);
   }
+  if (isUnpackerConfigFileSet(optsMap)) {
+    options["unpackerConfigFile"] = getUnpackerConfigFile(optsMap);
+  }
+  if (isUnpackerCalibFileSet(optsMap)) {
+    options["unpackerCalibFile"] = getUnpackerCalibFile(optsMap);
+  }
+
   auto firstEvent  = getLowerEventBound(optsMap);
   auto lastEvent  = getHigherEventBound(optsMap);
   if (firstEvent >= 0) options.at("firstEvent") = std::to_string(firstEvent);
