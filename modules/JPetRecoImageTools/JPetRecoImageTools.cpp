@@ -136,7 +136,7 @@ double JPetRecoImageTools::calculateProjection(const Matrix2D& emissionMatrix, d
     matrixGet  = matrixGetterFactory(emissionMatrix, true); // The matrix  elements will be taken as (y, x) - transposed.
     divided = std::abs(cos);
   }
-  const int kMatrixCenter = emissionMatrix.size() / 2;
+  const int kMatrixCenter = std::ceil(emissionMatrix.size() / 2.);
   double value = 0.;
   for (auto i = -kMatrixCenter; i < kMatrixCenter; i++) {
     value += interpolationFunction(i + kMatrixCenter , a * i + b + kMatrixCenter, matrixGet);
