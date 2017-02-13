@@ -122,20 +122,20 @@ BOOST_AUTO_TEST_CASE(linear)
   BOOST_REQUIRE_CLOSE(JPetRecoImageTools::linear(0, 0.6, getterT), 2.2, epsilon); //1*0.4 +  3  *0.6
 }
 
-//BOOST_AUTO_TEST_CASE(calculateProjection)
-//{
-//double epsilon = 0.00001;
-//JPetRecoImageTools::Matrix2D matrix = {{4}};
-////static double calculateProjection(const Matrix2D& emissionMatrix,
-////double phi,
-////int scanNumber,
-////int nScans,
-////InterpolationFunc& interpolationFunction
-////);
-///// first argument is i second j  (i,j)
-//JPetRecoImageTools::InterpolationFunc func = JPetRecoImageTools::nearestNeighbour;
-//BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,0,0,1, func), 4, epsilon);
-//}
+BOOST_AUTO_TEST_CASE(calculateProjection)
+{
+  double epsilon = 0.00001;
+  JPetRecoImageTools::Matrix2D matrix = {{4}};
+  //static double calculateProjection(const Matrix2D& emissionMatrix,
+  //double phi,
+  //int scanNumber,
+  //int nScans,
+  //InterpolationFunc& interpolationFunction
+  //);
+  /// first argument is i second j  (i,j)
+  JPetRecoImageTools::InterpolationFunc func = JPetRecoImageTools::nearestNeighbour;
+  BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection(matrix,0,0,1, func), 4, epsilon);
+}
 
 
 //BOOST_AUTO_TEST_CASE(calculateProjection2)
