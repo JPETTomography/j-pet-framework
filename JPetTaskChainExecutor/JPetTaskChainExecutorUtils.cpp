@@ -37,13 +37,16 @@ bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamMa
   }
   auto inputFile = options.getInputFile();
   auto inputFileType = options.getInputFileType();
+  auto unpackerConfigFile = options.getUnpackerConfigFile();
+  auto unpackerCalibFile = options.getUnpackerCalibFile();
+
   if (inputFileType == JPetOptions::kScope) {
     if (!createScopeTaskAndAddToTaskList(options, paramMgr, tasks)) {
       ERROR("Scope task not added correctly!!!");
       return false;
     }
   } else if (inputFileType == JPetOptions::kHld) {
-    unpackFile(inputFile, options.getTotalEvents());
+    unpackFile(inputFile, options.getTotalEvents(), unpackerConfigFile, unpackerCalibFile);
   }
   /// Assumption that if the file is zipped than it is in the hld format
   /// and we will also unpack if from hld  after unzipping.
@@ -55,7 +58,7 @@ bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamMa
     } else {
       INFO( std::string("Unpacking") );
       auto unzippedFilename = JPetCommonTools::stripFileNameSuffix(std::string(inputFile)).c_str();
-      unpackFile(unzippedFilename, options.getTotalEvents());
+      unpackFile(unzippedFilename, options.getTotalEvents(), unpackerConfigFile, unpackerCalibFile);
     }
   }
 
@@ -79,14 +82,14 @@ bool JPetTaskChainExecutorUtils::createScopeTaskAndAddToTaskList(const JPetOptio
   return true;
 }
 
-void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long nevents)
+void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long nevents, const char * configfile = "", const char * calibfile = "")
 {
   JPetUnpacker unpacker;
   if (nevents > 0) {
-    unpacker.setParams(filename, nevents);
+    unpacker.setParams(filename, nevents, configfile, calibfile);
     WARNING(std::string("Even though the range of events was set, only the first ") + JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
   } else {
-    unpacker.setParams(filename);
+    unpacker.setParams(filename, 100000000, configfile, calibfile);
   }
   unpacker.exec();
 }

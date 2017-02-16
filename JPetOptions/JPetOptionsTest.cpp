@@ -25,7 +25,9 @@ BOOST_AUTO_TEST_CASE(petOptionsDefaultConstrutorTest)
         {"firstEvent", "-1"},
         {"lastEvent", "-1"},
         {"progressBar", "false"},
-        {"runId", "-1"}
+        {"runId", "-1"},
+	{"unpackerConfigFile", "conf_trb3.xml"},
+	{"unpackerCalibFile", ""}
     };
 
     JPetOptions petOptions;
@@ -45,7 +47,9 @@ BOOST_AUTO_TEST_CASE(petOptionsBasicTest)
         {"runId", "2001, A Space Odyssey"},
         {"progressBar", "true"},
         {"inputFileType", "root"},
-        {"outputFileType", "scope"}
+        {"outputFileType", "scope"},
+	{"unpackerConfigFile", "conf_trb3.xml"},
+	{"unpackerCalibFile", ""}
     };
 
     JPetOptions petOptions(options);
@@ -79,7 +83,9 @@ BOOST_AUTO_TEST_CASE(getTotalEventsTest)
         {"runId", "2001, A Space Odyssey"},
         {"progressBar", "true"},
         {"inputFileType", "root"},
-        {"outputFileType", "scope"}
+        {"outputFileType", "scope"},
+        {"unpackerConfigFile", "conf_trb3.xml"},
+	{"unpackerCalibFile", ""}
     };
 
     BOOST_REQUIRE_EQUAL(JPetOptions(options).getTotalEvents(), -1);
