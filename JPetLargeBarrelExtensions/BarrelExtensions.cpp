@@ -115,7 +115,7 @@ void TOT_Hists::init(const JPetTaskInterface::Options& opts){
 TOT_Hists::TOT_Hists(const char* name, const char* description)
 :LargeBarrelTask(name,description){}
 TOT_Hists::~TOT_Hists(){}
-void TOT_Hists::createTOTHistos(const std::string& suffix,const size_t bins,const double&min,const double&max){
+void TOT_Hists::createTOTHistos(const std::string& suffix,const size_t bins,const double min,const double max){
     for(auto & layer : getParamBank().getLayers()){
 	const auto ln=map()->getLayerNumber(*layer.second);
 	for(size_t sl=1,n=map()->getSlotsCount(ln);sl<=n;sl++)
