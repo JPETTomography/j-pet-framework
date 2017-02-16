@@ -27,7 +27,9 @@ JPetOptions::Options JPetOptions::kDefaultOptions = {
   {"firstEvent", "-1"},
   {"lastEvent", "-1"},
   {"progressBar", "false"},
-  {"runId", "-1"}
+  {"runId", "-1"},
+  {"unpackerConfigFile", "conf_trb3.xml"},
+  {"unpackerCalibFile", ""}
 };
 
 JPetOptions::JPetOptions()
