@@ -16,8 +16,10 @@ def parse():
             tree = ET.parse(infile)
             root = tree.getroot()
             if root.findall('.//FatalError'):
+                element=root.findall('.//FatalError')[0]
                 eprint("Error detected")
                 print(infile)
+                print(element.text)
                 sys.exit(1)
         except ParseError:
             eprint("The file xml isn't correct. There were some mistakes in the tests ")
