@@ -64,7 +64,6 @@ public:
   float getPosY() const ;
   float getPosZ() const;
   float getPos(int index) const;
-  int getScinID()const;
   const TVector3& getPos() const;
   const JPetPhysSignal& getSignal(Signal pos) const;
   const JPetPhysSignal& getSignalA() const;
@@ -90,7 +89,6 @@ public:
   void setPos (float x, float y, float z) ;
   void setBarrelSlot( JPetBarrelSlot& bs) ;
   void setScintillator(JPetScin& sc) ;
-  void setScinID (const int scinID);
 
   void setSignals(JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB);
   void setSignalA(JPetPhysSignal& p_sig);
@@ -131,8 +129,6 @@ private:
   JPetPhysSignal fSignalB;
   bool fIsSignalAset = false;
   bool fIsSignalBset = false;
-
-  int fScinID = 0; ///< For simple reconstruction
 
   // references to parametric objects
   TRef fBarrelSlot = NULL; ///< BarrelSlot in which the hit was recorded
