@@ -395,10 +395,10 @@ BOOST_AUTO_TEST_CASE(sinogram)
   /// save sinogram
   std::ofstream res(outFile);
   res << "P2" << std::endl;
-  res << scans << " " << views << std::endl;
+  res << result[0].size() << " " << result.size() << std::endl;
   res << "255" << std::endl;
-  for (int i = 0; i < views; i++) {
-    for (int j = 0; j < scans; j++) {
+  for (unsigned int i = 0; i < result.size(); i++) {
+    for (unsigned int j = 0; j < result[0].size(); j++) {
       res << static_cast<int>(result[i][j]) << " ";
     }
     res << std::endl;
@@ -410,7 +410,7 @@ BOOST_AUTO_TEST_CASE(sinogram)
 // This test takes a Shepp-Logan phantom and creates a sinogram.
 BOOST_AUTO_TEST_CASE(sinogram2)
 {
-  const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom3.pgm";
+  const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
   const auto outFile = "sinogram2.ppm";
   /// read phantom
   std::ifstream in(inFile);
@@ -436,9 +436,9 @@ BOOST_AUTO_TEST_CASE(sinogram2)
   res << "P2" << std::endl;
   res << result.size() << " " << result[0].size() << std::endl;
   res << "255" << std::endl;
-  for (unsigned int i = 0; i < result.size(); i++) {
-    for (unsigned int j = 0; j < result[0].size(); j++) {
-      res << static_cast<int>(result[i][j]) << " ";
+  for (unsigned int i = 0; i < result[0].size(); i++) {
+    for (unsigned int j = 0; j < result.size(); j++) {
+      res << static_cast<int>(result[j][i]) << " ";
     }
     res << std::endl;
   }
