@@ -66,8 +66,7 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
     InterpolationFunc interpolationFunction,
     RescaleFunc rescaleFunc,
     int minCutoff,
-    int scaleFactor
-                                                             )
+    int scaleFactor)
 {
   assert(emissionMatrix.size() > 0);
   assert(emissionMatrix.size() == emissionMatrix[0].size());
@@ -94,10 +93,63 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D& emission
   return proj;
 }
 
+
+
+JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram2(
+    Matrix2D& emissionMatrix,
+    int nAngles, RescaleFunc rescaleFunc,
+    int rescaleMinCutoff,
+    int rescaleFactor)
+{
+  int imageSize = emissionMatrix.size();
+  double center = (imageSize - 1) / 2.0;
+
+  double angleStep = M_PI / nAngles;
+  double length = center * center;
+  Matrix2DProj proj(imageSize, std::vector<double>(nAngles));
+  std::function<double(int, int)> matrixGet;
+  matrixGet  = matrixGetterFactory(emissionMatrix, false); // The matrix  elements will be taken as (x,y).
+  for (int angle = 0 ; angle < nAngles; angle++) 
+  {
+    double cos = std::cos((double)angle * angleStep);
+    double sin = std::sin((double)angle * angleStep);
+    for (int scanNumber = 0; scanNumber < imageSize - 1; scanNumber++) 
+    {
+      proj[scanNumber][angle] = calculateProjection2(scanNumber, cos, sin, imageSize, center, length, matrixGet);
+    }
+  }
+  rescaleFunc(proj, rescaleMinCutoff, rescaleFactor);
+  return proj;
+}
+
+double JPetRecoImageTools::calculateProjection2(int step, double cos, double sin, 
+                                                int imageSize, double center, double length, 
+                                                std::function<double(int, int)> matrixGet)
+{
+  double stepMinusCenter = step - center;
+  double xtmp = center + stepMinusCenter * cos;
+  double ytmp = center - stepMinusCenter * sin;
+  //int nmin = std::floor(center - std::sqrt((length - (stepMinusCenter * stepMinusCenter))));
+  int nmin = 0;
+  //std::cout << "center: " << center << " length: " << length << " m * m: " << stepMinusCenter * stepMinusCenter << "\n";
+  //std::cout << "nmin: " << nmin << "\n";
+  double p = 0.0; 
+  for(int n = nmin; n < imageSize - nmin; n++)
+  {
+    double nMinusCenter = (double)n - center;
+    int x = std::floor((xtmp - nMinusCenter * sin) + 0.5);
+    int y = std::floor((ytmp - nMinusCenter * cos) + 0.5);
+    p += matrixGet(x, y);
+    //std::cout << "x: " << x << " y: " << y << " val: " << matrixGet(x, y) << "\n";
+  }
+  return p;
+}
+
+
 double JPetRecoImageTools::calculateProjection(const Matrix2D& emissionMatrix, double angle, int scanNumber, int nScans,
     InterpolationFunc& interpolationFunction)
 {
-  int N = scanNumber - nScans / 2 ;
+  int N = scanNumber - std::floor(nScans / 2) ;
   const int kInputMatrixSize = emissionMatrix.size();
   //if no. nScans is greater than the image width, then scale will be <1
   const double scale = kInputMatrixSize / nScans;
@@ -136,7 +188,7 @@ double JPetRecoImageTools::calculateProjection(const Matrix2D& emissionMatrix, d
     matrixGet  = matrixGetterFactory(emissionMatrix, true); // The matrix  elements will be taken as (y, x) - transposed.
     divided = std::abs(cos);
   }
-  const int kMatrixCenter = std::ceil(emissionMatrix.size() / 2.);
+  const int kMatrixCenter = std::floor(emissionMatrix.size() / 2);
   double value = 0.;
   for (auto i = -kMatrixCenter; i < kMatrixCenter; i++) {
     value += interpolationFunction(i + kMatrixCenter , a * i + b + kMatrixCenter, matrixGet);
