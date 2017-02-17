@@ -17,6 +17,7 @@
 #include <iostream>
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetLoggerInclude.h"
+#include "../JPetOptions/JPetOptionsTools.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include <stdexcept>
 
@@ -103,8 +104,19 @@ bool JPetOptionsGenerator::areCorrectOptions(const po::variables_map& variablesM
   return true;
 }
 
-std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variables_map& optsMap, const std::map<std::string, std::string>& additionalOptions) const
+std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variables_map& optsMap) const
 {
+  jpet_options_tools::Options optionsFromJson;
+  /// If json config file with user options was specified we must add the options from it.
+  if (optsMap.count("userCfg")) {
+    auto jsonCfgFile = optsMap["userCfg"].as<std::string>();
+    optionsFromJson = jpet_options_tools::createOptionsFromConfigFile(jsonCfgFile);
+  }
+
+  if (!areCorrectOptions(optsMap)) {
+    throw std::invalid_argument("Wrong user options provided! Check the log!");
+  }
+  
   std::map<std::string, std::string> options = JPetOptions::getDefaultOptions();
   auto fileType = getFileType(optsMap);
   if (isCorrectFileType(fileType)) {
@@ -133,7 +145,7 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
 
   /// We add additional options to already existing one.
   /// If the key already exists the element will not be updated.
-  options.insert(additionalOptions.begin(), additionalOptions.end());
+  options.insert(optionsFromJson.begin(), optionsFromJson.end());
 
   std::vector<JPetOptions>  optionContainer;
   /// In case of scope there is one special input file
