@@ -84,6 +84,16 @@ public:
                                     int nScans,
                                     InterpolationFunc& interpolationFunction
                                    );
+  static Matrix2DProj sinogram2(Matrix2D& emissionMatrix,
+                                 int nAngles, RescaleFunc rescaleFunc = nonRescale,
+                                 int rescaleMinCutoff = 0,
+                                 int rescaleFactor = 255
+                                );
+  static double calculateProjection2(int step, 
+                                     double cos, double sin, 
+                                     int imageSize, double center, double length,
+                                     std::function<double(int, int)> matrixGet
+                                     );
 private:
   JPetRecoImageTools();
   ~JPetRecoImageTools();
