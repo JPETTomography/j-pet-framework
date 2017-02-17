@@ -129,7 +129,9 @@ double JPetRecoImageTools::calculateProjection2(int step, double cos, double sin
   double stepMinusCenter = step - center;
   double xtmp = center + stepMinusCenter * cos;
   double ytmp = center - stepMinusCenter * sin;
-  //int nmin = std::floor(center - std::sqrt((length - (stepMinusCenter * stepMinusCenter))));
+  //int nmin = std::floor(center - std::sqrt((length - (stepMinusCenter * stepMinusCenter)))); 
+  //TODO Repair, when step is last step in emissionMatrix it's calculating wrong value
+  //for nmin = 0 we checking a lot of unnecessary values
   int nmin = 0;
   //std::cout << "center: " << center << " length: " << length << " m * m: " << stepMinusCenter * stepMinusCenter << "\n";
   //std::cout << "nmin: " << nmin << "\n";
