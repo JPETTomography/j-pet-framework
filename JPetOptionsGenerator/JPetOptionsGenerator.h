@@ -29,7 +29,7 @@ public:
   JPetOptionsGenerator();
   ~JPetOptionsGenerator();
   
-  std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap, const std::map<std::string, std::string>& additionalOptions = {}) const;
+  std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap) const;
   
   bool areCorrectOptions(const po::variables_map& options) const;
   

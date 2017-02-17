@@ -18,7 +18,6 @@
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetLoggerInclude.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
-#include "../JPetOptions/JPetOptionsTools.h"
 #include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
 #include <stdexcept>
 
@@ -62,17 +61,7 @@ std::vector<JPetOptions> JPetCmdParser::parseAndGenerateOptions(int argc, const 
   }
   po::notify(variablesMap);
   JPetOptionsGenerator generator;
-  if (!generator.areCorrectOptions(variablesMap)) {
-    throw std::invalid_argument("Wrong user options provided! Check the log!");
-  }
-
-  jpet_options_tools::Options optionsFromJson;
-  /// If json config file with user options was specified we must add the options from it.
-  if (variablesMap.count("userCfg")) {
-    auto jsonCfgFile = variablesMap["userCfg"].as<std::string>();
-    optionsFromJson = jpet_options_tools::createOptionsFromConfigFile(jsonCfgFile);
-  }
-  return generator.generateOptions(variablesMap, optionsFromJson);
+  return generator.generateOptions(variablesMap);
 }
 
 

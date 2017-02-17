@@ -21,3 +21,6 @@
 #include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
 
 using namespace std;
+BOOST_AUTO_TEST_SUITE(FirstSuite)
+
+BOOST_AUTO_TEST_SUITE_END()
