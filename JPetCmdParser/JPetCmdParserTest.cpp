@@ -18,6 +18,7 @@
 #include <boost/test/unit_test.hpp>
 #include <cstdlib>
 #include "../JPetCmdParser/JPetCmdParser.h"
+#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
 
 using namespace std;
 
@@ -152,7 +153,7 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
 
 BOOST_AUTO_TEST_CASE(runIdTest)
 {
-  JPetCmdParser cmdParser;
+  JPetOptionsGenerator cmdParser;
 
   auto commandLine = "main.x -i 231";
   auto args_char = createArgs(commandLine);
@@ -195,16 +196,16 @@ BOOST_AUTO_TEST_CASE(localDBTest)
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
 
-  BOOST_REQUIRE(JPetCmdParser::isLocalDBSet(variablesMap) == true);
-  BOOST_REQUIRE(JPetCmdParser::getLocalDBName(variablesMap) == std::string("input.json"));
-  BOOST_REQUIRE(JPetCmdParser::isLocalDBCreateSet(variablesMap) == true);
-  BOOST_REQUIRE(JPetCmdParser::getLocalDBCreateName(variablesMap) == std::string("output.json"));
+  BOOST_REQUIRE(JPetOptionsGenerator::isLocalDBSet(variablesMap) == true);
+  BOOST_REQUIRE(JPetOptionsGenerator::getLocalDBName(variablesMap) == std::string("input.json"));
+  BOOST_REQUIRE(JPetOptionsGenerator::isLocalDBCreateSet(variablesMap) == true);
+  BOOST_REQUIRE(JPetOptionsGenerator::getLocalDBCreateName(variablesMap) == std::string("output.json"));
 }
 
 
 BOOST_AUTO_TEST_CASE(generateOptionsTest)
 {
-  JPetCmdParser cmdParser;
+  JPetOptionsGenerator cmdParser;
 
   auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -b 1 -l unitTestData/JPetCmdParserTest/input.json -L output.json";
   auto args_char = createArgs(commandLine);
@@ -359,7 +360,7 @@ BOOST_AUTO_TEST_CASE(checkWrongOutputPath)
   po::variables_map variablesMap;
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
-  JPetCmdParser parser;
+  JPetOptionsGenerator parser;
   BOOST_REQUIRE(!parser.areCorrectOptions(variablesMap));
 }
 
