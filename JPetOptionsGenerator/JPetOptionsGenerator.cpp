@@ -116,20 +116,20 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   if (!areCorrectOptions(optsMap)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
-  
-  std::map<std::string, std::string> options = JPetOptions::getDefaultOptions();
+
+  std::map<std::string, std::string> options;
   auto fileType = getFileType(optsMap);
   if (isCorrectFileType(fileType)) {
-    options.at("inputFileType") = fileType;
+    options["inputFileType"] = fileType;
   }
   if (isOutputPath(optsMap)) {
-    options.at("outputPath") = JPetCommonTools::appendSlashToPathIfAbsent(getOutputPath(optsMap));
+    options["outputPath"] = JPetCommonTools::appendSlashToPathIfAbsent(getOutputPath(optsMap));
   }
   if (isRunNumberSet(optsMap)) {
-    options.at("runId") = std::to_string(getRunNumber(optsMap));
+    options["runId"] = std::to_string(getRunNumber(optsMap));
   }
   if (isProgressBarSet(optsMap)) {
-    options.at("progressBar") = "true";
+    options["progressBar"] = "true";
   }
   if (isLocalDBSet(optsMap)) {
     options["localDB"] = getLocalDBName(optsMap);
@@ -139,14 +139,14 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   }
   auto firstEvent  = getLowerEventBound(optsMap);
   auto lastEvent  = getHigherEventBound(optsMap);
-  if (firstEvent >= 0) options.at("firstEvent") = std::to_string(firstEvent);
-  if (lastEvent >= 0) options.at("lastEvent") = std::to_string(lastEvent);
+  if (firstEvent >= 0) options["firstEvent"] = std::to_string(firstEvent);
+  if (lastEvent >= 0) options["lastEvent"] = std::to_string(lastEvent);
   auto files = getFileNames(optsMap);
-
+  std::map<std::string, std::string> defaultOptions = JPetOptions::getDefaultOptions(); 
   /// We add additional options to already existing one.
   /// If the key already exists the element will not be updated.
   options.insert(optionsFromJson.begin(), optionsFromJson.end());
-
+  options.insert(defaultOptions.begin(), defaultOptions.end());
   std::vector<JPetOptions>  optionContainer;
   /// In case of scope there is one special input file
   /// which is a json config file which must be parsed.
@@ -166,7 +166,7 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
     JPetScopeConfigParser::DirFileContainer dirsAndFiles = scopeConfigParser.getInputDirectoriesAndFakeInputFiles(configFileName);
     for (const auto & dirAndFile : dirsAndFiles) {
       options.at("scopeInputDirectory") = dirAndFile.first;
-      options.at("inputFile") = dirAndFile.second;
+      options.at("inputFile")= dirAndFile.second;
       optionContainer.push_back(JPetOptions(options));
     }
   } else {
