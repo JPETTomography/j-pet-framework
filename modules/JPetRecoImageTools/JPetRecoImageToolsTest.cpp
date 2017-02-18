@@ -419,7 +419,7 @@ BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(5,
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(6,
                cos, sin, imageSize, center, length, matrixGet), 28, epsilon);
 }
-/*
+
 // This test takes a Shepp-Logan phantom and creates a sinogram.
 BOOST_AUTO_TEST_CASE(sinogram)
 {
@@ -498,5 +498,5 @@ BOOST_AUTO_TEST_CASE(sinogram2)
   }
   res.close();
   BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
-}*/
+}
 BOOST_AUTO_TEST_SUITE_END()
