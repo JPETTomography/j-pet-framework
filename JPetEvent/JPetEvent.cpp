@@ -24,6 +24,7 @@ JPetEvent::JPetEvent(): TNamed("JPetEvent", "event structure")
 }
 
 JPetEvent::JPetEvent(const std::vector<JPetHit>& hits, JPetEventType eventType, bool orderedByTime):
+  TNamed("JPetEvent", "event structure"),
   fType(eventType)
 {
   setHits(hits, orderedByTime);
