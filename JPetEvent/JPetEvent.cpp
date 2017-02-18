@@ -18,7 +18,7 @@
 
 ClassImp(JPetEvent);
 
-JPetEvent::JPetEvent()
+JPetEvent::JPetEvent(): TNamed("JPetEvent", "event structure")
 {
   /**/
 }
