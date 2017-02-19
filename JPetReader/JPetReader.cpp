@@ -78,7 +78,7 @@ bool JPetReader::lastEvent()
   return loadCurrentEvent();
 }
 
-bool JPetReader::nthEvent(int n)
+bool JPetReader::nthEvent(long long n)
 {
   fCurrentEventNumber = n;
   return loadCurrentEvent();
