@@ -211,6 +211,7 @@ void JPetRecoImageTools::rescale(Matrix2DProj& matrix, double minCutoff, double 
         datamin = matrix[k][j];
     }
   }
+  
   /// datamin represents the constant background factor.
   if ((datamax - datamin) == 0.) {
     WARNING("Maximum value in the matrix to rescale is 0. No rescaling performed.");
@@ -230,11 +231,11 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::backProject(Matrix2DProj& s
               int rescaleFactor)
 {
   int sinogramSize = sinogram.size(); // get height of image
-  double center = std::floor(((double) sinogramSize - 1.) / 2.0);
-  double lenght = center * center;
+  double center = ((double) sinogramSize - 1.) / 2.0;
+  double length = center * center;
   double angleStep = M_PI / (double) angles;
   Matrix2DProj reconstructed(sinogramSize, std::vector<double>(sinogramSize));
-
+  
   for(int i = 0; i < angles; i++)
   {
     double cos = std::cos((double)i * angleStep);
@@ -245,11 +246,11 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::backProject(Matrix2DProj& s
       double jMinusCenter = (double)j - center;
       double ttmp = jMinusCenter * cos + center;
       double kmc = jMinusCenter * jMinusCenter;
-
+      
       for(int l = 0; l < sinogramSize; l++)
       {
         double lMinusCenter = (double)l - center;
-        if(lMinusCenter * lMinusCenter + kmc < lenght)
+        if((lMinusCenter * lMinusCenter) + kmc < length)
         {
           double t = ttmp - lMinusCenter * sin;
           int n = std::floor(t + 0.5);
