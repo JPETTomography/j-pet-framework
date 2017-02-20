@@ -85,7 +85,7 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D &emission
   assert(minCutoff < scaleFactor);
 
   //create vector of size nViews, initialize it with vector of size nScans
-  Matrix2DProj proj(nViews, std::vector<double>(nScans));
+  Matrix2DProj proj(nScans, std::vector<double>(nViews));
 
   float stepsize = (angleEnd - angleBeg) / nViews;
   assert(stepsize > 0); //maybe != 0 ?
@@ -95,7 +95,7 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram(Matrix2D &emission
   {
     for (auto scanNumber = 0; scanNumber < nScans; scanNumber++)
     {
-      proj[viewIndex][nScans - 1 - scanNumber] = JPetRecoImageTools::calculateProjection(emissionMatrix,
+      proj[nScans - 1 - scanNumber][viewIndex] = JPetRecoImageTools::calculateProjection(emissionMatrix,
                                                                                          phi, scanNumber, nScans,
                                                                                          interpolationFunction);
     }
