@@ -547,7 +547,7 @@ BOOST_AUTO_TEST_CASE(backProject)
 
 BOOST_AUTO_TEST_CASE(backProject2)
 {
-  const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
+  const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom3.pgm";
   const auto outFile = "backproject2.ppm";
   /// read phantom
   std::ifstream in(inFile);
@@ -569,6 +569,7 @@ BOOST_AUTO_TEST_CASE(backProject2)
   }
   JPetRecoImageTools::Matrix2DProj sinogram = 
                         JPetRecoImageTools::sinogram2(m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::filter(sinogram);
   JPetRecoImageTools::Matrix2DProj result = 
                 JPetRecoImageTools::backProject(sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
