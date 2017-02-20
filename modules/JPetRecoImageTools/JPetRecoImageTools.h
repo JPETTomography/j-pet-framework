@@ -94,6 +94,11 @@ public:
                                      int imageSize, double center, double length,
                                      std::function<double(int, int)> matrixGet
                                      );
+
+  static Matrix2DProj backProject(Matrix2DProj& sinogram, int angles, 
+                                  RescaleFunc rescaleFunc, 
+                                  int rescaleMinCutoff,
+                                  int rescaleFactor);
 private:
   JPetRecoImageTools();
   ~JPetRecoImageTools();
