@@ -101,8 +101,8 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram2(
     int rescaleMinCutoff,
     int rescaleFactor)
 {
-  int imageSize = emissionMatrix.size();
-  double center = (imageSize - 1) / 2.0;
+  int imageSize = emissionMatrix[0].size();
+  double center = (double)(imageSize - 1) / 2.0;
 
   double angleStep = M_PI / nAngles;
   double length = center * center;
@@ -137,7 +137,7 @@ double JPetRecoImageTools::calculateProjection2(int step, double cos, double sin
     double nMinusCenter = (double)n - center;
     int x = std::floor((xtmp - nMinusCenter * sin) + 0.5);
     int y = std::floor((ytmp - nMinusCenter * cos) + 0.5);
-    p += matrixGet(x, y);
+    p += matrixGet(y, x); //y - height, x - widht
   }
   return p;
 }
@@ -222,4 +222,49 @@ void JPetRecoImageTools::rescale(Matrix2DProj& matrix, double minCutoff, double 
       matrix[k][j] = (matrix[k][j] - datamin) * rescaleFactor / (datamax - datamin);
     }
   }
+}
+
+JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::backProject(Matrix2DProj& sinogram, int angles, 
+              RescaleFunc rescaleFunc,
+              int rescaleMinCutoff,
+              int rescaleFactor)
+{
+  int sinogramSize = sinogram.size(); // get height of image
+  double center = std::floor(((double) sinogramSize - 1.) / 2.0);
+  double lenght = center * center;
+  double angleStep = M_PI / (double) angles;
+  Matrix2DProj reconstructed(sinogramSize, std::vector<double>(sinogramSize));
+
+  for(int i = 0; i < angles; i++)
+  {
+    double cos = std::cos((double)i * angleStep);
+    double sin = std::sin((double)i * angleStep);
+
+    for(int j = 0; j < sinogramSize; j++)
+    {
+      double jMinusCenter = (double)j - center;
+      double ttmp = jMinusCenter * cos + center;
+      double kmc = jMinusCenter * jMinusCenter;
+
+      for(int l = 0; l < sinogramSize; l++)
+      {
+        double lMinusCenter = (double)l - center;
+        if(lMinusCenter * lMinusCenter + kmc < lenght)
+        {
+          double t = ttmp - lMinusCenter * sin;
+          int n = std::floor(t + 0.5);
+          reconstructed[l][j] += sinogram[n][j];
+        }
+      }
+    }
+  }
+  for(int i = 0; i < sinogramSize; i++)
+  {
+    for(int j = 0; j < sinogramSize; j++)
+    {
+      reconstructed[j][i] *= angleStep;
+    }
+  }
+  rescaleFunc(reconstructed, rescaleMinCutoff, rescaleFactor);
+  return reconstructed;
 }
