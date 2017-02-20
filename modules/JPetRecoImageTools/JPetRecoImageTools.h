@@ -99,6 +99,13 @@ public:
                                   RescaleFunc rescaleFunc, 
                                   int rescaleMinCutoff,
                                   int rescaleFactor);
+
+  static void filter(Matrix2DProj &sinogram);
+
+  static void doFFT1D(std::vector<double> &Re, std::vector<double> &Im, int size, int shift, bool fast);
+
+  static void doIFFT1D(std::vector<double> &Re, std::vector<double> &Im, int size, int shift, bool fast);
+
 private:
   JPetRecoImageTools();
   ~JPetRecoImageTools();
