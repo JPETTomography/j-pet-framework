@@ -548,7 +548,7 @@ BOOST_AUTO_TEST_CASE(backProject)
 
 BOOST_AUTO_TEST_CASE(backProject2)
 {
-  const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom3.pgm";
+  const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
   const auto outFile = "backproject2.ppm";
   /// read phantom
   std::ifstream in(inFile);
