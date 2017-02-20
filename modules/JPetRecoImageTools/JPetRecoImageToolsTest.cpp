@@ -263,21 +263,21 @@ BOOST_AUTO_TEST_CASE(projection1)
   double cos = std::cos(step * 0); //0 degree
   double sin = std::sin(step * 0); //0 degree
   BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(0, 
-              cos, sin, imageSize, center, length, matrixGet), 6, epsilon); // 1 + 2 + 3
+              cos, sin, imageSize, center, length, matrixGet), 12, epsilon); // 1 + 4 + 7
   BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(1,
-                cos, sin, imageSize, center, length, matrixGet), 15, epsilon); // 4 + 5 + 6 
+                cos, sin, imageSize, center, length, matrixGet), 15, epsilon); // 2 + 5 + 8 
   BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(2,
-                cos, sin, imageSize, center, length, matrixGet), 24, epsilon); // 7 + 8 + 9 
+                cos, sin, imageSize, center, length, matrixGet), 18, epsilon); // 3 + 6 + 9 
 
   cos = std::cos(step * 90); //90 degree
   sin = std::sin(step * 90); //90 degree
 
   BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(0, 
-              cos, sin, imageSize, center, length, matrixGet), 18, epsilon); // 3 + 6 + 9
+              cos, sin, imageSize, center, length, matrixGet), 24, epsilon); // 9 + 8 + 7
   BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(1,
-                cos, sin, imageSize, center, length, matrixGet), 15, epsilon); // 8 + 5 + 2
+                cos, sin, imageSize, center, length, matrixGet), 15, epsilon); // 6 + 5 + 3
   BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(2,
-                cos, sin, imageSize, center, length, matrixGet), 12, epsilon); // 1 + 4 + 7
+                cos, sin, imageSize, center, length, matrixGet), 6, epsilon); // 3 + 2 + 1
 }
 
 BOOST_AUTO_TEST_CASE(projection2)
@@ -297,17 +297,17 @@ BOOST_AUTO_TEST_CASE(projection2)
   double cos = std::cos(step * 0); //0 degree
   double sin = std::sin(step * 0); //0 degree
   BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(0, 
-              cos, sin, imageSize, center, length, matrixGet), 3, epsilon); // 1 + 2
+              cos, sin, imageSize, center, length, matrixGet), 4, epsilon); // 1 + 3
   BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(1,
-                cos, sin, imageSize, center, length, matrixGet), 7, epsilon); // 3 + 4
+                cos, sin, imageSize, center, length, matrixGet), 6, epsilon); // 2 + 4
 
   cos = std::cos(step * 90); //90 degree
   sin = std::sin(step * 90); //90 degree
 
   BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(0, 
-              cos, sin, imageSize, center, length, matrixGet), 6, epsilon); // 2 + 4
+              cos, sin, imageSize, center, length, matrixGet), 7, epsilon); // 3 + 4
   BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(1,
-                cos, sin, imageSize, center, length, matrixGet), 4, epsilon); // 3 + 1
+                cos, sin, imageSize, center, length, matrixGet), 3, epsilon); // 1 + 2
 }
 
 BOOST_AUTO_TEST_CASE(projection3)
@@ -332,15 +332,15 @@ double step = (M_PI / 180);
 double cos = std::cos(step * 0); //0 degree
 double sin = std::sin(step * 0); //0 degree
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(0, 
-              cos, sin, imageSize, center, length, matrixGet), 15, epsilon); // 1 + 2 + 3 + 4 + 5
+              cos, sin, imageSize, center, length, matrixGet), 55, epsilon); // 21 + 16 + 11 + 6 + 1
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(1,
-              cos, sin, imageSize, center, length, matrixGet), 40, epsilon); // 6 + 7 + 8 + 9 + 10
+              cos, sin, imageSize, center, length, matrixGet), 60, epsilon); // 22 + 17 + 12 + 7 + 2
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(2, 
-              cos, sin, imageSize, center, length, matrixGet), 65, epsilon); // 11 + 12 + 13 + 14 + 15
+              cos, sin, imageSize, center, length, matrixGet), 65, epsilon); // 23 + 18 + 13 + 8 + 3
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(3, 
-              cos, sin, imageSize, center, length, matrixGet), 90, epsilon); // 16 + 17 + 18 + 19 + 20
+              cos, sin, imageSize, center, length, matrixGet), 70, epsilon); // 24 + 19 + 14 + 9 + 4
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(4, 
-              cos, sin, imageSize, center, length, matrixGet), 115, epsilon); // 21 + 22 + 23 + 24 + 25
+              cos, sin, imageSize, center, length, matrixGet), 75, epsilon); // 25 + 20 + 15 + 10 + 5
 
 
 //cos = std::cos(step * 45); //45 degree
@@ -355,15 +355,15 @@ sin = std::sin(step * 90); //90 degree
 
 
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(0,
-               cos, sin, imageSize, center, length, matrixGet), 75, epsilon); // 25 + 20 + 15 + 10 + 5
+               cos, sin, imageSize, center, length, matrixGet), 115, epsilon); // 25 + 24 + 23 + 22 + 21
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(1,
-               cos, sin, imageSize, center, length, matrixGet), 70, epsilon); // 24 + 19 + 14 + 9 + 4
+               cos, sin, imageSize, center, length, matrixGet), 90, epsilon); // 20 + 19 + 18 + 17 + 16
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(2,
-               cos, sin, imageSize, center, length, matrixGet), 65, epsilon); // 23 + 18 + 13 + 8 + 3
+               cos, sin, imageSize, center, length, matrixGet), 65, epsilon); // 15 + 14 + 13 + 12 + 11
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(3,
-               cos, sin, imageSize, center, length, matrixGet), 60, epsilon); // 22 + 17 + 12 + 7 + 2
+               cos, sin, imageSize, center, length, matrixGet), 40, epsilon); // 10 + 9 + 8 + 7 + 6
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(4,
-               cos, sin, imageSize, center, length, matrixGet), 55, epsilon); // 21 + 16 + 11 + 6 + 1
+               cos, sin, imageSize, center, length, matrixGet), 15, epsilon); // 5 + 4 + 3 + 2 + 1
 }
 
 BOOST_AUTO_TEST_CASE(projection4)
@@ -386,38 +386,38 @@ double step = (M_PI / 180);
 double cos = std::cos(step * 0); //0 degree
 double sin = std::sin(step * 0); //0 degree
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(0, 
-              cos, sin, imageSize, center, length, matrixGet), 1111111, epsilon);
+              cos, sin, imageSize, center, length, matrixGet), 28, epsilon);
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(1,
-              cos, sin, imageSize, center, length, matrixGet), 2222222, epsilon); 
+              cos, sin, imageSize, center, length, matrixGet), 280, epsilon); 
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(2, 
-              cos, sin, imageSize, center, length, matrixGet), 3333333, epsilon);
+              cos, sin, imageSize, center, length, matrixGet), 2800, epsilon);
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(3, 
-              cos, sin, imageSize, center, length, matrixGet), 4444444, epsilon);
+              cos, sin, imageSize, center, length, matrixGet), 28000, epsilon);
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(4, 
-              cos, sin, imageSize, center, length, matrixGet), 5555555, epsilon);
+              cos, sin, imageSize, center, length, matrixGet), 280000, epsilon);
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(5, 
-              cos, sin, imageSize, center, length, matrixGet), 6666666, epsilon);
+              cos, sin, imageSize, center, length, matrixGet), 2800000, epsilon);
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(6, 
-              cos, sin, imageSize, center, length, matrixGet), 7777777, epsilon); 
+              cos, sin, imageSize, center, length, matrixGet), 28000000, epsilon); 
 
 cos = std::cos(step * 90); //90 degree
 sin = std::sin(step * 90); //90 degree
 
 
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(0,
-               cos, sin, imageSize, center, length, matrixGet), 28000000, epsilon);
+               cos, sin, imageSize, center, length, matrixGet), 7777777, epsilon);
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(1,
-               cos, sin, imageSize, center, length, matrixGet), 2800000, epsilon);
+               cos, sin, imageSize, center, length, matrixGet), 6666666, epsilon);
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(2,
-               cos, sin, imageSize, center, length, matrixGet), 280000, epsilon);
+               cos, sin, imageSize, center, length, matrixGet), 5555555, epsilon);
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(3,
-               cos, sin, imageSize, center, length, matrixGet), 28000, epsilon);
+               cos, sin, imageSize, center, length, matrixGet), 4444444, epsilon);
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(4,
-               cos, sin, imageSize, center, length, matrixGet), 2800, epsilon);
+               cos, sin, imageSize, center, length, matrixGet), 3333333, epsilon);
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(5,
-               cos, sin, imageSize, center, length, matrixGet), 280, epsilon);
+               cos, sin, imageSize, center, length, matrixGet), 2222222, epsilon);
 BOOST_REQUIRE_CLOSE(JPetRecoImageTools::calculateProjection2(6,
-               cos, sin, imageSize, center, length, matrixGet), 28, epsilon);
+               cos, sin, imageSize, center, length, matrixGet), 1111111, epsilon);
 }
 
 // This test takes a Shepp-Logan phantom and creates a sinogram.
@@ -445,7 +445,9 @@ BOOST_AUTO_TEST_CASE(sinogram)
   }
   int views = 180;
   int scans = 256;
-  std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram(m, views, scans, 0, 180, JPetRecoImageTools::linear, JPetRecoImageTools::rescale);
+  std::vector<std::vector<double>> result = 
+                      JPetRecoImageTools::sinogram(m, views, scans, 0, 180, 
+                                          JPetRecoImageTools::linear, JPetRecoImageTools::rescale);
   /// save sinogram
   std::ofstream res(outFile);
   res << "P2" << std::endl;
@@ -484,15 +486,98 @@ BOOST_AUTO_TEST_CASE(sinogram2)
       m[i][j] = val;
     }
   }
-  std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram2(m, 180, JPetRecoImageTools::rescale, 0, 255);
+  std::vector<std::vector<double>> result = 
+                        JPetRecoImageTools::sinogram2(m, 180, JPetRecoImageTools::rescale, 0, 255);
   /// save sinogram
   std::ofstream res(outFile);
   res << "P2" << std::endl;
-  res << result.size() << " " << result[0].size() << std::endl;
+  res << result[0].size() << " " << result.size() << std::endl;
   res << "255" << std::endl;
-  for (unsigned int i = 0; i < result[0].size(); i++) {
-    for (unsigned int j = 0; j < result.size(); j++) {
-      res << static_cast<int>(result[j][i]) << " ";
+  for (unsigned int i = 0; i < result.size(); i++) {
+    for (unsigned int j = 0; j < result[0].size(); j++) {
+      res << static_cast<int>(result[i][j]) << " ";
+    }
+    res << std::endl;
+  }
+  res.close();
+  BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
+}
+
+BOOST_AUTO_TEST_CASE(backProject)
+{
+  const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
+  const auto outFile = "backproject.ppm";
+  /// read phantom
+  std::ifstream in(inFile);
+  BOOST_REQUIRE(in);
+  std::string line;
+  getline(in, line);
+  unsigned int width;
+  unsigned int height;
+  in >> width;
+  in >> height;
+  int val;
+  in >> val; // skip max val
+  std::vector<std::vector<int>> m(width, std::vector<int>(height));
+  for (unsigned int i = 0; i < width; i++) {
+    for (unsigned int j = 0; j < height; j++) {
+      in >> val;
+      m[i][j] = val;
+    }
+  }
+  int views = 180;
+  int scans = 256;
+  JPetRecoImageTools::Matrix2DProj sinogram = JPetRecoImageTools::sinogram(m, views, scans, 0, 180, 
+                                          JPetRecoImageTools::linear, JPetRecoImageTools::rescale);
+  JPetRecoImageTools::Matrix2DProj result = 
+                JPetRecoImageTools::backProject(sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
+  std::ofstream res(outFile);
+  res << "P2" << std::endl;
+  res << result[0].size() << " " << result.size() << std::endl;
+  res << "255" << std::endl;
+  for (unsigned int i = 0; i < result.size(); i++) {
+    for (unsigned int j = 0; j < result[0].size(); j++) {
+      res << static_cast<int>(result[i][j]) << " ";
+    }
+    res << std::endl;
+  }
+  res.close();
+  BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
+}
+
+BOOST_AUTO_TEST_CASE(backProject2)
+{
+  const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
+  const auto outFile = "backproject2.ppm";
+  /// read phantom
+  std::ifstream in(inFile);
+  BOOST_REQUIRE(in);
+  std::string line;
+  getline(in, line);
+  unsigned int width;
+  unsigned int height;
+  in >> width;
+  in >> height;
+  int val;
+  in >> val; // skip max val
+  std::vector<std::vector<int>> m(width, std::vector<int>(height));
+  for (unsigned int i = 0; i < width; i++) {
+    for (unsigned int j = 0; j < height; j++) {
+      in >> val;
+      m[i][j] = val;
+    }
+  }
+  JPetRecoImageTools::Matrix2DProj sinogram = 
+                        JPetRecoImageTools::sinogram2(m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::Matrix2DProj result = 
+                JPetRecoImageTools::backProject(sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
+  std::ofstream res(outFile);
+  res << "P2" << std::endl;
+  res << result[0].size() << " " << result.size() << std::endl;
+  res << "255" << std::endl;
+  for (unsigned int i = 0; i < result.size(); i++) {
+    for (unsigned int j = 0; j < result[0].size(); j++) {
+      res << static_cast<int>(result[i][j]) << " ";
     }
     res << std::endl;
   }
