@@ -125,7 +125,20 @@ public:
                                   int rescaleMinCutoff,
                                   int rescaleFactor);
 
+  static void None(Matrix2DProj &sinogram);
+
   static void RamLak(Matrix2DProj &sinogram);
+
+  static void SheppLogan(Matrix2DProj &sinogram);
+  
+  static void Cosine(Matrix2DProj &sinogram);
+
+  static void Hamming(Matrix2DProj &sinogram);
+
+  static void Ridgelet(Matrix2DProj &sinogram);
+
+  static void doFFT1D(Matrix2DProj &sinogram, int nAngles, int nScanSize,
+                      int padlen, std::vector<double> &Filt);
 
   static void doFFT1D(std::vector<double> &Re, std::vector<double> &Im, int size, int shift, bool fast);
 
