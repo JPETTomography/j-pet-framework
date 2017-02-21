@@ -529,7 +529,7 @@ BOOST_AUTO_TEST_CASE(backProject)
   int scans = 256;
   JPetRecoImageTools::Matrix2DProj sinogram = JPetRecoImageTools::sinogram(m, views, scans, 0, 180, 
                                           JPetRecoImageTools::linear, JPetRecoImageTools::rescale);
-  JPetRecoImageTools::filter(sinogram);
+  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::RamLak, sinogram);
   JPetRecoImageTools::Matrix2DProj result = 
                 JPetRecoImageTools::backProject(sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
