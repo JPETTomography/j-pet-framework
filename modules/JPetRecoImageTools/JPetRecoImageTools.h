@@ -137,18 +137,18 @@ public:
 
   static void Ridgelet(Matrix2DProj &sinogram);
 
+private:
+  JPetRecoImageTools();
+  ~JPetRecoImageTools();
+  JPetRecoImageTools(const JPetRecoImageTools&) = delete;
+  JPetRecoImageTools& operator=(const JPetRecoImageTools&) = delete;
+
   static void doFFT1D(Matrix2DProj &sinogram, int nAngles, int nScanSize,
                       int padlen, std::vector<double> &Filt);
 
   static void doFFT1D(std::vector<double> &Re, std::vector<double> &Im, int size, int shift, bool fast);
 
   static void doIFFT1D(std::vector<double> &Re, std::vector<double> &Im, int size, int shift, bool fast);
-
-private:
-  JPetRecoImageTools();
-  ~JPetRecoImageTools();
-  JPetRecoImageTools(const JPetRecoImageTools&) = delete;
-  JPetRecoImageTools& operator=(const JPetRecoImageTools&) = delete;
 
   static inline double setToZeroIfSmall(double value, double epsilon) {
     if (std::abs(value) < epsilon) return 0;
