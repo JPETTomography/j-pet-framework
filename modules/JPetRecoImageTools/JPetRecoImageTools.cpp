@@ -112,9 +112,9 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram2(
 {
   int imageSize = emissionMatrix[0].size();
   double center = (double)(imageSize - 1) / 2.0;
-
+  double center2 = center * center;
   double angleStep = M_PI / nAngles;
-  double length = center * center;
+  
   Matrix2DProj proj(imageSize, std::vector<double>(nAngles));
   std::function<double(int, int)> matrixGet;
   matrixGet = matrixGetterFactory(emissionMatrix, false); // The matrix  elements will be taken as (x,y).
@@ -124,7 +124,7 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram2(
     double sin = std::sin((double)angle * angleStep);
     for (int scanNumber = 0; scanNumber < imageSize - 1; scanNumber++)
     {
-      proj[scanNumber][angle] = calculateProjection2(scanNumber, cos, sin, imageSize, center, length, matrixGet);
+      proj[scanNumber][angle] = calculateProjection2(scanNumber, cos, sin, imageSize, center, center2, matrixGet);
     }
   }
   rescaleFunc(proj, rescaleMinCutoff, rescaleFactor);
@@ -132,13 +132,13 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::sinogram2(
 }
 
 double JPetRecoImageTools::calculateProjection2(int step, double cos, double sin,
-                                                int imageSize, double center, double length,
+                                                int imageSize, double center, double center2,
                                                 std::function<double(int, int)> matrixGet)
 {
   double stepMinusCenter = step - center;
   double xtmp = center + stepMinusCenter * cos;
   double ytmp = center - stepMinusCenter * sin;
-  int nmin = step == 0 || step == imageSize - 1 ? 0 : std::floor(center - std::sqrt((length - (stepMinusCenter * stepMinusCenter))));
+  int nmin = step == 0 || step == imageSize - 1 ? 0 : std::floor(center - std::sqrt((center2 - (stepMinusCenter * stepMinusCenter))));
   double p = 0.0;
   for (int n = nmin; n < imageSize - nmin; n++)
   {
@@ -241,30 +241,30 @@ void JPetRecoImageTools::rescale(Matrix2DProj &matrix, double minCutoff, double 
   }
 }
 
-JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::backProject(Matrix2DProj &sinogram, int Nangles,
+JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::backProject(Matrix2DProj &sinogram, int nAngles,
                                                                  RescaleFunc rescaleFunc,
                                                                  int rescaleMinCutoff,
                                                                  int rescaleFactor)
 {
-  int N = sinogram.size();
-  double center = (double)(N - 1) / 2.0F;
+  int imageSize = sinogram.size();
+  double center = (double)(imageSize - 1) / 2.0F;
   double center2 = center * center;
-  double angstep = M_PI / (double)Nangles;
+  double angleStep = M_PI / (double)nAngles;
 
-  Matrix2DProj reconst(N, std::vector<double>(N));
+  Matrix2DProj reconst(imageSize, std::vector<double>(imageSize));
 
-  for (int j = 0; j < Nangles; ++j)
+  for (int j = 0; j < nAngles; ++j)
   {
-    double co = std::cos((double)j * (double)angstep);
-    double si = std::sin((double)j * (double)angstep);
+    double co = std::cos((double)j * (double)angleStep);
+    double si = std::sin((double)j * (double)angleStep);
 
-    for (int k = 0; k < N; ++k)
+    for (int k = 0; k < imageSize; ++k)
     {
       double k_minus_center = (double)k - center;
       double ttemp = k_minus_center * co + center;
       double kmc2 = k_minus_center * k_minus_center;
 
-      for (int l = 0; l < N; ++l)
+      for (int l = 0; l < imageSize; ++l)
       {
         double l_minus_center = (double)l - center;
         if (l_minus_center * l_minus_center + kmc2 < center2)
@@ -277,18 +277,18 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::backProject(Matrix2DProj &s
     }
   }
 
-  for (int k = 0; k < N; ++k)
+  for (int k = 0; k < imageSize; ++k)
   {
-    for (int l = 0; l < N; ++l)
+    for (int l = 0; l < imageSize; ++l)
     {
-      reconst[l][k] *= angstep;
+      reconst[l][k] *= angleStep;
     }
   }
   rescaleFunc(reconst, rescaleMinCutoff, rescaleFactor);
   return reconst;
 }
 
-void JPetRecoImageTools::filter(Matrix2DProj &sinogram)
+void JPetRecoImageTools::RamLak(Matrix2DProj &sinogram)
 {
   int nang = sinogram[0].size();
   int ny = sinogram.size();
