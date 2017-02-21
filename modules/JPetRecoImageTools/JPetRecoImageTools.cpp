@@ -293,34 +293,163 @@ JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::backProject(Matrix2DProj &s
   return reconstructedProjection;
 }
 
+void JPetRecoImageTools::None(Matrix2DProj &sinogram)
+{
+  int nAngles = sinogram[0].size();
+  int nScanSize = sinogram.size();
+  int pow = std::round(std::log(nScanSize) / std::log(2.0));
+  int padlen = std::round(std::pow(2.0, pow + 1));
+  std::vector<double> Filt(padlen);
+  int highest = std::round(padlen / 2);
+  Filt[0] = 0.;
+  for (int j = 0; j < highest; j++)
+  {
+    Filt[j] = 1. / (double)padlen;
+    Filt[padlen - j] = 1. / (double)padlen;
+  }
+  Filt[highest] = 1. / (double)padlen;
+
+  doFFT1D(sinogram, nAngles, nScanSize, padlen, Filt);
+}
+
 void JPetRecoImageTools::RamLak(Matrix2DProj &sinogram)
 {
-  int nang = sinogram[0].size();
-  int ny = sinogram.size();
-  int pow = std::round(std::log(ny) / std::log(2.0));
+  int nAngles = sinogram[0].size();
+  int nScanSize = sinogram.size();
+  int pow = std::round(std::log(nScanSize) / std::log(2.0));
   int padlen = std::round(std::pow(2.0, pow + 1));
   std::vector<double> Re(padlen);
   std::vector<double> Im(padlen);
-  std::vector<double> col(ny);
+  std::vector<double> col(nScanSize);
   std::vector<double> Filt(padlen);
-  int Highest = std::round(padlen / 2);
-  double nu;
+  int highest = std::round(padlen / 2);
+  double nu = 0.;
   Filt[0] = 0.;
-  for (int j = 0; j < Highest; j++)
+  for (int j = 1; j < highest; j++)
   {
     nu = (double)j / (double)padlen;
     Filt[j] = nu;
     Filt[padlen - j] = nu;
   }
-  Filt[Highest] = (double)Highest / (double)padlen;
-  for (int k = 0; k < nang; k++)
+  Filt[highest] = (double)highest / (double)padlen;
+
+  doFFT1D(sinogram, nAngles, nScanSize, padlen, Filt);
+}
+
+void JPetRecoImageTools::SheppLogan(Matrix2DProj &sinogram)
+{
+  int nAngles = sinogram[0].size();
+  int nScanSize = sinogram.size();
+  int pow = std::round(std::log(nScanSize) / std::log(2.0));
+  int padlen = std::round(std::pow(2.0, pow + 1));
+  std::vector<double> Re(padlen);
+  std::vector<double> Im(padlen);
+  std::vector<double> col(nScanSize);
+  std::vector<double> Filt(padlen);
+  int highest = std::round(padlen / 2);
+  double nu = 0.;
+  Filt[0] = 0.;
+  for (int j = 1; j < highest; j++)
   {
-    for (int l = 0; l < ny; l++)
+    nu = (double)j / (double)padlen;
+    Filt[j] = std::sin(M_PI * nu) / M_PI;
+    Filt[padlen - j] = Filt[j];
+  }
+  nu = (double)highest / (double)padlen;
+  Filt[highest] = std::sin(M_PI * nu) / M_PI;
+
+  doFFT1D(sinogram, nAngles, nScanSize, padlen, Filt);
+}
+
+void JPetRecoImageTools::Cosine(Matrix2DProj &sinogram)
+{
+  int nAngles = sinogram[0].size();
+  int nScanSize = sinogram.size();
+  int pow = std::round(std::log(nScanSize) / std::log(2.0));
+  int padlen = std::round(std::pow(2.0, pow + 1));
+  std::vector<double> Re(padlen);
+  std::vector<double> Im(padlen);
+  std::vector<double> col(nScanSize);
+  std::vector<double> Filt(padlen);
+  int highest = std::round(padlen / 2);
+  double nu = 0.;
+  Filt[0] = 0.;
+  for (int j = 1; j < highest; j++)
+  {
+    nu = (double)j / (double)padlen;
+    Filt[j] = nu * std::cos(M_PI * nu);
+    Filt[padlen - j] = Filt[j];
+  }
+  nu = (double)highest / (double)padlen;
+  Filt[highest] = nu * std::cos(M_PI * nu);
+
+  doFFT1D(sinogram, nAngles, nScanSize, padlen, Filt);
+}
+
+void JPetRecoImageTools::Hamming(Matrix2DProj &sinogram)
+{
+  int nAngles = sinogram[0].size();
+  int nScanSize = sinogram.size();
+  int pow = std::round(std::log(nScanSize) / std::log(2.0));
+  int padlen = std::round(std::pow(2.0, pow + 1));
+  std::vector<double> Re(padlen);
+  std::vector<double> Im(padlen);
+  std::vector<double> col(nScanSize);
+  std::vector<double> Filt(padlen);
+  int highest = std::round(padlen / 2);
+  double nu = 0.;
+  Filt[0] = 0.;
+  double alpha = 0.5;
+  for (int j = 1; j < highest; j++)
+  {
+    nu = (double)j / (double)padlen;
+    Filt[j] = nu * (alpha + (1. - alpha) * std::cos(2 * M_PI * nu));
+    Filt[padlen - j] = Filt[j];
+  }
+  nu = (double)highest / (double)padlen;
+  Filt[highest] = nu * (alpha + (1. - alpha) * std::cos(2 * M_PI * nu));
+
+  doFFT1D(sinogram, nAngles, nScanSize, padlen, Filt);
+}
+
+void JPetRecoImageTools::Ridgelet(Matrix2DProj &sinogram)
+{
+  int nAngles = sinogram[0].size();
+  int nScanSize = sinogram.size();
+  int pow = std::round(std::log(nScanSize) / std::log(2.0));
+  int padlen = std::round(std::pow(2.0, pow + 1));
+  std::vector<double> Re(padlen);
+  std::vector<double> Im(padlen);
+  std::vector<double> col(nScanSize);
+  std::vector<double> Filt(padlen);
+  int highest = std::round(padlen / 2);
+  double nu = 0.;
+  Filt[0] = 0.;
+  for (int j = 1; j < highest; j++)
+  {
+    nu = (double)j / (double)padlen;
+    Filt[j] = std::sqrt(nu);
+    Filt[padlen - j] = Filt[j];
+  }
+  nu = (double)highest / (double)padlen;
+  Filt[highest] = std::sqrt(nu);
+
+  doFFT1D(sinogram, nAngles, nScanSize, padlen, Filt);
+}
+
+void JPetRecoImageTools::doFFT1D(Matrix2DProj &sinogram, int nAngles, int nScanSize,
+      int padlen, std::vector<double> &Filt)
+{
+  std::vector<double> Re(padlen);
+  std::vector<double> Im(padlen);
+  for (int k = 0; k < nAngles; k++)
+  {
+    for (int l = 0; l < nScanSize; l++)
     {
       Re[l] = sinogram[l][k];
       Im[l] = 0.;
     }
-    for (int l = ny; l < padlen; l++)
+    for (int l = nScanSize; l < padlen; l++)
     {
       Re[l] = 0.;
       Im[l] = 0.;
@@ -332,7 +461,7 @@ void JPetRecoImageTools::RamLak(Matrix2DProj &sinogram)
       Im[l] *= Filt[l];
     }
     doIFFT1D(Re, Im, padlen, 0, true);
-    for (int l = 0; l < ny; l++)
+    for (int l = 0; l < nScanSize; l++)
     {
       sinogram[l][k] = Re[l];
     }
