@@ -20,6 +20,10 @@
 #include <cmath>
 #include <functional>
 
+#include <boost/function_types/result_type.hpp>
+#include <boost/function_types/parameter_types.hpp>
+#include <boost/function_types/function_type.hpp>
+
 class JPetRecoImageTools
 {
 public:
@@ -28,6 +32,27 @@ public:
   using InterpolationFunc = std::function<double(int i, double y, std::function<double(int, int)>&)>;
   using RescaleFunc = std::function<void(Matrix2DProj& v, double minCutoff, double rescaleFactor)>;
 
+  template<typename Functor, typename... T>
+  static void FilterFunc(Functor f, Matrix2DProj &sinogram, T... args)
+  {
+    namespace ft = boost::function_types;
+
+    typedef typename ft::result_type<Functor>::type result_type;
+    typedef ft::parameter_types<Functor> parameter_types;
+    typedef typename boost::mpl::push_front<
+        parameter_types
+        , result_type
+    >::type sequence_type;
+    // sequence_type is now a Boost.MPL sequence in the style of
+    // mpl::vector<int, double, long> if the signature of the
+    // analyzed functor were int(double, long)
+
+    // We now build a function type out of the MPL sequence
+    typedef typename ft::function_type<sequence_type>::type function_type;
+
+    std::function<function_type> function = std::move(f);
+    function(sinogram, std::forward(args)...);
+  }
   /// Returns a matrixGetter, that can be used to return matrix elements in the following way:
   /// if isTransposed is set to false, matrixGetter returns matrix[i][j]
   /// else matrixGetter returns matrix[j][i].
@@ -100,7 +125,7 @@ public:
                                   int rescaleMinCutoff,
                                   int rescaleFactor);
 
-  static void filter(Matrix2DProj &sinogram);
+  static void RamLak(Matrix2DProj &sinogram);
 
   static void doFFT1D(std::vector<double> &Re, std::vector<double> &Im, int size, int shift, bool fast);
 
