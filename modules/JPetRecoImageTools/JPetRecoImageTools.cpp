@@ -318,9 +318,6 @@ void JPetRecoImageTools::RamLak(Matrix2DProj &sinogram)
   int nScanSize = sinogram.size();
   int pow = std::round(std::log(nScanSize) / std::log(2.0));
   int padlen = std::round(std::pow(2.0, pow + 1));
-  std::vector<double> Re(padlen);
-  std::vector<double> Im(padlen);
-  std::vector<double> col(nScanSize);
   std::vector<double> Filt(padlen);
   int highest = std::round(padlen / 2);
   double nu = 0.;
@@ -342,9 +339,6 @@ void JPetRecoImageTools::SheppLogan(Matrix2DProj &sinogram)
   int nScanSize = sinogram.size();
   int pow = std::round(std::log(nScanSize) / std::log(2.0));
   int padlen = std::round(std::pow(2.0, pow + 1));
-  std::vector<double> Re(padlen);
-  std::vector<double> Im(padlen);
-  std::vector<double> col(nScanSize);
   std::vector<double> Filt(padlen);
   int highest = std::round(padlen / 2);
   double nu = 0.;
@@ -367,9 +361,6 @@ void JPetRecoImageTools::Cosine(Matrix2DProj &sinogram)
   int nScanSize = sinogram.size();
   int pow = std::round(std::log(nScanSize) / std::log(2.0));
   int padlen = std::round(std::pow(2.0, pow + 1));
-  std::vector<double> Re(padlen);
-  std::vector<double> Im(padlen);
-  std::vector<double> col(nScanSize);
   std::vector<double> Filt(padlen);
   int highest = std::round(padlen / 2);
   double nu = 0.;
@@ -392,9 +383,6 @@ void JPetRecoImageTools::Hamming(Matrix2DProj &sinogram)
   int nScanSize = sinogram.size();
   int pow = std::round(std::log(nScanSize) / std::log(2.0));
   int padlen = std::round(std::pow(2.0, pow + 1));
-  std::vector<double> Re(padlen);
-  std::vector<double> Im(padlen);
-  std::vector<double> col(nScanSize);
   std::vector<double> Filt(padlen);
   int highest = std::round(padlen / 2);
   double nu = 0.;
@@ -418,9 +406,6 @@ void JPetRecoImageTools::Ridgelet(Matrix2DProj &sinogram)
   int nScanSize = sinogram.size();
   int pow = std::round(std::log(nScanSize) / std::log(2.0));
   int padlen = std::round(std::pow(2.0, pow + 1));
-  std::vector<double> Re(padlen);
-  std::vector<double> Im(padlen);
-  std::vector<double> col(nScanSize);
   std::vector<double> Filt(padlen);
   int highest = std::round(padlen / 2);
   double nu = 0.;
