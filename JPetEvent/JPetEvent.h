@@ -65,6 +65,6 @@ protected:
   JPetEventType fType;
 #endif
 
-  ClassDef(JPetEvent, 1);
+  ClassDef(JPetEvent, 2);
 };
 #endif /*  !JPETEVENT_H */
