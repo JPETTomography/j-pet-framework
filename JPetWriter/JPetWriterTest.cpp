@@ -13,6 +13,8 @@
 #include "../JPetLOR/JPetLOR.h"
 #include "../JPetWriter/JPetWriter.h"
 #include "../JPetReader/JPetReader.h"
+#include <iostream>
+
 
 
 //  JPetWriter(const char *p_fileName);
@@ -217,5 +219,20 @@ BOOST_AUTO_TEST_CASE( saving_different_objects8 )
   if(boost::filesystem::exists(fileTest))
           boost::filesystem::remove(fileTest);
 } 
+
+BOOST_AUTO_TEST_CASE( write_and_check_if_exists)
+{
+  JPetWriter writer("test.root");
+  writer.closeFile();
+  BOOST_REQUIRE(boost::filesystem::exists("test.root"));
+}
+
+BOOST_AUTO_TEST_CASE( number_of_objects )
+{
+  JPetWriter writer("test.root");
+  //writer.write
+  writer.closeFile();
+
+}
 
 BOOST_AUTO_TEST_SUITE_END()
