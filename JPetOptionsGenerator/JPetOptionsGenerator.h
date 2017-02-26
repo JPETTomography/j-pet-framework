@@ -22,6 +22,9 @@ class JPetOptionsGenerator;
 #include <string>
 #include "../JPetCmdParser/JPetCmdParser.h"
 #include "../JPetOptions/JPetOptions.h"
+#include <boost/any.hpp>
+#include <typeinfo>
+#include <iostream>
 
 class JPetOptionsGenerator
 {
