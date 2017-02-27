@@ -55,7 +55,7 @@ public:
   virtual bool nextEvent();
   virtual bool firstEvent();
   virtual bool lastEvent();
-  virtual bool nthEvent(int n);
+  virtual bool nthEvent(long long n);
   virtual long long getCurrentEventNumber() const {
     return fCurrentEventNumber;
   }
