@@ -14,6 +14,9 @@
 #include "../JPetWriter/JPetWriter.h"
 #include "../JPetReader/JPetReader.h"
 #include <iostream>
+#include "TTreeReader.h"
+#include "TTreeReaderValue.h
+
 
 
 
@@ -113,6 +116,12 @@ BOOST_AUTO_TEST_CASE( saving_different_objects1 )
     JPetSigCh testJPetSigCh;
     writer.write(testJPetSigCh);
   }
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+  TFile *f = TFile::Open(fileTest);
+  BOOST_REQUIRE(f);
+  BOOST_REQUIRE(!(f->IsZombie()));
+  //feeader myReader("ntuple", f);
+  delete f;  
   if(boost::filesystem::exists(fileTest))
           boost::filesystem::remove(fileTest);
 } 
@@ -127,6 +136,8 @@ BOOST_AUTO_TEST_CASE( saving_different_objects2 )
     JPetTimeWindow testJPetTimeWindow;
     writer.write(testJPetTimeWindow);
   }
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+
   if(boost::filesystem::exists(fileTest))
           boost::filesystem::remove(fileTest);
 } 
@@ -142,6 +153,8 @@ BOOST_AUTO_TEST_CASE( saving_different_objects3 )
     JPetBaseSignal testJPetBaseSignal;
     writer.write(testJPetBaseSignal);
   }
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+
   if(boost::filesystem::exists(fileTest))
           boost::filesystem::remove(fileTest);
 } 
@@ -156,6 +169,8 @@ BOOST_AUTO_TEST_CASE( saving_different_objects4 )
     JPetRawSignal testJPetRawSignal;
     writer.write(testJPetRawSignal);
   }
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+
   if(boost::filesystem::exists(fileTest))
           boost::filesystem::remove(fileTest);
 } 
@@ -171,6 +186,8 @@ BOOST_AUTO_TEST_CASE( saving_different_objects5 )
     JPetRecoSignal testJPetRecoSignal;
     writer.write(testJPetRecoSignal);
   }
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+
   if(boost::filesystem::exists(fileTest))
           boost::filesystem::remove(fileTest);
 } 
@@ -186,6 +203,8 @@ BOOST_AUTO_TEST_CASE( saving_different_objects6 )
     JPetPhysSignal testJPetPhysSignal;
     writer.write(testJPetPhysSignal);
   }
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+
   if(boost::filesystem::exists(fileTest))
           boost::filesystem::remove(fileTest);
 } 
@@ -201,6 +220,8 @@ BOOST_AUTO_TEST_CASE( saving_different_objects7 )
     JPetHit testJPetHit;
     writer.write(testJPetHit);
   }
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+
   if(boost::filesystem::exists(fileTest))
           boost::filesystem::remove(fileTest);
 } 
@@ -216,23 +237,11 @@ BOOST_AUTO_TEST_CASE( saving_different_objects8 )
     JPetLOR testJPetLOR;
     writer.write(testJPetLOR);
   }
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+
   if(boost::filesystem::exists(fileTest))
           boost::filesystem::remove(fileTest);
 } 
 
-BOOST_AUTO_TEST_CASE( write_and_check_if_exists)
-{
-  JPetWriter writer("test.root");
-  writer.closeFile();
-  BOOST_REQUIRE(boost::filesystem::exists("test.root"));
-}
-
-BOOST_AUTO_TEST_CASE( number_of_objects )
-{
-  JPetWriter writer("test.root");
-  //writer.write
-  writer.closeFile();
-
-}
 
 BOOST_AUTO_TEST_SUITE_END()
