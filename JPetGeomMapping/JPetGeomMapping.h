@@ -17,15 +17,17 @@
 #define JPETGEOMMAPPING_H
 #include <cstddef>
 #include <vector>
+#include <map>
 #include "../JPetLayer/JPetLayer.h"
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
+#include "../JPetPM/JPetPM.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetGeomMappingInterface/JPetGeomMappingInterface.h"
 
 class JPetGeomMapping: public JPetGeomMappingInterface
 {
 public:
-  JPetGeomMapping(const JPetParamBank& paramBank);
+  explicit JPetGeomMapping(const JPetParamBank& paramBank);
   virtual ~JPetGeomMapping();
   virtual const size_t getLayersCount()const override;
   virtual const size_t getLayerNumber(const JPetLayer& layer)const override;
@@ -36,9 +38,12 @@ public:
   virtual const std::vector<size_t> getLayersSizes() const override;
   const size_t calcDeltaID(const JPetBarrelSlot& slot1, const JPetBarrelSlot& slot2) const;
   const size_t calcGlobalPMTNumber(const JPetPM& pmt) const;
+  static const size_t kBadLayerNumber;
+  static const size_t kBadSlotNumber;
 private:
-  std::vector<double> fRadii;
-  std::vector<std::vector<double>> fTheta;
+  std::map<double, int> fRadiusToLayer;
+  std::vector<std::map<double, int> > fThetaToSlot;
+  std::vector<int> fNumberOfSlotsInLayer;
 };
 
 #endif /*  !JPETGEOMMAPPING_H */
