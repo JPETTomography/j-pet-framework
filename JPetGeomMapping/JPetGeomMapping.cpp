@@ -17,52 +17,100 @@
 
 using namespace std;
 
+const size_t JPetGeomMapping::kBadLayerNumber = 99999999;
+const size_t JPetGeomMapping::kBadSlotNumber = 99999999;
+
 JPetGeomMapping::JPetGeomMapping(const JPetParamBank& paramBank)
 {
+  vector<double> layersRadii;
+  vector<vector<double> > slotsTheta;
   for (auto & layer : paramBank.getLayers() ) {
     double radius = layer.second->getRadius();
-    fRadii.push_back(radius);
-    fTheta.push_back(vector<double>());
+    layersRadii.push_back(radius);
+    fNumberOfSlotsInLayer.push_back(0);
+    map<double, int> slots_map;
+    fThetaToSlot.push_back(slots_map);
+    vector<double> slots_theta;
+    slotsTheta.push_back(slots_theta);
   }
-  sort( fRadii.begin(), fRadii.end(), less<double>() );
+  sort( layersRadii.begin(), layersRadii.end(), less<double>() );
+  int layer_counter = 1;
+  for (const auto & radius : layersRadii ) {
+    fRadiusToLayer[ radius ] = layer_counter++;
+  }
   for (const auto & slot : paramBank.getBarrelSlots()) {
-    const int layer_number = getLayerNumber( slot.second->getLayer() );
-    fTheta[layer_number - 1].push_back(slot.second->getTheta());
+    int layer_number = getLayerNumber( slot.second->getLayer() );
+    fNumberOfSlotsInLayer[layer_number - 1]++;
+    slotsTheta[layer_number - 1].push_back(slot.second->getTheta());
   }
-  for (auto & thetas : fTheta)
+  vector<int> slotCounters;
+  int layerNumber = 1;
+  for (auto & thetas : slotsTheta) {
+    slotCounters.push_back(1);
     sort( thetas.begin(), thetas.end(), less<double>() );
+    for (const double & theta : thetas) {
+      fThetaToSlot[layerNumber - 1][theta] = slotCounters[layerNumber - 1]++;
+    }
+    layerNumber++;
+  }
 }
 
 JPetGeomMapping::~JPetGeomMapping() {}
+
 const size_t JPetGeomMapping::getLayersCount() const
 {
-  return fRadii.size();
-}
-const size_t JPetGeomMapping::getLayerNumber(const JPetLayer& layer) const
-{
-  size_t res = 0;
-  while (layer.getRadius() != fRadii[res])
-    res++;
-  return res + 1;
+  return fRadiusToLayer.size();
 }
 
-const size_t JPetGeomMapping::getSlotsCount(const size_t layer) const
+const size_t JPetGeomMapping::getLayerNumber(const JPetLayer& layer) const
 {
-  return fTheta[layer - 1].size();
+  auto radius = layer.getRadius();
+  if (fRadiusToLayer.find(radius) != fRadiusToLayer.end()) {
+    return fRadiusToLayer.at(radius);
+  } else {
+    ERROR("No layer for radius:" + std::to_string(radius) + " found.");
+    return JPetGeomMapping::kBadLayerNumber;
+  }
 }
 
 const size_t JPetGeomMapping::getSlotsCount(const JPetLayer& layer) const
 {
-  return fTheta[getLayerNumber(layer) - 1].size();
+  std::cout << "wat" << std::endl;
+  auto layerNr = getLayerNumber(layer);
+  std::cout << "ok" << std::endl;
+  std::cout << layerNr << std::endl;
+  if (fNumberOfSlotsInLayer.size() > layerNr) {
+    return fNumberOfSlotsInLayer.at(layerNr - 1);//??????? it's very strange thing
+  } else {
+    ERROR("No slot counts found for layer:" + std::to_string(layerNr));
+    return JPetGeomMapping::kBadLayerNumber;
+  }
+}
+
+const size_t JPetGeomMapping::getSlotsCount(const size_t layerNr) const
+{
+  if ((fNumberOfSlotsInLayer.size() >= layerNr) && (layerNr > 0)) {
+    return fNumberOfSlotsInLayer.at(layerNr - 1);
+  } else {
+    ERROR("No slot counts found for layer:" + std::to_string(layerNr));
+    return JPetGeomMapping::kBadSlotNumber;
+  }
 }
 
 const size_t JPetGeomMapping::getSlotNumber(const JPetBarrelSlot& slot) const
 {
-  const auto& theta = fTheta[getLayerNumber(slot.getLayer()) - 1];
-  size_t res = 0;
-  while (slot.getTheta() != theta[res])
-    res++;
-  return res + 1;
+  auto layerNr = getLayerNumber(slot.getLayer());
+  auto theta = slot.getTheta();
+  if ((fNumberOfSlotsInLayer.size() <  layerNr) || (layerNr <= 0)) {
+    ERROR("No slot counts found for layer:" + std::to_string(layerNr));
+    return JPetGeomMapping::kBadSlotNumber;
+  }
+  auto index = layerNr - 1;
+  if (fThetaToSlot.at(index).find(theta) == fThetaToSlot.at(index).end()) {
+    ERROR("No slot number found for theta :" + std::to_string(theta) + " in layer:" + std::to_string(layerNr));
+    return JPetGeomMapping::kBadSlotNumber;
+  }
+  return fThetaToSlot.at(index).at(theta);
 }
 
 const StripPos JPetGeomMapping::getStripPos(const JPetBarrelSlot& slot)const
@@ -81,26 +129,26 @@ const vector< size_t > JPetGeomMapping::getLayersSizes() const
 const size_t JPetGeomMapping::calcDeltaID(const JPetBarrelSlot& slot1, const JPetBarrelSlot& slot2) const
 {
   if (slot1.getLayer().getID() == slot2.getLayer().getID()) {
-    auto delta_ID = size_t(abs(int(getSlotNumber(slot1)) - int(getSlotNumber(slot2))));
-    auto layer_size = getSlotsCount(slot1.getLayer());
-    auto half_layer_size = layer_size / 2;
+    int delta_ID = abs(getSlotNumber(slot1) - getSlotNumber(slot2));
+    int layer_size = getSlotsCount(slot1.getLayer());
+    int half_layer_size = layer_size / 2;
     if ( delta_ID > half_layer_size ) return layer_size - delta_ID;
     return delta_ID;
   }
   ERROR("attempt to calc deltaID for strips from different layers");
   return -1;
 }
-
 const size_t JPetGeomMapping::calcGlobalPMTNumber(const JPetPM& pmt) const
 {
+  return -1;
   const size_t number_of_sides = 2;
   const auto layer_number = getLayerNumber(pmt.getBarrelSlot().getLayer());
   size_t pmt_no = 0;
   for (size_t l = 1; l < layer_number; l++)
-    pmt_no += number_of_sides * fTheta[l - 1].size();
+    pmt_no += number_of_sides * fThetaToSlot[l - 1].size();
   const auto slot_number = getSlotNumber(pmt.getBarrelSlot());
   if ( pmt.getSide() == JPetPM::SideB )
-    pmt_no += fTheta[layer_number - 1].size();
+    pmt_no += fThetaToSlot[layer_number - 1].size();
   pmt_no += slot_number - 1;
   return pmt_no;
 }
