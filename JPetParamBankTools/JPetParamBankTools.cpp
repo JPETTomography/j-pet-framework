@@ -44,7 +44,7 @@ std::map<std::tuple<int, int, JPetPM::Side, int>, int> JPetParamBankTools::getTO
       errorOccured = true;
       break;
     }
-    auto threshold = ch->getThreshold();
+    auto threshold = ch->getLocalChannelNumber();
     auto pm_side = ch->getPM().getSide();
     auto layer_id = ch->getPM().getScin().getBarrelSlot().getLayer().getID();
     auto barrel_slot_id = ch->getPM().getScin().getBarrelSlot().getID();
