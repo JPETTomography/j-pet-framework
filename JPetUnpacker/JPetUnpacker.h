@@ -34,15 +34,20 @@ class JPetUnpacker: public TObject
   inline int getEventsToProcess() const { return fEventsToProcess; }
   inline std::string getHldFile() const { return fHldFile; }
   inline std::string getCfgFile() const { return fCfgFile; }
-  void setParams(const std::string& hldFile, int numOfEvents = 100000000, const std::string& cfgFile = "conf_trb3.xml");
+  inline std::string getCalibFile() const { return fCalibFile; }
+  void setParams(const std::string& hldFile,
+                 int numOfEvents = 100000000,
+                 const std::string& cfgFile = "conf_trb3.xml",
+                 const std::string& calibFile = "");
 
-  ClassDef(JPetUnpacker, 1);
+  ClassDef(JPetUnpacker, 2);
 
  private:
   Unpacker2* fUnpacker;  
   int fEventsToProcess;
   std::string fHldFile;
   std::string fCfgFile;
+  std::string fCalibFile;
 };
 
 #endif

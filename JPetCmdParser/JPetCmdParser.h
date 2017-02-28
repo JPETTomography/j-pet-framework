@@ -35,7 +35,7 @@ public:
   inline const po::options_description getOptionsDescription() const {
     return fOptionsDescriptions;
   }
-  std::vector<JPetOptions> generateOptions(const po::variables_map& cmdLineOptions) const;
+  std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap, const std::map<std::string, std::string>& additionalOptions = {}) const;
 
   bool areCorrectOptions(const po::variables_map& options) const;
   inline const std::vector<std::string>& getFileNames(const po::variables_map& variablesMap) const {
@@ -101,6 +101,20 @@ public:
     return variablesMap["localDBCreate"].as<std::string>();
   }
 
+  static inline bool isUnpackerConfigFileSet(const po::variables_map& variablesMap) {
+    return variablesMap.count("unpackerConfigFile") > 0;
+  }
+  static inline std::string getUnpackerConfigFile(const po::variables_map& variablesMap) {
+    return variablesMap["unpackerConfigFile"].as<std::string>();
+  }
+
+  static inline bool isUnpackerCalibFileSet(const po::variables_map& variablesMap) {
+    return variablesMap.count("unpackerCalibFile") > 0;
+  }
+  static inline std::string getUnpackerCalibFile(const po::variables_map& variablesMap) {
+    return variablesMap["unpackerCalibFile"].as<std::string>();
+  }
+  
 protected:
   po::options_description fOptionsDescriptions;
 
