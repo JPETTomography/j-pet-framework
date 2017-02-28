@@ -53,6 +53,7 @@ JPetGeomMapping::JPetGeomMapping(const JPetParamBank& paramBank)
     }
     layerNumber++;
   }
+  fTOMBs = getTOMBMap(paramBank);
 }
 
 JPetGeomMapping::~JPetGeomMapping() {}
@@ -80,7 +81,7 @@ const size_t JPetGeomMapping::getSlotsCount(const JPetLayer& layer) const
   std::cout << "ok" << std::endl;
   std::cout << layerNr << std::endl;
   if (fNumberOfSlotsInLayer.size() > layerNr) {
-    return fNumberOfSlotsInLayer.at(layerNr - 1);//??????? it's very strange thing
+    return fNumberOfSlotsInLayer.at(layerNr - 1);
   } else {
     ERROR("No slot counts found for layer:" + std::to_string(layerNr));
     return JPetGeomMapping::kBadLayerNumber;
@@ -138,6 +139,7 @@ const size_t JPetGeomMapping::calcDeltaID(const JPetBarrelSlot& slot1, const JPe
   ERROR("attempt to calc deltaID for strips from different layers");
   return -1;
 }
+
 const size_t JPetGeomMapping::calcGlobalPMTNumber(const JPetPM& pmt) const
 {
   return -1;
@@ -151,4 +153,63 @@ const size_t JPetGeomMapping::calcGlobalPMTNumber(const JPetPM& pmt) const
     pmt_no += fThetaToSlot[layer_number - 1].size();
   pmt_no += slot_number - 1;
   return pmt_no;
+}
+
+std::map<std::tuple<int, int, JPetPM::Side, int>, int> JPetGeomMapping::getTOMBMap(const JPetParamBank& bank) const
+{
+  auto tombChannels = bank.getTOMBChannels();
+  std::map<std::tuple<int, int, JPetPM::Side, int>, int> result;
+  bool errorOccured = false;
+  for (const auto & el : tombChannels) {
+    assert(el.second);
+    assert(el.first == el.second->getChannel());
+    auto tomb_id = el.first;
+    auto ch = el.second;
+    if (! el.second) {
+      ERROR("No TOMB channel set!");
+      errorOccured = true;
+      break;
+    }
+    if (el.first != el.second->getChannel()) {
+      ERROR("Mismatch in TOMB Channel numbering!");
+      errorOccured = true;
+      break;
+    }
+    if (ch->getPM().isNullObject() ||
+        ch->getPM().getScin().isNullObject() ||
+        ch->getPM().getScin().getBarrelSlot().isNullObject() ||
+        ch->getPM().getScin().getBarrelSlot().getLayer().isNullObject()) {
+      ERROR("Some parameter object is not set!");
+      errorOccured = true;
+      break;
+    }
+    auto threshold = ch->getLocalChannelNumber();
+    auto pm_side = ch->getPM().getSide();
+    const auto& barrelSlot = ch->getPM().getScin().getBarrelSlot();
+    auto LayerNr = getLayerNumber(barrelSlot.getLayer());
+    auto barrel_slot_nr = getSlotNumber(barrelSlot);
+    result.insert(std::make_pair(std::make_tuple(LayerNr, barrel_slot_nr, pm_side, threshold), tomb_id));
+  }
+  if (errorOccured) {
+    ERROR("Error occured while generating TOMBMap. Empty map will be returned!");
+    std::map<std::tuple<int, int, JPetPM::Side, int>, int> emptyMap;
+    return emptyMap;
+  } else {
+    return result;
+  }
+}
+
+std::map<std::tuple<int, int, JPetPM::Side, int>, int> JPetGeomMapping::getTOMBMapping() const
+{
+  return fTOMBs;
+}
+
+const int JPetGeomMapping::getTOMB(int LayerNr, int barrel_slot_nr, const JPetPM::Side& side, int threshold) const
+{
+  auto key = std::make_tuple(LayerNr, barrel_slot_nr, side, threshold);
+  if (fTOMBs.find(key) == fTOMBs.end()) {
+    return -1;
+  } else {
+    return fTOMBs.at(key);
+  }
 }
