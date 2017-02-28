@@ -78,10 +78,6 @@ float JPetHit::getPos(int index) const
 {
   return fPos(index);
 }
-int JPetHit::getScinID() const
-{
-  return fScinID;
-}
 const TVector3& JPetHit::getPos() const
 {
   return fPos;
@@ -174,11 +170,6 @@ void JPetHit::setScintillator(JPetScin& sc)
 {
   fScintillator = &sc;
 }
-void JPetHit::setScinID (const int scinID)
-{
-  fScinID = scinID;
-}
-
 
 bool JPetHit::checkConsistency() const
 {

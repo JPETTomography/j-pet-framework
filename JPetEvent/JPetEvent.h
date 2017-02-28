@@ -20,6 +20,7 @@
 #include "../JPetHit/JPetHit.h"
 #include <TNamed.h>
 #include <vector>
+#include "../JPetEventType/JPetEventType.h"
 
 /**
  * @brief Data class representing an event from a single emission.
@@ -34,8 +35,6 @@
  * e.g. static_cast<JPetEventType>(JPetEventType::kGamma2|JPetEventType::kScattered).
  * This means, that at given moment we don't know to which type it belongs.
  */
-
-#include "../JPetEventType/JPetEventType.h"
 
 class JPetEvent : public TNamed
 {
@@ -58,11 +57,14 @@ public:
   bool isTypeOf(JPetEventType type) const; /// check if the event is of a given type. Event can belong to more than one category e.g. k2Gamma|kScattered.
   bool isOnlyTypeOf(JPetEventType type) const;/// check if the event is of only given type e.g. isOnlyTypeOf(k2Gamma) will return false if the type is k2Gamma|kScattered.
 
-  ClassDef(JPetEvent, 1);
-
 protected:
   std::vector<JPetHit> fHits;
+#ifndef __CINT__
   JPetEventType fType = JPetEventType::kUnknown;
+#else
+  JPetEventType fType;
+#endif
 
+  ClassDef(JPetEvent, 2);
 };
 #endif /*  !JPETEVENT_H */
