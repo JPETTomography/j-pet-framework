@@ -27,6 +27,9 @@
 class JPetGeomMapping: public JPetGeomMappingInterface
 {
 public:
+  static const size_t kBadLayerNumber;
+  static const size_t kBadSlotNumber;
+
   explicit JPetGeomMapping(const JPetParamBank& paramBank);
   virtual ~JPetGeomMapping();
   virtual const size_t getLayersCount()const override;
@@ -38,12 +41,25 @@ public:
   virtual const std::vector<size_t> getLayersSizes() const override;
   const size_t calcDeltaID(const JPetBarrelSlot& slot1, const JPetBarrelSlot& slot2) const;
   const size_t calcGlobalPMTNumber(const JPetPM& pmt) const;
-  static const size_t kBadLayerNumber;
-  static const size_t kBadSlotNumber;
+
+  /// Function returns a map which reflects the relation:
+  /// layer id, barrel slot id, photomultiplier side, threshold -->  TOMB channel number.
+  /// TOMB channel is a unique identifier that corresponds a single front-end electronic channel or
+  /// equivalently a set of parameter objects Layer-BarrelSlot-Scintillator-PM-threshold.
+  /// TOMB channels are used as internal identifiers in internal parameter DB.
+  /// The map is created based on the JPetParamBank content.
+  /// If any of param objects needed to create the map is not set in JPetParamBank, the empty map will be returned.
+  std::map<std::tuple<int, int, JPetPM::Side, int>, int> getTOMBMapping() const;
+  const int getTOMB(int LayerNr, int slotNr, const JPetPM::Side& side, int threshold) const;
+
 private:
+  std::map<std::tuple<int, int, JPetPM::Side, int>, int> getTOMBMap(const JPetParamBank& bank) const;
+
   std::map<double, int> fRadiusToLayer;
   std::vector<std::map<double, int> > fThetaToSlot;
   std::vector<int> fNumberOfSlotsInLayer;
+
+  std::map<std::tuple<int, int, JPetPM::Side, int>, int> fTOMBs;
 };
 
 #endif /*  !JPETGEOMMAPPING_H */
