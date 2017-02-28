@@ -86,7 +86,7 @@ public:
     virtual ~TOT_Hists();
     virtual void init(const JPetTaskInterface::Options& opts)override;
 protected:
-    void createTOTHistos(const std::string&suffix);
+    void createTOTHistos(const std::string&suffix,const size_t bins,const double min,const double max);
     void fillTOTHistos(const JPetHit&hit,const std::string&suffix);
     const TOTs getTOTs(const JPetHit&hit)const;
 };

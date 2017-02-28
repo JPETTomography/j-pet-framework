@@ -40,7 +40,7 @@ public:
 		DataType v;
 		f_data[layer_index].push_back(v);
 	    }
-	          layer_index++;
+	    layer_index++;
 	}
     }
     virtual ~JPetMap(){}
