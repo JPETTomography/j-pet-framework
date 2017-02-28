@@ -26,7 +26,7 @@ class JPetReaderInterface {
   virtual bool nextEvent()=0;
   virtual bool firstEvent()=0;
   virtual bool lastEvent()=0;
-  virtual bool nthEvent(int n)=0;
+  virtual bool nthEvent(long long int n)=0;
   virtual long long getCurrentEventNumber() const =0;
   virtual long long getNbOfAllEvents() const =0; 
   virtual TObject* getObjectFromFile(const char* name)=0;

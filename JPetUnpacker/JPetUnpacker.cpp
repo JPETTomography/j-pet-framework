@@ -25,7 +25,8 @@ JPetUnpacker::JPetUnpacker():
 fUnpacker(0),
 fEventsToProcess(0),
 fHldFile(""),
-fCfgFile("")
+fCfgFile(""),
+fCalibFile("")
 {
   /**/
 }
@@ -40,10 +41,11 @@ JPetUnpacker::~JPetUnpacker()
 }
 
 
-void JPetUnpacker::setParams(const std::string& hldFile,  int numOfEvents, const std::string& cfgFile)
+void JPetUnpacker::setParams(const std::string& hldFile,  int numOfEvents, const std::string& cfgFile, const std::string& calibFile)
 {
   fHldFile = hldFile;
   fCfgFile = cfgFile;
+  fCalibFile = calibFile;
   fEventsToProcess = numOfEvents;
 }
 
@@ -59,6 +61,11 @@ bool JPetUnpacker::exec()
     ERROR("The config file doesnt exist");
     return false;
   }
+  if (getCalibFile()!="" && !boost::filesystem::exists(getCalibFile())) 
+  {
+    ERROR("The provided calib file doesnt exist");
+    return false;
+  }
   if(getEventsToProcess() <= 0)
   {
     ERROR("No events to process");
@@ -72,7 +79,7 @@ bool JPetUnpacker::exec()
   fUnpacker = new Unpacker2();
 
   int refChannelOffset = 65;
-  fUnpacker->UnpackSingleStep(fHldFile.c_str(), fCfgFile.c_str(), fEventsToProcess, refChannelOffset, "");
+  fUnpacker->UnpackSingleStep(fHldFile.c_str(), fCfgFile.c_str(), fEventsToProcess, refChannelOffset, fCalibFile.c_str());
   
   return true;
 }

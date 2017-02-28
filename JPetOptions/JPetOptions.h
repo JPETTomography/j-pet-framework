@@ -85,6 +85,14 @@ public:
     return result;
   }
 
+  inline const char* getUnpackerConfigFile() const {
+    return fOptions.at("unpackerConfigFile").c_str();
+  }
+
+  inline const char* getUnpackerCalibFile() const {
+    return fOptions.at("unpackerCalibFile").c_str();
+  }
+  
   FileType getInputFileType() const;
   FileType getOutputFileType() const;
 
