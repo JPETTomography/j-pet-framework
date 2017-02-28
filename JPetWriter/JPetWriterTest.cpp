@@ -14,8 +14,8 @@
 #include "../JPetWriter/JPetWriter.h"
 #include "../JPetReader/JPetReader.h"
 #include <iostream>
-#include "TTreeReader.h"
-#include "TTreeReaderValue.h
+//#include <TTreeReader.h>  --> jak to odkomentuje to ERROR 
+//#include <TTreeReaderValue.h>
 
 
 
@@ -121,7 +121,8 @@ BOOST_AUTO_TEST_CASE( saving_different_objects1 )
   BOOST_REQUIRE(f);
   BOOST_REQUIRE(!(f->IsZombie()));
   //feeader myReader("ntuple", f);
-  delete f;  
+
+  f->Close();  
   if(boost::filesystem::exists(fileTest))
           boost::filesystem::remove(fileTest);
 } 
