@@ -46,19 +46,27 @@ BOOST_AUTO_TEST_CASE(hitTest)
   BOOST_REQUIRE(event.getSecondHit().getEnergy() == firstHit.getEnergy());
   
   JPetHit fh;
-  JPetHit sh;  
-  fh.setScinID(8);
-  sh.setScinID(16);
+  JPetHit sh;
+  JPetScin scin1(8);
+  JPetScin scin2(16);
+  fh.setScintillator(scin1);
+  sh.setScintillator(scin2);
   event.setHits(fh, sh);
-  BOOST_REQUIRE(event.getFirstHit().getScinID() == fh.getScinID());
-  BOOST_REQUIRE(event.getSecondHit().getScinID() == sh.getScinID());
+  BOOST_REQUIRE(event.getFirstHit().getScintillator().getID()
+  				== fh.getScintillator().getID());
+  BOOST_REQUIRE(event.getSecondHit().getScintillator().getID()
+  				== sh.getScintillator().getID());
   
-  fh.setScinID(32);
-  sh.setScinID(64);
+  JPetScin scin3(32);
+  JPetScin scin4(64);
+  fh.setScintillator(scin3);
+  sh.setScintillator(scin4);
   event.setFirstHit(fh);
   event.setSecondHit(sh);
-  BOOST_REQUIRE(event.getFirstHit().getScinID() == fh.getScinID());
-  BOOST_REQUIRE(event.getSecondHit().getScinID() == sh.getScinID());
+  BOOST_REQUIRE(event.getFirstHit().getScintillator().getID()
+  				== fh.getScintillator().getID());
+  BOOST_REQUIRE(event.getSecondHit().getScintillator().getID()
+  				== sh.getScintillator().getID());
 }
 
 BOOST_AUTO_TEST_CASE(timeDiffTest)

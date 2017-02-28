@@ -115,13 +115,13 @@ void TOT_Hists::init(const JPetTaskInterface::Options& opts){
 TOT_Hists::TOT_Hists(const char* name, const char* description)
 :LargeBarrelTask(name,description){}
 TOT_Hists::~TOT_Hists(){}
-void TOT_Hists::createTOTHistos(const std::string& suffix){
+void TOT_Hists::createTOTHistos(const std::string& suffix,const size_t bins,const double min,const double max){
     for(auto & layer : getParamBank().getLayers()){
 	const auto ln=map()->getLayerNumber(*layer.second);
 	for(size_t sl=1,n=map()->getSlotsCount(ln);sl<=n;sl++)
 	    for(size_t thr=1;thr<=4;thr++){
-		getStatistics().createHistogram( new TH1F(("TOT-"+LayerSlotThr(ln,sl,thr)+"-A-"+suffix).c_str(), "",500, 0.,100.));
-		getStatistics().createHistogram( new TH1F(("TOT-"+LayerSlotThr(ln,sl,thr)+"-B-"+suffix).c_str(), "",500, 0.,100.));
+		getStatistics().createHistogram( new TH1F(("TOT-"+LayerSlotThr(ln,sl,thr)+"-A-"+suffix).c_str(), "",bins, min,max));
+		getStatistics().createHistogram( new TH1F(("TOT-"+LayerSlotThr(ln,sl,thr)+"-B-"+suffix).c_str(), "",bins, min,max));
 	    }
     }
 }

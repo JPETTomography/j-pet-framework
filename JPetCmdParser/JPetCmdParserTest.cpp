@@ -132,12 +132,14 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
   //cout << rangeOptionDescription.format_name() << endl;
   BOOST_REQUIRE(std::string(rangeOptionDescription.format_name()) == "-r [ --range ]");
 
-  auto paramOptionDescription = optionDescription.find("param", true);
-  //cout << paramOptionDescription.description() << endl;
-  BOOST_REQUIRE(std::string(paramOptionDescription.description()) == "xml file with TRB settings used by the unpacker program.");
-  //cout << paramOptionDescription.format_name() << endl;
-  BOOST_REQUIRE(std::string(paramOptionDescription.format_name()) == "-p [ --param ]");
+  auto unpackerConfigOptionDescription = optionDescription.find("unpackerConfigFile", true);
+  BOOST_REQUIRE(std::string(unpackerConfigOptionDescription.description()) == "xml file with TRB settings used by the unpacker program.");
+  BOOST_REQUIRE(std::string(unpackerConfigOptionDescription.format_name()) == "-p [ --unpackerConfigFile ]");
 
+  auto unpackerCalibOptionDescription = optionDescription.find("unpackerCalibFile", true);
+  BOOST_REQUIRE(std::string(unpackerCalibOptionDescription.description()) == "ROOT file with TRB calibration used by the unpacker program.");
+  BOOST_REQUIRE(std::string(unpackerCalibOptionDescription.format_name()) == "-c [ --unpackerCalibFile ]");
+  
   auto runIdOptionDescription = optionDescription.find("runId", true);
   //cout << runIdOptionDescription.description() << endl;
   BOOST_REQUIRE(std::string(runIdOptionDescription.description()) == "Run id.");
@@ -154,7 +156,7 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
 
 BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
 {
-  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 4 -p data.hld -i 231 -L output.json";
+  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 4 -p unitTestData/JPetCmdParserTest/data.hld -c unitTestData/JPetUnpackerTest/calib.root -i 231 -L output.json";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
@@ -167,6 +169,8 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
 
   BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
   BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
+  BOOST_REQUIRE(strcmp(firstOption.getUnpackerConfigFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
+  BOOST_REQUIRE(strcmp(firstOption.getUnpackerCalibFile(), "unitTestData/JPetUnpackerTest/calib.root") == 0);
   BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
   BOOST_REQUIRE(firstOption.getFirstEvent() == 2);
   BOOST_REQUIRE(firstOption.getLastEvent() == 4);
