@@ -29,6 +29,15 @@ JPetOptionsGenerator::~JPetOptionsGenerator()
 {
 
 }
+bool JPetOptionsGenerator::isOptionSet(const po::variables_map& variablesMap, const std::string& option) const
+{
+  return (bool)variablesMap.count(option);
+}
+
+std::string JPetOptionsGenerator::getOptionValue(const po::variables_map& variablesMap, const std::string& option) const
+{
+  return variablesMap[option].as<std::string>();
+}
 
 bool JPetOptionsGenerator::areCorrectOptions(const po::variables_map& variablesMap) const
 {
@@ -48,14 +57,14 @@ bool JPetOptionsGenerator::areCorrectOptions(const po::variables_map& variablesM
     }
   }
 
-  if (!isCorrectFileType(getFileType(variablesMap))) {
+  if (!isCorrectFileType(getOptionValue(variablesMap, "type"))) {
     ERROR("Wrong type of file.");
-    std::cerr << "Wrong type of file: " << getFileType(variablesMap) << std::endl;
+    std::cerr << "Wrong type of file: " << getOptionValue(variablesMap, "type") << std::endl;
     std::cerr << "Possible options: hld, zip, root or scope" << std::endl;
     return false;
   }
 
-  if (isRunNumberSet(variablesMap)) {
+  if (isOptionSet(variablesMap, "runId")) {
     int l_runId = variablesMap["runId"].as<int>();
 
     if (l_runId <= 0) {
@@ -65,8 +74,8 @@ bool JPetOptionsGenerator::areCorrectOptions(const po::variables_map& variablesM
     }
   }
 
-  if (isLocalDBSet(variablesMap)) {
-    std::string localDBName = getLocalDBName(variablesMap);
+  if (isOptionSet(variablesMap, "localDB")) {
+    std::string localDBName = getOptionValue(variablesMap, "localDB");
     if ( !JPetCommonTools::ifFileExisting(localDBName) ) {
       ERROR("File : " + localDBName + " does not exist.");
       std::cerr << "File : " << localDBName << " does not exist" << std::endl;
@@ -86,15 +95,15 @@ bool JPetOptionsGenerator::areCorrectOptions(const po::variables_map& variablesM
 
 
   /// The run number option is neclegted if the input file is set as "scope"
-  if (isRunNumberSet(variablesMap)) {
-    if (getFileType(variablesMap) == "scope") {
+  if (isOptionSet(variablesMap, "runId")) {
+    if (getOptionValue(variablesMap, "type") == "scope") {
       WARNING("Run number was specified but the input file type is a scope!\n The run number will be ignored!");
     }
   }
 
   /// Check if output path exists
-  if (isOutputPath(variablesMap)) {
-    auto dir = getOutputPath(variablesMap);
+  if (isOptionSet(variablesMap, "outputPath")) {
+    auto dir = getOptionValue(variablesMap, "outputPath");
     if (!JPetCommonTools::isDirectory(dir)) {
       ERROR("Output directory : " + dir + " does not exist.");
       std::cerr << "Output directory: " << dir << " does not exist" << std::endl;
@@ -118,24 +127,24 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   }
 
   std::map<std::string, std::string> options;
-  auto fileType = getFileType(optsMap);
+  auto fileType = getOptionValue(optsMap, "type");
   if (isCorrectFileType(fileType)) {
     options["inputFileType"] = fileType;
   }
-  if (isOutputPath(optsMap)) {
-    options["outputPath"] = JPetCommonTools::appendSlashToPathIfAbsent(getOutputPath(optsMap));
+  if (isOptionSet(optsMap, "outputPath")) {
+    options["outputPath"] = JPetCommonTools::appendSlashToPathIfAbsent(getOptionValue(optsMap, "outputPath"));
   }
-  if (isRunNumberSet(optsMap)) {
+  if (isOptionSet(optsMap, "runId")) {
     options["runId"] = std::to_string(getRunNumber(optsMap));
   }
   if (isProgressBarSet(optsMap)) {
     options["progressBar"] = "true";
   }
-  if (isLocalDBSet(optsMap)) {
-    options["localDB"] = getLocalDBName(optsMap);
+  if (isOptionSet(optsMap, "localDB")) {
+    options["localDB"] = getOptionValue(optsMap, "localDB");
   }
-  if (isLocalDBCreateSet(optsMap)) {
-    options["localDBCreate"] = getLocalDBCreateName(optsMap);
+  if (isOptionSet(optsMap, "localDBCreate")) {
+    options["localDBCreate"] = getOptionValue(optsMap, "localDBCreate");
   }
   auto firstEvent  = getLowerEventBound(optsMap);
   auto lastEvent  = getHigherEventBound(optsMap);
