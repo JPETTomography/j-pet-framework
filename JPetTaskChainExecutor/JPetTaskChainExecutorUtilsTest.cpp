@@ -23,21 +23,25 @@ BOOST_AUTO_TEST_SUITE(JPetTaskChainExecutorTestSuite)
 BOOST_AUTO_TEST_CASE(tryToUnzipSomethingNotExistingFile)
 {
   BOOST_REQUIRE(JPetTaskChainExecutorUtils::unzipFile("unitTestData/JPetTaskChainExecutorUtilsTest/goodZip.gz"));
+  system("rm unitTestData/JPetTaskChainExecutorUtilsTest/goodZip");
   std::string initialPath = boost::filesystem::path(boost::filesystem::current_path()).string();
   initialPath = initialPath.substr(0, initialPath.find("build") );
   std::string wrongZipPath = initialPath + "wrongZip.gz";
   BOOST_REQUIRE(!JPetTaskChainExecutorUtils::unzipFile( wrongZipPath.c_str() ));
   BOOST_REQUIRE(!JPetTaskChainExecutorUtils::unzipFile( "unitTestData/JPetTaskChainExecutorUtilsTest/wrongZip.gz" ));
+  
 }
 
 BOOST_AUTO_TEST_CASE(tryToUnzipSomethingNotExistingFileWithXz)
 {
   BOOST_REQUIRE(JPetTaskChainExecutorUtils::unzipFile("unitTestData/JPetTaskChainExecutorUtilsTest/goodXZ.xz"));
+  system("rm unitTestData/JPetTaskChainExecutorUtilsTest/goodXZ");
   std::string initialPath = boost::filesystem::path(boost::filesystem::current_path()).string();
   initialPath = initialPath.substr(0, initialPath.find("build") );
   std::string wrongZipPath = initialPath + "unitTestData/JPetTaskChainExecutorUtilsTest/wrongZip.Xz";
   BOOST_REQUIRE(!JPetTaskChainExecutorUtils::unzipFile( wrongZipPath.c_str() ));
   BOOST_REQUIRE(!JPetTaskChainExecutorUtils::unzipFile( "unitTestData/JPetTaskChainExecutorUtilsTest/wrongXZ.xz" ));
+  
 }
 
 BOOST_AUTO_TEST_SUITE_END()
