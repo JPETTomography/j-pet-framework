@@ -39,6 +39,8 @@ public:
   bool isOptionSet(const po::variables_map& variablesMap, const std::string& option) const; 
   
   std::string getOptionValue(const po::variables_map& variablesMap, const std::string& option) const;
+
+  std::map<std::string, std::string> variablesMapToOption(const po::variables_map& variablesMap) const; 
   
   inline const std::vector<std::string>& getFileNames(const po::variables_map& variablesMap) const {
     return variablesMap["file"].as< std::vector<std::string> >();
