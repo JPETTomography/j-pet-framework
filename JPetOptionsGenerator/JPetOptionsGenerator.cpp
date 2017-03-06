@@ -21,6 +21,8 @@
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include <stdexcept>
 
+using boost::any_cast;
+
 JPetOptionsGenerator::JPetOptionsGenerator()
 {
 
@@ -39,13 +41,21 @@ std::string JPetOptionsGenerator::getOptionValue(const po::variables_map& variab
   return variablesMap[option].as<std::string>();
 }
 
-std::map<std::string, std::string> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap) const
+std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap) const
 {
-  std::map<std::string, std::string> optionsMap;
+  std::map<std::string, boost::any> optionsMap;
   std::map<std::string, std::string> tmpMap = JPetOptions::getDefaultOptions();
-  for(auto &option : tmpMap)
-    if(variablesMap.count(option.first))
-      optionsMap.at(option.first) = variablesMap[option.first].as<std::string>();
+  for(auto &option : tmpMap){
+    if(variablesMap.count(option.first)){
+      if(option.first=="file")
+        optionsMap.at(option.first)= variablesMap[option.first].as<std::vector<std::string>>();
+      if(option.first=="range")
+        optionsMap.at(option.first)=variablesMap[option.first].as<std::vector<int>>();
+      if(option.first=="runId")
+        optionsMap.at(option.first)=variablesMap[option.first].as<int>();  
+    optionsMap.at(option.first) = variablesMap[option.first].as<std::string>();
+    }
+  }
   return optionsMap;
 }
 bool JPetOptionsGenerator::areCorrectOptions(const po::variables_map& variablesMap) const
