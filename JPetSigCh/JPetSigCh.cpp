@@ -69,3 +69,16 @@ bool JPetSigCh::compareByThresholdNumber(const JPetSigCh& A,
   }
   return false;
 }
+JPetSigCh JPetSigCh::makeSigCh(const JPetPM & pm, const JPetTRB & trb, const JPetFEB & feb, const JPetTOMBChannel & channel, float val, EdgeType type, float thr, Int_t daqch, unsigned int threshold_number){
+   JPetSigCh sigChObject;
+   sigChObject.fPM = const_cast<JPetPM*>(&pm);
+   sigChObject.fTRB = const_cast<JPetTRB*>(&trb);
+   sigChObject.fFEB = const_cast<JPetFEB*>(&feb);
+   sigChObject.fTOMBChannel = const_cast<JPetTOMBChannel*>(&channel);
+   sigChObject.fValue = val;
+   sigChObject.fType = type;
+   sigChObject.fThreshold = thr;
+   sigChObject.fDAQch = daqch;
+   sigChObject.fThresholdNumber = threshold_number;
+   return sigChObject;
+  }
