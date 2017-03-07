@@ -72,6 +72,8 @@ public:
   const JPetBarrelSlot& getBarrelSlot() const;
   bool isSignalASet()const;
   bool isSignalBSet()const;
+  
+  JPetHit makeHit(float energy, float qualityOfEnergy, float time, float qualityOfTime, float td, float qtd, float x, float y, float z, JPetBarrelSlot& bs, JPetScin& sc, JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB );
 
   void setEnergy(float energy);
   void setQualityOfEnergy(float qualityOfEnergy);
