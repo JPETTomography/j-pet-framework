@@ -36,7 +36,7 @@ bool JPetOptionsGenerator::isOptionSet(const std::map<std::string, boost::any>& 
   return (bool)variablesMap.count(option);
 }
 
-std::string JPetOptionsGenerator::getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string& option) const
+std::string JPetOptionsGenerator::getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string option) const
 {
   return any_cast<std::string>(variablesMap.at(option));
 }
@@ -58,6 +58,16 @@ std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(con
   }
   return optionsMap;
 }
+
+std::map<std::string, std::string> JPetOptionsGenerator::anyMapToStringMap(const std::map<std::string, boost::any> & map) const
+{
+  std::map<std::string, std::string> optionsMap;
+  for(auto &option : optionsMap){
+    optionsMap.at(option.first) = any_cast<std::string>(map.at(option.first));
+  }
+  return optionsMap;
+}
+
 bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::any>& variablesMap) const
 {
   /* Parse range of events */
@@ -84,7 +94,7 @@ bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::
   }
 
   if (isOptionSet(variablesMap, "runId")) {
-    int l_runId = variablesMap["runId"];
+    int l_runId = any_cast<int>(variablesMap.at("runId"));
 
     if (l_runId <= 0) {
       ERROR("Run id must be a number larger than 0.");
@@ -102,7 +112,7 @@ bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::
     }
   }
 
-  std::vector<std::string> fileNames(variablesMap["file"];
+  std::vector<std::string> fileNames= any_cast<std::vector<std::string>>(variablesMap.at("file"));
   for (unsigned int i = 0; i < fileNames.size(); i++) {
     if ( ! JPetCommonTools::ifFileExisting(fileNames[i]) ) {
       std::string fileName = fileNames[i];
@@ -140,39 +150,36 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
     auto jsonCfgFile = optsMap["userCfg"].as<std::string>();
     optionsFromJson = jpet_options_tools::createOptionsFromConfigFile(jsonCfgFile);
   }
-  std::map<std::string, boost::any> optionsFromCmd(variablesMapToOption(optsMap));
-  std::map<std::string, boost::any> options;
-  auto fileType = getOptionValue(optionsFromCmd(, "type");
-  if (isCorrectFileType(fileType)) {
-    options["inputFileType"] = fileType;
-  }
-  if (isOptionSet(optionsFromCmd, "outputPath")) {
-    options["outputPath"] = JPetCommonTools::appendSlashToPathIfAbsent(getOptionValue(optionsFromCmd, "outputPath"));
-  }
-  if (isOptionSet(optionsFromCmd, "runId")) {
-    options["runId"] = std::to_string(getRunNumber(optsMap));
-  }
-  if (isOptionSet(optionsFromCmd, "progressBar")) {
-    options["progressBar"] = "true";
-  }
-  if (isOptionSet(optionsFromCmd, "localDB")) {
-    options["localDB"] = getOptionValue(optionsFromCmd, "localDB");
-  }
-  if (isOptionSet(optionsFromCmd, "localDBCreate")) {
-    options["localDBCreate"] = getOptionValue(optionsFromCmd, "localDBCreate");
-  }
-  auto firstEvent  = getLowerEventBound(optsMap);
-  auto lastEvent  = getHigherEventBound(optsMap);
-  if (firstEvent >= 0) options["firstEvent"] = std::to_string(firstEvent);
-  if (lastEvent >= 0) options["lastEvent"] = std::to_string(lastEvent);
-  auto files = getFileNames(optsMap);
+  std::map<std::string, boost::any> options = variablesMapToOption(optsMap);
   std::map<std::string, std::string> defaultOptions = JPetOptions::getDefaultOptions(); 
   /// We add additional options to already existing one.
   /// If the key already exists the element will not be updated.
   options.insert(optionsFromJson.begin(), optionsFromJson.end());
   options.insert(defaultOptions.begin(), defaultOptions.end());
 
-  if (!areCorrectOptions(options) {
+  auto fileType = getOptionValue(options, "type");
+//  if (isCorrectFileType(fileType)) {
+//    options["inputFileType"] = fileType;
+//  }
+  if (isOptionSet(options, "outputPath")) {
+    options["outputPath"] = JPetCommonTools::appendSlashToPathIfAbsent(getOptionValue(options, "outputPath"));
+  }
+//  if (isOptionSet(optionsFromCmd, "progressBar")) {
+//    options["progressBar"] = "true";
+//  }
+//  if (isOptionSet(optionsFromCmd, "localDB")) {
+//    options["localDB"] = getOptionValue(optionsFromCmd, "localDB");
+//  }
+//  if (isOptionSet(optionsFromCmd, "localDBCreate")) {
+//    options["localDBCreate"] = getOptionValue(optionsFromCmd, "localDBCreate");
+//  }
+  auto firstEvent  = getLowerEventBound(optsMap);
+  auto lastEvent  = getHigherEventBound(optsMap);
+  if (firstEvent >= 0) options["firstEvent"] = std::to_string(firstEvent);
+  if (lastEvent >= 0) options["lastEvent"] = std::to_string(lastEvent);
+  auto files = getFileNames(optsMap);
+
+  if (!areCorrectOptions(options)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
 
@@ -197,13 +204,13 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
     for (const auto & dirAndFile : dirsAndFiles) {
       options.at("scopeInputDirectory") = dirAndFile.first;
       options.at("inputFile")= dirAndFile.second;
-      optionContainer.push_back(JPetOptions(options));
+      optionContainer.push_back(JPetOptions(anyMapToStringMap(options)));
     }
   } else {
     /// for every single input file we create separate JPetOptions
     for (const auto & file : files) {
       options.at("inputFile") = file;
-      optionContainer.push_back(JPetOptions(options));
+      optionContainer.push_back(JPetOptions(anyMapToStringMap(options)));
     }
   }
   return optionContainer;

@@ -38,10 +38,12 @@ public:
   
   bool isOptionSet(const std::map<std::string, boost::any>& variablesMap, const std::string& option) const; 
   
-  std::string getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string& option) const;
+  std::string getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string option) const;
 
   std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const; 
-  
+
+  std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& map) const; 
+ 
   inline const std::vector<std::string>& getFileNames(const po::variables_map& variablesMap) const {
     return variablesMap["file"].as< std::vector<std::string> >();
   }
