@@ -34,11 +34,11 @@ public:
   
   std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap) const;
   
-  bool areCorrectOptions(const po::variables_map& options) const;
+  bool areCorrectOptions(const std::map<std::string, boost::any>& options) const;
   
-  bool isOptionSet(const po::variables_map& variablesMap, const std::string& option) const; 
+  bool isOptionSet(const std::map<std::string, boost::any>& variablesMap, const std::string& option) const; 
   
-  std::string getOptionValue(const po::variables_map& variablesMap, const std::string& option) const;
+  std::string getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string& option) const;
 
   std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const; 
   
