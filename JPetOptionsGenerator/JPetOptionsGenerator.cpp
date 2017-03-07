@@ -31,14 +31,14 @@ JPetOptionsGenerator::~JPetOptionsGenerator()
 {
 
 }
-bool JPetOptionsGenerator::isOptionSet(const po::variables_map& variablesMap, const std::string& option) const
+bool JPetOptionsGenerator::isOptionSet(const std::map<std::string, boost::any>& variablesMap, const std::string& option) const
 {
   return (bool)variablesMap.count(option);
 }
 
-std::string JPetOptionsGenerator::getOptionValue(const po::variables_map& variablesMap, const std::string& option) const
+std::string JPetOptionsGenerator::getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string& option) const
 {
-  return variablesMap[option].as<std::string>();
+  return any_cast<std::string>(variablesMap.at(option));
 }
 
 std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap) const
@@ -58,18 +58,18 @@ std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(con
   }
   return optionsMap;
 }
-bool JPetOptionsGenerator::areCorrectOptions(const po::variables_map& variablesMap) const
+bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::any>& variablesMap) const
 {
   /* Parse range of events */
   if (variablesMap.count("range")) {
-    if (variablesMap["range"].as< std::vector<int> >().size() != 2) {
+    if ((any_cast<std::vector<int>>(variablesMap.at("range"))).size() != 2) {
       ERROR("Wrong number of bounds in range.");
-      std::cerr << "Wrong number of bounds in range: " << variablesMap["range"].as< std::vector<int> >().size() << std::endl;
+      std::cerr << "Wrong number of bounds in range: " << (any_cast<std::vector<int>>(variablesMap.at("range"))).size() << std::endl;
       return false;
     }
     if (
-      variablesMap["range"].as< std::vector<int> >()[0]
-      > variablesMap["range"].as< std::vector<int> >()[1]) {
+      (any_cast<std::vector<int>>(variablesMap.at("range"))).at(0)
+      >  (any_cast<std::vector<int>>(variablesMap.at("range"))).at(1)) {
       ERROR("Wrong range of events.");
       std::cerr << "Wrong range of events." << std::endl;
       return false;
@@ -84,7 +84,7 @@ bool JPetOptionsGenerator::areCorrectOptions(const po::variables_map& variablesM
   }
 
   if (isOptionSet(variablesMap, "runId")) {
-    int l_runId = variablesMap["runId"].as<int>();
+    int l_runId = variablesMap["runId"];
 
     if (l_runId <= 0) {
       ERROR("Run id must be a number larger than 0.");
@@ -102,7 +102,7 @@ bool JPetOptionsGenerator::areCorrectOptions(const po::variables_map& variablesM
     }
   }
 
-  std::vector<std::string> fileNames(variablesMap["file"].as< std::vector<std::string> >());
+  std::vector<std::string> fileNames(variablesMap["file"];
   for (unsigned int i = 0; i < fileNames.size(); i++) {
     if ( ! JPetCommonTools::ifFileExisting(fileNames[i]) ) {
       std::string fileName = fileNames[i];
@@ -140,30 +140,26 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
     auto jsonCfgFile = optsMap["userCfg"].as<std::string>();
     optionsFromJson = jpet_options_tools::createOptionsFromConfigFile(jsonCfgFile);
   }
-
-  if (!areCorrectOptions(optsMap)) {
-    throw std::invalid_argument("Wrong user options provided! Check the log!");
-  }
-
-  std::map<std::string, std::string> options;
-  auto fileType = getOptionValue(optsMap, "type");
+  std::map<std::string, boost::any> optionsFromCmd(variablesMapToOption(optsMap));
+  std::map<std::string, boost::any> options;
+  auto fileType = getOptionValue(optionsFromCmd(, "type");
   if (isCorrectFileType(fileType)) {
     options["inputFileType"] = fileType;
   }
-  if (isOptionSet(optsMap, "outputPath")) {
-    options["outputPath"] = JPetCommonTools::appendSlashToPathIfAbsent(getOptionValue(optsMap, "outputPath"));
+  if (isOptionSet(optionsFromCmd, "outputPath")) {
+    options["outputPath"] = JPetCommonTools::appendSlashToPathIfAbsent(getOptionValue(optionsFromCmd, "outputPath"));
   }
-  if (isOptionSet(optsMap, "runId")) {
+  if (isOptionSet(optionsFromCmd, "runId")) {
     options["runId"] = std::to_string(getRunNumber(optsMap));
   }
-  if (isProgressBarSet(optsMap)) {
+  if (isOptionSet(optionsFromCmd, "progressBar")) {
     options["progressBar"] = "true";
   }
-  if (isOptionSet(optsMap, "localDB")) {
-    options["localDB"] = getOptionValue(optsMap, "localDB");
+  if (isOptionSet(optionsFromCmd, "localDB")) {
+    options["localDB"] = getOptionValue(optionsFromCmd, "localDB");
   }
-  if (isOptionSet(optsMap, "localDBCreate")) {
-    options["localDBCreate"] = getOptionValue(optsMap, "localDBCreate");
+  if (isOptionSet(optionsFromCmd, "localDBCreate")) {
+    options["localDBCreate"] = getOptionValue(optionsFromCmd, "localDBCreate");
   }
   auto firstEvent  = getLowerEventBound(optsMap);
   auto lastEvent  = getHigherEventBound(optsMap);
@@ -175,6 +171,12 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   /// If the key already exists the element will not be updated.
   options.insert(optionsFromJson.begin(), optionsFromJson.end());
   options.insert(defaultOptions.begin(), defaultOptions.end());
+
+  if (!areCorrectOptions(options) {
+    throw std::invalid_argument("Wrong user options provided! Check the log!");
+  }
+
+
   std::vector<JPetOptions>  optionContainer;
   /// In case of scope there is one special input file
   /// which is a json config file which must be parsed.
