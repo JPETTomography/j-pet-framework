@@ -76,10 +76,7 @@ const size_t JPetGeomMapping::getLayerNumber(const JPetLayer& layer) const
 
 const size_t JPetGeomMapping::getSlotsCount(const JPetLayer& layer) const
 {
-  std::cout << "wat" << std::endl;
   auto layerNr = getLayerNumber(layer);
-  std::cout << "ok" << std::endl;
-  std::cout << layerNr << std::endl;
   if (fNumberOfSlotsInLayer.size() > layerNr) {
     return fNumberOfSlotsInLayer.at(layerNr - 1);
   } else {
@@ -112,6 +109,24 @@ const size_t JPetGeomMapping::getSlotNumber(const JPetBarrelSlot& slot) const
     return JPetGeomMapping::kBadSlotNumber;
   }
   return fThetaToSlot.at(index).at(theta);
+}
+
+const size_t JPetGeomMapping::getGlobalSlotNumber(const JPetBarrelSlot& slot) const
+{
+  auto layerNr = getLayerNumber(slot.getLayer());
+  auto index = layerNr - 1;
+  auto previousSlots = 0;
+  /// We add all previously defined slots in previous layers
+  for (auto i = 0u; i < fNumberOfSlotsInLayer.size(); i++) {
+    if (index <= i) break; /// if we reach our layer
+    previousSlots =  i + fNumberOfSlotsInLayer[i];
+  }
+  auto slotNrInLayer = getSlotNumber(slot);
+  if (slotNrInLayer == JPetGeomMapping::kBadSlotNumber) {
+    return JPetGeomMapping::kBadSlotNumber;
+  } else {
+    return previousSlots + getSlotNumber(slot);
+  }
 }
 
 const StripPos JPetGeomMapping::getStripPos(const JPetBarrelSlot& slot)const
@@ -187,7 +202,7 @@ std::map<std::tuple<int, int, JPetPM::Side, int>, int> JPetGeomMapping::getTOMBM
     auto pm_side = ch->getPM().getSide();
     const auto& barrelSlot = ch->getPM().getScin().getBarrelSlot();
     auto LayerNr = getLayerNumber(barrelSlot.getLayer());
-    auto barrel_slot_nr = getSlotNumber(barrelSlot);
+    auto barrel_slot_nr = getGlobalSlotNumber(barrelSlot);
     result.insert(std::make_pair(std::make_tuple(LayerNr, barrel_slot_nr, pm_side, threshold), tomb_id));
   }
   if (errorOccured) {
