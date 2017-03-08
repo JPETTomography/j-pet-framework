@@ -33,7 +33,7 @@ public:
   JPetBarrelSlot();
   JPetBarrelSlot(int id, bool isActive, std::string name, float theta, int inFrameID);
   explicit JPetBarrelSlot(bool isNull);
-
+  JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, std::string name, float theta, int inFrameID);
   bool operator==(const JPetBarrelSlot& bslot) const;
   bool operator!=(const JPetBarrelSlot& bslot) const;
 
