@@ -69,7 +69,7 @@ public:
   void setBarrelSlot(JPetBarrelSlot& p_barrelSlot);
   JPetBarrelSlot& getBarrelSlot() const;
   bool isNullObject() const;
-
+  JPetPM makePM(Side side, int set, int opt, float g1, float g2, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot);
 
 protected:
   void clearTRefFEBs();
