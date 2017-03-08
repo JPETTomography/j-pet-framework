@@ -45,8 +45,8 @@ std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(con
 {
   std::map<std::string, boost::any> optionsMap;
   std::map<std::string, std::string> tmpMap = JPetOptions::getDefaultOptions();
-  for(auto &option : tmpMap){
-    if(variablesMap.count(option.first)){
+  for(auto &option : variablesMap){
+    //if(variablesMap.count(option.first)){
       if(option.first=="file")
         optionsMap.at(option.first)= variablesMap[option.first].as<std::vector<std::string>>();
       if(option.first=="range")
@@ -54,7 +54,7 @@ std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(con
       if(option.first=="runId")
         optionsMap.at(option.first)=variablesMap[option.first].as<int>();  
     optionsMap.at(option.first) = variablesMap[option.first].as<std::string>();
-    }
+   // }
   }
   return optionsMap;
 }
