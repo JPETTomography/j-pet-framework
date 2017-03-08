@@ -19,5 +19,11 @@ void JPetTimeWindow::addCh(JPetSigCh& new_ch)
 {
   fSigChannels.push_back( JPetSigCh(new_ch) );
 }
-
+JPetTimeWindow JPetTimeWindow::makeTimeWindow(JPetSigCh& new_ch, unsigned int index)
+{
+  JPetTimeWindow timeWindowObject;
+  timeWindowObject.fSigChannels.push_back( JPetSigCh(new_ch) );
+  timeWindowObject.fIndex = index;
+  return timeWindowObject;
+}
 ClassImp(JPetTimeWindow);
