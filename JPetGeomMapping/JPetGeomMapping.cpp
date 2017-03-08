@@ -119,7 +119,7 @@ const size_t JPetGeomMapping::getGlobalSlotNumber(const JPetBarrelSlot& slot) co
   /// We add all previously defined slots in previous layers
   for (auto i = 0u; i < fNumberOfSlotsInLayer.size(); i++) {
     if (index <= i) break; /// if we reach our layer
-    previousSlots =  i + fNumberOfSlotsInLayer[i];
+    previousSlots = previousSlots  + fNumberOfSlotsInLayer[i];
   }
   auto slotNrInLayer = getSlotNumber(slot);
   if (slotNrInLayer == JPetGeomMapping::kBadSlotNumber) {
