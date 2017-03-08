@@ -33,7 +33,7 @@ public:
   using RescaleFunc = std::function<void(Matrix2DProj &v, double minCutoff,
                                          double rescaleFactor)>;
 
-  template <typename Functor, typename... T>
+  /*template <typename Functor, typename... T>
   static void FilterFunc(Functor f, Matrix2DProj &sinogram, T... args) {
     namespace ft = boost::function_types;
 
@@ -50,7 +50,7 @@ public:
 
     std::function<function_type> function = std::move(f);
     function(sinogram, std::forward(args)...);
-  }
+  }*/
   /// Returns a matrixGetter, that can be used to return matrix elements in the
   /// following way:
   /// if isTransposed is set to false, matrixGetter returns matrix[i][j]
@@ -123,6 +123,8 @@ public:
   static Matrix2DProj backProject(Matrix2DProj &sinogram, int angles,
                                   RescaleFunc rescaleFunc, int rescaleMinCutoff,
                                   int rescaleFactor);
+
+  //static void doFFTW(Matrix2DProj &sinogram, std::vector<double> &filter);
 
   static void None(Matrix2DProj &sinogram);
 
