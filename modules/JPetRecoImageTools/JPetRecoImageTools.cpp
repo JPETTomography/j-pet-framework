@@ -21,6 +21,7 @@
 #include <memory>
 #include <utility>
 #include <vector>
+#include <fftw3.h>
 
 JPetRecoImageTools::JPetRecoImageTools() {}
 
@@ -295,7 +296,8 @@ void JPetRecoImageTools::RamLak(Matrix2DProj &sinogram) {
   int nAngles = sinogram[0].size();
   int nScanSize = sinogram.size();
   int pow = std::round(std::log(nScanSize) / std::log(2.0));
-  int padlen = std::round(std::pow(2.0, pow + 1));
+  //int padlen = std::round(std::pow(2.0, pow + 1));
+  int padlen = std::floor(nScanSize / 2) + 1;
   std::vector<double> Filt(padlen);
   int highest = std::round(padlen / 2);
   double nu = 0.;
@@ -307,7 +309,7 @@ void JPetRecoImageTools::RamLak(Matrix2DProj &sinogram) {
   }
   Filt[highest] = (double)highest / (double)padlen;
 
-  doFFT1D(sinogram, nAngles, nScanSize, padlen, Filt);
+  //doFFTW(sinogram, Filt);
 }
 
 void JPetRecoImageTools::SheppLogan(Matrix2DProj &sinogram) {
@@ -390,6 +392,43 @@ void JPetRecoImageTools::Ridgelet(Matrix2DProj &sinogram) {
 
   doFFT1D(sinogram, nAngles, nScanSize, padlen, Filt);
 }
+
+//see http://www.fftw.org/doc/One_002dDimensional-DFTs-of-Real-Data.html
+/*void JPetRecoImageTools::doFFTW(Matrix2DProj &sinogram, std::vector<double> &filter)
+{
+  int nAngles = sinogram[0].size();
+  int nScanSize = sinogram.size();
+  int outputSize = std::floor(nScanSize / 2) + 1;
+  
+  double *in;
+  in = (double*)malloc(nScanSize * sizeof(double));
+  double outResult[nScanSize];
+  fftw_complex out[outputSize];
+  fftw_plan plan, invPlan;
+  for (int i = 0; i < nAngles; i++) {
+    plan = fftw_plan_dft_r2c_1d(nScanSize, in, out, FFTW_ESTIMATE);
+    for(int j = 0; j < nScanSize; j++)
+    {
+      *in = sinogram[i][j];
+    }
+    fftw_execute(plan);
+    for (int j = 0; j < outputSize; j++)
+    {
+      out[j][0] *= 0; //Re part
+      out[j][1] *= 0; //Im part
+    }
+    invPlan = fftw_plan_dft_c2r_1d(nScanSize, out, outResult, FFTW_ESTIMATE);
+    fftw_execute(invPlan);
+    std::copy(outResult, outResult + nScanSize, sinogram[i].begin());
+    for(int j = 0; j < nScanSize; j++)
+    {
+      sinogram[i][j] /= nScanSize;
+    }
+  }
+  fftw_destroy_plan(plan);
+  fftw_destroy_plan(invPlan);
+  fftw_cleanup();
+}*/
 
 void JPetRecoImageTools::doFFT1D(Matrix2DProj &sinogram, int nAngles,
                                  int nScanSize, int padlen,
