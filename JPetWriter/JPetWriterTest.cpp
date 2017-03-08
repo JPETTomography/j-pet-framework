@@ -14,6 +14,9 @@
 #include "../JPetEvent/JPetEvent.h"
 #include "../JPetWriter/JPetWriter.h"
 #include "../JPetReader/JPetReader.h"
+#include <iostream>
+
+
 
 
 //  JPetWriter(const char *p_fileName);
@@ -112,9 +115,13 @@ BOOST_AUTO_TEST_CASE( saving_different_objects1 )
     JPetSigCh testJPetSigCh;
     writer.write(testJPetSigCh);
   }
-  if (boost::filesystem::exists(fileTest))
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+  JPetReader reader(fileTest);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  reader.closeFile();
+  if(boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-}
+} 
 
 BOOST_AUTO_TEST_CASE( saving_different_objects2 )
 {
@@ -126,9 +133,13 @@ BOOST_AUTO_TEST_CASE( saving_different_objects2 )
     JPetTimeWindow testJPetTimeWindow;
     writer.write(testJPetTimeWindow);
   }
-  if (boost::filesystem::exists(fileTest))
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+  JPetReader reader(fileTest);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  reader.closeFile();
+  if(boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-}
+} 
 
 BOOST_AUTO_TEST_CASE( saving_different_objects3 )
 {
@@ -141,9 +152,13 @@ BOOST_AUTO_TEST_CASE( saving_different_objects3 )
     JPetBaseSignal testJPetBaseSignal;
     writer.write(testJPetBaseSignal);
   }
-  if (boost::filesystem::exists(fileTest))
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+  JPetReader reader(fileTest);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  reader.closeFile();
+  if(boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-}
+} 
 
 BOOST_AUTO_TEST_CASE( saving_different_objects4 )
 {
@@ -155,9 +170,13 @@ BOOST_AUTO_TEST_CASE( saving_different_objects4 )
     JPetRawSignal testJPetRawSignal;
     writer.write(testJPetRawSignal);
   }
-  if (boost::filesystem::exists(fileTest))
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+  JPetReader reader(fileTest);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  reader.closeFile();
+  if(boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-}
+} 
 
 BOOST_AUTO_TEST_CASE( saving_different_objects5 )
 {
@@ -170,9 +189,13 @@ BOOST_AUTO_TEST_CASE( saving_different_objects5 )
     JPetRecoSignal testJPetRecoSignal;
     writer.write(testJPetRecoSignal);
   }
-  if (boost::filesystem::exists(fileTest))
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+  JPetReader reader(fileTest);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  reader.closeFile();
+  if(boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-}
+} 
 
 BOOST_AUTO_TEST_CASE( saving_different_objects6 )
 {
@@ -185,9 +208,13 @@ BOOST_AUTO_TEST_CASE( saving_different_objects6 )
     JPetPhysSignal testJPetPhysSignal;
     writer.write(testJPetPhysSignal);
   }
-  if (boost::filesystem::exists(fileTest))
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+  JPetReader reader(fileTest);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  reader.closeFile();
+  if(boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-}
+} 
 
 BOOST_AUTO_TEST_CASE( saving_different_objects7 )
 {
@@ -200,9 +227,13 @@ BOOST_AUTO_TEST_CASE( saving_different_objects7 )
     JPetHit testJPetHit;
     writer.write(testJPetHit);
   }
-  if (boost::filesystem::exists(fileTest))
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+  JPetReader reader(fileTest);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  reader.closeFile();
+  if(boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-}
+} 
 
 BOOST_AUTO_TEST_CASE( saving_different_objects8 )
 {
@@ -215,22 +246,13 @@ BOOST_AUTO_TEST_CASE( saving_different_objects8 )
     JPetLOR testJPetLOR;
     writer.write(testJPetLOR);
   }
-  if (boost::filesystem::exists(fileTest))
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+  JPetReader reader(fileTest);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  reader.closeFile();
+  if(boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-}
+} 
 
-BOOST_AUTO_TEST_CASE( saving_different_objects_event )
-{
-  auto fileTest = "saving_different_objectsTest.root";
-  JPetWriter writer(fileTest);
-  const auto kHugeNumberOfObjects = 10000;
-  for (int i = 0; i < kHugeNumberOfObjects; i++) {
-    if (i % 1000 == 0) std::cout << "*" << std::flush;
-    JPetLOR testJPetEvent;
-    writer.write(testJPetEvent);
-  }
-  if (boost::filesystem::exists(fileTest))
-    boost::filesystem::remove(fileTest);
-}
 
 BOOST_AUTO_TEST_SUITE_END()
