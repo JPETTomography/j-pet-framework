@@ -22,7 +22,7 @@ class JPetReaderInterface {
  public:
   typedef TObject MyEvent; 
   virtual ~JPetReaderInterface() {;}
-  virtual MyEvent& getCurrentEvent()=0;   
+  virtual MyEvent& getCurrentEvent()=0;
   virtual bool nextEvent()=0;
   virtual bool firstEvent()=0;
   virtual bool lastEvent()=0;
@@ -30,8 +30,10 @@ class JPetReaderInterface {
   virtual long long getCurrentEventNumber() const =0;
   virtual long long getNbOfAllEvents() const =0; 
   virtual TObject* getObjectFromFile(const char* name)=0;
-  
-  virtual bool openFileAndLoadData(const char* filename, const char* treename)=0;
+  virtual TBranch* getBranch(const char *name) = 0;
+
+  virtual bool openFileAndLoadData(const char *filename,
+                                   const char *treename) = 0;
   virtual void closeFile()=0; 
 };
 #endif /*  !JPETREADERINTERFACE_H */
