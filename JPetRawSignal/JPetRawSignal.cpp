@@ -64,8 +64,8 @@ std::vector<JPetSigCh> JPetRawSignal::getPoints(
 }
 
 
-std::map<int, double> JPetRawSignal::getTimesVsThresholdNumber(JPetSigCh::EdgeType edge) const {
-  std::map<int, double> thrToTime;
+std::map<unsigned int, float> JPetRawSignal::getTimesVsThresholdNumber(JPetSigCh::EdgeType edge) const {
+  std::map<unsigned int, float> thrToTime;
   const std::vector<JPetSigCh> & vec = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
 
   for( std::vector<JPetSigCh>::const_iterator it = vec.begin(); it!=vec.end(); ++it){
@@ -74,8 +74,9 @@ std::map<int, double> JPetRawSignal::getTimesVsThresholdNumber(JPetSigCh::EdgeTy
   return thrToTime;
 }
 
-std::map<float, double> JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const {
-  std::map<float, double> thrToTime;
+std::map<float, float>
+JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const {
+  std::map<float, float> thrToTime;
 
   const std::vector<JPetSigCh> & vec = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
 
@@ -85,10 +86,10 @@ std::map<float, double> JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeT
   return thrToTime;
 }
 
-std::map<int, double> JPetRawSignal::getTOTsVsThresholdNumber() const {
+std::map<unsigned int, float> JPetRawSignal::getTOTsVsThresholdNumber() const {
 
-  std::map<int, double> thrToTOT;
-  
+  std::map<unsigned int, float> thrToTOT;
+
   for( std::vector<JPetSigCh>::const_iterator it1 = fLeadingPoints.begin(); it1!=fLeadingPoints.end(); ++it1){
     for( std::vector<JPetSigCh>::const_iterator it2 = fTrailingPoints.begin(); it2!=fTrailingPoints.end(); ++it2){
       if( it1->getThresholdNumber() == it2->getThresholdNumber() ){
@@ -99,8 +100,8 @@ std::map<int, double> JPetRawSignal::getTOTsVsThresholdNumber() const {
   return thrToTOT;
 }
 
-std::map<int, double> JPetRawSignal::getTOTsVsThresholdValue() const {
-  std::map<int, double> thrToTOT;
+std::map<float, float> JPetRawSignal::getTOTsVsThresholdValue() const {
+  std::map<float, float> thrToTOT;
 
   for( std::vector<JPetSigCh>::const_iterator it1 = fLeadingPoints.begin(); it1!=fLeadingPoints.end(); ++it1){
     for( std::vector<JPetSigCh>::const_iterator it2 = fTrailingPoints.begin(); it2!=fTrailingPoints.end(); ++it2){

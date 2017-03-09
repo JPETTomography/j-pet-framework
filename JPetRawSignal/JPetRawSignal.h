@@ -81,24 +81,23 @@ public:
   /**
    * @brief Get a map with (threshold number, time [ps]) pairs.
    */
-  std::map<int, double> getTimesVsThresholdNumber(JPetSigCh::EdgeType edge) const;
+  std::map<unsigned int, float> getTimesVsThresholdNumber(JPetSigCh::EdgeType edge) const;
 
   /**
    * @brief Get a map with (threshold value [mV], time [ps]) pairs.
    */
-  std::map<float, double> getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const;
+  std::map<float, float> getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const;
 
   /**
    * @brief Get a map with (threshold value [mV], TOT [ps]) pairs.
    */
-  std::map<int, double> getTOTsVsThresholdValue() const;
-  
+  std::map<float, float> getTOTsVsThresholdValue() const;
+
   /**
    * @brief Get a map with (threshold number, TOT [ps]) pairs.
    */
-  std::map<int, double> getTOTsVsThresholdNumber() const;
+  std::map<unsigned int, float> getTOTsVsThresholdNumber() const;
 
-  
   inline int getNumberOfLeadingEdgePoints(void) const {
     return fLeadingPoints.size();
   }

@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(GetMapOfTimesVsThrNumTest) {
   signal.addPoint(sigch2);
   signal.addPoint(sigch3);
 
-  std::map<int, double> map;
+  std::map<unsigned int, float> map;
   map = signal.getTimesVsThresholdNumber(JPetSigCh::Trailing);
 
   BOOST_REQUIRE_EQUAL( map[sigch1.getThresholdNumber()], sigch1.getValue() );
@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(GetMapOfTimesVsThrValueTest) {
   signal.addPoint(sigch3);
   signal.addPoint(sigch4);
 
-  std::map<float, double> map;
+  std::map<float, float> map;
   map = signal.getTimesVsThresholdValue(JPetSigCh::Trailing);
 
   BOOST_REQUIRE_EQUAL( map[100], sigch1.getValue() );
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE(GetMapOfTOTsVsThrNumOrValueTest) {
   signal.addPoint(sigch2l);
   signal.addPoint(sigch3l);
 
-  std::map<int, double> map;
+  std::map<unsigned int, float> map;
   map = signal.getTOTsVsThresholdNumber();
 
   BOOST_REQUIRE_EQUAL( map.size(), 2u );
@@ -203,7 +203,7 @@ BOOST_AUTO_TEST_CASE(GetMapOfTOTsVsThrNumOrValueTest) {
   BOOST_REQUIRE_EQUAL( map.count(3), 0u ); 
   BOOST_CHECK_THROW( map.at(2), std::out_of_range);
   
-  std::map<int, double> map2;
+  std::map<float, float> map2;
   map2 = signal.getTOTsVsThresholdValue();
 
   BOOST_REQUIRE_EQUAL( map2.size(), 2u );
