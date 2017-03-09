@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(GetVectorOfPointsTest) {
 
   BOOST_REQUIRE_EQUAL(
       signal.getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrValue).size(),
-      0);
+      0u);
 
 }
 
@@ -114,20 +114,25 @@ BOOST_AUTO_TEST_CASE(GetMapOfTimesVsThrValueTest) {
   JPetSigCh sigch3(JPetSigCh::Trailing, 43.f);
   sigch3.setThreshold(400.f);
   sigch3.setThresholdNumber(4);
+  JPetSigCh sigch4(JPetSigCh::Trailing, 23.f);
+  sigch4.setThreshold(400.1f);
+  sigch4.setThresholdNumber(5);
 
   signal.addPoint(sigch1);
   signal.addPoint(sigch2);
   signal.addPoint(sigch3);
+  signal.addPoint(sigch4);
 
-  std::map<int, double> map;
+  std::map<float, double> map;
   map = signal.getTimesVsThresholdValue(JPetSigCh::Trailing);
 
   BOOST_REQUIRE_EQUAL( map[100], sigch1.getValue() );
   BOOST_REQUIRE_EQUAL( map[sigch2.getThreshold()], sigch2.getValue() );
   BOOST_REQUIRE_EQUAL( map[sigch3.getThreshold()], sigch3.getValue() );
-  BOOST_REQUIRE_EQUAL( map[300], 0.f );
+  BOOST_REQUIRE_EQUAL(map[sigch4.getThreshold()], sigch4.getValue());
+  BOOST_REQUIRE_EQUAL(map.size(), 4u);
+  BOOST_REQUIRE_EQUAL(map[300], 0.f); // [] operator create object if key dosent exists
 }
-
 
 BOOST_AUTO_TEST_CASE(SetAndGetTSlotIndexTest) {
   JPetRawSignal signal;
@@ -191,21 +196,21 @@ BOOST_AUTO_TEST_CASE(GetMapOfTOTsVsThrNumOrValueTest) {
   std::map<int, double> map;
   map = signal.getTOTsVsThresholdNumber();
 
-  BOOST_REQUIRE_EQUAL( map.size(), 2 );
+  BOOST_REQUIRE_EQUAL( map.size(), 2u );
   BOOST_REQUIRE_EQUAL( map[1], sigch1t.getValue() - sigch1l.getValue() );
   BOOST_REQUIRE_EQUAL( map[4], sigch3t.getValue() - sigch3l.getValue() );
-  BOOST_REQUIRE_EQUAL( map.count(2), 0 ); 
-  BOOST_REQUIRE_EQUAL( map.count(3), 0 ); 
+  BOOST_REQUIRE_EQUAL( map.count(2), 0u ); 
+  BOOST_REQUIRE_EQUAL( map.count(3), 0u ); 
   BOOST_CHECK_THROW( map.at(2), std::out_of_range);
   
   std::map<int, double> map2;
   map2 = signal.getTOTsVsThresholdValue();
 
-  BOOST_REQUIRE_EQUAL( map2.size(), 2 );
+  BOOST_REQUIRE_EQUAL( map2.size(), 2u );
   BOOST_REQUIRE_EQUAL( map2[100.f], sigch3t.getValue() - sigch1l.getValue() );
   BOOST_REQUIRE_EQUAL( map2[400.f], sigch1t.getValue() - sigch3l.getValue() );
-  BOOST_REQUIRE_EQUAL( map2.count(50.f), 0 ); 
-  BOOST_REQUIRE_EQUAL( map2.count(200.f), 0 ); 
+  BOOST_REQUIRE_EQUAL( map2.count(50.f), 0u ); 
+  BOOST_REQUIRE_EQUAL( map2.count(200.f), 0u ); 
 
 }
 

@@ -86,7 +86,7 @@ public:
   /**
    * @brief Get a map with (threshold value [mV], time [ps]) pairs.
    */
-  std::map<int, double> getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const;
+  std::map<float, double> getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const;
 
   /**
    * @brief Get a map with (threshold value [mV], TOT [ps]) pairs.
