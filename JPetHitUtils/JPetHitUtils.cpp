@@ -21,9 +21,9 @@ const double JPetHitUtils::Unset = -std::numeric_limits<double>::infinity();
 
 double JPetHitUtils::getTimeDiffAtThr(const JPetHit& hit, int thr){
   
-  std::map<int,double> lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal()
+  std::map<unsigned int,float> lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal()
     .getTimesVsThresholdNumber(JPetSigCh::Leading);
-  std::map<int,double> lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal()
+  std::map<unsigned int,float> lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal()
     .getTimesVsThresholdNumber(JPetSigCh::Leading);
   
   // it there was TDC signal at this threshold on leading edge at both sides
@@ -36,9 +36,9 @@ double JPetHitUtils::getTimeDiffAtThr(const JPetHit& hit, int thr){
 
 double JPetHitUtils::getTimeAtThr(const JPetHit& hit, int thr){
   
-  std::map<int,double> lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal()
+  std::map<unsigned int,float> lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal()
     .getTimesVsThresholdNumber(JPetSigCh::Leading);
-  std::map<int,double> lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal()
+  std::map<unsigned int,float> lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal()
     .getTimesVsThresholdNumber(JPetSigCh::Leading);
   
   // it there was TDC signal at this threshold on leading edge at both sides
