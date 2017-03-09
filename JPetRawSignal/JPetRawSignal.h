@@ -98,13 +98,6 @@ public:
    */
   std::map<unsigned int, float> getTOTsVsThresholdNumber() const;
 
-  inline int getNumberOfLeadingEdgePoints(void) const {
-    return fLeadingPoints.size();
-  }
-  inline int getNumberOfTrailingEdgePoints(void) const {
-    return fTrailingPoints.size();
-  }
-
 private:
   std::vector<JPetSigCh> fLeadingPoints; ///< vector of JPetSigCh objects from leading edge of the signal
   std::vector<JPetSigCh> fTrailingPoints; ///< vector of JPetSigCh objects from trailing edge of the signal

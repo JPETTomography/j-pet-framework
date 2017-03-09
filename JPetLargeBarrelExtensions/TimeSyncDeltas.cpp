@@ -21,20 +21,21 @@ Synchronization::Synchronization(const shared_ptr < AbstractBarrelMapping > map,
     f_offsets=make_shared<JPetMap<SynchroStrip>>(f_mapping->getLayersSizes());
     str>>(*f_offsets);
 }
-Synchronization::~Synchronization(){}
-const SynchroStrip Synchronization::get_times(const JPetHit & hit) const{
-    const auto& offsets=f_offsets->operator[](f_mapping->getStripPos(hit.getBarrelSlot()));
-    map<unsigned int,float> lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal().getTimesVsThresholdNumber(JPetSigCh::Leading);
-    map<unsigned int,float> lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal().getTimesVsThresholdNumber(JPetSigCh::Leading);
-    vector<double> A,B;
-    for(size_t thr=1;thr<=4;thr++){
-	A.push_back(lead_times_A[thr]);
-	B.push_back(lead_times_B[thr]);
-    }
-    SynchroStrip res;
-    res.A=f_time_calc(A)+offsets.A;
-    res.B=f_time_calc(B)+offsets.B;
-    return res;
+Synchronization::~Synchronization() {}
+const SynchroStrip Synchronization::get_times(const JPetHit& hit) const
+{
+  const auto& offsets = f_offsets->operator[](f_mapping->getStripPos(hit.getBarrelSlot()));
+  map<unsigned int, float> lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal().getTimesVsThresholdNumber(JPetSigCh::Leading);
+  map<unsigned int, float> lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal().getTimesVsThresholdNumber(JPetSigCh::Leading);
+  vector<double> A, B;
+  for (size_t thr = 1; thr <= 4; thr++) {
+    A.push_back(lead_times_A[thr]);
+    B.push_back(lead_times_B[thr]);
+  }
+  SynchroStrip res;
+  res.A = f_time_calc(A) + offsets.A;
+  res.B = f_time_calc(B) + offsets.B;
+  return res;
 }
 const double defaultTimeCalculation(const vector<double>&P){
     return P[0];//This algorithm should be discussed
