@@ -74,8 +74,8 @@ std::map<int, double> JPetRawSignal::getTimesVsThresholdNumber(JPetSigCh::EdgeTy
   return thrToTime;
 }
 
-std::map<int, double> JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const {
-  std::map<int, double> thrToTime;
+std::map<float, double> JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const {
+  std::map<float, double> thrToTime;
 
   const std::vector<JPetSigCh> & vec = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
 
