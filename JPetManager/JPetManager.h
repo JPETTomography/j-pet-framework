@@ -36,6 +36,7 @@ public:
   bool run();
   void registerTask(const TaskGenerator& taskGen);
   void parseCmdLine(int argc, char** argv);
+  bool initDBConnection(const char * configFilePath);
   inline std::vector<JPetOptions> getOptions() const {
     return fOptions;
   }
@@ -50,5 +51,6 @@ private:
   std::vector<JPetOptions> fOptions; /// fOptions are input options.
   /// Its number corresponds to the number of independent input files.
   TaskGeneratorChain* fTaskGeneratorChain; /// fTaskGeneratorChain is a sequences of registered computing tasks.
+
 };
 #endif /*  !JPETMANAGER_H */
