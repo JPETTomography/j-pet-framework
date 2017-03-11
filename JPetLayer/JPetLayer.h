@@ -45,7 +45,8 @@ public:
   void setFrame(JPetFrame& frame);
   bool isNullObject() const;
   static  JPetLayer& getDummyResult();
-
+  static  JPetLayer makeLayer(int id, bool isActive, std::string name, float radius,JPetFrame& frame);
+  
 protected:
   void clearTRefFrame();
 
