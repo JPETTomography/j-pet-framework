@@ -99,5 +99,11 @@ void JPetLayer::clearTRefFrame()
 {
   fTRefFrame = NULL;
 }
-
+JPetLayer JPetLayer::makeLayer(int id, bool isActive, std::string name, float radius, JPetFrame& frame)
+{
+  JPetLayer objectLayer(id, isActive, name, radius);
+  objectLayer.fTRefFrame = &frame;
+  return objectLayer;
+}
+  
 ClassImp(JPetLayer);
