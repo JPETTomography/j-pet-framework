@@ -78,6 +78,7 @@ public:
   const JPetTRB& getTRB() const;
   void setTRB(JPetTRB& p_TRB);
   bool isNullObject() const;
+  static JPetFEB makeFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId, int p_n_time_outputs_per_input, int p_n_notime_outputs_per_input, JPetTRB& p_TRB);
 
 protected:
   void clearTRefTRBs();
