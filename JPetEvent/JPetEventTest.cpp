@@ -228,4 +228,13 @@ BOOST_AUTO_TEST_CASE(addEventType3)
   BOOST_REQUIRE((type & JPetEventType::kScattered) != JPetEventType::kScattered);
 }
 
+BOOST_AUTO_TEST_CASE( fabric )
+{
+  const JPetHit hit;
+  JPetEventType type;
+  JPetEvent event = JPetEvent::makeEvent(hit, type); 
+  BOOST_REQUIRE( event.getEventType() == type );
+  BOOST_REQUIRE_EQUAL( event.getHits().size(), 1);
+ }
+
 BOOST_AUTO_TEST_SUITE_END()
