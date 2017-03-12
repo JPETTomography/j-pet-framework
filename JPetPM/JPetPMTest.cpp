@@ -365,5 +365,21 @@ BOOST_AUTO_TEST_CASE( wrong_barrelSlot_relation )
   JPetPMFactory factory(paramGetter, 7, febFactory, scinFactory, barrelSlotFactory);
   BOOST_REQUIRE_THROW(factory.getPMs(), std::out_of_range);
 }
+BOOST_AUTO_TEST_CASE( fabric )
+{
+  JPetPM::Side side;
+  JPetBarrelSlot p_barrelSlot;
+  JPetScin p_scin;
+  JPetFEB p_FEB;
+  JPetPM pm = JPetPM::makePM(side, 1, 2, 3.0, 4.0, p_FEB, p_scin, p_barrelSlot);
+  BOOST_REQUIRE(pm.getSide() == side);
+  BOOST_REQUIRE_EQUAL(pm.getHVset(), 1);
+  BOOST_REQUIRE_EQUAL(pm.getHVopt(), 2);
+  BOOST_REQUIRE_EQUAL(pm.getHVgain().first, 3.0);
+  BOOST_REQUIRE_EQUAL(pm.getHVgain().second, 4.0);
+  BOOST_REQUIRE(const_cast<JPetFEB&>(pm.getFEB()) == p_FEB);
+  BOOST_REQUIRE(pm.getScin() == p_scin);
+  BOOST_REQUIRE(pm.getBarrelSlot() == p_barrelSlot);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
