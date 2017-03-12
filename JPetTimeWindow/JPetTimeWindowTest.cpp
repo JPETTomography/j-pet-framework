@@ -47,4 +47,12 @@ BOOST_AUTO_TEST_CASE( some_channels )
 
 }
 
+BOOST_AUTO_TEST_CASE( fabric )
+{
+  JPetSigCh new_ch;
+  JPetTimeWindow timeWindow = JPetTimeWindow::makeTimeWindow(new_ch, 1);
+  BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfSigCh(), 1);
+  BOOST_REQUIRE_EQUAL(timeWindow.getIndex(), 1);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
