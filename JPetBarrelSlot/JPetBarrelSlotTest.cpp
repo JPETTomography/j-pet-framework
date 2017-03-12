@@ -267,4 +267,16 @@ BOOST_AUTO_TEST_CASE( wrong_relation )
   BOOST_REQUIRE_THROW(factory.getBarrelSlots(), std::out_of_range);
 }
 
+BOOST_AUTO_TEST_CASE( fabric )
+{
+  JPetLayer p_layer;
+  JPetBarrelSlot barrelSlot = JPetBarrelSlot::makeBarrelSlot(p_layer, 1 , true, "name", 0, 2);
+  BOOST_REQUIRE(barrelSlot.getLayer() == p_layer);
+  BOOST_REQUIRE_EQUAL(barrelSlot.getID(), 1);
+  BOOST_REQUIRE(barrelSlot.isActive());
+  BOOST_REQUIRE_EQUAL(barrelSlot.getName(), "name");
+  BOOST_REQUIRE_EQUAL(barrelSlot.getTheta(), 0);
+  BOOST_REQUIRE_EQUAL(barrelSlot.getInFrameID(), 2);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
