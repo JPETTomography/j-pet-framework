@@ -20,7 +20,7 @@
 #include "../JPetFEB/JPetFEB.h"
 #include "../JPetLayer/JPetLayer.h"
 #include "../JPetHit/JPetHit.h"
-#include "../JPetSigCh/JPetSigCh"
+#include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
 #include "../JPetTimeWindow/JPetTimeWindow.h"
 #include "../JPetPM/JPetPM.h"
