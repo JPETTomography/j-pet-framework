@@ -21,6 +21,7 @@
 #include "../JPetLoggerInclude.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetCmdParser/JPetCmdParser.h"
+#include "../DBHandler/HeaderFiles/DBHandler.h"
 
 #include <TThread.h>
 #include <TDSet.h>
@@ -76,6 +77,8 @@ void JPetManager::parseCmdLine(int argc, char** argv)
 {
   JPetCmdParser parser;
   fOptions = parser.parseAndGenerateOptions(argc, (const char**)argv);
+  // check whether connection to DB will be needed
+
 }
 
 JPetManager::~JPetManager()
@@ -90,4 +93,37 @@ void JPetManager::registerTask(const TaskGenerator& taskGen)
 {
   assert(fTaskGeneratorChain);
   fTaskGeneratorChain->push_back(taskGen);
+}
+
+/**
+ * @brief Initialize connection to database if such connection is necessary
+ *
+ * @param configFilePath path to the config file with database connection details
+ *
+ * @return true if database connection was required and initialization was called,
+ * false if database connection was not required and its initialization was skipped
+ *
+ * Database connection is only initialized if the user provided the run number
+ * ("-i" option) and did not provide local database ("-l") at the same time.
+ */
+bool JPetManager::initDBConnection(const char * configFilePath = "../DBConfig/configDB.cfg"){
+
+  bool isDBrequired = false;
+  
+  if(fOptions.size() > 0){ // if at least one input file to process
+    if(fOptions.at(0).getRunNumber() >= 0){ // if run number is not default -1
+      if(!fOptions.at(0).isLocalDB()){ // unless local DB file was provided
+	isDBrequired = true;
+      }
+    }
+  }
+
+  if(isDBrequired){
+    INFO("Attempting to set up connection to the database.");
+    DB::SERVICES::DBHandler::createDBConnection(configFilePath);
+  }else{
+    INFO("Setting connection to database skipped.");
+  }
+  
+  return isDBrequired;
 }
