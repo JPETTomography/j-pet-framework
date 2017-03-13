@@ -165,9 +165,3 @@ void JPetFEB::clearTRefTRBs()
   fTRefTRBs = NULL;
 }
 
-JPetFEB JPetFEB::makeFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId, int p_n_time_outputs_per_input, int p_n_notime_outputs_per_input, JPetTRB& p_TRB)
-{
-  JPetFEB objectFEB(p_id, p_isActive, p_status, p_description, p_version, p_userId, p_n_time_outputs_per_input, p_n_notime_outputs_per_input);
-  objectFEB.fTRefTRBs = &p_TRB;
-  return objectFEB;
-}

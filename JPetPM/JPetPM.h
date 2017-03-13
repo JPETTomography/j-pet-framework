@@ -69,8 +69,7 @@ public:
   void setBarrelSlot(JPetBarrelSlot& p_barrelSlot);
   JPetBarrelSlot& getBarrelSlot() const;
   bool isNullObject() const;
-  static JPetPM makePM(Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot);
-
+  
 protected:
   void clearTRefFEBs();
   void clearTRefScin();

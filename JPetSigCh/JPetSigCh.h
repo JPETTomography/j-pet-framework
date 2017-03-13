@@ -189,7 +189,6 @@ public:
   
   ClassDef(JPetSigCh, 5);
 
-  static JPetSigCh makeSigCh(const JPetPM & pm, const JPetTRB & trb, const JPetFEB & feb, const JPetTOMBChannel & channel, float val, EdgeType type, float thr, Int_t daqch, unsigned int threshold_number);
 protected:
   EdgeType fType; ///< type of the SigCh: Leading, Trailing (time) or Charge (charge)
   float fValue; ///< main value of the SigCh; either time [ps] (if fType is kRiging or Leading) or charge (if fType is Charge)

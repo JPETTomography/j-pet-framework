@@ -77,24 +77,5 @@ BOOST_AUTO_TEST_CASE( second )
   BOOST_REQUIRE_CLOSE(test.getThreshold(), test2.getThreshold(), epsilon);
 }
 
-BOOST_AUTO_TEST_CASE( fabric )
-{
-  const JPetPM pm;
-  const JPetTRB trb;
-  const JPetFEB feb;
-  const JPetTOMBChannel channel;
-  JPetSigCh::EdgeType type;
-  Int_t daqch;
-  JPetSigCh sigCh = JPetSigCh::makeSigCh(pm, trb, feb, channel, 4.0, type, 3.0, daqch, 0.0);
-  BOOST_REQUIRE_EQUAL(sigCh.getValue(), 4.0);
-  BOOST_REQUIRE_EQUAL(sigCh.getType(), type);
-  BOOST_REQUIRE(sigCh.getPM() == pm);
-  BOOST_REQUIRE(sigCh.getTRB() == trb);
-  BOOST_REQUIRE(const_cast<JPetFEB&>(sigCh.getFEB()) == feb);
-  BOOST_REQUIRE(const_cast<JPetTOMBChannel&>(sigCh.getTOMBChannel()) == channel);
-  BOOST_REQUIRE(sigCh.getDAQch() == daqch);
-  BOOST_REQUIRE(sigCh.getThresholdNumber() == 0.0);
-  BOOST_REQUIRE(sigCh.getThreshold() == 3.0);
-}
 
 BOOST_AUTO_TEST_SUITE_END()
