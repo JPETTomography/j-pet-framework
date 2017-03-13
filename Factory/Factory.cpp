@@ -10,12 +10,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetFabrics.cpp
+ *  @file Factory.cpp
  */
 
-#include "./JPetFabrics.h"
+#include "./Factory.h"
 
-namespace fabrics
+namespace factory
 {
 JPetScin makeScin(int id, float attenLen, float length, float height, float width, JPetBarrelSlot& p_barrelSlot )
 {
@@ -46,7 +46,7 @@ JPetHit makeHit(float energy, float qualityOfEnergy, float time, float qualityOf
   return hitObject;
 }
 
-JPetSigCh makeSigCh(const JPetPM & pm, const JPetTRB & trb, const JPetFEB & feb, const JPetTOMBChannel & channel, float val, EdgeType type, float thr, Int_t daqch, unsigned int threshold_number){
+JPetSigCh makeSigCh(const JPetPM & pm, const JPetTRB & trb, const JPetFEB & feb, const JPetTOMBChannel & channel, float val, JPetSigCh::EdgeType type, float thr, Int_t daqch, unsigned int threshold_number){
    JPetSigCh sigChObject(type, val );
    sigChObject.fPM = const_cast<JPetPM*>(&pm);
    sigChObject.fTRB = const_cast<JPetTRB*>(&trb);
@@ -73,7 +73,7 @@ JPetTimeWindow makeTimeWindow(JPetSigCh& new_ch, unsigned int index)
   return timeWindowObject;
 }
 
-JPetPM makePM(Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot)
+JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot)
 {
   JPetPM pmObject(side, id, set, opt, gain);
   pmObject.fTRefFEB = &p_FEB;
@@ -83,4 +83,3 @@ JPetPM makePM(Side side, int id, int set, int opt, std::pair<float, float>& gain
 }
 
 }
-#endif
