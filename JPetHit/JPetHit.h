@@ -73,7 +73,7 @@ public:
   bool isSignalASet()const;
   bool isSignalBSet()const;
   
-  static JPetHit makeHit(float energy, float qualityOfEnergy, float time, float qualityOfTime, float td, float qtd, float x, float y, float z, JPetBarrelSlot& bs, JPetScin& sc, JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB );
+  static JPetHit makeHit(float energy, float qualityOfEnergy, float time, float qualityOfTime, float td, float qtd, TVector3& pos , JPetBarrelSlot& bs, JPetScin& sc, JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB );
 
   void setEnergy(float energy);
   void setQualityOfEnergy(float qualityOfEnergy);

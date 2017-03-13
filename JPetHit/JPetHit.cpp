@@ -120,24 +120,11 @@ bool JPetHit::isSignalBSet() const
   return fIsSignalBset;
 }
 
-JPetHit JPetHit::makeHit(float energy, float qualityOfEnergy, float time, float qualityOfTime, float td, float qtd, float x, float y, float z, JPetBarrelSlot& bs, JPetScin& sc, JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB )
+JPetHit JPetHit::makeHit(float energy, float qualityOfEnergy, float time, float qualityOfTime, float td, float qtd, TVector3& pos , JPetBarrelSlot& bs, JPetScin& sc, JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB )
 {
-  JPetHit hitObject;
-  hitObject.fEnergy=energy;
-  hitObject.fQualityOfEnergy=qualityOfEnergy;
-  hitObject.fTime=time; 
-  hitObject.fQualityOfTime=qualityOfTime;
+  JPetHit hitObject(energy, qualityOfEnergy, time, qualityOfTime, pos, p_sigA, p_sigB, bs, sc); 
   hitObject.fTimeDiff=td;
   hitObject.fQualityOfTimeDiff=qtd; 
-  hitObject.fBarrelSlot=&bs; 
-  hitObject.fScintillator=&sc;
-  hitObject.fPos.SetX(x);
-  hitObject.fPos.SetY(y);
-  hitObject.fPos.SetZ(z);
-  hitObject.fSignalA = p_sigA;
-  hitObject.fIsSignalAset = true;
-  hitObject.fSignalB = p_sigB;
-  hitObject.fIsSignalBset = true;
   return hitObject;
 }
 void JPetHit::setEnergy(float energy)
