@@ -182,14 +182,9 @@ JPetPM& JPetPM::getDummyResult()
   static JPetPM DummyResult(true);
   return DummyResult;
 }
-JPetPM JPetPM::makePM(Side side, int set, int opt, float g1, float g2, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot)
+JPetPM JPetPM::makePM(Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot)
 {
-  JPetPM pmObject;
-  pmObject.fSide = side;
-  pmObject.fHVset = set;
-  pmObject.fHVopt = opt;
-  pmObject.fHVgain.first = g1;
-  pmObject.fHVgain.second = g2;
+  JPetPM pmObject(side, id, set, opt, gain);
   pmObject.fTRefFEB = &p_FEB;
   pmObject.fTRefScin = &p_scin;
   pmObject.fTRefBarrelSlot = &p_barrelSlot;

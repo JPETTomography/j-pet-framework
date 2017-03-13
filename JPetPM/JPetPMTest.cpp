@@ -371,7 +371,8 @@ BOOST_AUTO_TEST_CASE( fabric )
   JPetBarrelSlot p_barrelSlot;
   JPetScin p_scin;
   JPetFEB p_FEB;
-  JPetPM pm = JPetPM::makePM(side, 1, 2, 3.0, 4.0, p_FEB, p_scin, p_barrelSlot);
+  std::pair<float, float> gain(3.0, 4.0);
+  JPetPM pm = JPetPM::makePM(side, 1, 1, 2, gain, p_FEB, p_scin, p_barrelSlot);
   BOOST_REQUIRE(pm.getSide() == side);
   BOOST_REQUIRE_EQUAL(pm.getHVset(), 1);
   BOOST_REQUIRE_EQUAL(pm.getHVopt(), 2);
