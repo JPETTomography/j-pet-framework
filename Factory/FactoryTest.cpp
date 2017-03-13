@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE fabrics
+#define BOOST_TEST_MODULE factory
 #include <boost/test/unit_test.hpp>
-#include "JPetFabrics.h"
+#include "Factory.h"
 #include <boost/filesystem.hpp>
 
 
@@ -11,7 +11,7 @@ BOOST_AUTO_TEST_CASE( scin )
 {
   JPetBarrelSlot p_barrelSlot;
   JPetScin::Dimension dim = JPetScin::kLength;
-  JPetScin scin = fabrics::makeScin(1, 2.0, 3.0, 4.0, 5.0, p_barrelSlot );
+  JPetScin scin = factory::makeScin(1, 2.0, 3.0, 4.0, 5.0, p_barrelSlot );
   BOOST_REQUIRE_EQUAL(scin.getID(), 1);
   BOOST_REQUIRE_EQUAL(scin.getAttenLen(), 2.0);
   BOOST_REQUIRE_EQUAL(scin.getScinSize(dim), 3.0);
@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE( scin )
 BOOST_AUTO_TEST_CASE( feb )
 {
   JPetTRB p_TRB;
-  JPetFEB feb = fabrics::makeFEB( 1, true, "status", "description", 2, 7, 1, 0, p_TRB);
+  JPetFEB feb = factory::makeFEB( 1, true, "status", "description", 2, 7, 1, 0, p_TRB);
   BOOST_REQUIRE_EQUAL(feb.getID(), 1);
   BOOST_REQUIRE_EQUAL(feb.isActive(), true);
   BOOST_REQUIRE_EQUAL(feb.status(), "status");
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE( feb )
 BOOST_AUTO_TEST_CASE( layer )
 {
   JPetFrame frame;
-  JPetLayer layer = fabrics::makeLayer(1, true, "name", 3, frame);
+  JPetLayer layer = factory::makeLayer(1, true, "name", 3, frame);
   BOOST_REQUIRE_EQUAL(layer.getID(), 1);
   BOOST_REQUIRE_EQUAL(layer.getIsActive(), true);
   BOOST_REQUIRE_EQUAL(layer.getName(), "name");
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE( hit )
    JPetPhysSignal p_sigA;
    JPetPhysSignal p_sigB;
    TVector3 position(6.0, 7.0, 8.0);
-   JPetHit hit = fabrics::makeHit(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, position, bs, sc, p_sigA, p_sigB );
+   JPetHit hit = factory::makeHit(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, position, bs, sc, p_sigA, p_sigB );
    BOOST_REQUIRE_EQUAL(hit.getEnergy(), 0.0f);
    BOOST_REQUIRE_EQUAL(hit.getQualityOfEnergy(), 1.0f);
    BOOST_REQUIRE_EQUAL(hit.getTime(), 2.0f);
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE( sigCh )
   const JPetTOMBChannel channel;
   JPetSigCh::EdgeType type;
   Int_t daqch;
-  JPetSigCh sigCh = fabrics::makeSigCh(pm, trb, feb, channel, 4.0, type, 3.0, daqch, 0.0);
+  JPetSigCh sigCh = factory::makeSigCh(pm, trb, feb, channel, 4.0, type, 3.0, daqch, 0.0);
   BOOST_REQUIRE_EQUAL(sigCh.getValue(), 4.0);
   BOOST_REQUIRE_EQUAL(sigCh.getType(), type);
   BOOST_REQUIRE(sigCh.getPM() == pm);
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE( sigCh )
 BOOST_AUTO_TEST_CASE( barrelSlot )
 {
   JPetLayer p_layer;
-  JPetBarrelSlot barrelSlot = fabrics::makeBarrelSlot(p_layer, 1 , true, "name", 0, 2);
+  JPetBarrelSlot barrelSlot = factory::makeBarrelSlot(p_layer, 1 , true, "name", 0, 2);
   BOOST_REQUIRE(barrelSlot.getLayer() == p_layer);
   BOOST_REQUIRE_EQUAL(barrelSlot.getID(), 1);
   BOOST_REQUIRE(barrelSlot.isActive());
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE( barrelSlot )
 BOOST_AUTO_TEST_CASE( timeWindow )
 {
   JPetSigCh new_ch;
-  JPetTimeWindow timeWindow = fabrics::makeTimeWindow(new_ch, 1);
+  JPetTimeWindow timeWindow = factory::makeTimeWindow(new_ch, 1);
   BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfSigCh(), 1);
   BOOST_REQUIRE_EQUAL(timeWindow.getIndex(), 1);
 }
@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE( pm )
   JPetScin p_scin;
   JPetFEB p_FEB;
   std::pair<float, float> gain(3.0, 4.0);
-  JPetPM pm = fabrics::makePM(side, 1, 1, 2, gain, p_FEB, p_scin, p_barrelSlot);
+  JPetPM pm = factory::makePM(side, 1, 1, 2, gain, p_FEB, p_scin, p_barrelSlot);
   BOOST_REQUIRE(pm.getSide() == side);
   BOOST_REQUIRE_EQUAL(pm.getHVset(), 1);
   BOOST_REQUIRE_EQUAL(pm.getHVopt(), 2);

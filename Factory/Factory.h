@@ -10,11 +10,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetFabrics.h
+ *  @file Factory.h
  */
 
-#ifndef JPET_FABRICS_H
-#define JPET_FABRICS_H
+#ifndef Factory_H
+#define Factory_H
 
 #include "../JPetScin/JPetScin.h"
 #include "../JPetFEB/JPetFEB.h"
@@ -26,19 +26,19 @@
 #include "../JPetPM/JPetPM.h"
 #include "../JPetTRB/JPetTRB.h"
 #include "../JPetFrame/JPetFrame.h"
-#include " ../JPetPhysSignal/JPetPhysSignal.h"
+#include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetPhysSignal/JPetPhysSignal.h"
 #include  "TVector3.h"
 
-namespace fabrics
+namespace factory
 {
 JPetScin makeScin(int id, float attenLen, float length, float height, float width, JPetBarrelSlot& p_barrelSlot ); 
 JPetFEB makeFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId, int p_n_time_outputs_per_input, int p_n_notime_outputs_per_input, JPetTRB& p_TRB);
 JPetLayer makeLayer(int id, bool isActive, std::string name, float radius,JPetFrame& frame); 
 JPetHit makeHit(float energy, float qualityOfEnergy, float time, float qualityOfTime, float td, float qtd, TVector3& pos ,JPetBarrelSlot& bs, JPetScin& sc, JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB );
-JPetSigCh makeSigCh(const JPetPM & pm, const JPetTRB & trb, const JPetFEB & feb, const JPetTOMBChannel & channel, float val, EdgeType type, float thr, Int_t daqch, unsigned int threshold_number); 
+JPetSigCh makeSigCh(const JPetPM & pm, const JPetTRB & trb, const JPetFEB & feb, const JPetTOMBChannel & channel, float val, JPetSigCh::EdgeType type, float thr, Int_t daqch, unsigned int threshold_number); 
 JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, std::string name, float theta, int inFrameID); 
 JPetTimeWindow makeTimeWindow(JPetSigCh& new_ch, unsigned int index); 
-JPetPM makePM(Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot); 
+JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot); 
 }
-#endif /*  !JPET_FABRICS_H */
+#endif /*  !Factory_H */
