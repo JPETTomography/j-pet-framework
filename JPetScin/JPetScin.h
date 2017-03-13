@@ -58,7 +58,6 @@ public:
   JPetBarrelSlot& getBarrelSlot() const;
   bool isNullObject() const;
   static JPetScin& getDummyResult();
-  static JPetScin makeScin(int id, float attenLen, float length, float height, float width, JPetBarrelSlot& p_barrelSlot );
 
 protected:
   void clearTRefBarrelSlot();

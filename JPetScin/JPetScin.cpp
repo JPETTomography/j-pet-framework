@@ -154,9 +154,4 @@ void JPetScin::clearTRefBarrelSlot()
   fTRefBarrelSlot = NULL;
 }
 
-JPetScin JPetScin::makeScin(int id, float attenLen, float length, float height, float width, JPetBarrelSlot& p_barrelSlot )
-{
-  JPetScin scinObject(id, attenLen, length, height, width);
-  scinObject.fTRefBarrelSlot = &p_barrelSlot;
-  return scinObject;
-}
+

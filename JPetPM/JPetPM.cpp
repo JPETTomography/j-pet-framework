@@ -182,14 +182,6 @@ JPetPM& JPetPM::getDummyResult()
   static JPetPM DummyResult(true);
   return DummyResult;
 }
-JPetPM JPetPM::makePM(Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot)
-{
-  JPetPM pmObject(side, id, set, opt, gain);
-  pmObject.fTRefFEB = &p_FEB;
-  pmObject.fTRefScin = &p_scin;
-  pmObject.fTRefBarrelSlot = &p_barrelSlot;
-  return pmObject;
-}
 
 
 ClassImp(JPetPM);
