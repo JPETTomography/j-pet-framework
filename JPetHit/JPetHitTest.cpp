@@ -127,7 +127,8 @@ BOOST_AUTO_TEST_CASE(set_get_objects_test)
    JPetScin sc;
    JPetPhysSignal p_sigA;
    JPetPhysSignal p_sigB;
-   JPetHit hit = JPetHit::makeHit(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, bs, sc, p_sigA, p_sigB );
+   TVector3 position(6.0, 7.0, 8.0;)
+   JPetHit hit = JPetHit::makeHit(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, position, bs, sc, p_sigA, p_sigB );
    BOOST_REQUIRE_EQUAL(hit.getEnergy(), 0.0f);
    BOOST_REQUIRE_EQUAL(hit.getQualityOfEnergy(), 1.0f);
    BOOST_REQUIRE_EQUAL(hit.getTime(), 2.0f);
