@@ -445,9 +445,10 @@ BOOST_AUTO_TEST_CASE(sinogram)
   }
   int views = 180;
   int scans = 256;
-  std::vector<std::vector<double>> result = 
-                      JPetRecoImageTools::sinogram(m, views, scans, 0, 180, 
-                                          JPetRecoImageTools::linear, JPetRecoImageTools::rescale);
+  std::vector<std::vector<double>> result =
+      JPetRecoImageTools::createSinogramWithSingleInterpolation(
+          m, views, scans, 0, 180, JPetRecoImageTools::linear,
+          JPetRecoImageTools::rescale);
   /// save sinogram
   std::ofstream res(outFile);
   res << "P2" << std::endl;
@@ -486,8 +487,9 @@ BOOST_AUTO_TEST_CASE(sinogram2)
       m[i][j] = val;
     }
   }
-  std::vector<std::vector<double>> result = 
-                        JPetRecoImageTools::sinogram2(m, 180, JPetRecoImageTools::rescale, 0, 255);
+  std::vector<std::vector<double>> result =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
   /// save sinogram
   std::ofstream res(outFile);
   res << "P2" << std::endl;
@@ -527,9 +529,11 @@ BOOST_AUTO_TEST_CASE(backProject)
   }
   int views = 180;
   int scans = 256;
-  JPetRecoImageTools::Matrix2DProj sinogram = JPetRecoImageTools::sinogram(m, views, scans, 0, 180, 
-                                          JPetRecoImageTools::linear, JPetRecoImageTools::rescale);
-  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::RamLak, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithSingleInterpolation(
+          m, views, scans, 0, 180, JPetRecoImageTools::linear,
+          JPetRecoImageTools::rescale);
+  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::RamLakFilter, sinogram);
   JPetRecoImageTools::Matrix2DProj result = 
                 JPetRecoImageTools::backProject(sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
@@ -568,9 +572,10 @@ BOOST_AUTO_TEST_CASE(backProjectNone)
       m[i][j] = val;
     }
   }
-  JPetRecoImageTools::Matrix2DProj sinogram = 
-                        JPetRecoImageTools::sinogram2(m, 180, JPetRecoImageTools::rescale, 0, 255);
-  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::None, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::NoneFilter, sinogram);
   JPetRecoImageTools::Matrix2DProj result = 
                 JPetRecoImageTools::backProject(sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
@@ -609,9 +614,10 @@ BOOST_AUTO_TEST_CASE(backProjectRamLak)
       m[i][j] = val;
     }
   }
-  JPetRecoImageTools::Matrix2DProj sinogram = 
-                        JPetRecoImageTools::sinogram2(m, 180, JPetRecoImageTools::rescale, 0, 255);
-  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::RamLak, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::RamLakFilter, sinogram);
   JPetRecoImageTools::Matrix2DProj result = 
                 JPetRecoImageTools::backProject(sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
@@ -650,9 +656,10 @@ BOOST_AUTO_TEST_CASE(backProjectSheppLogan)
       m[i][j] = val;
     }
   }
-  JPetRecoImageTools::Matrix2DProj sinogram = 
-                        JPetRecoImageTools::sinogram2(m, 180, JPetRecoImageTools::rescale, 0, 255);
-  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::SheppLogan, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::SheppLoganFilter, sinogram);
   JPetRecoImageTools::Matrix2DProj result = 
                 JPetRecoImageTools::backProject(sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
@@ -691,9 +698,10 @@ BOOST_AUTO_TEST_CASE(backProjectCosine)
       m[i][j] = val;
     }
   }
-  JPetRecoImageTools::Matrix2DProj sinogram = 
-                        JPetRecoImageTools::sinogram2(m, 180, JPetRecoImageTools::rescale, 0, 255);
-  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::Cosine, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::CosineFilter, sinogram);
   JPetRecoImageTools::Matrix2DProj result = 
                 JPetRecoImageTools::backProject(sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
@@ -732,9 +740,10 @@ BOOST_AUTO_TEST_CASE(backProjectHamming)
       m[i][j] = val;
     }
   }
-  JPetRecoImageTools::Matrix2DProj sinogram = 
-                        JPetRecoImageTools::sinogram2(m, 180, JPetRecoImageTools::rescale, 0, 255);
-  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::Hamming, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::HammingFilter, sinogram);
   JPetRecoImageTools::Matrix2DProj result = 
                 JPetRecoImageTools::backProject(sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
@@ -773,9 +782,10 @@ BOOST_AUTO_TEST_CASE(backProjectRidgelet)
       m[i][j] = val;
     }
   }
-  JPetRecoImageTools::Matrix2DProj sinogram = 
-                        JPetRecoImageTools::sinogram2(m, 180, JPetRecoImageTools::rescale, 0, 255);
-  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::Ridgelet, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::FilterFunc(JPetRecoImageTools::RidgeletFilter, sinogram);
   JPetRecoImageTools::Matrix2DProj result = 
                 JPetRecoImageTools::backProject(sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);

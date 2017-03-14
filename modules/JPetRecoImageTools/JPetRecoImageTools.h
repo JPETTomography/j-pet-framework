@@ -50,8 +50,8 @@ public:
     // We now build a function type out of the MPL sequence
     typedef typename ft::function_type<sequence_type>::type function_type;
 
-    std::function<function_type> function = std::move(f);
-    function(sinogram, std::forward(args)...);
+    std::function<function_type> callableFunction = std::move(f);
+    callableFunction(sinogram, std::forward(args)...);
   }
   /// Returns a matrixGetter, that can be used to return matrix elements in the following way:
   /// if isTransposed is set to false, matrixGetter returns matrix[i][j]
@@ -95,7 +95,7 @@ public:
    *  \param angleEnd end angle for projection in deg(Optional, default 180)
    *  \param rescaleFunc function that rescales the final result (Optional, default no rescaling)
   */
-  static Matrix2DProj sinogram(Matrix2D& emissionMatrix,
+  static Matrix2DProj createSinogramWithSingleInterpolation(Matrix2D& emissionMatrix,
                                int nViews, int nScans,
                                double angleBeg = 0, double angleEnd = 180,
                                InterpolationFunc interpolationFunction = linear,
@@ -109,7 +109,15 @@ public:
                                     int nScans,
                                     InterpolationFunc& interpolationFunction
                                    );
-  static Matrix2DProj sinogram2(Matrix2D& emissionMatrix,
+  /*! \brief Function returning sinogram matrix with both variables interpolated
+   *  \param emissionMatrix matrix, needs to be NxN
+   *  \param nAngles angle step is calculated as PI / nAngles
+   *  \param rescaleFunc function that rescales the final result (Optional,
+   * default no rescaling)
+   *  \param rescaleMinCutoff min value to set in rescale (Optional)
+   *  \param rescaleFactor max value to set in rescale (Optional)
+  */
+  static Matrix2DProj createSinogramWithDoubleInterpolation(Matrix2D& emissionMatrix,
                                  int nAngles, RescaleFunc rescaleFunc = nonRescale,
                                  int rescaleMinCutoff = 0,
                                  int rescaleFactor = 255
@@ -120,22 +128,52 @@ public:
                                      std::function<double(int, int)> matrixGet
                                      );
 
+  /*! \brief Function image from sinogram matrix
+   *  \param sinogram matrix containing sinogram to backProject
+   *  \param nAngles angle step is calculated as PI / nAngles
+   *  \param rescaleFunc function that rescales the final result (Optional,
+   * default no rescaling)
+   *  \param rescaleMinCutoff min value to set in rescale (Optional)
+   *  \param rescaleFactor max value to set in rescale (Optional)
+  */
   static Matrix2DProj backProject(Matrix2DProj& sinogram, int angles, 
                                   RescaleFunc rescaleFunc, 
                                   int rescaleMinCutoff,
                                   int rescaleFactor);
 
-  static void None(Matrix2DProj &sinogram);
+  /*! \brief Should by used by FilterFunc, not filtering data
+   *  \param sinogram matrix with data to filter
+  */
+  static void NoneFilter(Matrix2DProj &sinogram);
 
-  static void RamLak(Matrix2DProj &sinogram);
+  /*! \brief Should by used by FilterFunc, filter data by |w|, basic filter,
+   * other filters are a combination of this one
+   *  \param sinogram matrix with data to filter
+  */
+  static void RamLakFilter(Matrix2DProj &sinogram);
 
-  static void SheppLogan(Matrix2DProj &sinogram);
-  
-  static void Cosine(Matrix2DProj &sinogram);
+  /*! \brief Should by used by FilterFunc, RamLakFilter miltiplies by sin
+   * function
+   *  \param sinogram matrix with data to filter
+  */
+  static void SheppLoganFilter(Matrix2DProj &sinogram);
 
-  static void Hamming(Matrix2DProj &sinogram);
+  /*! \brief Should by used by FilterFunc, RamLakFilter miltiplies by cos
+   * function
+   *  \param sinogram matrix with data to filter
+  */
+  static void CosineFilter(Matrix2DProj &sinogram);
 
-  static void Ridgelet(Matrix2DProj &sinogram);
+  /*! \brief Should by used by FilterFunc, RamLakFilter miltiplies by a Hamming
+   * window
+   *  \param sinogram matrix with data to filter
+  */
+  static void HammingFilter(Matrix2DProj &sinogram);
+
+  /*! \brief Should by used by FilterFunc, square root of RamLakFilter
+   *  \param sinogram matrix with data to filter
+  */
+  static void RidgeletFilter(Matrix2DProj &sinogram);
 
 private:
   JPetRecoImageTools();
@@ -146,9 +184,9 @@ private:
   static void doFFT1D(Matrix2DProj &sinogram, int nAngles, int nScanSize,
                       int padlen, std::vector<double> &Filt);
 
-  static void doFFT1D(std::vector<double> &Re, std::vector<double> &Im, int size, int shift, bool fast);
+  static void doFFT1D(std::vector<double> &Re, std::vector<double> &Im, int size, int shift);
 
-  static void doIFFT1D(std::vector<double> &Re, std::vector<double> &Im, int size, int shift, bool fast);
+  static void doIFFT1D(std::vector<double> &Re, std::vector<double> &Im, int size, int shift);
 
   static inline double setToZeroIfSmall(double value, double epsilon) {
     if (std::abs(value) < epsilon) return 0;
