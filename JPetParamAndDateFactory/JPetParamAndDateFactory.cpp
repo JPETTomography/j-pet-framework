@@ -10,10 +10,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file Factory.cpp
+ *  @file JPetParamAndDateFactory.cpp
  */
 
-#include "./Factory.h"
+#include "./JPetParamAndDateFactory.h"
 
 namespace factory
 {

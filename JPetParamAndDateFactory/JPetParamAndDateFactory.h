@@ -10,11 +10,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file Factory.h
+ *  @file JPetParamAndDateFactory.h
  */
 
-#ifndef Factory_H
-#define Factory_H
+#ifndef JPETPARAM_AND_DATE_FACTORY_H
+#define JPETPARAM_AND_DATE_FACTORY_H
 
 #include "../JPetScin/JPetScin.h"
 #include "../JPetFEB/JPetFEB.h"

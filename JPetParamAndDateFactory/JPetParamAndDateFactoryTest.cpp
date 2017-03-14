@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE FactoryTest
+#define BOOST_TEST_MODULE JPetParamAndDateFactoryTest
 #include <boost/test/unit_test.hpp>
-#include "Factory.h"
+#include "JPetParamAndDateFactory.h"
 #include <boost/filesystem.hpp>
 
 
