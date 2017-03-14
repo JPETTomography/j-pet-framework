@@ -9,7 +9,21 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE( scin )
 {
+  JPetBarrelSlot p_barrelSlot(1, true, "name", 1, 1);
   JPetScin scin = factory::makeScin(1, 2.0, 3.0, 4.0, 5.0, p_barrelSlot );
+  BOOST_REQUIRE_EQUAL(scin.getID(), 1);
+  BOOST_REQUIRE_EQUAL(scin.getAttenLen(), 2.0);
+  JPetScin::Dimension dim = JPetScin::kLength;
+  BOOST_REQUIRE_EQUAL(scin.getScinSize(dim), 3.0);
+  dim = JPetScin::kHeight;
+  BOOST_REQUIRE_EQUAL(scin.getScinSize(dim), 4.0);
+  dim = JPetScin::kWidth;
+  BOOST_REQUIRE_EQUAL(scin.getScinSize(dim), 5.0);
+  BOOST_REQUIRE_EQUAL(scin.getBarrelSlot().getID(), p_barrelSlot.getID());
+  BOOST_REQUIRE_EQUAL(scin.getBarrelSlot().isActive(), p_barrelSlot.isActive());
+  BOOST_REQUIRE_EQUAL(scin.getBarrelSlot().getName(), p_barrelSlot.getName());
+  BOOST_REQUIRE_EQUAL(scin.getBarrelSlot().getTheta(), p_barrelSlot.getTheta());
+  BOOST_REQUIRE_EQUAL(scin.getBarrelSlot().getInFrameID(), p_barrelSlot.getInFrameID());
 }
 
 BOOST_AUTO_TEST_CASE( feb )
@@ -38,16 +52,6 @@ BOOST_AUTO_TEST_CASE( tombChannel )
 /*
 BOOST_AUTO_TEST_CASE( scin )
 {
-  JPetBarrelSlot p_barrelSlot;
-  JPetScin::Dimension dim = JPetScin::kLength;
-  JPetScin scin = factory::makeScin(1, 2.0, 3.0, 4.0, 5.0, p_barrelSlot );
-  BOOST_REQUIRE_EQUAL(scin.getID(), 1);
-  BOOST_REQUIRE_EQUAL(scin.getAttenLen(), 2.0);
-  BOOST_REQUIRE_EQUAL(scin.getScinSize(dim), 3.0);
-  dim = JPetScin::kHeight;
-  BOOST_REQUIRE_EQUAL(scin.getScinSize(dim), 4.0);
-  dim = JPetScin::kWidth;
-  BOOST_REQUIRE_EQUAL(scin.getScinSize(dim), 5.0);
   BOOST_REQUIRE(scin.getBarrelSlot() == p_barrelSlot);
 }
 
