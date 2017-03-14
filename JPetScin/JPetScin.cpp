@@ -19,28 +19,32 @@
 
 ClassImp(JPetScin);
 
-JPetScin::JPetScin():
-fID(0),
-fAttenLen(0.0),
-fScinSize(0., 0., 0.)
+JPetScin::JPetScin() :
+  fScinSize(0., 0., 0.)
 {
   /* */
   SetName("JPetScin");
 }
 
 JPetScin::JPetScin(int id) : fID(id),
-                 fAttenLen(0.0),
-                 fScinSize(0., 0., 0.)
+  fScinSize(0., 0., 0.)
 {
   SetName("JPetScin");
 }
 
 JPetScin::JPetScin(int id, float attenLen, float length, float height, float width):
-fID(id),
-fAttenLen(attenLen),
-fScinSize(length, height, width)
+  fID(id),
+  fAttenLen(attenLen),
+  fScinSize(length, height, width)
 {
   /* */
+  SetName("JPetScin");
+}
+
+JPetScin::JPetScin(bool isNull) :
+  fScinSize(0., 0., 0.),
+  fIsNullObject(isNull)
+{
   SetName("JPetScin");
 }
 
@@ -83,4 +87,69 @@ void JPetScin::setScinSize(JPetScin::Dimension dim, float value)
   default:
     assert(1 == 0);
   }
+}
+
+bool JPetScin::operator==(const JPetScin& scin) const
+{
+  return getID() == scin.getID();
+}
+
+bool JPetScin::operator!=(const JPetScin& scin) const
+{
+  return getID() != scin.getID();
+}
+
+int JPetScin::getID() const
+{
+  return fID;
+}
+
+float JPetScin::getAttenLen() const
+{
+  return fAttenLen;
+}
+
+JPetScin::ScinDimensions JPetScin::getScinSize() const
+{
+  return fScinSize;
+}
+float JPetScin::getScinSize(Dimension dim) const;
+void JPetScin::setAttenLen(float attenLen)
+{
+  fAttenLen = attenLen;
+}
+void JPetScin::setScinSize(ScinDimensions size)
+{
+  fScinSize = size;
+}
+void JPetScin::setScinSize(Dimension dim, float value);
+
+void JPetScin::setBarrelSlot(JPetBarrelSlot& p_barrelSlot)
+{
+  fTRefBarrelSlot = &p_barrelSlot;
+}
+
+JPetBarrelSlot& JPetScin::getBarrelSlot() const
+{
+  if (fTRefBarrelSlot.GetObject()) return (JPetBarrelSlot&) * (fTRefBarrelSlot.GetObject());
+  else {
+    ERROR("No JPetBarrelSlot slot set, Null object will be returned");
+    return JPetBarrelSlot::getDummyResult();
+  }
+}
+
+bool JPetScin::isNullObject() const
+{
+  return fIsNullObject;
+}
+
+JPetScin& JPetScin::getDummyResult()
+{
+  static JPetScin DummyResult(true);
+  return DummyResult;
+}
+
+void JPetScin::clearTRefBarrelSlot()
+{
+  fTRefBarrelSlot = NULL;
 }

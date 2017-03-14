@@ -19,6 +19,7 @@
 #include "TNamed.h"
 #include <TRef.h>
 #include "../JPetTRB/JPetTRB.h"
+#include "../JPetLoggerInclude.h"
 
 /**
  * @brief Parametric class representing database information on parameters of a front-end board (FEB).
@@ -28,89 +29,87 @@
 class JPetFEB: public TNamed
 {
 protected:
-  struct JPetFEBChannel
-  {
+  struct JPetFEBChannel {
     int m_id;
     bool m_isActive;
     std::string m_status;
     int m_portNumber;
     std::string m_description;
   };
-  
-  struct JPetFEBInput : public JPetFEBChannel
-  {
+
+  struct JPetFEBInput : public JPetFEBChannel {
     JPetFEBInput(int p_FEBId);
-    
+
     int m_FEBId;
   };
 
-  struct JPetFEBOutput : public JPetFEBChannel
-  {
+  struct JPetFEBOutput : public JPetFEBChannel {
     JPetFEBOutput(bool p_passedInformationIsTime, std::string p_passedInformation, int p_FEBId, int p_inputId, int p_FEBInputId);
-    
+
     bool m_passedInformationIsTime;
     std::string m_passedInformation;
     int m_FEBId;
     int m_inputId;
     int m_FEBInputId;
   };
-  
-  int m_id;
-  bool m_isActive;
-  std::string m_status;
-  std::string m_description;
-  const int m_version;
-  //JPetUser &m_JPetUser;		//creatorId
-  const int m_userId;		// creatorId 
-  /// @todo userId is inaccesible!!!
-  int m_n_time_outputs_per_input;
-  int m_n_notime_outputs_per_input;
-  
-  
+
 public:
+  static JPetFEB& getDummyResult();
+
   JPetFEB();
-  JPetFEB(int id);
+  explicit JPetFEB(int id);
+  explicit JPetFEB(bool isNull);
   JPetFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description,
-	  int p_version, int p_userId, int p_n_time_outputs_per_input,
-	  int p_n_notime_outputs_per_input);
+          int p_version, int p_userId, int p_n_time_outputs_per_input,
+          int p_n_notime_outputs_per_input);
   virtual ~JPetFEB(void);
-  
+
+  bool operator==(const JPetFEB& feb);
+  bool operator!=(const JPetFEB& feb);
+
   virtual int getID(void) const;
   virtual bool isActive(void) const;
   virtual std::string status(void) const;
   virtual std::string description(void) const;
   virtual int version(void) const;
-  inline int getCreator() const {return m_userId;}
+  int getCreator() const;
   virtual int getNtimeOutsPerInput(void) const;
   virtual int getNnotimeOutsPerInput(void) const;
-  
-  const JPetTRB & getTRB() const
-  { 
-    return (JPetTRB&)*fTRefTRBs.GetObject(); 
-  }
-  
-  void setTRB(JPetTRB &p_TRB)
-  {
-    fTRefTRBs = &p_TRB;
-  }
-
-  inline bool operator==(const JPetFEB& feb) { return getID() == feb.getID(); }
-  inline bool operator!=(const JPetFEB& feb) { return getID() != feb.getID(); }
-
+  const JPetTRB& getTRB() const;
+  void setTRB(JPetTRB& p_TRB);
+  bool isNullObject() const;
 
 protected:
+  void clearTRefTRBs();
+
+#ifndef __CINT__
+  int m_id = 0;
+  bool m_isActive = false;
+  std::string m_status = "";
+  std::string m_description = "";
+  const int m_version = 0;
+  const int m_userId = 0;		// creatorId
+  /// @todo userId is inaccesible!!!
+  int m_n_time_outputs_per_input = 0;
+  int m_n_notime_outputs_per_input = 0;
+  bool fIsNullObject = false;
+#else
+  int m_id;
+  bool m_isActive;
+  std::string m_status;
+  std::string m_description;
+  const int m_version;
+  const int m_userId;		// creatorId
+  /// @todo userId is inaccesible!!!
+  int m_n_time_outputs_per_input;
+  int m_n_notime_outputs_per_input;
+  bool fIsNullObject;
+#endif
   TRef fTRefTRBs;
-  
-  void clearTRefTRBs()
-  {
-    fTRefTRBs = NULL;
-  }
-  
-  
-private:
-  ClassDef(JPetFEB, 1);
-  
+
   friend class JPetParamManager;
+
+  ClassDef(JPetFEB, 2);
 };
 
 #endif // JPET_FEB_H

@@ -111,15 +111,14 @@ add_subdirectory(Unpacker2/Unpacker2)
 file(GLOB HEADERS JPet*/*.h tools/JPet*/*.h modules/JPet*/*.h)
 file(GLOB SOURCES JPet*/*.cpp tools/JPet*/*.cpp modules/JPet*/*.cpp)
 file(GLOB UNIT_TEST_SOURCES JPet*/*Test.cpp)
+file(GLOB MODULES_UNIT_TEST_SOURCES modules/JPet*/*Test.cpp)
+list(APPEND UNIT_TEST_SOURCES ${MODULES_UNIT_TEST_SOURCES})
 list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
 
 ##download test files and config files
-#only once
+# the script shouldn't do anything if the data is present and correct
 set(DOWNLOAD_DATA ${CMAKE_CURRENT_SOURCE_DIR}/download_data.sh ${CMAKE_CURRENT_SOURCE_DIR})
-if(NOT DOWNLOAD_DATA_HAPPENED)
-  execute_process( COMMAND ${DOWNLOAD_DATA} )
-  set(DOWNLOAD_DATA_HAPPENED TRUE CACHE BOOL "Has the download data happened?" FORCE)
-endif() 
+execute_process( COMMAND ${DOWNLOAD_DATA} )
 
 generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   # exclude following sources from ROOT dictionary

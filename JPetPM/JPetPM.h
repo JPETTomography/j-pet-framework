@@ -22,6 +22,7 @@
 #include "../JPetFEB/JPetFEB.h"
 #include "../JPetScin/JPetScin.h"
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
+#include "../JPetLoggerInclude.h"
 
 class JPetScin;
 
@@ -29,92 +30,74 @@ class JPetScin;
  * @brief Parametric class representing database information on parameters of a photomultiplier.
  *
  */
-class JPetPM: public TNamed 
+class JPetPM: public TNamed
 {
- public:
+public:
   enum Side {SideA, SideB};
   enum GainNumber {kFirst, kSecond};
 
+  static  JPetPM& getDummyResult();
+
   JPetPM();
-  JPetPM(int id);
+  explicit JPetPM(int id);
+  explicit JPetPM(bool isNull);
   JPetPM(Side side,
-	 int id,
-	 int HVset,
-	 int HVopt,
-	 std::pair<float, float> HVgainNumber);
+         int id,
+         int HVset,
+         int HVopt,
+         std::pair<float, float> HVgainNumber);
   ~JPetPM();
 
-  inline Side getSide() const { return fSide; }
-  inline int getID() const { return fID; }
-  inline int getHVset() const { return fHVset; }
-  inline int getHVopt() const { return fHVopt; }
-  inline float getHVgain(GainNumber nr) { return (nr == kFirst) ? fHVgain.first : fHVgain.second; }
-  inline std::pair<float, float> getHVgain() { return fHVgain; }
-  inline void setSide(Side side) { fSide = side; }
-  inline void setHVset(int set) { fHVset = set; }
-  inline void setHVopt(int opt) { fHVopt= opt; }
-  inline void setHVgain(float g1, float g2) { fHVgain.first = g1; fHVgain.second = g2; }
-  inline void setHVgain(const std::pair<float,float>& gain) { fHVgain = gain; }
-
-  void setFEB(JPetFEB &p_FEB) { fTRefFEB = &p_FEB; }
-  const JPetFEB& getFEB() const { return (JPetFEB&)*(fTRefFEB.GetObject()); }
-  
-  void setScin(JPetScin &p_scin) { fTRefScin = &p_scin; }
-  JPetScin & getScin() const { return (JPetScin&)*(fTRefScin.GetObject()); }
-
-  void setBarrelSlot(JPetBarrelSlot &p_barrelSlot){ fTRefBarrelSlot = &p_barrelSlot; }
-  JPetBarrelSlot& getBarrelSlot() const { return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject()); }	
-  
   bool operator==(const JPetPM& pm) const;
   bool operator!=(const JPetPM& pm) const;
-  
-  /*std::vector<TRef> getTRefKBs() const { return fTRefKBs; }
 
-  JPetFEB* getTRefKB(int p_index)
-  {
-    if(p_index < fTRefKBs.size())
-    {
-      return (JPetFEB*)fTRefKBs[p_index].GetObject();
-    }
-    return NULL;
-  }
-  
-  void setTRefKBs(std::vector<TRef> &p_TRefKBs)
-  {
-    fTRefKBs = p_TRefKBs;
-  }
-  
-  void addTRefKB(JPetFEB &p_KB)
-  {
-    fTRefKBs.push_back(&p_KB);
-  }*/
-  
- private:
+  Side getSide() const;
+  int getID() const;
+  int getHVset() const;
+  int getHVopt() const;
+  float getHVgain(GainNumber nr);
+  std::pair<float, float> getHVgain();
+  void setSide(Side side);
+  void setHVset(int set);
+  void setHVopt(int opt);
+  void setHVgain(float g1, float g2);
+  void setHVgain(const std::pair<float, float>& gain);
+  void setFEB(JPetFEB& p_FEB);
+  const JPetFEB& getFEB() const;
+  void setScin(JPetScin& p_scin);
+  JPetScin& getScin() const;
+  void setBarrelSlot(JPetBarrelSlot& p_barrelSlot);
+  JPetBarrelSlot& getBarrelSlot() const;
+  bool isNullObject() const;
+
+
+protected:
+  void clearTRefFEBs();
+  void clearTRefScin();
+  void clearTRefBarrelSlot();
+
+#ifndef __CINT__
+  Side fSide = SideA;
+  int fID = 0;
+  int fHVset = 0;
+  int fHVopt = 0;
+  std::pair<float, float> fHVgain;
+  bool fIsNullObject = false;
+#else
   Side fSide;
   int fID;
   int fHVset;
   int fHVopt;
   std::pair<float, float> fHVgain;
-
-  ClassDef(JPetPM, 4);
-  
-protected:
+  bool fIsNullObject;
+#endif
   TRef fTRefFEB;
   TRef fTRefScin;
   TRef fTRefBarrelSlot;
 
-  void clearTRefFEBs() { fTRefFEB = NULL; }
-  void clearTRefScin() { fTRefScin = NULL; }
-  void clearTRefBarrelSlot() { fTRefBarrelSlot = NULL; }
-  
-  /*std::vector<TRef> fTRefKBs;
-  
-  void clearTRefKBs()
-  {
-    fTRefKBs.clear();
-  }*/
-  
   friend class JPetParamManager;
+
+  ClassDef(JPetPM, 5);
 };
 
 #endif

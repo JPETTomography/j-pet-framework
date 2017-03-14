@@ -18,6 +18,7 @@
 
 #include <TRef.h>
 #include "../JPetLayer/JPetLayer.h"
+#include "../JPetLoggerInclude.h"
 #include "TNamed.h"
 
 /**
@@ -27,41 +28,50 @@
  */
 class JPetBarrelSlot: public TNamed
 {
+
 public:
-  /// Default constructor sets fId, fTheta to -1. 
   JPetBarrelSlot();
   JPetBarrelSlot(int id, bool isActive, std::string name, float theta, int inFrameID);
-  
-  inline bool operator==(const JPetBarrelSlot& bslot) const { return getID() == bslot.getID(); }
-  inline bool operator!=(const JPetBarrelSlot& bslot) const { return getID() != bslot.getID(); }
+  explicit JPetBarrelSlot(bool isNull);
 
-  inline int getID() const { return fId; }
-  inline float getTheta() const { return fTheta; }
-  inline bool isActive() const { return fIsActive; }
-  inline std::string getName() const { return fName; }
-  inline int getInFrameID() const {return fInFrameID; }
-  inline const JPetLayer & getLayer() const { return static_cast<JPetLayer&>(*(fTRefLayer.GetObject())); }
-  
-  void setLayer(JPetLayer &p_layer)
-  {
-    fTRefLayer = &p_layer;
-  }
+  bool operator==(const JPetBarrelSlot& bslot) const;
+  bool operator!=(const JPetBarrelSlot& bslot) const;
 
-private:
+  int getID() const;
+  float getTheta() const;
+  bool isActive() const;
+  std::string getName() const;
+  int getInFrameID() const;
+  const JPetLayer& getLayer() const;
+
+  bool isNullObject() const;
+  static  JPetBarrelSlot& getDummyResult();
+
+  void setLayer(JPetLayer& p_layer);
+
+protected:
+  void clearTRefLayer();
+
+#ifndef __CINT__
+  int fId = -1;
+  bool fIsActive = false;
+  std::string fName = "";
+  float fTheta = -1.f;
+  int fInFrameID = -1;
+  TRef fTRefLayer;
+  bool fIsNullObject = false;
+#else
   int fId;
   bool fIsActive;
   std::string fName;
   float fTheta;
   int fInFrameID;
   TRef fTRefLayer;
-  
-protected:
-  void clearTRefLayer()
-  {
-    fTRefLayer = NULL;
-  }
+  bool fIsNullObject;
+#endif
 
-  ClassDef(JPetBarrelSlot, 3);
+
+  ClassDef(JPetBarrelSlot, 4);
 };
 
 #endif

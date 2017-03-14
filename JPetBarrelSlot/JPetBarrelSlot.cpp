@@ -15,12 +15,7 @@
 
 #include "JPetBarrelSlot.h"
 
-JPetBarrelSlot::JPetBarrelSlot():
-  fId(-1),
-  fIsActive(false),
-  fName(""),
-  fTheta(-1.f),
-  fInFrameID(-1)
+JPetBarrelSlot::JPetBarrelSlot()
 {
   SetName("JPetBarrelSlot");
 }
@@ -34,6 +29,67 @@ JPetBarrelSlot::JPetBarrelSlot(int id, bool isActive, std::string name, float th
   fInFrameID(inFrameID)
 {
   SetName("JPetBarrelSlot");
+}
+
+JPetBarrelSlot::JPetBarrelSlot(bool isNull) :
+  fIsNullObject(isNull)
+{
+  SetName("JPetBarrelSlot");
+}
+
+bool JPetBarrelSlot::operator==(const JPetBarrelSlot& bslot) const
+{
+  return getID() == bslot.getID();
+}
+bool JPetBarrelSlot::operator!=(const JPetBarrelSlot& bslot) const
+{
+  return getID() != bslot.getID();
+}
+
+int JPetBarrelSlot::getID() const
+{
+  return fId;
+}
+float JPetBarrelSlot::getTheta() const
+{
+  return fTheta;
+}
+bool JPetBarrelSlot::isActive() const
+{
+  return fIsActive;
+}
+std::string JPetBarrelSlot::getName() const
+{
+  return fName;
+}
+int JPetBarrelSlot::getInFrameID() const
+{
+  return fInFrameID;
+}
+const JPetLayer& JPetBarrelSlot::getLayer() const
+{
+  if (fTRefLayer.GetObject()) return static_cast<JPetLayer&>(*(fTRefLayer.GetObject()));
+  else  {
+    ERROR("No JPetLayer slot set, Null object will be returned");
+    return JPetLayer::getDummyResult();
+  }
+}
+
+bool JPetBarrelSlot::isNullObject() const
+{
+  return fIsNullObject;
+}
+
+JPetBarrelSlot& JPetBarrelSlot::getDummyResult()
+{
+  static JPetBarrelSlot DummyResult(true);
+  return DummyResult;
+}
+
+
+void JPetBarrelSlot::setLayer(JPetLayer& p_layer)
+{
+  fTRefLayer = &p_layer;
 }
 
 ClassImp(JPetBarrelSlot);
