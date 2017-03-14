@@ -22,6 +22,7 @@ cmake_install.cmake
 *.ninja
 Makefile
 MakeFile
+build 
 
 # output files
 /*Test
