@@ -20,6 +20,19 @@ using namespace std;
 const size_t JPetGeomMapping::kBadLayerNumber = 99999999;
 const size_t JPetGeomMapping::kBadSlotNumber = 99999999;
 
+void JPetGeomMapping::printTOMBMapping(const std::map<std::tuple<int, int, JPetPM::Side, int>, int>& tombMap)
+{
+  for (auto & el : tombMap) {
+    auto key = el.first;
+    auto layer =  std::get<0>(key);
+    auto slot  = std::get<1>(key);
+    auto side  = std::get<2>(key);
+    auto threshold = std::get<3>(key);
+    auto tomb = el.second;
+    std::cout << "layer:" << layer << " slot:" << slot << " side:" << side << " threshold:" << threshold << " tomb:" << tomb << std::endl;
+  }
+}
+
 JPetGeomMapping::JPetGeomMapping(const JPetParamBank& paramBank)
 {
   vector<double> layersRadii;
@@ -202,7 +215,7 @@ std::map<std::tuple<int, int, JPetPM::Side, int>, int> JPetGeomMapping::getTOMBM
     auto pm_side = ch->getPM().getSide();
     const auto& barrelSlot = ch->getPM().getScin().getBarrelSlot();
     auto LayerNr = getLayerNumber(barrelSlot.getLayer());
-    auto barrel_slot_nr = getGlobalSlotNumber(barrelSlot);
+    auto barrel_slot_nr = getSlotNumber(barrelSlot);
     result.insert(std::make_pair(std::make_tuple(LayerNr, barrel_slot_nr, pm_side, threshold), tomb_id));
   }
   if (errorOccured) {

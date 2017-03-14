@@ -75,36 +75,37 @@ BOOST_FIXTURE_TEST_CASE(minimalBank, myFixture)
   BOOST_REQUIRE(!mapping.empty());
   BOOST_REQUIRE_EQUAL(mapping.size(), 5u);
   auto layer = 1;
-  auto barrelSlot = 1;
+  auto slot = 1;
   auto side = JPetPM::SideB;
   auto thresholdNumber  = 1;
-  BOOST_REQUIRE_EQUAL(mapping.count(std::make_tuple(layer, barrelSlot, side, thresholdNumber)), 1);
-  auto result_tomb = mapping.at(std::make_tuple(layer, barrelSlot, side, thresholdNumber));
+  BOOST_REQUIRE_EQUAL(mapping.count(std::make_tuple(layer, slot, side, thresholdNumber)), 1);
+  auto result_tomb = mapping.at(std::make_tuple(layer, slot, side, thresholdNumber));
   BOOST_REQUIRE_EQUAL(result_tomb, 1);
   layer = 1;
-  barrelSlot = 1;
+  slot = 1;
   side = JPetPM::SideA;
   thresholdNumber  = 1;
-  result_tomb = mapping.at(std::make_tuple(layer, barrelSlot, side, thresholdNumber));
+  result_tomb = mapping.at(std::make_tuple(layer, slot, side, thresholdNumber));
   BOOST_REQUIRE_EQUAL(result_tomb, 2);
   layer = 1;
-  barrelSlot = 2;
+  slot = 2;
   side = JPetPM::SideA;
   thresholdNumber  = 1;
-  result_tomb = mapping.at(std::make_tuple(layer, barrelSlot, side, thresholdNumber));
+  result_tomb = mapping.at(std::make_tuple(layer, slot, side, thresholdNumber));
   BOOST_REQUIRE_EQUAL(result_tomb, 3);
   layer = 1;
-  barrelSlot = 2;
+  slot = 2;
   side = JPetPM::SideB;
   thresholdNumber  = 1;
-  result_tomb = mapping.at(std::make_tuple(layer, barrelSlot, side, thresholdNumber));
+  result_tomb = mapping.at(std::make_tuple(layer, slot, side, thresholdNumber));
   BOOST_REQUIRE_EQUAL(result_tomb, 4);
 /// second layer
+  JPetGeomMapping::printTOMBMapping(mapping);
   layer = 2;
-  barrelSlot = 3;
+  slot = 1;
   side = JPetPM::SideA;
   thresholdNumber  = 1;
-  result_tomb = mapping.at(std::make_tuple(layer, barrelSlot, side, thresholdNumber));
+  result_tomb = mapping.at(std::make_tuple(layer, slot, side, thresholdNumber));
   BOOST_REQUIRE_EQUAL(result_tomb, 10);
 }
 
@@ -113,31 +114,31 @@ BOOST_FIXTURE_TEST_CASE(getTOMB, myFixture)
   auto bank = fparamManagerInstance.getParamBank();
   auto mapper  = JPetGeomMapping(bank);
   auto layer = 1;
-  auto barrelSlot = 1;
+  auto slot = 1;
   auto side = JPetPM::SideB;
   auto thresholdNumber  = 1;
-  BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, barrelSlot, side, thresholdNumber), 1);
+  BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, slot, side, thresholdNumber), 1);
   layer = 1;
-  barrelSlot = 1;
+  slot = 1;
   side = JPetPM::SideA;
   thresholdNumber  = 1;
-  BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, barrelSlot, side, thresholdNumber), 2);
+  BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, slot, side, thresholdNumber), 2);
   layer = 1;
-  barrelSlot = 2;
+  slot = 2;
   side = JPetPM::SideA;
   thresholdNumber  = 1;
-  BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, barrelSlot, side, thresholdNumber), 3);
+  BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, slot, side, thresholdNumber), 3);
   layer = 1;
-  barrelSlot = 2;
+  slot = 2;
   side = JPetPM::SideB;
   thresholdNumber  = 1;
-  BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, barrelSlot, side, thresholdNumber), 4);
+  BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, slot, side, thresholdNumber), 4);
 /// second layer
   layer = 2;
-  barrelSlot = 3;
+  slot = 1;
   side = JPetPM::SideA;
   thresholdNumber  = 1;
-  BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, barrelSlot, side, thresholdNumber), 10);
+  BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, slot, side, thresholdNumber), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
