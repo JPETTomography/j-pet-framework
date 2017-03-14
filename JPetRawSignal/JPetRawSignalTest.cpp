@@ -116,15 +116,16 @@ BOOST_AUTO_TEST_CASE(GetMapOfTimesVsThrValueTest) {
   signal.addPoint(sigch2);
   signal.addPoint(sigch3);
 
-  std::map<int, double> map;
+  std::map<int, std::pair<float, float>> map;
   map = signal.getTimesVsThresholdValue(JPetSigCh::Trailing);
 
-  BOOST_REQUIRE_EQUAL( map[100], sigch1.getValue() );
-  BOOST_REQUIRE_EQUAL( map[sigch2.getThreshold()], sigch2.getValue() );
-  BOOST_REQUIRE_EQUAL( map[sigch3.getThreshold()], sigch3.getValue() );
-  BOOST_REQUIRE_EQUAL( map[300], 0.f );
+  BOOST_REQUIRE_EQUAL(map[1].first, sigch1.getThreshold());
+  BOOST_REQUIRE_EQUAL(map[1].second, sigch1.getValue());
+  BOOST_REQUIRE_EQUAL(map[2].first, sigch2.getThreshold());
+  BOOST_REQUIRE_EQUAL(map[2].second, sigch2.getValue());
+  BOOST_REQUIRE_EQUAL(map[4].first, sigch3.getThreshold());
+  BOOST_REQUIRE_EQUAL(map[4].second, sigch3.getValue());
 }
-
 
 BOOST_AUTO_TEST_CASE(SetAndGetTSlotIndexTest) {
   JPetRawSignal signal;
