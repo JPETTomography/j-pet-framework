@@ -30,6 +30,8 @@ public:
   static const size_t kBadLayerNumber;
   static const size_t kBadSlotNumber;
 
+  static void printTOMBMapping(const std::map<std::tuple<int, int, JPetPM::Side, int>, int>& tombMap);
+
   explicit JPetGeomMapping(const JPetParamBank& paramBank);
   virtual ~JPetGeomMapping();
   virtual const size_t getLayersCount()const override;
