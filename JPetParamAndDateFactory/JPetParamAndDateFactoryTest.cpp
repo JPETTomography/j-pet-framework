@@ -159,7 +159,33 @@ BOOST_AUTO_TEST_CASE( timeWindow )
 }
 
 BOOST_AUTO_TEST_CASE( pm )
-{}
+{
+  JPetPM::Side side = JPetPM::SideA;
+  JPetBarrelSlot p_barrelSlot(1, true, "name", 2, 3);
+  JPetScin p_scin(1, 2, 3, 4, 5);
+  JPetFEB p_FEB(1, true, "p_status", "p_description", 2, 3, 4, 5);;
+  std::pair<float, float> gain(3.0, 4.0);
+  JPetPM pm = factory::makePM(side, 1, 1, 2, gain, p_FEB, p_scin, p_barrelSlot);
+
+  BOOST_REQUIRE_EQUAL(pm.getID(), 1);
+  BOOST_REQUIRE_EQUAL(pm.getHVset(), 1);
+  BOOST_REQUIRE_EQUAL(pm.getHVopt(), 2);
+
+  BOOST_REQUIRE_EQUAL(pm.getSide(), JPetPM::SideA);
+
+  BOOST_REQUIRE_EQUAL(pm.getHVgain().first, 3.0);
+  BOOST_REQUIRE_EQUAL(pm.getHVgain().second, 4.0);
+
+  BOOST_REQUIRE_EQUAL(pm.getScin().getID(), p_scin.getID() );
+  BOOST_REQUIRE_EQUAL(pm.getScin().getAttenLen(), p_scin.getAttenLen() );
+
+  BOOST_REQUIRE_EQUAL(pm.getBarrelSlot().getID(), p_barrelSlot.getID());
+  BOOST_REQUIRE_EQUAL(pm.getBarrelSlot().getName(), p_barrelSlot.getName());
+
+  BOOST_REQUIRE_EQUAL(pm.getFEB().getID(), p_FEB.getID());
+  BOOST_REQUIRE_EQUAL(pm.getFEB().isActive(), p_FEB.isActive());
+}
+
 BOOST_AUTO_TEST_CASE( baseSignal )
 {}
 BOOST_AUTO_TEST_CASE( physSignal )
@@ -169,33 +195,5 @@ BOOST_AUTO_TEST_CASE( rawSignal )
 BOOST_AUTO_TEST_CASE( tombChannel )
 {}
 
-/*
 
-
-BOOST_AUTO_TEST_CASE( timeWindow )
-{
-  JPetSigCh new_ch;
-  JPetTimeWindow timeWindow = factory::makeTimeWindow(new_ch, 1);
-  BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfSigCh(), 1);
-  BOOST_REQUIRE_EQUAL(timeWindow.getIndex(), 1);
-}
-
-BOOST_AUTO_TEST_CASE( pm )
-{
-  JPetPM::Side side;
-  JPetBarrelSlot p_barrelSlot;
-  JPetScin p_scin;
-  JPetFEB p_FEB;
-  std::pair<float, float> gain(3.0, 4.0);
-  JPetPM pm = factory::makePM(side, 1, 1, 2, gain, p_FEB, p_scin, p_barrelSlot);
-  BOOST_REQUIRE(pm.getSide() == side);
-  BOOST_REQUIRE_EQUAL(pm.getHVset(), 1);
-  BOOST_REQUIRE_EQUAL(pm.getHVopt(), 2);
-  BOOST_REQUIRE_EQUAL(pm.getHVgain().first, 3.0);
-  BOOST_REQUIRE_EQUAL(pm.getHVgain().second, 4.0);
-  BOOST_REQUIRE(const_cast<JPetFEB&>(pm.getFEB()) == p_FEB);
-  BOOST_REQUIRE(pm.getScin() == p_scin);
-  BOOST_REQUIRE(pm.getBarrelSlot() == p_barrelSlot);
-}
-*/
 BOOST_AUTO_TEST_SUITE_END()
