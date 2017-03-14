@@ -1,4 +1,4 @@
-/*#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetParamAndDateFactoryTest
 #include <boost/test/unit_test.hpp>
 #include "JPetParamAndDateFactory.h"
@@ -7,6 +7,35 @@
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
+BOOST_AUTO_TEST_CASE( scin )
+{
+  JPetScin scin = factory::makeScin(1, 2.0, 3.0, 4.0, 5.0, p_barrelSlot );
+}
+
+BOOST_AUTO_TEST_CASE( feb )
+{}
+BOOST_AUTO_TEST_CASE( layer )
+{}
+BOOST_AUTO_TEST_CASE( hit )
+{}
+BOOST_AUTO_TEST_CASE( sigCh )
+{}
+BOOST_AUTO_TEST_CASE( barrelSlot )
+{}
+BOOST_AUTO_TEST_CASE( timeWindow )
+{}
+BOOST_AUTO_TEST_CASE( pm )
+{}
+BOOST_AUTO_TEST_CASE( baseSignal )
+{}
+BOOST_AUTO_TEST_CASE( physSignal )
+{}
+BOOST_AUTO_TEST_CASE( rawSignal )
+{}
+BOOST_AUTO_TEST_CASE( tombChannel )
+{}
+
+/*
 BOOST_AUTO_TEST_CASE( scin )
 {
   JPetBarrelSlot p_barrelSlot;
@@ -135,5 +164,5 @@ BOOST_AUTO_TEST_CASE( pm )
   BOOST_REQUIRE(pm.getScin() == p_scin);
   BOOST_REQUIRE(pm.getBarrelSlot() == p_barrelSlot);
 }
-BOOST_AUTO_TEST_SUITE_END()
 */
+BOOST_AUTO_TEST_SUITE_END()
