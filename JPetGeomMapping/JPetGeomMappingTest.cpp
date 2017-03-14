@@ -100,7 +100,6 @@ BOOST_FIXTURE_TEST_CASE(minimalBank, myFixture)
   result_tomb = mapping.at(std::make_tuple(layer, slot, side, thresholdNumber));
   BOOST_REQUIRE_EQUAL(result_tomb, 4);
 /// second layer
-  JPetGeomMapping::printTOMBMapping(mapping);
   layer = 2;
   slot = 1;
   side = JPetPM::SideA;
@@ -138,7 +137,7 @@ BOOST_FIXTURE_TEST_CASE(getTOMB, myFixture)
   slot = 1;
   side = JPetPM::SideA;
   thresholdNumber  = 1;
-  BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, slot, side, thresholdNumber), 1);
+  BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, slot, side, thresholdNumber), 10);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
