@@ -27,8 +27,10 @@
 #include "../JPetTRB/JPetTRB.h"
 #include "../JPetFrame/JPetFrame.h"
 #include "../JPetPhysSignal/JPetPhysSignal.h"
-#include "../JPetPhysSignal/JPetPhysSignal.h"
+#include "../JPetBaseSignal/JPetBaseSignal.h"
+#include "../JPetRawSignal/JPetRawSignal.h"
 #include  "TVector3.h"
+#include "../JPetTOMBChannel/JPetTOMBChannel.h"
 
 namespace factory
 {
@@ -40,5 +42,9 @@ JPetSigCh makeSigCh(const JPetPM & pm, const JPetTRB & trb, const JPetFEB & feb,
 JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, std::string name, float theta, int inFrameID); 
 JPetTimeWindow makeTimeWindow(JPetSigCh& new_ch, unsigned int index); 
 JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot); 
+JPetBaseSignal makeBaseSignal(unsigned int index, const JPetPM & pm, const JPetBarrelSlot & bs);
+JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, double qualityOfPhe, const JPetRecoSignal& recoSignal);
+JPetRawSignal makeRawSignal(const int points, const JPetSigCh& sigch);
+JPetTOMBChannel makeTOMBChannel(int p_channel, JPetFEB& p_FEB, JPetTRB& p_TRB, JPetPM& p_PM, float p_threshold, unsigned int lcn, unsigned int fin);
 }
 #endif /*  !Factory_H */

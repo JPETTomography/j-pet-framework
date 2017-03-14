@@ -82,4 +82,43 @@ JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, floa
   return pmObject;
 }
 
+JPetBaseSignal makeBaseSignal(unsigned int index, const JPetPM & pm, const JPetBarrelSlot & bs)
+{
+  JPetBaseSignal baseSignalObject;
+  baseSignalObject.setTimeWindowIndex(index);
+  baseSignalObject.setPM(pm);
+  baseSignalObject.setBarrelSlot(bs);
+  return baseSignalObject;
+}
+
+JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, double qualityOfPhe, const JPetRecoSignal& recoSignal)
+{
+  JPetPhysSignal physSignalObject;
+  physSignalObject.setTime(time);
+  physSignalObject.setQualityOfTime(qualityOfTime);
+  physSignalObject.setPhe(phe);
+  physSignalObject.setQualityOfPhe(qualityOfPhe);
+  physSignalObject.setRecoSignal(recoSignal);
+  return physSignalObject;
+}
+
+JPetRawSignal makeRawSignal(const int points, const JPetSigCh& sigch)
+{
+  JPetRawSignal rawSignalObject(points);
+  rawSignalObject.addPoint(sigch);
+  return rawSignalObject;
+}
+
+JPetTOMBChannel makeTOMBChannel(int p_channel, JPetFEB& p_FEB, JPetTRB& p_TRB, JPetPM& p_PM, float p_threshold, unsigned int lcn, unsigned int fin)
+{
+  JPetTOMBChannel tombChannelObject(p_channel);
+  tombChannelObject.setFEB(p_FEB);
+  tombChannelObject.setTRB(p_TRB);
+  tombChannelObject.setPM(p_PM);
+  tombChannelObject.setThreshold(p_threshold);
+  tombChannelObject.setLocalChannelNumber(lcn);
+  tombChannelObject.setFEBInputNumber(fin);
+  return tombChannelObject;
+}
+
 }
