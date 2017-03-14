@@ -58,9 +58,81 @@ BOOST_AUTO_TEST_CASE( layer )
 }
 
 BOOST_AUTO_TEST_CASE( hit )
-{}
+{
+  JPetBarrelSlot bs(1, true, "name", 2, 3);
+  JPetScin sc(1, 2, 3, 4, 5);
+  JPetPhysSignal p_sigA;
+  JPetPhysSignal p_sigB;
+  p_sigA.setTime(1);
+  p_sigA.setPhe(2);
+  p_sigB.setTime(3);
+  p_sigB.setPhe(4);
+  TVector3 position(6.0, 7.0, 8.0);
+  JPetHit hit = factory::makeHit(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, position, bs, sc, p_sigA, p_sigB );
+  BOOST_REQUIRE_EQUAL(hit.getEnergy(), 0.0f);
+  BOOST_REQUIRE_EQUAL(hit.getQualityOfEnergy(), 1.0f);
+  BOOST_REQUIRE_EQUAL(hit.getTime(), 2.0f);
+  BOOST_REQUIRE_EQUAL(hit.getQualityOfTime(), 3.0f);
+  BOOST_REQUIRE_EQUAL(hit.getTimeDiff(), 4.0f);
+  BOOST_REQUIRE_EQUAL(hit.getQualityOfTimeDiff(), 5.0f); 
+  BOOST_REQUIRE_EQUAL(hit.getPosX(), 6.0 );
+  BOOST_REQUIRE_EQUAL(hit.getPosY(), 7.0 );
+  BOOST_REQUIRE_EQUAL(hit.getPosZ(), 8.0 );
+
+  BOOST_REQUIRE(hit.isSignalASet());
+  BOOST_REQUIRE(hit.isSignalBSet());
+  
+  BOOST_REQUIRE_EQUAL(hit.getBarrelSlot().getID(), bs.getID() );
+  BOOST_REQUIRE_EQUAL(hit.getBarrelSlot().isActive(), bs.isActive() );
+  BOOST_REQUIRE_EQUAL(hit.getBarrelSlot().getName(), bs.getName() );
+  BOOST_REQUIRE_EQUAL(hit.getBarrelSlot().getTheta(), bs.getTheta() );
+
+  BOOST_REQUIRE_EQUAL(hit.getScintillator().getID(), sc.getID() );
+  BOOST_REQUIRE_EQUAL(hit.getScintillator().getAttenLen(), sc.getAttenLen() );
+
+  BOOST_REQUIRE_EQUAL(hit.getSignalA().getTime(), p_sigA.getTime() );
+  BOOST_REQUIRE_EQUAL(hit.getSignalA().getPhe(), p_sigA.getPhe() );
+  BOOST_REQUIRE_EQUAL(hit.getSignalB().getTime(), p_sigB.getTime() );
+  BOOST_REQUIRE_EQUAL(hit.getSignalB().getPhe(), p_sigB.getPhe() );
+
+}
+
 BOOST_AUTO_TEST_CASE( sigCh )
-{}
+{
+  JPetPM pm(1);
+  pm.setHVopt(2);
+  pm.setHVset(3);
+  const JPetTRB trb(1, 2, 3);
+  JPetFEB feb(1);
+  feb.setTRB(const_cast<JPetTRB&>(trb));
+  JPetTOMBChannel channel(1);
+  channel.setTRB(const_cast<JPetTRB&>(trb));
+  JPetSigCh::EdgeType type = JPetSigCh::Trailing;
+  Int_t daqch;
+  JPetSigCh sigCh = factory::makeSigCh(pm, trb, feb, channel, 4.0, type, 3.0, daqch, 0.0);
+
+  BOOST_REQUIRE_EQUAL(sigCh.getPM().getHVopt(), pm.getHVopt());
+  BOOST_REQUIRE_EQUAL(sigCh.getPM().getHVset(), pm.getHVset());
+
+  BOOST_REQUIRE_EQUAL(sigCh.getTRB().getID(), trb.getID());
+  BOOST_REQUIRE_EQUAL(sigCh.getTRB().getType(), trb.getType());
+  BOOST_REQUIRE_EQUAL(sigCh.getTRB().getChannel(), trb.getChannel());
+
+  BOOST_REQUIRE_EQUAL(sigCh.getFEB().getID(), feb.getID());
+  BOOST_REQUIRE_EQUAL(sigCh.getFEB().getTRB().getID(), feb.getTRB().getID());
+
+  BOOST_REQUIRE_EQUAL(sigCh.getTOMBChannel().getChannel(), channel.getChannel());
+  BOOST_REQUIRE_EQUAL(sigCh.getTOMBChannel().getTRB().getID(), channel.getTRB().getID());
+
+  BOOST_REQUIRE_EQUAL(sigCh.getValue(), 4.0);
+  BOOST_REQUIRE_EQUAL(sigCh.getThresholdNumber(), 0.0);
+  BOOST_REQUIRE_EQUAL(sigCh.getThreshold(), 3.0);
+
+  BOOST_REQUIRE_EQUAL(sigCh.getType(), type);
+
+  BOOST_REQUIRE_EQUAL(sigCh.getDAQch(), daqch);
+}
+
 BOOST_AUTO_TEST_CASE( barrelSlot )
 {}
 BOOST_AUTO_TEST_CASE( timeWindow )
@@ -77,47 +149,6 @@ BOOST_AUTO_TEST_CASE( tombChannel )
 {}
 
 /*
-
-
-BOOST_AUTO_TEST_CASE( layer )
-{
-  JPetFrame frame;
-  JPetLayer layer = factory::makeLayer(1, true, "name", 3, frame);
-  BOOST_REQUIRE_EQUAL(layer.getID(), 1);
-  BOOST_REQUIRE_EQUAL(layer.getIsActive(), true);
-  BOOST_REQUIRE_EQUAL(layer.getName(), "name");
-  BOOST_REQUIRE_EQUAL(layer.getRadius(), 3);
-  BOOST_REQUIRE(const_cast<JPetFrame&>(layer.getFrame()) == frame);
-
-}
-
-BOOST_AUTO_TEST_CASE( hit )
-{
-   JPetBarrelSlot bs;
-   JPetScin sc;
-   JPetPhysSignal p_sigA;
-   JPetPhysSignal p_sigB;
-   TVector3 position(6.0, 7.0, 8.0);
-   JPetHit hit = factory::makeHit(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, position, bs, sc, p_sigA, p_sigB );
-   BOOST_REQUIRE_EQUAL(hit.getEnergy(), 0.0f);
-   BOOST_REQUIRE_EQUAL(hit.getQualityOfEnergy(), 1.0f);
-   BOOST_REQUIRE_EQUAL(hit.getTime(), 2.0f);
-   BOOST_REQUIRE_EQUAL(hit.getQualityOfTime(), 3.0f);
-   BOOST_REQUIRE_EQUAL(hit.getTimeDiff(), 4.0f);
-   BOOST_REQUIRE_EQUAL(hit.getQualityOfTimeDiff(), 5.0f); 
-   BOOST_REQUIRE_EQUAL(hit.getPosX(), 6.0 );
-   BOOST_REQUIRE_EQUAL(hit.getPosY(), 7.0 );
-   BOOST_REQUIRE_EQUAL(hit.getPosZ(), 8.0 );
-
-   BOOST_REQUIRE(hit.isSignalASet());
-   BOOST_REQUIRE(hit.isSignalBSet());
-  
-   BOOST_REQUIRE(hit.getBarrelSlot() == bs );
-   BOOST_REQUIRE(hit.getScintillator() == sc );
-   //BOOST_REQUIRE(hit.getSignalA() == p_sigA );
-   //BOOST_REQUIRE(hit.getSignalB() == p_sigB );
-
-}
 
 BOOST_AUTO_TEST_CASE( sigCh )
 {
