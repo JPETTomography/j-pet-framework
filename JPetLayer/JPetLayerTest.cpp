@@ -225,16 +225,4 @@ BOOST_AUTO_TEST_CASE( wrong_relation )
   BOOST_REQUIRE_THROW(factory.getLayers(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE( factory )
-{
-  JPetFrame frame;
-  JPetLayer layer = JPetLayer::makeLayer(1, true, "name", 3, frame);
-  BOOST_REQUIRE_EQUAL(layer.getID(), 1);
-  BOOST_REQUIRE_EQUAL(layer.getIsActive(), true);
-  BOOST_REQUIRE_EQUAL(layer.getName(), "name");
-  BOOST_REQUIRE_EQUAL(layer.getRadius(), 3);
-  BOOST_REQUIRE(const_cast<JPetFrame&>(layer.getFrame()) == frame);
-
-}
-
 BOOST_AUTO_TEST_SUITE_END()

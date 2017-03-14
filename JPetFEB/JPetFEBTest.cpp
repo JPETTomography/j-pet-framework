@@ -228,19 +228,5 @@ BOOST_AUTO_TEST_CASE( wrong_relation )
   BOOST_REQUIRE_THROW(factory.getFEBs(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE( fabric )
-{
-  JPetTRB p_TRB;
-  JPetFEB feb = JPetFEB::makeFEB( 1, true, "status", "description", 2, 7, 1, 0, p_TRB);
-  BOOST_REQUIRE_EQUAL(feb.getID(), 1);
-  BOOST_REQUIRE_EQUAL(feb.isActive(), true);
-  BOOST_REQUIRE_EQUAL(feb.status(), "status");
-  BOOST_REQUIRE_EQUAL(feb.description(), "description");
-  BOOST_REQUIRE_EQUAL(feb.version(), 2);
-  BOOST_REQUIRE_EQUAL(feb.getCreator(), 7);
-  BOOST_REQUIRE_EQUAL(feb.getNtimeOutsPerInput(), 1);
-  BOOST_REQUIRE_EQUAL(feb.getNnotimeOutsPerInput(), 0);
-  BOOST_REQUIRE(feb.getTRB() ==p_TRB);
 
-}
 BOOST_AUTO_TEST_SUITE_END()

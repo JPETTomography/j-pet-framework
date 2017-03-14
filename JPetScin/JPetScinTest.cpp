@@ -287,19 +287,5 @@ BOOST_AUTO_TEST_CASE( wrong_relation )
   BOOST_REQUIRE_THROW(factory.getScins(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE( fabric )
-{
-  JPetBarrelSlot p_barrelSlot;
-  JPetScin::Dimension dim = JPetScin::kLength;
-  JPetScin scin = JPetScin::makeScin(1, 2.0, 3.0, 4.0, 5.0, p_barrelSlot );
-  BOOST_REQUIRE_EQUAL(scin.getID(), 1);
-  BOOST_REQUIRE_EQUAL(scin.getAttenLen(), 2.0);
-  BOOST_REQUIRE_EQUAL(scin.getScinSize(dim), 3.0);
-  dim = JPetScin::kHeight;
-  BOOST_REQUIRE_EQUAL(scin.getScinSize(dim), 4.0);
-  dim = JPetScin::kWidth;
-  BOOST_REQUIRE_EQUAL(scin.getScinSize(dim), 5.0);
-  BOOST_REQUIRE(scin.getBarrelSlot() == p_barrelSlot);
-}
 
 BOOST_AUTO_TEST_SUITE_END()
