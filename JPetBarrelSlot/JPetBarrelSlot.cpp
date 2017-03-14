@@ -38,7 +38,12 @@ JPetBarrelSlot::JPetBarrelSlot(bool isNull) :
 }
 JPetBarrelSlot JPetBarrelSlot::makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, std::string name, float theta, int inFrameID)
 {
-  JPetBarrelSlot barrelSlotObject(id, isActive, name, theta, inFrameID);
+  JPetBarrelSlot barrelSlotObject;
+  barrelSlotObject.fId = id;
+  barrelSlotObject.fIsActive = isActive;
+  barrelSlotObject.fName = name;
+  barrelSlotObject.fTheta = theta;
+  barrelSlotObject.fInFrameID = inFrameID;
   barrelSlotObject.fTRefLayer = &p_layer;
   return barrelSlotObject;
 }
