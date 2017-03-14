@@ -134,9 +134,30 @@ BOOST_AUTO_TEST_CASE( sigCh )
 }
 
 BOOST_AUTO_TEST_CASE( barrelSlot )
-{}
+{
+  JPetLayer p_layer(1, true, "name", 3);
+  JPetBarrelSlot barrelSlot = factory::makeBarrelSlot(p_layer, 1 , true, "name", 0, 2);
+  
+  BOOST_REQUIRE_EQUAL(barrelSlot.getID(), 1);
+  BOOST_REQUIRE(barrelSlot.isActive());
+  BOOST_REQUIRE_EQUAL(barrelSlot.getName(), "name");
+  BOOST_REQUIRE_EQUAL(barrelSlot.getTheta(), 0);
+  BOOST_REQUIRE_EQUAL(barrelSlot.getInFrameID(), 2);
+
+  BOOST_REQUIRE_EQUAL(barrelSlot.getLayer().getID(), p_layer.getID());
+  BOOST_REQUIRE_EQUAL(barrelSlot.getLayer().getRadius(), p_layer.getRadius());
+}
+
 BOOST_AUTO_TEST_CASE( timeWindow )
-{}
+{
+  JPetSigCh::EdgeType type = JPetSigCh::Trailing;
+  JPetSigCh new_ch(type, 1);;
+  JPetTimeWindow timeWindow = factory::makeTimeWindow(new_ch, 1);
+  BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfSigCh(), 1);
+  BOOST_REQUIRE_EQUAL(timeWindow.getIndex(), 1);
+  BOOST_REQUIRE_EQUAL(timeWindow[0].getValue(), new_ch.getValue());
+}
+
 BOOST_AUTO_TEST_CASE( pm )
 {}
 BOOST_AUTO_TEST_CASE( baseSignal )
@@ -150,37 +171,6 @@ BOOST_AUTO_TEST_CASE( tombChannel )
 
 /*
 
-BOOST_AUTO_TEST_CASE( sigCh )
-{
-  const JPetPM pm;
-  const JPetTRB trb;
-  const JPetFEB feb;
-  const JPetTOMBChannel channel;
-  JPetSigCh::EdgeType type;
-  Int_t daqch;
-  JPetSigCh sigCh = factory::makeSigCh(pm, trb, feb, channel, 4.0, type, 3.0, daqch, 0.0);
-  BOOST_REQUIRE_EQUAL(sigCh.getValue(), 4.0);
-  BOOST_REQUIRE_EQUAL(sigCh.getType(), type);
-  BOOST_REQUIRE(sigCh.getPM() == pm);
-  BOOST_REQUIRE(sigCh.getTRB() == trb);
-  BOOST_REQUIRE(const_cast<JPetFEB&>(sigCh.getFEB()) == feb);
-  BOOST_REQUIRE(const_cast<JPetTOMBChannel&>(sigCh.getTOMBChannel()) == channel);
-  BOOST_REQUIRE(sigCh.getDAQch() == daqch);
-  BOOST_REQUIRE(sigCh.getThresholdNumber() == 0.0);
-  BOOST_REQUIRE(sigCh.getThreshold() == 3.0);
-}
-
-BOOST_AUTO_TEST_CASE( barrelSlot )
-{
-  JPetLayer p_layer;
-  JPetBarrelSlot barrelSlot = factory::makeBarrelSlot(p_layer, 1 , true, "name", 0, 2);
-  BOOST_REQUIRE(barrelSlot.getLayer() == p_layer);
-  BOOST_REQUIRE_EQUAL(barrelSlot.getID(), 1);
-  BOOST_REQUIRE(barrelSlot.isActive());
-  BOOST_REQUIRE_EQUAL(barrelSlot.getName(), "name");
-  BOOST_REQUIRE_EQUAL(barrelSlot.getTheta(), 0);
-  BOOST_REQUIRE_EQUAL(barrelSlot.getInFrameID(), 2);
-}
 
 BOOST_AUTO_TEST_CASE( timeWindow )
 {
