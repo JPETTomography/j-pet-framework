@@ -27,9 +27,36 @@ BOOST_AUTO_TEST_CASE( scin )
 }
 
 BOOST_AUTO_TEST_CASE( feb )
-{}
+{
+  JPetTRB p_TRB(1, 2, 2);
+  JPetFEB feb = factory::makeFEB( 1, true, "status", "description", 2, 7, 1, 0, p_TRB);
+  BOOST_REQUIRE_EQUAL(feb.getID(), 1);
+  BOOST_REQUIRE_EQUAL(feb.isActive(), true);
+  BOOST_REQUIRE_EQUAL(feb.status(), "status");
+  BOOST_REQUIRE_EQUAL(feb.description(), "description");
+  BOOST_REQUIRE_EQUAL(feb.version(), 2);
+  BOOST_REQUIRE_EQUAL(feb.getCreator(), 7);
+  BOOST_REQUIRE_EQUAL(feb.getNtimeOutsPerInput(), 1);
+  BOOST_REQUIRE_EQUAL(feb.getNnotimeOutsPerInput(), 0);
+  BOOST_REQUIRE_EQUAL(feb.getTRB().getID(), p_TRB.getID());
+  BOOST_REQUIRE_EQUAL(feb.getTRB().getType(), p_TRB.getType());
+  BOOST_REQUIRE_EQUAL(feb.getTRB().getChannel(), p_TRB.getChannel());
+}
+
 BOOST_AUTO_TEST_CASE( layer )
-{}
+{
+  JPetFrame frame(1, true, "status", "description", 2, 3);
+  JPetLayer layer = factory::makeLayer(1, true, "name", 3, frame);
+  BOOST_REQUIRE_EQUAL(layer.getID(), 1);
+  BOOST_REQUIRE_EQUAL(layer.getIsActive(), true);
+  BOOST_REQUIRE_EQUAL(layer.getName(), "name");
+  BOOST_REQUIRE_EQUAL(layer.getRadius(), 3);
+  BOOST_REQUIRE_EQUAL(layer.getFrame().getID(), frame.getID());
+  BOOST_REQUIRE_EQUAL(layer.getFrame().getIsActive(), frame.getIsActive());
+  BOOST_REQUIRE_EQUAL(layer.getFrame().getStatus(), frame.getStatus());
+  BOOST_REQUIRE_EQUAL(layer.getFrame().getCreator(), frame.getCreator());
+}
+
 BOOST_AUTO_TEST_CASE( hit )
 {}
 BOOST_AUTO_TEST_CASE( sigCh )
@@ -50,26 +77,7 @@ BOOST_AUTO_TEST_CASE( tombChannel )
 {}
 
 /*
-BOOST_AUTO_TEST_CASE( scin )
-{
-  BOOST_REQUIRE(scin.getBarrelSlot() == p_barrelSlot);
-}
 
-BOOST_AUTO_TEST_CASE( feb )
-{
-  JPetTRB p_TRB;
-  JPetFEB feb = factory::makeFEB( 1, true, "status", "description", 2, 7, 1, 0, p_TRB);
-  BOOST_REQUIRE_EQUAL(feb.getID(), 1);
-  BOOST_REQUIRE_EQUAL(feb.isActive(), true);
-  BOOST_REQUIRE_EQUAL(feb.status(), "status");
-  BOOST_REQUIRE_EQUAL(feb.description(), "description");
-  BOOST_REQUIRE_EQUAL(feb.version(), 2);
-  BOOST_REQUIRE_EQUAL(feb.getCreator(), 7);
-  BOOST_REQUIRE_EQUAL(feb.getNtimeOutsPerInput(), 1);
-  BOOST_REQUIRE_EQUAL(feb.getNnotimeOutsPerInput(), 0);
-  BOOST_REQUIRE(feb.getTRB() ==p_TRB);
-
-}
 
 BOOST_AUTO_TEST_CASE( layer )
 {
