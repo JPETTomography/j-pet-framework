@@ -20,6 +20,19 @@ using namespace std;
 const size_t JPetGeomMapping::kBadLayerNumber = 99999999;
 const size_t JPetGeomMapping::kBadSlotNumber = 99999999;
 
+void JPetGeomMapping::printTOMBMapping(const std::map<std::tuple<int, int, JPetPM::Side, int>, int>& tombMap)
+{
+  for (auto & el : tombMap) {
+    auto key = el.first;
+    auto layer =  std::get<0>(key);
+    auto slot  = std::get<1>(key);
+    auto side  = std::get<2>(key);
+    auto threshold = std::get<3>(key);
+    auto tomb = el.second;
+    std::cout << "layer:" << layer << " slot:" << slot << " side:" << side << " threshold:" << threshold << " tomb:" << tomb << std::endl;
+  }
+}
+
 JPetGeomMapping::JPetGeomMapping(const JPetParamBank& paramBank)
 {
   vector<double> layersRadii;
@@ -76,10 +89,7 @@ const size_t JPetGeomMapping::getLayerNumber(const JPetLayer& layer) const
 
 const size_t JPetGeomMapping::getSlotsCount(const JPetLayer& layer) const
 {
-  std::cout << "wat" << std::endl;
   auto layerNr = getLayerNumber(layer);
-  std::cout << "ok" << std::endl;
-  std::cout << layerNr << std::endl;
   if (fNumberOfSlotsInLayer.size() > layerNr) {
     return fNumberOfSlotsInLayer.at(layerNr - 1);
   } else {
@@ -112,6 +122,24 @@ const size_t JPetGeomMapping::getSlotNumber(const JPetBarrelSlot& slot) const
     return JPetGeomMapping::kBadSlotNumber;
   }
   return fThetaToSlot.at(index).at(theta);
+}
+
+const size_t JPetGeomMapping::getGlobalSlotNumber(const JPetBarrelSlot& slot) const
+{
+  auto layerNr = getLayerNumber(slot.getLayer());
+  auto index = layerNr - 1;
+  auto previousSlots = 0;
+  /// We add all previously defined slots in previous layers
+  for (auto i = 0u; i < fNumberOfSlotsInLayer.size(); i++) {
+    if (index <= i) break; /// if we reach our layer
+    previousSlots = previousSlots  + fNumberOfSlotsInLayer[i];
+  }
+  auto slotNrInLayer = getSlotNumber(slot);
+  if (slotNrInLayer == JPetGeomMapping::kBadSlotNumber) {
+    return JPetGeomMapping::kBadSlotNumber;
+  } else {
+    return previousSlots + getSlotNumber(slot);
+  }
 }
 
 const StripPos JPetGeomMapping::getStripPos(const JPetBarrelSlot& slot)const
