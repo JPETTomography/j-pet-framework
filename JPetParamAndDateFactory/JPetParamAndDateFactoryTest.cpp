@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE( layer )
   BOOST_REQUIRE_EQUAL(layer.getFrame().getStatus(), frame.getStatus());
   BOOST_REQUIRE_EQUAL(layer.getFrame().getCreator(), frame.getCreator());
 }
-
+/*
 BOOST_AUTO_TEST_CASE( hit )
 {
   JPetBarrelSlot bs(1, true, "name", 2, 3);
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE( hit )
   BOOST_REQUIRE_EQUAL(hit.getSignalB().getPhe(), p_sigB.getPhe() );
 
 }
-
+*/
 BOOST_AUTO_TEST_CASE( sigCh )
 {
   JPetPM pm(1);
