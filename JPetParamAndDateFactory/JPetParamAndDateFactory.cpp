@@ -38,11 +38,11 @@ JPetLayer makeLayer(int id, bool isActive, std::string name, float radius, JPetF
   return objectLayer;
 }
 
-JPetHit makeHit(float energy, float qualityOfEnergy, float time, float qualityOfTime, float td, float qtd, TVector3& pos , JPetBarrelSlot& bs, JPetScin& sc, JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB )
+JPetHit makeHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSignal& siga, JPetPhysSignal& sigb, JPetBarrelSlot& bslot, JPetScin& scin, float qtd, float td)
 {
-  JPetHit hitObject(energy, qualityOfEnergy, time, qualityOfTime, pos, p_sigA, p_sigB, bs, sc); 
-  hitObject.setTimeDiff(td);
-  hitObject.setQualityOfTimeDiff(qtd); 
+  JPetHit hitObject;//(e, qe, t, qt, pos, siga, sigb, bslot, scin); 
+  //hitObject.setQualityOfTimeDiff(qtd);
+  //hitObject.setTimeDiff(td);
   return hitObject;
 }
 

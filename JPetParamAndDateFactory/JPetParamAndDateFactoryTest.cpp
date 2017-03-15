@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE( layer )
   BOOST_REQUIRE_EQUAL(layer.getFrame().getStatus(), frame.getStatus());
   BOOST_REQUIRE_EQUAL(layer.getFrame().getCreator(), frame.getCreator());
 }
-/*
+
 BOOST_AUTO_TEST_CASE( hit )
 {
   JPetBarrelSlot bs(1, true, "name", 2, 3);
@@ -68,8 +68,8 @@ BOOST_AUTO_TEST_CASE( hit )
   p_sigB.setTime(3);
   p_sigB.setPhe(4);
   TVector3 position(6.0, 7.0, 8.0);
-  JPetHit hit = factory::makeHit(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, position, bs, sc, p_sigA, p_sigB );
-  BOOST_REQUIRE_EQUAL(hit.getEnergy(), 0.0f);
+  JPetHit hit = factory::makeHit(0.0f, 1.0f, 2.0f, 3.0f, position, p_sigA, p_sigB, bs, sc, 4.0f,  5.0f);
+/*  BOOST_REQUIRE_EQUAL(hit.getEnergy(), 0.0f);
   BOOST_REQUIRE_EQUAL(hit.getQualityOfEnergy(), 1.0f);
   BOOST_REQUIRE_EQUAL(hit.getTime(), 2.0f);
   BOOST_REQUIRE_EQUAL(hit.getQualityOfTime(), 3.0f);
@@ -94,9 +94,9 @@ BOOST_AUTO_TEST_CASE( hit )
   BOOST_REQUIRE_EQUAL(hit.getSignalA().getPhe(), p_sigA.getPhe() );
   BOOST_REQUIRE_EQUAL(hit.getSignalB().getTime(), p_sigB.getTime() );
   BOOST_REQUIRE_EQUAL(hit.getSignalB().getPhe(), p_sigB.getPhe() );
-
-}
 */
+}
+
 BOOST_AUTO_TEST_CASE( sigCh )
 {
   JPetPM pm(1);
@@ -187,7 +187,21 @@ BOOST_AUTO_TEST_CASE( pm )
 }
 
 BOOST_AUTO_TEST_CASE( baseSignal )
-{}
+{
+  JPetPM pm(1);
+  pm.setHVopt(2);
+  pm.setHVset(3);
+  JPetBarrelSlot p_barrelSlot(1, true, "name", 2, 3);
+  JPetBaseSignal bs = factory::makeBaseSignal(1, pm, p_barrelSlot);
+  BOOST_REQUIRE_EQUAL(bs.getTimeWindowIndex(), 1 );
+
+  BOOST_REQUIRE_EQUAL(bs.getPM().getHVopt(), pm.getHVopt() );
+  BOOST_REQUIRE_EQUAL(bs.getPM().getHVset(), pm.getHVset() );
+
+  BOOST_REQUIRE_EQUAL(bs.getBarrelSlot().getID(), p_barrelSlot.getID());
+  BOOST_REQUIRE_EQUAL(bs.getBarrelSlot().getName(), p_barrelSlot.getName());
+}
+
 BOOST_AUTO_TEST_CASE( physSignal )
 {}
 BOOST_AUTO_TEST_CASE( rawSignal )
