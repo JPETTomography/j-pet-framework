@@ -203,7 +203,17 @@ BOOST_AUTO_TEST_CASE( baseSignal )
 }
 
 BOOST_AUTO_TEST_CASE( physSignal )
-{}
+{
+  JPetRecoSignal recoSignal(2);
+
+  JPetPhysSignal ps = factory::makePhysSignal( 1, 2, 3, 4, recoSignal)
+
+  BOOST_REQUIRE_EQUAL(ps.getTime(), 1 );
+  BOOST_REQUIRE_EQUAL(ps.getQualityOfTime(), 2 );
+  BOOST_REQUIRE_EQUAL(ps.getPhe(), 3 );
+  BOOST_REQUIRE_EQUAL(ps.getQualityOfPhe(), 4 );
+}
+
 BOOST_AUTO_TEST_CASE( rawSignal )
 {}
 BOOST_AUTO_TEST_CASE( tombChannel )
