@@ -120,5 +120,39 @@ BOOST_AUTO_TEST_CASE(set_get_objects_test)
 
 }
 
+//BOOST_AUTO_TEST_CASE( not_default_constructor)
+//{
+  //TVector3 position(6.0, 7.0, 8.0);
+  //JPetPhysSignal p_sigA;
+  //JPetPhysSignal p_sigB;
+  //JPetBarrelSlot bs(1, true, "name", 2, 3);
+  //JPetScin sc(1, 2, 3, 4, 5);
+
+  //JPetHit hit(0.0f, 1.0f, 2.0f, 3.0f, position, p_sigA, p_sigB, bs, sc);
+  //BOOST_REQUIRE_EQUAL(hit.getEnergy(), 0.0f);
+  //BOOST_REQUIRE_EQUAL(hit.getQualityOfEnergy(), 1.0f);
+  //BOOST_REQUIRE_EQUAL(hit.getTime(), 2.0f);
+  //BOOST_REQUIRE_EQUAL(hit.getQualityOfTime(), 3.0f);
+  // BOOST_REQUIRE_EQUAL(hit.getPosX(), 6.0 );
+  // BOOST_REQUIRE_EQUAL(hit.getPosY(), 7.0 );
+  // BOOST_REQUIRE_EQUAL(hit.getPosZ(), 8.0 );
+
+  // BOOST_REQUIRE(hit.isSignalASet());
+  // BOOST_REQUIRE(hit.isSignalBSet());
+
+  // BOOST_REQUIRE_EQUAL(hit.getBarrelSlot().getID(), bs.getID() );
+  // BOOST_REQUIRE_EQUAL(hit.getBarrelSlot().isActive(), bs.isActive() );
+  // BOOST_REQUIRE_EQUAL(hit.getBarrelSlot().getName(), bs.getName() );
+  // BOOST_REQUIRE_EQUAL(hit.getBarrelSlot().getTheta(), bs.getTheta() );
+
+  // BOOST_REQUIRE_EQUAL(hit.getScintillator().getID(), sc.getID() );
+  // BOOST_REQUIRE_EQUAL(hit.getScintillator().getAttenLen(), sc.getAttenLen() );
+
+  // BOOST_REQUIRE_EQUAL(hit.getSignalA().getTime(), p_sigA.getTime() );
+  // BOOST_REQUIRE_EQUAL(hit.getSignalA().getPhe(), p_sigA.getPhe() );
+  // BOOST_REQUIRE_EQUAL(hit.getSignalB().getTime(), p_sigB.getTime() );
+  // BOOST_REQUIRE_EQUAL(hit.getSignalB().getPhe(), p_sigB.getPhe() );
+//}
+
 
 BOOST_AUTO_TEST_SUITE_END()

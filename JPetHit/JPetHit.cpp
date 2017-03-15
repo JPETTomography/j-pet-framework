@@ -197,6 +197,10 @@ bool JPetHit::checkConsistency() const
     return false;
   }
 
+ // if ( !(reinterpret_cast<bool &>(const_cast<JPetPhysSignal&>(getSignalA()))) || !(reinterpret_cast<bool &>(const_cast<JPetPhysSignal&>(getSignalB())) )){
+  //  return false;
+  //}
+
   return true;
 }
 
