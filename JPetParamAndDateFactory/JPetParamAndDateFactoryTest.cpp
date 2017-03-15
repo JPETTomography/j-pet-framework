@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE( pm )
   JPetPM::Side side = JPetPM::SideA;
   JPetBarrelSlot p_barrelSlot(1, true, "name", 2, 3);
   JPetScin p_scin(1, 2, 3, 4, 5);
-  JPetFEB p_FEB(1, true, "p_status", "p_description", 2, 3, 4, 5);;
+  JPetFEB p_FEB(1, true, "p_status", "p_description", 2, 3, 4, 5);
   std::pair<float, float> gain(3.0, 4.0);
   JPetPM pm = factory::makePM(side, 1, 1, 2, gain, p_FEB, p_scin, p_barrelSlot);
 
@@ -233,7 +233,29 @@ BOOST_AUTO_TEST_CASE( rawSignal )
 }
 
 BOOST_AUTO_TEST_CASE( tombChannel )
-{}
+{
+  JPetPM pm(1);
+  pm.setHVopt(2);
+  pm.setHVset(3);
+  JPetTRB trb(1, 2, 3);
+  JPetFEB feb(1, true, "p_status", "p_description", 2, 3, 4, 5);
+  JPetTOMBChannel tombChannel = factory::makeTOMBChannel(3, feb, trb, pm, 4, 5, 6);
+  
+  BOOST_REQUIRE_EQUAL(tombChannel.getChannel(), 3);
+  BOOST_REQUIRE_EQUAL(tombChannel.getThreshold(), 4);
+  BOOST_REQUIRE_EQUAL(tombChannel.getLocalChannelNumber(), 5);
+  BOOST_REQUIRE_EQUAL(tombChannel.getFEBInputNumber(), 6);
+
+  BOOST_REQUIRE_EQUAL(tombChannel.getTRB().getID(), trb.getID());
+  BOOST_REQUIRE_EQUAL(tombChannel.getTRB().getType(), trb.getType());
+  BOOST_REQUIRE_EQUAL(tombChannel.getTRB().getChannel(), trb.getChannel());
+
+  BOOST_REQUIRE_EQUAL(tombChannel.getFEB().getID() , feb.getID());
+  BOOST_REQUIRE_EQUAL(tombChannel.getFEB().isActive() , feb.isActive());
+
+  BOOST_REQUIRE_EQUAL(tombChannel.getPM().getHVopt(), pm.getHVopt());
+  BOOST_REQUIRE_EQUAL(tombChannel.getPM().getHVset(), pm.getHVset());
+}
 
 
 BOOST_AUTO_TEST_SUITE_END()
