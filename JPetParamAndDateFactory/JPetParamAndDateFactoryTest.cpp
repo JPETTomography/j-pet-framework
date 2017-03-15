@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE( barrelSlot )
 BOOST_AUTO_TEST_CASE( timeWindow )
 {
   JPetSigCh::EdgeType type = JPetSigCh::Trailing;
-  JPetSigCh new_ch(type, 1);;
+  JPetSigCh new_ch(type, 1);
   JPetTimeWindow timeWindow = factory::makeTimeWindow(new_ch, 1);
   BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfSigCh(), 1);
   BOOST_REQUIRE_EQUAL(timeWindow.getIndex(), 1);
@@ -219,7 +219,19 @@ BOOST_AUTO_TEST_CASE( physSignal )
 }
 
 BOOST_AUTO_TEST_CASE( rawSignal )
-{}
+{
+  JPetSigCh::EdgeType type = JPetSigCh::Trailing;
+  JPetSigCh sigch(type, 1);
+  JPetRawSignal rs = factory::makeRawSignal(3, sigch);
+
+  BOOST_REQUIRE_EQUAL(rs.getNumberOfPoints(type), 1);
+  
+  JPetRawSignal::PointsSortOrder order = JPetRawSignal::ByThrValue;
+
+  BOOST_REQUIRE_EQUAL(rs.getPoints(type, order)[0].getType(), sigch.getType());
+  BOOST_REQUIRE_EQUAL(rs.getPoints(type, order)[0].getValue(), sigch.getValue());
+}
+
 BOOST_AUTO_TEST_CASE( tombChannel )
 {}
 
