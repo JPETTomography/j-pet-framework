@@ -33,12 +33,17 @@ public:
 
   JPetPhysSignal();
   virtual ~JPetPhysSignal();
+  explicit JPetPhysSignal(bool isNull);
 
   /**
    * @brief Returns the time reconstructed for this signal using its leading-edge and trailing-edge points.
    *
    * The time is in picoseconds and is the time w.r.t. beginning of a time slot.
    */
+
+  bool isNullObject() const;
+  static  JPetPhysSignal& getDummyResult();
+
   inline float getTime() const {
     return fTime;
   }
@@ -91,6 +96,13 @@ private:
   double fQualityOfPhe; ///< quantitative measure of the Phe reconstruction quality (scale is yet to be decided)
 
   JPetRecoSignal fRecoSignal;
+protected:
+
+#ifndef __CINT__
+  bool fIsNullObject = false;
+#else
+  bool fIsNullObject;
+#endif
 
 ClassDef(JPetPhysSignal, 1);
 };
