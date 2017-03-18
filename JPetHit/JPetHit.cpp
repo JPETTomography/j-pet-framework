@@ -32,8 +32,8 @@ JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSi
 {
   fIsSignalAset = true ;
   fIsSignalBset = true ;
-  if (!checkConsistency())
-    ERROR("Problem with creating Hit.");
+  //if (!checkConsistency())
+  //  ERROR("Problem with creating Hit.");
 }
 
 JPetHit::~JPetHit()
@@ -223,10 +223,6 @@ bool JPetHit::checkConsistency() const
                 getSignalA().getTimeWindowIndex(), getSignalB().getTimeWindowIndex()) );
     return false;
   }
-
- // if ( !(reinterpret_cast<bool &>(const_cast<JPetPhysSignal&>(getSignalA()))) || !(reinterpret_cast<bool &>(const_cast<JPetPhysSignal&>(getSignalB())) )){
-  //  return false;
-  //}
 
   return true;
 }
