@@ -140,5 +140,17 @@ BOOST_FIXTURE_TEST_CASE(getTOMB, myFixture)
   BOOST_REQUIRE_EQUAL(mapper.getTOMB(layer, slot, side, thresholdNumber), 10);
 }
 
+BOOST_AUTO_TEST_CASE(TestOfLargeBarrelJson)
+{
+  JPetParamManager fparamManagerInstance(new JPetParamGetterAscii("unitTestData/JPetGeomMappingTest/large_barrel.json"));
+  fparamManagerInstance.fillParameterBank(43);
+  auto bank = fparamManagerInstance.getParamBank();
+  auto mapper  = JPetGeomMapping(bank);
+  auto tombMap = mapper.getTOMBMapping();
+  BOOST_REQUIRE(!tombMap.empty());
+  // (96 +48 + 48 scints) x 2 pm x4 thr = 1536
+  BOOST_REQUIRE_EQUAL(tombMap.size(), 1536);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
