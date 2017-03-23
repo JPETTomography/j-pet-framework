@@ -24,7 +24,7 @@ JPetBaseSignal::JPetBaseSignal() :
 JPetBaseSignal::JPetBaseSignal(bool isNull):
   fIsNullObject(isNull)
 {
-	TNamed("JPetBaseSignal", "Base Signal structure");
+	SetNameTitle("JPetBaseSignal", "Base Signal structure");
 }
 
 bool JPetBaseSignal::isNullObject() const

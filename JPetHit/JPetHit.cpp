@@ -32,8 +32,8 @@ JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSi
 {
   fIsSignalAset = true ;
   fIsSignalBset = true ;
-  //if (!checkConsistency())
-  //  ERROR("Problem with creating Hit.");
+  if (!checkConsistency())
+    ERROR("Problem with creating Hit.");
 }
 
 JPetHit::~JPetHit()
