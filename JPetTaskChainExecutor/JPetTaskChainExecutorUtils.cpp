@@ -14,10 +14,13 @@
  */
 
 #include <cassert>
+#include <chrono>
 #include "./JPetTaskChainExecutorUtils.h"
 #include "../JPetTaskLoader/JPetTaskLoader.h"
 #include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
+
+using namespace std::chrono;
 
 bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamManager* paramMgr, std::list<JPetTaskRunnerInterface*>& tasks)
 {
@@ -91,8 +94,14 @@ void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long neve
   } else {
     unpacker.setParams(filename, 100000000, configfile, calibfile);
   }
+  // measure unpacking time
+  high_resolution_clock::time_point tstart = high_resolution_clock::now();
   unpacker.exec();
+  high_resolution_clock::time_point tend = high_resolution_clock::now();
+  auto duration = duration_cast<seconds>(tend - tstart).count();
+  INFO(Form("Unpacking took %ld seconds.", duration));
 }
+
 
 JPetParamManager* JPetTaskChainExecutorUtils::generateParamManager(const JPetOptions& options)
 {
