@@ -23,7 +23,7 @@ ClassImp(JPetSigCh);
 const float JPetSigCh::kUnset = std::numeric_limits<float>::infinity();
 
 void JPetSigCh::Init() {
-  SetNameTitle("JPetSigCh", "Signal Channel Structure");
+  //  SetNameTitle("JPetSigCh", "Signal Channel Structure");
   fValue = kUnset;
   fType = Leading;
   fThreshold = kUnset;

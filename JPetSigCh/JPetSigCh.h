@@ -33,7 +33,7 @@
  *
  * Contains either time corresponding to a single threshold and slope type of a front-end board or charge from a single PM (if available in a given setup).
  */
-class JPetSigCh: public TNamed
+class JPetSigCh: public TObject
 {
 public:
   enum EdgeType
@@ -187,7 +187,7 @@ public:
   static bool compareByThresholdNumber(const JPetSigCh & A,
                                        const JPetSigCh & B);
   
-  ClassDef(JPetSigCh, 5);
+  ClassDef(JPetSigCh, 6);
   
 protected:
   EdgeType fType; ///< type of the SigCh: Leading, Trailing (time) or Charge (charge)

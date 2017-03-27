@@ -19,13 +19,13 @@
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetPM/JPetPM.h"
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include <TNamed.h>
+#include <TObject.h>
 #include <TRef.h>
 
 /**
  * @brief Base class for all signal data classes
  */
-class JPetBaseSignal: public TNamed
+class JPetBaseSignal: public TObject
 {
 public:
 
@@ -89,7 +89,7 @@ bool fIsNullObject = false;
 bool fIsNullObject;
 #endif
 
-ClassDef(JPetBaseSignal, 1)
-  ;
+ClassDef(JPetBaseSignal, 2);
+
 };
 #endif /*  !JPETBASESIGNAL_H */
