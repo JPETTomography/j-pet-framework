@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(runIdTest)
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
 
-  BOOST_REQUIRE(cmdParser.isRunNumberSet(variablesMap) == true);
+  BOOST_REQUIRE(cmdParser.isOptionSet(variablesMap, "runId") == true);
   BOOST_REQUIRE(cmdParser.getRunNumber(variablesMap) == 231);
 
   auto runId = variablesMap["runId"].as<int>();
@@ -86,10 +86,16 @@ BOOST_AUTO_TEST_CASE(localDBTest)
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
 
-  BOOST_REQUIRE(JPetOptionsGenerator::isLocalDBSet(variablesMap) == true);
-  BOOST_REQUIRE(JPetOptionsGenerator::getLocalDBName(variablesMap) == std::string("input.json"));
-  BOOST_REQUIRE(JPetOptionsGenerator::isLocalDBCreateSet(variablesMap) == true);
-  BOOST_REQUIRE(JPetOptionsGenerator::getLocalDBCreateName(variablesMap) == std::string("output.json"));
+  JPetOptionsGenerator cmdParser;
+  BOOST_REQUIRE(cmdParser.isOptionSet(variablesMap, "localDB") == true);
+  BOOST_REQUIRE(cmdParser.getOptionValue(variablesMap, "localDB") == std::string("input.json"));
+  BOOST_REQUIRE(cmdParser.isOptionSet(variablesMap, "localDBCreate") == true);
+  BOOST_REQUIRE(cmdParser.getOptionValue(variablesMap, "localDBCreate") == std::string("output.json"));
+
+//  BOOST_REQUIRE(JPetOptionsGenerator::isOptionSet(variablesMap, "localDB") == true);
+//  BOOST_REQUIRE(JPetOptionsGenerator::getLocalDBName(variablesMap) == std::string("input.json"));
+//  BOOST_REQUIRE(JPetOptionsGenerator::isOptionSet(variablesMap, "localDBCreate") == true);
+//  BOOST_REQUIRE(JPetOptionsGenerator::getLocalDBCreateName(variablesMap) == std::string("output.json"));
 }
 
 
