@@ -20,7 +20,7 @@ ClassImp(JPetRecoSignal);
 JPetRecoSignal::JPetRecoSignal(const int points) :
     fDelay(0), fAmplitude(0), fOffset(0), fCharge(0) {
 
-  SetNameTitle("JPetRecoSignal", "Working signal structure for reconstruction");
+  //  SetNameTitle("JPetRecoSignal", "Working signal structure for reconstruction");
 
   if (points > 0) {
     fShape.reserve(points);
