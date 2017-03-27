@@ -21,13 +21,13 @@
 ClassImp(JPetHit);
 
 JPetHit::JPetHit() :
-  TNamed("JPetHit", "Hit Structure")
+  TObject()
 {
 }
 
 JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSignal& siga, JPetPhysSignal& sigb,
-                 JPetBarrelSlot& bslot, JPetScin& scin): 
-  TNamed("JPetHit", "Hit Structure") , fEnergy(e), fQualityOfEnergy(qe), fTime(t),
+                 JPetBarrelSlot& bslot, JPetScin& scin) :
+  TObject() , fEnergy(e), fQualityOfEnergy(qe), fTime(t),
   fQualityOfTime(qt), fPos(pos), fSignalA(siga), fSignalB(sigb), fBarrelSlot(&bslot), fScintillator(&scin)
 {
   fIsSignalAset = true ;

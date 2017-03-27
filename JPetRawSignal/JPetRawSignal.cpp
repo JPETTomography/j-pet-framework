@@ -19,7 +19,7 @@ ClassImp(JPetRawSignal);
 
 JPetRawSignal::JPetRawSignal(const int points){
 
-  SetNameTitle("JPetRawSignal", "Raw signal (from Front-End electronics) structure");
+  //  SetNameTitle("JPetRawSignal", "Raw signal (from Front-End electronics) structure");
 
   fLeadingPoints.reserve(points);
   fTrailingPoints.reserve(points);

@@ -18,7 +18,7 @@
 #define JPETEVENT_H
 
 #include "../JPetHit/JPetHit.h"
-#include <TNamed.h>
+#include <TObject.h>
 #include <vector>
 #include "../JPetEventType/JPetEventType.h"
 
@@ -36,7 +36,7 @@
  * This means, that at given moment we don't know to which type it belongs.
  */
 
-class JPetEvent : public TNamed
+class JPetEvent : public TObject
 {
 
 public:
@@ -65,6 +65,6 @@ protected:
   JPetEventType fType;
 #endif
 
-  ClassDef(JPetEvent, 2);
+  ClassDef(JPetEvent, 3);
 };
 #endif /*  !JPETEVENT_H */

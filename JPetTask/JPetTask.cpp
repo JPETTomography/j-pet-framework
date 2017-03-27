@@ -40,7 +40,7 @@ void JPetTask::terminate()
 {
 }
 
-void JPetTask::setEvent(TNamed* ev)
+void JPetTask::setEvent(TObject* ev)
 {
   fEvent = ev;
 }

@@ -67,7 +67,7 @@ void JPetTaskIO::exec()
   for (auto i = firstEvent; i <= lastEvent; i++) {
 
     //(std::dynamic_pointer_cast<JPetTask>(fTask))->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
-    (dynamic_cast<JPetTask*>(fTask))->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
+    (dynamic_cast<JPetTask*>(fTask))->setEvent(&(static_cast<TObject&>(fReader->getCurrentEvent())));
     if (fOptions.isProgressBar()) {
       displayProgressBar(i, lastEvent);
     }
