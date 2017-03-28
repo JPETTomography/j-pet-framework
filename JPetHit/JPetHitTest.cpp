@@ -123,8 +123,8 @@ BOOST_AUTO_TEST_CASE(set_get_objects_test)
 BOOST_AUTO_TEST_CASE( not_default_constructor)
 {
   TVector3 position(6.0, 7.0, 8.0);
-  JPetPhysSignal p_sigA;
-  JPetPhysSignal p_sigB;
+  JPetPhysSignal p_sigA(true);
+  JPetPhysSignal p_sigB(true);
   JPetBarrelSlot bs(1, true, "name", 2, 3);
   JPetScin sc(1, 2, 3, 4, 5);
 
