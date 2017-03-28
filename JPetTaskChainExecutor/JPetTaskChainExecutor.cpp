@@ -21,6 +21,7 @@
 #include "../JPetLoggerInclude.h"
 #include "JPetTaskChainExecutorUtils.h"
 #include <memory>
+#include <chrono>
 
 
 JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
@@ -50,10 +51,17 @@ bool JPetTaskChainExecutor::preprocessing(const JPetOptions& options, JPetParamM
 
 bool JPetTaskChainExecutor::process()
 {
+  namespace stdc = std::chrono;
+  std::vector<std::pair<std::string, stdc::seconds>> elapsedTime;
+  auto startTime = stdc::system_clock::now();
+
   if (!preprocessing(fOptions, fParamManager, fTasks)) {
     ERROR("Error in preprocessing");
     return false;
   }
+
+  elapsedTime.push_back(std::make_pair("Preprocessing", stdc::duration_cast< stdc::seconds > (stdc::system_clock::now() - startTime)));
+
   for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
     JPetOptions::Options currOpts = fOptions.getOptions();
     if (currentTask != fTasks.begin()) {
@@ -71,6 +79,7 @@ bool JPetTaskChainExecutor::process()
     auto taskCurr = dynamic_cast<JPetTask*> (dynamic_cast<JPetTaskLoader*>(*currentTask)->getTask());
     //auto taskCurr = std::dynamic_pointer_cast<JPetTask>((*currentTask)->getTask());
     auto taskName = taskCurr->GetName();
+    startTime = stdc::system_clock::now();
     INFO(Form("Starting task: %s", taskName));
     JPetTaskChainExecutor::printCurrentOptionsToLog(currOpts);
     /// @todo fix it
@@ -78,8 +87,22 @@ bool JPetTaskChainExecutor::process()
     taskRunnerCurr->init(currOpts);
     taskRunnerCurr->exec();
     taskRunnerCurr->terminate();
+
+    elapsedTime.push_back(std::make_pair("task " + std::string(taskName), stdc::duration_cast< stdc::seconds > (stdc::system_clock::now() - startTime)));
     INFO(Form("Finished task: %s", taskName));
   }
+  for (auto & el : elapsedTime) {
+    INFO("Elapsed time for " + el.first + ":" + el.second.count() + " [s]");
+  }
+  auto total = std::accumulate(elapsedTime.begin(),
+                               elapsedTime.end(),
+                               stdc::seconds (0),
+  [](const stdc::seconds prev, const std::pair <std::string, stdc::seconds>& el) {
+    return prev + el.second;
+  }
+                              );
+  INFO(std::string("Total elapsed time:") + total.count() + " [s]");
+
   return true;
 }
 
