@@ -87,7 +87,7 @@ void JPetTaskIO::terminate()
 
   fWriter->writeHeader(fHeader);
 
-  fWriter->writeCollection(fStatistics->getHistogramsTable(), "Stats");
+  fWriter->writeCollection(fStatistics->getStatsTable(), "Stats");
   
   fWriter->writeObject(fAuxilliaryData, "Auxilliary Data");
 
