@@ -31,12 +31,14 @@ public:
 
   JPetBaseSignal();
   virtual ~JPetBaseSignal();
-
+  explicit JPetBaseSignal(bool isNull);
   /**
    * @brief Set number of the Time Slot this signal belongs to.
    *
    * Should be set to the value returned by JPetTimeWindow::getIndex() for the respective Time Window
    */
+  bool isNullObject() const;
+  static  JPetBaseSignal& getDummyResult();
   inline void setTimeWindowIndex(unsigned int index) {
     fTimeWindowIndex = index;
   }
@@ -78,6 +80,14 @@ private:
   TRef fBarrelSlot; ///< BarrelSlot containing the PM which recorded this signal
 
   unsigned int fTimeWindowIndex; // index of original TSlot
+
+protected:
+
+#ifndef __CINT__
+bool fIsNullObject = false;
+#else
+bool fIsNullObject;
+#endif
 
 ClassDef(JPetBaseSignal, 1)
   ;

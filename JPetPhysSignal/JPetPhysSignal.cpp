@@ -30,6 +30,16 @@ JPetPhysSignal::JPetPhysSignal() :
 JPetPhysSignal::~JPetPhysSignal()
 { }
 
+JPetPhysSignal::JPetPhysSignal(bool isNull):
+  fIsNullObject(isNull)
+{
+	SetNameTitle("JPetPhysSignal", "Physical signal structure");
+}
+
+bool JPetPhysSignal::isNullObject() const
+{
+   return fIsNullObject;
+}
 void JPetPhysSignal::setRecoSignal(const JPetRecoSignal& recoSignal){
    fRecoSignal = recoSignal;
    setPM( recoSignal.getPM() );
