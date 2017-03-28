@@ -21,6 +21,20 @@ JPetBaseSignal::JPetBaseSignal() :
     TNamed("JPetBaseSignal", "Base Signal structure"), fPM(0), fBarrelSlot(0),
     fTimeWindowIndex(0) {
 }
+JPetBaseSignal::JPetBaseSignal(bool isNull):
+  fIsNullObject(isNull)
+{
+	SetNameTitle("JPetBaseSignal", "Base Signal structure");
+}
 
+bool JPetBaseSignal::isNullObject() const
+{
+   return fIsNullObject;
+}
+JPetBaseSignal& JPetBaseSignal::getDummyResult()
+{
+   static JPetBaseSignal DummyResult(true);
+   return DummyResult;
+}
 JPetBaseSignal::~JPetBaseSignal() {
 }
