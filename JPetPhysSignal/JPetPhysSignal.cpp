@@ -30,6 +30,12 @@ JPetPhysSignal::JPetPhysSignal() :
 JPetPhysSignal::~JPetPhysSignal()
 { }
 
+JPetPhysSignal::JPetPhysSignal(bool isNull):
+  fIsNullObject(isNull)
+{
+	SetNameTitle("JPetPhysSignal", "Physical signal structure");
+}
+
 bool JPetPhysSignal::isNullObject() const
 {
    return fIsNullObject;

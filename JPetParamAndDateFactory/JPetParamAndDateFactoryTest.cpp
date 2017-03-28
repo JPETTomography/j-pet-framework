@@ -61,15 +61,15 @@ BOOST_AUTO_TEST_CASE( hit )
 {
   JPetBarrelSlot bs(1, true, "name", 2, 3);
   JPetScin sc(1, 2, 3, 4, 5);
-  JPetPhysSignal p_sigA;
-  JPetPhysSignal p_sigB;
+  JPetPhysSignal p_sigA(true);
+  JPetPhysSignal p_sigB(true);
   p_sigA.setTime(1);
   p_sigA.setPhe(2);
   p_sigB.setTime(3);
   p_sigB.setPhe(4);
   TVector3 position(6.0, 7.0, 8.0);
   JPetHit hit = factory::makeHit(0.0f, 1.0f, 2.0f, 3.0f, position, p_sigA, p_sigB, bs, sc, 4.0f,  5.0f);
-/*  BOOST_REQUIRE_EQUAL(hit.getEnergy(), 0.0f);
+  BOOST_REQUIRE_EQUAL(hit.getEnergy(), 0.0f);
   BOOST_REQUIRE_EQUAL(hit.getQualityOfEnergy(), 1.0f);
   BOOST_REQUIRE_EQUAL(hit.getTime(), 2.0f);
   BOOST_REQUIRE_EQUAL(hit.getQualityOfTime(), 3.0f);
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE( hit )
   BOOST_REQUIRE_EQUAL(hit.getSignalA().getPhe(), p_sigA.getPhe() );
   BOOST_REQUIRE_EQUAL(hit.getSignalB().getTime(), p_sigB.getTime() );
   BOOST_REQUIRE_EQUAL(hit.getSignalB().getPhe(), p_sigB.getPhe() );
-*/
+
 }
 
 BOOST_AUTO_TEST_CASE( sigCh )

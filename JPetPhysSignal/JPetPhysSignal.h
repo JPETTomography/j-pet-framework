@@ -34,6 +34,7 @@ public:
   JPetPhysSignal();
   virtual ~JPetPhysSignal();
   bool isNullObject() const;
+  explicit JPetPhysSignal(bool isNull);
   /**
    * @brief Returns the time reconstructed for this signal using its leading-edge and trailing-edge points.
    *
@@ -91,7 +92,13 @@ private:
   double fQualityOfPhe; ///< quantitative measure of the Phe reconstruction quality (scale is yet to be decided)
 
   JPetRecoSignal fRecoSignal;
- 
+protected:
+  #ifndef __CINT__
+  bool fIsNullObject = false;
+  #else
+  bool fIsNullObject;
+  #endif
+
 ClassDef(JPetPhysSignal, 1);
 };
 #endif /*  !JPETPHYSSIGNAL_H */
