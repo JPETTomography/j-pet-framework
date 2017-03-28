@@ -63,3 +63,57 @@ void JPetWriter::writeHeader(TObject* header)
   fTree->GetUserInfo()->AddAt(header, JPetUserInfoStructure::kHeader);
 }
 
+void JPetWriter::writeCollection(const TCollection * col, const char* dirname, const char* subdirname){
+
+  TDirectory * current =  fFile->GetDirectory(dirname);
+
+  if(!current){
+    current = fFile->mkdir(dirname);
+  }
+
+  assert(current);
+  
+  // use a subdirectory if requested by user
+  if(!std::string(subdirname).empty()){
+    
+    if(current->GetDirectory(subdirname)){
+      current = current->GetDirectory(subdirname);
+    }else{
+      current = current->mkdir(subdirname);
+    }
+    
+  }  
+
+  assert(current);
+  
+  current->cd();
+
+  TIterator * it = col->MakeIterator();
+
+  TObject * obj;
+  while((obj = it->Next())){
+    obj->Write();
+  }
+
+  fFile->cd();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
