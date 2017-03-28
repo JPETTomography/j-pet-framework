@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(constructor)
   JPetEvent event({firstHit, secondHit}, JPetEventType::kUnknown);
 
   BOOST_REQUIRE(!event.getHits().empty());
-  BOOST_REQUIRE_EQUAL(event.getHits().size(), 2);
+  BOOST_REQUIRE_EQUAL(event.getHits().size(), 2u);
 }
 
 BOOST_AUTO_TEST_CASE(constructor_orderedHits)
@@ -98,9 +98,9 @@ BOOST_AUTO_TEST_CASE(addHit)
   JPetHit thirdHit;
   event.setHits( {firstHit, secondHit});
   BOOST_REQUIRE(!event.getHits().empty());
-  BOOST_REQUIRE_EQUAL(event.getHits().size(), 2);
+  BOOST_REQUIRE_EQUAL(event.getHits().size(), 2u);
   event.addHit(thirdHit);
-  BOOST_REQUIRE_EQUAL(event.getHits().size(), 3);
+  BOOST_REQUIRE_EQUAL(event.getHits().size(), 3u);
 }
 
 BOOST_AUTO_TEST_CASE(eventTypes)
