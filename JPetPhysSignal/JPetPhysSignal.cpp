@@ -30,6 +30,10 @@ JPetPhysSignal::JPetPhysSignal() :
 JPetPhysSignal::~JPetPhysSignal()
 { }
 
+bool JPetPhysSignal::isNullObject() const
+{
+   return fIsNullObject;
+}
 void JPetPhysSignal::setRecoSignal(const JPetRecoSignal& recoSignal){
    fRecoSignal = recoSignal;
    setPM( recoSignal.getPM() );
