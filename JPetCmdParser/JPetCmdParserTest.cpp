@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE( parsing_1 )
 
   JPetCmdParser parser;
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
-  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  BOOST_REQUIRE_EQUAL(options.size(), 1u);
   auto option = options.at(0);
   BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCmdParserTest/testfile.hld");
   BOOST_REQUIRE_EQUAL(option.getFirstEvent(), -1);
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
 
   JPetCmdParser parser;
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
-  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  BOOST_REQUIRE_EQUAL(options.size(), 1u);
   auto option = options.at(0);
   BOOST_REQUIRE_EQUAL(std::string(option.getInputFile()), "unitTestData/JPetCmdParserTest/testfile_config1_6");
   BOOST_REQUIRE_EQUAL(std::string(option.getScopeConfigFile()), "unitTestData/JPetCmdParserTest/testfile.json");
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE( parsing_zip_file )
 
   JPetCmdParser parser;
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
-  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  BOOST_REQUIRE_EQUAL(options.size(), 1u);
   auto option = options.at(0);
   BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCommonToolsTest/goodZip.gz");
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kZip);
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(runIdTest)
   BOOST_REQUIRE(cmdParser.getRunNumber(variablesMap) == 231);
 
   auto runId = variablesMap["runId"].as<int>();
-  BOOST_REQUIRE(variablesMap.size() == 1);
+  BOOST_REQUIRE(variablesMap.size() == 1u);
   BOOST_REQUIRE(variablesMap.count("runId") == 1);
   BOOST_REQUIRE(runId == 231);
 }
@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
   JPetCmdParser parser;
   std::vector<JPetOptions> options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
 
-  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  BOOST_REQUIRE_EQUAL(options.size(), 1u);
   JPetOptions firstOption = options.front();
 
   BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
   JPetCmdParser parser;
   std::vector<JPetOptions> options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
 
-  BOOST_REQUIRE_EQUAL(options.size(), 1);
+  BOOST_REQUIRE_EQUAL(options.size(), 1u);
   JPetOptions firstOption = options.front();
 
   BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
@@ -380,7 +380,7 @@ BOOST_AUTO_TEST_CASE(checkOptionsWithAddedFromJson)
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
   auto option = options.at(0);
   auto allOptions = option.getOptions();
-  BOOST_REQUIRE_EQUAL(allOptions.count("myOption"), 1);
+  BOOST_REQUIRE_EQUAL(allOptions.count("myOption"), 1u);
   BOOST_REQUIRE_EQUAL(allOptions.at("myOption"), "great");
   BOOST_REQUIRE(allOptions.count("myAnotherOption"));
   BOOST_REQUIRE_EQUAL(allOptions.at("myAnotherOption"), "wat");

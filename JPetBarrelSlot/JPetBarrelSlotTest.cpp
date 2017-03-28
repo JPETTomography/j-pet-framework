@@ -197,7 +197,7 @@ BOOST_AUTO_TEST_CASE( no_barrelSlots )
   JPetLayerFactory layerFactory(paramGetter, 0, frameFactory);
   JPetBarrelSlotFactory factory(paramGetter, 0, layerFactory);
   auto& barrelSlots = factory.getBarrelSlots();
-  BOOST_REQUIRE_EQUAL(barrelSlots.size(), 0);
+  BOOST_REQUIRE_EQUAL(barrelSlots.size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( single_object )
@@ -206,7 +206,7 @@ BOOST_AUTO_TEST_CASE( single_object )
   JPetLayerFactory layerFactory(paramGetter, 1, frameFactory);
   JPetBarrelSlotFactory factory(paramGetter, 1, layerFactory);
   auto& barrelSlots = factory.getBarrelSlots();
-  BOOST_REQUIRE_EQUAL(barrelSlots.size(), 1);
+  BOOST_REQUIRE_EQUAL(barrelSlots.size(), 1u);
   auto barrelSlot = barrelSlots[1];
   BOOST_REQUIRE_EQUAL(barrelSlot->getID(), 1);
   BOOST_REQUIRE(barrelSlot->isActive());
@@ -223,7 +223,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   JPetLayerFactory layerFactory(paramGetter, 2, frameFactory);
   JPetBarrelSlotFactory factory(paramGetter, 2, layerFactory);
   auto& barrelSlots = factory.getBarrelSlots();
-  BOOST_REQUIRE_EQUAL(barrelSlots.size(), 2);
+  BOOST_REQUIRE_EQUAL(barrelSlots.size(), 2u);
   auto barrelSlot = barrelSlots[1];
   BOOST_REQUIRE_EQUAL(barrelSlot->getID(), 1);
   BOOST_REQUIRE(barrelSlot->isActive());

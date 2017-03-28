@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE( no_tombChannels )
   JPetPMFactory pmFactory(paramGetter, 0, febFactory, scinFactory, barrelSlotFactory);
   JPetTOMBChannelFactory factory(paramGetter, 0, febFactory, trbFactory, pmFactory);
   auto & tombChannels = factory.getTOMBChannels();
-  BOOST_REQUIRE_EQUAL(tombChannels.size(), 0);
+  BOOST_REQUIRE_EQUAL(tombChannels.size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( single_object )
@@ -257,11 +257,11 @@ BOOST_AUTO_TEST_CASE( single_object )
   JPetPMFactory pmFactory(paramGetter, 1, febFactory, scinFactory, barrelSlotFactory);
   JPetTOMBChannelFactory factory(paramGetter, 1, febFactory, trbFactory, pmFactory);
   auto & tombChannels = factory.getTOMBChannels();
-  BOOST_REQUIRE_EQUAL(tombChannels.size(), 1);
+  BOOST_REQUIRE_EQUAL(tombChannels.size(), 1u);
   auto tombChannel = tombChannels[1];
   BOOST_REQUIRE_EQUAL(tombChannel->getChannel(), 1);
-  BOOST_REQUIRE_EQUAL(tombChannel->getLocalChannelNumber(), 2);
-  BOOST_REQUIRE_EQUAL(tombChannel->getFEBInputNumber(), 3);
+  BOOST_REQUIRE_EQUAL(tombChannel->getLocalChannelNumber(), 2u);
+  BOOST_REQUIRE_EQUAL(tombChannel->getFEBInputNumber(), 3u);
   BOOST_REQUIRE_CLOSE(tombChannel->getThreshold(), 4, epsilon);
 
   BOOST_REQUIRE_EQUAL(tombChannel->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
@@ -280,11 +280,11 @@ BOOST_AUTO_TEST_CASE( two_objects )
   JPetPMFactory pmFactory(paramGetter, 2, febFactory, scinFactory, barrelSlotFactory);
   JPetTOMBChannelFactory factory(paramGetter, 2, febFactory, trbFactory, pmFactory);
   auto & tombChannels = factory.getTOMBChannels();
-  BOOST_REQUIRE_EQUAL(tombChannels.size(), 2);
+  BOOST_REQUIRE_EQUAL(tombChannels.size(), 2u);
   auto tombChannel = tombChannels[1];
   BOOST_REQUIRE_EQUAL(tombChannel->getChannel(), 1);
-  BOOST_REQUIRE_EQUAL(tombChannel->getLocalChannelNumber(), 2);
-  BOOST_REQUIRE_EQUAL(tombChannel->getFEBInputNumber(), 3);
+  BOOST_REQUIRE_EQUAL(tombChannel->getLocalChannelNumber(), 2u);
+  BOOST_REQUIRE_EQUAL(tombChannel->getFEBInputNumber(), 3u);
   BOOST_REQUIRE_CLOSE(tombChannel->getThreshold(), 4, epsilon);
 
   BOOST_REQUIRE_EQUAL(tombChannel->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
@@ -293,8 +293,8 @@ BOOST_AUTO_TEST_CASE( two_objects )
 
   tombChannel = tombChannels[5];
   BOOST_REQUIRE_EQUAL(tombChannel->getChannel(), 5);
-  BOOST_REQUIRE_EQUAL(tombChannel->getLocalChannelNumber(), 3);
-  BOOST_REQUIRE_EQUAL(tombChannel->getFEBInputNumber(), 4);
+  BOOST_REQUIRE_EQUAL(tombChannel->getLocalChannelNumber(), 3u);
+  BOOST_REQUIRE_EQUAL(tombChannel->getFEBInputNumber(), 4u);
   BOOST_REQUIRE_CLOSE(tombChannel->getThreshold(), 5, epsilon);
 
   BOOST_REQUIRE_EQUAL(tombChannel->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
