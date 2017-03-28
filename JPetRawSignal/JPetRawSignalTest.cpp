@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(GetVectorOfPointsTest) {
 
   BOOST_REQUIRE_EQUAL(
       signal.getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrValue).size(),
-      0);
+      0u);
 
 }
 
@@ -189,21 +189,21 @@ BOOST_AUTO_TEST_CASE(GetMapOfTOTsVsThrNumOrValueTest) {
   std::map<int, double> map;
   map = signal.getTOTsVsThresholdNumber();
 
-  BOOST_REQUIRE_EQUAL( map.size(), 2 );
+  BOOST_REQUIRE_EQUAL( map.size(), 2u );
   BOOST_REQUIRE_EQUAL( map[1], sigch1t.getValue() - sigch1l.getValue() );
   BOOST_REQUIRE_EQUAL( map[4], sigch3t.getValue() - sigch3l.getValue() );
-  BOOST_REQUIRE_EQUAL( map.count(2), 0 ); 
-  BOOST_REQUIRE_EQUAL( map.count(3), 0 ); 
+  BOOST_REQUIRE_EQUAL( map.count(2), 0u ); 
+  BOOST_REQUIRE_EQUAL( map.count(3), 0u ); 
   BOOST_CHECK_THROW( map.at(2), std::out_of_range);
   
   std::map<int, double> map2;
   map2 = signal.getTOTsVsThresholdValue();
 
-  BOOST_REQUIRE_EQUAL( map2.size(), 2 );
+  BOOST_REQUIRE_EQUAL( map2.size(), 2u );
   BOOST_REQUIRE_EQUAL( map2[100.f], sigch3t.getValue() - sigch1l.getValue() );
   BOOST_REQUIRE_EQUAL( map2[400.f], sigch1t.getValue() - sigch3l.getValue() );
-  BOOST_REQUIRE_EQUAL( map2.count(50.f), 0 ); 
-  BOOST_REQUIRE_EQUAL( map2.count(200.f), 0 ); 
+  BOOST_REQUIRE_EQUAL( map2.count(50.f), 0u ); 
+  BOOST_REQUIRE_EQUAL( map2.count(200.f), 0u ); 
 
 }
 

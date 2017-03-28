@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(basicDataTest)
   int run  = 1;
   ParamObjectsDescriptions descriptions = paramGetter.getAllBasicData(ParamObjectType::kLayer, run);
 
-  BOOST_REQUIRE_EQUAL(descriptions.size(), 1);
+  BOOST_REQUIRE_EQUAL(descriptions.size(), 1u);
 
   ParamObjectDescription & description = descriptions[1];
   BOOST_REQUIRE_EQUAL(description["id"], "1");
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(relationalDataTest)
   int run  = 1;
   ParamRelationalData relations = paramGetter.getAllRelationalData(ParamObjectType::kLayer, ParamObjectType::kFrame, run);
 
-  BOOST_REQUIRE_EQUAL(relations.size(), 1);
+  BOOST_REQUIRE_EQUAL(relations.size(), 1u);
   BOOST_REQUIRE_EQUAL(relations[1], 1);
 }
 
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(tombRelationalDataTest)
   int run  = 1;
   ParamRelationalData relations = paramGetter.getAllRelationalData(ParamObjectType::kTOMBChannel, ParamObjectType::kTRB, run);
 
-  BOOST_REQUIRE_EQUAL(relations.size(), 4);
+  BOOST_REQUIRE_EQUAL(relations.size(), 4u);
   BOOST_REQUIRE_EQUAL(relations[111], 1);
   BOOST_REQUIRE_EQUAL(relations[112], 1);
   BOOST_REQUIRE_EQUAL(relations[113], 1);

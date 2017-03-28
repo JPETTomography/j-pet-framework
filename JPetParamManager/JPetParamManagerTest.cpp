@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(getParametersFromScopeConfigFile)
   const JPetParamBank& bank = paramManagerInstance.getParamBank();
   BOOST_REQUIRE(!bank.isDummy());
   auto bslots = bank.getBarrelSlots();
-  BOOST_REQUIRE_EQUAL(bslots.size(), 2);
+  BOOST_REQUIRE_EQUAL(bslots.size(), 2u);
   for(const BSlot& BSlotConf: config.fBSlots) {
     BOOST_REQUIRE(bslots.at(BSlotConf.fId));
     BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->getID(), BSlotConf.fId);
@@ -141,13 +141,13 @@ BOOST_AUTO_TEST_CASE(getParametersFromScopeConfigFile)
     BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->getTheta(), BSlotConf.fTheta);
   }
   auto pms = bank.getPMs();
-  BOOST_REQUIRE_EQUAL(pms.size(), 4);
+  BOOST_REQUIRE_EQUAL(pms.size(), 4u);
   for(const PM& PMConf: config.fPMs) {
     BOOST_REQUIRE(pms.at(PMConf.fId));
     BOOST_REQUIRE_EQUAL(pms.at(PMConf.fId)->getID(), PMConf.fId);
   }
   auto scintillators = bank.getScintillators();
-  BOOST_REQUIRE_EQUAL(scintillators.size(), 2);
+  BOOST_REQUIRE_EQUAL(scintillators.size(), 2u);
   for(const Scin& ScinConf: config.fScins) {
     BOOST_REQUIRE(scintillators.at(ScinConf.fId));
     BOOST_REQUIRE_EQUAL(scintillators.at(ScinConf.fId)->getID(), ScinConf.fId);
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE(getParametersFromScopeConfigFileTwice)
   const JPetParamBank& bank = paramManagerInstance.getParamBank();
   BOOST_REQUIRE(!bank.isDummy());
   auto bslots = bank.getBarrelSlots();
-  BOOST_REQUIRE_EQUAL(bslots.size(), 2);
+  BOOST_REQUIRE_EQUAL(bslots.size(), 2u);
   for(const BSlot& BSlotConf: config.fBSlots) {
     BOOST_REQUIRE(bslots.at(BSlotConf.fId));
     BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->getID(), BSlotConf.fId);
@@ -202,14 +202,14 @@ BOOST_AUTO_TEST_CASE(getParametersFromScopeConfigFileTwice)
     BOOST_REQUIRE_EQUAL(bslots.at(BSlotConf.fId)->getTheta(), BSlotConf.fTheta);
   }
   auto pms = bank.getPMs();
-  BOOST_REQUIRE_EQUAL(pms.size(), 4);
+  BOOST_REQUIRE_EQUAL(pms.size(), 4u);
   for(const PM& PMConf: config.fPMs) {
     BOOST_REQUIRE(pms.at(PMConf.fId));
     BOOST_REQUIRE_EQUAL(pms.at(PMConf.fId)->getID(), PMConf.fId);
   }
 
   auto scintillators = bank.getScintillators();
-  BOOST_REQUIRE_EQUAL(scintillators.size(), 2);
+  BOOST_REQUIRE_EQUAL(scintillators.size(), 2u);
   for(const Scin& ScinConf: config.fScins) {
     BOOST_REQUIRE(scintillators.at(ScinConf.fId));
     BOOST_REQUIRE_EQUAL(scintillators.at(ScinConf.fId)->getID(), ScinConf.fId);

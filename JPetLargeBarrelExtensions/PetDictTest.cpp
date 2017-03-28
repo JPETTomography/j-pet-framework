@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_SUITE(JPetMapTesting)
 
 BOOST_AUTO_TEST_CASE(empty){
     JPetMap<size_t> map({});
-    BOOST_REQUIRE_EQUAL(0,map.layersCount());
+    BOOST_REQUIRE_EQUAL(0u,map.layersCount());
     BOOST_CHECK_THROW(map.layerSize(0),Exception<JPetMap<size_t>>);
     BOOST_CHECK_THROW(map.layerSize(1),Exception<JPetMap<size_t>>);
     BOOST_CHECK_THROW(map.layerSize(2),Exception<JPetMap<size_t>>);
@@ -33,35 +33,35 @@ BOOST_AUTO_TEST_CASE(sizes){
     {
 	JPetMap<size_t> map({2});
 	BOOST_CHECK_THROW(map.layerSize(0),Exception<JPetMap<size_t>>);
-	BOOST_REQUIRE_EQUAL(2,map.layerSize(1));
+	BOOST_REQUIRE_EQUAL(2u,map.layerSize(1));
 	BOOST_CHECK_THROW(map.layerSize(2),Exception<JPetMap<size_t>>);
     }{
 	JPetMap<size_t> map({2,3});
 	BOOST_CHECK_THROW(map.layerSize(0),Exception<JPetMap<size_t>>);
 	BOOST_CHECK_THROW(map.operator[]({.layer=0,.slot=0}),Exception<JPetMap<size_t>>);
 	BOOST_CHECK_THROW(map.operator[]({.layer=0,.slot=1}),Exception<JPetMap<size_t>>);
-	BOOST_REQUIRE_EQUAL(2,map.layerSize(1));
+	BOOST_REQUIRE_EQUAL(2u,map.layerSize(1));
 	BOOST_CHECK_THROW(map.operator[]({.layer=1,.slot=0}),Exception<JPetMap<size_t>>);
 	BOOST_CHECK_NO_THROW(map.operator[]({.layer=1,.slot=1}));
 	BOOST_CHECK_NO_THROW(map.operator[]({.layer=1,.slot=2}));
 	BOOST_CHECK_THROW(map.operator[]({.layer=1,.slot=3}),Exception<JPetMap<size_t>>);
-	BOOST_REQUIRE_EQUAL(3,map.layerSize(2));
+	BOOST_REQUIRE_EQUAL(3u,map.layerSize(2));
 	BOOST_CHECK_THROW(map.layerSize(3),Exception<JPetMap<size_t>>);
     }{
 	JPetMap<size_t> map({2,3,8});
 	BOOST_CHECK_THROW(map.layerSize(0),Exception<JPetMap<size_t>>);
-	BOOST_REQUIRE_EQUAL(2,map.layerSize(1));
-	BOOST_REQUIRE_EQUAL(3,map.layerSize(2));
-	BOOST_REQUIRE_EQUAL(8,map.layerSize(3));
+	BOOST_REQUIRE_EQUAL(2u,map.layerSize(1));
+	BOOST_REQUIRE_EQUAL(3u,map.layerSize(2));
+	BOOST_REQUIRE_EQUAL(8u,map.layerSize(3));
 	BOOST_CHECK_THROW(map.layerSize(4),Exception<JPetMap<size_t>>);
     }
 }
 BOOST_AUTO_TEST_CASE(Positioning){
     JPetMap<size_t> map({2,3,8});
     const auto initpos=map.positionOfGlobalNumber(0);
-    BOOST_REQUIRE_EQUAL(initpos.layer,1);
-    BOOST_REQUIRE_EQUAL(initpos.slot,1);
-    BOOST_REQUIRE_EQUAL(0,map.globalSlotNumber(initpos));
+    BOOST_REQUIRE_EQUAL(initpos.layer,1u);
+    BOOST_REQUIRE_EQUAL(initpos.slot,1u);
+    BOOST_REQUIRE_EQUAL(0u,map.globalSlotNumber(initpos));
     for(size_t cur=1;cur<map.size();cur++){
 	const size_t prev=cur-1;
 	const auto prevpos=map.positionOfGlobalNumber(prev);
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(Positioning){
 	    BOOST_REQUIRE_EQUAL(prevpos.slot+1,curpos.slot);
 	}else{
 	    if((prevpos.layer+1)==curpos.layer){
-		BOOST_REQUIRE_EQUAL(1,curpos.slot);
+		BOOST_REQUIRE_EQUAL(1u,curpos.slot);
 		BOOST_REQUIRE_EQUAL(map.layerSize(prevpos.layer),prevpos.slot);
 	    }else BOOST_REQUIRE(false);
 	}
