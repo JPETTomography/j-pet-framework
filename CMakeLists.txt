@@ -57,7 +57,7 @@ find_package(Boost 1.50.0 REQUIRED COMPONENTS
   unit_test_framework
   )
 
-include_directories(${Boost_INCLUDE_DIRS})
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 add_definitions(${Boost_DEFINITIONS})
 
 get_directory_property(has_parent PARENT_DIRECTORY)
