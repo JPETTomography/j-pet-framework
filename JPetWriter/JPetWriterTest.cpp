@@ -3,6 +3,8 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>  // for filesystem::remove
 #include <TNamed.h>
+#include <TList.h>
+#include <TFile.h>
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetTimeWindow/JPetTimeWindow.h"
 #include "../JPetBaseSignal/JPetBaseSignal.h"
@@ -29,7 +31,6 @@
 //  inline bool IsOpenFile() const {return fFile.IsOpen();}
 //  void closeFile();
 //
-//  int WriteObject(const TObject* obj, const char* name){ return fFile.WriteObject(obj, name); }
 //
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
@@ -260,5 +261,74 @@ BOOST_AUTO_TEST_CASE( saving_different_objects8 )
   if(boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
 } 
+
+BOOST_AUTO_TEST_CASE( saving_ROOT_container )
+{
+  auto fileTest = "saving_different_objectsTest.root";
+  JPetWriter writer(fileTest);
+  TList list;
+  list.Add(new TNamed("test1", "test object 1"));
+  list.Add(new TNamed("test2", "test object 2"));
+  list.Add(new TNamed("test3", "test object 3"));
+
+  writer.writeCollection(&list, "testdir");
+  writer.closeFile();  
+
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+
+  TFile fread(fileTest, "READ");
+
+  TNamed * retrieved1 = dynamic_cast<TNamed*>(fread.Get("testdir/test1"));
+  TNamed * retrieved2 = dynamic_cast<TNamed*>(fread.Get("testdir/test2"));
+  TNamed * retrieved3 = dynamic_cast<TNamed*>(fread.Get("testdir/test3"));
+
+  BOOST_CHECK(retrieved1);
+  BOOST_CHECK(retrieved2);
+  BOOST_CHECK(retrieved3);
+  
+  BOOST_REQUIRE(std::string(retrieved1->GetName()) == "test1");
+  BOOST_REQUIRE(std::string(retrieved2->GetName()) == "test2");
+  BOOST_REQUIRE(std::string(retrieved3->GetName()) == "test3");
+
+  BOOST_REQUIRE(std::string(retrieved1->GetTitle()) == "test object 1");
+    
+  fread.Close();
+}
+
+BOOST_AUTO_TEST_CASE( saving_ROOT_container_subdir )
+{
+  auto fileTest = "saving_different_objectsTest.root";
+  JPetWriter writer(fileTest);
+  TList list;
+  list.Add(new TNamed("test1", "test object 1"));
+
+  THashTable hash;  
+  hash.Add(new TNamed("test2", "test object 2"));
+  hash.Add(new TNamed("test3", "test object 3"));
+
+  writer.writeCollection(&list, "testdir", "listcontents");
+  writer.writeCollection(&hash, "testdir", "hashcontents");
+  writer.closeFile();  
+
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+
+  TFile fread(fileTest, "READ");
+
+  TNamed * retrieved1 = dynamic_cast<TNamed*>(fread.Get("testdir/listcontents/test1"));
+  TNamed * retrieved2 = dynamic_cast<TNamed*>(fread.Get("testdir/hashcontents/test2"));
+  TNamed * retrieved3 = dynamic_cast<TNamed*>(fread.Get("testdir/hashcontents/test3"));
+
+  BOOST_CHECK(retrieved1);
+  BOOST_CHECK(retrieved2);
+  BOOST_CHECK(retrieved3);
+  
+  BOOST_REQUIRE(std::string(retrieved1->GetName()) == "test1");
+  BOOST_REQUIRE(std::string(retrieved2->GetName()) == "test2");
+  BOOST_REQUIRE(std::string(retrieved3->GetName()) == "test3");
+
+  BOOST_REQUIRE(std::string(retrieved1->GetTitle()) == "test object 1");
+    
+  fread.Close();
+}
 
 BOOST_AUTO_TEST_SUITE_END()
