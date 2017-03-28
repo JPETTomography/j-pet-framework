@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_CASE( ConstructorTest ) {
   BOOST_CHECK_CLOSE(signal.getOffset(), 0.f, epsilon);
   BOOST_CHECK_CLOSE(signal.getCharge(), 0.f, epsilon);
 
-  BOOST_CHECK_EQUAL(signal.getShape().size(), 0);
+  BOOST_CHECK_EQUAL(signal.getShape().size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( ScalarFieldsTest ) {
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE( SignalShapePointsTest ) {
   }
 
   const std::vector<shapePoint> & vec = signal.getShape();
-  BOOST_CHECK_EQUAL(vec.size(), 502);
+  BOOST_CHECK_EQUAL(vec.size(), 502u);
 
   BOOST_CHECK_CLOSE(vec.front().time, 501.f, epsilon);
   BOOST_CHECK_CLOSE(vec.front().amplitude, 501.43f, epsilon);
