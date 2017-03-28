@@ -57,7 +57,6 @@ BOOST_AUTO_TEST_CASE( my_test2 )
   BOOST_REQUIRE(std::string(objOut.GetTitle()) == "Title of this testObj");
 }
 
-
 /// a tree must have a name if not SetAutoSave makes it crash when when call Branch
 BOOST_AUTO_TEST_CASE( my_helperTest_for_test3 )
 {
@@ -115,6 +114,7 @@ BOOST_AUTO_TEST_CASE( saving_different_objects1 )
     JPetSigCh testJPetSigCh;
     writer.write(testJPetSigCh);
   }
+  writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
@@ -133,6 +133,7 @@ BOOST_AUTO_TEST_CASE( saving_different_objects2 )
     JPetTimeWindow testJPetTimeWindow;
     writer.write(testJPetTimeWindow);
   }
+  writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
@@ -152,6 +153,7 @@ BOOST_AUTO_TEST_CASE( saving_different_objects3 )
     JPetBaseSignal testJPetBaseSignal;
     writer.write(testJPetBaseSignal);
   }
+  writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
@@ -170,6 +172,7 @@ BOOST_AUTO_TEST_CASE( saving_different_objects4 )
     JPetRawSignal testJPetRawSignal;
     writer.write(testJPetRawSignal);
   }
+  writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
@@ -189,6 +192,7 @@ BOOST_AUTO_TEST_CASE( saving_different_objects5 )
     JPetRecoSignal testJPetRecoSignal;
     writer.write(testJPetRecoSignal);
   }
+  writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
@@ -208,6 +212,7 @@ BOOST_AUTO_TEST_CASE( saving_different_objects6 )
     JPetPhysSignal testJPetPhysSignal;
     writer.write(testJPetPhysSignal);
   }
+  writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
@@ -227,6 +232,7 @@ BOOST_AUTO_TEST_CASE( saving_different_objects7 )
     JPetHit testJPetHit;
     writer.write(testJPetHit);
   }
+  writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
@@ -246,6 +252,7 @@ BOOST_AUTO_TEST_CASE( saving_different_objects8 )
     JPetLOR testJPetLOR;
     writer.write(testJPetLOR);
   }
+  writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
@@ -253,6 +260,5 @@ BOOST_AUTO_TEST_CASE( saving_different_objects8 )
   if(boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
 } 
-
 
 BOOST_AUTO_TEST_SUITE_END()
