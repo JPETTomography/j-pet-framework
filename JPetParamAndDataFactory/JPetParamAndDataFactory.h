@@ -10,11 +10,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetParamAndDateFactory.h
+ *  @file JPetParamAndDataFactory.h
  */
 
-#ifndef JPETPARAM_AND_DATE_FACTORY_H
-#define JPETPARAM_AND_DATE_FACTORY_H
+#ifndef JPETPARAM_AND_DATA_FACTORY_H
+#define JPETPARAM_AND_DATA_FACTORY_H
 
 #include "../JPetScin/JPetScin.h"
 #include "../JPetFEB/JPetFEB.h"
@@ -32,7 +32,7 @@
 #include  "TVector3.h"
 #include "../JPetTOMBChannel/JPetTOMBChannel.h"
 
-namespace factory
+namespace param_and_data_factory
 {
 JPetScin makeScin(int id, float attenLen, float length, float height, float width, JPetBarrelSlot& p_barrelSlot ); 
 JPetFEB makeFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId, int p_n_time_outputs_per_input, int p_n_notime_outputs_per_input, JPetTRB& p_TRB);
