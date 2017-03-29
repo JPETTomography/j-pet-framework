@@ -10,12 +10,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetParamAndDateFactory.cpp
+ *  @file JPetParamAndDataFactory.cpp
  */
 
-#include "./JPetParamAndDateFactory.h"
+#include "./JPetParamAndDataFactory.h"
 
-namespace factory
+namespace param_and_data_factory
 {
 JPetScin makeScin(int id, float attenLen, float length, float height, float width, JPetBarrelSlot& p_barrelSlot )
 {
@@ -120,5 +120,4 @@ JPetTOMBChannel makeTOMBChannel(int p_channel, JPetFEB& p_FEB, JPetTRB& p_TRB, J
   tombChannelObject.setFEBInputNumber(fin);
   return tombChannelObject;
 }
-
 }

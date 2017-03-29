@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE JPetParamAndDateFactoryTest
+#define BOOST_TEST_MODULE JPetParamAndDataFactoryTest
 #include <boost/test/unit_test.hpp>
-#include "JPetParamAndDateFactory.h"
+#include "JPetParamAndDataFactory.h"
 #include <boost/filesystem.hpp>
 
 
@@ -10,7 +10,7 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( scin )
 {
   JPetBarrelSlot p_barrelSlot(1, true, "name", 1, 1);
-  JPetScin scin = factory::makeScin(1, 2.0, 3.0, 4.0, 5.0, p_barrelSlot );
+  JPetScin scin = param_and_data_factory::makeScin(1, 2.0, 3.0, 4.0, 5.0, p_barrelSlot );
   BOOST_REQUIRE_EQUAL(scin.getID(), 1);
   BOOST_REQUIRE_EQUAL(scin.getAttenLen(), 2.0);
   JPetScin::Dimension dim = JPetScin::kLength;
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE( scin )
 BOOST_AUTO_TEST_CASE( feb )
 {
   JPetTRB p_TRB(1, 2, 2);
-  JPetFEB feb = factory::makeFEB( 1, true, "status", "description", 2, 7, 1, 0, p_TRB);
+  JPetFEB feb = param_and_data_factory::makeFEB( 1, true, "status", "description", 2, 7, 1, 0, p_TRB);
   BOOST_REQUIRE_EQUAL(feb.getID(), 1);
   BOOST_REQUIRE_EQUAL(feb.isActive(), true);
   BOOST_REQUIRE_EQUAL(feb.status(), "status");
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE( feb )
 BOOST_AUTO_TEST_CASE( layer )
 {
   JPetFrame frame(1, true, "status", "description", 2, 3);
-  JPetLayer layer = factory::makeLayer(1, true, "name", 3, frame);
+  JPetLayer layer = param_and_data_factory::makeLayer(1, true, "name", 3, frame);
   BOOST_REQUIRE_EQUAL(layer.getID(), 1);
   BOOST_REQUIRE_EQUAL(layer.getIsActive(), true);
   BOOST_REQUIRE_EQUAL(layer.getName(), "name");
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE( hit )
   p_sigB.setTime(3);
   p_sigB.setPhe(4);
   TVector3 position(6.0, 7.0, 8.0);
-  JPetHit hit = factory::makeHit(0.0f, 1.0f, 2.0f, 3.0f, position, p_sigA, p_sigB, bs, sc, 4.0f,  5.0f);
+  JPetHit hit = param_and_data_factory::makeHit(0.0f, 1.0f, 2.0f, 3.0f, position, p_sigA, p_sigB, bs, sc, 4.0f,  5.0f);
   BOOST_REQUIRE_EQUAL(hit.getEnergy(), 0.0f);
   BOOST_REQUIRE_EQUAL(hit.getQualityOfEnergy(), 1.0f);
   BOOST_REQUIRE_EQUAL(hit.getTime(), 2.0f);
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE( sigCh )
   channel.setTRB(const_cast<JPetTRB&>(trb));
   JPetSigCh::EdgeType type = JPetSigCh::Trailing;
   Int_t daqch;
-  JPetSigCh sigCh = factory::makeSigCh(pm, trb, feb, channel, 4.0, type, 3.0, daqch, 0.0);
+  JPetSigCh sigCh = param_and_data_factory::makeSigCh(pm, trb, feb, channel, 4.0, type, 3.0, daqch, 0.0);
 
   BOOST_REQUIRE_EQUAL(sigCh.getPM().getHVopt(), pm.getHVopt());
   BOOST_REQUIRE_EQUAL(sigCh.getPM().getHVset(), pm.getHVset());
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE( sigCh )
 BOOST_AUTO_TEST_CASE( barrelSlot )
 {
   JPetLayer p_layer(1, true, "name", 3);
-  JPetBarrelSlot barrelSlot = factory::makeBarrelSlot(p_layer, 1 , true, "name", 0, 2);
+  JPetBarrelSlot barrelSlot = param_and_data_factory::makeBarrelSlot(p_layer, 1 , true, "name", 0, 2);
   
   BOOST_REQUIRE_EQUAL(barrelSlot.getID(), 1);
   BOOST_REQUIRE(barrelSlot.isActive());
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE( timeWindow )
 {
   JPetSigCh::EdgeType type = JPetSigCh::Trailing;
   JPetSigCh new_ch(type, 1);
-  JPetTimeWindow timeWindow = factory::makeTimeWindow(new_ch, 1);
+  JPetTimeWindow timeWindow = param_and_data_factory::makeTimeWindow(new_ch, 1);
   BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfSigCh(), 1);
   BOOST_REQUIRE_EQUAL(timeWindow.getIndex(), 1);
   BOOST_REQUIRE_EQUAL(timeWindow[0].getValue(), new_ch.getValue());
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE( pm )
   JPetScin p_scin(1, 2, 3, 4, 5);
   JPetFEB p_FEB(1, true, "p_status", "p_description", 2, 3, 4, 5);
   std::pair<float, float> gain(3.0, 4.0);
-  JPetPM pm = factory::makePM(side, 1, 1, 2, gain, p_FEB, p_scin, p_barrelSlot);
+  JPetPM pm = param_and_data_factory::makePM(side, 1, 1, 2, gain, p_FEB, p_scin, p_barrelSlot);
 
   BOOST_REQUIRE_EQUAL(pm.getID(), 1);
   BOOST_REQUIRE_EQUAL(pm.getHVset(), 1);
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE( baseSignal )
   pm.setHVopt(2);
   pm.setHVset(3);
   JPetBarrelSlot p_barrelSlot(1, true, "name", 2, 3);
-  JPetBaseSignal bs = factory::makeBaseSignal(1, pm, p_barrelSlot);
+  JPetBaseSignal bs = param_and_data_factory::makeBaseSignal(1, pm, p_barrelSlot);
   BOOST_REQUIRE_EQUAL(bs.getTimeWindowIndex(), 1 );
 
   BOOST_REQUIRE_EQUAL(bs.getPM().getHVopt(), pm.getHVopt() );
@@ -206,7 +206,7 @@ BOOST_AUTO_TEST_CASE( physSignal )
 {
   JPetRecoSignal recoSignal(2);
 
-  JPetPhysSignal ps = factory::makePhysSignal( 1, 2, 3, 4, recoSignal);
+  JPetPhysSignal ps = param_and_data_factory::makePhysSignal( 1, 2, 3, 4, recoSignal);
 
   BOOST_REQUIRE_EQUAL(ps.getTime(), 1 );
   BOOST_REQUIRE_EQUAL(ps.getQualityOfTime(), 2 );
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE( rawSignal )
 {
   JPetSigCh::EdgeType type = JPetSigCh::Trailing;
   JPetSigCh sigch(type, 1);
-  JPetRawSignal rs = factory::makeRawSignal(3, sigch);
+  JPetRawSignal rs = param_and_data_factory::makeRawSignal(3, sigch);
 
   BOOST_REQUIRE_EQUAL(rs.getNumberOfPoints(type), 1);
   
@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_CASE( tombChannel )
   pm.setHVset(3);
   JPetTRB trb(1, 2, 3);
   JPetFEB feb(1, true, "p_status", "p_description", 2, 3, 4, 5);
-  JPetTOMBChannel tombChannel = factory::makeTOMBChannel(3, feb, trb, pm, 4, 5, 6);
+  JPetTOMBChannel tombChannel = param_and_data_factory::makeTOMBChannel(3, feb, trb, pm, 4, 5, 6);
   
   BOOST_REQUIRE_EQUAL(tombChannel.getChannel(), 3);
   BOOST_REQUIRE_EQUAL(tombChannel.getThreshold(), 4);
