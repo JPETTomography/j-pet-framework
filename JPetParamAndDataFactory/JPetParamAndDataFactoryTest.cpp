@@ -29,7 +29,9 @@ BOOST_AUTO_TEST_CASE( scin )
 BOOST_AUTO_TEST_CASE( feb )
 {
   JPetTRB p_TRB(1, 2, 2);
-  JPetFEB feb = param_and_data_factory::makeFEB( 1, true, "status", "description", 2, 7, 1, 0, p_TRB);
+  const std::string status = "status";
+  const std::string description = "description";
+  JPetFEB feb = param_and_data_factory::makeFEB( 1, true, status, description, 2, 7, 1, 0, p_TRB);
   BOOST_REQUIRE_EQUAL(feb.getID(), 1);
   BOOST_REQUIRE_EQUAL(feb.isActive(), true);
   BOOST_REQUIRE_EQUAL(feb.status(), "status");
@@ -45,8 +47,9 @@ BOOST_AUTO_TEST_CASE( feb )
 
 BOOST_AUTO_TEST_CASE( layer )
 {
+  const std::string name = "name";
   JPetFrame frame(1, true, "status", "description", 2, 3);
-  JPetLayer layer = param_and_data_factory::makeLayer(1, true, "name", 3, frame);
+  JPetLayer layer = param_and_data_factory::makeLayer(1, true, name, 3, frame);
   BOOST_REQUIRE_EQUAL(layer.getID(), 1);
   BOOST_REQUIRE_EQUAL(layer.getIsActive(), true);
   BOOST_REQUIRE_EQUAL(layer.getName(), "name");
@@ -135,8 +138,9 @@ BOOST_AUTO_TEST_CASE( sigCh )
 
 BOOST_AUTO_TEST_CASE( barrelSlot )
 {
+  const std::string name = "name";
   JPetLayer p_layer(1, true, "name", 3);
-  JPetBarrelSlot barrelSlot = param_and_data_factory::makeBarrelSlot(p_layer, 1 , true, "name", 0, 2);
+  JPetBarrelSlot barrelSlot = param_and_data_factory::makeBarrelSlot(p_layer, 1 , true, name, 0, 2);
   
   BOOST_REQUIRE_EQUAL(barrelSlot.getID(), 1);
   BOOST_REQUIRE(barrelSlot.isActive());
