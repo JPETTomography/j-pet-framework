@@ -24,14 +24,14 @@ JPetScin makeScin(int id, float attenLen, float length, float height, float widt
   return scinObject;
 }
 
-JPetFEB makeFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description, int p_version, int p_userId, int p_n_time_outputs_per_input, int p_n_notime_outputs_per_input, JPetTRB& p_TRB)
+JPetFEB makeFEB(int p_id, bool p_isActive, const std::string& p_status, const std::string& p_description, int p_version, int p_userId, int p_n_time_outputs_per_input, int p_n_notime_outputs_per_input, JPetTRB& p_TRB)
 {
   JPetFEB objectFEB(p_id, p_isActive, p_status, p_description, p_version, p_userId, p_n_time_outputs_per_input, p_n_notime_outputs_per_input);
   objectFEB.setTRB(p_TRB);
   return objectFEB;
 }
 
-JPetLayer makeLayer(int id, bool isActive, std::string name, float radius, JPetFrame& frame)
+JPetLayer makeLayer(int id, bool isActive, const std::string& name, float radius, JPetFrame& frame)
 {
   JPetLayer objectLayer(id, isActive, name, radius);
   objectLayer.setFrame(frame);
@@ -58,7 +58,7 @@ JPetSigCh makeSigCh(const JPetPM & pm, const JPetTRB & trb, const JPetFEB & feb,
    return sigChObject;
   }
 
-JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, std::string name, float theta, int inFrameID)
+JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, const std::string& name, float theta, int inFrameID)
 {
   JPetBarrelSlot barrelSlotObject(id, isActive, name, theta, inFrameID);
   barrelSlotObject.setLayer(p_layer);
