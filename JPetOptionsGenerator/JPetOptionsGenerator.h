@@ -25,6 +25,7 @@ class JPetOptionsGenerator;
 #include <boost/any.hpp>
 #include <typeinfo>
 #include <iostream>
+#include <utility>
 
 class JPetOptionsGenerator
 {
@@ -32,6 +33,8 @@ public:
   JPetOptionsGenerator();
   ~JPetOptionsGenerator();
   
+  std::map<std::string, std::function<bool(std::pair <std::string, boost::any>)> > validationMap;
+
   std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap) const;
   
   bool areCorrectOptions(const std::map<std::string, boost::any>& options) const;

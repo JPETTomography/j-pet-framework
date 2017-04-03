@@ -44,17 +44,8 @@ std::string JPetOptionsGenerator::getOptionValue(const std::map<std::string, boo
 std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap) const
 {
   std::map<std::string, boost::any> optionsMap;
-  std::map<std::string, std::string> tmpMap = JPetOptions::getDefaultOptions();
   for(auto &option : variablesMap){
-    //if(variablesMap.count(option.first)){
-      if(option.first=="file")
-        optionsMap.at(option.first)= variablesMap[option.first].as<std::vector<std::string>>();
-      if(option.first=="range")
-        optionsMap.at(option.first)=variablesMap[option.first].as<std::vector<int>>();
-      if(option.first=="runId")
-        optionsMap.at(option.first)=variablesMap[option.first].as<int>();  
-    optionsMap.at(option.first) = variablesMap[option.first].as<std::string>();
-   // }
+    optionsMap.at(option.first) = variablesMap[option.first].as<boost::any>();
   }
   return optionsMap;
 }
@@ -68,10 +59,19 @@ std::map<std::string, std::string> JPetOptionsGenerator::anyMapToStringMap(const
   return optionsMap;
 }
 
-bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::any>& variablesMap) const
+bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap) const
 {
+  for(auto &option : optionsMap){
+    if( validationMap.at(option.first)(std::pair <std::string, boost::any> (option.first, option.second)) == false);
+      return false;
+  }
+  return true;
+}
   /* Parse range of events */
-  if (variablesMap.count("range")) {
+bool JPetOptionsGenerator::isRangeValid(){
+  return true;
+}
+/*  if (variablesMap.count("range")) {
     if ((any_cast<std::vector<int>>(variablesMap.at("range"))).size() != 2) {
       ERROR("Wrong number of bounds in range.");
       std::cerr << "Wrong number of bounds in range: " << (any_cast<std::vector<int>>(variablesMap.at("range"))).size() << std::endl;
@@ -139,8 +139,8 @@ bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::
       return false;
     }
   }
-  return true;
-}
+  */
+  
 
 std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variables_map& optsMap) const
 {
