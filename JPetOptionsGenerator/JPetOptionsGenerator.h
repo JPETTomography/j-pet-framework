@@ -35,13 +35,17 @@ public:
   
   std::map<std::string, std::function<bool(std::pair <std::string, boost::any>)> > validationMap;
 
+  std::map<std::string, std::function<boost::any(std::pair <std::string, boost::any>)> > transformationMap;
+
   std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap) const;
+
+  std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& options);
   
   bool areCorrectOptions(const std::map<std::string, boost::any>& options) const;
   
   bool isOptionSet(const std::map<std::string, boost::any>& variablesMap, const std::string& option) const; 
   
-  std::string getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string option) const;
+  boost::any getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string option) const;
 
   std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const; 
 

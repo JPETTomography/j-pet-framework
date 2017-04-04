@@ -36,9 +36,9 @@ bool JPetOptionsGenerator::isOptionSet(const std::map<std::string, boost::any>& 
   return (bool)variablesMap.count(option);
 }
 
-std::string JPetOptionsGenerator::getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string option) const
+boost::any JPetOptionsGenerator::getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string option) const
 {
-  return any_cast<std::string>(variablesMap.at(option));
+  return any_cast<boost::any>(variablesMap.at(option));
 }
 
 std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap) const
@@ -59,10 +59,13 @@ std::map<std::string, std::string> JPetOptionsGenerator::anyMapToStringMap(const
   return optionsMap;
 }
 
+
+
 bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap) const
 {
   for(auto &option : optionsMap){
     if( validationMap.at(option.first)(std::pair <std::string, boost::any> (option.first, option.second)) == false);
+      ERROR("ERROR VALIDATON FOR " + option.first);
       return false;
   }
   return true;
