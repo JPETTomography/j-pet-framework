@@ -105,11 +105,11 @@ BOOST_AUTO_TEST_CASE( sigCh )
   JPetPM pm(1);
   pm.setHVopt(2);
   pm.setHVset(3);
-  const JPetTRB trb(1, 2, 3);
+  JPetTRB trb(1, 2, 3);
   JPetFEB feb(1);
-  feb.setTRB(const_cast<JPetTRB&>(trb));
+  feb.setTRB(trb);
   JPetTOMBChannel channel(1);
-  channel.setTRB(const_cast<JPetTRB&>(trb));
+  channel.setTRB(trb);
   JPetSigCh::EdgeType type = JPetSigCh::Trailing;
   Int_t daqch;
   JPetSigCh sigCh = param_and_data_factory::makeSigCh(pm, trb, feb, channel, 4.0, type, 3.0, daqch, 0.0);
