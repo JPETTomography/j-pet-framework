@@ -35,11 +35,11 @@ public:
   
   std::map<std::string, std::function<bool(std::pair <std::string, boost::any>)> > validationMap;
 
-  std::map<std::string, std::function<boost::any(std::pair <std::string, boost::any>)> > transformationMap;
+  std::map<std::string, std::vector<std::function<std::pair <std::string, boost::any>(boost::any)>> > transformationMap;
 
   std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap) const;
 
-  std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& options);
+  std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap);
   
   bool areCorrectOptions(const std::map<std::string, boost::any>& options) const;
   
@@ -49,33 +49,26 @@ public:
 
   std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const; 
 
-  std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& map) const; 
+  std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& map) const;
+
+  bool isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option); 
+
+  bool isRangeOfEventsValid(std::pair <std::string, boost::any> option);
+
+  bool isCorrectFileType(std::pair <std::string, boost::any> option);
+
+  bool isRunIdValid(std::pair <std::string, boost::any> option);
+
+  bool isLocalDBValid(std::pair <std::string, boost::any> option);
+
+  bool areFilesValid(std::pair <std::string, boost::any> option);
+
+  bool isOutputDirectoryValid(std::pair <std::string, boost::any> option);
+
  
   inline const std::vector<std::string>& getFileNames(const po::variables_map& variablesMap) const {
     return variablesMap["file"].as< std::vector<std::string> >();
   }
-  inline bool isCorrectFileType(const std::string& type) const {
-    if (type == "hld" || type == "root" || type == "scope" || type == "zip") {
-      return true;
-    }
-    return false;
-  }
-
-//  inline const std::string& getOutputPath(const po::variables_map& variablesMap) const {
-//    return variablesMap["outputPath"].as<std::string>();
-//  }
-
-//  inline bool isOutputPath(const po::variables_map& variablesMap) const {
-//    return (bool)variablesMap.count("outputPath");
-//  }
-
-//  inline const std::string& getFileType(const po::variables_map& variablesMap) const {
-//    return variablesMap["type"].as<std::string>();
-//  }
-
-//  inline bool IsFileTypeSet(const po::variables_map& variablesMap) const {
-//    return (bool)variablesMap.count("type");
-//  }
 
   inline int getLowerEventBound(const po::variables_map& variablesMap) const {
     return variablesMap["range"].as< std::vector<int> >()[0];
@@ -83,17 +76,6 @@ public:
   inline int getHigherEventBound(const po::variables_map& variablesMap) const {
     return variablesMap["range"].as< std::vector<int> >()[1];
   }
-//  inline bool isParamSet(const po::variables_map& variablesMap) const {
-//    return (bool)variablesMap.count("param");
-//  }
-//  inline const std::string& getParam(const po::variables_map& variablesMap) const {
-//    return variablesMap["param"].as< std::string >();
-//  }
-
-//  inline bool isRunNumberSet(const po::variables_map& variablesMap) const {
-//    return (bool)variablesMap.count("runId");
-//  }
-
   inline const int getRunNumber(const po::variables_map& variablesMap) const {
     return variablesMap["runId"].as<int>();
   }
@@ -101,20 +83,6 @@ public:
   inline bool isProgressBarSet(const po::variables_map& variablesMap) const {
     return variablesMap["progressBar"].as<bool>();
   }
-
-//  static inline bool isLocalDBSet(const po::variables_map& variablesMap) {
-//    return variablesMap.count("localDB") > 0;
-//  }
-//  static inline std::string getLocalDBName(const po::variables_map& variablesMap) {
-//    return variablesMap["localDB"].as<std::string>();
-// }
-
-//  static inline bool isLocalDBCreateSet(const po::variables_map& variablesMap) {
-//    return variablesMap.count("localDBCreate") > 0;
-//  }
-//  static inline std::string getLocalDBCreateName(const po::variables_map& variablesMap) {
-//    return variablesMap["localDBCreate"].as<std::string>();
-//  }
 
 };
 #endif
