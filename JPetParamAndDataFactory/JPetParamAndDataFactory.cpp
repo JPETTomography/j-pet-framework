@@ -46,7 +46,7 @@ JPetHit makeHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSig
   return hitObject;
 }
 
-JPetSigCh makeSigCh(const JPetPM & pm, const JPetTRB & trb, const JPetFEB & feb, const JPetTOMBChannel & channel, float val, JPetSigCh::EdgeType type, float thr, Int_t daqch, unsigned int threshold_number){
+JPetSigCh makeSigCh(JPetPM & pm, JPetTRB & trb, JPetFEB & feb, JPetTOMBChannel & channel, float val, JPetSigCh::EdgeType type, float thr, Int_t daqch, unsigned int threshold_number){
    JPetSigCh sigChObject(type, val );
    sigChObject.setPM(pm);
    sigChObject.setTRB(trb);
@@ -82,7 +82,7 @@ JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, floa
   return pmObject;
 }
 
-JPetBaseSignal makeBaseSignal(unsigned int index, const JPetPM & pm, const JPetBarrelSlot & bs)
+JPetBaseSignal makeBaseSignal(unsigned int index, JPetPM & pm, JPetBarrelSlot & bs)
 {
   JPetBaseSignal baseSignalObject;
   baseSignalObject.setTimeWindowIndex(index);
@@ -91,7 +91,7 @@ JPetBaseSignal makeBaseSignal(unsigned int index, const JPetPM & pm, const JPetB
   return baseSignalObject;
 }
 
-JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, double qualityOfPhe, const JPetRecoSignal& recoSignal)
+JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, double qualityOfPhe, JPetRecoSignal& recoSignal)
 {
   JPetPhysSignal physSignalObject;
   physSignalObject.setTime(time);
@@ -102,7 +102,7 @@ JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, doubl
   return physSignalObject;
 }
 
-JPetRawSignal makeRawSignal(const int points, const JPetSigCh& sigch)
+JPetRawSignal makeRawSignal(int points, JPetSigCh& sigch)
 {
   JPetRawSignal rawSignalObject(points);
   rawSignalObject.addPoint(sigch);
