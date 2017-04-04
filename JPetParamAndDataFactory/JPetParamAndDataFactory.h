@@ -38,13 +38,13 @@ JPetScin makeScin(int id, float attenLen, float length, float height, float widt
 JPetFEB makeFEB(int p_id, bool p_isActive, const std::string& p_status, const std::string& p_description, int p_version, int p_userId, int p_n_time_outputs_per_input, int p_n_notime_outputs_per_input, JPetTRB& p_TRB);
 JPetLayer makeLayer(int id, bool isActive, const std::string& name, float radius,JPetFrame& frame); 
 JPetHit makeHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSignal& siga, JPetPhysSignal& sigb, JPetBarrelSlot& bslot, JPetScin& scin, float qtd, float td);
-JPetSigCh makeSigCh(const JPetPM & pm, const JPetTRB & trb, const JPetFEB & feb, const JPetTOMBChannel & channel, float val, JPetSigCh::EdgeType type, float thr, Int_t daqch, unsigned int threshold_number); 
+JPetSigCh makeSigCh(JPetPM & pm, JPetTRB & trb, JPetFEB & feb, JPetTOMBChannel & channel, float val, JPetSigCh::EdgeType type, float thr, Int_t daqch, unsigned int threshold_number); 
 JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, const std::string& name, float theta, int inFrameID); 
 JPetTimeWindow makeTimeWindow(JPetSigCh& new_ch, unsigned int index); 
 JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot); 
-JPetBaseSignal makeBaseSignal(unsigned int index, const JPetPM & pm, const JPetBarrelSlot & bs);
-JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, double qualityOfPhe, const JPetRecoSignal& recoSignal);
-JPetRawSignal makeRawSignal(const int points, const JPetSigCh& sigch);
+JPetBaseSignal makeBaseSignal(unsigned int index, JPetPM & pm, JPetBarrelSlot & bs);
+JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, double qualityOfPhe, JPetRecoSignal& recoSignal);
+JPetRawSignal makeRawSignal(int points, JPetSigCh& sigch);
 JPetTOMBChannel makeTOMBChannel(int p_channel, JPetFEB& p_FEB, JPetTRB& p_TRB, JPetPM& p_PM, float p_threshold, unsigned int lcn, unsigned int fin);
 }
 #endif /*  !Factory_H */
