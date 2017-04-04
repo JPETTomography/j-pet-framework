@@ -32,6 +32,11 @@
 #include  "TVector3.h"
 #include "../JPetTOMBChannel/JPetTOMBChannel.h"
 
+/**
+ * @brief A namespace contains set of factory methods to create fully operational parameter and data objects.
+ *
+ */
+
 namespace param_and_data_factory
 {
 JPetScin makeScin(int id, float attenLen, float length, float height, float width, JPetBarrelSlot& p_barrelSlot ); 
@@ -47,4 +52,4 @@ JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, doubl
 JPetRawSignal makeRawSignal(int points, JPetSigCh& sigch);
 JPetTOMBChannel makeTOMBChannel(int p_channel, JPetFEB& p_FEB, JPetTRB& p_TRB, JPetPM& p_PM, float p_threshold, unsigned int lcn, unsigned int fin);
 }
-#endif /*  !Factory_H */
+#endif /*  !JPETPARAM_AND_DATA_FACTORY_H */
