@@ -26,6 +26,8 @@ class JPetOptionsGenerator;
 #include <typeinfo>
 #include <iostream>
 #include <utility>
+#include <vector>
+#include <map>
 
 class JPetOptionsGenerator
 {
@@ -33,13 +35,10 @@ public:
   JPetOptionsGenerator();
   ~JPetOptionsGenerator();
   
-  std::map<std::string, std::function<bool(std::pair <std::string, boost::any>)> > validationMap;
-
-  std::map<std::string, std::vector<std::function<std::pair <std::string, boost::any>(boost::any)>> > transformationMap;
 
   std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap) const;
 
-  std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap);
+  std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap) const;
   
   bool areCorrectOptions(const std::map<std::string, boost::any>& options) const;
   
@@ -51,38 +50,29 @@ public:
 
   std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& map) const;
 
-  bool isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option); 
+  static bool isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option); 
 
-  bool isRangeOfEventsValid(std::pair <std::string, boost::any> option);
+  static bool isRangeOfEventsValid(std::pair <std::string, boost::any> option);
 
-  bool isCorrectFileType(std::pair <std::string, boost::any> option);
+  static bool isCorrectFileType(std::pair <std::string, boost::any> option);
 
-  bool isRunIdValid(std::pair <std::string, boost::any> option);
+  static bool isRunIdValid(std::pair <std::string, boost::any> option);
 
-  bool isLocalDBValid(std::pair <std::string, boost::any> option);
+  static bool isLocalDBValid(std::pair <std::string, boost::any> option);
 
-  bool areFilesValid(std::pair <std::string, boost::any> option);
+  static bool areFilesValid(std::pair <std::string, boost::any> option);
 
-  bool isOutputDirectoryValid(std::pair <std::string, boost::any> option);
+  static bool isOutputDirectoryValid(std::pair <std::string, boost::any> option);
 
- 
-  inline const std::vector<std::string>& getFileNames(const po::variables_map& variablesMap) const {
-    return variablesMap["file"].as< std::vector<std::string> >();
-  }
+  static std::pair <std::string, boost::any>appendSlash(boost::any option);
 
-  inline int getLowerEventBound(const po::variables_map& variablesMap) const {
-    return variablesMap["range"].as< std::vector<int> >()[0];
-  }
-  inline int getHigherEventBound(const po::variables_map& variablesMap) const {
-    return variablesMap["range"].as< std::vector<int> >()[1];
-  }
-  inline const int getRunNumber(const po::variables_map& variablesMap) const {
-    return variablesMap["runId"].as<int>();
-  }
+  std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > generateValidationMap() const; 
 
-  inline bool isProgressBarSet(const po::variables_map& variablesMap) const {
-    return variablesMap["progressBar"].as<bool>();
-  }
+  std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::any)> > generateTransformationMap() const; 
+
+  static std::pair <std::string, boost::any>getLowerEventBound(boost::any option);
+
+  static std::pair <std::string, boost::any>getHigherEventBound(boost::any option);
 
 };
 #endif
