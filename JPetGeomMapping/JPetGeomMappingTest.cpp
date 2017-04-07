@@ -23,22 +23,22 @@ BOOST_FIXTURE_TEST_CASE(mappingFirst, myFixture)
 {
   auto bank = fparamManagerInstance.getParamBank();
   auto mapping  = JPetGeomMapping(bank);
-  BOOST_REQUIRE_EQUAL(mapping.getLayersCount(), 3);
-  BOOST_REQUIRE_EQUAL(mapping.getLayersCount(), 3);
+  BOOST_REQUIRE_EQUAL(mapping.getLayersCount(), 3u);
+  BOOST_REQUIRE_EQUAL(mapping.getLayersCount(), 3u); // is checking same thing 2 times was intended?
   JPetLayer layerOK(1, true, "Layer01", 42.5);
   JPetLayer layerWrong(2, true, "Layer02", 50);
 
-  BOOST_REQUIRE_EQUAL(mapping.getLayerNumber(layerOK), 1);
+  BOOST_REQUIRE_EQUAL(mapping.getLayerNumber(layerOK), 1u);
   BOOST_REQUIRE_EQUAL(mapping.getLayerNumber(layerWrong), JPetGeomMapping::kBadLayerNumber);
 
   BOOST_REQUIRE_EQUAL(mapping.getSlotsCount(0), JPetGeomMapping::kBadSlotNumber);
-  BOOST_REQUIRE_EQUAL(mapping.getSlotsCount(1), 2);
-  BOOST_REQUIRE_EQUAL(mapping.getSlotsCount(2), 1);
+  BOOST_REQUIRE_EQUAL(mapping.getSlotsCount(1), 2u);
+  BOOST_REQUIRE_EQUAL(mapping.getSlotsCount(2), 1u);
 
 
   auto sizes = mapping.getLayersSizes();
   BOOST_REQUIRE(!sizes.empty());
-  BOOST_REQUIRE_EQUAL(sizes.size(), 3);
+  BOOST_REQUIRE_EQUAL(sizes.size(), 3u);
 }
 
 BOOST_FIXTURE_TEST_CASE(getSlotNumber, myFixture)
@@ -53,8 +53,8 @@ BOOST_FIXTURE_TEST_CASE(getSlotNumber, myFixture)
   slotOK2.setLayer(layerOK);
   JPetBarrelSlot slotWrong(3, true, "C2AA", 5, 9);
 
-  BOOST_REQUIRE_EQUAL(mapping.getSlotNumber(slotOK1), 1);
-  BOOST_REQUIRE_EQUAL(mapping.getSlotNumber(slotOK2), 2);
+  BOOST_REQUIRE_EQUAL(mapping.getSlotNumber(slotOK1), 1u);
+  BOOST_REQUIRE_EQUAL(mapping.getSlotNumber(slotOK2), 2u);
   BOOST_REQUIRE_EQUAL(mapping.getSlotNumber(slotWrong), JPetGeomMapping::kBadSlotNumber);
 
 
@@ -78,7 +78,7 @@ BOOST_FIXTURE_TEST_CASE(minimalBank, myFixture)
   auto slot = 1;
   auto side = JPetPM::SideB;
   auto thresholdNumber  = 1;
-  BOOST_REQUIRE_EQUAL(mapping.count(std::make_tuple(layer, slot, side, thresholdNumber)), 1);
+  BOOST_REQUIRE_EQUAL(mapping.count(std::make_tuple(layer, slot, side, thresholdNumber)), 1u);
   auto result_tomb = mapping.at(std::make_tuple(layer, slot, side, thresholdNumber));
   BOOST_REQUIRE_EQUAL(result_tomb, 1);
   layer = 1;
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE(TestOfLargeBarrelJson)
   auto tombMap = mapper.getTOMBMapping();
   BOOST_REQUIRE(!tombMap.empty());
   // (96 +48 + 48 scints) x 2 pm x4 thr = 1536
-  BOOST_REQUIRE_EQUAL(tombMap.size(), 1536);
+  BOOST_REQUIRE_EQUAL(tombMap.size(), 1536u);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
