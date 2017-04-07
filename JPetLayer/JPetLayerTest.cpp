@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE( no_layers )
   JPetFrameFactory frameFactory(paramGetter, 0);
   JPetLayerFactory factory(paramGetter, 0, frameFactory);
   auto& layers = factory.getLayers();
-  BOOST_REQUIRE_EQUAL(layers.size(), 0);
+  BOOST_REQUIRE_EQUAL(layers.size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( single_object )
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE( single_object )
   JPetFrameFactory frameFactory(paramGetter, 1);
   JPetLayerFactory factory(paramGetter, 1, frameFactory);
   auto& layers = factory.getLayers();
-  BOOST_REQUIRE_EQUAL(layers.size(), 1);
+  BOOST_REQUIRE_EQUAL(layers.size(), 1u);
   auto layer = layers[1];
   BOOST_REQUIRE_EQUAL(layer->getID(), 1);
   BOOST_REQUIRE(layer->getIsActive());
@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   JPetFrameFactory frameFactory(paramGetter, 2);
   JPetLayerFactory factory(paramGetter, 2, frameFactory);
   auto& layers = factory.getLayers();
-  BOOST_REQUIRE_EQUAL(layers.size(), 2);
+  BOOST_REQUIRE_EQUAL(layers.size(), 2u);
   auto layer = layers[1];
   BOOST_REQUIRE_EQUAL(layer->getID(), 1);
   BOOST_REQUIRE(layer->getIsActive());

@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(getElementsWithExistingDirs)
   std::vector<std::pair<std::string, std::string> >  dirsAndFakeFiles = { std::make_pair("./", "file1"), std::make_pair("fake/directory", "file2")};
   JPetScopeConfigParser parser;
   auto result = parser.getElementsWithExistingDirs(dirsAndFakeFiles );
-  BOOST_REQUIRE_EQUAL(result.size(), 1);
+  BOOST_REQUIRE_EQUAL(result.size(), 1u);
   BOOST_REQUIRE_EQUAL(result.at(0).first, "./");
   BOOST_REQUIRE_EQUAL(result.at(0).second, "file1");
   BOOST_REQUIRE(parser.getElementsWithExistingDirs({}).empty());
