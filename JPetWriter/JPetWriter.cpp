@@ -18,8 +18,8 @@
 
 
 JPetWriter::JPetWriter(const char* p_fileName) :
-  fFileName(p_fileName),			// string z nazwą pliku
-  fFile(0),	// plik
+  fFileName(p_fileName),                        // string z nazwą pliku
+  fFile(0),     // plik
   fIsBranchCreated(false),
   fTree(0)
 {
@@ -63,6 +63,24 @@ void JPetWriter::writeHeader(TObject* header)
   fTree->GetUserInfo()->AddAt(header, JPetUserInfoStructure::kHeader);
 }
 
+
+/**
+ * @brief Write all TObjects from a given TCollection into a certain directory structure in the file
+ *
+ * @param col pointer to a TCollection-based container
+ * @param dirname name of a directory inside the output file to which the objects should be written
+ * @param subdirname optional name of a subdirectory inside dirname to which the objects should be written
+ * 
+ * This method whites all TObject-based objects contained in the TCollection-based container (see ROOT documentation)
+ * into a directory whose name is given by dirname inside the output file. If dirname does not exist
+ * in the output file, it will be created. Otherwise, contents of the col collection will be appended to an existing
+ * directory.
+ *
+ * If the optional subdirectory name is specified (subdirname parameter, defaults to empty string) then the 
+ * contents of the collection will be written to "dirname/subdirname". If the "subdirname" directory does not
+ * exist inside the "dirname" directory, it will be created.
+ *
+ */
 void JPetWriter::writeCollection(const TCollection * col, const char* dirname, const char* subdirname){
 
   TDirectory * current =  fFile->GetDirectory(dirname);
@@ -80,8 +98,7 @@ void JPetWriter::writeCollection(const TCollection * col, const char* dirname, c
       current = current->GetDirectory(subdirname);
     }else{
       current = current->mkdir(subdirname);
-    }
-    
+    }    
   }  
 
   assert(current);
@@ -96,24 +113,4 @@ void JPetWriter::writeCollection(const TCollection * col, const char* dirname, c
   }
 
   fFile->cd();
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
