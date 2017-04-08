@@ -37,8 +37,8 @@ JPetSimplePhysSignalReco::~JPetSimplePhysSignalReco()
 void JPetSimplePhysSignalReco::exec()
 {
   // Get a Reco Signal
-  auto currSignal = (JPetRecoSignal&) (*getEvent());
-  savePhysSignal(createPhysSignal(currSignal));
+  //  auto currSignal = (JPetRecoSignal&) (*getEvent());
+  //  savePhysSignal(createPhysSignal(currSignal));
 }
 
 void JPetSimplePhysSignalReco::savePhysSignal(JPetPhysSignal sig)
