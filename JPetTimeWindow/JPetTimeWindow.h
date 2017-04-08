@@ -31,15 +31,23 @@ class JPetTimeWindow: public TObject
 {
 public:
 
-  JPetTimeWindow() : fEvents()
-  {}
+  JPetTimeWindow() : fEvents() {
+    SetName("JPetTimeWindow");
+    std::cout << "TW default contructor called" << "\n";
+  }
   
-  JPetTimeWindow(const char * event_type) : fEvents(event_type, 2000)
-  {}
+  JPetTimeWindow(const char * event_type) : fEvents(event_type, 2000) {
+    SetName("JPetTimeWindow");
+    std::cout << "TW contructor called" << "\n";
+  }
+
+  JPetTimeWindow(const JPetTimeWindow &){
+    std::cout << "TW COPY contructor called" << "\n";
+  }
   
   template<typename T>
-  void add(const T & evt){
-    dynamic_cast<T&>(*(fEvents.ConstructedAt(fEventCount++))) = evt;
+  void Add(T & evt){
+    new (fEvents[fEventCount++]) T(evt);
   }
   
   inline size_t getNumberOfEvents() const {
@@ -61,7 +69,7 @@ public:
   }
 
   virtual void Clear() {
-    fEvents.Clear("C");
+    fEvents.Clear();
     fEventCount = 0;
   }
   
