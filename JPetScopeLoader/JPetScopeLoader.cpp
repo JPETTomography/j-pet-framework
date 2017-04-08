@@ -171,7 +171,7 @@ void JPetScopeLoader::terminate()
   assert(fHeader);
   assert(fStatistics);
   fWriter->writeHeader(fHeader);
-  fWriter->writeObject(fStatistics->getHistogramsTable(), "Stats");
+  fWriter->writeCollection(fStatistics->getStatsTable(), "Stats");
   //store the parametric objects in the ouptut ROOT file
   getParamManager().saveParametersToFile(fWriter);
   getParamManager().clearParameters();

@@ -87,8 +87,8 @@ void JPetTaskIO::terminate()
 
   fWriter->writeHeader(fHeader);
 
-  fWriter->writeObject(fStatistics->getHistogramsTable(), "Stats");
-
+  fWriter->writeCollection(fStatistics->getStatsTable(), "Stats");
+  
   fWriter->writeObject(fAuxilliaryData, "Auxilliary Data");
 
   // store the parametric objects in the ouptut ROOT file
