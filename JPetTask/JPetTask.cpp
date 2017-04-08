@@ -41,4 +41,3 @@ JPetTaskInterface* JPetTask::getSubTask() const
 {
   return fSubTask.get();
 }
-
