@@ -155,11 +155,10 @@ BOOST_AUTO_TEST_CASE( barrelSlot )
 BOOST_AUTO_TEST_CASE( timeWindow )
 {
   JPetSigCh::EdgeType type = JPetSigCh::Trailing;
-  JPetSigCh new_ch(type, 1);
-  JPetTimeWindow timeWindow = param_and_data_factory::makeTimeWindow(new_ch, 1);
-  BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfSigCh(), 1);
+  std::vector<JPetSigCh> vec ={JPetSigCh(type, 1), JPetSigCh(type, 1)};
+  JPetTimeWindow timeWindow = param_and_data_factory::makeTimeWindow(vec, 1);
+  BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfSigCh(), 2);
   BOOST_REQUIRE_EQUAL(timeWindow.getIndex(), 1);
-  BOOST_REQUIRE_EQUAL(timeWindow[0].getValue(), new_ch.getValue());
 }
 
 BOOST_AUTO_TEST_CASE( pm )
@@ -225,15 +224,11 @@ BOOST_AUTO_TEST_CASE( physSignal )
 BOOST_AUTO_TEST_CASE( rawSignal )
 {
   JPetSigCh::EdgeType type = JPetSigCh::Trailing;
-  JPetSigCh sigch(type, 1);
-  JPetRawSignal rs = param_and_data_factory::makeRawSignal(3, sigch);
+  std::vector<JPetSigCh> vec = {JPetSigCh(type, 1), JPetSigCh(type, 1)};
+  JPetRawSignal rs = param_and_data_factory::makeRawSignal(vec);
 
-  BOOST_REQUIRE_EQUAL(rs.getNumberOfPoints(type), 1);
-  
-  JPetRawSignal::PointsSortOrder order = JPetRawSignal::ByThrValue;
+  BOOST_REQUIRE_EQUAL(rs.getNumberOfPoints(type), 2);
 
-  BOOST_REQUIRE_EQUAL(rs.getPoints(type, order)[0].getType(), sigch.getType());
-  BOOST_REQUIRE_EQUAL(rs.getPoints(type, order)[0].getValue(), sigch.getValue());
 }
 
 BOOST_AUTO_TEST_CASE( tombChannel )
