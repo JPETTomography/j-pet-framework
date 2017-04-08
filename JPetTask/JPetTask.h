@@ -16,6 +16,7 @@
 #ifndef JPETTASK_H
 #define JPETTASK_H
 #include "../JPetParamsInterface/JPetParamsInterface.h"
+#include "../JPetTimeWindow/JPetTimeWindow.h"
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetDataInterface/JPetDataInterface.h"
 #include <string>
@@ -41,8 +42,13 @@ public:
   void setName(const std::string& name);
   std::string getName() const override;
 
+  virtual JPetTimeWindow * getOutputEvents(){
+    return fOutputEvents;
+  }
+
 protected:
   std::string fName;
   std::unique_ptr<JPetTaskInterface> fSubTask = 0;
+  JPetTimeWindow * fOutputEvents;
 };
 #endif /*  !JPETTASK_H */
