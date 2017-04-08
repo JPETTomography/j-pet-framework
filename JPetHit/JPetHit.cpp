@@ -26,13 +26,14 @@ JPetHit::JPetHit() :
 }
 
 JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSignal& siga, JPetPhysSignal& sigb,
-                 JPetBarrelSlot& bslot, JPetScin& scin) :
+                 JPetBarrelSlot& bslot, JPetScin& scin): 
   TNamed("JPetHit", "Hit Structure") , fEnergy(e), fQualityOfEnergy(qe), fTime(t),
   fQualityOfTime(qt), fPos(pos), fSignalA(siga), fSignalB(sigb), fBarrelSlot(&bslot), fScintillator(&scin)
 {
   fIsSignalAset = true ;
   fIsSignalBset = true ;
-  checkConsistency();
+  if (!checkConsistency())
+    ERROR("Problem with creating Hit.");
 }
 
 JPetHit::~JPetHit()
@@ -120,8 +121,6 @@ bool JPetHit::isSignalBSet() const
   return fIsSignalBset;
 }
 
-
-
 void JPetHit::setEnergy(float energy)
 {
   fEnergy = energy;
@@ -177,6 +176,33 @@ bool JPetHit::checkConsistency() const
     return true; // do not claim incosistency if signals are not set yet
   }
 
+  if( getSignalA().isNullObject() || getSignalB().isNullObject()) {
+    ERROR("one of the signal is a Null Object");
+    return false;
+  }
+
+  if(getSignalA().getPM().isNullObject()){
+    ERROR("PM from signalA  is a Null Object");
+    return false;
+  }
+
+  if(getSignalB().getPM().isNullObject()){
+    ERROR("PM from signalB  is a Null Object");
+    return false;
+  }
+
+  if (getSignalA().getPM().getBarrelSlot().isNullObject())
+  {
+    ERROR("barrel slot from PM from signalA  is a Null Object");
+    return false;
+  }
+
+  if (getSignalB().getPM().getBarrelSlot().isNullObject())
+  {
+    ERROR("barrel slot from PM from signalB  is a Null Object");
+    return false;
+  }
+
   const int slot_a = getSignalA().getPM().getBarrelSlot().getID();
   const int slot_b = getSignalB().getPM().getBarrelSlot().getID();
 
@@ -207,21 +233,24 @@ void JPetHit::setSignals(JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB)
   fIsSignalAset = true;
   fSignalB = p_sigB;
   fIsSignalBset = true;
-  checkConsistency();
+  if (!checkConsistency())
+    return;
 }
 
 void JPetHit::setSignalA(JPetPhysSignal& p_sig)
 {
   fSignalA = p_sig;
   fIsSignalAset = true;
-  checkConsistency();
+  if (!checkConsistency())
+    return;
 }
 
 void JPetHit::setSignalB(JPetPhysSignal& p_sig)
 {
   fSignalB = p_sig;
   fIsSignalBset = true;
-  checkConsistency();
+  if (!checkConsistency())
+    return;
 }
 
 unsigned int JPetHit::getTimeWindowIndex() const
