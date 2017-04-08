@@ -31,6 +31,11 @@ class JPetTimeWindow: public TObject
 {
 public:
 
+  JPetTimeWindow() : fEvents() {
+    SetName("JPetTimeWindow");
+    std::cout << "TW default contructor called" << "\n";
+  }
+  
   JPetTimeWindow(const char * event_type) : fEvents(event_type, 2000) {
     SetName("JPetTimeWindow");
     std::cout << "TW contructor called" << "\n";
@@ -43,7 +48,6 @@ public:
   template<typename T>
   void Add(T & evt){
     new (fEvents[fEventCount++]) T(evt);
-    fEventCount++;
   }
   
   inline size_t getNumberOfEvents() const {
@@ -64,6 +68,11 @@ public:
     fEventCount = 0;
   }
 
+  virtual void Clear() {
+    fEvents.Clear();
+    fEventCount = 0;
+  }
+  
   ClassDef(JPetTimeWindow, 3);
 
 private:
