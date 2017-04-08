@@ -69,6 +69,7 @@ public:
     return fFile->WriteTObject(obj, name);
   }
 
+  void writeCollection(const TCollection * hash, const char* dirname, const char* subdirname="");
 
 protected:
   std::string fFileName;
