@@ -65,11 +65,14 @@ JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, const s
   return barrelSlotObject;
 }
 
-JPetTimeWindow makeTimeWindow(JPetSigCh& new_ch, unsigned int index)
+JPetTimeWindow makeTimeWindow(const std::vector<JPetSigCh>& vec, unsigned int window_id)
 {
   JPetTimeWindow timeWindowObject;
-  timeWindowObject.addCh(new_ch);
-  timeWindowObject.setIndex(index);
+  for(auto sigch: vec)
+  {
+    timeWindowObject.addCh(sigch);
+  }
+  timeWindowObject.setIndex(window_id);
   return timeWindowObject;
 }
 
@@ -102,10 +105,13 @@ JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, doubl
   return physSignalObject;
 }
 
-JPetRawSignal makeRawSignal(int points, JPetSigCh& sigch)
+JPetRawSignal makeRawSignal(const std::vector<JPetSigCh>& vec)
 {
-  JPetRawSignal rawSignalObject(points);
-  rawSignalObject.addPoint(sigch);
+  JPetRawSignal rawSignalObject(vec.size()); 
+  for(const auto& sigch: vec) 
+  { 
+    rawSignalObject.addPoint(sigch); 
+  } 
   return rawSignalObject;
 }
 

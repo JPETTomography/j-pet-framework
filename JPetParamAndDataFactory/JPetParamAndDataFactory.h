@@ -45,11 +45,11 @@ JPetLayer makeLayer(int id, bool isActive, const std::string& name, float radius
 JPetHit makeHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSignal& siga, JPetPhysSignal& sigb, JPetBarrelSlot& bslot, JPetScin& scin, float qtd, float td);
 JPetSigCh makeSigCh(JPetPM & pm, JPetTRB & trb, JPetFEB & feb, JPetTOMBChannel & channel, float val, JPetSigCh::EdgeType type, float thr, Int_t daqch, unsigned int threshold_number); 
 JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, const std::string& name, float theta, int inFrameID); 
-JPetTimeWindow makeTimeWindow(JPetSigCh& new_ch, unsigned int index); 
+JPetTimeWindow makeTimeWindow(const std::vector<JPetSigCh>& vec, unsigned int window_id); 
 JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot); 
 JPetBaseSignal makeBaseSignal(unsigned int index, JPetPM & pm, JPetBarrelSlot & bs);
 JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, double qualityOfPhe, JPetRecoSignal& recoSignal);
-JPetRawSignal makeRawSignal(int points, JPetSigCh& sigch);
+JPetRawSignal makeRawSignal(const std::vector<JPetSigCh>& vec);
 JPetTOMBChannel makeTOMBChannel(int p_channel, JPetFEB& p_FEB, JPetTRB& p_TRB, JPetPM& p_PM, float p_threshold, unsigned int lcn, unsigned int fin);
 }
 #endif /*  !JPETPARAM_AND_DATA_FACTORY_H */
