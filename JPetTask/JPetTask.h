@@ -15,6 +15,7 @@
 
 #ifndef JPETTASK_H
 #define JPETTASK_H
+#include "../JPetTimeWindow/JPetTimeWindow.h"
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetStatistics/JPetStatistics.h"
@@ -50,11 +51,16 @@ public:
     return fName.GetTitle();
   }
 
+  virtual JPetTimeWindow * getOutputEvents(){
+    return fOutputEvents;
+  }
+  
 protected:
   TNamed fName;
   TObject* fEvent;
   JPetParamManager* fParamManager;
   JPetStatistics* fStatistics;
   JPetAuxilliaryData* fAuxilliaryData;
+  JPetTimeWindow * fOutputEvents;
 };
 #endif /*  !JPETTASK_H */
