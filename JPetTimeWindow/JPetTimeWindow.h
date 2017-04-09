@@ -46,7 +46,7 @@ public:
   }
   
   template<typename T>
-  void Add(T & evt){
+  void add(const T & evt){
     new (fEvents[fEventCount++]) T(evt);
   }
   
