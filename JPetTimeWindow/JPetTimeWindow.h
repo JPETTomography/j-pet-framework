@@ -31,19 +31,11 @@ class JPetTimeWindow: public TObject
 {
 public:
 
-  JPetTimeWindow() : fEvents() {
-    SetName("JPetTimeWindow");
-    std::cout << "TW default contructor called" << "\n";
-  }
+  JPetTimeWindow() : fEvents()
+  {}
   
-  JPetTimeWindow(const char * event_type) : fEvents(event_type, 2000) {
-    SetName("JPetTimeWindow");
-    std::cout << "TW contructor called" << "\n";
-  }
-
-  JPetTimeWindow(const JPetTimeWindow &){
-    std::cout << "TW COPY contructor called" << "\n";
-  }
+  JPetTimeWindow(const char * event_type) : fEvents(event_type, 2000)
+  {}
   
   template<typename T>
   void add(const T & evt){
