@@ -71,7 +71,9 @@ void JPetTaskIO::exec()
     if (fOptions.isProgressBar()) {
       displayProgressBar(i, lastEvent);
     }
+    (dynamic_cast<JPetTask*>(fTask))->getOutputEvents()->Clear();
     fTask->exec();
+    fWriter->write(*((dynamic_cast<JPetTask*>(fTask))->getOutputEvents()));
     fReader->nextEvent();
   }
   fTask->terminate();
