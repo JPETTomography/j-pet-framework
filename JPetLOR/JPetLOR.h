@@ -39,8 +39,8 @@ public:
   virtual ~JPetLOR();
 
 public:
-	const float getTime() const;
-	const float getQualityOfTime() const;
+	float getTime() const;
+	float getQualityOfTime() const;
 	void setTime(const float time);
 	void setQualityOfTime(const float qualityOfTime);
 	const JPetHit& getFirstHit() const;
@@ -69,9 +69,9 @@ public:
 
   void setTimeDiff(const float td);
   void setQualityOfTimeDiff(const float qtd);
-  const float getTimeDiff() const;
-  const float getQualityOfTimeDiff() const;
-  const bool isHitSet(const unsigned int index);
+  float getTimeDiff() const;
+  float getQualityOfTimeDiff() const;
+  bool isHitSet(const unsigned int index);
   
 ClassDef(JPetLOR,1);
 
@@ -90,7 +90,7 @@ ClassDef(JPetLOR,1);
  *
  *  @return true if both signals are consistently from the same barrel slot.
  */
-const bool isFromSameBarrelSlot() const; 
+bool isFromSameBarrelSlot() const; 
 private:
 
   float fTime; ///< reconstructed absolute time of the event wrt to beginning of the run [ps]
