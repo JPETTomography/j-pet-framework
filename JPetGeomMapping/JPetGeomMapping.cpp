@@ -71,12 +71,12 @@ JPetGeomMapping::JPetGeomMapping(const JPetParamBank& paramBank)
 
 JPetGeomMapping::~JPetGeomMapping() {}
 
-const size_t JPetGeomMapping::getLayersCount() const
+size_t JPetGeomMapping::getLayersCount() const
 {
   return fRadiusToLayer.size();
 }
 
-const size_t JPetGeomMapping::getLayerNumber(const JPetLayer& layer) const
+size_t JPetGeomMapping::getLayerNumber(const JPetLayer& layer) const
 {
   auto radius = layer.getRadius();
   if (fRadiusToLayer.find(radius) != fRadiusToLayer.end()) {
@@ -87,7 +87,7 @@ const size_t JPetGeomMapping::getLayerNumber(const JPetLayer& layer) const
   }
 }
 
-const size_t JPetGeomMapping::getSlotsCount(const JPetLayer& layer) const
+size_t JPetGeomMapping::getSlotsCount(const JPetLayer& layer) const
 {
   auto layerNr = getLayerNumber(layer);
   if (fNumberOfSlotsInLayer.size() > layerNr) {
@@ -98,7 +98,7 @@ const size_t JPetGeomMapping::getSlotsCount(const JPetLayer& layer) const
   }
 }
 
-const size_t JPetGeomMapping::getSlotsCount(const size_t layerNr) const
+size_t JPetGeomMapping::getSlotsCount(const size_t layerNr) const
 {
   if ((fNumberOfSlotsInLayer.size() >= layerNr) && (layerNr > 0)) {
     return fNumberOfSlotsInLayer.at(layerNr - 1);
@@ -108,7 +108,7 @@ const size_t JPetGeomMapping::getSlotsCount(const size_t layerNr) const
   }
 }
 
-const size_t JPetGeomMapping::getSlotNumber(const JPetBarrelSlot& slot) const
+size_t JPetGeomMapping::getSlotNumber(const JPetBarrelSlot& slot) const
 {
   auto layerNr = getLayerNumber(slot.getLayer());
   auto theta = slot.getTheta();
@@ -124,7 +124,7 @@ const size_t JPetGeomMapping::getSlotNumber(const JPetBarrelSlot& slot) const
   return fThetaToSlot.at(index).at(theta);
 }
 
-const size_t JPetGeomMapping::getGlobalSlotNumber(const JPetBarrelSlot& slot) const
+size_t JPetGeomMapping::getGlobalSlotNumber(const JPetBarrelSlot& slot) const
 {
   auto layerNr = getLayerNumber(slot.getLayer());
   auto index = layerNr - 1;
@@ -155,7 +155,7 @@ const vector< size_t > JPetGeomMapping::getLayersSizes() const
   return res;
 }
 
-const size_t JPetGeomMapping::calcDeltaID(const JPetBarrelSlot& slot1, const JPetBarrelSlot& slot2) const
+size_t JPetGeomMapping::calcDeltaID(const JPetBarrelSlot& slot1, const JPetBarrelSlot& slot2) const
 {
   if (slot1.getLayer().getID() == slot2.getLayer().getID()) {
     int delta_ID = abs(getSlotNumber(slot1) - getSlotNumber(slot2));
@@ -168,7 +168,7 @@ const size_t JPetGeomMapping::calcDeltaID(const JPetBarrelSlot& slot1, const JPe
   return -1;
 }
 
-const size_t JPetGeomMapping::calcGlobalPMTNumber(const JPetPM& pmt) const
+size_t JPetGeomMapping::calcGlobalPMTNumber(const JPetPM& pmt) const
 {
   return -1;
   const size_t number_of_sides = 2;
@@ -232,7 +232,7 @@ std::map<std::tuple<int, int, JPetPM::Side, int>, int> JPetGeomMapping::getTOMBM
   return fTOMBs;
 }
 
-const int JPetGeomMapping::getTOMB(int LayerNr, int barrel_slot_nr, const JPetPM::Side& side, int threshold) const
+int JPetGeomMapping::getTOMB(int LayerNr, int barrel_slot_nr, const JPetPM::Side& side, int threshold) const
 {
   auto key = std::make_tuple(LayerNr, barrel_slot_nr, side, threshold);
   if (fTOMBs.find(key) == fTOMBs.end()) {

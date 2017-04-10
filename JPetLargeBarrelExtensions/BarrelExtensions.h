@@ -15,6 +15,7 @@
 
 #ifndef _LARGE_BARREL_EXTENSIONS_
 #define _LARGE_BARREL_EXTENSIONS_
+
 #include <map>
 #include <vector>
 #include <string>
@@ -35,13 +36,13 @@ class LargeBarrelMapping: public JPetGeomMappingInterface
 public:
   LargeBarrelMapping(const JPetParamBank& paramBank);
   virtual ~LargeBarrelMapping();
-  virtual const size_t getLayersCount()const override;
-  virtual const size_t getLayerNumber(const JPetLayer& layer)const override;
-  virtual const size_t getSlotsCount(const JPetLayer& layer)const override;
-  virtual const size_t getSlotsCount(const size_t layer)const override;
-  virtual const size_t getSlotNumber(const JPetBarrelSlot& slot) const override;
-  const size_t calcDeltaID(const JPetBarrelSlot& slot1, const JPetBarrelSlot& slot2) const;
-  const size_t calcGlobalPMTNumber(const JPetPM& pmt) const;
+  virtual size_t getLayersCount()const override;
+  virtual size_t getLayerNumber(const JPetLayer& layer)const override;
+  virtual size_t getSlotsCount(const JPetLayer& layer)const override;
+  virtual size_t getSlotsCount(const size_t layer)const override;
+  virtual size_t getSlotNumber(const JPetBarrelSlot& slot) const override;
+  size_t calcDeltaID(const JPetBarrelSlot& slot1, const JPetBarrelSlot& slot2) const;
+  size_t calcGlobalPMTNumber(const JPetPM& pmt) const;
   const StripPos getStripPos(const JPetBarrelSlot& slot) const;
   const std::vector<size_t> getLayersSizes()const;
 private:
