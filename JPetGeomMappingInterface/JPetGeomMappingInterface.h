@@ -28,11 +28,11 @@ struct StripPos {
 class JPetGeomMappingInterface
 {
 public:
-  virtual const size_t getLayersCount() const = 0;
-  virtual const size_t getLayerNumber(const JPetLayer& layer) const = 0;
-  virtual const size_t getSlotsCount(const JPetLayer& layer) const = 0;
-  virtual const size_t getSlotsCount(const size_t layer) const = 0;
-  virtual const size_t getSlotNumber(const JPetBarrelSlot& slot) const = 0;
+  virtual size_t getLayersCount() const = 0;
+  virtual size_t getLayerNumber(const JPetLayer& layer) const = 0;
+  virtual size_t getSlotsCount(const JPetLayer& layer) const = 0;
+  virtual size_t getSlotsCount(const size_t layer) const = 0;
+  virtual size_t getSlotNumber(const JPetBarrelSlot& slot) const = 0;
   virtual const StripPos getStripPos(const JPetBarrelSlot& slot) const = 0;
   virtual const std::vector<size_t> getLayersSizes() const = 0 ;
 };

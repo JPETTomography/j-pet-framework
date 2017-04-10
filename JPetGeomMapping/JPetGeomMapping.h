@@ -34,15 +34,15 @@ public:
 
   explicit JPetGeomMapping(const JPetParamBank& paramBank);
   virtual ~JPetGeomMapping();
-  virtual const size_t getLayersCount()const override;
-  virtual const size_t getLayerNumber(const JPetLayer& layer)const override;
-  virtual const size_t getSlotsCount(const JPetLayer& layer)const override;
-  virtual const size_t getSlotsCount(const size_t layer)const override;
-  virtual const size_t getSlotNumber(const JPetBarrelSlot& slot) const override; /// Slot number within a given layer !!!
+  virtual size_t getLayersCount()const override;
+  virtual size_t getLayerNumber(const JPetLayer& layer)const override;
+  virtual size_t getSlotsCount(const JPetLayer& layer)const override;
+  virtual size_t getSlotsCount(const size_t layer)const override;
+  virtual size_t getSlotNumber(const JPetBarrelSlot& slot) const override; /// Slot number within a given layer !!!
   virtual const StripPos getStripPos(const JPetBarrelSlot& slot) const override;
   virtual const std::vector<size_t> getLayersSizes() const override;
-  const size_t calcDeltaID(const JPetBarrelSlot& slot1, const JPetBarrelSlot& slot2) const;
-  const size_t calcGlobalPMTNumber(const JPetPM& pmt) const;
+  size_t calcDeltaID(const JPetBarrelSlot& slot1, const JPetBarrelSlot& slot2) const;
+  size_t calcGlobalPMTNumber(const JPetPM& pmt) const;
 
   /// Function returns a map which reflects the relation:
   /// layer id, barrel slot id, photomultiplier side, threshold -->  TOMB channel number.
@@ -52,8 +52,8 @@ public:
   /// The map is created based on the JPetParamBank content.
   /// If any of param objects needed to create the map is not set in JPetParamBank, the empty map will be returned.
   std::map<std::tuple<int, int, JPetPM::Side, int>, int> getTOMBMapping() const;
-  const int getTOMB(int LayerNr, int slotNr, const JPetPM::Side& side, int threshold) const;
-  const size_t getGlobalSlotNumber(const JPetBarrelSlot& slot) const ; /// Slot number calculated for all layers e.g, 1-48 for layer 1 and 49-... for layers 2 and so on
+  int getTOMB(int LayerNr, int slotNr, const JPetPM::Side& side, int threshold) const;
+  size_t getGlobalSlotNumber(const JPetBarrelSlot& slot) const ; /// Slot number calculated for all layers e.g, 1-48 for layer 1 and 49-... for layers 2 and so on
 
 private:
   std::map<std::tuple<int, int, JPetPM::Side, int>, int> getTOMBMap(const JPetParamBank& bank) const;
