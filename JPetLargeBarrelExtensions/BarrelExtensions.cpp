@@ -58,26 +58,26 @@ LargeBarrelMapping::LargeBarrelMapping(const JPetParamBank& paramBank)
     sort( thetas.begin(), thetas.end(), less<double>() );
 }
 LargeBarrelMapping::~LargeBarrelMapping() {}
-const size_t LargeBarrelMapping::getLayersCount() const
+size_t LargeBarrelMapping::getLayersCount() const
 {
   return fRadii.size();
 }
-const size_t LargeBarrelMapping::getLayerNumber(const JPetLayer& layer) const
+size_t LargeBarrelMapping::getLayerNumber(const JPetLayer& layer) const
 {
   size_t res = 0;
   while (layer.getRadius() != fRadii[res])
     res++;
   return res + 1;
 }
-const size_t LargeBarrelMapping::getSlotsCount(const size_t layer) const
+size_t LargeBarrelMapping::getSlotsCount(const size_t layer) const
 {
   return fTheta[layer - 1].size();
 }
-const size_t LargeBarrelMapping::getSlotsCount(const JPetLayer& layer) const
+size_t LargeBarrelMapping::getSlotsCount(const JPetLayer& layer) const
 {
   return fTheta[getLayerNumber(layer) - 1].size();
 }
-const size_t LargeBarrelMapping::getSlotNumber(const JPetBarrelSlot& slot) const
+size_t LargeBarrelMapping::getSlotNumber(const JPetBarrelSlot& slot) const
 {
   const auto& theta = fTheta[getLayerNumber(slot.getLayer()) - 1];
   size_t res = 0;
@@ -85,7 +85,7 @@ const size_t LargeBarrelMapping::getSlotNumber(const JPetBarrelSlot& slot) const
     res++;
   return res + 1;
 }
-const size_t LargeBarrelMapping::calcDeltaID(const JPetBarrelSlot& slot1, const JPetBarrelSlot& slot2) const
+size_t LargeBarrelMapping::calcDeltaID(const JPetBarrelSlot& slot1, const JPetBarrelSlot& slot2) const
 {
   if (slot1.getLayer().getID() == slot2.getLayer().getID()) {
     auto delta_ID = size_t(abs(int(getSlotNumber(slot1)) - int(getSlotNumber(slot2))));
@@ -96,7 +96,7 @@ const size_t LargeBarrelMapping::calcDeltaID(const JPetBarrelSlot& slot1, const 
   }
   throw Exception<LargeBarrelMapping>("attempt to calc deltaID for strips from different layers");
 }
-const size_t LargeBarrelMapping::calcGlobalPMTNumber(const JPetPM& pmt) const
+size_t LargeBarrelMapping::calcGlobalPMTNumber(const JPetPM& pmt) const
 {
   const size_t number_of_sides = 2;
   const auto layer_number = getLayerNumber(pmt.getBarrelSlot().getLayer());
