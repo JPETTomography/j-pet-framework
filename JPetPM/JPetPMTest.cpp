@@ -366,4 +366,5 @@ BOOST_AUTO_TEST_CASE( wrong_barrelSlot_relation )
   BOOST_REQUIRE_THROW(factory.getPMs(), std::out_of_range);
 }
 
+
 BOOST_AUTO_TEST_SUITE_END()

@@ -34,7 +34,6 @@ public:
   JPetTimeWindow() {
     SetName("JPetTimeWindow");
   }
-
   void addCh(JPetSigCh& new_ch);
 
   inline size_t getNumberOfSigCh() const {

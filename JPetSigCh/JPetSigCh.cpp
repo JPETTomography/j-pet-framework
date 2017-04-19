@@ -69,3 +69,4 @@ bool JPetSigCh::compareByThresholdNumber(const JPetSigCh& A,
   }
   return false;
 }
+

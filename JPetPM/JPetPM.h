@@ -69,8 +69,7 @@ public:
   void setBarrelSlot(JPetBarrelSlot& p_barrelSlot);
   JPetBarrelSlot& getBarrelSlot() const;
   bool isNullObject() const;
-
-
+  
 protected:
   void clearTRefFEBs();
   void clearTRefScin();
