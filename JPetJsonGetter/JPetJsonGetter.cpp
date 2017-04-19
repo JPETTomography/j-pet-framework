@@ -43,3 +43,4 @@ std::string JPetJsonGetter::getJsonByMD5(const std::string &md5Hash)
   }
   return response;
 }
+//HttpDownloader, static function reading from file
