@@ -89,7 +89,9 @@ BOOST_AUTO_TEST_CASE(localDBTest)
   po::notify(variablesMap);
 
   JPetOptionsGenerator cmdParser;
+//  std::cout<<"Tu jestem "<<endl;
   std::map<std::string, boost::any> mapFromVariableMap = cmdParser.variablesMapToOption(variablesMap);
+//  std::cout<<"Czy tu dochodze? "<<endl;
   BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "localDB"));
   BOOST_REQUIRE_EQUAL(any_cast<std::string>(cmdParser.getOptionValue(mapFromVariableMap, "localDB")), std::string("input.json"));
   BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "localDBCreate"));

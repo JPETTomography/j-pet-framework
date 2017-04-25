@@ -21,7 +21,10 @@
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include <stdexcept>
 #include <vector>
+#include <string>
+
 using boost::any_cast;
+using namespace std;
 
 JPetOptionsGenerator::JPetOptionsGenerator()
 {
@@ -31,14 +34,14 @@ JPetOptionsGenerator::~JPetOptionsGenerator()
 {
 
 }
-bool JPetOptionsGenerator::isOptionSet(const std::map<std::string, boost::any>& variablesMap, const std::string& option) const
+bool JPetOptionsGenerator::isOptionSet(const std::map<std::string, boost::any>& optionsMap, const std::string& option) const
 {
-  return (bool)variablesMap.count(option);
+  return (bool)optionsMap.count(option);
 }
 
-boost::any JPetOptionsGenerator::getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string option) const
+boost::any JPetOptionsGenerator::getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const
 {
-  return any_cast<boost::any>(variablesMap.at(option));
+  return any_cast<boost::any>(optionsMap.at(option));
 }
 
 bool JPetOptionsGenerator::isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option){
@@ -117,7 +120,6 @@ std::pair <std::string, boost::any>JPetOptionsGenerator::getLowerEventBound(boos
   {
     return std::make_pair("firstEvent", firstEvent);
   } 
-  //return std::make_pair("n");!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
 std::pair <std::string, boost::any>JPetOptionsGenerator::getHigherEventBound(boost::any option)
@@ -129,23 +131,55 @@ std::pair <std::string, boost::any>JPetOptionsGenerator::getHigherEventBound(boo
   }
 }
 
+std::string JPetOptionsGenerator::getTypeOfOption(const std::string nameOfOption) const
+{
+	std::size_t pos = nameOfOption.find("_");
+	return nameOfOption.substr(pos+1);
+}
 
 std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap) const
 {
   std::map<std::string, boost::any> optionsMap;
+  std::map<std::string, int> typesToSwitch;
+  typesToSwitch["int"] = 0;
+  typesToSwitch["std::string"] = 1;
+  typesToSwitch["bool"] = 2;
+  typesToSwitch["std::vector<std::string>"] = 3;
+  typesToSwitch["std::vector<int>"] = 4;
   for(auto &option : variablesMap){
-    optionsMap.at(option.first) = variablesMap[option.first].as<boost::any>();
+  	int typeOfOption = typesToSwitch.at(getTypeOfOption(option.first));
+  	switch(typeOfOption)
+  	{
+  		case 0:
+  			optionsMap[option.first] = variablesMap[option.first].as<int>();
+  			break;
+  		case 1:
+  			optionsMap[option.first] = variablesMap[option.first].as<std::string>();
+  			break;
+  		case 2:
+  			optionsMap[option.first] = variablesMap[option.first].as<bool>();
+  			break;
+  		case 3:
+  			optionsMap[option.first] = variablesMap[option.first].as<std::vector<std::string>>();
+  			break;
+  		case 4:
+  			optionsMap[option.first] = variablesMap[option.first].as<std::vector<int>>();
+  			break;
+  		default:
+  			optionsMap[option.first] = variablesMap[option.first].as<boost::any>();
+  			break;
+  	}
   }
   return optionsMap;
 }
 
-std::map<std::string, std::string> JPetOptionsGenerator::anyMapToStringMap(const std::map<std::string, boost::any> & map) const
+std::map<std::string, std::string> JPetOptionsGenerator::anyMapToStringMap(const std::map<std::string, boost::any> & optionsMap) const
 {
-  std::map<std::string, std::string> optionsMap;
-  for(auto &option : optionsMap){
-    optionsMap.at(option.first) = any_cast<std::string>(map.at(option.first));
+  std::map<std::string, std::string> newOptionsMap;
+  for(auto &option : newOptionsMap){
+    newOptionsMap[option.first] = any_cast<std::string>(optionsMap.at(option.first));
   }
-  return optionsMap;
+  return newOptionsMap;
 }
 std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > JPetOptionsGenerator::generateValidationMap() const
 {
@@ -173,10 +207,13 @@ bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::
 {
   auto validationMap = generateValidationMap();
   for(auto &option : optionsMap){
-    for(auto &checkFunc : validationMap.at(option.first)){
-      if(( checkFunc(std::make_pair(option.first, option.second))) == false);
-        ERROR("ERROR VALIDATON FOR " + option.first);
-        return false;
+    if (validationMap.count(option.first)>0){
+      for(auto &checkFunc : validationMap.at(option.first)){
+        if(( checkFunc(std::make_pair(option.first, option.second))) == false){
+          ERROR("ERROR VALIDATON FOR " + option.first);
+          return false;
+        }
+      }
     }
   }
   return true;
@@ -186,9 +223,11 @@ std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::ma
 {
   auto transformationMap = generateTransformationMap();
   for(auto &option : optionsMap){
-    for(auto &validFunct : transformationMap.at(option.first)){
+    if(transformationMap.count(option.first)>0){
+      for(auto &validFunct : transformationMap.at(option.first)){
         auto transformed = validFunct(option.second);
         optionsMap[transformed.first] = transformed.second;
+      }
     }
   }
   return optionsMap;

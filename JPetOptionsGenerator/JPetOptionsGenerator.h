@@ -40,15 +40,17 @@ public:
 
   std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap) const;
   
-  bool areCorrectOptions(const std::map<std::string, boost::any>& options) const;
+  bool areCorrectOptions(const std::map<std::string, boost::any>& optionsMap) const;
   
-  bool isOptionSet(const std::map<std::string, boost::any>& variablesMap, const std::string& option) const; 
+  bool isOptionSet(const std::map<std::string, boost::any>& optionsMap, const std::string& option) const; 
   
-  boost::any getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string option) const;
+  boost::any getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const;
+
+  std::string getTypeOfOption(const std::string nameOfOption) const;
 
   std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const; 
 
-  std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& map) const;
+  std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& optionsMap) const;
 
   static bool isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option); 
 
