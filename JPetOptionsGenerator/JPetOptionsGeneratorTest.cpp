@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(runIdTest)
 
   po::options_description description("Allowed options");
   description.add_options()
-  ("runId,i", po::value<int>(), "Run id.")
+  ("runId_int,i", po::value<int>(), "Run id.")
   ;
 
   po::variables_map variablesMap;
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(runIdTest)
 
   auto runId = any_cast<int>(cmdParser.getOptionValue(mapFromVariableMap, "runId"));
   BOOST_REQUIRE(variablesMap.size() == 1);
-  BOOST_REQUIRE(variablesMap.count("runId") == 1);
+  BOOST_REQUIRE(variablesMap.count("runId_int") == 1);
   BOOST_REQUIRE(runId == 231);
 }
 
@@ -79,9 +79,9 @@ BOOST_AUTO_TEST_CASE(localDBTest)
 
   po::options_description description("Allowed options");
   description.add_options()
-  ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
-  ("localDBCreate,L", po::value<std::string>(), "Where to save the parameter database.")
-  ("runId,i", po::value<int>(), "Run id.")
+  ("localDB_std::string,l", po::value<std::string>(), "The file to use as the parameter database.")
+  ("localDBCreate_std::string,L", po::value<std::string>(), "Where to save the parameter database.")
+  ("runId_int,i", po::value<int>(), "Run id.")
   ;
 
   po::variables_map variablesMap;
@@ -89,9 +89,9 @@ BOOST_AUTO_TEST_CASE(localDBTest)
   po::notify(variablesMap);
 
   JPetOptionsGenerator cmdParser;
-//  std::cout<<"Tu jestem "<<endl;
+  std::cout<<"Tu jestem "<<endl;
   std::map<std::string, boost::any> mapFromVariableMap = cmdParser.variablesMapToOption(variablesMap);
-//  std::cout<<"Czy tu dochodze? "<<endl;
+  std::cout<<"Czy tu dochodze? "<<endl;
   BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "localDB"));
   BOOST_REQUIRE_EQUAL(any_cast<std::string>(cmdParser.getOptionValue(mapFromVariableMap, "localDB")), std::string("input.json"));
   BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "localDBCreate"));
@@ -111,14 +111,14 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
 
   po::options_description description("Allowed options");
   description.add_options()
-  ("file,f", po::value<std::vector<std::string>>(), "File(s) to open")
-  ("type,t", po::value<std::string>(), "type of file: hld, zip, root or scope")
-  ("range,r", po::value<std::vector<int>>(), "Range of events to process.")
-  ("param,p", po::value<std::string>(), "File with TRB numbers.")
-  ("runId,i", po::value<int>(), "Run id.")
-  ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
-  ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
-  ("localDBCreate,L", po::value<std::string>(), "Where to save the parameter database.")
+  ("file_std::vector<std::string>,f", po::value<std::vector<std::string>>(), "File(s) to open")
+  ("type_std::string,t", po::value<std::string>(), "type of file: hld, zip, root or scope")
+  ("range_std::vector<int>,r", po::value<std::vector<int>>(), "Range of events to process.")
+  ("param_std::string,p", po::value<std::string>(), "File with TRB numbers.")
+  ("runId_int,i", po::value<int>(), "Run id.")
+  ("progressBar_bool,b", po::bool_switch()->default_value(false), "Progress bar.")
+  ("localDB_std::string,l", po::value<std::string>(), "The file to use as the parameter database.")
+  ("localDBCreate_std::string,L", po::value<std::string>(), "Where to save the parameter database.")
   ;
 
   po::variables_map variablesMap;
@@ -154,16 +154,16 @@ BOOST_AUTO_TEST_CASE(checkWrongOutputPath)
   po::options_description description("Allowed options");
   description.add_options()
   ("help,h", "Displays this help message.")
-  ("type,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, zip, root or scope.")
-  ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
-  ("outputPath,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
-  ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
-  ("param,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
-  ("runId,i", po::value<int>(), "Run id.")
-  ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
-  ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
-  ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.")
-  ("userCfg,u", po::value<std::string>(), "Json file with optional user parameters.");
+  ("type_std::string,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, zip, root or scope.")
+  ("file_std::vector<std::string>,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
+  ("outputPath_std::string,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
+  ("range_std::vector<int>,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
+  ("param_std::string,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
+  ("runId_int,i", po::value<int>(), "Run id.")
+  ("progressBar_bool,b", po::bool_switch()->default_value(false), "Progress bar.")
+  ("localDB_std::string,l", po::value<std::string>(), "The file to use as the parameter database.")
+  ("localDBCreate_std::string,L", po::value<std::string>(), "File name to which the parameter database will be saved.")
+  ("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
 
   po::variables_map variablesMap;
   po::store(po::parse_command_line(argc, argv, description), variablesMap);

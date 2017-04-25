@@ -47,6 +47,7 @@ public:
   boost::any getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const;
 
   std::string getTypeOfOption(const std::string nameOfOption) const;
+  std::string getNameOfOption(const std::string option) const;
 
   std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const; 
 
