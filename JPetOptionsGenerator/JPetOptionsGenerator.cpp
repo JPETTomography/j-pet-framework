@@ -140,29 +140,26 @@ std::string JPetOptionsGenerator::getTypeOfOption(const std::string nameOfOption
 std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap) const
 {
   std::map<std::string, boost::any> optionsMap;
-  std::map<std::string, int> typesToSwitch;
-  typesToSwitch["int"] = 0;
-  typesToSwitch["std::string"] = 1;
-  typesToSwitch["bool"] = 2;
-  typesToSwitch["std::vector<std::string>"] = 3;
-  typesToSwitch["std::vector<int>"] = 4;
+  std::map<std::string, optionTypes> typesToSwitch = {{"int", Int},{"std::string", String},{"bool", Bool},{"std::vector<std::string>", VectorString},{"std::vector<int>", VectorInt}};
   for(auto &option : variablesMap){
-  	int typeOfOption = typesToSwitch.at(getTypeOfOption(option.first));
+  	int typeOfOption = 100;
+  	if (typesToSwitch.count(getTypeOfOption(option.first))>0)
+  		int typeOfOption = typesToSwitch.at(getTypeOfOption(option.first));
   	switch(typeOfOption)
   	{
-  		case 0:
+  		case Int:
   			optionsMap[option.first] = variablesMap[option.first].as<int>();
   			break;
-  		case 1:
+  		case String:
   			optionsMap[option.first] = variablesMap[option.first].as<std::string>();
   			break;
-  		case 2:
+  		case Bool:
   			optionsMap[option.first] = variablesMap[option.first].as<bool>();
   			break;
-  		case 3:
+  		case VectorString:
   			optionsMap[option.first] = variablesMap[option.first].as<std::vector<std::string>>();
   			break;
-  		case 4:
+  		case VectorInt:
   			optionsMap[option.first] = variablesMap[option.first].as<std::vector<int>>();
   			break;
   		default:

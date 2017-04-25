@@ -75,6 +75,14 @@ public:
   static std::pair <std::string, boost::any>getLowerEventBound(boost::any option);
 
   static std::pair <std::string, boost::any>getHigherEventBound(boost::any option);
-
+private:
+	enum optionTypes
+	{
+		Int,
+		String,
+		Bool,
+		VectorString,
+		VectorInt
+	};
 };
 #endif
