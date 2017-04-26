@@ -219,13 +219,13 @@ std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::
 bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap) const
 {
   auto validationMap = generateValidationMap();
-  for(auto &option : optionsMap){
+  for(auto &checkGroup : validationMap){
     //std::cout<<" 1.Czy tu jestem?? "<<option.first<<std::endl;
-    if (validationMap.count(option.first)>0){
-      for(auto &checkFunc : validationMap.at(option.first)){
-        std::cout<<" 2. Czy tu jestem?? "<<option.first<<std::endl;
-        if(( !checkFunc(std::make_pair(option.first, option.second)))){
-          ERROR("ERROR VALIDATON FOR " + option.first);
+    if (optionsMap.count(checkGroup.first)>0){
+      for(auto &checkFunc : checkGroup.second){
+        std::cout<<" 2. Czy tu jestem?? "<<checkGroup.first<<std::endl;
+        if(( !checkFunc(std::make_pair(checkGroup.first, optionsMap.at(checkGroup.first))) )){
+          ERROR("ERROR VALIDATON FOR " + checkGroup.first);
           return false;
         }
       }
@@ -237,10 +237,10 @@ bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::
 std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::map<std::string, boost::any>& optionsMap) const
 {
   auto transformationMap = generateTransformationMap();
-  for(auto &option : optionsMap){
-    if(transformationMap.count(option.first)>0){
-      for(auto &validFunct : transformationMap.at(option.first)){
-        auto transformed = validFunct(option.second);
+  for(auto &validGroup : transformationMap){
+    if(optionsMap.count(validGroup.first)>0){
+      for(auto &validFunct : validGroup.second){
+        auto transformed = validFunct(optionsMap.at(validGroup.first));
         optionsMap[transformed.first] = transformed.second;
       }
     }
