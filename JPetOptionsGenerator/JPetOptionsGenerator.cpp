@@ -65,6 +65,7 @@ bool JPetOptionsGenerator::isRangeOfEventsValid(std::pair <std::string, boost::a
 
 bool JPetOptionsGenerator::isCorrectFileType(std::pair <std::string, boost::any> option){
   std::string type = any_cast<std::string>(option.second);
+  //std::string type = option.second;
   if (type == "hld" || type == "root" || type == "scope" || type == "zip") {
       return true;
   } else {
@@ -102,11 +103,14 @@ bool JPetOptionsGenerator::areFilesValid(std::pair <std::string, boost::any> opt
 }
 
 bool JPetOptionsGenerator::isOutputDirectoryValid(std::pair <std::string, boost::any> option){
-    if(!JPetCommonTools::isDirectory(any_cast<std::string>(option.second))){
-      ERROR("Output directory does not exist.");
-      return false;
-    }
-  return true;
+  std::cout<<" wooow "<<option.first<<std::endl;
+  if(!JPetCommonTools::isDirectory(any_cast<std::string>(option.second))){
+    std::cout<<" wooow wooow "<<option.first<<std::endl;
+    ERROR("Output directory does not exist.");
+    std::cout<<" wooow wooow wooow wooow "<<option.first<<std::endl;
+    return false;
+  }
+  return true; 
 }
 std::pair <std::string, boost::any>JPetOptionsGenerator::appendSlash(boost::any option)
 {
@@ -195,11 +199,11 @@ std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> 
   std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > validationMap;
   validationMap["range"].push_back(&isNumberBoundsInRangeValid);
   validationMap["range"].push_back(&isRangeOfEventsValid);
-  validationMap["file"].push_back(&isCorrectFileType);
+  validationMap["type"].push_back(&isCorrectFileType);
   validationMap["file"].push_back(&areFilesValid);
   validationMap["runId"].push_back(&isRunIdValid);
   validationMap["localDB"].push_back(&isLocalDBValid);
-  validationMap["unpackerConfigFile"].push_back(&isOutputDirectoryValid);
+  validationMap["outputPath"].push_back(&isOutputDirectoryValid);
   return validationMap;
 }
 
@@ -216,11 +220,11 @@ bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::
 {
   auto validationMap = generateValidationMap();
   for(auto &option : optionsMap){
-    std::cout<<" 1.Czy tu jestem?? "<<option.first<<std::endl;
+    //std::cout<<" 1.Czy tu jestem?? "<<option.first<<std::endl;
     if (validationMap.count(option.first)>0){
       for(auto &checkFunc : validationMap.at(option.first)){
-        std::cout<<" 2. Czy tu jestem?? "<<checkFunc<<std::endl;
-        if(( checkFunc(std::make_pair(option.first, option.second))) == false){
+        std::cout<<" 2. Czy tu jestem?? "<<option.first<<std::endl;
+        if(( !checkFunc(std::make_pair(option.first, option.second)))){
           ERROR("ERROR VALIDATON FOR " + option.first);
           return false;
         }
@@ -277,7 +281,7 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   if (!areCorrectOptions(options)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
-
+  std::cout<<" 2222. Czy tu jestem?? "<<std::endl;
   auto files = any_cast<std::vector<std::string>>(getOptionValue(options, "file"));
 
   std::vector<JPetOptions>  optionContainer;
