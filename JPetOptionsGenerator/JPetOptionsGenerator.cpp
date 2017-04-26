@@ -274,13 +274,14 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   /// We add additional options to already existing one.
   /// If the key already exists the element will not be updated.
   options.insert(optionsFromJson.begin(), optionsFromJson.end());
-  options.insert(defaultOptions.begin(), defaultOptions.end());
+  
 
   options = transformOptions(options);
 
   if (!areCorrectOptions(options)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
+  options.insert(defaultOptions.begin(), defaultOptions.end());
   std::cout<<" 2222. Czy tu jestem?? "<<std::endl;
   auto files = any_cast<std::vector<std::string>>(getOptionValue(options, "file"));
 
