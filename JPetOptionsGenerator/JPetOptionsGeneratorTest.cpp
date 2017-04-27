@@ -61,10 +61,10 @@ BOOST_AUTO_TEST_CASE(runIdTest)
   
   std::map<std::string, boost::any> mapFromVariableMap = cmdParser.variablesMapToOption(variablesMap);
   
-  BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "runId"));
-  BOOST_REQUIRE_EQUAL(any_cast<int>(cmdParser.getOptionValue(mapFromVariableMap, "runId")), 231);
+  BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "runId_int"));
+  BOOST_REQUIRE_EQUAL(any_cast<int>(cmdParser.getOptionValue(mapFromVariableMap, "runId_int")), 231);
 
-  auto runId = any_cast<int>(cmdParser.getOptionValue(mapFromVariableMap, "runId"));
+  auto runId = any_cast<int>(cmdParser.getOptionValue(mapFromVariableMap, "runId_int"));
   BOOST_REQUIRE(variablesMap.size() == 1);
   BOOST_REQUIRE(variablesMap.count("runId_int") == 1);
   BOOST_REQUIRE(runId == 231);
@@ -90,10 +90,10 @@ BOOST_AUTO_TEST_CASE(localDBTest)
 
   JPetOptionsGenerator cmdParser;
   std::map<std::string, boost::any> mapFromVariableMap = cmdParser.variablesMapToOption(variablesMap);
-  BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "localDB"));
-  BOOST_REQUIRE_EQUAL(any_cast<std::string>(cmdParser.getOptionValue(mapFromVariableMap, "localDB")), std::string("input.json"));
-  BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "localDBCreate"));
-  BOOST_REQUIRE_EQUAL(any_cast<std::string>(cmdParser.getOptionValue(mapFromVariableMap, "localDBCreate")), std::string("output.json"));
+  BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "localDB_std::string"));
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(cmdParser.getOptionValue(mapFromVariableMap, "localDB_std::string")), std::string("input.json"));
+  BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "localDBCreate_std::string"));
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(cmdParser.getOptionValue(mapFromVariableMap, "localDBCreate_std::string")), std::string("output.json"));
 
 }
 
@@ -125,12 +125,15 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
   
   std::map<std::string, boost::any> mapFromVariableMap = cmdParser.variablesMapToOption(variablesMap);
   BOOST_REQUIRE(cmdParser.areCorrectOptions(mapFromVariableMap));
-
+  std::cout<<"testy "<<std::endl;
   std::vector<JPetOptions> options = cmdParser.generateOptions(variablesMap);
+  std::cout<<"testy 2 "<<std::endl;
   JPetOptions firstOption = options.front();
-
+  std::cout<<"testy 3 "<<std::endl;
   BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
+  std::cout<<"testy 4 "<<std::endl;
   BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
+  std::cout<<"testy 5 "<<std::endl;
   BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
   //BOOST_REQUIRE(firstOption.getOutputFile() == "root");
   //BOOST_REQUIRE(firstOption.getOutputFileType() == "test.root");

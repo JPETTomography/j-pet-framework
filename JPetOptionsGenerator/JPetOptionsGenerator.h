@@ -83,7 +83,8 @@ private:
 		String,
 		Bool,
 		VectorString,
-		VectorInt
+		VectorInt,
+    Default
 	};
 };
 #endif

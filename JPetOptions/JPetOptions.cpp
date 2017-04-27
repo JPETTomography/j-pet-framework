@@ -59,7 +59,6 @@ JPetOptions::FileType JPetOptions::handleFileType(const std::string& fileType) c
 {
   try {
     auto option = fOptions.at(fileType);
-
     try {
       return fStringToFileType.at(option);
     } catch (const std::out_of_range& outOfRangeFileTypeException) {
