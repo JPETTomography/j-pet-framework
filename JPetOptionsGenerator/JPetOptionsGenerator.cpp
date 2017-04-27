@@ -20,8 +20,11 @@
 #include "../JPetOptions/JPetOptionsTools.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include <stdexcept>
+#include <vector>
+#include <string>
 
 using boost::any_cast;
+using namespace std;
 
 JPetOptionsGenerator::JPetOptionsGenerator()
 {
@@ -31,98 +34,222 @@ JPetOptionsGenerator::~JPetOptionsGenerator()
 {
 
 }
-bool JPetOptionsGenerator::isOptionSet(const std::map<std::string, boost::any>& variablesMap, const std::string& option) const
+bool JPetOptionsGenerator::isOptionSet(const std::map<std::string, boost::any>& optionsMap, const std::string& option) const
 {
-  return (bool)variablesMap.count(option);
+  return (bool)optionsMap.count(option);
 }
 
-std::string JPetOptionsGenerator::getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string option) const
+boost::any JPetOptionsGenerator::getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const
 {
-  return any_cast<std::string>(variablesMap.at(option));
+  //return any_cast<boost::any>(optionsMap.at(option));
+  return optionsMap.at(option);
+}
+
+bool JPetOptionsGenerator::isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option){
+  if( any_cast<std::vector<int>>(option.second).size()!=2){
+    ERROR("Wrong number of bounds in range.");
+    std::cerr << "Wrong number of bounds in range: " << (any_cast<std::vector<int>>(option.second).size()) << std::endl;
+    return false;
+  }
+  return true;
+}
+
+bool JPetOptionsGenerator::isRangeOfEventsValid(std::pair <std::string, boost::any> option){
+  if( any_cast<std::vector<int>>(option.second).at(0) > any_cast<std::vector<int>>(option.second).at(1)){
+    ERROR("Wrong number of bounds in range.");
+    std::cerr << "Wrong number of bounds in range: " << (any_cast<std::vector<int>>(option.second).size()) << std::endl;
+    return false;
+  }
+  return true;
+}
+
+bool JPetOptionsGenerator::isCorrectFileType(std::pair <std::string, boost::any> option){
+  std::string type = any_cast<std::string>(option.second);
+  //std::string type = option.second;
+  if (type == "hld" || type == "root" || type == "scope" || type == "zip") {
+      return true;
+  } else {
+    ERROR("Wrong type of file.");
+    std::cerr << "Possible options: hld, zip, root or scope" << std::endl;
+    return false;
+  }
+}
+
+bool JPetOptionsGenerator::isRunIdValid(std::pair <std::string, boost::any> option){
+  if( any_cast<int>(option.second) <=0){
+    ERROR("Run id must be a number larger than 0.");
+    return false;
+  }
+  return true;
+}
+
+bool JPetOptionsGenerator::isLocalDBValid(std::pair <std::string, boost::any> option){
+  if( !JPetCommonTools::ifFileExisting(any_cast<std::string>(option.second)) ){
+    ERROR("File doed not exist.");
+    return false;
+  }
+  return true;
+}
+
+bool JPetOptionsGenerator::areFilesValid(std::pair <std::string, boost::any> option){
+  std::vector<std::string> fileNames= any_cast<std::vector<std::string>>(option.second);
+  for ( unsigned int i = 0; i < fileNames.size(); i++ ){
+    if( !JPetCommonTools::ifFileExisting(fileNames[i])){
+      ERROR("File : " + fileNames[i] + " does not exist.");
+      return false;
+    }
+  }
+  return true;
+}
+
+bool JPetOptionsGenerator::isOutputDirectoryValid(std::pair <std::string, boost::any> option){
+  std::cout<<" wooow "<<option.first<<std::endl;
+  if(!JPetCommonTools::isDirectory(any_cast<std::string>(option.second))){
+    std::cout<<" wooow wooow "<<option.first<<std::endl;
+    ERROR("Output directory does not exist.");
+    std::cout<<" wooow wooow wooow wooow "<<option.first<<std::endl;
+    return false;
+  }
+  return true; 
+}
+std::pair <std::string, boost::any>JPetOptionsGenerator::appendSlash(boost::any option)
+{
+  auto path = JPetCommonTools::appendSlashToPathIfAbsent(any_cast<std::string>(option));
+  return std::make_pair("outputPath", path);
+}
+
+std::pair <std::string, boost::any>JPetOptionsGenerator::getLowerEventBound(boost::any option)
+{
+  int firstEvent = any_cast<std::vector<int>>(option)[0];
+  if (firstEvent >= 0)
+  {
+    return std::make_pair("firstEvent", firstEvent);
+  } 
+}
+
+std::pair <std::string, boost::any>JPetOptionsGenerator::getHigherEventBound(boost::any option)
+{
+  int lastEvent = any_cast<std::vector<int>>(option)[1];
+  if (lastEvent >= 0)
+  {
+    return std::make_pair("lastEvent", lastEvent);
+  }
+}
+
+std::string JPetOptionsGenerator::getTypeOfOption(const std::string nameOfOption) const
+{
+	std::size_t pos = nameOfOption.find("_");
+  //std::cout<<"Gettype "<<nameOfOption.substr(pos+1)<<std::endl;
+	return nameOfOption.substr(pos+1);
+}
+
+std::string JPetOptionsGenerator::getNameOfOption(const std::string option) const
+{
+  std::size_t pos= option.find("_");
+  //std::cout<<"GetName "<<option.substr(0, pos)<<std::endl;
+  return option.substr(0, pos);
 }
 
 std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap) const
 {
   std::map<std::string, boost::any> optionsMap;
-  std::map<std::string, std::string> tmpMap = JPetOptions::getDefaultOptions();
+  std::map<std::string, optionTypes> typesToSwitch = {{"int", Int},{"std::string", String},{"bool", Bool},{"std::vector<std::string>", VectorString},{"std::vector<int>", VectorInt}};
   for(auto &option : variablesMap){
-    //if(variablesMap.count(option.first)){
-      if(option.first=="file")
-        optionsMap.at(option.first)= variablesMap[option.first].as<std::vector<std::string>>();
-      if(option.first=="range")
-        optionsMap.at(option.first)=variablesMap[option.first].as<std::vector<int>>();
-      if(option.first=="runId")
-        optionsMap.at(option.first)=variablesMap[option.first].as<int>();  
-    optionsMap.at(option.first) = variablesMap[option.first].as<std::string>();
-   // }
+  	//int typeOfOption;
+  	//if (typesToSwitch.count(getTypeOfOption(option.first))>0)
+  	int typeOfOption = typesToSwitch.at(getTypeOfOption(option.first));
+    //else
+    //  typeOfOption = 100;
+  	switch(typeOfOption)
+  	{
+  		case Int:
+  			optionsMap[getNameOfOption(option.first)] = variablesMap[option.first].as<int>();
+  			break;
+  		case String:
+  			optionsMap[getNameOfOption(option.first)] = variablesMap[option.first].as<std::string>();
+  			break;
+  		case Bool:
+  			optionsMap[getNameOfOption(option.first)] = variablesMap[option.first].as<bool>();
+  			break;
+  		case VectorString:
+  			optionsMap[getNameOfOption(option.first)] = variablesMap[option.first].as<std::vector<std::string>>();
+  			break;
+  		case VectorInt:
+  			optionsMap[getNameOfOption(option.first)] = variablesMap[option.first].as<std::vector<int>>();
+  			break;
+  		// default:
+  		// 	optionsMap[getNameOfOption(option.first)] = variablesMap[option.first].as<boost::any>();
+  		// 	break;
+  	}
+  }
+ // std::cout<<"Czy tu jestem?? "<<std::endl;
+  return optionsMap;
+}
+
+std::map<std::string, std::string> JPetOptionsGenerator::anyMapToStringMap(const std::map<std::string, boost::any> & optionsMap) const
+{
+  std::map<std::string, std::string> newOptionsMap;
+  for(auto &option : newOptionsMap){
+    newOptionsMap[option.first] = any_cast<std::string>(optionsMap.at(option.first));
+  }
+  return newOptionsMap;
+}
+std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > JPetOptionsGenerator::generateValidationMap() const
+{
+  std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > validationMap;
+  validationMap["range"].push_back(&isNumberBoundsInRangeValid);
+  validationMap["range"].push_back(&isRangeOfEventsValid);
+  validationMap["type"].push_back(&isCorrectFileType);
+  validationMap["file"].push_back(&areFilesValid);
+  validationMap["runId"].push_back(&isRunIdValid);
+  validationMap["localDB"].push_back(&isLocalDBValid);
+  validationMap["outputPath"].push_back(&isOutputDirectoryValid);
+  return validationMap;
+}
+
+std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::any)> > JPetOptionsGenerator::generateTransformationMap() const
+{
+  std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::any)> > transformationMap;
+  transformationMap["outputPath"].push_back(&appendSlash);
+  transformationMap["range"].push_back(&getLowerEventBound);
+  transformationMap["range"].push_back(&getHigherEventBound);
+  return transformationMap;
+}
+
+bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap) const
+{
+  auto validationMap = generateValidationMap();
+  for(auto &checkGroup : validationMap){
+    //std::cout<<" 1.Czy tu jestem?? "<<option.first<<std::endl;
+    if (optionsMap.count(checkGroup.first)>0){
+      for(auto &checkFunc : checkGroup.second){
+        std::cout<<" 2. Czy tu jestem?? "<<checkGroup.first<<std::endl;
+        if(( !checkFunc(std::make_pair(checkGroup.first, optionsMap.at(checkGroup.first))) )){
+          ERROR("ERROR VALIDATON FOR " + checkGroup.first);
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+}
+
+std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::map<std::string, boost::any>& optionsMap) const
+{
+  auto transformationMap = generateTransformationMap();
+  for(auto &validGroup : transformationMap){
+    if(optionsMap.count(validGroup.first)>0){
+      for(auto &validFunct : validGroup.second){
+        auto transformed = validFunct(optionsMap.at(validGroup.first));
+        optionsMap[transformed.first] = transformed.second;
+      }
+    }
   }
   return optionsMap;
 }
 
-std::map<std::string, std::string> JPetOptionsGenerator::anyMapToStringMap(const std::map<std::string, boost::any> & map) const
-{
-  std::map<std::string, std::string> optionsMap;
-  for(auto &option : optionsMap){
-    optionsMap.at(option.first) = any_cast<std::string>(map.at(option.first));
-  }
-  return optionsMap;
-}
-
-bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::any>& variablesMap) const
-{
-  /* Parse range of events */
-  if (variablesMap.count("range")) {
-    if ((any_cast<std::vector<int>>(variablesMap.at("range"))).size() != 2) {
-      ERROR("Wrong number of bounds in range.");
-      std::cerr << "Wrong number of bounds in range: " << (any_cast<std::vector<int>>(variablesMap.at("range"))).size() << std::endl;
-      return false;
-    }
-    if (
-      (any_cast<std::vector<int>>(variablesMap.at("range"))).at(0)
-      >  (any_cast<std::vector<int>>(variablesMap.at("range"))).at(1)) {
-      ERROR("Wrong range of events.");
-      std::cerr << "Wrong range of events." << std::endl;
-      return false;
-    }
-  }
-
-  if (!isCorrectFileType(getOptionValue(variablesMap, "type"))) {
-    ERROR("Wrong type of file.");
-    std::cerr << "Wrong type of file: " << getOptionValue(variablesMap, "type") << std::endl;
-    std::cerr << "Possible options: hld, zip, root or scope" << std::endl;
-    return false;
-  }
-
-  if (isOptionSet(variablesMap, "runId")) {
-    int l_runId = any_cast<int>(variablesMap.at("runId"));
-
-    if (l_runId <= 0) {
-      ERROR("Run id must be a number larger than 0.");
-      std::cerr << "Run id must be a number larger than 0." << l_runId << std::endl;
-      return false;
-    }
-  }
-
-  if (isOptionSet(variablesMap, "localDB")) {
-    std::string localDBName = getOptionValue(variablesMap, "localDB");
-    if ( !JPetCommonTools::ifFileExisting(localDBName) ) {
-      ERROR("File : " + localDBName + " does not exist.");
-      std::cerr << "File : " << localDBName << " does not exist" << std::endl;
-      return false;
-    }
-  }
-
-  std::vector<std::string> fileNames= any_cast<std::vector<std::string>>(variablesMap.at("file"));
-  for (unsigned int i = 0; i < fileNames.size(); i++) {
-    if ( ! JPetCommonTools::ifFileExisting(fileNames[i]) ) {
-      std::string fileName = fileNames[i];
-      ERROR("File : " + fileName + " does not exist.");
-      std::cerr << "File : " << fileNames[i] << " does not exist" << std::endl;
-      return false;
-    }
-  }
-
-
+/*
+======?????????
   /// The run number option is neclegted if the input file is set as "scope"
   if (isOptionSet(variablesMap, "runId")) {
     if (getOptionValue(variablesMap, "type") == "scope") {
@@ -130,17 +257,9 @@ bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::
     }
   }
 
-  /// Check if output path exists
-  if (isOptionSet(variablesMap, "outputPath")) {
-    auto dir = getOptionValue(variablesMap, "outputPath");
-    if (!JPetCommonTools::isDirectory(dir)) {
-      ERROR("Output directory : " + dir + " does not exist.");
-      std::cerr << "Output directory: " << dir << " does not exist" << std::endl;
-      return false;
-    }
-  }
-  return true;
-}
+======?????????
+
+  */
 
 std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variables_map& optsMap) const
 {
@@ -155,34 +274,16 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   /// We add additional options to already existing one.
   /// If the key already exists the element will not be updated.
   options.insert(optionsFromJson.begin(), optionsFromJson.end());
-  options.insert(defaultOptions.begin(), defaultOptions.end());
+  
 
-  auto fileType = getOptionValue(options, "type");
-//  if (isCorrectFileType(fileType)) {
-//    options["inputFileType"] = fileType;
-//  }
-  if (isOptionSet(options, "outputPath")) {
-    options["outputPath"] = JPetCommonTools::appendSlashToPathIfAbsent(getOptionValue(options, "outputPath"));
-  }
-//  if (isOptionSet(optionsFromCmd, "progressBar")) {
-//    options["progressBar"] = "true";
-//  }
-//  if (isOptionSet(optionsFromCmd, "localDB")) {
-//    options["localDB"] = getOptionValue(optionsFromCmd, "localDB");
-//  }
-//  if (isOptionSet(optionsFromCmd, "localDBCreate")) {
-//    options["localDBCreate"] = getOptionValue(optionsFromCmd, "localDBCreate");
-//  }
-  auto firstEvent  = getLowerEventBound(optsMap);
-  auto lastEvent  = getHigherEventBound(optsMap);
-  if (firstEvent >= 0) options["firstEvent"] = std::to_string(firstEvent);
-  if (lastEvent >= 0) options["lastEvent"] = std::to_string(lastEvent);
-  auto files = getFileNames(optsMap);
+  options = transformOptions(options);
 
   if (!areCorrectOptions(options)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
-
+  options.insert(defaultOptions.begin(), defaultOptions.end());
+  std::cout<<" 2222. Czy tu jestem?? "<<std::endl;
+  auto files = any_cast<std::vector<std::string>>(getOptionValue(options, "file"));
 
   std::vector<JPetOptions>  optionContainer;
   /// In case of scope there is one special input file
@@ -190,7 +291,7 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   /// Based on its content the set of input directories are generated.
   /// The input directories contain data files.
   /// The config input file name also should be stored in a special option field.
-  if (fileType == "scope") {
+  if (any_cast<std::string>(getOptionValue(options, "type")) == "scope") {
     assert(files.size() == 1); /// there should be only file which is config.
     auto configFileName = files.front();
     options.at("scopeConfigFile") =  configFileName;
