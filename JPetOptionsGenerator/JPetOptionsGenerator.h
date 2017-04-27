@@ -25,6 +25,9 @@ class JPetOptionsGenerator;
 #include <boost/any.hpp>
 #include <typeinfo>
 #include <iostream>
+#include <utility>
+#include <vector>
+#include <map>
 
 class JPetOptionsGenerator
 {
@@ -32,82 +35,55 @@ public:
   JPetOptionsGenerator();
   ~JPetOptionsGenerator();
   
+
   std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap) const;
+
+  std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap) const;
   
-  bool areCorrectOptions(const std::map<std::string, boost::any>& options) const;
+  bool areCorrectOptions(const std::map<std::string, boost::any>& optionsMap) const;
   
-  bool isOptionSet(const std::map<std::string, boost::any>& variablesMap, const std::string& option) const; 
+  bool isOptionSet(const std::map<std::string, boost::any>& optionsMap, const std::string& option) const; 
   
-  std::string getOptionValue(const std::map<std::string, boost::any>& variablesMap, std::string option) const;
+  boost::any getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const;
+
+  std::string getTypeOfOption(const std::string nameOfOption) const;
+  std::string getNameOfOption(const std::string option) const;
 
   std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const; 
 
-  std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& map) const; 
- 
-  inline const std::vector<std::string>& getFileNames(const po::variables_map& variablesMap) const {
-    return variablesMap["file"].as< std::vector<std::string> >();
-  }
-  inline bool isCorrectFileType(const std::string& type) const {
-    if (type == "hld" || type == "root" || type == "scope" || type == "zip") {
-      return true;
-    }
-    return false;
-  }
+  std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& optionsMap) const;
 
-//  inline const std::string& getOutputPath(const po::variables_map& variablesMap) const {
-//    return variablesMap["outputPath"].as<std::string>();
-//  }
+  static bool isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option); 
 
-//  inline bool isOutputPath(const po::variables_map& variablesMap) const {
-//    return (bool)variablesMap.count("outputPath");
-//  }
+  static bool isRangeOfEventsValid(std::pair <std::string, boost::any> option);
 
-//  inline const std::string& getFileType(const po::variables_map& variablesMap) const {
-//    return variablesMap["type"].as<std::string>();
-//  }
+  static bool isCorrectFileType(std::pair <std::string, boost::any> option);
 
-//  inline bool IsFileTypeSet(const po::variables_map& variablesMap) const {
-//    return (bool)variablesMap.count("type");
-//  }
+  static bool isRunIdValid(std::pair <std::string, boost::any> option);
 
-  inline int getLowerEventBound(const po::variables_map& variablesMap) const {
-    return variablesMap["range"].as< std::vector<int> >()[0];
-  }
-  inline int getHigherEventBound(const po::variables_map& variablesMap) const {
-    return variablesMap["range"].as< std::vector<int> >()[1];
-  }
-//  inline bool isParamSet(const po::variables_map& variablesMap) const {
-//    return (bool)variablesMap.count("param");
-//  }
-//  inline const std::string& getParam(const po::variables_map& variablesMap) const {
-//    return variablesMap["param"].as< std::string >();
-//  }
+  static bool isLocalDBValid(std::pair <std::string, boost::any> option);
 
-//  inline bool isRunNumberSet(const po::variables_map& variablesMap) const {
-//    return (bool)variablesMap.count("runId");
-//  }
+  static bool areFilesValid(std::pair <std::string, boost::any> option);
 
-  inline const int getRunNumber(const po::variables_map& variablesMap) const {
-    return variablesMap["runId"].as<int>();
-  }
+  static bool isOutputDirectoryValid(std::pair <std::string, boost::any> option);
 
-  inline bool isProgressBarSet(const po::variables_map& variablesMap) const {
-    return variablesMap["progressBar"].as<bool>();
-  }
+  static std::pair <std::string, boost::any>appendSlash(boost::any option);
 
-//  static inline bool isLocalDBSet(const po::variables_map& variablesMap) {
-//    return variablesMap.count("localDB") > 0;
-//  }
-//  static inline std::string getLocalDBName(const po::variables_map& variablesMap) {
-//    return variablesMap["localDB"].as<std::string>();
-// }
+  std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > generateValidationMap() const; 
 
-//  static inline bool isLocalDBCreateSet(const po::variables_map& variablesMap) {
-//    return variablesMap.count("localDBCreate") > 0;
-//  }
-//  static inline std::string getLocalDBCreateName(const po::variables_map& variablesMap) {
-//    return variablesMap["localDBCreate"].as<std::string>();
-//  }
+  std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::any)> > generateTransformationMap() const; 
 
+  static std::pair <std::string, boost::any>getLowerEventBound(boost::any option);
+
+  static std::pair <std::string, boost::any>getHigherEventBound(boost::any option);
+private:
+	enum optionTypes
+	{
+		Int,
+		String,
+		Bool,
+		VectorString,
+		VectorInt
+	};
 };
 #endif

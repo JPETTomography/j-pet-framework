@@ -35,7 +35,7 @@ public:
   inline const po::options_description getOptionsDescription() const {
     return fOptionsDescriptions;
   }
-
+/*
   static inline bool isUnpackerConfigFileSet(const po::variables_map& variablesMap) {
     return variablesMap.count("unpackerConfigFile") > 0;
   }
@@ -49,7 +49,7 @@ public:
   static inline std::string getUnpackerCalibFile(const po::variables_map& variablesMap) {
     return variablesMap["unpackerCalibFile"].as<std::string>();
   }
-  
+  */
 protected:
   po::options_description fOptionsDescriptions;
 
