@@ -134,13 +134,13 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
   std::cout<<"testy 4 "<<std::endl;
   BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
   std::cout<<"testy 5 "<<std::endl;
-  BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
+  BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld); //--------------Tu nie przechodzi------------------//
   //BOOST_REQUIRE(firstOption.getOutputFile() == "root");
   //BOOST_REQUIRE(firstOption.getOutputFileType() == "test.root");
   BOOST_REQUIRE(firstOption.getFirstEvent() == 2);
   BOOST_REQUIRE(firstOption.getLastEvent() == 4);
   BOOST_REQUIRE(firstOption.getRunNumber() == 231);
-  BOOST_REQUIRE(firstOption.isProgressBar());
+  BOOST_REQUIRE(firstOption.isProgressBar()); //--------------Tu nie przechodzi------------------//
   BOOST_REQUIRE(firstOption.isLocalDB());
   BOOST_REQUIRE(firstOption.getLocalDB() == std::string("unitTestData/JPetCmdParserTest/input.json"));
   BOOST_REQUIRE(firstOption.isLocalDBCreate());
