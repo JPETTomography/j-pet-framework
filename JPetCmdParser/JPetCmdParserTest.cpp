@@ -44,13 +44,17 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE( parsing_1 )
 {
+  std::cout<<"parsing_1 "<<std::endl;
   auto commandLine = "main.x -t hld -f unitTestData/JPetCmdParserTest/testfile.hld -i 10";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
 
+  std::cout<<"parsing_1 after auto "<<std::endl;
   JPetCmdParser parser;
+  std::cout<<"parsing_1 after JPetCmdParser parser "<<std::endl;
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  std::cout<<"parsing_1 after parseAndGenerateOptions "<<std::endl;
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
   BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCmdParserTest/testfile.hld");
@@ -65,6 +69,7 @@ BOOST_AUTO_TEST_CASE( parsing_1 )
 
 BOOST_AUTO_TEST_CASE( parsing_2 )
 {
+  std::cout<<"parsing_2 "<<std::endl;
   auto commandLine = "main.x -t scope -f unitTestData/JPetCmdParserTest/testfile.json ";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
@@ -87,6 +92,7 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
 
 BOOST_AUTO_TEST_CASE( parsing_zip_file )
 {
+  std::cout<<"parsing_zip_file "<<std::endl;
   auto commandLine = "main.x -t zip -f unitTestData/JPetCommonToolsTest/goodZip.gz";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
@@ -104,6 +110,7 @@ BOOST_AUTO_TEST_CASE( parsing_zip_file )
 
 BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
 {
+  std::cout<<"getOptionsDescriptionTest"<<std::endl;
   JPetCmdParser cmdParser;
   auto optionDescription = cmdParser.getOptionsDescription();
   //optionDescription.add
@@ -114,48 +121,49 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
   //cout << helpOptionDescription.format_name() << endl;
   BOOST_REQUIRE(std::string(helpOptionDescription.format_name()) == "-h [ --help ]");
 
-  auto typeOptionDescription = optionDescription.find("type", true);
+  auto typeOptionDescription = optionDescription.find("type_std::string", true);
   //cout << typeOptionDescription.description() << endl;
   BOOST_REQUIRE(std::string(typeOptionDescription.description()) == "Type of file: hld, zip, root or scope.");
   //cout << typeOptionDescription.format_name() << endl;
-  BOOST_REQUIRE(std::string(typeOptionDescription.format_name()) == "-t [ --type ]");
+  BOOST_REQUIRE(std::string(typeOptionDescription.format_name()) == "-t [ --type_std::string ]");
 
-  auto fileOptionDescription = optionDescription.find("file", true);
+  auto fileOptionDescription = optionDescription.find("file_std::vector<std::string>", true);
   //cout << fileOptionDescription.description() << endl;
   BOOST_REQUIRE(std::string(fileOptionDescription.description()) == "File(s) to open.");
   //cout << fileOptionDescription.format_name() << endl;
-  BOOST_REQUIRE(std::string(fileOptionDescription.format_name()) == "-f [ --file ]");
+  BOOST_REQUIRE(std::string(fileOptionDescription.format_name()) == "-f [ --file_std::vector<std::string> ]");
 
-  auto rangeOptionDescription = optionDescription.find("range", true);
+  auto rangeOptionDescription = optionDescription.find("range_std::vector<int>", true);
   //cout << rangeOptionDescription.description() << endl;
   BOOST_REQUIRE(std::string(rangeOptionDescription.description()) == "Range of events to process e.g. -r 1 1000 .");
   //cout << rangeOptionDescription.format_name() << endl;
-  BOOST_REQUIRE(std::string(rangeOptionDescription.format_name()) == "-r [ --range ]");
+  BOOST_REQUIRE(std::string(rangeOptionDescription.format_name()) == "-r [ --range_std::vector<int> ]");
 
-  auto unpackerConfigOptionDescription = optionDescription.find("unpackerConfigFile", true);
+  auto unpackerConfigOptionDescription = optionDescription.find("unpackerConfigFile_std::string", true);
   BOOST_REQUIRE(std::string(unpackerConfigOptionDescription.description()) == "xml file with TRB settings used by the unpacker program.");
-  BOOST_REQUIRE(std::string(unpackerConfigOptionDescription.format_name()) == "-p [ --unpackerConfigFile ]");
+  BOOST_REQUIRE(std::string(unpackerConfigOptionDescription.format_name()) == "-p [ --unpackerConfigFile_std::string ]");
 
-  auto unpackerCalibOptionDescription = optionDescription.find("unpackerCalibFile", true);
+  auto unpackerCalibOptionDescription = optionDescription.find("unpackerCalibFile_std::string", true);
   BOOST_REQUIRE(std::string(unpackerCalibOptionDescription.description()) == "ROOT file with TRB calibration used by the unpacker program.");
-  BOOST_REQUIRE(std::string(unpackerCalibOptionDescription.format_name()) == "-c [ --unpackerCalibFile ]");
+  BOOST_REQUIRE(std::string(unpackerCalibOptionDescription.format_name()) == "-c [ --unpackerCalibFile_std::string ]");
   
-  auto runIdOptionDescription = optionDescription.find("runId", true);
+  auto runIdOptionDescription = optionDescription.find("runId_int", true);
   //cout << runIdOptionDescription.description() << endl;
   BOOST_REQUIRE(std::string(runIdOptionDescription.description()) == "Run id.");
   //cout << runIdOptionDescription.format_name() << endl;
-  BOOST_REQUIRE(std::string(runIdOptionDescription.format_name()) == "-i [ --runId ]");
+  BOOST_REQUIRE(std::string(runIdOptionDescription.format_name()) == "-i [ --runId_int ]");
 
-  auto progressBarOptionDescription = optionDescription.find("progressBar", true);
+  auto progressBarOptionDescription = optionDescription.find("progressBar_bool", true);
   //cout << progressBarOptionDescription.description() << endl;
   BOOST_REQUIRE(std::string(progressBarOptionDescription.description()) == "Progress bar.");
   //cout << progressBarOptionDescription.format_name() << endl;
-  BOOST_REQUIRE(std::string(progressBarOptionDescription.format_name()) == "-b [ --progressBar ]");
+  BOOST_REQUIRE(std::string(progressBarOptionDescription.format_name()) == "-b [ --progressBar_bool ]");
 }
 
 
 BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
 {
+  std::cout<<"parseAndGenerateOptionsTest"<<std::endl;
   auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 4 -p unitTestData/JPetCmdParserTest/data.hld -c unitTestData/JPetUnpackerTest/calib.root -i 231 -L output.json";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
