@@ -38,6 +38,10 @@ public:
 
   std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap) const;
 
+  std::string getConfigFileName(const po::variables_map& optsMap) const;
+  void addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, boost::any>& options) const;
+  void addMissingDefaultOptions(std::map<std::string, std::string>& stringMap) const;
+
   std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap) const;
   
   bool areCorrectOptions(const std::map<std::string, boost::any>& optionsMap) const;

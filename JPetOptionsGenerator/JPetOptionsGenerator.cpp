@@ -329,30 +329,47 @@ std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::ma
 ======?????????
 
   */
+  /// We add additional options to already existing one.
+  /// If the key already exists the element will not be updated.
+void JPetOptionsGenerator::addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, boost::any>& options) const 
+{
+  jpet_options_tools::Options optionsFromJson = jpet_options_tools::createOptionsFromConfigFile(cfgFile);
+  options.insert(optionsFromJson.begin(), optionsFromJson.end());
+}
+
+std::string JPetOptionsGenerator::getConfigFileName(const po::variables_map& optsMap) const 
+{
+  if (optsMap.count("userCfg_std::string")) {
+    return optsMap["userCfg_std::string"].as<std::string>();
+  } else {
+    return "";
+  }
+}
+
+void JPetOptionsGenerator::addMissingDefaultOptions(std::map<std::string, std::string>& stringMap) const 
+{
+  std::map<std::string, std::string> defaultOptions = JPetOptions::getDefaultOptions(); 
+  stringMap.insert(defaultOptions.begin(), defaultOptions.end());
+}
 
 std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variables_map& optsMap) const
 {
-  jpet_options_tools::Options optionsFromJson;
-  /// If json config file with user options was specified we must add the options from it.
-  if (optsMap.count("userCfg_std::string")) {
-    auto jsonCfgFile = optsMap["userCfg_std::string"].as<std::string>();
-    optionsFromJson = jpet_options_tools::createOptionsFromConfigFile(jsonCfgFile);
+  auto options = variablesMapToOption(optsMap);
+  auto cfgFileName = getConfigFileName(optsMap);
+  if (!cfgFileName.empty()) {
+    addNewOptionsFromCfgFile(cfgFileName, options);
   }
-  std::map<std::string, boost::any> options = variablesMapToOption(optsMap);
-  std::map<std::string, std::string> defaultOptions = JPetOptions::getDefaultOptions(); 
-  /// We add additional options to already existing one.
-  /// If the key already exists the element will not be updated.
-  options.insert(optionsFromJson.begin(), optionsFromJson.end());
   
-
   options = transformOptions(options);
 
   if (!areCorrectOptions(options)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
+ 
   std::cout<<std::endl;
   auto stringMap = anyMapToStringMap(options);
-  stringMap.insert(defaultOptions.begin(), defaultOptions.end());
+  addMissingDefaultOptions(stringMap);
+
   for(auto &option : stringMap){
     std::cout<<"option: "<<option.first<<std::endl;
   }
