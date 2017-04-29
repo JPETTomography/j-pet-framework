@@ -133,6 +133,26 @@ std::pair <std::string, boost::any>JPetOptionsGenerator::getHigherEventBound(boo
   }
 }
 
+std::pair <std::string, boost::any>JPetOptionsGenerator::setInputFileType(boost::any option)
+{
+  auto inputFileType = any_cast<std::string>(option);
+  return std::make_pair("inputFileType_std::string", inputFileType);
+}
+
+// std::pair <std::string, boost::any>JPetOptionsGenerator::setProgressBar(boost::any option)
+// {
+//   std::cout<<"Czy setProgressBar? "<<std::endl;
+//   bool progressBar = any_cast<bool>(option);
+//   if(progressBar == true){
+//     std::cout<<"progressBar: "<< progressBar <<std::endl;
+//     return std::make_pair("progressBar_bool", true);
+//   }
+//   else{
+//     std::cout<<"progressBar: "<< progressBar <<std::endl;
+//     return std::make_pair("progressBar_bool", false);
+//   }
+// }
+
 std::string JPetOptionsGenerator::getTypeOfOption(const std::string nameOfOption) const
 {
 	std::size_t pos = nameOfOption.find("_");
@@ -199,22 +219,29 @@ std::map<std::string, std::string> JPetOptionsGenerator::anyMapToStringMap(const
     switch(typeOfOption)
     {
       case Int:
+        std::cout<< option.first <<std::endl;
         newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<int>(optionsMap.at(option.first)));
         std::cout<< newOptionsMap[getNameOfOption(option.first)] <<": anyMapToStringMap "<<std::endl;
         std::cout<<std::endl;
         break;
       case String:
+        std::cout<< option.first <<std::endl;
         newOptionsMap[getNameOfOption(option.first)] = any_cast<std::string>(optionsMap.at(option.first));
         std::cout<< newOptionsMap[getNameOfOption(option.first)] <<": anyMapToStringMap "<<std::endl;
         std::cout<<std::endl;
         break;
       case Bool:
-        newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<bool>(optionsMap.at(option.first)));
+        std::cout<< option.first <<std::endl;
+        if(any_cast<bool>(optionsMap.at(option.first)))
+          newOptionsMap[getNameOfOption(option.first)] = "true";
+        else
+          newOptionsMap[getNameOfOption(option.first)] = "false";
         std::cout<< newOptionsMap[getNameOfOption(option.first)] <<": anyMapToStringMap "<<std::endl;
         std::cout<<std::endl;
         break;
       case Default:
-        newOptionsMap[option.first] = any_cast<std::string>((optionsMap.at(option.first)));
+        std::cout<< option.first <<std::endl;
+        newOptionsMap[option.first] = any_cast<std::string>(optionsMap.at(option.first));
         std::cout<< newOptionsMap[option.first] <<": anyMapToStringMap "<<std::endl;
         std::cout<<std::endl;
         break;
@@ -251,6 +278,8 @@ std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::
   transformationMap["outputPath_std::string"].push_back(&appendSlash);
   transformationMap["range_std::vector<int>"].push_back(&getLowerEventBound);
   transformationMap["range_std::vector<int>"].push_back(&getHigherEventBound);
+  transformationMap["type_std::string"].push_back(&setInputFileType);
+//  transformationMap["progressBar_bool"].push_back(&setProgressBar);
   return transformationMap;
 }
 
