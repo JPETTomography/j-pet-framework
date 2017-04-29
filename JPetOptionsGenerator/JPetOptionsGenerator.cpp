@@ -367,10 +367,9 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   }
  
   std::cout<<std::endl;
-  auto stringMap = anyMapToStringMap(options);
-  addMissingDefaultOptions(stringMap);
 
-  for(auto &option : stringMap){
+
+  for(auto &option : options){
     std::cout<<"option: "<<option.first<<std::endl;
   }
   std::cout<<std::endl;
@@ -384,12 +383,12 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   /// Based on its content the set of input directories are generated.
   /// The input directories contain data files.
   /// The config input file name also should be stored in a special option field.
-  //if (any_cast<std::string>(getOptionValue(options, "type_std::string")) == "scope") {
-  if (stringMap.at("type") == "scope") {
+  if (any_cast<std::string>(getOptionValue(options, "type_std::string")) == "scope") {
+  //if (options.at("type") == "scope") {
     assert(files.size() == 1); /// there should be only file which is config.
     auto configFileName = files.front();
+    options["scopeConfigFile_std::string"] =  configFileName;
     //options["scopeConfigFile_std::string"] =  configFileName;
-    stringMap["scopeConfigFile"] =  configFileName;
     JPetScopeConfigParser scopeConfigParser;
     /// The scope module must use a fake input file name which will be used to
     /// produce the correct output file names by the following modules.
@@ -398,26 +397,31 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
     /// based on the content of the configuration file.
     JPetScopeConfigParser::DirFileContainer dirsAndFiles = scopeConfigParser.getInputDirectoriesAndFakeInputFiles(configFileName);
     for (const auto & dirAndFile : dirsAndFiles) {
-      // options["scopeInputDirectory_std::string"] = dirAndFile.first;
-      // options["inputFile_std::string"]= dirAndFile.second;
-      stringMap["scopeInputDirectory"] = dirAndFile.first;
-      stringMap["inputFile"]= dirAndFile.second;
+      options["scopeInputDirectory_std::string"] = dirAndFile.first;
+      options["inputFile_std::string"]= dirAndFile.second;
+      //stringMap["scopeInputDirectory"] = dirAndFile.first;
+      //stringMap["inputFile"]= dirAndFile.second;
       std::cout<<"StringMap"<<std::endl;
-      for (auto a: stringMap){
-        std::cout<<a.first<< " : " << a.second <<std::endl;
-      }
+      // for (auto a: stringMap){
+      //   std::cout<<a.first<< " : " << a.second <<std::endl;
+      // }
+      // ;
+      auto stringMap = anyMapToStringMap(options);
+      addMissingDefaultOptions(stringMap);
       optionContainer.push_back(JPetOptions(stringMap));
     }
   } else {
     /// for every single input file we create separate JPetOptions
     for (const auto & file : files) {
-      // options["inputFile_std::string"] = file;
-      stringMap["inputFile"] = file;
-      std::cout<<"anyMapCheck:  " <<std::endl;
-      for (auto a: stringMap){
-        std::cout<<a.first<< " : " << a.second <<std::endl;
-      }
+      options["inputFile_std::string"] = file;
+      //stringMap["inputFile"] = file;
+      // std::cout<<"anyMapCheck:  " <<std::endl;
+      // for (auto a: stringMap){
+      //   std::cout<<a.first<< " : " << a.second <<std::endl;
+      // }
       std::cout<<std::endl;
+      auto stringMap = anyMapToStringMap(options);
+      addMissingDefaultOptions(stringMap);
       optionContainer.push_back(JPetOptions(stringMap));
     }
   }
