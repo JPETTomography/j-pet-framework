@@ -121,7 +121,9 @@ std::pair <std::string, boost::any>JPetOptionsGenerator::getLowerEventBound(boos
   if (firstEvent >= 0)
   {
     return std::make_pair("firstEvent_int", firstEvent);
-  } 
+  }
+  else
+    return std::make_pair("wrongFirstEvent_int", -1); 
 }
 
 std::pair <std::string, boost::any>JPetOptionsGenerator::getHigherEventBound(boost::any option)
@@ -131,6 +133,8 @@ std::pair <std::string, boost::any>JPetOptionsGenerator::getHigherEventBound(boo
   {
     return std::make_pair("lastEvent_int", lastEvent);
   }
+  else
+    return std::make_pair("wrongLastEvent_int", -1); 
 }
 
 std::pair <std::string, boost::any>JPetOptionsGenerator::setInputFileType(boost::any option)

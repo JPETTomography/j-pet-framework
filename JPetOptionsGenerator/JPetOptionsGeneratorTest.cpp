@@ -22,6 +22,7 @@
 using boost::any_cast;
 using namespace std;
 
+
 char* convertStringToCharP(const std::string& s)
 {
   char* pc = new char[s.size() + 1];
@@ -174,4 +175,16 @@ BOOST_AUTO_TEST_CASE(checkWrongOutputPath)
   BOOST_REQUIRE(!parser.areCorrectOptions(parser.variablesMapToOption(variablesMap)));
 }
 
+BOOST_AUTO_TEST_CASE(checkIfFunctionsToTransformOptionWork)
+{
+  std::vector<int> firstOption = {1,2};
+
+  BOOST_REQUIRE_EQUAL(any_cast<int>(JPetOptionsGenerator::getLowerEventBound(firstOption).second), 1);
+  BOOST_REQUIRE_EQUAL(any_cast<int>(JPetOptionsGenerator::getHigherEventBound(firstOption).second), 2);
+
+  std::vector<int> secondOption = {-1,-2};
+
+  //BOOST_REQUIRE_EQUAL(any_cast<int>(JPetOptionsGenerator::getLowerEventBound(secondOption).second), NULL);
+  //BOOST_REQUIRE_EQUAL(any_cast<int>(JPetOptionsGenerator::getHigherEventBound(secondOption).second), NULL);
+}
 BOOST_AUTO_TEST_SUITE_END()
