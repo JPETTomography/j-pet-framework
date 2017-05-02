@@ -41,7 +41,6 @@ bool JPetOptionsGenerator::isOptionSet(const std::map<std::string, boost::any>& 
 
 boost::any JPetOptionsGenerator::getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const
 {
-  //return any_cast<boost::any>(optionsMap.at(option));
   return optionsMap.at(option);
 }
 
@@ -143,19 +142,6 @@ std::pair <std::string, boost::any>JPetOptionsGenerator::setInputFileType(boost:
   return std::make_pair("inputFileType_std::string", inputFileType);
 }
 
-// std::pair <std::string, boost::any>JPetOptionsGenerator::setProgressBar(boost::any option)
-// {
-//   std::cout<<"Czy setProgressBar? "<<std::endl;
-//   bool progressBar = any_cast<bool>(option);
-//   if(progressBar == true){
-//     std::cout<<"progressBar: "<< progressBar <<std::endl;
-//     return std::make_pair("progressBar_bool", true);
-//   }
-//   else{
-//     std::cout<<"progressBar: "<< progressBar <<std::endl;
-//     return std::make_pair("progressBar_bool", false);
-//   }
-// }
 
 std::string JPetOptionsGenerator::getTypeOfOption(const std::string nameOfOption) const
 {
@@ -163,14 +149,12 @@ std::string JPetOptionsGenerator::getTypeOfOption(const std::string nameOfOption
     if(pos == string::npos){
     return "default";
   }
-  //std::cout<<"Gettype "<<nameOfOption.substr(pos+1)<<std::endl;
 	return nameOfOption.substr(pos+1);
 }
 
 std::string JPetOptionsGenerator::getNameOfOption(const std::string option) const
 {
   std::size_t pos= option.find("_");
-  //std::cout<<"GetName "<<option.substr(0, pos)<<std::endl;
   return option.substr(0, pos);
 }
 
@@ -179,15 +163,10 @@ std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(con
   std::map<std::string, boost::any> optionsMap;
   std::map<std::string, optionTypes> typesToSwitch = {{"int", Int},{"std::string", String},{"bool", Bool},{"std::vector<std::string>", VectorString},{"std::vector<int>", VectorInt}};
   for(auto &option : variablesMap){
-  	//int typeOfOption;
-  	//if (typesToSwitch.count(getTypeOfOption(option.first))>0)
   	int typeOfOption = typesToSwitch.at(getTypeOfOption(option.first));
-    //else
-    //  typeOfOption = 100;
   	switch(typeOfOption)
   	{
   		case Int:
-  			// optionsMap[getNameOfOption(option.first)] = variablesMap[option.first].as<int>();
         optionsMap[option.first] = variablesMap[option.first].as<int>();
   			break;
   		case String:
@@ -202,12 +181,8 @@ std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(con
   		case VectorInt:
   			optionsMap[option.first] = variablesMap[option.first].as<std::vector<int>>();
   			break;
-  		// default:
-  		// 	optionsMap[getNameOfOption(option.first)] = variablesMap[option.first].as<boost::any>();
-  		// 	break;
   	}
   }
- // std::cout<<"Czy tu jestem?? "<<std::endl;
   return optionsMap;
 }
 
@@ -219,7 +194,6 @@ std::map<std::string, std::string> JPetOptionsGenerator::anyMapToStringMap(const
   for(auto &option : optionsMap){
     int typeOfOption = typesToSwitch.at(getTypeOfOption(option.first));
     std::cout<< "Typ opcji: "<< getTypeOfOption(option.first)<<std::endl;
-//    newOptionsMap[option.first] = std::to_string(option.second);
     switch(typeOfOption)
     {
       case Int:
@@ -249,15 +223,6 @@ std::map<std::string, std::string> JPetOptionsGenerator::anyMapToStringMap(const
         std::cout<< newOptionsMap[option.first] <<": anyMapToStringMap "<<std::endl;
         std::cout<<std::endl;
         break;
-      // case VectorString:
-      //   newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<std::vector<std::string>>(optionsMap.at(option.first)));
-      //   break;
-      // case VectorInt:
-      //   newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<std::vector<int>>(optionsMap.at(option.first)));
-      //   break;
-      // default:
-      //  optionsMap[getNameOfOption(option.first)] = variablesMap[option.first].as<boost::any>();
-      //  break;
     }
   }
   std::cout<<std::endl;
@@ -283,7 +248,6 @@ std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::
   transformationMap["range_std::vector<int>"].push_back(&getLowerEventBound);
   transformationMap["range_std::vector<int>"].push_back(&getHigherEventBound);
   transformationMap["type_std::string"].push_back(&setInputFileType);
-//  transformationMap["progressBar_bool"].push_back(&setProgressBar);
   return transformationMap;
 }
 
@@ -291,7 +255,6 @@ bool JPetOptionsGenerator::areCorrectOptions(const std::map<std::string, boost::
 {
   auto validationMap = generateValidationMap();
   for(auto &checkGroup : validationMap){
-    //std::cout<<" 1.Czy tu jestem?? "<<option.first<<std::endl;
     if (optionsMap.count(checkGroup.first)>0){
       for(auto &checkFunc : checkGroup.second){
         std::cout<<"areCorrectOptions: "<<checkGroup.first<<std::endl;
@@ -310,11 +273,10 @@ std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::ma
 {
   auto transformationMap = generateTransformationMap();
   for(auto &validGroup : transformationMap){
-    if(optionsMap.count(validGroup.first)>0){
+    if(optionsMap.count(validGroup.first)){
       for(auto &validFunct : validGroup.second){
         std::pair <std::string, boost::any> transformed = validFunct(optionsMap.at(validGroup.first));
         optionsMap[transformed.first] = transformed.second;
-        //std::cout<<"Transformacja: "<<transformed.first <<std::endl;
       }
     }
   }

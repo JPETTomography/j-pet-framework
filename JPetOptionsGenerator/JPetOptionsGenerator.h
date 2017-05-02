@@ -75,8 +75,6 @@ public:
 
   static std::pair <std::string, boost::any>setInputFileType(boost::any option);
 
-//  static std::pair <std::string, boost::any>setProgressBar(boost::any option);
-
   std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > generateValidationMap() const; 
 
   std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::any)> > generateTransformationMap() const; 

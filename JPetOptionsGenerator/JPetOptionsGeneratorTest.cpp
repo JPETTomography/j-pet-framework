@@ -126,15 +126,15 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
   
   std::map<std::string, boost::any> mapFromVariableMap = cmdParser.variablesMapToOption(variablesMap);
   BOOST_REQUIRE(cmdParser.areCorrectOptions(mapFromVariableMap));
-  std::cout<<"testy "<<std::endl;
+  //std::cout<<"testy "<<std::endl;
   std::vector<JPetOptions> options = cmdParser.generateOptions(variablesMap);
-  std::cout<<"testy 2 "<<std::endl;
+  //std::cout<<"testy 2 "<<std::endl;
   JPetOptions firstOption = options.front();
-  std::cout<<"testy 3 "<<std::endl;
+  //std::cout<<"testy 3 "<<std::endl;
   BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
-  std::cout<<"testy 4 "<<std::endl;
+  //std::cout<<"testy 4 "<<std::endl;
   BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
-  std::cout<<"testy 5 "<<std::endl;
+  //std::cout<<"testy 5 "<<std::endl;
   BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
   //BOOST_REQUIRE(firstOption.getOutputFile() == "root");
   //BOOST_REQUIRE(firstOption.getOutputFileType() == "test.root");
@@ -184,7 +184,59 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionsToTransformOptionWork)
 
   std::vector<int> secondOption = {-1,-2};
 
-  //BOOST_REQUIRE_EQUAL(any_cast<int>(JPetOptionsGenerator::getLowerEventBound(secondOption).second), NULL);
-  //BOOST_REQUIRE_EQUAL(any_cast<int>(JPetOptionsGenerator::getHigherEventBound(secondOption).second), NULL);
+  BOOST_REQUIRE_EQUAL(any_cast<int>(JPetOptionsGenerator::getLowerEventBound(secondOption).second), -1);
+  BOOST_REQUIRE_EQUAL(any_cast<int>(JPetOptionsGenerator::getHigherEventBound(secondOption).second), -1);
+
+  std::string inputFileType = "inputFileType";
+  BOOST_REQUIRE_EQUAL(JPetOptionsGenerator::setInputFileType(inputFileType).first, "inputFileType_std::string");
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(JPetOptionsGenerator::setInputFileType(inputFileType).second), inputFileType);
+
+  std::string emptyPath = "";
+  BOOST_REQUIRE_EQUAL(JPetOptionsGenerator::appendSlash(emptyPath).first, "outputPath_std::string");
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(JPetOptionsGenerator::appendSlash(emptyPath).second), "");
+
+  std::string correctPath = "a/b/c/d/";
+  BOOST_REQUIRE_EQUAL(JPetOptionsGenerator::appendSlash(correctPath).first, "outputPath_std::string");
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(JPetOptionsGenerator::appendSlash(correctPath).second), correctPath);
+
+  std::string pathForCorrection = "a/b/c/d";
+  BOOST_REQUIRE_EQUAL(JPetOptionsGenerator::appendSlash(pathForCorrection).first, "outputPath_std::string");
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(JPetOptionsGenerator::appendSlash(pathForCorrection).second), correctPath);
+
 }
+
+BOOST_AUTO_TEST_CASE(checkIfFunctionToGenerateTransformationMapWork){
+  JPetOptionsGenerator generator;
+  auto transformationMap = generator.generateTransformationMap();
+  BOOST_REQUIRE(transformationMap.count("outputPath_std::string"));
+  BOOST_REQUIRE(transformationMap.count("range_std::vector<int>"));
+  BOOST_REQUIRE(transformationMap.count("type_std::string"));
+}
+
+BOOST_AUTO_TEST_CASE(checkIfFunctionToTransformOptionsWork){
+  JPetOptionsGenerator generator;
+
+  std::map<std::string, boost::any> emptyOptions;
+  BOOST_REQUIRE(generator.transformOptions(emptyOptions).empty());
+
+  std::string pathForCorrection = "a/b/c/d";
+  std::vector<int> range = {1,2};
+  std::string inputFileType = "inputFileType";
+
+  std::map<std::string, boost::any> optionForTransformation;
+  optionForTransformation["outputPath_std::string"] = pathForCorrection;
+  optionForTransformation["range_std::vector<int>"] = range;
+  optionForTransformation["type_std::string"] = inputFileType;
+
+  auto mapAfterTransformation = generator.transformOptions(optionForTransformation);
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(mapAfterTransformation.at("outputPath_std::string")), (pathForCorrection + '/'));
+  BOOST_REQUIRE_EQUAL(any_cast<int>(mapAfterTransformation.at("lastEvent_int")), 2);
+  BOOST_REQUIRE_EQUAL(any_cast<int>(mapAfterTransformation.at("firstEvent_int")), 1);
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(mapAfterTransformation.at("inputFileType_std::string")), inputFileType);  
+}
+
+BOOST_AUTO_TEST_CASE(checkIfFunctionsToValidateOptionWork){
+  
+}
+
 BOOST_AUTO_TEST_SUITE_END()
