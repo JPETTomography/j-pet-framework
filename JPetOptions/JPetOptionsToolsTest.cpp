@@ -4,7 +4,7 @@
 #include "JPetOptionsTools.h"
 #include <boost/filesystem.hpp>
 #include<iostream>
-
+#include <boost/any.hpp>
 const std::string dataDir = "unitTestData/JPetOptionsToolsTest/";
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
@@ -22,14 +22,14 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptions )
 BOOST_AUTO_TEST_CASE(createOptionsFromConfigFile)
 {
   auto inFile = "unitTestData/JPetOptionsToolsTest/inputTestCfg.json";
-  std::map<std::string, std::string> options = jpet_options_tools::createOptionsFromConfigFile(inFile);
-  std::map<std::string, std::string> expected = {{"myOption", "great"}, {"myAnotherOption", "wat"}, {"boolOption", "true"}, {"NumberOption", "12.2"}};
+  std::map<std::string, boost::any> options = jpet_options_tools::createOptionsFromConfigFile(inFile);
+  std::map<std::string, boost::any> expected = {{"myOption", "great"}, {"myAnotherOption", "wat"}, {"boolOption", "true"}, {"NumberOption", "12.2"}};
   BOOST_REQUIRE_EQUAL(options.size(), 4);
 
   std::vector<std::string> keys_expected;
-  std::vector<std::string> values_expected;
+  std::vector<boost::any> values_expected;
   std::vector<std::string> keys;
-  std::vector<std::string> values;
+  std::vector<boost::any> values;
   for (const auto & el : expected) {
     keys_expected.push_back(el.first);
     values_expected.push_back(el.second);
@@ -48,15 +48,15 @@ BOOST_AUTO_TEST_CASE(createOptionsFromConfigFile)
 
 BOOST_AUTO_TEST_CASE( createConfigFileFromOptionsAndReadItBack )
 {
-  jpet_options_tools::Options options = {{"TimeWindow", "11"}, {"SomeOption", "false"}, {"AnotherOption", "4.5"}};
+  std::map<std::string, boost::any> options = {{"TimeWindow", "11"}, {"SomeOption", "false"}, {"AnotherOption", "4.5"}};
   std::string cfgFile = "test_cfg2.json";
   BOOST_REQUIRE(jpet_options_tools::createConfigFileFromOptions(options, cfgFile));
   auto loadedOptions = jpet_options_tools::createOptionsFromConfigFile(cfgFile);
   BOOST_REQUIRE_EQUAL(options.size(), loadedOptions.size());
   std::vector<std::string> keys_expected;
-  std::vector<std::string> values_expected;
+  std::vector<boost::any> values_expected;
   std::vector<std::string> keys;
-  std::vector<std::string> values;
+  std::vector<boost::any> values;
   for (const auto & el : loadedOptions) {
     keys_expected.push_back(el.first);
     values_expected.push_back(el.second);

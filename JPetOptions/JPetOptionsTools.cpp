@@ -25,11 +25,11 @@ namespace pt = boost::property_tree;
 
 namespace jpet_options_tools
 {
-bool createConfigFileFromOptions(const Options& options, const std::string& outFile)
+bool createConfigFileFromOptions(const std::map<std::string, boost::any>& options, const std::string& outFile)
 {
   pt::ptree optionsTree;
   for (auto & entry : options)
-    optionsTree.put (entry.first, entry.second);
+    optionsTree.put(entry.first, entry.second);
   try {
     pt::write_json(outFile, optionsTree);
   } catch (pt::json_parser_error) {
@@ -39,16 +39,16 @@ bool createConfigFileFromOptions(const Options& options, const std::string& outF
   return true;
 }
 
-Options createOptionsFromConfigFile(const std::string& filename)
+std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string& filename)
 {
   pt::ptree optionsTree;
-  Options mapOptions, emptyMap;
+  std::map<std::string, boost::any> mapOptions, emptyMap;
   if (JPetCommonTools::ifFileExisting(filename)) {
     try {
       pt::read_json(filename, optionsTree);
       for (auto & item : optionsTree) {
         auto key = item.first;
-        auto value = item.second.get_value<std::string>();
+        auto value = item.second.get_value<boost::any>();
         mapOptions.insert(std::make_pair(key, value));
       }
     } catch (pt::json_parser_error) {
