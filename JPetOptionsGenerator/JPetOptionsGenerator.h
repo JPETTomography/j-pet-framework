@@ -32,7 +32,6 @@ class JPetOptionsGenerator;
 #include "../JPetOptions/JPetOptions.h"
 #include "../JPetOption/JPetOption.h"
 
-
 class JPetOptionsGenerator
 {
 public:
@@ -42,7 +41,7 @@ public:
 
   std::string getConfigFileName(const po::variables_map& optsMap) const;
   void addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, boost::any>& options) const;
-  void addMissingDefaultOptions(std::map<std::string, std::string>& stringMap) const;
+  void addMissingDefaultOptions(std::map<std::string, boost::any>& options) const;
 
   bool isOptionSet(const std::map<std::string, boost::any>& optionsMap, const std::string& option) const;
   boost::any getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const;
@@ -56,5 +55,12 @@ public:
   static std::pair <std::string, boost::any>setInputFileType(boost::any option);
   static std::pair <std::string, boost::any>getLowerEventBound(boost::any option);
   static std::pair <std::string, boost::any>getHigherEventBound(boost::any option);
+
+  static std::map<std::string, boost::any> getDefaultOptions() {
+    return kDefaultOptions;
+  }
+
+protected:
+  static std::map<std::string, boost::any> kDefaultOptions;
 };
 #endif

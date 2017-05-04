@@ -29,6 +29,22 @@
 using boost::any_cast;
 using namespace std;
 
+std::map<std::string, boost::any> JPetOptionsGenerator::kDefaultOptions = {
+  {"inputFile_std::string", std::string("")},
+  {"inputFileType_std::string", std::string("")},
+  {"scopeConfigFile_std::string", std::string("")},
+  {"scopeInputDirectory_std::string", std::string("")},
+  {"outputPath_std::string", std::string("")},
+  {"outputFile_std::string", std::string("root")},
+  {"outputFileType_std::string", std::string("test.root")},
+  {"firstEvent_int", -1},
+  {"lastEvent_int", -1},
+  {"progressBar_bool", false},
+  {"runId_int", -1},
+  {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
+  {"unpackerCalibFile_std::string", std::string("")}
+};
+
 JPetOptionsGenerator::JPetOptionsGenerator()
 {
 }
@@ -125,21 +141,20 @@ std::string JPetOptionsGenerator::getConfigFileName(const po::variables_map& opt
   }
 }
 
-void JPetOptionsGenerator::addMissingDefaultOptions(std::map<std::string, std::string>& stringMap) const
+void JPetOptionsGenerator::addMissingDefaultOptions(std::map<std::string, boost::any>& options) const
 {
-  std::map<std::string, std::string> defaultOptions = JPetOptions::getDefaultOptions();
-  stringMap.insert(defaultOptions.begin(), defaultOptions.end());
+  auto defaultOptions = JPetOptionsGenerator::getDefaultOptions();
+  options.insert(defaultOptions.begin(), defaultOptions.end());
 }
 
-std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variables_map& optsMap) const
+std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variables_map& cmdLineArgs) const
 {
-
-  auto options = variablesMapToOption(optsMap);
-  auto cfgFileName = getConfigFileName(optsMap);
+  auto options = variablesMapToOption(cmdLineArgs);
+  auto cfgFileName = getConfigFileName(cmdLineArgs);
   if (!cfgFileName.empty()) {
     addNewOptionsFromCfgFile(cfgFileName, options);
   }
-
+  addMissingDefaultOptions(options);
   options = transformOptions(options);
 
   if (!JPetOptionValidator::areCorrectOptions(options)) {
@@ -172,7 +187,6 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
       options["scopeInputDirectory_std::string"] = dirAndFile.first;
       options["inputFile_std::string"] = dirAndFile.second;
       auto stringMap = optTypeHandler.anyMapToStringMap(options);
-      addMissingDefaultOptions(stringMap);
       optionContainer.push_back(JPetOptions(stringMap));
     }
   } else {
@@ -180,7 +194,6 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
     for (const auto & file : files) {
       options["inputFile_std::string"] = file;
       auto stringMap = optTypeHandler.anyMapToStringMap(options);
-      addMissingDefaultOptions(stringMap);
       optionContainer.push_back(JPetOptions(stringMap));
     }
   }
