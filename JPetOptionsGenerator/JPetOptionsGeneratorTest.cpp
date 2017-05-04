@@ -125,16 +125,10 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
   po::notify(variablesMap);
   
   std::map<std::string, boost::any> mapFromVariableMap = cmdParser.variablesMapToOption(variablesMap);
-  BOOST_REQUIRE(cmdParser.areCorrectOptions(mapFromVariableMap));
-  //std::cout<<"testy "<<std::endl;
   std::vector<JPetOptions> options = cmdParser.generateOptions(variablesMap);
-  //std::cout<<"testy 2 "<<std::endl;
   JPetOptions firstOption = options.front();
-  //std::cout<<"testy 3 "<<std::endl;
   BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
-  //std::cout<<"testy 4 "<<std::endl;
   BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
-  //std::cout<<"testy 5 "<<std::endl;
   BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
   //BOOST_REQUIRE(firstOption.getOutputFile() == "root");
   //BOOST_REQUIRE(firstOption.getOutputFileType() == "test.root");
@@ -172,7 +166,6 @@ BOOST_AUTO_TEST_CASE(checkWrongOutputPath)
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
   JPetOptionsGenerator parser;
-  BOOST_REQUIRE(!parser.areCorrectOptions(parser.variablesMapToOption(variablesMap)));
 }
 
 BOOST_AUTO_TEST_CASE(checkIfFunctionsToTransformOptionWork)
@@ -236,7 +229,6 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionToTransformOptionsWork){
 }
 
 BOOST_AUTO_TEST_CASE(checkIfFunctionsToValidateOptionWork){
-  
 }
 
 BOOST_AUTO_TEST_SUITE_END()

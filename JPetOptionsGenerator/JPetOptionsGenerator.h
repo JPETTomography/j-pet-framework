@@ -48,18 +48,7 @@ public:
   boost::any getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const;
 
   std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const;
-  std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > generateValidationMap() const;
   std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::any)> > generateTransformationMap() const;
-
-  bool areCorrectOptions(const std::map<std::string, boost::any>& optionsMap) const;
-  /// validation functions
-  static bool isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option);
-  static bool isRangeOfEventsValid(std::pair <std::string, boost::any> option);
-  static bool isCorrectFileType(std::pair <std::string, boost::any> option);
-  static bool isRunIdValid(std::pair <std::string, boost::any> option);
-  static bool isLocalDBValid(std::pair <std::string, boost::any> option);
-  static bool areFilesValid(std::pair <std::string, boost::any> option);
-  static bool isOutputDirectoryValid(std::pair <std::string, boost::any> option);
 
   std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap) const;
   /// transformation functions ?
@@ -67,6 +56,5 @@ public:
   static std::pair <std::string, boost::any>setInputFileType(boost::any option);
   static std::pair <std::string, boost::any>getLowerEventBound(boost::any option);
   static std::pair <std::string, boost::any>getHigherEventBound(boost::any option);
-
 };
 #endif
