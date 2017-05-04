@@ -18,23 +18,25 @@
 
 class JPetOptionsGenerator;
 
-#include "boost/program_options.hpp" // Library parsing command line arguments
-#include <string>
-#include "../JPetCmdParser/JPetCmdParser.h"
-#include "../JPetOptions/JPetOptions.h"
-#include <boost/any.hpp>
 #include <typeinfo>
 #include <iostream>
 #include <utility>
 #include <vector>
 #include <map>
+#include <string>
+
+#include "boost/program_options.hpp" // Library parsing command line arguments
+#include <boost/any.hpp>
+
+#include "../JPetCmdParser/JPetCmdParser.h"
+#include "../JPetOptions/JPetOptions.h"
+#include "../JPetOption/JPetOption.h"
+
 
 class JPetOptionsGenerator
 {
 public:
   JPetOptionsGenerator();
-  ~JPetOptionsGenerator();
-  
 
   std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap) const;
 
@@ -42,55 +44,41 @@ public:
   void addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, boost::any>& options) const;
   void addMissingDefaultOptions(std::map<std::string, std::string>& stringMap) const;
 
-  std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap) const;
-  
-  bool areCorrectOptions(const std::map<std::string, boost::any>& optionsMap) const;
-  
-  bool isOptionSet(const std::map<std::string, boost::any>& optionsMap, const std::string& option) const; 
-  
+  bool isOptionSet(const std::map<std::string, boost::any>& optionsMap, const std::string& option) const;
   boost::any getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const;
-
   std::string getTypeOfOption(const std::string nameOfOption) const;
   std::string getNameOfOption(const std::string option) const;
 
-  std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const; 
-
+  std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const;
   std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& optionsMap) const;
+  std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > generateValidationMap() const;
+  std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::any)> > generateTransformationMap() const;
 
-  static bool isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option); 
-
+  bool areCorrectOptions(const std::map<std::string, boost::any>& optionsMap) const;
+  /// validation functions
+  static bool isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option);
   static bool isRangeOfEventsValid(std::pair <std::string, boost::any> option);
-
   static bool isCorrectFileType(std::pair <std::string, boost::any> option);
-
   static bool isRunIdValid(std::pair <std::string, boost::any> option);
-
   static bool isLocalDBValid(std::pair <std::string, boost::any> option);
-
   static bool areFilesValid(std::pair <std::string, boost::any> option);
-
   static bool isOutputDirectoryValid(std::pair <std::string, boost::any> option);
 
+  std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap) const;
+  /// transformation functions ?
   static std::pair <std::string, boost::any>appendSlash(boost::any option);
-
   static std::pair <std::string, boost::any>setInputFileType(boost::any option);
-
-  std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > generateValidationMap() const; 
-
-  std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::any)> > generateTransformationMap() const; 
-
   static std::pair <std::string, boost::any>getLowerEventBound(boost::any option);
-
   static std::pair <std::string, boost::any>getHigherEventBound(boost::any option);
+
 private:
-	enum optionTypes
-	{
-		Int,
-		String,
-		Bool,
-		VectorString,
-		VectorInt,
+  enum optionTypes {
+    Int,
+    String,
+    Bool,
+    VectorString,
+    VectorInt,
     Default
-	};
+  };
 };
 #endif
