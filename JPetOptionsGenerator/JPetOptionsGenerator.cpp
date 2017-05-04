@@ -45,6 +45,7 @@ std::map<std::string, boost::any> JPetOptionsGenerator::kDefaultOptions = {
   {"unpackerCalibFile_std::string", std::string("")}
 };
 
+
 JPetOptionsGenerator::JPetOptionsGenerator()
 {
 }
@@ -98,17 +99,15 @@ std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(con
   return optionsMap;
 }
 
-
-std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::any)> > JPetOptionsGenerator::generateTransformationMap() const
+std::map<std::string, std::vector<JPetOptionsGenerator::Transformer> > JPetOptionsGenerator::generateTransformationMap() const
 {
-  std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::any)> > transformationMap;
-  transformationMap["outputPath_std::string"].push_back(&appendSlash);
-  transformationMap["range_std::vector<int>"].push_back(&getLowerEventBound);
-  transformationMap["range_std::vector<int>"].push_back(&getHigherEventBound);
-  transformationMap["type_std::string"].push_back(&setInputFileType);
+  std::map<std::string, std::vector<Transformer> > transformationMap;
+  transformationMap["outputPath_std::string"].push_back(appendSlash);
+  transformationMap["range_std::vector<int>"].push_back(getLowerEventBound);
+  transformationMap["range_std::vector<int>"].push_back(getHigherEventBound);
+  transformationMap["type_std::string"].push_back(setInputFileType);
   return transformationMap;
 }
-
 
 std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::map<std::string, boost::any>& optionsMap) const
 {
@@ -116,7 +115,7 @@ std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::ma
   for (auto & validGroup : transformationMap) {
     if (optionsMap.count(validGroup.first)) {
       for (auto & validFunct : validGroup.second) {
-        std::pair <std::string, boost::any> transformed = validFunct(optionsMap.at(validGroup.first));
+        auto transformed = validFunct(optionsMap.at(validGroup.first));
         optionsMap[transformed.first] = transformed.second;
       }
     }

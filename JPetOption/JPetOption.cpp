@@ -16,8 +16,14 @@
 #include <iostream>
 #include "./JPetOption.h"
 
+JPetOption::JPetOption():
+  fNameValue("_std::string", std::string("")),
+  fTransformer(dummyTransform),
+  fValidator(dummyValidator)
+{ }
+
 JPetOption::JPetOption(const std::string& name, const boost::any value, JPetOption::Validator valid, JPetOption::Transformer transform):
-  fTransformer(transform), 
+  fTransformer(transform),
   fValidator(valid)
 {
   fNameValue = fTransformer(std::make_pair(name, value));

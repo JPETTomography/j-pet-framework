@@ -35,10 +35,13 @@ class JPetOptionsGenerator;
 class JPetOptionsGenerator
 {
 public:
+  using OptNameValPair = std::pair<std::string, boost::any>;
+  using Transformer = std::function<OptNameValPair(boost::any opt)>;
+  using CmdLineArgs = po::variables_map;
+
   JPetOptionsGenerator();
 
   std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap) const;
-
   std::string getConfigFileName(const po::variables_map& optsMap) const;
   void addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, boost::any>& options) const;
   void addMissingDefaultOptions(std::map<std::string, boost::any>& options) const;
@@ -47,7 +50,7 @@ public:
   boost::any getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const;
 
   std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const;
-  std::map<std::string, std::vector<std::pair <std::string, boost::any>(*)(boost::any)> > generateTransformationMap() const;
+  std::map<std::string, std::vector<Transformer> > generateTransformationMap() const;
 
   std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap) const;
   /// transformation functions ?
@@ -62,5 +65,6 @@ public:
 
 protected:
   static std::map<std::string, boost::any> kDefaultOptions;
+
 };
 #endif

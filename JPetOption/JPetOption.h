@@ -39,11 +39,12 @@ public:
   }
 
   JPetOption(const std::string& name, const boost::any value, Validator valid = dummyValidator, Transformer transform = dummyTransform);
+  JPetOption();
   virtual bool isValid() const;
   virtual OptNameValPair getNameVal() const;
 
 protected:
-  OptNameValPair fNameValue;
+  std::pair<std::string, boost::any> fNameValue;
   Transformer fTransformer;
   Validator fValidator;
 };
