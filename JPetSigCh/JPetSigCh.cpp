@@ -40,20 +40,6 @@ JPetSigCh::JPetSigCh(EdgeType Edge, float EdgeTime) {
 
 }
 
-bool JPetSigCh::isCharge() const {
-  if (fType == Charge) {
-    return true;
-  }
-  return false;
-}
-
-bool JPetSigCh::isTime() const {
-  if (fType == Trailing || fType == Leading) {
-    return true;
-  }
-  return false;
-}
-
 bool JPetSigCh::compareByThresholdValue(const JPetSigCh& A,
                                         const JPetSigCh& B) {
   if (A.getThreshold() < B.getThreshold()) {
