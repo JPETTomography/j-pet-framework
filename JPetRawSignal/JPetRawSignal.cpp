@@ -19,8 +19,6 @@ ClassImp(JPetRawSignal);
 
 JPetRawSignal::JPetRawSignal(const int points){
 
-  //  SetNameTitle("JPetRawSignal", "Raw signal (from Front-End electronics) structure");
-
   fLeadingPoints.reserve(points);
   fTrailingPoints.reserve(points);
 
@@ -44,8 +42,6 @@ void JPetRawSignal::addPoint(const JPetSigCh& sigch) {
     fTrailingPoints.push_back(sigch);
   } else if (sigch.getType() == JPetSigCh::Leading) {
     fLeadingPoints.push_back(sigch);
-  } else if (sigch.getType() == JPetSigCh::Charge) {
-    fTOTPoint = sigch;
   }
 }
 
@@ -74,8 +70,8 @@ std::map<int, double> JPetRawSignal::getTimesVsThresholdNumber(JPetSigCh::EdgeTy
   return thrToTime;
 }
 
-std::map<int, std::pair<float, float>> JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const {
-  std::map<int, std::pair<float, float>> thrToTime;
+std::map<int, std::pair<float, float> > JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const {
+  std::map<int, std::pair<float, float> > thrToTime;
 
   const std::vector<JPetSigCh> & vec = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
 
