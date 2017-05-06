@@ -19,13 +19,13 @@
 #include "../JPetOptions/JPetOptions.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetLoggerInclude.h"
-
+#include <typeinfo>
 
 namespace pt = boost::property_tree;
 
 namespace jpet_options_tools
 {
-bool createConfigFileFromOptions(const std::map<std::string, boost::any>& options, const std::string& outFile)
+bool createConfigFileFromOptions(const Options& options, const std::string& outFile)
 {
   pt::ptree optionsTree;
   for (auto & entry : options)
@@ -48,7 +48,8 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
       pt::read_json(filename, optionsTree);
       for (auto & item : optionsTree) {
         auto key = item.first;
-        auto value = item.second.get_value<boost::any>();
+        std::cout<<typeid(item.second).name()<<std::endl;
+        auto value = item.second;
         mapOptions.insert(std::make_pair(key, value));
       }
     } catch (pt::json_parser_error) {

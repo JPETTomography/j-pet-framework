@@ -21,7 +21,7 @@
 namespace jpet_options_tools
 {
 typedef std::map<std::string, std::string> Options;
-bool createConfigFileFromOptions(const std::map<std::string, boost::any>& options, const std::string& outFile);
+bool createConfigFileFromOptions(const Options& options, const std::string& outFile);
 std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string& inFile);
 }
 #endif /*  !JPETOPTIONSTOOLS_H */

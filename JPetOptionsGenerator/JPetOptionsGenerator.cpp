@@ -127,7 +127,7 @@ std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::ma
 /// If the key already exists the element will not be updated.
 void JPetOptionsGenerator::addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, boost::any>& options) const
 {
-  jpet_options_tools::Options optionsFromJson = jpet_options_tools::createOptionsFromConfigFile(cfgFile);
+  std::map<std::string, boost::any> optionsFromJson = jpet_options_tools::createOptionsFromConfigFile(cfgFile);
   options.insert(optionsFromJson.begin(), optionsFromJson.end());
 }
 
