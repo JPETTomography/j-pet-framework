@@ -31,6 +31,7 @@ class JPetOptionsGenerator;
 #include "../JPetCmdParser/JPetCmdParser.h"
 #include "../JPetOptions/JPetOptions.h"
 #include "../JPetOption/JPetOption.h"
+#include "../JPetOptionValidator/JPetOptionValidator.h"
 
 class JPetOptionsGenerator
 {
@@ -51,6 +52,7 @@ public:
 
   std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const;
   std::map<std::string, std::vector<Transformer> > generateTransformationMap() const;
+  void addTransformFunction(const std::string& name, Transformer transformFunction);
 
   std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap) const;
   /// transformation functions ?
@@ -65,6 +67,9 @@ public:
 
 protected:
   static std::map<std::string, boost::any> kDefaultOptions;
+private:
+  std::map<std::string, std::vector<Transformer> > fTransformationMap;
+  const JPetOptionValidator fValidator;
 
 };
 #endif

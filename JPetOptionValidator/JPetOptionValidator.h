@@ -27,8 +27,12 @@
 class JPetOptionValidator
 {
 public:
+
+  JPetOptionValidator();
+
   static bool areCorrectOptions(const std::map<std::string, boost::any>& optionsMap);
   static std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > generateValidationMap();
+  void addValidatorFunction(const std::string& name, bool(*validatorFunction)(std::pair <std::string, boost::any>) );
   /// validation functions
   static bool isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option);
   static bool isRangeOfEventsValid(std::pair <std::string, boost::any> option);
@@ -37,5 +41,7 @@ public:
   static bool isLocalDBValid(std::pair <std::string, boost::any> option);
   static bool areFilesValid(std::pair <std::string, boost::any> option);
   static bool isOutputDirectoryValid(std::pair <std::string, boost::any> option);
+private:
+  std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > fValidatorMap;
 };
 #endif /*  !JPETOPTIONVALIDATOR_H */

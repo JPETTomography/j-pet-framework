@@ -19,6 +19,10 @@
 
 using boost::any_cast;
 
+JPetOptionValidator::JPetOptionValidator(){
+  fValidatorMap = generateValidationMap();
+}
+
 bool JPetOptionValidator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap)
 {
   auto validationMap = generateValidationMap();
@@ -47,6 +51,11 @@ std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> 
   validationMap["localDB_std::string"].push_back(&isLocalDBValid);
   validationMap["outputPath_std::string"].push_back(&isOutputDirectoryValid);
   return validationMap;
+}
+
+void JPetOptionValidator::addValidatorFunction(const std::string& name, bool(*validatorFunction)(std::pair <std::string, boost::any>) )
+{
+  fValidatorMap[name].push_back(validatorFunction);
 }
 
 bool JPetOptionValidator::isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option)

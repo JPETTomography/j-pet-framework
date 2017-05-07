@@ -48,6 +48,7 @@ std::map<std::string, boost::any> JPetOptionsGenerator::kDefaultOptions = {
 
 JPetOptionsGenerator::JPetOptionsGenerator()
 {
+  fTransformationMap = generateTransformationMap();
 }
 
 bool JPetOptionsGenerator::isOptionSet(const std::map<std::string, boost::any>& optionsMap, const std::string& option) const
@@ -107,6 +108,11 @@ std::map<std::string, std::vector<JPetOptionsGenerator::Transformer> > JPetOptio
   transformationMap["range_std::vector<int>"].push_back(getHigherEventBound);
   transformationMap["type_std::string"].push_back(setInputFileType);
   return transformationMap;
+}
+
+void JPetOptionsGenerator::addTransformFunction(const std::string& name, Transformer transformFunction)
+{
+  fTransformationMap[name].push_back(transformFunction);
 }
 
 std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::map<std::string, boost::any>& optionsMap) const
