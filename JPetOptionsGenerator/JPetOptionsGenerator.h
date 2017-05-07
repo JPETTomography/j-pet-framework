@@ -69,7 +69,7 @@ protected:
   static std::map<std::string, boost::any> kDefaultOptions;
 private:
   std::map<std::string, std::vector<Transformer> > fTransformationMap;
-  const JPetOptionValidator fValidator;
+  JPetOptionValidator fValidator;
 
 };
 #endif

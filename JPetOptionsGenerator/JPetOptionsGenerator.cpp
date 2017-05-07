@@ -63,7 +63,9 @@ boost::any JPetOptionsGenerator::getOptionValue(const std::map<std::string, boos
 
 std::pair <std::string, boost::any>JPetOptionsGenerator::appendSlash(boost::any option)
 {
+  std::cout<< "before append slash: "<<any_cast<std::string>(option) <<std::endl;
   auto path = JPetCommonTools::appendSlashToPathIfAbsent(any_cast<std::string>(option));
+  std::cout<< "appendSlash: outputPath_std::string: "<< path<<std::endl;
   return std::make_pair("outputPath_std::string", path);
 }
 
@@ -88,6 +90,7 @@ std::pair <std::string, boost::any>JPetOptionsGenerator::getHigherEventBound(boo
 std::pair <std::string, boost::any>JPetOptionsGenerator::setInputFileType(boost::any option)
 {
   auto inputFileType = any_cast<std::string>(option);
+  std::cout<< "setInputFileType: "<< inputFileType<<std::endl;
   return std::make_pair("inputFileType_std::string", inputFileType);
 }
 
@@ -117,8 +120,8 @@ void JPetOptionsGenerator::addTransformFunction(const std::string& name, Transfo
 
 std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::map<std::string, boost::any>& optionsMap) const
 {
-  auto transformationMap = generateTransformationMap();
-  for (auto & validGroup : transformationMap) {
+  //auto transformationMap = generateTransformationMap();
+  for (auto & validGroup : fTransformationMap) {
     if (optionsMap.count(validGroup.first)) {
       for (auto & validFunct : validGroup.second) {
         auto transformed = validFunct(optionsMap.at(validGroup.first));
@@ -161,8 +164,14 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   }
   addMissingDefaultOptions(options);
   options = transformOptions(options);
-
-  if (!JPetOptionValidator::areCorrectOptions(options)) {
+////Only for testing/////
+ // for(auto o : options){
+ //   std::cout<< "option name: "<< o.first<<std::endl;
+  //  std::cout<< 
+ // }
+////////////////////////
+  JPetOptionValidator validator;
+  if (!validator.areCorrectOptions(options)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
 

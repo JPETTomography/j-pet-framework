@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
   BOOST_REQUIRE(firstOption.getFirstEvent() == 2);
   BOOST_REQUIRE(firstOption.getLastEvent() == 4);
   BOOST_REQUIRE(firstOption.getRunNumber() == 231);
-  BOOST_REQUIRE(firstOption.isProgressBar()); //--------------Tu nie przechodzi------------------//
+  BOOST_REQUIRE(firstOption.isProgressBar());
   BOOST_REQUIRE(firstOption.isLocalDB());
   BOOST_REQUIRE(firstOption.getLocalDB() == std::string("unitTestData/JPetCmdParserTest/input.json"));
   BOOST_REQUIRE(firstOption.isLocalDBCreate());
@@ -230,8 +230,5 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionToTransformOptionsWork)
   BOOST_REQUIRE_EQUAL(any_cast<std::string>(mapAfterTransformation.at("inputFileType_std::string")), inputFileType);
 }
 
-BOOST_AUTO_TEST_CASE(checkIfFunctionsToValidateOptionWork)
-{
-}
 
 BOOST_AUTO_TEST_SUITE_END()

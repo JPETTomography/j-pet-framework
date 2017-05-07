@@ -30,7 +30,7 @@ public:
 
   JPetOptionValidator();
 
-  static bool areCorrectOptions(const std::map<std::string, boost::any>& optionsMap);
+  bool areCorrectOptions(const std::map<std::string, boost::any>& optionsMap);
   static std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > generateValidationMap();
   void addValidatorFunction(const std::string& name, bool(*validatorFunction)(std::pair <std::string, boost::any>) );
   /// validation functions

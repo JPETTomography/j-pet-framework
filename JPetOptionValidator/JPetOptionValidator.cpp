@@ -25,11 +25,11 @@ JPetOptionValidator::JPetOptionValidator(){
 
 bool JPetOptionValidator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap)
 {
-  auto validationMap = generateValidationMap();
-  for (auto & checkGroup : validationMap) {
+  //auto validationMap = generateValidationMap();
+  for (auto & checkGroup : fValidatorMap) {
     if (optionsMap.count(checkGroup.first) > 0) {
       for (auto & checkFunc : checkGroup.second) {
-        // std::cout<<"areCorrectOptions: "<<checkGroup.first<<std::endl;
+         std::cout<<"areCorrectOptions: "<<checkGroup.first<<std::endl;
         if (( !checkFunc(std::make_pair(checkGroup.first, optionsMap.at(checkGroup.first))) )) {
           ERROR("ERROR VALIDATON FOR " + checkGroup.first);
           return false;
