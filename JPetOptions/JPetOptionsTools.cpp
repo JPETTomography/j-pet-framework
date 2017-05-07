@@ -19,6 +19,7 @@
 #include "../JPetOptions/JPetOptions.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetLoggerInclude.h"
+#include "../JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 #include <typeinfo>
 
 namespace pt = boost::property_tree;
@@ -46,11 +47,36 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
   if (JPetCommonTools::ifFileExisting(filename)) {
     try {
       pt::read_json(filename, optionsTree);
+      std::vector<std::string> allowedTypes = { "int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>"};
+      JPetOptionsTypeHandler typeHandler(allowedTypes);
       for (auto & item : optionsTree) {
         auto key = item.first;
-        std::cout<<typeid(item.second).name()<<std::endl;
-        auto value = item.second;
-        mapOptions.insert(std::make_pair(key, value));
+        std::string typeOfOption = typeHandler.getTypeOfOption(key);
+        if(std::find(typeHandler.getAllowedTypes().begin(), typeHandler.getAllowedTypes().end(), typeOfOption) != typeHandler.getAllowedTypes().end()){
+          if(typeOfOption == "int"){
+            auto value = item.second.get_value<int>();
+            mapOptions.insert(std::make_pair(key, value));
+          }
+          else if(typeOfOption == "std::string"){
+            auto value = item.second.get_value<std::string>();
+            mapOptions.insert(std::make_pair(key, value));
+          }
+          else if(typeOfOption == "bool"){
+            auto value = item.second.get_value<bool>();
+            mapOptions.insert(std::make_pair(key, value));
+          }
+          // if(typeOfOption == "std::vector<std::string>"){
+          //   auto value = item.second.get_value<std::vector<std::string>>(); 
+          //   mapOptions.insert(std::make_pair(key, value));
+          // }
+          // if(typeOfOption == "std::vector<int>"){
+          //   auto value = item.second.get_value<std::vector<int>>();
+          //   mapOptions.insert(std::make_pair(key, value));
+          // }
+        }
+        //std::cout<<typeid(item).name()<<std::endl;
+        //auto value = item.second;
+        
       }
     } catch (pt::json_parser_error) {
       ERROR("ERROR IN READINIG OPTIONS FROM JSON FILE! FILENAME:" + filename );

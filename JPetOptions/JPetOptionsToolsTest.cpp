@@ -7,6 +7,7 @@
 #include <boost/any.hpp>
 #include <string>
 #include <typeinfo>
+#include "../JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 using boost::any_cast;
 const std::string dataDir = "unitTestData/JPetOptionsToolsTest/";
 using namespace std;
@@ -26,16 +27,21 @@ BOOST_AUTO_TEST_CASE(createOptionsFromConfigFile)
 {
   auto inFile = "unitTestData/JPetOptionsToolsTest/inputTestCfg.json";
   std::map<std::string, boost::any> options = jpet_options_tools::createOptionsFromConfigFile(inFile);
-  std::map<std::string, std::string> expected = {{"myOption", "great"}, {"myAnotherOption", "wat"}, {"boolOption", "true"}, {"NumberOption", "12.2"}};
-  BOOST_REQUIRE_EQUAL(options.size(), 4);
+  std::map<std::string, boost::any> expected = {{"myOption_std::string", "great"}, {"myAnotherOption_std::string", "wat"}, {"boolOption_std::string", "true"}, {"NumberOption_std::string", "12.2"}, {"intOption_int", 123}};
+  BOOST_REQUIRE_EQUAL(options.size(), 5);
 
   std::vector<std::string> keys_expected;
   std::vector<std::string> values_expected;
   std::vector<std::string> keys;
   std::vector<std::string> values;
+  std::vector<std::string> allowedTypes = { "int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>"};
+  JPetOptionsTypeHandler typeHandler(allowedTypes);
   for (const auto & el : expected) {
     keys_expected.push_back(el.first);
-    values_expected.push_back(el.second);
+    if(typeHandler.getTypeOfOption(el.first) == "std::string" )
+      values_expected.push_back(any_cast<std::string>(el.second));
+    else if(typeHandler.getTypeOfOption(el.first) == "int" )
+      values_expected.push_back(std::to_string(any_cast<int>(el.second)));
   }
   for (const auto & el : options) {
     keys.push_back(el.first);
