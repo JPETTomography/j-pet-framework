@@ -35,13 +35,5 @@ public:
 
 private:
   const std::vector<std::string> fAllowedTypes;
-  // enum optionTypes {
-  //   Int,
-  //   String,
-  //   Bool,
-  //   VectorString,
-  //   VectorInt,
-  //   Default
-  // };
 };
 #endif /*  !JPETOPTIONSTYPEHANDLER_H */
