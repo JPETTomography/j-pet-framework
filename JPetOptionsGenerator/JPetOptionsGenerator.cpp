@@ -164,12 +164,7 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   }
   addMissingDefaultOptions(options);
   options = transformOptions(options);
-////Only for testing/////
- // for(auto o : options){
- //   std::cout<< "option name: "<< o.first<<std::endl;
-  //  std::cout<< 
- // }
-////////////////////////
+
   JPetOptionValidator validator;
   if (!validator.areCorrectOptions(options)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");

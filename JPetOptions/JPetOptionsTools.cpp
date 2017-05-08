@@ -65,18 +65,21 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
             auto value = item.second.get_value<bool>();
             mapOptions.insert(std::make_pair(key, value));
           }
-          // if(typeOfOption == "std::vector<std::string>"){
-          //   auto value = item.second.get_value<std::vector<std::string>>(); 
-          //   mapOptions.insert(std::make_pair(key, value));
-          // }
-          // if(typeOfOption == "std::vector<int>"){
-          //   auto value = item.second.get_value<std::vector<int>>();
-          //   mapOptions.insert(std::make_pair(key, value));
-          // }
+          else if(typeOfOption == "std::vector<std::string>"){
+            std::vector<std::string> values;
+            for(pt::ptree::value_type & value : optionsTree.get_child(key)){
+              values.push_back(value.second.get_value<std::string>());
+            }
+            mapOptions.insert(std::make_pair(key, values));
+           }
+          else if(typeOfOption == "std::vector<int>"){
+            std::vector<int> values;
+            for(pt::ptree::value_type & value : optionsTree.get_child(key)){
+              values.push_back(value.second.get_value<int>());
+            }
+            mapOptions.insert(std::make_pair(key, values));
+          }
         }
-        //std::cout<<typeid(item).name()<<std::endl;
-        //auto value = item.second;
-        
       }
     } catch (pt::json_parser_error) {
       ERROR("ERROR IN READINIG OPTIONS FROM JSON FILE! FILENAME:" + filename );
