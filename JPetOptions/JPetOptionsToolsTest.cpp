@@ -4,9 +4,13 @@
 #include "JPetOptionsTools.h"
 #include <boost/filesystem.hpp>
 #include<iostream>
-
+#include <boost/any.hpp>
+#include <string>
+#include <typeinfo>
+#include "../JPetOptionsGenerator/JPetOptionsTypeHandler.h"
+using boost::any_cast;
 const std::string dataDir = "unitTestData/JPetOptionsToolsTest/";
-
+using namespace std;
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 
@@ -22,33 +26,55 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptions )
 BOOST_AUTO_TEST_CASE(createOptionsFromConfigFile)
 {
   auto inFile = "unitTestData/JPetOptionsToolsTest/inputTestCfg.json";
-  std::map<std::string, std::string> options = jpet_options_tools::createOptionsFromConfigFile(inFile);
-  std::map<std::string, std::string> expected = {{"myOption", "great"}, {"myAnotherOption", "wat"}, {"boolOption", "true"}, {"NumberOption", "12.2"}};
-  BOOST_REQUIRE_EQUAL(options.size(), 4);
+  std::map<std::string, boost::any> options = jpet_options_tools::createOptionsFromConfigFile(inFile);
+  std::map<std::string, std::string> expectedStringMap = {{"myOption_std::string", "great"}, {"myAnotherOption_std::string", "wat"}, {"NumberOption_std::string", "12.2"}};
+  std::map<std::string, boost::any> expected(expectedStringMap.begin(), expectedStringMap.end());
+  expected["intOption_int"] = 123;
+  expected["boolOption_bool"] = true;
+  std::vector<std::string> v1 = {"firstOption","secondOption", "thirdOption"};
+  expected["vectorOfStringOtption_std::vector<std::string>"] = v1;
+  std::vector<int> v2 = {1,2,3};
+  expected["vectorOfIntOption_std::vector<int>"] = v2;
+  BOOST_REQUIRE_EQUAL(options.size(), 7);
 
   std::vector<std::string> keys_expected;
-  std::vector<std::string> values_expected;
   std::vector<std::string> keys;
-  std::vector<std::string> values;
   for (const auto & el : expected) {
     keys_expected.push_back(el.first);
-    values_expected.push_back(el.second);
   }
   for (const auto & el : options) {
     keys.push_back(el.first);
-    values.push_back(el.second);
   }
   std::sort(keys.begin(), keys.end());
-  std::sort(values.begin(), values.end());
   std::sort(keys_expected.begin(), keys_expected.end());
-  std::sort(values_expected.begin(), values_expected.end());
   BOOST_REQUIRE_EQUAL_COLLECTIONS(keys.begin(), keys.end(), keys_expected.begin(), keys_expected.end());
-  BOOST_REQUIRE_EQUAL_COLLECTIONS(values.begin(), values.end(), values_expected.begin(), values_expected.end());
+
+  std::vector<std::string> allowedTypes = { "int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>"};
+  JPetOptionsTypeHandler typeHandler(allowedTypes);
+  for(const auto & opt:  options){
+    if (typeHandler.getTypeOfOption(opt.first) == "std::string"){
+      BOOST_REQUIRE_EQUAL(any_cast<std::string>(opt.second), any_cast<std::string>(expected[opt.first]));
+    }
+    else if (typeHandler.getTypeOfOption(opt.first) == "int"){
+      BOOST_REQUIRE_EQUAL(any_cast<int>(opt.second), any_cast<int>(expected[opt.first]));
+    }
+    else if (typeHandler.getTypeOfOption(opt.first) == "bool"){
+      BOOST_REQUIRE_EQUAL(any_cast<bool>(opt.second), any_cast<bool>(expected[opt.first]));
+    }
+    else if (typeHandler.getTypeOfOption(opt.first) == "std::vector<std::string>"){
+      auto vectorStringOption =  any_cast< std::vector<std::string> >(opt.second);
+      BOOST_REQUIRE_EQUAL_COLLECTIONS(vectorStringOption.begin(), vectorStringOption.end(), v1.begin(), v1.end());
+    }
+    else if (typeHandler.getTypeOfOption(opt.first) == "std::vector<int>"){
+      auto vectorIntOption =  any_cast< std::vector<int> >(opt.second);
+      BOOST_REQUIRE_EQUAL_COLLECTIONS(vectorIntOption.begin(), vectorIntOption.end(), v2.begin(), v2.end());
+    }
+  }
 }
 
 BOOST_AUTO_TEST_CASE( createConfigFileFromOptionsAndReadItBack )
 {
-  jpet_options_tools::Options options = {{"TimeWindow", "11"}, {"SomeOption", "false"}, {"AnotherOption", "4.5"}};
+  std::map<std::string, std::string> options = {{"TimeWindow_std::string", "11"}, {"SomeOption_std::string", "false"}, {"AnotherOption_std::string", "4.5"}};
   std::string cfgFile = "test_cfg2.json";
   BOOST_REQUIRE(jpet_options_tools::createConfigFileFromOptions(options, cfgFile));
   auto loadedOptions = jpet_options_tools::createOptionsFromConfigFile(cfgFile);
@@ -59,7 +85,7 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptionsAndReadItBack )
   std::vector<std::string> values;
   for (const auto & el : loadedOptions) {
     keys_expected.push_back(el.first);
-    values_expected.push_back(el.second);
+    values_expected.push_back(any_cast<std::string>(el.second));
   }
   for (const auto & el : options) {
     keys.push_back(el.first);

@@ -34,3 +34,4 @@ build
 unitTestData/*
 Examples/*
 DBHandler/Config/*
+build/

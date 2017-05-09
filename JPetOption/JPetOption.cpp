@@ -10,18 +10,31 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetOptionsTools.h
+ *  @file JPetOption.cpp
  */
 
-#ifndef JPETOPTIONSTOOLS_H
-#define JPETOPTIONSTOOLS_H
-#include <map>
-#include <boost/any.hpp>
+#include <iostream>
+#include "./JPetOption.h"
 
-namespace jpet_options_tools
+JPetOption::JPetOption():
+  fNameValue("_std::string", std::string("")),
+  fTransformer(dummyTransform),
+  fValidator(dummyValidator)
+{ }
+
+JPetOption::JPetOption(const std::string& name, const boost::any value, JPetOption::Validator valid, JPetOption::Transformer transform):
+  fTransformer(transform),
+  fValidator(valid)
 {
-typedef std::map<std::string, std::string> Options;
-bool createConfigFileFromOptions(const Options& options, const std::string& outFile);
-std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string& inFile);
+  fNameValue = fTransformer(std::make_pair(name, value));
 }
-#endif /*  !JPETOPTIONSTOOLS_H */
+
+bool JPetOption::isValid() const
+{
+  return fValidator(fNameValue);
+}
+
+JPetOption::OptNameValPair JPetOption::getNameVal() const
+{
+  return fNameValue;
+}
