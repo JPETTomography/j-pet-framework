@@ -42,15 +42,17 @@ public:
 
   JPetOptionsGenerator();
 
-  std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap) const;
+  std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap);
   std::string getConfigFileName(const po::variables_map& optsMap) const;
   void addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, boost::any>& options) const;
   void addMissingDefaultOptions(std::map<std::string, boost::any>& options) const;
 
+  void createMapOfBoolOptionFromUser(const std::map<std::string, boost::any>& optionsMap);
+
   bool isOptionSet(const std::map<std::string, boost::any>& optionsMap, const std::string& option) const;
   boost::any getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const;
 
-  std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap) const;
+  std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap);
   std::map<std::string, std::vector<Transformer> > generateTransformationMap() const;
   void addTransformFunction(const std::string& name, Transformer transformFunction);
 
@@ -64,11 +66,13 @@ public:
   static std::map<std::string, boost::any> getDefaultOptions() {
     return kDefaultOptions;
   }
+  std::vector<std::string> getVectorOfOptionFromUser() const;
 
 protected:
   static std::map<std::string, boost::any> kDefaultOptions;
 private:
   std::map<std::string, std::vector<Transformer> > fTransformationMap;
+  std::vector<std::string> fVectorOfOptionFromUser;
   JPetOptionValidator fValidator;
 
 };

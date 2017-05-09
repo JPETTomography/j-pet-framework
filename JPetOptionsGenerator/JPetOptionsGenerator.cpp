@@ -60,6 +60,9 @@ boost::any JPetOptionsGenerator::getOptionValue(const std::map<std::string, boos
 {
   return optionsMap.at(option);
 }
+std::vector<std::string> JPetOptionsGenerator::getVectorOfOptionFromUser() const{
+  return fVectorOfOptionFromUser;
+}
 
 std::pair <std::string, boost::any>JPetOptionsGenerator::appendSlash(boost::any option)
 {
@@ -94,7 +97,7 @@ std::pair <std::string, boost::any>JPetOptionsGenerator::setInputFileType(boost:
   return std::make_pair("inputFileType_std::string", inputFileType);
 }
 
-std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap) const
+std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap) 
 {
   std::map<std::string, boost::any> optionsMap;
   for (auto & option : variablesMap) {
@@ -116,6 +119,13 @@ std::map<std::string, std::vector<JPetOptionsGenerator::Transformer> > JPetOptio
 void JPetOptionsGenerator::addTransformFunction(const std::string& name, Transformer transformFunction)
 {
   fTransformationMap[name].push_back(transformFunction);
+}
+
+void JPetOptionsGenerator::createMapOfBoolOptionFromUser(const std::map<std::string, boost::any>& optionsMap)
+{
+  for( auto & opt: optionsMap){
+    fVectorOfOptionFromUser.push_back(opt.first);
+  }
 }
 
 std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::map<std::string, boost::any>& optionsMap) const
@@ -155,18 +165,20 @@ void JPetOptionsGenerator::addMissingDefaultOptions(std::map<std::string, boost:
   options.insert(defaultOptions.begin(), defaultOptions.end());
 }
 
-std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variables_map& cmdLineArgs) const
+std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variables_map& cmdLineArgs)
 {
   auto options = variablesMapToOption(cmdLineArgs);
   auto cfgFileName = getConfigFileName(cmdLineArgs);
   if (!cfgFileName.empty()) {
     addNewOptionsFromCfgFile(cfgFileName, options);
   }
+  createMapOfBoolOptionFromUser(options);
+
   addMissingDefaultOptions(options);
   options = transformOptions(options);
 
   JPetOptionValidator validator;
-  if (!validator.areCorrectOptions(options)) {
+  if (!validator.areCorrectOptions(options, fVectorOfOptionFromUser)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
 

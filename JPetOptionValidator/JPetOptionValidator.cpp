@@ -23,11 +23,11 @@ JPetOptionValidator::JPetOptionValidator(){
   fValidatorMap = generateValidationMap();
 }
 
-bool JPetOptionValidator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap)
+bool JPetOptionValidator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap, std::vector<std::string> isOption)
 {
   //auto validationMap = generateValidationMap();
   for (auto & checkGroup : fValidatorMap) {
-    if (optionsMap.count(checkGroup.first) > 0) {
+    if (std::find(isOption.begin(), isOption.end(), checkGroup.first ) != isOption.end()) {
       for (auto & checkFunc : checkGroup.second) {
          std::cout<<"areCorrectOptions: "<<checkGroup.first<<std::endl;
         if (( !checkFunc(std::make_pair(checkGroup.first, optionsMap.at(checkGroup.first))) )) {

@@ -86,6 +86,11 @@ BOOST_AUTO_TEST_CASE(areCorrectOptionsWork)
   };
 
   JPetOptionValidator validator;
-  BOOST_REQUIRE(validator.areCorrectOptions(options));
+  std::vector<std::string> v;
+  for( auto & opt: options){
+    v.push_back(opt.first);
+  }
+  options["ble"] = range;
+  BOOST_REQUIRE(validator.areCorrectOptions(options, v));
 }
 BOOST_AUTO_TEST_SUITE_END()
