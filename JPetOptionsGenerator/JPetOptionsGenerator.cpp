@@ -186,7 +186,7 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   std::vector<JPetOptions>  optionContainer;
 
   /// @todo change it to be properly initialized
-  JPetOptionsTypeHandler optTypeHandler({"int", "std::string"});
+  JPetOptionsTypeHandler optTypeHandler({"int", "std::string", "bool"});
 
   /// In case of scope there is one special input file
   /// which is a json config file which must be parsed.
