@@ -86,7 +86,7 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
             }
             mapOptions.insert(std::make_pair(key, values));
           }
-        }//else continue;
+        }
       }
     } catch (pt::json_parser_error) {
       ERROR("ERROR IN READINIG OPTIONS FROM JSON FILE! FILENAME:" + filename );
