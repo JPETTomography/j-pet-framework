@@ -128,9 +128,9 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
 
   std::vector<JPetOptions> options = cmdParser.generateOptions(variablesMap);
   JPetOptions firstOption = options.front();
-  for (auto & opt: firstOption.getOptions()){
-    std::cout<<"Option name: "<<opt.first<<" Option value: "<<opt.second<<std::endl;
-  }
+  // for (auto & opt: firstOption.getOptions()){
+  //   std::cout<<"Option name: "<<opt.first<<" Option value: "<<opt.second<<std::endl;
+  // }
   BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
   BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
   BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);

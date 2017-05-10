@@ -51,7 +51,6 @@ BOOST_AUTO_TEST_CASE( parsing_1 )
   auto argv = args_char.data();
 
   JPetCmdParser parser;
-  std::cout<< "parsing_1 "<<std::endl;
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);

@@ -29,7 +29,7 @@ bool JPetOptionValidator::areCorrectOptions(const std::map<std::string, boost::a
   for (auto & checkGroup : fValidatorMap) {
     if (std::find(isOption.begin(), isOption.end(), checkGroup.first ) != isOption.end()) {
       for (auto & checkFunc : checkGroup.second) {
-         std::cout<<"areCorrectOptions: "<<checkGroup.first<<std::endl;
+  //       std::cout<<"areCorrectOptions: "<<checkGroup.first<<std::endl;
         if (( !checkFunc(std::make_pair(checkGroup.first, optionsMap.at(checkGroup.first))) )) {
           ERROR("ERROR VALIDATON FOR " + checkGroup.first);
           return false;
