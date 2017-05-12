@@ -38,6 +38,12 @@ std::map<std::string, std::string> JPetOptionsTypeHandler::anyMapToStringMap(con
       if(typeOfOption == "int"){
         newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<int>(optionsMap.at(option.first)));
       }
+      else if(typeOfOption == "float"){
+        newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<float>(optionsMap.at(option.first)));
+      }
+      else if(typeOfOption == "double"){
+        newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<double>(optionsMap.at(option.first)));
+      }
       else if(typeOfOption == "std::string"){
         newOptionsMap[getNameOfOption(option.first)] = any_cast<std::string>(optionsMap.at(option.first));
       }
