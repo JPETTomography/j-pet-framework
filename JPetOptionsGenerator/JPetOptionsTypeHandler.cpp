@@ -14,9 +14,18 @@
  */
 
 #include "JPetOptionsTypeHandler.h"
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include "../JPetCommonTools/JPetCommonTools.h"
+#include "../JPetLoggerInclude.h"
+namespace pt = boost::property_tree;
 
-JPetOptionsTypeHandler::JPetOptionsTypeHandler(const std::vector<std::string>& allowedTypes):
+JPetOptionsTypeHandler::JPetOptionsTypeHandler(const std::vector<std::string>& allowedTypes): 
   fAllowedTypes(allowedTypes)
+{ }
+
+JPetOptionsTypeHandler::JPetOptionsTypeHandler(const std::string& allowedTypes):
+  fAllowedTypes(getAllowedTypesFromFile(allowedTypes))
 { }
 
 std::map<std::string, std::string> JPetOptionsTypeHandler::anyMapToStringMap(const std::map<std::string, boost::any>& optionsMap) const
@@ -64,4 +73,28 @@ std::string JPetOptionsTypeHandler::getNameOfOption(const std::string& option) c
 std::vector<std::string> JPetOptionsTypeHandler::getAllowedTypes() const
 {
   return fAllowedTypes;
+}
+
+std::vector<std::string> JPetOptionsTypeHandler::getAllowedTypesFromFile(const std::string& filename)
+{
+  pt::ptree optionsTree;
+  std::vector<std::string> types, emptyTypes;
+  if (JPetCommonTools::ifFileExisting(filename)) {
+    try {
+      pt::read_json(filename, optionsTree);
+      for (auto & item : optionsTree) {
+        if(item.first == "allowedTypes"){
+          for(pt::ptree::value_type & value : optionsTree.get_child(item.first)){
+            types.push_back(value.second.get_value<std::string>());
+          }
+        }
+      }
+    } catch (pt::json_parser_error) {
+      ERROR("ERROR IN READINIG TYPES FROM JSON FILE! FILENAME:" + filename );
+      return emptyTypes;
+    }
+  } else {
+    ERROR("JSON TYPES FILE DOES NOT EXIST! FILENAME:" + filename);
+  }
+  return types;
 }
