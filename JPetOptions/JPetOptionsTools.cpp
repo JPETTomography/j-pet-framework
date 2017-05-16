@@ -26,6 +26,8 @@ namespace pt = boost::property_tree;
 
 namespace jpet_options_tools
 {
+const std::string kFileWithAllowedOptionType= "allowedUserOptionTypes.json";
+
 bool createConfigFileFromOptions(const Options& options, const std::string& outFile)
 {
   pt::ptree optionsTree;
@@ -47,8 +49,8 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
   if (JPetCommonTools::ifFileExisting(filename)) {
     try {
       pt::read_json(filename, optionsTree);
-      std::vector<std::string> allowedTypes = { "int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>"};
-      JPetOptionsTypeHandler typeHandler(allowedTypes);
+      //std::vector<std::string> allowedTypes = { "int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>"};
+      JPetOptionsTypeHandler typeHandler(kFileWithAllowedOptionType);
      // std::cout << "After creating object of typeHandler"<< std::endl;
       for (auto & item : optionsTree) {
       //  std::cout << "Option tree: "<< item.first << std::endl;
