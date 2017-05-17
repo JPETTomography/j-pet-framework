@@ -72,6 +72,11 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
       //      std::cout << "value: "<< value << std::endl;
             mapOptions.insert(std::make_pair(key, value));
           }
+          else if(typeOfOption == "float"){
+            auto value = item.second.get_value<float>();
+      //      std::cout << "value: "<< value << std::endl;
+            mapOptions.insert(std::make_pair(key, value));
+          }
           else if(typeOfOption == "std::vector<std::string>"){
             std::vector<std::string> values;
             for(pt::ptree::value_type & value : optionsTree.get_child(key)){
