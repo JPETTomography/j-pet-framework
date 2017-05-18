@@ -26,7 +26,7 @@ namespace pt = boost::property_tree;
 
 namespace jpet_options_tools
 {
-const std::string kFileWithAllowedOptionType= "allowedUserOptionTypes.json";
+// const std::string kFileWithAllowedOptionType= "allowedUserOptionTypes.json";
 
 bool createConfigFileFromOptions(const Options& options, const std::string& outFile)
 {
