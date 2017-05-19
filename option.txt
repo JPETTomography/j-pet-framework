@@ -1,0 +1,51 @@
+JPetCmdParser/JPetCmdParserTest.cpp:21:#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
+JPetCmdParser/JPetCmdParserTest.cpp:63:  BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kHld);
+JPetCmdParser/JPetCmdParserTest.cpp:88:  BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kScope);
+JPetCmdParser/JPetCmdParserTest.cpp:104:  BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kZip);
+JPetCmdParser/JPetCmdParserTest.cpp:171:  std::vector<JPetOptions> options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+JPetCmdParser/JPetCmdParserTest.cpp:180:  BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
+JPetCmdParser/JPetCmdParserTest.cpp:198:  std::vector<JPetOptions> options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+JPetCmdParser/JPetCmdParserTest.cpp:205:  BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
+JPetCmdParser/JPetCmdParserTest.cpp:258:  auto args_char = createArgs("main.x -o ./ -f unitTestData/JPetCmdParserTest/data.hld -t hld -u unitTestData/JPetOptionsToolsTest/newInputTestCfg.json");
+JPetScopeLoader/JPetScopeLoader.cpp:152:void JPetScopeLoader::init(const JPetOptions::Options& opts)
+JPetScopeLoader/JPetScopeLoader.h:55:  virtual void init(const JPetOptions::Options& opts);
+JPetTaskChainExecutor/JPetTaskChainExecutor.cpp:26:JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
+JPetTaskChainExecutor/JPetTaskChainExecutor.cpp:45:bool JPetTaskChainExecutor::preprocessing(const JPetOptions& options, JPetParamManager* manager, std::list<JPetTaskRunnerInterface*>& tasks)
+JPetTaskChainExecutor/JPetTaskChainExecutor.cpp:58:    JPetOptions::Options currOpts = fOptions.getOptions();
+JPetTaskChainExecutor/JPetTaskChainExecutor.cpp:61:      currOpts = JPetOptions::resetEventRange(currOpts);
+JPetTaskChainExecutor/JPetTaskChainExecutor.cpp:86:void JPetTaskChainExecutor::printCurrentOptionsToLog(const JPetOptions::Options& currOpts)
+JPetTaskChainExecutor/JPetTaskChainExecutor.h:24:#include "../JPetOptions/JPetOptions.h"
+JPetTaskChainExecutor/JPetTaskChainExecutor.h:37:  JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFile, JPetOptions opts);
+JPetTaskChainExecutor/JPetTaskChainExecutor.h:42:  static void printCurrentOptionsToLog(const JPetOptions::Options& currOpts);
+JPetTaskChainExecutor/JPetTaskChainExecutor.h:45:  bool preprocessing(const JPetOptions& options, JPetParamManager* manager, std::list<JPetTaskRunnerInterface*>& tasks);
+JPetTaskChainExecutor/JPetTaskChainExecutor.h:51:  JPetOptions fOptions;
+JPetTaskChainExecutor/JPetTaskChainExecutorUtils.cpp:22:bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamManager* paramMgr, std::list<JPetTaskRunnerInterface*>& tasks)
+JPetTaskChainExecutor/JPetTaskChainExecutorUtils.cpp:43:  if (inputFileType == JPetOptions::kScope) {
+JPetTaskChainExecutor/JPetTaskChainExecutorUtils.cpp:48:  } else if (inputFileType == JPetOptions::kHld) {
+JPetTaskChainExecutor/JPetTaskChainExecutorUtils.cpp:53:  else if ( inputFileType == JPetOptions::kZip) {
+JPetTaskChainExecutor/JPetTaskChainExecutorUtils.cpp:65:  if (options.getInputFileType() == JPetOptions::kUndefinedFileType)
+JPetTaskChainExecutor/JPetTaskChainExecutorUtils.cpp:70:bool JPetTaskChainExecutorUtils::createScopeTaskAndAddToTaskList(const JPetOptions& options, JPetParamManager* paramMgr, std::list<JPetTaskRunnerInterface*>& tasks)
+JPetTaskChainExecutor/JPetTaskChainExecutorUtils.cpp:97:JPetParamManager* JPetTaskChainExecutorUtils::generateParamManager(const JPetOptions& options)
+JPetTaskChainExecutor/JPetTaskChainExecutorUtils.h:20:#include "../JPetOptions/JPetOptions.h"
+JPetTaskChainExecutor/JPetTaskChainExecutorUtils.h:35:  bool process(const JPetOptions& options, JPetParamManager* fParamManager, std::list<JPetTaskRunnerInterface*>& tasks);
+JPetTaskChainExecutor/JPetTaskChainExecutorUtils.h:37:  bool createScopeTaskAndAddToTaskList(const JPetOptions& options, JPetParamManager* paramMgr, std::list<JPetTaskRunnerInterface*>& tasks);
+JPetTaskChainExecutor/JPetTaskChainExecutorUtils.h:38:  static JPetParamManager* generateParamManager(const  JPetOptions& options);
+JPetTaskInterface/JPetTaskInterface.h:21://#include "../JPetOptionsInterface/JPetOptionsInterface.h"
+JPetTaskIO/JPetTaskIO.cpp:38:void JPetTaskIO::init(const JPetOptions::Options& opts)
+JPetTaskIO/JPetTaskIO.cpp:40:  setOptions(JPetOptions(opts));
+JPetTaskIO/JPetTaskIO.cpp:104:void JPetTaskIO::setOptions(const JPetOptions& opts)
+JPetTaskIO/JPetTaskIO.cpp:131:  if (fOptions.getInputFileType() == JPetOptions::kHld ) {
+JPetTaskIO/JPetTaskIO.cpp:137:    if (fOptions.getInputFileType() == JPetOptions::kHld ) {
+JPetTaskIO/JPetTaskIO.cpp:227:void JPetTaskIO::setUserLimits(const JPetOptions& opts, const long long kTotEventsFromReader, long long& first, long long& last) const
+JPetTaskIO/JPetTaskIO.h:23:#include "../JPetOptions/JPetOptions.h"
+JPetTaskIO/JPetTaskIO.h:44:  virtual void init(const JPetOptions::Options& opts);
+JPetTaskIO/JPetTaskIO.h:50:  void setOptions(const JPetOptions& opts);
+JPetTaskIO/JPetTaskIO.h:51:  inline JPetOptions getOptions() const {
+JPetTaskIO/JPetTaskIO.h:62:  void setUserLimits(const JPetOptions& opts, const long long totEventsFromReader, long long& firstEvent, long long& lastEvent) const;
+JPetTaskIO/JPetTaskIO.h:68:  JPetOptions fOptions; //options like max num of events, first event, last event, inputFileType, outputFileType
+JPetTaskIO/JPetTaskIOTest.cpp:54:  JPetOptions optObject(opt);
+JPetTaskIO/JPetTaskIOTest.cpp:73:  JPetOptions optObject(opt);
+JPetTaskLoader/JPetTaskLoader.cpp:39:void JPetTaskLoader::init(const JPetOptions::Options& opts)
+JPetTaskLoader/JPetTaskLoader.cpp:50:  setOptions(JPetOptions(newOpts));
+JPetTaskLoader/JPetTaskLoader.h:30:  virtual void init(const JPetOptions::Options& opts); /// Overloading JPetTaskIO init
+JPetTaskLoader/JPetTaskLoaderTest.cpp:12:    /*JPetOptions::Options options = {
