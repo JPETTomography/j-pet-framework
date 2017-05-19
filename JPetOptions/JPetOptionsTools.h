@@ -20,6 +20,7 @@
 
 namespace jpet_options_tools
 {
+static const std::string kFileWithAllowedOptionType= "allowedUserOptionTypes.json";
 typedef std::map<std::string, std::string> Options;
 bool createConfigFileFromOptions(const Options& options, const std::string& outFile);
 std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string& inFile);
