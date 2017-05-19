@@ -37,19 +37,19 @@ public:
   JPetOptions();
   explicit JPetOptions(const Options& opts);
 
-  inline const char* getInputFile() const {
+  inline const std::string getInputFile() const {
     return any_cast<std::string>(fOptions.at("inputFile_std::string"));
   }
-  inline const char* getScopeConfigFile() const {
+  inline const std::string getScopeConfigFile() const {
     return any_cast<std::string>(fOptions.at("scopeConfigFile_std::string"));
   }
-  inline const char* getScopeInputDirectory() const {
+  inline const std::string getScopeInputDirectory() const {
     return any_cast<std::string>(fOptions.at("scopeInputDirectory_std::string"));
   }
-  inline const char* getOutputFile() const {
+  inline const std::string getOutputFile() const {
     return any_cast<std::string>(fOptions.at("outputFile_std::string"));
   }
-  inline const char* getOutputPath() const {
+  inline const std::string getOutputPath() const {
     return any_cast<std::string>(fOptions.at("outputPath_std::string"));
   }
   inline long long getFirstEvent() const {
@@ -87,11 +87,11 @@ public:
     return result;
   }
 
-  inline const char* getUnpackerConfigFile() const {
+  inline const std::string getUnpackerConfigFile() const {
     return any_cast<std::string>(fOptions.at("unpackerConfigFile_std::string"));
   }
 
-  inline const char* getUnpackerCalibFile() const {
+  inline const std::string getUnpackerCalibFile() const {
     return any_cast<std::string>(fOptions.at("unpackerCalibFile_std::string"));
   }
   
