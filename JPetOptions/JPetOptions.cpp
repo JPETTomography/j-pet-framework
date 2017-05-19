@@ -16,37 +16,16 @@
 #include "./JPetOptions.h"
 #include "../JPetLoggerInclude.h"
 
-JPetOptions::Options JPetOptions::kDefaultOptions = {
-  {"inputFile", ""},
-  {"inputFileType", ""},
-  {"scopeConfigFile", ""},
-  {"scopeInputDirectory", ""},
-  {"outputPath", ""},
-  {"outputFile", "root"},
-  {"outputFileType", "test.root"},
-  {"firstEvent", "-1"},
-  {"lastEvent", "-1"},
-  {"progressBar", "false"},
-  {"runId", "-1"},
-  {"unpackerConfigFile", "conf_trb3.xml"},
-  {"unpackerCalibFile", ""}
-};
-
 JPetOptions::JPetOptions()
 {
   setStringToFileTypeConversion();
-  fOptions = JPetOptions::kDefaultOptions;
+  fOptions = JPetOptionsGenerator::getDefaultOptions();
 }
 
 JPetOptions::JPetOptions(const Options& opts):
   fOptions(opts)
 {
   setStringToFileTypeConversion();
-  if (areCorrect(opts)) {
-    setOptions(opts);
-  } else {
-    ERROR("Options are not correct using default ones");
-  }
 }
 
 void JPetOptions::handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException) const

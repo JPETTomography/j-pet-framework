@@ -18,6 +18,7 @@
 
 #include <string>
 #include <map>
+#include <boost/any.hpp>
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetOptionsInterface/JPetOptionsInterface.h"
 
@@ -28,13 +29,12 @@ public:
   enum FileType {
     kNoType, kScope, kRaw, kRoot, kHld, kZip, kPhysEve, kPhysHit, kPhysSig, kRawSig, kRecoSig, kTslotCal, kTslotRaw, kUndefinedFileType
   };
-  typedef std::map<std::string, std::string> Options;
+  typedef std::map<std::string, boost::any> Options;
   typedef std::vector<std::string> InputFileNames;
 
   JPetOptions();
   explicit JPetOptions(const Options& opts);
 
-  bool areCorrect(const Options&) const;
   inline const char* getInputFile() const {
     return fOptions.at("inputFile").c_str();
   }
@@ -104,12 +104,7 @@ public:
   static Options resetEventRange(const Options& srcOpts);
 
 
-  static  Options getDefaultOptions() {
-    return kDefaultOptions;
-  }
-
 protected:
-  static Options kDefaultOptions;
 
   void handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException) const;
   FileType handleFileType(const std::string& fileType) const;
