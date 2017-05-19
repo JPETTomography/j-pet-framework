@@ -74,6 +74,7 @@ private:
   std::map<std::string, std::vector<Transformer> > fTransformationMap;
   std::vector<std::string> fVectorOfOptionFromUser;
   JPetOptionValidator fValidator;
+  
 
 };
 #endif

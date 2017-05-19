@@ -37,7 +37,7 @@ void JPetOptions::handleErrorMessage(const std::string& errorMessage, const std:
 JPetOptions::FileType JPetOptions::handleFileType(const std::string& fileType) const
 {
   try {
-    auto option = fOptions.at(fileType);
+    auto option = any_cast<std::string>(fOptions.at(fileType));
     try {
       return fStringToFileType.at(option);
     } catch (const std::out_of_range& outOfRangeFileTypeException) {
@@ -69,19 +69,15 @@ void JPetOptions::setStringToFileTypeConversion()
   };
 }
 
-bool JPetOptions::areCorrect(const Options&) const
-{
-  return true;
-}
 
 JPetOptions::FileType JPetOptions::getInputFileType() const
 {
-  return handleFileType("inputFileType");
+  return handleFileType("inputFileType_std::string");
 }
 
 JPetOptions::FileType JPetOptions::getOutputFileType() const
 {
-  return handleFileType("outputFileType");
+  return handleFileType("outputFileType_std::string");
 }
 
 void JPetOptions::resetEventRange()
@@ -93,8 +89,8 @@ void JPetOptions::resetEventRange()
 JPetOptions::Options JPetOptions::resetEventRange(const Options& srcOpts)
 {
   Options opts(srcOpts);
-  opts.at("firstEvent") = "-1";
-  opts.at("lastEvent") = "-1";
+  opts.at("firstEvent_int") = -1;
+  opts.at("lastEvent_int") = -1;
   return opts; 
 }
 

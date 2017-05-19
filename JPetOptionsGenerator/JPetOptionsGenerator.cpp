@@ -186,7 +186,7 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   std::vector<JPetOptions>  optionContainer;
 
   /// @todo change it to be properly initialized
-  JPetOptionsTypeHandler optTypeHandler({"int", "std::string", "bool"});
+ // JPetOptionsTypeHandler optTypeHandler({"int", "std::string", "bool"});
 
   /// In case of scope there is one special input file
   /// which is a json config file which must be parsed.
@@ -207,15 +207,15 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
     for (const auto & dirAndFile : dirsAndFiles) {
       options["scopeInputDirectory_std::string"] = dirAndFile.first;
       options["inputFile_std::string"] = dirAndFile.second;
-      auto stringMap = optTypeHandler.anyMapToStringMap(options);
-      optionContainer.push_back(JPetOptions(stringMap));
+ //     auto stringMap = optTypeHandler.anyMapToStringMap(options);
+      optionContainer.push_back(JPetOptions(options));
     }
   } else {
     /// for every single input file we create separate JPetOptions
     for (const auto & file : files) {
       options["inputFile_std::string"] = file;
-      auto stringMap = optTypeHandler.anyMapToStringMap(options);
-      optionContainer.push_back(JPetOptions(stringMap));
+  //    auto stringMap = optTypeHandler.anyMapToStringMap(options);
+      optionContainer.push_back(JPetOptions(options));
     }
   }
   return optionContainer;
