@@ -15,6 +15,7 @@
 
 #include "./JPetOptions.h"
 #include "../JPetLoggerInclude.h"
+#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
 
 JPetOptions::JPetOptions()
 {

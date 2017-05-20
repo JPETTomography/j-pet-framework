@@ -18,6 +18,7 @@
 
 #include <map>
 #include <string>
+#include <boost/any.hpp>
 //#include "../JPetOptionsInterface/JPetOptionsInterface.h"
 
 class JPetParamManager;

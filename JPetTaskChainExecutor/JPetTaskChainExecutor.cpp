@@ -22,6 +22,7 @@
 #include "JPetTaskChainExecutorUtils.h"
 #include <memory>
 
+using boost::any_cast;
 
 JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
   fInputSeqId(processedFileId),
@@ -63,9 +64,9 @@ bool JPetTaskChainExecutor::process()
       /// the input path must be changed if
       /// the output path argument -o was given, because the input
       /// data for them will lay in the location defined by -o.
-      auto outPath  = currOpts.at("outputPath");
+      auto outPath  = any_cast<std::string>(currOpts.at("outputPath_std::string"));
       if (!outPath.empty()) {
-        currOpts.at("inputFile") = outPath + JPetCommonTools::extractPathFromFile(currOpts.at("inputFile")) + JPetCommonTools::extractFileNameFromFullPath(currOpts.at("inputFile"));
+        currOpts.at("inputFile_std::string") = outPath + JPetCommonTools::extractPathFromFile(any_cast<std::string>(currOpts.at("inputFile_std::string"))) + JPetCommonTools::extractFileNameFromFullPath(any_cast<std::string>(currOpts.at("inputFile_std::string")));
       }
     }
     auto taskCurr = dynamic_cast<JPetTask*> (dynamic_cast<JPetTaskLoader*>(*currentTask)->getTask());
