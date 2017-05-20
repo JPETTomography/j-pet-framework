@@ -19,7 +19,9 @@
 #include <cstdlib>
 #include "../JPetCmdParser/JPetCmdParser.h"
 #include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include <boost/any.hpp>
 
+using boost::any_cast;
 using namespace std;
 
 char* convertStringToCharP(const std::string& s)
@@ -173,7 +175,6 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   JPetOptions firstOption = options.front();
 
-  BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
   BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
   BOOST_REQUIRE(strcmp(firstOption.getUnpackerConfigFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
   BOOST_REQUIRE(strcmp(firstOption.getUnpackerCalibFile(), "unitTestData/JPetUnpackerTest/calib.root") == 0);
@@ -200,7 +201,6 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   JPetOptions firstOption = options.front();
 
-  BOOST_REQUIRE(firstOption.areCorrect(firstOption.getOptions()));
   BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
   BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
   BOOST_REQUIRE(firstOption.getFirstEvent() == -1);
@@ -263,13 +263,13 @@ BOOST_AUTO_TEST_CASE(checkOptionsWithAddedFromJson)
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
   auto option = options.at(0);
   auto allOptions = option.getOptions();
-  BOOST_REQUIRE_EQUAL(allOptions.count("myOption"), 1);
-  BOOST_REQUIRE_EQUAL(allOptions.at("myOption"), "great");
-  BOOST_REQUIRE(allOptions.count("myAnotherOption"));
-  BOOST_REQUIRE_EQUAL(allOptions.at("myAnotherOption"), "wat");
-  BOOST_REQUIRE(allOptions.count("boolOption"));
-  BOOST_REQUIRE_EQUAL(allOptions.at("boolOption"), "true");
-  BOOST_REQUIRE(allOptions.count("NumberOption"));
-  BOOST_REQUIRE_EQUAL(allOptions.at("NumberOption"), "12.2");
+  BOOST_REQUIRE_EQUAL(allOptions.count("myOption_std::string"), 1);
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(allOptions.at("myOption_std::string")), "great");
+  BOOST_REQUIRE(allOptions.count("myAnotherOption_std::string"));
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(allOptions.at("myAnotherOption_std::string")), "wat");
+  BOOST_REQUIRE(allOptions.count("boolOption_bool"));
+  BOOST_REQUIRE_EQUAL(any_cast<bool>(allOptions.at("boolOption_bool")), true);
+  BOOST_REQUIRE(allOptions.count("NumberOption_std::string"));
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(allOptions.at("NumberOption_std::string")), "12.2");
 }
 BOOST_AUTO_TEST_SUITE_END()

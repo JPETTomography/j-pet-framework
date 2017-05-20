@@ -78,7 +78,7 @@ public:
     return result;
   }
   inline bool isLocalDBCreate() const {
-    return (bool)fOptions.count("localDBCreate");
+    return (bool)fOptions.count("localDBCreate_std::string");
   }
   inline std::string getLocalDBCreate() const {
     std::string result("");
