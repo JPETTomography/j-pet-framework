@@ -83,8 +83,8 @@ JPetOptions::FileType JPetOptions::getOutputFileType() const
 
 void JPetOptions::resetEventRange()
 {
-  fOptions.at("firstEvent") = "-1";
-  fOptions.at("lastEvent") = "-1";
+  fOptions.at("firstEvent_int") = -1;
+  fOptions.at("lastEvent_int") = -1;
 }
 
 JPetOptions::Options JPetOptions::resetEventRange(const Options& srcOpts)
