@@ -11,7 +11,8 @@ BOOST_AUTO_TEST_CASE( my_test1 )
 {
   JPetOptions opts; 
   auto default_opts =  JPetOptionsGenerator::getDefaultOptions();
-  JPetOptionsTypeHandler toComparison;
+  std::vector<std::string> allowedTypes = { "int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>"};
+  JPetOptionsTypeHandler toComparison(allowedTypes);
   BOOST_REQUIRE(JPetCommonTools::mapComparator(toComparison.anyMapToStringMap(opts.getOptions()), toComparison.anyMapToStringMap(default_opts)));
 }
 
@@ -48,9 +49,11 @@ BOOST_AUTO_TEST_CASE(petOptionsBasicTest)
     BOOST_REQUIRE_EQUAL(petOptions.isProgressBar(), true);
     BOOST_REQUIRE_EQUAL(petOptions.getInputFileType(), JPetOptions::FileType::kRoot);
     BOOST_REQUIRE_EQUAL(petOptions.getOutputFileType(), JPetOptions::FileType::kScope);
-    JPetOptionsTypeHandler toComparison;
-    BOOST_REQUIRE_EQUAL(JPetCommonTools::mapComparator(toComparison.anyMapToStringMap(petOptions.getOptions()), toComparison.anyMapToStringMap(options)), true);
-    BOOST_REQUIRE_EQUAL(JPetCommonTools::mapComparator(toComparison.anyMapToStringMap(JPetOptionsGenerator::getDefaultOptions()), toComparison.anyMapToStringMap(options)), false);
+    std::vector<std::string> allowedTypes = { "int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>"};
+    JPetOptionsTypeHandler toComparison(allowedTypes);
+    auto default_opts =  JPetOptionsGenerator::getDefaultOptions();
+    BOOST_REQUIRE(JPetCommonTools::mapComparator(toComparison.anyMapToStringMap(petOptions.getOptions()), toComparison.anyMapToStringMap(options)));
+    BOOST_REQUIRE(!JPetCommonTools::mapComparator(toComparison.anyMapToStringMap(default_opts), toComparison.anyMapToStringMap(petOptions.getOptions())));
 }
 
 BOOST_AUTO_TEST_CASE(getTotalEventsTest)

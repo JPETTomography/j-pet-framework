@@ -88,7 +88,12 @@ bool JPetTaskChainExecutor::process()
 void JPetTaskChainExecutor::printCurrentOptionsToLog(const JPetOptions::Options& currOpts)
 {
   INFO("Current options:");
-  JPetOptionsTypeHandler typeHandler;
+  std::vector<std::string> allowedTypes;
+  JPetOptionsTypeHandler forGettingAllowedTypes(allowedTypes);
+  for(auto a : currOpts){
+    allowedTypes.push_back(forGettingAllowedTypes.getTypeOfOption(a.first));
+  }
+  JPetOptionsTypeHandler typeHandler(allowedTypes);
   auto stringOptions = typeHandler.anyMapToStringMap(currOpts);
   for (const auto & el : stringOptions) {
     INFO(el.first + "=" + el.second);

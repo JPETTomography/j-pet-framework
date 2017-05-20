@@ -20,8 +20,6 @@
 #include "../JPetLoggerInclude.h"
 namespace pt = boost::property_tree;
 
-JPetOptionsTypeHandler::JPetOptionsTypeHandler()
-{}
 
 JPetOptionsTypeHandler::JPetOptionsTypeHandler(const std::vector<std::string>& allowedTypes): 
   fAllowedTypes(allowedTypes)
