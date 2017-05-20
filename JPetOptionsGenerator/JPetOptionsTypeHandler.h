@@ -27,6 +27,7 @@
 class JPetOptionsTypeHandler
 {
 public:
+  JPetOptionsTypeHandler();
   JPetOptionsTypeHandler(const std::vector<std::string>& allowedTypes);
   JPetOptionsTypeHandler(const std::string& allowedTypes);
   std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& optionsMap) const;

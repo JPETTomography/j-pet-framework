@@ -20,6 +20,7 @@
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
 #include "../JPetLoggerInclude.h"
 #include "JPetTaskChainExecutorUtils.h"
+#include "../JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 #include <memory>
 
 using boost::any_cast;
@@ -87,7 +88,9 @@ bool JPetTaskChainExecutor::process()
 void JPetTaskChainExecutor::printCurrentOptionsToLog(const JPetOptions::Options& currOpts)
 {
   INFO("Current options:");
-  for (const auto & el : currOpts) {
+  JPetOptionsTypeHandler typeHandler;
+  auto stringOptions = typeHandler.anyMapToStringMap(currOpts);
+  for (const auto & el : stringOptions) {
     INFO(el.first + "=" + el.second);
   }
 }

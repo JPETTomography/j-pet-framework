@@ -38,20 +38,20 @@ public:
   JPetOptions();
   explicit JPetOptions(const Options& opts);
 
-  inline const std::string getInputFile() const {
-    return any_cast<std::string>(fOptions.at("inputFile_std::string"));
+  inline const char* getInputFile() const {
+    return any_cast<std::string>(fOptions.at("inputFile_std::string")).c_str();
   }
-  inline const std::string getScopeConfigFile() const {
-    return any_cast<std::string>(fOptions.at("scopeConfigFile_std::string"));
+  inline const char* getScopeConfigFile() const {
+    return any_cast<std::string>(fOptions.at("scopeConfigFile_std::string")).c_str();
   }
-  inline const std::string getScopeInputDirectory() const {
-    return any_cast<std::string>(fOptions.at("scopeInputDirectory_std::string"));
+  inline const char* getScopeInputDirectory() const {
+    return any_cast<std::string>(fOptions.at("scopeInputDirectory_std::string")).c_str();
   }
-  inline const std::string getOutputFile() const {
-    return any_cast<std::string>(fOptions.at("outputFile_std::string"));
+  inline const char* getOutputFile() const {
+    return any_cast<std::string>(fOptions.at("outputFile_std::string")).c_str();
   }
-  inline const std::string getOutputPath() const {
-    return any_cast<std::string>(fOptions.at("outputPath_std::string"));
+  inline const char* getOutputPath() const {
+    return any_cast<std::string>(fOptions.at("outputPath_std::string")).c_str();
   }
   inline long long getFirstEvent() const {
     return any_cast<int>(fOptions.at("firstEvent_int"));
@@ -88,12 +88,12 @@ public:
     return result;
   }
 
-  inline const std::string getUnpackerConfigFile() const {
-    return any_cast<std::string>(fOptions.at("unpackerConfigFile_std::string"));
+  inline const char* getUnpackerConfigFile() const {
+    return any_cast<std::string>(fOptions.at("unpackerConfigFile_std::string")).c_str();
   }
 
-  inline const std::string getUnpackerCalibFile() const {
-    return any_cast<std::string>(fOptions.at("unpackerCalibFile_std::string"));
+  inline const char* getUnpackerCalibFile() const {
+    return any_cast<std::string>(fOptions.at("unpackerCalibFile_std::string")).c_str();
   }
   
   FileType getInputFileType() const;
