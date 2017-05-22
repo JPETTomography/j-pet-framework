@@ -22,28 +22,28 @@
 namespace boost;
 class boost::noncopyable;
 #endif /* __CINT __ */
+#include <algorithm>
 #include <boost/filesystem.hpp>
+#include <cctype>
 #include <ctime>
 #include <fstream>
-#include <sstream>
-#include <string>
 #include <iomanip>
-#include <algorithm>
-#include <cctype>
+#include <sstream>
 #include <stdlib.h>
+#include <string>
 
 class JPetCommonTools : public boost::noncopyable
 {
 public:
   static const std::string currentDateTime();
 
-  static std::size_t findSubstring(const std::string& p_string, const std::string& p_substring);
+  static std::size_t findSubstring(const std::string &p_string,
+                                   const std::string &p_substring);
 
-  static std::string Itoa(int x) {
-    return intToString(x);
-  }
+  static std::string Itoa(int x) { return intToString(x); }
 
-  static std::string intToString(int x) {
+  static std::string intToString(int x)
+  {
     std::ostringstream out;
     out << x;
     return out.str();
@@ -51,9 +51,10 @@ public:
 
   static std::string doubleToString(double x);
 
-  static int stringToInt(const std::string& str);
+  static int stringToInt(const std::string &str);
 
-  static bool to_bool(std::string str) {
+  static bool to_bool(std::string str)
+  {
     std::transform(str.begin(), str.end(), str.begin(), ::tolower);
     std::istringstream is(str);
     bool b;
@@ -61,9 +62,11 @@ public:
     return b;
   }
 
-  static bool ifFileExisting(const std::string& name) {
+  static bool ifFileExisting(const std::string &name)
+  {
     std::ifstream f(name.c_str());
-    if (f.good()) {
+    if (f.good())
+    {
       f.close();
       return true;
     }
@@ -74,54 +77,68 @@ public:
   /**
     * @brief returns the time std::string in the format dd.mm.yyyy HH:MM
     */
-  static std::string getTimeString() {
-    time_t _tm = time(NULL );
-    struct tm* curtime = localtime ( &_tm );
+  static std::string getTimeString()
+  {
+    time_t _tm = time(NULL);
+    struct tm *curtime = localtime(&_tm);
     char buf[100];
-    strftime( buf, 100, "%d.%m.%Y %R", curtime);
+    strftime(buf, 100, "%d.%m.%Y %R", curtime);
 
-    return std::string( buf );
+    return std::string(buf);
   }
 
-  template <typename Map>
-  static bool mapComparator(Map const& lhs, Map const& rhs) {
+  template < typename Map >
+  static bool mapComparator(Map const &lhs, Map const &rhs)
+  {
     auto pred = [](decltype(*lhs.begin()) a, decltype(a) b) {
-      return a.first == b.first
-             && a.second == b.second;
+      return a.first == b.first && a.second == b.second;
     };
 
-    return lhs.size() == rhs.size()
-           && std::equal(lhs.begin(), lhs.end(), rhs.begin(), pred);
+    return lhs.size() == rhs.size() &&
+           std::equal(lhs.begin(), lhs.end(), rhs.begin(), pred);
   }
 
-  ///removes the suffix of the file
-  inline static std::string stripFileNameSuffix(const std::string& filename) {
-    return  boost::filesystem::change_extension(filename, "").string();
+  /// removes the suffix of the file
+  inline static std::string stripFileNameSuffix(const std::string &filename)
+  {
+    return boost::filesystem::change_extension(filename, "").string();
   }
-  inline static std::string exctractFileNameSuffix(const std::string& filename){
+  inline static std::string exctractFileNameSuffix(const std::string &filename)
+  {
     return boost::filesystem::extension(filename);
   }
-  
-  inline static std::string currentFullPath() {
-    return boost::filesystem::path( boost::filesystem::current_path() ).string();
+
+  inline static std::string currentFullPath()
+  {
+    return boost::filesystem::path(boost::filesystem::current_path()).string();
   }
 
-  inline static std::string extractPathFromFile(const std::string& fileWithPath) {
-    return boost::filesystem::path( fileWithPath ).parent_path().string();
+  inline static std::string extractPathFromFile(const std::string &fileWithPath)
+  {
+    return boost::filesystem::path(fileWithPath).parent_path().string();
   }
 
-  inline static std::string extractFileNameFromFullPath(const std::string& fileWithPath) {
-    return boost::filesystem::path( fileWithPath ).filename().string();
+  inline static std::string
+  extractFileNameFromFullPath(const std::string &fileWithPath)
+  {
+    return boost::filesystem::path(fileWithPath).filename().string();
   }
 
-  inline static std::string appendSlashToPathIfAbsent(const std::string& path) {
-    if (!path.empty() && path.back() != '/') return path + '/';
-    else return path;
+  inline static std::string appendSlashToPathIfAbsent(const std::string &path)
+  {
+    if (!path.empty() && path.back() != '/')
+      return path + '/';
+    else
+      return path;
   }
 
-  inline static bool isDirectory( const std::string& dir) {
+  inline static bool isDirectory(const std::string &dir)
+  {
     return boost::filesystem::is_directory(dir);
   }
+
+  static const std::string getMD5FromFile(const std::string filePath,
+                                          const unsigned int chunkSize = 1024);
 };
 
 #endif // COMMON_TOOLS_H
