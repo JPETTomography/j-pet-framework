@@ -28,6 +28,7 @@ class boost::noncopyable;
 #include <ctime>
 #include <fstream>
 #include <iomanip>
+#include <openssl/md5.h>
 #include <sstream>
 #include <stdlib.h>
 #include <string>
