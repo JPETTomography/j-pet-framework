@@ -15,10 +15,9 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetCommonToolsTest
+#include "JPetCommonTools.h"
 #include <boost/test/unit_test.hpp>
 #include <map>
-#include "JPetCommonTools.h"
-
 
 BOOST_AUTO_TEST_SUITE(CommonToolsTestSuite)
 
@@ -75,19 +74,19 @@ BOOST_AUTO_TEST_CASE(ifFileExistingTest)
 
 BOOST_AUTO_TEST_CASE(mapAreEqualTest)
 {
-  std::map<int, int> mapTestLeft, mapTestRight;
+  std::map< int, int > mapTestLeft, mapTestRight;
   bool areMapsEqual = JPetCommonTools::mapComparator(mapTestLeft, mapTestRight);
   BOOST_REQUIRE(areMapsEqual);
 }
 
 BOOST_AUTO_TEST_CASE(mapAreNotEqualTest)
 {
-  std::map<char, int> first;
+  std::map< char, int > first;
   first['a'] = 10;
   first['b'] = 30;
   first['c'] = 50;
   first['d'] = 70;
-  std::map<char, int> second;
+  std::map< char, int > second;
 
   bool areMapsEqual = JPetCommonTools::mapComparator(first, second);
   BOOST_REQUIRE(!areMapsEqual);
@@ -97,7 +96,8 @@ BOOST_AUTO_TEST_CASE(stripFileNameSuffixTest)
 {
   std::string fileTest = "run_tests.pl";
 
-  std::string stripFileNameSuffix = JPetCommonTools::stripFileNameSuffix(fileTest);
+  std::string stripFileNameSuffix =
+      JPetCommonTools::stripFileNameSuffix(fileTest);
   BOOST_REQUIRE_EQUAL(stripFileNameSuffix, "run_tests");
 }
 
@@ -105,13 +105,15 @@ BOOST_AUTO_TEST_CASE(extractFileNameSuffixTest)
 {
   std::string fileTest = "run_tests.pl";
 
-  std::string stripFileNameSuffix = JPetCommonTools::exctractFileNameSuffix(fileTest);
+  std::string stripFileNameSuffix =
+      JPetCommonTools::exctractFileNameSuffix(fileTest);
   BOOST_REQUIRE_EQUAL(stripFileNameSuffix, ".pl");
 }
 
 BOOST_AUTO_TEST_CASE(currentFullPathTest)
 {
-  std::string currentFullPathTest = boost::filesystem::path(boost::filesystem::current_path()).string();
+  std::string currentFullPathTest =
+      boost::filesystem::path(boost::filesystem::current_path()).string();
 
   std::string currentFullPath = JPetCommonTools::currentFullPath();
   BOOST_REQUIRE_EQUAL(currentFullPath, currentFullPathTest);
@@ -119,16 +121,20 @@ BOOST_AUTO_TEST_CASE(currentFullPathTest)
 
 BOOST_AUTO_TEST_CASE(extractPathFromFileTest)
 {
-  std::string currentFullPathTest = boost::filesystem::path(boost::filesystem::current_path()).string();
-  std::string currentFullPathTestWithFileName = currentFullPathTest + "/" + "run_tests.pl";
+  std::string currentFullPathTest =
+      boost::filesystem::path(boost::filesystem::current_path()).string();
+  std::string currentFullPathTestWithFileName =
+      currentFullPathTest + "/" + "run_tests.pl";
 
-  std::string result = JPetCommonTools::extractPathFromFile(currentFullPathTestWithFileName);
+  std::string result =
+      JPetCommonTools::extractPathFromFile(currentFullPathTestWithFileName);
   BOOST_REQUIRE_EQUAL(result, currentFullPathTest);
 }
 
 BOOST_AUTO_TEST_CASE(isDirectory)
 {
-  BOOST_REQUIRE(JPetCommonTools::isDirectory(boost::filesystem::initial_path().string()));
+  BOOST_REQUIRE(
+      JPetCommonTools::isDirectory(boost::filesystem::initial_path().string()));
   BOOST_REQUIRE(!JPetCommonTools::isDirectory("fake/directory/baba"));
 }
 
@@ -136,10 +142,28 @@ BOOST_AUTO_TEST_CASE(appendSlashToPathIfAbsent)
 {
   BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent(""), "");
   BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("./"), "./");
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("/home/"), "/home/");
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("/home"), "/home/");
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("home/bbl/be"), "home/bbl/be/");
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("test"), "test/");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("/home/"),
+                      "/home/");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("/home"),
+                      "/home/");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("home/bbl/be"),
+                      "home/bbl/be/");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("test"),
+                      "test/");
+}
+
+BOOST_AUTO_TEST_CASE(test_MD5_1)
+{
+  std::string result = JPetCommonTools::getMD5FromFile(
+      "unitTestData/JPetCmdParserTest/data.hld");
+  BOOST_REQUIRE_EQUAL(result, std::string("d5d9e1c6112b106fabaef2a8ed1f972e"));
+}
+
+BOOST_AUTO_TEST_CASE(test_MD5_2)
+{
+  std::string result = JPetCommonTools::getMD5FromFile(
+      "unitTestData/JPetRecoImageToolsTest/phantom.pgm");
+  BOOST_REQUIRE_EQUAL(result, std::string("37b9ef1add018cfff000d0c73bb9b465"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
