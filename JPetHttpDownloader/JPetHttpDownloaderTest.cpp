@@ -10,29 +10,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetJsonGetter.h
+ *  @file JPetHttpDownloaderTest.cpp
  */
 
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE JPetHttpDownloaderTest
+#include "JPetHttpDownloader.h"
+#include <boost/test/unit_test.hpp>
 
-#ifndef JPETJSONGETTER_H
-#define JPETJSONGETTER_H
+BOOST_AUTO_TEST_SUITE(JPetHttpDownloaderTest)
 
-#include <boost/asio.hpp>
-#include <string>
-
-class JPetJsonGetter
+BOOST_AUTO_TEST_CASE(empty)
 {
-public:
-  JPetJsonGetter(std::string host, std::string port);
-  ~JPetJsonGetter();
-  std::string getJsonByMD5(const std::string& md5Hash);
+  JPetHttpDownloader getter("127.0.0.1", "8087");
+  BOOST_REQUIRE_EQUAL(getter.getJsonByMD5("qweasdzxc"), std::string("test"));
+}
 
-private:
-  JPetJsonGetter(const JPetJsonGetter&) = delete;
-  JPetJsonGetter& operator=(const JPetJsonGetter&) = delete;
-
-  std::string fHost;
-  std::string fPort;
-};
-
-#endif /*  !JPETJSONGETTER_H */
+BOOST_AUTO_TEST_SUITE_END()

@@ -10,19 +10,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetJsonGetter.cpp
+ *  @file JPetHttpDownloader.cpp
  */
 
-#include "JPetJsonGetter.h"
+#include "JPetHttpDownloader.h"
 
-JPetJsonGetter::JPetJsonGetter(std::string host, std::string port)
+JPetHttpDownloader::JPetHttpDownloader(std::string host, std::string port)
     : fHost(host), fPort(port)
 {
 }
 
-JPetJsonGetter::~JPetJsonGetter() {}
+JPetHttpDownloader::~JPetHttpDownloader() {}
 
-std::string JPetJsonGetter::getJsonByMD5(const std::string &md5Hash)
+std::string JPetHttpDownloader::getJsonByMD5(const std::string &md5Hash)
 {
   boost::system::error_code ec;
   boost::asio::io_service service;
@@ -43,4 +43,4 @@ std::string JPetJsonGetter::getJsonByMD5(const std::string &md5Hash)
   }
   return response;
 }
-//HttpDownloader, static function reading from file
+// static function reading from file
