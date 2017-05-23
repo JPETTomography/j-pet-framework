@@ -66,9 +66,7 @@ std::vector<std::string> JPetOptionsGenerator::getVectorOfOptionFromUser() const
 
 std::pair <std::string, boost::any>JPetOptionsGenerator::appendSlash(boost::any option)
 {
-  //std::cout<< "before append slash: "<<any_cast<std::string>(option) <<std::endl;
   auto path = JPetCommonTools::appendSlashToPathIfAbsent(any_cast<std::string>(option));
-  //std::cout<< "appendSlash: outputPath_std::string: "<< path<<std::endl;
   return std::make_pair("outputPath_std::string", path);
 }
 
@@ -93,7 +91,6 @@ std::pair <std::string, boost::any>JPetOptionsGenerator::getHigherEventBound(boo
 std::pair <std::string, boost::any>JPetOptionsGenerator::setInputFileType(boost::any option)
 {
   auto inputFileType = any_cast<std::string>(option);
-  //std::cout<< "setInputFileType: "<< inputFileType<<std::endl;
   return std::make_pair("inputFileType_std::string", inputFileType);
 }
 
@@ -130,7 +127,6 @@ void JPetOptionsGenerator::createMapOfBoolOptionFromUser(const std::map<std::str
 
 std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::map<std::string, boost::any>& optionsMap) const
 {
-  //auto transformationMap = generateTransformationMap();
   for (auto & validGroup : fTransformationMap) {
     if (optionsMap.count(validGroup.first)) {
       for (auto & validFunct : validGroup.second) {

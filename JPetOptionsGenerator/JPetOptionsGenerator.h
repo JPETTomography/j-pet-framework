@@ -68,6 +68,10 @@ public:
   }
   std::vector<std::string> getVectorOfOptionFromUser() const;
 
+  JPetOptionValidator getValidator(){
+    return fValidator;
+  }
+
 protected:
   static std::map<std::string, boost::any> kDefaultOptions;
 private:

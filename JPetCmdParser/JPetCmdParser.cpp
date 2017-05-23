@@ -18,7 +18,6 @@
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetLoggerInclude.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
-#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
 #include <stdexcept>
 
 
@@ -61,8 +60,7 @@ std::vector<JPetOptions> JPetCmdParser::parseAndGenerateOptions(int argc, const 
     exit(0);
   }
   po::notify(variablesMap);
-  JPetOptionsGenerator generator;
-  return generator.generateOptions(variablesMap);
+  return fGenerator.generateOptions(variablesMap);
 }
 
 

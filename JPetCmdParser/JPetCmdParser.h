@@ -21,6 +21,7 @@ class JPetCmdParser;
 #include "boost/program_options.hpp" // Library parsing command line arguments
 #include <string>
 #include "../JPetOptions/JPetOptions.h"
+#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
 
 
 namespace po = boost::program_options;
@@ -35,25 +36,14 @@ public:
   inline const po::options_description getOptionsDescription() const {
     return fOptionsDescriptions;
   }
-/*
-  static inline bool isUnpackerConfigFileSet(const po::variables_map& variablesMap) {
-    return variablesMap.count("unpackerConfigFile") > 0;
+  JPetOptionsGenerator& getGenerator(){
+    return fGenerator;
   }
-  static inline std::string getUnpackerConfigFile(const po::variables_map& variablesMap) {
-    return variablesMap["unpackerConfigFile"].as<std::string>();
-  }
-
-  static inline bool isUnpackerCalibFileSet(const po::variables_map& variablesMap) {
-    return variablesMap.count("unpackerCalibFile") > 0;
-  }
-  static inline std::string getUnpackerCalibFile(const po::variables_map& variablesMap) {
-    return variablesMap["unpackerCalibFile"].as<std::string>();
-  }
-  */
 protected:
   po::options_description fOptionsDescriptions;
 
 private:
+  JPetOptionsGenerator& fGenerator;
   JPetCmdParser(const JPetCmdParser& cmdParser);
   JPetCmdParser& operator=(const JPetCmdParser& cmdParser);
 };
