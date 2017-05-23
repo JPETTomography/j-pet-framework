@@ -22,7 +22,7 @@
 #include "../JPetCommonTools/JPetCommonTools.h"
 
 #include "../JPetLoggerInclude.h"
-
+#include "../version.h"
 
 JPetTaskIO::JPetTaskIO():
   fEventNb(-1),
