@@ -30,7 +30,6 @@ class JPetTimeWindow: public TObject
 {
 public:
   JPetTimeWindow() {
-    //    SetName("JPetTimeWindow");
   }
 
   void addCh(JPetSigCh& new_ch);
