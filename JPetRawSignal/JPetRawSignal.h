@@ -103,7 +103,7 @@ private:
   std::vector<JPetSigCh> fLeadingPoints; ///< vector of JPetSigCh objects from leading edge of the signal
   std::vector<JPetSigCh> fTrailingPoints; ///< vector of JPetSigCh objects from trailing edge of the signal
 
-ClassDef(JPetRawSignal, 5)
+ClassDef(JPetRawSignal, 4)
   ;
 };
 #endif /*  !JPETRAWSIGNAL_H */
