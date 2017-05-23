@@ -23,7 +23,6 @@ JPetPhysSignal::JPetPhysSignal() :
   fPhe(0),
   fQualityOfPhe(0)
 {
-  //  SetNameTitle("JPetPhysSignal", "Physical signal structure");
 }
 
 
