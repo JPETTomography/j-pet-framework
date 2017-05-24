@@ -61,8 +61,7 @@ public:
    *
    * The JPetSigCh object is automatically added to the array
    * of trailing-edge or leading-edge points depending
-   * on the type which was set in it. If its type is Charge,
-   * it will be set as the TOT point.
+   * on the type which was set in it. 
    */
   void addPoint(const JPetSigCh& sigch);
 
@@ -87,7 +86,7 @@ public:
   /**
    * @brief Get a map with (threshold value [mV], time [ps]) pairs.
    */
-  std::map<int, std::pair<float, float>> getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const;
+  std::map<int, std::pair<float, float> > getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const;
 
   /**
    * @brief Get a map with (threshold value [mV], TOT [ps]) pairs.
@@ -103,9 +102,8 @@ public:
 private:
   std::vector<JPetSigCh> fLeadingPoints; ///< vector of JPetSigCh objects from leading edge of the signal
   std::vector<JPetSigCh> fTrailingPoints; ///< vector of JPetSigCh objects from trailing edge of the signal
-  JPetSigCh fTOTPoint;
 
-ClassDef(JPetRawSignal, 3)
+ClassDef(JPetRawSignal, 4)
   ;
 };
 #endif /*  !JPETRAWSIGNAL_H */
