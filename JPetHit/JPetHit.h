@@ -21,7 +21,7 @@
 #include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetTimeWindow/JPetTimeWindow.h"
 
-#include "TNamed.h"
+#include "TObject.h"
 #include "TVector3.h"
 #include <TRef.h>
 
@@ -38,7 +38,7 @@ class JPetTimeWindow;
  *
  * It contains two objects of type JPetPhysSignal (from "Side A" and "Side B" of the Barrel) which represent signals at two ends of a scintillator strip, from which the hit was reconstructed.
  */
-class JPetHit : public TNamed
+class JPetHit : public TObject
 {
 
 public:
@@ -134,7 +134,7 @@ private:
   TRef fBarrelSlot = NULL; ///< BarrelSlot in which the hit was recorded
   TRef fScintillator = NULL; ///< Scintillator strip which was hit
 
-  ClassDef(JPetHit, 3);
+  ClassDef(JPetHit, 4);
 };
 
 #endif

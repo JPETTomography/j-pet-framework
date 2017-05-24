@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 BOOST_AUTO_TEST_CASE( some_channels )
 {
   JPetTimeWindow test;
-  JPetSigCh ch_test(JPetSigCh::Trailing, 1.2), ch_test2(JPetSigCh::Leading, 1.5), ch_test3(JPetSigCh::Charge, 98);
+  JPetSigCh ch_test(JPetSigCh::Trailing, 1.2), ch_test2(JPetSigCh::Leading, 1.5), ch_test3(JPetSigCh::Leading, 98);
   test.addCh(ch_test);
   test.addCh(ch_test2);
   test.addCh(ch_test3);

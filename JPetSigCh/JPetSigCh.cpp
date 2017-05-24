@@ -23,7 +23,6 @@ ClassImp(JPetSigCh);
 const float JPetSigCh::kUnset = std::numeric_limits<float>::infinity();
 
 void JPetSigCh::Init() {
-  SetNameTitle("JPetSigCh", "Signal Channel Structure");
   fValue = kUnset;
   fType = Leading;
   fThreshold = kUnset;
@@ -38,20 +37,6 @@ JPetSigCh::JPetSigCh(EdgeType Edge, float EdgeTime) {
   fType = Edge;
   fValue = EdgeTime;
 
-}
-
-bool JPetSigCh::isCharge() const {
-  if (fType == Charge) {
-    return true;
-  }
-  return false;
-}
-
-bool JPetSigCh::isTime() const {
-  if (fType == Trailing || fType == Leading) {
-    return true;
-  }
-  return false;
 }
 
 bool JPetSigCh::compareByThresholdValue(const JPetSigCh& A,

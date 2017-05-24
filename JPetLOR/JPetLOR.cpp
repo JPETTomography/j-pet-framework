@@ -18,7 +18,7 @@
 ClassImp(JPetLOR);
 
 JPetLOR::JPetLOR() :
-    TNamed("JPetLOR", "Event Structure"), 
+    TObject(),
     fTime(0.0f), 
     fQualityOfTime(0.0f),
     fTimeDiff(0.0f), 
@@ -30,7 +30,7 @@ JPetLOR::JPetLOR() :
 
 JPetLOR::JPetLOR(float Time, float QualityOfTime, JPetHit& firstHit,
                  JPetHit& secondHit) :
-    TNamed("JPetLOR", "Event Structure"), 
+    TObject(), 
     fTime(Time),
     fQualityOfTime(QualityOfTime),
     fTimeDiff(0.0f),
