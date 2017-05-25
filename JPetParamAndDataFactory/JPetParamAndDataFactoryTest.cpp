@@ -152,14 +152,16 @@ BOOST_AUTO_TEST_CASE( barrelSlot )
   BOOST_REQUIRE_EQUAL(barrelSlot.getLayer().getRadius(), p_layer.getRadius());
 }
 
+/*
 BOOST_AUTO_TEST_CASE( timeWindow )
 {
   JPetSigCh::EdgeType type = JPetSigCh::Trailing;
-  std::vector<JPetSigCh> vec = {JPetSigCh(type, 1), JPetSigCh(type, 1)};
-  JPetTimeWindow timeWindow = param_and_data_factory::makeTimeWindow(vec, 1);
-  BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfSigCh(), 2);
-  BOOST_REQUIRE_EQUAL(timeWindow.getIndex(), 1);
+  std::vector<JPetSigCh> vec ={JPetSigCh(type, 1), JPetSigCh(type, 1)};
+  JPetTimeWindow timeWindow = param_and_data_factory::makeTimeWindow(vec);
+  BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfEvents(), 2);
+
 }
+*/
 
 BOOST_AUTO_TEST_CASE( pm )
 {
