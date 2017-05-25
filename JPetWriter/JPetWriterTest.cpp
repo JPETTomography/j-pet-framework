@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE( saving_different_objects2 )
   const auto kHugeNumberOfObjects = 10000;
   for (int i = 0; i < kHugeNumberOfObjects; i++) {
     if (i % 1000 == 0) std::cout << "*" << std::flush;
-    JPetTimeWindow testJPetTimeWindow;
+    JPetTimeWindow testJPetTimeWindow("JPetSigCh");
     writer.write(testJPetTimeWindow);
   }
   writer.closeFile();
