@@ -90,9 +90,9 @@ public:
   void setBarrelSlot( JPetBarrelSlot& bs) ;
   void setScintillator(JPetScin& sc) ;
 
-  void setSignals(JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB);
-  void setSignalA(JPetPhysSignal& p_sig);
-  void setSignalB(JPetPhysSignal& p_sig);
+  void setSignals(const JPetPhysSignal& p_sigA, const JPetPhysSignal& p_sigB);
+  void setSignalA(const JPetPhysSignal& p_sig);
+  void setSignalB(const JPetPhysSignal& p_sig);
   unsigned int getTimeWindowIndex()const;
   
   /** @brief Checks whether information contained in both Signal objects

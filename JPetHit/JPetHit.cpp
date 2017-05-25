@@ -227,7 +227,7 @@ bool JPetHit::checkConsistency() const
   return true;
 }
 
-void JPetHit::setSignals(JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB)
+void JPetHit::setSignals(const JPetPhysSignal& p_sigA, const JPetPhysSignal& p_sigB)
 {
   fSignalA = p_sigA;
   fIsSignalAset = true;
@@ -237,7 +237,7 @@ void JPetHit::setSignals(JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB)
     return;
 }
 
-void JPetHit::setSignalA(JPetPhysSignal& p_sig)
+void JPetHit::setSignalA(const JPetPhysSignal& p_sig)
 {
   fSignalA = p_sig;
   fIsSignalAset = true;
@@ -245,7 +245,7 @@ void JPetHit::setSignalA(JPetPhysSignal& p_sig)
     return;
 }
 
-void JPetHit::setSignalB(JPetPhysSignal& p_sig)
+void JPetHit::setSignalB(const JPetPhysSignal& p_sig)
 {
   fSignalB = p_sig;
   fIsSignalBset = true;
