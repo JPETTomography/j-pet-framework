@@ -18,6 +18,7 @@
 
 #include <map>
 #include <string>
+#include <boost/any.hpp>
 //#include "../JPetOptionsInterface/JPetOptionsInterface.h"
 
 class JPetParamManager;
@@ -25,7 +26,7 @@ class JPetParamManager;
 class JPetTaskInterface
 {
 public:
-  typedef std::map<std::string, std::string> Options;
+  typedef std::map<std::string, boost::any> Options;
   virtual ~JPetTaskInterface() {}
   virtual void init(const Options& options) = 0;
   virtual void exec() = 0;
