@@ -78,7 +78,16 @@ void JPetManager::parseCmdLine(int argc, char** argv)
   JPetCmdParser parser;
   fOptions = parser.parseAndGenerateOptions(argc, (const char**)argv);
   // check whether connection to DB will be needed
+}
 
+void JPetManager::addValidationFunctionForUserOptions(const std::string& name, bool(*validatorFunction)(std::pair <std::string, boost::any>) )
+{
+  fParser.getGenerator().getValidator().addValidatorFunction(name, validatorFunction);
+}
+
+void JPetManager::addTransformationFunctionForUserOption(const std::string& name, std::function<std::pair<std::string, boost::any>(boost::any opt)> transformFunction)
+{
+  fParser.getGenerator().addTransformFunction(name, transformFunction);
 }
 
 JPetManager::~JPetManager()
@@ -105,7 +114,7 @@ void JPetManager::registerTask(const TaskGenerator& taskGen)
  * Database connection is only initialized if the user provided the run number
  * ("-i" option) and did not provide local database ("-l") at the same time.
  */
-bool JPetManager::initDBConnection(const char* configFilePath = "../DBConfig/configDB.cfg")
+bool JPetManager::initDBConnection(const char* configFilePath)
 {
 
   bool isDBrequired = false;
