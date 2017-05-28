@@ -12,6 +12,10 @@
  *
  *  @file JPetAdditionalValiators.h
  */
+#ifndef J_PET_ADDITIONAL_VALIDATORS_H
+#define J_PET_ADDITIONAL_VALIDATORS_H
 #include <boost/any.hpp>
 
 bool additionalCheckIfRunIdIsOk(std::pair <std::string, boost::any> option);
+
+#endif
