@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -10,19 +10,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetOptionsTools.h
+ *  @file AdditionalTransformation.h
  */
 
-#ifndef JPETOPTIONSTOOLS_H
-#define JPETOPTIONSTOOLS_H
-#include <map>
+
 #include <boost/any.hpp>
 
-namespace jpet_options_tools
-{
-static const std::string kFileWithAllowedOptionType= "allowedUserOptionTypes.json";
-typedef std::map<std::string, std::string> Options;
-bool createConfigFileFromOptions(const Options& options, const std::string& outFile);
-std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string& inFile);
-}
-#endif /*  !JPETOPTIONSTOOLS_H */
+using boost::any_cast;
+
+std::pair <std::string, boost::any> setAdditionalRunIdInTheMap(boost::any option);
