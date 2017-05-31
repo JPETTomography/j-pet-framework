@@ -28,10 +28,19 @@ bool JPetBaseSignal::isNullObject() const
 {
    return fIsNullObject;
 }
+
 JPetBaseSignal& JPetBaseSignal::getDummyResult()
 {
    static JPetBaseSignal DummyResult(true);
    return DummyResult;
 }
+
 JPetBaseSignal::~JPetBaseSignal() {
+}
+
+void JPetBaseSignal::Clear(Option_t *){
+
+  fPM = NULL;
+  fBarrelSlot = NULL;
+
 }
