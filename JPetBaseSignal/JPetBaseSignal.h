@@ -60,6 +60,8 @@ public:
     return (JPetBarrelSlot&) *fBarrelSlot.GetObject();
   }
 
+  void Clear(Option_t * opt = "");
+  
 private:
   // references to parametric objects
   TRef fPM; ///< Photomultiplier which recorded this signal
