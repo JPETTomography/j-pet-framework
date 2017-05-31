@@ -57,6 +57,8 @@ public:
   bool isTypeOf(JPetEventType type) const; /// check if the event is of a given type. Event can belong to more than one category e.g. k2Gamma|kScattered.
   bool isOnlyTypeOf(JPetEventType type) const;/// check if the event is of only given type e.g. isOnlyTypeOf(k2Gamma) will return false if the type is k2Gamma|kScattered.
 
+  void Clear(Option_t * opt = "");
+  
 protected:
   std::vector<JPetHit> fHits;
 #ifndef __CINT__
