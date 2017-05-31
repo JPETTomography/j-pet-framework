@@ -199,8 +199,7 @@ BOOST_AUTO_TEST_CASE( baseSignal )
   pm.setHVopt(2);
   pm.setHVset(3);
   JPetBarrelSlot p_barrelSlot(1, true, "name", 2, 3);
-  JPetBaseSignal bs = param_and_data_factory::makeBaseSignal(1, pm, p_barrelSlot);
-  BOOST_REQUIRE_EQUAL(bs.getTimeWindowIndex(), 1 );
+  JPetBaseSignal bs = param_and_data_factory::makeBaseSignal(pm, p_barrelSlot);
 
   BOOST_REQUIRE_EQUAL(bs.getPM().getHVopt(), pm.getHVopt() );
   BOOST_REQUIRE_EQUAL(bs.getPM().getHVset(), pm.getHVset() );
