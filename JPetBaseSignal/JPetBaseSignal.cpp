@@ -18,8 +18,7 @@
 ClassImp(JPetBaseSignal);
 
 JPetBaseSignal::JPetBaseSignal() :
-    TObject(), fPM(0), fBarrelSlot(0),
-    fTimeWindowIndex(0) {
+  TObject(), fPM(0), fBarrelSlot(0) {
 }
 JPetBaseSignal::JPetBaseSignal(bool isNull):
   fIsNullObject(isNull)
