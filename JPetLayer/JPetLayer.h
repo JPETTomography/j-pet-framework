@@ -45,7 +45,7 @@ public:
   void setFrame(JPetFrame& frame);
   bool isNullObject() const;
   static  JPetLayer& getDummyResult();
-
+  
 protected:
   void clearTRefFrame();
 

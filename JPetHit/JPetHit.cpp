@@ -120,8 +120,6 @@ bool JPetHit::isSignalBSet() const
   return fIsSignalBset;
 }
 
-
-
 void JPetHit::setEnergy(float energy)
 {
   fEnergy = energy;

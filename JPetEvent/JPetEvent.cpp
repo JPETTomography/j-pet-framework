@@ -38,7 +38,6 @@ void JPetEvent::setHits(const std::vector<JPetHit>& hits, bool orderedByTime)
     fHits = hits;
   }
 }
-
 void JPetEvent::addHit(const JPetHit& hit)
 {
   fHits.push_back(hit);

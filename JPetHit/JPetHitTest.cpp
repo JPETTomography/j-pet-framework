@@ -56,7 +56,8 @@ BOOST_AUTO_TEST_CASE(consistency_check_test)
   BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), false );
 }
 
-BOOST_AUTO_TEST_CASE(set_get_scalars_test){
+BOOST_AUTO_TEST_CASE(set_get_scalars_test)
+{
   JPetHit hit;
   float time = 0.1;
   float timeDiff = 0.2;
@@ -118,4 +119,6 @@ BOOST_AUTO_TEST_CASE(set_get_objects_test)
   BOOST_REQUIRE_EQUAL( hit.getSignalB().getTime(), timeB );
 
 }
+
+
 BOOST_AUTO_TEST_SUITE_END()

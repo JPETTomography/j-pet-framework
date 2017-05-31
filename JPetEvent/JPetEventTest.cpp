@@ -228,4 +228,5 @@ BOOST_AUTO_TEST_CASE(addEventType3)
   BOOST_REQUIRE((type & JPetEventType::kScattered) != JPetEventType::kScattered);
 }
 
+
 BOOST_AUTO_TEST_SUITE_END()

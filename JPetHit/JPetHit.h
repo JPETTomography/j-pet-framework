@@ -72,7 +72,7 @@ public:
   const JPetBarrelSlot& getBarrelSlot() const;
   bool isSignalASet()const;
   bool isSignalBSet()const;
-
+  
   void setEnergy(float energy);
   void setQualityOfEnergy(float qualityOfEnergy);
   void setTime(float time);
