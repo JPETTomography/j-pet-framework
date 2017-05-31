@@ -19,7 +19,6 @@
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
 #include "../JPetScin/JPetScin.h"
 #include "../JPetPhysSignal/JPetPhysSignal.h"
-#include "../JPetTimeWindow/JPetTimeWindow.h"
 
 #include "TObject.h"
 #include "TVector3.h"
@@ -31,7 +30,6 @@
 class JPetBarrelSlot;
 class JPetScin;
 class JPetPhysSignal;
-class JPetTimeWindow;
 
 /**
  * @brief Data class representing a reconstructed hit of a photon in the scintillator strip.
@@ -93,7 +91,6 @@ public:
   void setSignals(const JPetPhysSignal& p_sigA, const JPetPhysSignal& p_sigB);
   void setSignalA(const JPetPhysSignal& p_sig);
   void setSignalB(const JPetPhysSignal& p_sig);
-  unsigned int getTimeWindowIndex()const;
   
   /** @brief Checks whether information contained in both Signal objects
    *  set in this Hit object is consistent and logs an error message if

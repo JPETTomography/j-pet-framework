@@ -218,12 +218,6 @@ bool JPetHit::checkConsistency() const
     return false;
   }
 
-  if ( getSignalA().getTimeWindowIndex() != getSignalB().getTimeWindowIndex() ) {
-    ERROR( Form("Signals added to Hit come from different time windows: %d and %d." ,
-                getSignalA().getTimeWindowIndex(), getSignalB().getTimeWindowIndex()) );
-    return false;
-  }
-
   return true;
 }
 
@@ -253,7 +247,4 @@ void JPetHit::setSignalB(const JPetPhysSignal& p_sig)
     return;
 }
 
-unsigned int JPetHit::getTimeWindowIndex() const
-{
-  return getSignalA().getTimeWindowIndex();
-}
+
