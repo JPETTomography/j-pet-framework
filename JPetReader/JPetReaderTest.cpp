@@ -127,4 +127,14 @@ BOOST_AUTO_TEST_CASE (good_file_closeFile)
   BOOST_REQUIRE(!reader.getObjectFromFile("testObj"));
 }
 
+BOOST_AUTO_TEST_CASE(check_branch) 
+{
+  JPetReader reader;
+  BOOST_REQUIRE(reader.openFileAndLoadData(
+      "unitTestData/JPetReaderTest/timewindows.root", "tree"));
+  BOOST_REQUIRE(reader.isOpen());
+  BOOST_REQUIRE(reader.getBranch("JPetTimeWindow"));
+  BOOST_CHECK(!reader.getBranch("NotCorrectBranch"));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

@@ -81,8 +81,12 @@ public:
     else return false;
   }
 
+  virtual TBranch* getBranch(const char* name) {
+    return fTree->GetBranch(name);
+  }
+
 protected:
-  virtual bool openFile(const char* filename);
+  virtual bool openFile(const char *filename);
   virtual bool loadData(const char* treename = "tree");
   bool loadCurrentEvent() {
     if (fTree) {
