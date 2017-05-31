@@ -85,10 +85,9 @@ JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, floa
   return pmObject;
 }
 
-JPetBaseSignal makeBaseSignal(unsigned int index, JPetPM& pm, JPetBarrelSlot& bs)
+JPetBaseSignal makeBaseSignal(JPetPM & pm, JPetBarrelSlot & bs)
 {
   JPetBaseSignal baseSignalObject;
-  baseSignalObject.setTimeWindowIndex(index);
   baseSignalObject.setPM(pm);
   baseSignalObject.setBarrelSlot(bs);
   return baseSignalObject;
