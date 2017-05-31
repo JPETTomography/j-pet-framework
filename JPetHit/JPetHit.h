@@ -114,6 +114,9 @@ public:
    */
   bool checkConsistency() const;
 
+  void Clear(Option_t * opt  = "");
+  
+  
 private:
   float fEnergy = 0.0f; ///< reconstructed energy of the hit [keV]
   float fQualityOfEnergy = 0.0f;
