@@ -216,6 +216,8 @@ public:
     return const_cast<std::map<float, float> & > (fRecoTimesAtThreshold)[threshold];
   }
 
+  void Clear(Option_t * opt = "");
+  
 private:
 
   static bool compareShapePointsTime(const shapePoint & A,
