@@ -32,23 +32,9 @@ public:
   JPetBaseSignal();
   virtual ~JPetBaseSignal();
   explicit JPetBaseSignal(bool isNull);
-  /**
-   * @brief Set number of the Time Slot this signal belongs to.
-   *
-   * Should be set to the value returned by JPetTimeWindow::getIndex() for the respective Time Window
-   */
+
   bool isNullObject() const;
   static  JPetBaseSignal& getDummyResult();
-  inline void setTimeWindowIndex(unsigned int index) {
-    fTimeWindowIndex = index;
-  }
-
-  /**
-   * @brief Get the number of the Time Window this signal belongs to.
-   */
-  inline unsigned int getTimeWindowIndex() const {
-    return fTimeWindowIndex;
-  }
 
   inline void setPM(const JPetPM & pm) {
     fPM = const_cast<JPetPM*>(&pm);
@@ -78,8 +64,6 @@ private:
   // references to parametric objects
   TRef fPM; ///< Photomultiplier which recorded this signal
   TRef fBarrelSlot; ///< BarrelSlot containing the PM which recorded this signal
-
-  unsigned int fTimeWindowIndex; // index of original TSlot
 
 protected:
 
