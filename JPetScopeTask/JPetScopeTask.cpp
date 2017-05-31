@@ -60,7 +60,6 @@ bool JPetScopeTask::exec()
     for (const auto& file : inputFilesInTimeWindowOrder) {
       DEBUG(std::string("file to open:") + file.first);
       JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.first.c_str());
-      sig.setTimeWindowIndex(getTimeWindowIndex(file.first));
       DEBUG("before setPM");
       const JPetPM& pm = bank.getPM(file.second);
       const JPetBarrelSlot& bs = pm.getBarrelSlot();
