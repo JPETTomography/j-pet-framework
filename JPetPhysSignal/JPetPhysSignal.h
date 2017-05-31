@@ -85,6 +85,8 @@ public:
 
   void setRecoSignal(const JPetRecoSignal& recoSignal);
 
+  void Clear(Option_t * opt = "");
+  
 private:
   double fTime; ///< one time reconstructed for the whole signal [ps]
   double fQualityOfTime; ///< quantitative measure of the time reconstruction quality (scale is yet to be decided)
