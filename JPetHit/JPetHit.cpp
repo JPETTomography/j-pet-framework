@@ -247,4 +247,19 @@ void JPetHit::setSignalB(const JPetPhysSignal& p_sig)
     return;
 }
 
-
+void JPetHit::Clear(Option_t *){
+  fEnergy = 0.0f;
+  fQualityOfEnergy = 0.0f;
+  fTime = 0.0f;
+  fQualityOfTime = 0.0f;
+  fTimeDiff = 0.0f;
+  fQualityOfTimeDiff = 0.0f;
+  fPos = TVector3();
+  fSignalA = JPetPhysSignal();
+  fSignalB = JPetPhysSignal();
+  fIsSignalAset = false;
+  fIsSignalBset = false;
+  
+  fBarrelSlot = NULL;
+  fScintillator = NULL;
+}
