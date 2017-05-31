@@ -39,7 +39,7 @@ public:
   
   template<typename T>
   void add(const T & evt){
-    new (fEvents[fEventCount++]) T(evt);
+    dynamic_cast<T&>(*(fEvents.ConstructedAt(fEventCount++))) = evt;
   }
   
   inline size_t getNumberOfEvents() const {
@@ -56,12 +56,12 @@ public:
   }
 
   virtual ~JPetTimeWindow() {
-    fEvents.Clear();
+    fEvents.Clear("C");
     fEventCount = 0;
   }
 
   virtual void Clear() {
-    fEvents.Clear();
+    fEvents.Clear("C");
     fEventCount = 0;
   }
   
