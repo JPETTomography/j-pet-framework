@@ -110,3 +110,7 @@ std::map<int, double> JPetRawSignal::getTOTsVsThresholdValue() const {
   return thrToTOT;
 }
 
+void JPetRawSignal::Clear(Option_t *){
+  fLeadingPoints.clear();
+  fTrailingPoints.clear();
+}
