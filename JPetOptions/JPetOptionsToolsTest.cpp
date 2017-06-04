@@ -26,9 +26,7 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptions )
 BOOST_AUTO_TEST_CASE(createOptionsFromConfigFile)
 {
   auto inFile = "unitTestData/JPetOptionsToolsTest/newInputTestCfg.json";
-  //std::cout << "CreateOptionFromUser: tu jeszcze jestem. "<< std::endl;
   std::map<std::string, boost::any> options = jpet_options_tools::createOptionsFromConfigFile(inFile);
-  //std::cout << "CreateOptionFromUser: tu jestem. "<< std::endl;
   std::map<std::string, std::string> expectedStringMap = {{"myOption_std::string", "great"}, {"myAnotherOption_std::string", "wat"}, {"NumberOption_std::string", "12.2"}};
   std::map<std::string, boost::any> expected(expectedStringMap.begin(), expectedStringMap.end());
   expected["intOption_int"] = 123;

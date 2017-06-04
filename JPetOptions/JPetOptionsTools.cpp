@@ -26,7 +26,6 @@ namespace pt = boost::property_tree;
 
 namespace jpet_options_tools
 {
-// const std::string kFileWithAllowedOptionType= "allowedUserOptionTypes.json";
 
 bool createConfigFileFromOptions(const Options& options, const std::string& outFile)
 {
@@ -49,44 +48,35 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
   if (JPetCommonTools::ifFileExisting(filename)) {
     try {
       pt::read_json(filename, optionsTree);
-      //std::vector<std::string> allowedTypes = { "int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>"};
       JPetOptionsTypeHandler typeHandler(kFileWithAllowedOptionType);
-     // std::cout << "After creating object of typeHandler"<< std::endl;
       for (auto & item : optionsTree) {
-      //  std::cout << "Option tree: "<< item.first << std::endl;
         auto key = item.first;
         std::string typeOfOption = typeHandler.getTypeOfOption(key);
         auto allowedTypes = typeHandler.getAllowedTypes(); 
         if(std::find(allowedTypes.begin(), allowedTypes.end(), typeOfOption) != allowedTypes.end()){ 
           if(typeOfOption == "int"){
             auto value = item.second.get_value<int>();
-      //      std::cout << "value: "<< value << std::endl;
             mapOptions.insert(std::make_pair(key, value));
           }
           else if(typeOfOption == "std::string"){
             auto value = item.second.get_value<std::string>();
-      //      std::cout << "value: "<< value << std::endl;
             mapOptions.insert(std::make_pair(key, value));
           }
           else if(typeOfOption == "float"){
             auto value = item.second.get_value<float>();
-      //      std::cout << "value: "<< value << std::endl;
             mapOptions.insert(std::make_pair(key, value));
           }
           else if(typeOfOption == "double"){
             auto value = item.second.get_value<double>();
-      //      std::cout << "value: "<< value << std::endl;
             mapOptions.insert(std::make_pair(key, value));
           }
           else if(typeOfOption == "bool"){
             auto value = item.second.get_value<bool>();
-      //      std::cout << "value: "<< value << std::endl;
             mapOptions.insert(std::make_pair(key, value));
           }
           else if(typeOfOption == "std::vector<std::string>"){
             std::vector<std::string> values;
             for(pt::ptree::value_type & value : optionsTree.get_child(key)){
-    //          std::cout << "value: "<< value.second.get_value<std::string>() << std::endl;
               values.push_back(value.second.get_value<std::string>());
             }
             mapOptions.insert(std::make_pair(key, values));
@@ -94,7 +84,6 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
           else if(typeOfOption == "std::vector<int>"){
             std::vector<int> values;
             for(pt::ptree::value_type & value : optionsTree.get_child(key)){
-    //          std::cout << "value: "<< value.second.get_value<int>() << std::endl;
               values.push_back(value.second.get_value<int>());
             }
             mapOptions.insert(std::make_pair(key, values));
