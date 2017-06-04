@@ -58,7 +58,7 @@ public:
   void addTransformFunction(const std::string& name, Transformer transformFunction);
 
   std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap) const;
-  /// transformation functions ?
+
   static std::pair <std::string, boost::any>appendSlash(boost::any option);
   static std::pair <std::string, boost::any>setInputFileType(boost::any option);
   static std::pair <std::string, boost::any>getLowerEventBound(boost::any option);

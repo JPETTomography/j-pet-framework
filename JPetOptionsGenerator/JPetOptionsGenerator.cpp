@@ -205,14 +205,11 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
     for (const auto & dirAndFile : dirsAndFiles) {
       options["scopeInputDirectory_std::string"] = dirAndFile.first;
       options["inputFile_std::string"] = dirAndFile.second;
- //     auto stringMap = optTypeHandler.anyMapToStringMap(options);
       optionContainer.push_back(JPetOptions(options));
     }
   } else {
-    /// for every single input file we create separate JPetOptions
     for (const auto & file : files) {
       options["inputFile_std::string"] = file;
-  //    auto stringMap = optTypeHandler.anyMapToStringMap(options);
       optionContainer.push_back(JPetOptions(options));
     }
   }
