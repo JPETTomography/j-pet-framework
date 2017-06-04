@@ -128,13 +128,8 @@ BOOST_AUTO_TEST_CASE(generateOptionsTest)
 
   std::vector<JPetOptions> options = cmdParser.generateOptions(variablesMap);
   JPetOptions firstOption = options.front();
-  // for (auto & opt: firstOption.getOptions()){
-  //   std::cout<<"Option name: "<<opt.first<<" Option value: "<<opt.second<<std::endl;
-  // }
   BOOST_REQUIRE(strcmp(firstOption.getInputFile(), "unitTestData/JPetCmdParserTest/data.hld") == 0);
   BOOST_REQUIRE(firstOption.getInputFileType() == JPetOptions::kHld);
-  //BOOST_REQUIRE(firstOption.getOutputFile() == "root");
-  //BOOST_REQUIRE(firstOption.getOutputFileType() == "test.root");
   BOOST_REQUIRE(firstOption.getFirstEvent() == 2);
   BOOST_REQUIRE(firstOption.getLastEvent() == 4);
   BOOST_REQUIRE(firstOption.getRunNumber() == 231);
@@ -305,36 +300,7 @@ BOOST_AUTO_TEST_CASE(checkIfFumctionToAddOptionsFromCfgFileWork)
   BOOST_REQUIRE(options.count("myAnotherOption_std::string"));
 }
 
-// BOOST_AUTO_TEST_CASE(checkIfFumctionToAddMissingDefaultOptionsWork)
-// {
-//   JPetOptionsGenerator generator;
 
-//   auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -b 1 -l unitTestData/JPetCmdParserTest/input.json -L output.json";
-//   auto args_char = createArgs(commandLine);
-//   auto argc = args_char.size();
-//   auto argv = args_char.data();
-
-//   po::options_description description("Allowed options");
-//   description.add_options()
-//   ("file_std::vector<std::string>,f", po::value<std::vector<std::string>>(), "File(s) to open")
-//   ("type_std::string,t", po::value<std::string>(), "type of file: hld, zip, root or scope")
-//   ("range_std::vector<int>,r", po::value<std::vector<int>>(), "Range of events to process.")
-//   ("param_std::string,p", po::value<std::string>(), "File with TRB numbers.")
-//   ("runId_int,i", po::value<int>(), "Run id.")
-//   ("progressBar_bool,b", po::bool_switch()->default_value(false), "Progress bar.")
-//   ("localDB_std::string,l", po::value<std::string>(), "The file to use as the parameter database.")
-//   ("localDBCreate_std::string,L", po::value<std::string>(), "Where to save the parameter database.")
-//   ;
-
-//   po::variables_map variablesMap;
-//   po::store(po::parse_command_line(argc, argv, description), variablesMap);
-//   po::notify(variablesMap);
-
-//   auto options = generator.variablesMapToOption(variablesMap);
-//   generator.addMissingDefaultOptions(options);
-//   BOOST_REQUIRE_EQUAL(any_cast<std::string>(mapAfterTransformation.at("outputPath_std::string")), (pathForCorrection + '/'));
-//   BOOST_REQUIRE_EQUAL(any_cast<int>(mapAfterTransformation.at("lastEvent_int")), 2);
-// }
 BOOST_AUTO_TEST_CASE(checkIfGetOptionAndIsOptionWork)
 {
   std::map<std::string, boost::any> options = {

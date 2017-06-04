@@ -113,30 +113,23 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
   std::cout<<"getOptionsDescriptionTest"<<std::endl;
   JPetCmdParser cmdParser;
   auto optionDescription = cmdParser.getOptionsDescription();
-  //optionDescription.add
-  //optionDescription.find()
+
   auto helpOptionDescription = optionDescription.find("help", true);
-  //cout << helpOptionDescription.description() << endl;
+
   BOOST_REQUIRE(std::string(helpOptionDescription.description()) == "Displays this help message.");
-  //cout << helpOptionDescription.format_name() << endl;
+
   BOOST_REQUIRE(std::string(helpOptionDescription.format_name()) == "-h [ --help ]");
 
   auto typeOptionDescription = optionDescription.find("type_std::string", true);
-  //cout << typeOptionDescription.description() << endl;
   BOOST_REQUIRE(std::string(typeOptionDescription.description()) == "Type of file: hld, zip, root or scope.");
-  //cout << typeOptionDescription.format_name() << endl;
   BOOST_REQUIRE(std::string(typeOptionDescription.format_name()) == "-t [ --type_std::string ]");
 
   auto fileOptionDescription = optionDescription.find("file_std::vector<std::string>", true);
-  //cout << fileOptionDescription.description() << endl;
   BOOST_REQUIRE(std::string(fileOptionDescription.description()) == "File(s) to open.");
-  //cout << fileOptionDescription.format_name() << endl;
   BOOST_REQUIRE(std::string(fileOptionDescription.format_name()) == "-f [ --file_std::vector<std::string> ]");
 
   auto rangeOptionDescription = optionDescription.find("range_std::vector<int>", true);
-  //cout << rangeOptionDescription.description() << endl;
   BOOST_REQUIRE(std::string(rangeOptionDescription.description()) == "Range of events to process e.g. -r 1 1000 .");
-  //cout << rangeOptionDescription.format_name() << endl;
   BOOST_REQUIRE(std::string(rangeOptionDescription.format_name()) == "-r [ --range_std::vector<int> ]");
 
   auto unpackerConfigOptionDescription = optionDescription.find("unpackerConfigFile_std::string", true);
@@ -148,15 +141,11 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
   BOOST_REQUIRE(std::string(unpackerCalibOptionDescription.format_name()) == "-c [ --unpackerCalibFile_std::string ]");
   
   auto runIdOptionDescription = optionDescription.find("runId_int", true);
-  //cout << runIdOptionDescription.description() << endl;
   BOOST_REQUIRE(std::string(runIdOptionDescription.description()) == "Run id.");
-  //cout << runIdOptionDescription.format_name() << endl;
   BOOST_REQUIRE(std::string(runIdOptionDescription.format_name()) == "-i [ --runId_int ]");
 
   auto progressBarOptionDescription = optionDescription.find("progressBar_bool", true);
-  //cout << progressBarOptionDescription.description() << endl;
   BOOST_REQUIRE(std::string(progressBarOptionDescription.description()) == "Progress bar.");
-  //cout << progressBarOptionDescription.format_name() << endl;
   BOOST_REQUIRE(std::string(progressBarOptionDescription.format_name()) == "-b [ --progressBar_bool ]");
 }
 
