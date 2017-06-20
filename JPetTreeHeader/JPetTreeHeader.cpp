@@ -20,6 +20,8 @@
 ClassImp(JPetTreeHeader);
 
 JPetTreeHeader::JPetTreeHeader():
+  fFrameworkVersion("unknown"),
+  fFrameworkRevision("unknown"),
   fRunNo(-1),
   fBaseFilename("filename not set"),
   fSourcePosition(-1),
@@ -28,6 +30,8 @@ JPetTreeHeader::JPetTreeHeader():
 }
 
 JPetTreeHeader::JPetTreeHeader(int run):
+  fFrameworkVersion("unknown"),
+  fFrameworkRevision("unknown"),
   fRunNo(run),
   fBaseFilename("filename not set"),
   fSourcePosition(-1),
