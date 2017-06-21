@@ -22,7 +22,7 @@
 #include "../JPetCommonTools/JPetCommonTools.h"
 
 #include "../JPetLoggerInclude.h"
-
+#include "../version.h"
 
 JPetTaskIO::JPetTaskIO():
   fEventNb(-1),
@@ -137,7 +137,9 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
     if (fOptions.getInputFileType() == JPetOptions::kHld ) {
       // create a header to be stored along with the output tree
       fHeader = new JPetTreeHeader(fOptions.getRunNumber());
-
+      fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
+      fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
+      
       // add general info to the Tree header
       fHeader->setBaseFileName(fOptions.getInputFile());
 
