@@ -17,6 +17,7 @@
 
 #ifndef _HELPERMATHFUNCTIONS_H_
 #define _HELPERMATHFUNCTIONS_H_
+#include <boost/serialization/array_wrapper.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
 using namespace boost::numeric::ublas;
