@@ -15,10 +15,12 @@
 
 #include <math.h>
 #include <cassert>
-#include "HelperMathFunctions.h"
 #include "JPetSimplePhysSignalReco.h"
 #include "../JPetWriter/JPetWriter.h"
+#include "HelperMathFunctions.h"
 #include <boost/property_tree/json_parser.hpp>
+
+using namespace boost::numeric::ublas;
 
 JPetSimplePhysSignalReco::JPetSimplePhysSignalReco():
   fAlpha(1),
