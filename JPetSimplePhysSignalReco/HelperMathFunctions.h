@@ -20,11 +20,12 @@
 #include <boost/serialization/array_wrapper.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
-using namespace boost::numeric::ublas;
 
-float polynomialFit(const vector<float>& t, const vector<float>& v_source, int alfa, float v0)
+namespace ublas = boost::numeric::ublas;
+
+float polynomialFit(const ublas::vector<float>& t, const ublas::vector<float>& v_source, int alfa, float v0)
 {
-  vector<float> v(v_source);
+  ublas::vector<float> v(v_source);
   int K;
   float tSig = -1.0;
   float a, b;
