@@ -40,7 +40,6 @@ void DBConfigControler::readConfigFileAndFillDBConfigData(const std::string& p_c
     std::string message = "Error opening config file. Error = " + std::string(error.what());
     std::cerr << message << std::endl;
   }
-  std::cout <<"check loaded data" << p_dbConfigData <<std::endl;
 }
 
 } // namespace FUNCTIONS
