@@ -10,23 +10,34 @@ import sys
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
-def parse():
-    for infile in glob.glob('*.xml'):
-        try:
-            tree = ET.parse(infile)
-            root = tree.getroot()
-            if root.findall('.//FatalError'):
-                element=root.findall('.//FatalError')[0]
-                eprint("Error detected")
-                print(infile)
-                print(element.text)
-                sys.exit(1)
-        except ParseError:
-            eprint("The file xml isn't correct. There were some mistakes in the tests ")
-            sys.exit(1)
+def parseXmlReports():
+  all_errors = []
+  for infile in glob.glob('*.xml'):
+    try:
+      tree = ET.parse(infile)
+      root = tree.getroot()
+      errors = root.findall('.//FatalError')
+      exceptions = root.findall('.//Exception')
+      all_errors = all_errors + errors + exceptions
+    except ParseError:
+      eprint("The file format is not a correct xml. There were some mistakes in the tests ")
+      sys.exit(1)
+  if all_errors:
+    for occur in all_errors:
+      eprint("*******************")
+      eprint("type: " +occur.tag)
+      eprint("message: "+occur.text)
+      eprint("additional message: " + str(occur.attrib))
+      for subInfo in occur:
+        eprint("info:" +subInfo.tag)
+        eprint("additional info: " + str(subInfo.attrib))
+    return False 
+  return True
 
 def main():
-    parse()
-
+  res = parseXmlReports()
+  if not res:
+    sys.exit(1)
+    
 if __name__ == '__main__':
     main()
