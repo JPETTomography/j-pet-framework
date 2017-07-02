@@ -14,7 +14,6 @@ install:
   - sudo apt-get install -y git
   - sudo apt-get install -y libboost-all-dev 
   - sudo apt-get install -y libpqxx-3.1 libpqxx3-dev 
-  - sudo apt-get install -y libconfig++ 
   - sudo apt-get install -y cmake 
   - sudo apt-get install -y libtinyxml2-dev
   - sudo apt-get install -y doxygen
@@ -29,7 +28,7 @@ script:
     - mkdir build
     - cd build
     - cmake ..
-    - cp ../DBHandler/Config/configDB.cfg.koza ../DBHandler/Config/configDB.cfg;
+    - cp ../DBHandler/Config/configDB.json.koza ../DBHandler/Config/configDB.json;
     - make all tests
     - cd tests
     - ./run_tests.pl -f xml
