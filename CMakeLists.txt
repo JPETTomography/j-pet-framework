@@ -56,6 +56,9 @@ find_package(Boost 1.50.0 REQUIRED COMPONENTS
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 add_definitions(${Boost_DEFINITIONS})
 
+find_package(FFTW REQUIRED)
+include_directories(${FFTW_INCLUDE_DIRS})
+
 get_directory_property(has_parent PARENT_DIRECTORY)
 if(has_parent)
   # export ROOT, Boost and pqxx includes to depending projects
@@ -167,7 +170,8 @@ foreach(test_source ${UNIT_TEST_SOURCES})
   target_link_libraries(${test}.x
     JPetFramework
     ${Boost_LIBRARIES}
-    )
+    ${FFTW_LIBRARIES}
+    ) #change to only JPetRecoImageTools link FFTW
 endforeach()
 
 add_custom_target(tests DEPENDS ${test_binaries} ${TESTS_DIR}/unitTestData)
