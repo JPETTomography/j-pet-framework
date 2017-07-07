@@ -11,7 +11,8 @@
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-BOOST_AUTO_TEST_CASE(rescale_0) {
+BOOST_AUTO_TEST_CASE(rescale_0)
+{
   JPetRecoImageTools::Matrix2DProj matrix = {{3, 0}, {0, 0}};
   double resFact = 5;
   double minCutoff = 0;
@@ -23,7 +24,8 @@ BOOST_AUTO_TEST_CASE(rescale_0) {
   BOOST_REQUIRE_CLOSE(matrix[1][1], 0, epsilon);
 }
 
-BOOST_AUTO_TEST_CASE(rescale) {
+BOOST_AUTO_TEST_CASE(rescale)
+{
   JPetRecoImageTools::Matrix2DProj matrix = {{2, 1}, {1, 1}};
   double resFact = 2;
   double minCutoff = 0;
@@ -35,7 +37,8 @@ BOOST_AUTO_TEST_CASE(rescale) {
   BOOST_REQUIRE_CLOSE(matrix[1][1], 0, epsilon);
 }
 
-BOOST_AUTO_TEST_CASE(rescale_2) {
+BOOST_AUTO_TEST_CASE(rescale_2)
+{
   JPetRecoImageTools::Matrix2DProj matrix = {{5, 2}, {1, 2}};
   double resFact = 2;
   double minCutoff = 0;
@@ -47,7 +50,8 @@ BOOST_AUTO_TEST_CASE(rescale_2) {
   BOOST_REQUIRE_CLOSE(matrix[1][1], 0.5, epsilon);
 }
 
-BOOST_AUTO_TEST_CASE(rescale_3) {
+BOOST_AUTO_TEST_CASE(rescale_3)
+{
   JPetRecoImageTools::Matrix2DProj matrix = {{5, 3}, {1, 2}};
   double resFact = 8;
   double minCutoff = 2; /// -> 5, 3 , 2, 2
@@ -59,7 +63,8 @@ BOOST_AUTO_TEST_CASE(rescale_3) {
   BOOST_REQUIRE_CLOSE(matrix[1][0], 0 * 8. / 3., epsilon);
   BOOST_REQUIRE_CLOSE(matrix[1][1], 0, epsilon);
 }
-BOOST_AUTO_TEST_CASE(matrixGetterFactoryTest) {
+BOOST_AUTO_TEST_CASE(matrixGetterFactoryTest)
+{
   double epsilon = 0.00001;
   JPetRecoImageTools::Matrix2D matrix = {{1, 2}, {3, 4}};
   auto getter = JPetRecoImageTools::matrixGetterFactory(matrix, false);
@@ -79,7 +84,8 @@ BOOST_AUTO_TEST_CASE(matrixGetterFactoryTest) {
                       epsilon); /// out of range should return 0
 }
 
-BOOST_AUTO_TEST_CASE(nearestNeighbour) {
+BOOST_AUTO_TEST_CASE(nearestNeighbour)
+{
   double epsilon = 0.00001;
   JPetRecoImageTools::Matrix2D matrix = {{1, 2}, {3, 4}};
   auto getter = JPetRecoImageTools::matrixGetterFactory(matrix, false);
@@ -113,7 +119,8 @@ BOOST_AUTO_TEST_CASE(nearestNeighbour) {
                       epsilon); // (1,1)
 }
 
-BOOST_AUTO_TEST_CASE(linear) {
+BOOST_AUTO_TEST_CASE(linear)
+{
   double epsilon = 0.00001;
   JPetRecoImageTools::Matrix2D matrix = {{1, 2}, {3, 4}};
   auto getter = JPetRecoImageTools::matrixGetterFactory(matrix, false);
@@ -303,7 +310,8 @@ func, func2);
 //std::cout <<j <<std::endl;
 //}
 */
-BOOST_AUTO_TEST_CASE(projection1) {
+BOOST_AUTO_TEST_CASE(projection1)
+{
   double epsilon = 0.00001;
   JPetRecoImageTools::Matrix2D matrix = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
   /// 1 2 3
@@ -313,7 +321,7 @@ BOOST_AUTO_TEST_CASE(projection1) {
   int imageSize = matrix.size();
   double center = (float)(imageSize - 1) / 2.0;
   double length = center * center;
-  std::function<double(int, int)> matrixGet;
+  std::function< double(int, int) > matrixGet;
   matrixGet = JPetRecoImageTools::matrixGetterFactory(
       matrix, false); // The matrix  elements will be taken as (x,y).
   double step = (M_PI / 180);
@@ -344,7 +352,8 @@ BOOST_AUTO_TEST_CASE(projection1) {
                       6, epsilon); // 3 + 2 + 1
 }
 
-BOOST_AUTO_TEST_CASE(projection2) {
+BOOST_AUTO_TEST_CASE(projection2)
+{
   double epsilon = 0.00001;
   JPetRecoImageTools::Matrix2D matrix = {{1, 2}, {3, 4}};
   /// 1 2
@@ -353,7 +362,7 @@ BOOST_AUTO_TEST_CASE(projection2) {
   int imageSize = matrix.size();
   double center = (float)(imageSize - 1) / 2.0;
   double length = center * center;
-  std::function<double(int, int)> matrixGet;
+  std::function< double(int, int) > matrixGet;
   matrixGet = JPetRecoImageTools::matrixGetterFactory(
       matrix, false); // The matrix  elements will be taken as (x,y).
   double step = (M_PI / 180);
@@ -378,7 +387,8 @@ BOOST_AUTO_TEST_CASE(projection2) {
                       3, epsilon); // 1 + 2
 }
 
-BOOST_AUTO_TEST_CASE(projection3) {
+BOOST_AUTO_TEST_CASE(projection3)
+{
   double epsilon = 0.00001;
   JPetRecoImageTools::Matrix2D matrix = {{1, 2, 3, 4, 5},
                                          {6, 7, 8, 9, 10},
@@ -395,7 +405,7 @@ BOOST_AUTO_TEST_CASE(projection3) {
   int imageSize = matrix.size();
   double center = (float)(imageSize - 1) / 2.0;
   double length = center * center;
-  std::function<double(int, int)> matrixGet;
+  std::function< double(int, int) > matrixGet;
   matrixGet = JPetRecoImageTools::matrixGetterFactory(
       matrix, false); // The matrix  elements will be taken as (x,y).
   double step = (M_PI / 180);
@@ -445,7 +455,8 @@ BOOST_AUTO_TEST_CASE(projection3) {
                       15, epsilon); // 5 + 4 + 3 + 2 + 1
 }
 
-BOOST_AUTO_TEST_CASE(projection4) {
+BOOST_AUTO_TEST_CASE(projection4)
+{
   double epsilon = 0.00001;
   JPetRecoImageTools::Matrix2D matrix = {
       {1, 10, 100, 1000, 10000, 100000, 1000000},
@@ -458,7 +469,7 @@ BOOST_AUTO_TEST_CASE(projection4) {
   int imageSize = matrix.size();
   double center = (float)(imageSize - 1) / 2.0;
   double length = center * center;
-  std::function<double(int, int)> matrixGet;
+  std::function< double(int, int) > matrixGet;
   matrixGet = JPetRecoImageTools::matrixGetterFactory(
       matrix, false); // The matrix  elements will be taken as (x,y).
   double step = (M_PI / 180);
@@ -514,7 +525,8 @@ BOOST_AUTO_TEST_CASE(projection4) {
 }
 
 // This test takes a Shepp-Logan phantom and creates a sinogram.
-BOOST_AUTO_TEST_CASE(sinogram) {
+BOOST_AUTO_TEST_CASE(sinogram)
+{
   const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
   const auto outFile = "sinogram.ppm";
   /// read phantom
@@ -528,26 +540,31 @@ BOOST_AUTO_TEST_CASE(sinogram) {
   in >> height;
   int val;
   in >> val; // skip max val
-  std::vector<std::vector<int>> m(width, std::vector<int>(height));
-  for (unsigned int i = 0; i < width; i++) {
-    for (unsigned int j = 0; j < height; j++) {
+  std::vector< std::vector< int > > m(width, std::vector< int >(height));
+  for (unsigned int i = 0; i < width; i++)
+  {
+    for (unsigned int j = 0; j < height; j++)
+    {
       in >> val;
       m[i][j] = val;
     }
   }
   int views = 180;
   int scans = 256;
-  std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram(
-      m, views, scans, 0, 180, JPetRecoImageTools::linear,
-      JPetRecoImageTools::rescale);
+  std::vector< std::vector< double > > result =
+      JPetRecoImageTools::createSinogramWithSingleInterpolation(
+          m, views, scans, 0, 180, JPetRecoImageTools::linear,
+          JPetRecoImageTools::rescale);
   /// save sinogram
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
   res << "255" << std::endl;
-  for (unsigned int i = 0; i < result.size(); i++) {
-    for (unsigned int j = 0; j < result[0].size(); j++) {
-      res << static_cast<int>(result[i][j]) << " ";
+  for (unsigned int i = 0; i < result.size(); i++)
+  {
+    for (unsigned int j = 0; j < result[0].size(); j++)
+    {
+      res << static_cast< int >(result[i][j]) << " ";
     }
     res << std::endl;
   }
@@ -556,7 +573,8 @@ BOOST_AUTO_TEST_CASE(sinogram) {
 }
 
 // This test takes a Shepp-Logan phantom and creates a sinogram.
-BOOST_AUTO_TEST_CASE(sinogram2) {
+BOOST_AUTO_TEST_CASE(sinogram2)
+{
   const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
   const auto outFile = "sinogram2.ppm";
   /// read phantom
@@ -570,23 +588,28 @@ BOOST_AUTO_TEST_CASE(sinogram2) {
   in >> height;
   int val;
   in >> val; // skip max val
-  std::vector<std::vector<int>> m(width, std::vector<int>(height));
-  for (unsigned int i = 0; i < width; i++) {
-    for (unsigned int j = 0; j < height; j++) {
+  std::vector< std::vector< int > > m(width, std::vector< int >(height));
+  for (unsigned int i = 0; i < width; i++)
+  {
+    for (unsigned int j = 0; j < height; j++)
+    {
       in >> val;
       m[i][j] = val;
     }
   }
-  std::vector<std::vector<double>> result = JPetRecoImageTools::sinogram2(
-      m, 180, JPetRecoImageTools::rescale, 0, 255);
+  std::vector< std::vector< double > > result =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
   /// save sinogram
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
   res << "255" << std::endl;
-  for (unsigned int i = 0; i < result.size(); i++) {
-    for (unsigned int j = 0; j < result[0].size(); j++) {
-      res << static_cast<int>(result[i][j]) << " ";
+  for (unsigned int i = 0; i < result.size(); i++)
+  {
+    for (unsigned int j = 0; j < result[0].size(); j++)
+    {
+      res << static_cast< int >(result[i][j]) << " ";
     }
     res << std::endl;
   }
@@ -594,7 +617,8 @@ BOOST_AUTO_TEST_CASE(sinogram2) {
   BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
 }
 
-BOOST_AUTO_TEST_CASE(backProject) {
+BOOST_AUTO_TEST_CASE(backProject)
+{
   const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
   const auto outFile = "backproject.ppm";
   /// read phantom
@@ -608,28 +632,32 @@ BOOST_AUTO_TEST_CASE(backProject) {
   in >> height;
   int val;
   in >> val; // skip max val
-  std::vector<std::vector<int>> m(width, std::vector<int>(height));
-  for (unsigned int i = 0; i < width; i++) {
-    for (unsigned int j = 0; j < height; j++) {
+  std::vector< std::vector< int > > m(width, std::vector< int >(height));
+  for (unsigned int i = 0; i < width; i++)
+  {
+    for (unsigned int j = 0; j < height; j++)
+    {
       in >> val;
       m[i][j] = val;
     }
   }
   int views = 180;
   int scans = 256;
-  JPetRecoImageTools::Matrix2DProj sinogram = JPetRecoImageTools::sinogram(
-      m, views, scans, 0, 180, JPetRecoImageTools::linear,
-      JPetRecoImageTools::rescale);
-  //JPetRecoImageTools::FilterFunc(JPetRecoImageTools::RamLak, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithSingleInterpolation(
+          m, views, scans, 0, 180, JPetRecoImageTools::linear,
+          JPetRecoImageTools::rescale);
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
       sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
   res << "255" << std::endl;
-  for (unsigned int i = 0; i < result.size(); i++) {
-    for (unsigned int j = 0; j < result[0].size(); j++) {
-      res << static_cast<int>(result[i][j]) << " ";
+  for (unsigned int i = 0; i < result.size(); i++)
+  {
+    for (unsigned int j = 0; j < result[0].size(); j++)
+    {
+      res << static_cast< int >(result[i][j]) << " ";
     }
     res << std::endl;
   }
@@ -637,7 +665,8 @@ BOOST_AUTO_TEST_CASE(backProject) {
   BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
 }
 
-BOOST_AUTO_TEST_CASE(backProjectNone) {
+BOOST_AUTO_TEST_CASE(backProjectNone)
+{
   const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
   const auto outFile = "backprojectNone.ppm";
   /// read phantom
@@ -651,25 +680,30 @@ BOOST_AUTO_TEST_CASE(backProjectNone) {
   in >> height;
   int val;
   in >> val; // skip max val
-  std::vector<std::vector<int>> m(width, std::vector<int>(height));
-  for (unsigned int i = 0; i < width; i++) {
-    for (unsigned int j = 0; j < height; j++) {
+  std::vector< std::vector< int > > m(width, std::vector< int >(height));
+  for (unsigned int i = 0; i < width; i++)
+  {
+    for (unsigned int j = 0; j < height; j++)
+    {
       in >> val;
       m[i][j] = val;
     }
   }
-  JPetRecoImageTools::Matrix2DProj sinogram = JPetRecoImageTools::sinogram2(
-      m, 180, JPetRecoImageTools::rescale, 0, 255);
-  //JPetRecoImageTools::FilterFunc(JPetRecoImageTools::None, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::FilterSinogram(JPetRecoImageTools::NoneFilter, sinogram);
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
       sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
   res << "255" << std::endl;
-  for (unsigned int i = 0; i < result.size(); i++) {
-    for (unsigned int j = 0; j < result[0].size(); j++) {
-      res << static_cast<int>(result[i][j]) << " ";
+  for (unsigned int i = 0; i < result.size(); i++)
+  {
+    for (unsigned int j = 0; j < result[0].size(); j++)
+    {
+      res << static_cast< int >(result[i][j]) << " ";
     }
     res << std::endl;
   }
@@ -677,7 +711,8 @@ BOOST_AUTO_TEST_CASE(backProjectNone) {
   BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
 }
 
-BOOST_AUTO_TEST_CASE(backProjectRamLak) {
+BOOST_AUTO_TEST_CASE(backProjectRamLak)
+{
   const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
   const auto outFile = "backprojectRamLak.ppm";
   /// read phantom
@@ -691,26 +726,31 @@ BOOST_AUTO_TEST_CASE(backProjectRamLak) {
   in >> height;
   int val;
   in >> val; // skip max val
-  std::vector<std::vector<int>> m(width, std::vector<int>(height));
-  for (unsigned int i = 0; i < width; i++) {
-    for (unsigned int j = 0; j < height; j++) {
+  std::vector< std::vector< int > > m(width, std::vector< int >(height));
+  for (unsigned int i = 0; i < width; i++)
+  {
+    for (unsigned int j = 0; j < height; j++)
+    {
       in >> val;
       m[i][j] = val;
     }
   }
-  JPetRecoImageTools::Matrix2DProj sinogram = JPetRecoImageTools::sinogram2(
-      m, 180, JPetRecoImageTools::rescale, 0, 255);
-  JPetRecoImageTools::RamLak(sinogram);
-  // JPetRecoImageTools::FilterFunc(JPetRecoImageTools::RamLak, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::FilterSinogram(JPetRecoImageTools::RamLakFilter,
+                                     sinogram);
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
       sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
   res << "255" << std::endl;
-  for (unsigned int i = 0; i < result.size(); i++) {
-    for (unsigned int j = 0; j < result[0].size(); j++) {
-      res << static_cast<int>(result[i][j]) << " ";
+  for (unsigned int i = 0; i < result.size(); i++)
+  {
+    for (unsigned int j = 0; j < result[0].size(); j++)
+    {
+      res << static_cast< int >(result[i][j]) << " ";
     }
     res << std::endl;
   }
@@ -718,7 +758,8 @@ BOOST_AUTO_TEST_CASE(backProjectRamLak) {
   BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
 }
 
-BOOST_AUTO_TEST_CASE(backProjectSheppLogan) {
+BOOST_AUTO_TEST_CASE(backProjectSheppLogan)
+{
   const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
   const auto outFile = "backprojectSheppLogan.ppm";
   /// read phantom
@@ -732,25 +773,31 @@ BOOST_AUTO_TEST_CASE(backProjectSheppLogan) {
   in >> height;
   int val;
   in >> val; // skip max val
-  std::vector<std::vector<int>> m(width, std::vector<int>(height));
-  for (unsigned int i = 0; i < width; i++) {
-    for (unsigned int j = 0; j < height; j++) {
+  std::vector< std::vector< int > > m(width, std::vector< int >(height));
+  for (unsigned int i = 0; i < width; i++)
+  {
+    for (unsigned int j = 0; j < height; j++)
+    {
       in >> val;
       m[i][j] = val;
     }
   }
-  JPetRecoImageTools::Matrix2DProj sinogram = JPetRecoImageTools::sinogram2(
-      m, 180, JPetRecoImageTools::rescale, 0, 255);
-  //JPetRecoImageTools::FilterFunc(JPetRecoImageTools::SheppLogan, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::FilterSinogram(JPetRecoImageTools::SheppLoganFilter,
+                                     sinogram);
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
       sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
   res << "255" << std::endl;
-  for (unsigned int i = 0; i < result.size(); i++) {
-    for (unsigned int j = 0; j < result[0].size(); j++) {
-      res << static_cast<int>(result[i][j]) << " ";
+  for (unsigned int i = 0; i < result.size(); i++)
+  {
+    for (unsigned int j = 0; j < result[0].size(); j++)
+    {
+      res << static_cast< int >(result[i][j]) << " ";
     }
     res << std::endl;
   }
@@ -758,7 +805,8 @@ BOOST_AUTO_TEST_CASE(backProjectSheppLogan) {
   BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
 }
 
-BOOST_AUTO_TEST_CASE(backProjectCosine) {
+BOOST_AUTO_TEST_CASE(backProjectCosine)
+{
   const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
   const auto outFile = "backprojectCosine.ppm";
   /// read phantom
@@ -772,33 +820,40 @@ BOOST_AUTO_TEST_CASE(backProjectCosine) {
   in >> height;
   int val;
   in >> val; // skip max val
-  std::vector<std::vector<int>> m(width, std::vector<int>(height));
-  for (unsigned int i = 0; i < width; i++) {
-    for (unsigned int j = 0; j < height; j++) {
+  std::vector< std::vector< int > > m(width, std::vector< int >(height));
+  for (unsigned int i = 0; i < width; i++)
+  {
+    for (unsigned int j = 0; j < height; j++)
+    {
       in >> val;
       m[i][j] = val;
     }
   }
-  JPetRecoImageTools::Matrix2DProj sinogram = JPetRecoImageTools::sinogram2(
-      m, 180, JPetRecoImageTools::rescale, 0, 255);
-  //JPetRecoImageTools::FilterFunc(JPetRecoImageTools::Cosine, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::FilterSinogram(JPetRecoImageTools::CosineFilter,
+                                     sinogram);
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
       sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
   res << "255" << std::endl;
-  for (unsigned int i = 0; i < result.size(); i++) {
-    for (unsigned int j = 0; j < result[0].size(); j++) {
-      res << static_cast<int>(result[i][j]) << " ";
+  for (unsigned int i = 0; i < result.size(); i++)
+  {
+    for (unsigned int j = 0; j < result[0].size(); j++)
+    {
+      res << static_cast< int >(result[i][j]) << " ";
     }
     res << std::endl;
   }
   res.close();
   BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
 }
-
-BOOST_AUTO_TEST_CASE(backProjectHamming) {
+/*
+BOOST_AUTO_TEST_CASE(backProjectHamming)
+{
   const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
   const auto outFile = "backprojectHamming.ppm";
   /// read phantom
@@ -812,33 +867,39 @@ BOOST_AUTO_TEST_CASE(backProjectHamming) {
   in >> height;
   int val;
   in >> val; // skip max val
-  std::vector<std::vector<int>> m(width, std::vector<int>(height));
-  for (unsigned int i = 0; i < width; i++) {
-    for (unsigned int j = 0; j < height; j++) {
+  std::vector< std::vector< int > > m(width, std::vector< int >(height));
+  for (unsigned int i = 0; i < width; i++)
+  {
+    for (unsigned int j = 0; j < height; j++)
+    {
       in >> val;
       m[i][j] = val;
     }
   }
   JPetRecoImageTools::Matrix2DProj sinogram = JPetRecoImageTools::sinogram2(
       m, 180, JPetRecoImageTools::rescale, 0, 255);
-  //JPetRecoImageTools::FilterFunc(JPetRecoImageTools::Hamming, sinogram);
+  JPetRecoImageTools::Hamming(sinogram);
+  // JPetRecoImageTools::FilterFunc(JPetRecoImageTools::Hamming, sinogram);
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
       sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
   res << "255" << std::endl;
-  for (unsigned int i = 0; i < result.size(); i++) {
-    for (unsigned int j = 0; j < result[0].size(); j++) {
-      res << static_cast<int>(result[i][j]) << " ";
+  for (unsigned int i = 0; i < result.size(); i++)
+  {
+    for (unsigned int j = 0; j < result[0].size(); j++)
+    {
+      res << static_cast< int >(result[i][j]) << " ";
     }
     res << std::endl;
   }
   res.close();
   BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
-}
+}*/
 
-BOOST_AUTO_TEST_CASE(backProjectRidgelet) {
+BOOST_AUTO_TEST_CASE(backProjectRidgelet)
+{
   const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
   const auto outFile = "backprojectRidgelet.ppm";
   /// read phantom
@@ -852,25 +913,31 @@ BOOST_AUTO_TEST_CASE(backProjectRidgelet) {
   in >> height;
   int val;
   in >> val; // skip max val
-  std::vector<std::vector<int>> m(width, std::vector<int>(height));
-  for (unsigned int i = 0; i < width; i++) {
-    for (unsigned int j = 0; j < height; j++) {
+  std::vector< std::vector< int > > m(width, std::vector< int >(height));
+  for (unsigned int i = 0; i < width; i++)
+  {
+    for (unsigned int j = 0; j < height; j++)
+    {
       in >> val;
       m[i][j] = val;
     }
   }
-  JPetRecoImageTools::Matrix2DProj sinogram = JPetRecoImageTools::sinogram2(
-      m, 180, JPetRecoImageTools::rescale, 0, 255);
-  //JPetRecoImageTools::FilterFunc(JPetRecoImageTools::Ridgelet, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetRecoImageTools::FilterSinogram(JPetRecoImageTools::RidgeletFilter,
+                                     sinogram);
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
       sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
   res << "255" << std::endl;
-  for (unsigned int i = 0; i < result.size(); i++) {
-    for (unsigned int j = 0; j < result[0].size(); j++) {
-      res << static_cast<int>(result[i][j]) << " ";
+  for (unsigned int i = 0; i < result.size(); i++)
+  {
+    for (unsigned int j = 0; j < result[0].size(); j++)
+    {
+      res << static_cast< int >(result[i][j]) << " ";
     }
     res << std::endl;
   }
