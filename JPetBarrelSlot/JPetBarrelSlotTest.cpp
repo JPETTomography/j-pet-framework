@@ -33,6 +33,7 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_REQUIRE(!slot.isActive());
   BOOST_REQUIRE(slot.getName().empty());
   BOOST_REQUIRE(slot.getInFrameID() == -1);
+  BOOST_REQUIRE(!slot.hasLayer());
 }
 
 BOOST_AUTO_TEST_CASE( constructor )
@@ -43,6 +44,7 @@ BOOST_AUTO_TEST_CASE( constructor )
   BOOST_REQUIRE(slot.isActive());
   BOOST_REQUIRE(slot.getName() == "pepe");
   BOOST_REQUIRE(slot.getInFrameID() == 6);
+  BOOST_REQUIRE(!slot.hasLayer());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -51,7 +53,8 @@ BOOST_AUTO_TEST_SUITE(FactorySuite)
 
 class TestParamGetter : public JPetParamGetter
 {
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId) {
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId)
+  {
     ParamObjectsDescriptions result;
     switch (type) {
     case ParamObjectType::kBarrelSlot:
@@ -152,7 +155,8 @@ class TestParamGetter : public JPetParamGetter
     }
     return result;
   }
-  ParamRelationalData getAllRelationalData(ParamObjectType type1, ParamObjectType, const int runId) {
+  ParamRelationalData getAllRelationalData(ParamObjectType type1, ParamObjectType, const int runId)
+  {
     ParamRelationalData result;
     switch (type1) {
     case ParamObjectType::kBarrelSlot:
@@ -214,6 +218,7 @@ BOOST_AUTO_TEST_CASE( single_object )
   BOOST_REQUIRE_CLOSE(barrelSlot->getTheta(), 5.5, epsilon);
   BOOST_REQUIRE_EQUAL(barrelSlot->getInFrameID(), 6);
 
+  BOOST_REQUIRE(barrelSlot->hasLayer());
   BOOST_REQUIRE_EQUAL(barrelSlot->getLayer().getID(), layerFactory.getLayers().at(1)->getID());
 }
 
@@ -231,6 +236,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   BOOST_REQUIRE_CLOSE(barrelSlot->getTheta(), 5.5, epsilon);
   BOOST_REQUIRE_EQUAL(barrelSlot->getInFrameID(), 6);
 
+  BOOST_REQUIRE(barrelSlot->hasLayer());
   BOOST_REQUIRE_EQUAL(barrelSlot->getLayer().getID(), layerFactory.getLayers().at(1)->getID());
 
   barrelSlot = barrelSlots[5];
@@ -240,6 +246,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   BOOST_REQUIRE_CLOSE(barrelSlot->getTheta(), 6.5, epsilon);
   BOOST_REQUIRE_EQUAL(barrelSlot->getInFrameID(), 7);
 
+  BOOST_REQUIRE(barrelSlot->hasLayer());
   BOOST_REQUIRE_EQUAL(barrelSlot->getLayer().getID(), layerFactory.getLayers().at(1)->getID());
 }
 

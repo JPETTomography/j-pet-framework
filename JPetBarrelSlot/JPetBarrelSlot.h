@@ -42,6 +42,7 @@ public:
   bool isActive() const;
   std::string getName() const;
   int getInFrameID() const;
+  bool hasLayer() const;
   const JPetLayer& getLayer() const;
 
   bool isNullObject() const;
