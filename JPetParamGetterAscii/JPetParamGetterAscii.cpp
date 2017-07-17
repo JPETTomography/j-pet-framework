@@ -44,7 +44,7 @@ ParamObjectsDescriptions JPetParamGetterAscii::getAllBasicData(ParamObjectType t
           result[id] = description;
         }
       }  else {
-        ERROR(std::string("No ")+objectsName+" in the specified run.");
+        ERROR(std::string("No ") + objectsName + " in the specified run.");
       }
     } else {
       ERROR(std::string("No run with such id:") + runNumberS);
@@ -59,7 +59,7 @@ ParamRelationalData JPetParamGetterAscii::getAllRelationalData(ParamObjectType t
 {
   std::string runNumberS = boost::lexical_cast<std::string>(runId);
   std::string objectsName = objectsNames.at(type1);
-  std::string fieldName = objectsNames.at(type2)+"_id";
+  std::string fieldName = objectsNames.at(type2) + "_id";
   ParamRelationalData result;
   if (boost::filesystem::exists(filename)) {
     boost::property_tree::ptree dataFromFile;
@@ -71,17 +71,19 @@ ParamRelationalData JPetParamGetterAscii::getAllRelationalData(ParamObjectType t
         for (auto infoRaw : infos) {
           auto info = infoRaw.second;
           ParamObjectDescription description = toDescription(info);
-          int id;
-          if (type1 == kTOMBChannel) {
-            id = boost::lexical_cast<int>(description["channel"]);
-          } else {
-            id = boost::lexical_cast<int>(description["id"]);
+          if (description.count(fieldName)) {
+            int id;
+            if (type1 == kTOMBChannel) {
+              id = boost::lexical_cast<int>(description["channel"]);
+            } else {
+              id = boost::lexical_cast<int>(description["id"]);
+            }
+            int otherId = boost::lexical_cast<int>(description[fieldName]);
+            result[id] = otherId;
           }
-          int otherId = boost::lexical_cast<int>(description[fieldName]);
-          result[id] = otherId;
         }
       }  else {
-        ERROR(std::string("No ")+objectsName+" in the specified run.");
+        ERROR(std::string("No ") + objectsName + " in the specified run.");
       }
     } else {
       ERROR(std::string("No run with such id:") + runNumberS);
@@ -92,7 +94,7 @@ ParamRelationalData JPetParamGetterAscii::getAllRelationalData(ParamObjectType t
   return result;
 }
 
-ParamObjectDescription JPetParamGetterAscii::toDescription(boost::property_tree::ptree & info)
+ParamObjectDescription JPetParamGetterAscii::toDescription(boost::property_tree::ptree& info)
 {
   ParamObjectDescription description;
   for (auto value : info) {

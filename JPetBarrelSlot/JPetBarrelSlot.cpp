@@ -66,6 +66,10 @@ int JPetBarrelSlot::getInFrameID() const
 {
   return fInFrameID;
 }
+bool JPetBarrelSlot::hasLayer() const
+{
+  return fTRefLayer.GetObject() != 0;
+}
 const JPetLayer& JPetBarrelSlot::getLayer() const
 {
   if (fTRefLayer.GetObject()) return static_cast<JPetLayer&>(*(fTRefLayer.GetObject()));

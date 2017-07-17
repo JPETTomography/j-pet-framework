@@ -63,6 +63,7 @@ public:
   void setHVgain(float g1, float g2);
   void setHVgain(const std::pair<float, float>& gain);
   void setFEB(JPetFEB& p_FEB);
+  bool hasFEB() const;
   const JPetFEB& getFEB() const;
   void setScin(JPetScin& p_scin);
   JPetScin& getScin() const;
