@@ -137,6 +137,11 @@ void JPetPM::setFEB(JPetFEB& p_FEB)
   fTRefFEB = &p_FEB;
 }
 
+bool JPetPM::hasFEB() const
+{
+  return fTRefFEB.GetObject() != 0;
+}
+
 const JPetFEB& JPetPM::getFEB() const
 {
   if (fTRefFEB.GetObject()) return (JPetFEB&) * (fTRefFEB.GetObject());
