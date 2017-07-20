@@ -45,10 +45,6 @@ find_package(PQXX REQUIRED)
 include_directories(${PQXX_INCLUDE_DIRS})
 add_definitions(${PQXX_DEFINITIONS})
 
-find_package(Config++ REQUIRED)
-include_directories(${CONFIG++_INCLUDE_DIRS})
-add_definitions(${CONFIG++_DEFINITIONS})
-
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
@@ -187,7 +183,6 @@ file(GLOB DBHANDLER_SOURCES DBHandler/SourceFiles/*.cpp)
 add_library(dbhandler SHARED ${DBHANDLER_HEADERS} ${DBHANDLER_SOURCES})
 target_link_libraries(dbhandler
   ${PQXX_LIBRARIES}
-  ${CONFIG++_LIBRARIES}
   )
 
 # copy the DB config file to an expected location
