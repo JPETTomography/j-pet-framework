@@ -5,7 +5,7 @@
 #include "../JPetDBParamGetter/JPetDBParamGetter.h"
 #include "../JPetParamManager/JPetParamManager.h"
 
-const char* gDefaultConfigFile = "../DBConfig/configDB.cfg";
+const char* gDefaultConfigFile = "../DBConfig/configDB.json";
 
 BOOST_AUTO_TEST_SUITE(DBParamGetterTS)
 
