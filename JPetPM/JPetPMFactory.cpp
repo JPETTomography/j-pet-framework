@@ -20,7 +20,7 @@
 #include <tuple>
 #include <boost/lexical_cast.hpp>
 
-std::map<int, JPetPM *> & JPetPMFactory::getPMs()
+std::map<int, JPetPM*>& JPetPMFactory::getPMs()
 {
   if (!fInitialized) {
     initialize();
@@ -52,15 +52,16 @@ void JPetPMFactory::initialize()
   }
 }
 
-JPetPM * JPetPMFactory::build(ParamObjectDescription data)
+JPetPM* JPetPMFactory::build(ParamObjectDescription data)
 {
   try {
     int id = boost::lexical_cast<int>(data.at("id"));
     JPetPM::Side side = boost::lexical_cast<bool>(data.at("is_right_side")) ? JPetPM::Side::SideB : JPetPM::Side::SideA;
-    JPetPM * result = new JPetPM(id);
+    std::string description = boost::lexical_cast<std::string>(data.at("description"));
+    JPetPM* result = new JPetPM(id, description);
     result->setSide(side);
     return result;
-  } catch (const std::exception & e) {
+  } catch (const std::exception& e) {
     ERROR(std::string("Failed to build PM with error: ") + e.what());
     throw;
   }

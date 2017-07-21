@@ -33,6 +33,7 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_REQUIRE_EQUAL(pm.getHVopt(), 0);
   BOOST_REQUIRE_CLOSE(pm.getHVgain(JPetPM::kFirst), 0, epsilon);
   BOOST_REQUIRE_CLOSE(pm.getHVgain(JPetPM::kSecond), 0, epsilon);
+  BOOST_REQUIRE_EQUAL(pm.getDescription(), "");
   BOOST_CHECK_EQUAL(pm.isNullObject(), false);
   BOOST_REQUIRE(!pm.hasFEB());
 }
@@ -59,7 +60,8 @@ class TestParamGetter : public JPetParamGetter
           {
             1, {
               {"id", "1"},
-              {"is_right_side", "1"}
+              {"is_right_side", "1"},
+              {"description", "no writing"}
             }
           }
         };
@@ -69,13 +71,15 @@ class TestParamGetter : public JPetParamGetter
           {
             1, {
               {"id", "1"},
-              {"is_right_side", "1"}
+              {"is_right_side", "1"},
+              {"description", "no writing"}
             }
           },
           {
             5, {
               {"id", "5"},
-              {"is_right_side", "0"}
+              {"is_right_side", "0"},
+              {"description", "some writing"}
             }
           }
         };
@@ -85,6 +89,7 @@ class TestParamGetter : public JPetParamGetter
           {
             1, {
               {"id", "1"},
+              {"description", "some writing"}
             }
           }
         };
@@ -94,7 +99,8 @@ class TestParamGetter : public JPetParamGetter
           {
             1, {
               {"id", "1"},
-              {"is_right_side", "probably"}
+              {"is_right_side", "probably"},
+              {"description", "some writing"}
             }
           }
         };
