@@ -7,7 +7,7 @@ os:
 - linux
 addons:
   apt:
-    packges:
+    packages:
       - sshpass
 install:
   - sudo apt-get -qq update
