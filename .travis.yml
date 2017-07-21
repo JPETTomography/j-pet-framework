@@ -23,12 +23,12 @@ script:
     - export SSHPASS=$SPHINX_PASSWORD
     - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SPHINX_USERNAME@sphinx.if.uj.edu.pl:/home/framework_configs/configDB.json DBHandler/Config/
     - ls DBHandler/Config/
-    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SPHINX_USERNAME@sphinx.if.uj.edu.pl:/home/framework_configs/configDB.json.koza DBHandler/Config/
+    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SPHINX_USERNAME@sphinx.if.uj.edu.pl:/home/framework_configs/configDB.json.sphinx DBHandler/Config/
     - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SPHINX_USERNAME@sphinx.if.uj.edu.pl:/home/framework_configs/ReadMe.txt DBHandler/Config/
     - mkdir build
     - cd build
     - cmake ..
-    - cp ../DBHandler/Config/configDB.json.koza ../DBHandler/Config/configDB.json;
+    - cp ../DBHandler/Config/configDB.json.sphinx ../DBHandler/Config/configDB.json;
     - make all tests
     - cd tests
     - ./run_tests.pl -f xml
