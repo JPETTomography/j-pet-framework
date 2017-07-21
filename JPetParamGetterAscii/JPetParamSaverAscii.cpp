@@ -98,6 +98,7 @@ boost::property_tree::ptree JPetParamSaverAscii::PMToInfo(const JPetPM& pm)
   boost::property_tree::ptree info;
   info.put("id", pm.getID());
   info.put("is_right_side", (pm.getSide() == JPetPM::Side::SideB));
+  info.put("description", pm.getDescription());
 
   info.put(objectsNames.at(ParamObjectType::kBarrelSlot) + "_id", pm.getBarrelSlot().getID());
   if (pm.hasFEB()) {

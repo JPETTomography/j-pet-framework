@@ -39,13 +39,14 @@ public:
   static  JPetPM& getDummyResult();
 
   JPetPM();
-  explicit JPetPM(int id);
+  explicit JPetPM(int id, std::string description);
   explicit JPetPM(bool isNull);
   JPetPM(Side side,
          int id,
          int HVset,
          int HVopt,
-         std::pair<float, float> HVgainNumber);
+         std::pair<float, float> HVgainNumber,
+         std::string description);
   ~JPetPM();
 
   bool operator==(const JPetPM& pm) const;
@@ -57,6 +58,7 @@ public:
   int getHVopt() const;
   float getHVgain(GainNumber nr);
   std::pair<float, float> getHVgain();
+  std::string getDescription() const;
   void setSide(Side side);
   void setHVset(int set);
   void setHVopt(int opt);
@@ -83,6 +85,7 @@ protected:
   int fHVset = 0;
   int fHVopt = 0;
   std::pair<float, float> fHVgain;
+  std::string fDescription = "";
   bool fIsNullObject = false;
 #else
   Side fSide;
@@ -90,6 +93,7 @@ protected:
   int fHVset;
   int fHVopt;
   std::pair<float, float> fHVgain;
+  std::string fDescription;
   bool fIsNullObject;
 #endif
   TRef fTRefFEB;

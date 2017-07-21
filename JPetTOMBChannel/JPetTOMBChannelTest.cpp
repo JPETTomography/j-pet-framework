@@ -14,149 +14,162 @@ class TestParamGetter : public JPetParamGetter
   {
     ParamObjectsDescriptions result;
     switch (type) {
-      case ParamObjectType::kTOMBChannel:
-        switch (runId) {
-          case 0: //No TOMBChannels
-            break;
-          case 1: //Simple single object
-          case 5: //Wrong FEB relation
-          case 6: //Wrong TRB relation
-          case 7: //Wrong PM relation
-            result = {
-              {1, {
-                    {"channel", "1"},
-                    {"local_number", "2"},
-                    {"FEB", "3"},
-                    {"threshold", "4"}
-                  }
-              }
-            };
-            break;
-          case 2: //Simple two objects
-            result = {
-              {1, {
-                    {"channel", "1"},
-                    {"local_number", "2"},
-                    {"FEB", "3"},
-                    {"threshold", "4"}
-                  }
-              },
-              {5, {
-                    {"channel", "5"},
-                    {"local_number", "3"},
-                    {"FEB", "4"},
-                    {"threshold", "5"}
-                  }
-              }
-            };
-            break;
-          case 3: //Object with missing field
-            result = {
-              {1, {
-                    {"channel", "1"},
-                    {"FEB", "3"},
-                    {"threshold", "4"}
-                  }
-              }
-            };
-            break;
-          case 4: //Object with wrong field
-            result = {
-              {1, {
-                    {"channel", "1"},
-                    {"local_number", "TVP"},
-                    {"FEB", "3"},
-                    {"threshold", "4"}
-                  }
-              }
-            };
-            break;
+    case ParamObjectType::kTOMBChannel:
+      switch (runId) {
+      case 0: //No TOMBChannels
+        break;
+      case 1: //Simple single object
+      case 5: //Wrong FEB relation
+      case 6: //Wrong TRB relation
+      case 7: //Wrong PM relation
+        result = {
+          {
+            1, {
+              {"channel", "1"},
+              {"local_number", "2"},
+              {"FEB", "3"},
+              {"threshold", "4"}
+            }
+          }
+        };
+        break;
+      case 2: //Simple two objects
+        result = {
+          {
+            1, {
+              {"channel", "1"},
+              {"local_number", "2"},
+              {"FEB", "3"},
+              {"threshold", "4"}
+            }
+          },
+          {
+            5, {
+              {"channel", "5"},
+              {"local_number", "3"},
+              {"FEB", "4"},
+              {"threshold", "5"}
+            }
+          }
+        };
+        break;
+      case 3: //Object with missing field
+        result = {
+          {
+            1, {
+              {"channel", "1"},
+              {"FEB", "3"},
+              {"threshold", "4"}
+            }
+          }
+        };
+        break;
+      case 4: //Object with wrong field
+        result = {
+          {
+            1, {
+              {"channel", "1"},
+              {"local_number", "TVP"},
+              {"FEB", "3"},
+              {"threshold", "4"}
+            }
+          }
+        };
+        break;
+      }
+      break;
+    case ParamObjectType::kPM:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"is_right_side", "1"},
+            {"description", "no writing"}
+          }
         }
-        break;
-      case ParamObjectType::kPM:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"is_right_side", "1"}
-              }
+      };
+      break;
+    case ParamObjectType::kFEB:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"active", "1"},
+            {"status", "healthy"},
+            {"description", "tall"},
+            {"version", "27"},
+            {"creator_id", "44"},
+            {"time_outputs_per_input", "2"},
+            {"no_time_outputs_per_input", "3"}
           }
-        };
-        break;
-      case ParamObjectType::kFEB:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"status", "healthy"},
-                {"description", "tall"},
-                {"version", "27"},
-                {"creator_id", "44"},
-                {"time_outputs_per_input", "2"},
-                {"no_time_outputs_per_input", "3"}
-              }
+        }
+      };
+      break;
+    case ParamObjectType::kTRB:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"type", "1"},
+            {"channel", "224"}
           }
-        };
-        break;
-      case ParamObjectType::kTRB:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"type", "1"},
-                {"channel", "224"}
-              }
+        }
+      };
+      break;
+    case ParamObjectType::kScintillator:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"attenuation_length", "10.34"},
+            {"length", "100"},
+            {"width", "4.5"},
+            {"height", "2.5"}
           }
-        };
-        break;
-      case ParamObjectType::kScintillator:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"attenuation_length", "10.34"},
-                {"length", "100"},
-                {"width", "4.5"},
-                {"height", "2.5"}
-              }
+        }
+      };
+      break;
+    case ParamObjectType::kBarrelSlot:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"active", "1"},
+            {"name", "pepe"},
+            {"theta1", "5.5"},
+            {"frame_id", "6"}
           }
-        };
-        break;
-      case ParamObjectType::kBarrelSlot:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"name", "pepe"},
-                {"theta1", "5.5"},
-                {"frame_id", "6"}
-              }
+        }
+      };
+      break;
+    case ParamObjectType::kLayer:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"active", "1"},
+            {"name", "ala"},
+            {"radius", "10.5"}
           }
-        };
-        break;
-      case ParamObjectType::kLayer:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"name", "ala"},
-                {"radius", "10.5"}
-              }
+        }
+      };
+      break;
+    case ParamObjectType::kFrame:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"active", "1"},
+            {"status", "ok"},
+            {"description", "descr1"},
+            {"version", "2"},
+            {"creator_id", "1"}
           }
-        };
-        break;
-      case ParamObjectType::kFrame:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"status", "ok"},
-                {"description", "descr1"},
-                {"version", "2"},
-                {"creator_id", "1"}
-              }
-          }
-        };
-        break;
-      default: //Other cases not needed.
-        break;
+        }
+      };
+      break;
+    default: //Other cases not needed.
+      break;
     }
     return result;
   }
@@ -164,67 +177,67 @@ class TestParamGetter : public JPetParamGetter
   {
     ParamRelationalData result;
     switch (type1) {
-      case ParamObjectType::kTOMBChannel:
-        switch (runId) {
-          case 0: //No relations
-            break;
-          case 1: //Simple single object
-            result = {
-              {1, 1}
-            };
-            break;
-          case 2: //Simple two objects
-            result = {
-              {1, 1},
-              {5, 1}
-            };
-            break;
-          case 5: //Wrong FEB relation
-            switch (type2) {
-              case ParamObjectType::kFEB:
-                result = {
-                  {1, 43}
-                };
-                break;
-              default:
-                result = {
-                  {1, 1}
-                };
-                break;
-            }
-          case 6: //Wrong TRB relation
-            switch (type2) {
-              case ParamObjectType::kTRB:
-                result = {
-                  {1, 43}
-                };
-                break;
-              default:
-                result = {
-                  {1, 1}
-                };
-                break;
-            }
-          case 7: //Wrong PM relation
-            switch (type2) {
-              case ParamObjectType::kPM:
-                result = {
-                  {1, 43}
-                };
-                break;
-              default:
-                result = {
-                  {1, 1}
-                };
-                break;
-            }
-        }
+    case ParamObjectType::kTOMBChannel:
+      switch (runId) {
+      case 0: //No relations
         break;
-      default:
+      case 1: //Simple single object
         result = {
           {1, 1}
         };
         break;
+      case 2: //Simple two objects
+        result = {
+          {1, 1},
+          {5, 1}
+        };
+        break;
+      case 5: //Wrong FEB relation
+        switch (type2) {
+        case ParamObjectType::kFEB:
+          result = {
+            {1, 43}
+          };
+          break;
+        default:
+          result = {
+            {1, 1}
+          };
+          break;
+        }
+      case 6: //Wrong TRB relation
+        switch (type2) {
+        case ParamObjectType::kTRB:
+          result = {
+            {1, 43}
+          };
+          break;
+        default:
+          result = {
+            {1, 1}
+          };
+          break;
+        }
+      case 7: //Wrong PM relation
+        switch (type2) {
+        case ParamObjectType::kPM:
+          result = {
+            {1, 43}
+          };
+          break;
+        default:
+          result = {
+            {1, 1}
+          };
+          break;
+        }
+      }
+      break;
+    default:
+      result = {
+        {1, 1}
+      };
+      break;
     }
     return result;
   }
@@ -242,7 +255,7 @@ BOOST_AUTO_TEST_CASE( no_tombChannels )
   JPetScinFactory scinFactory(paramGetter, 0, barrelSlotFactory);
   JPetPMFactory pmFactory(paramGetter, 0, febFactory, scinFactory, barrelSlotFactory);
   JPetTOMBChannelFactory factory(paramGetter, 0, febFactory, trbFactory, pmFactory);
-  auto & tombChannels = factory.getTOMBChannels();
+  auto& tombChannels = factory.getTOMBChannels();
   BOOST_REQUIRE_EQUAL(tombChannels.size(), 0u);
 }
 
@@ -256,7 +269,7 @@ BOOST_AUTO_TEST_CASE( single_object )
   JPetScinFactory scinFactory(paramGetter, 1, barrelSlotFactory);
   JPetPMFactory pmFactory(paramGetter, 1, febFactory, scinFactory, barrelSlotFactory);
   JPetTOMBChannelFactory factory(paramGetter, 1, febFactory, trbFactory, pmFactory);
-  auto & tombChannels = factory.getTOMBChannels();
+  auto& tombChannels = factory.getTOMBChannels();
   BOOST_REQUIRE_EQUAL(tombChannels.size(), 1u);
   auto tombChannel = tombChannels[1];
   BOOST_REQUIRE_EQUAL(tombChannel->getChannel(), 1);
@@ -279,7 +292,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   JPetScinFactory scinFactory(paramGetter, 2, barrelSlotFactory);
   JPetPMFactory pmFactory(paramGetter, 2, febFactory, scinFactory, barrelSlotFactory);
   JPetTOMBChannelFactory factory(paramGetter, 2, febFactory, trbFactory, pmFactory);
-  auto & tombChannels = factory.getTOMBChannels();
+  auto& tombChannels = factory.getTOMBChannels();
   BOOST_REQUIRE_EQUAL(tombChannels.size(), 2u);
   auto tombChannel = tombChannels[1];
   BOOST_REQUIRE_EQUAL(tombChannel->getChannel(), 1);

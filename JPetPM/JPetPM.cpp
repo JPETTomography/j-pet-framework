@@ -24,9 +24,10 @@ JPetPM::JPetPM() :
   SetName("JPetPM");
 }
 
-JPetPM::JPetPM(int id) :
+JPetPM::JPetPM(int id, std::string description) :
   fID(id),
-  fHVgain(std::make_pair(0.0, 0.0))
+  fHVgain(std::make_pair(0.0, 0.0)),
+  fDescription(description)
 {
   SetName("JPetPM");
 }
@@ -35,12 +36,14 @@ JPetPM::JPetPM(Side side,
                int id,
                int HVset,
                int HVopt,
-               std::pair<float, float> HVgainNumber):
+               std::pair<float, float> HVgainNumber,
+               std::string description):
   fSide(side),
   fID(id),
   fHVset(HVset),
   fHVopt(HVopt),
-  fHVgain(HVgainNumber)
+  fHVgain(HVgainNumber),
+  fDescription(description)
 {
   SetName("JPetPM");
 }
@@ -109,6 +112,10 @@ float JPetPM::getHVgain(GainNumber nr)
 std::pair<float, float> JPetPM::getHVgain()
 {
   return fHVgain;
+}
+std::string JPetPM::getDescription() const
+{
+  return fDescription;
 }
 void JPetPM::setSide(JPetPM::Side side)
 {
