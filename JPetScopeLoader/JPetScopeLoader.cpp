@@ -75,7 +75,7 @@ void JPetScopeLoader::createInputObjects(const char*)
   JPetScopeConfigParser confParser;
   auto config = confParser.getConfig(fOptions.getScopeConfigFile());
 
-  auto prefix2PM =  getPMPrefixToPMIdMap(config);
+  auto prefix2PM =  getPMPrefixToPMIdMap();
   std::map<std::string, int> inputScopeFiles = createInputScopeFileNames(fOptions.getScopeInputDirectory(), prefix2PM);
   auto task = dynamic_cast<JPetScopeTask*>(fTask);
   task->setInputFiles(inputScopeFiles);
@@ -91,11 +91,11 @@ void JPetScopeLoader::createInputObjects(const char*)
   //fHeader->setSourcePosition((*fIter).pCollPosition);
 }
 
-std::map<std::string, int> JPetScopeLoader::getPMPrefixToPMIdMap(const scope_config::Config& config) const
+std::map<std::string, int> JPetScopeLoader::getPMPrefixToPMIdMap() const
 {
   std::map< std::string, int> prefixToId;
-  for (const auto &  pm : config.fPMs) {
-    prefixToId[pm.fPrefix] = pm.fId;
+  for (const auto&   pm : fParamManager->getParamBank().getPMs()) {
+    prefixToId[pm.second->getDescription()] = pm.first;
   }
   return prefixToId;
 }

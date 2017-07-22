@@ -33,15 +33,15 @@ public:
   /// process() method depends on the options can: 1.saves paramBank locally in ASCII format , 2. generate and add ScopeLoader
   /// 3. unpack the hld file.
   bool process(const JPetOptions& options, JPetParamManager* fParamManager, std::list<JPetTaskRunnerInterface*>& tasks);
-  void unpackFile(const char* filename, long long nevents, const char * configfile, const char * calibfile);
-  bool createScopeTaskAndAddToTaskList(const JPetOptions& options, JPetParamManager* paramMgr, std::list<JPetTaskRunnerInterface*>& tasks);
+  void unpackFile(const char* filename, long long nevents, const char* configfile, const char* calibfile);
   static JPetParamManager* generateParamManager(const  JPetOptions& options);
   /// system(...) is returning integer, 0 when everything went smoothly and error code when not.
   /// Here I just convert return value into boolean type - Sz.N.
-  inline static bool unzipFile(const char* filename) {
-    if( JPetCommonTools::exctractFileNameSuffix(filename) == ".gz")
+  inline static bool unzipFile(const char* filename)
+  {
+    if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".gz")
       return !( system( ( std::string("gzip -dk ") + std::string(filename) ).c_str() ) );
-    else if( JPetCommonTools::exctractFileNameSuffix(filename) == ".xz" )
+    else if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".xz" )
       return !( system( (std::string("xz -dk ") + std::string(filename) ).c_str() ) );
     else
       return false;

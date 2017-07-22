@@ -235,17 +235,6 @@ const JPetParamBank& JPetParamManager::getParamBank() const
   else return DummyResult;
 }
 
-bool JPetParamManager::getParametersFromScopeConfig(const std::string& scopeConfFile)
-{
-  if (fBank) {
-    delete fBank;
-    fBank = 0;
-  }
-  fBank = fScopeParamGetter.generateParamBank(scopeConfFile);
-  if (!fBank) return false;
-  return true;
-}
-
 bool JPetParamManager::saveParametersToFile(std::string filename)
 {
   TFile file(filename.c_str(), "UPDATE");

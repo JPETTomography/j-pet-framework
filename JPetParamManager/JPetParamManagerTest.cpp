@@ -14,7 +14,6 @@ BOOST_AUTO_TEST_SUITE(JPetParamManagerTestSuite)
 void checkContainersSize(const JPetParamBank& bank)
 {
   JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
   BOOST_REQUIRE_EQUAL(bank.getScintillatorsSize(), 2);
   BOOST_REQUIRE_EQUAL(bank.getPMsSize(), 4);
   BOOST_REQUIRE_EQUAL(bank.getPMCalibsSize(), 0);// It is not 0 for e.g. run_id = 2 - FOR run_id=2 NOT for run_id=1 YES. In test run_id is set to 1 so the size=0
@@ -27,13 +26,11 @@ void checkContainersSize(const JPetParamBank& bank)
 BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
   JPetParamManager paramMgr;
 }
 BOOST_AUTO_TEST_CASE(generateParamBankTest)
 {
   JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
   JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
   l_paramManagerInstance.fillParameterBank(1);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().isDummy(), false);
@@ -60,7 +57,6 @@ BOOST_AUTO_TEST_CASE(generateParamBankTest)
 BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
 {
   JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
   std::string testDatafile = dataDir + "testDataFile.txt";
   JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
 
@@ -77,7 +73,6 @@ BOOST_AUTO_TEST_CASE(writeAndReadDataFromFileByFileNameTest)
 BOOST_AUTO_TEST_CASE(some_Test_that_had_no_name)
 {
   JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
 
   JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
 
@@ -101,7 +96,6 @@ BOOST_AUTO_TEST_CASE(some_Test_that_had_no_name)
 BOOST_AUTO_TEST_CASE(getParamBankTest)
 {
   JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
 
   JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileName));
 
