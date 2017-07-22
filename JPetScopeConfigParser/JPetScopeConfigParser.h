@@ -43,16 +43,10 @@ public:
 
   DirFileContainer getElementsWithExistingDirs(const JPetScopeConfigParser::DirFileContainer& dirsAndFiles) const;
 
-  /// Method returns true if the barrelslots, scins, pms ids are not unique.
-  bool areObjectsWithDuplicatedIds(const scope_config::Config& config) const;
-
 protected:
   scope_config::Config getConfig(std::string configName, boost::property_tree::ptree const& configContent) const;
   std::vector<std::string> getPositions(boost::property_tree::ptree const& configContent) const;
   std::string getLocation(boost::property_tree::ptree const& content) const;
-  std::vector<scope_config::BSlot> getBSlots(boost::property_tree::ptree const& content) const;
-  std::vector<scope_config::PM> getPMs(boost::property_tree::ptree const& content) const;
-  std::vector<scope_config::Scin> getScins(boost::property_tree::ptree const& content) const;
 
 private:
   JPetScopeConfigParser(const JPetScopeConfigParser&);
