@@ -26,8 +26,8 @@ bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamMa
   if (runNum >= 0) {
     try {
       paramMgr->fillParameterBank(runNum);
-    } catch (...) {
-      ERROR("Param bank was not generated correctly.\n The run number used:" + JPetCommonTools::intToString(runNum));
+    } catch (const std::exception& e) {
+      ERROR(std::string("Param bank was not generated correctly with error: ") + e.what() + "\n The run number used:" + JPetCommonTools::intToString(runNum));
       return false;
     }
     if (options.isLocalDBCreate()) {
@@ -41,10 +41,9 @@ bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamMa
   auto unpackerCalibFile = options.getUnpackerCalibFile();
 
   if (inputFileType == JPetOptions::kScope) {
-    if (!createScopeTaskAndAddToTaskList(options, paramMgr, tasks)) {
-      ERROR("Scope task not added correctly!!!");
-      return false;
-    }
+    JPetScopeLoader* module = new JPetScopeLoader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
+    module->setParamManager(paramMgr);
+    tasks.push_front(module);
   } else if (inputFileType == JPetOptions::kHld) {
     unpackFile(inputFile, options.getTotalEvents(), unpackerConfigFile, unpackerCalibFile);
   }
@@ -67,22 +66,7 @@ bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamMa
   return true;
 }
 
-bool JPetTaskChainExecutorUtils::createScopeTaskAndAddToTaskList(const JPetOptions& options, JPetParamManager* paramMgr, std::list<JPetTaskRunnerInterface*>& tasks)
-{
-  assert(paramMgr);
-  auto scopeFile = options.getScopeConfigFile();
-  if (!paramMgr->getParametersFromScopeConfig(scopeFile)) {
-    ERROR("Unable to generate Param Bank from Scope Config");
-    return false;
-  }
-  JPetScopeLoader* module = new JPetScopeLoader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
-  assert(module);
-  module->setParamManager(paramMgr);
-  tasks.push_front(module);
-  return true;
-}
-
-void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long nevents, const char * configfile = "", const char * calibfile = "")
+void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long nevents, const char* configfile = "", const char* calibfile = "")
 {
   JPetUnpacker unpacker;
   if (nevents > 0) {

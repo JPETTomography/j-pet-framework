@@ -43,11 +43,12 @@ class JPetWriter;
  * This module reads oscilloscope ACSII data based on config file passed through command line.
  * Example of usign this module is located in workdir/ScopeLoaderExample/ .
  */
-class JPetScopeLoader: public JPetTaskLoader {
-  
- public:
+class JPetScopeLoader: public JPetTaskLoader
+{
 
-  JPetScopeLoader(JPetScopeTask * task);
+public:
+
+  JPetScopeLoader(JPetScopeTask* task);
   virtual ~JPetScopeLoader();
 
   virtual void createInputObjects(const char* inputFilename);
@@ -57,9 +58,9 @@ class JPetScopeLoader: public JPetTaskLoader {
   virtual void terminate();
 
   std::map<std::string, int> createInputScopeFileNames(const std::string& inputPathToScopeFiles,
-                                                     std::map<std::string, int> pmPref2Id
-                                                    ) const;
-  std::map<std::string, int> getPMPrefixToPMIdMap(const scope_config::Config& config) const;
+      std::map<std::string, int> pmPref2Id
+                                                      ) const;
+  std::map<std::string, int> getPMPrefixToPMIdMap() const;
   bool isCorrectScopeFileName(const std::string& filename) const;
   std::string getFilePrefix(const std::string& filename) const;
 };

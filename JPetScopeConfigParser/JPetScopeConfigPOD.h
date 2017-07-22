@@ -19,57 +19,20 @@
 #include <string>
 namespace scope_config
 {
-struct BSlot {
-  BSlot(int id = -1, bool active = false, const std::string& name = "", float theta = -1.0, int frame = -1):
-    fId(id),
-    fActive(active),
-    fName(name),
-    fTheta(theta),
-    fFrame(frame) {
-    /**/
-  }
-  int fId;
-  bool fActive;
-  std::string fName;
-  float fTheta;
-  int fFrame;
-};
-
-struct PM {
-  PM(int id = -1, const std::string& prefix = ""):
-    fId(id),
-    fPrefix(prefix) {
-  }
-  int fId;
-  std::string fPrefix;
-};
-struct Scin {
-  Scin(int id = -1):
-    fId(id) {
-    /**/
-  }
-  int fId;
-};
-
 struct Config {
-  Config() {
+  Config()
+  {
     /* */
   }
-  Config(const std::string& name, const std::vector<BSlot>& bslots,
-         const std::vector<PM>& pms, const std::vector<Scin>& scins,
+  Config(const std::string& name,
          const std::string& location, const std::vector<std::string> positions):
     fName(name),
-    fBSlots(bslots),
-    fPMs(pms),
-    fScins(scins),
     fLocation(location),
-    fCollimatorPositions(positions) {
+    fCollimatorPositions(positions)
+  {
     /* */
   }
   std::string fName;
-  std::vector<BSlot> fBSlots;
-  std::vector<PM> fPMs;
-  std::vector<Scin> fScins;
   std::string fLocation;
   std::vector<std::string> fCollimatorPositions;
 };
