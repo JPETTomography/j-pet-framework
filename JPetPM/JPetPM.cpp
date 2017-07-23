@@ -55,6 +55,22 @@ JPetPM::JPetPM(bool isNull) :
   SetName("JPetPM");
 }
 
+JPetPM::JPetPM(const JPetPM& pm):
+  fSide(pm.fSide),
+  fID(pm.fID),
+  fHVset(pm.fHVset),
+  fHVopt(pm.fHVopt),
+  fHVgain(pm.fHVgain),
+  fDescription(pm.fDescription),
+  fTRefScin(pm.fTRefScin),
+  fTRefBarrelSlot(pm.fTRefBarrelSlot)
+{
+  SetName("JPetPM");
+  if (pm.hasFEB()) {
+    fTRefFEB = pm.fTRefFEB;
+  }
+}
+
 JPetPM::~JPetPM()
 {
 }

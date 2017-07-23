@@ -47,6 +47,7 @@ public:
          int HVopt,
          std::pair<float, float> HVgainNumber,
          std::string description);
+  JPetPM(JPetPM const&);
   ~JPetPM();
 
   bool operator==(const JPetPM& pm) const;
