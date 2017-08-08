@@ -34,3 +34,7 @@ script:
     - ./run_tests.pl -f xml
     - chmod a+x parseXML.py
     - ./parseXML.py
+notifications:
+  email:
+    - aleksander.gajos@doctoral.uj.edu.pl
+    - wojciech.krzemien@ncbj.gov.pl
