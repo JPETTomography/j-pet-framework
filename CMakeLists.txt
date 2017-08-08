@@ -16,30 +16,15 @@ if(NOT MSVC)
   add_definitions(-std=c++11 -Wall -Wunused-parameter)
 endif()
 
-foreach(mode QUIET REQUIRED)
-  find_package(ROOT 5 ${mode} COMPONENTS
-    Hist
-    Physics
-    RIO
-    Thread
-    Tree
-    )
-  if(ROOT_USE_FILE)
-    include(${ROOT_USE_FILE})
-  endif()
-  if(ROOT_FOUND)
-    break()
-  endif()
-  # if we failed with CMake based find_package, use fallback
-  # root-config version from cmake/fallback/
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/fallback)
-endforeach()
+find_package(ROOT REQUIRED)
+
+if(ROOT_USE_FILE)
+  include(${ROOT_USE_FILE})
+endif()
+
 include_directories(${ROOT_INCLUDE_DIRS})
 add_definitions(${ROOT_DEFINITIONS})
 message(STATUS "ROOT version: ${ROOT_VERSION}")
-if(ROOT_FOUND AND NOT ROOT_VERSION VERSION_LESS "6.0")
-  message(FATAL_ERROR "ROOT 6.0 is not compatible")
-endif()
 
 find_package(PQXX REQUIRED)
 include_directories(${PQXX_INCLUDE_DIRS})
@@ -188,7 +173,7 @@ target_link_libraries(dbhandler
 # copy the DB config file to an expected location
 set(db_config_dir ${CMAKE_CURRENT_BINARY_DIR}/DBConfig)
 add_custom_command(TARGET dbhandler
-  POST_BUILD 
+  POST_BUILD
   COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/DBHandler/Config ${db_config_dir}
   )
 
