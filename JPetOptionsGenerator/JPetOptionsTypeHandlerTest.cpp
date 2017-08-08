@@ -10,26 +10,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetTaskInterface.h
+ *  @file JPetOptionsGeneratorTest.cpp
  */
 
-#ifndef JPETTASKINTERFACE_H
-#define JPETTASKINTERFACE_H
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MODULE JPetOptionsGeneratorTest
+#include <boost/test/unit_test.hpp>
+#include <cstdlib>
 
-#include <map>
-#include <string>
-#include <boost/any.hpp>
+BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-class JPetParamManager;
-
-class JPetTaskInterface
+BOOST_AUTO_TEST_CASE(readingTypesFromFile)
 {
-public:
-  typedef std::map<std::string, boost::any> Options;
-  virtual ~JPetTaskInterface() {}
-  virtual void init(const Options& options) = 0;
-  virtual void exec() = 0;
-  virtual void terminate() = 0;
-  virtual void setParamManager(JPetParamManager* paramManager) = 0;
-};
-#endif /*  !JPETTASKINTERFACE_H */
+	
+}
+
+BOOST_AUTO_TEST_SUITE_END()

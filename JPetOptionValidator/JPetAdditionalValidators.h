@@ -10,26 +10,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetTaskInterface.h
+ *  @file JPetAdditionalValiators.h
  */
-
-#ifndef JPETTASKINTERFACE_H
-#define JPETTASKINTERFACE_H
-
-#include <map>
-#include <string>
+#ifndef J_PET_ADDITIONAL_VALIDATORS_H
+#define J_PET_ADDITIONAL_VALIDATORS_H
 #include <boost/any.hpp>
 
-class JPetParamManager;
+bool additionalCheckIfRunIdIsOk(std::pair <std::string, boost::any> option);
 
-class JPetTaskInterface
-{
-public:
-  typedef std::map<std::string, boost::any> Options;
-  virtual ~JPetTaskInterface() {}
-  virtual void init(const Options& options) = 0;
-  virtual void exec() = 0;
-  virtual void terminate() = 0;
-  virtual void setParamManager(JPetParamManager* paramManager) = 0;
-};
-#endif /*  !JPETTASKINTERFACE_H */
+#endif
