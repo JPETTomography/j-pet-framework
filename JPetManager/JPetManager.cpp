@@ -27,8 +27,6 @@
 #include <TDSet.h>
 
 
-
-
 JPetManager& JPetManager::getManager()
 {
   static JPetManager instance;
