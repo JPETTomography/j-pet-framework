@@ -16,7 +16,7 @@
 #include "JPetCommonTools.h"
 
 
-const std::string JPetCommonTools::currentDateTime() 
+const std::string JPetCommonTools::currentDateTime()
 {
   time_t     now = time(0);
   struct tm  tstruct;
@@ -28,23 +28,37 @@ const std::string JPetCommonTools::currentDateTime()
   return buf;
 }
 
-std::size_t JPetCommonTools::findSubstring(const std::string& p_string, const std::string& p_substring) 
+std::size_t JPetCommonTools::findSubstring(const std::string& p_string, const std::string& p_substring)
 {
   // TODO check extension of the file. If necessary change it to another.
   return p_string.find(p_substring);
 }
 
-std::string JPetCommonTools::doubleToString(double x) 
+std::string JPetCommonTools::doubleToString(double x)
 {
   std::ostringstream out;
   out << x;
   return out.str();
 }
 
-int JPetCommonTools::stringToInt(const std::string& str) 
+int JPetCommonTools::stringToInt(const std::string& str)
 {
   std::istringstream in(str);
   int num;
   in >> num;
   return num;
+}
+
+
+std::vector<const char*> JPetCommonTools::createArgs(const std::string& commandLine)
+{
+  std::istringstream iss(commandLine);
+  std::vector<std::string> args {std::istream_iterator<std::string>{iss},
+                                 std::istream_iterator<std::string>{}
+                                };
+  std::vector<const char*> args_char;
+  std::transform(args.begin(), args.end(), std::back_inserter(args_char), [](const std::string & s) {
+    return s.c_str();
+  });
+  return args_char;
 }
