@@ -21,6 +21,9 @@
 //ClassImp(JPetTaskLoader);
 
 #include <boost/filesystem.hpp>
+#include <boost/any.hpp>
+
+using boost::any_cast;
 
 JPetTaskLoader::JPetTaskLoader(const char* in_file_type,
                                const char* out_file_type,
@@ -39,14 +42,14 @@ JPetTaskLoader::JPetTaskLoader(const char* in_file_type,
 void JPetTaskLoader::init(const JPetOptions::Options& opts)
 {
   auto newOpts(opts);
-  auto inFile = newOpts.at("inputFile");
+  auto inFile = any_cast<std::string>(newOpts.at("inputFile_std::string"));
   auto outFile = inFile; /// @todo This line is potentially dangerous if the output directory is different than the input one.
   inFile = generateProperNameFile(inFile, fInFileType);
   outFile = generateProperNameFile(outFile, fOutFileType);
-  newOpts.at("inputFile") = inFile;
-  newOpts.at("inputFileType") = fInFileType;
-  newOpts.at("outputFile") = outFile;
-  newOpts.at("outputFileType") = fOutFileType;
+  newOpts.at("inputFile_std::string") = inFile;
+  newOpts.at("inputFileType_std::string") = fInFileType;
+  newOpts.at("outputFile_std::string") = outFile;
+  newOpts.at("outputFileType_std::string") = fOutFileType;
   setOptions(JPetOptions(newOpts));
 
   //here we should call some function to parse options

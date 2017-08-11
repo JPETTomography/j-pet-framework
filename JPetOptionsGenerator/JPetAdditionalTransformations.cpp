@@ -10,26 +10,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetTaskInterface.h
+ *  @file AdditionalTransformation.h
  */
 
-#ifndef JPETTASKINTERFACE_H
-#define JPETTASKINTERFACE_H
 
-#include <map>
-#include <string>
 #include <boost/any.hpp>
+#include "./JPetAdditionalTransformations.h"
+using boost::any_cast;
 
-class JPetParamManager;
-
-class JPetTaskInterface
+std::pair <std::string, boost::any> setAdditionalRunIdInTheMap(boost::any option)
 {
-public:
-  typedef std::map<std::string, boost::any> Options;
-  virtual ~JPetTaskInterface() {}
-  virtual void init(const Options& options) = 0;
-  virtual void exec() = 0;
-  virtual void terminate() = 0;
-  virtual void setParamManager(JPetParamManager* paramManager) = 0;
-};
-#endif /*  !JPETTASKINTERFACE_H */
+  int run = any_cast<int>(option);
+  return std::make_pair("additionalRunID_int", run);
+}
