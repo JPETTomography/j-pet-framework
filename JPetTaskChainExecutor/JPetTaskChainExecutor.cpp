@@ -22,6 +22,7 @@
 #include "JPetTaskChainExecutorUtils.h"
 #include "../JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 #include <memory>
+#include <chrono>
 
 using boost::any_cast;
 
@@ -52,10 +53,17 @@ bool JPetTaskChainExecutor::preprocessing(const JPetOptions& options, JPetParamM
 
 bool JPetTaskChainExecutor::process()
 {
+  namespace stdc = std::chrono;
+  std::vector<std::pair<std::string, stdc::seconds>> elapsedTime;
+  auto startTime = stdc::system_clock::now();
+
   if (!preprocessing(fOptions, fParamManager, fTasks)) {
     ERROR("Error in preprocessing");
     return false;
   }
+
+  elapsedTime.push_back(std::make_pair("Preprocessing", stdc::duration_cast< stdc::seconds > (stdc::system_clock::now() - startTime)));
+
   for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
     JPetOptions::Options currOpts = fOptions.getOptions();
     if (currentTask != fTasks.begin()) {
@@ -80,8 +88,22 @@ bool JPetTaskChainExecutor::process()
     taskRunnerCurr->init(currOpts);
     taskRunnerCurr->exec();
     taskRunnerCurr->terminate();
+
+    elapsedTime.push_back(std::make_pair("task " + std::string(taskName), stdc::duration_cast< stdc::seconds > (stdc::system_clock::now() - startTime)));
     INFO(Form("Finished task: %s", taskName));
   }
+  for (auto& el : elapsedTime) {
+    INFO("Elapsed time for " + el.first + ":" + el.second.count() + " [s]");
+  }
+  auto total = std::accumulate(elapsedTime.begin(),
+                               elapsedTime.end(),
+                               stdc::seconds (0),
+  [](const stdc::seconds prev, const std::pair <std::string, stdc::seconds>& el) {
+    return prev + el.second;
+  }
+                              );
+  INFO(std::string("Total elapsed time:") + total.count() + " [s]");
+
   return true;
 }
 
@@ -90,12 +112,12 @@ void JPetTaskChainExecutor::printCurrentOptionsToLog(const JPetOptions::Options&
   INFO("Current options:");
   std::vector<std::string> allowedTypes;
   JPetOptionsTypeHandler forGettingAllowedTypes(allowedTypes);
-  for(auto a : currOpts){
+  for (auto a : currOpts) {
     allowedTypes.push_back(forGettingAllowedTypes.getTypeOfOption(a.first));
   }
   JPetOptionsTypeHandler typeHandler(allowedTypes);
   auto stringOptions = typeHandler.anyMapToStringMap(currOpts);
-  for (const auto & el : stringOptions) {
+  for (const auto& el : stringOptions) {
     INFO(el.first + "=" + el.second);
   }
 }
@@ -117,7 +139,7 @@ TThread* JPetTaskChainExecutor::run()
 
 JPetTaskChainExecutor::~JPetTaskChainExecutor()
 {
-  for (auto & task : fTasks) {
+  for (auto& task : fTasks) {
     if (task) {
       delete task;
       task = 0;
