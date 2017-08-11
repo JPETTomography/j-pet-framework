@@ -20,7 +20,6 @@
 
 #include "../JPetLoggerInclude.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetCmdParser/JPetCmdParser.h"
 #include "../DBHandler/HeaderFiles/DBHandler.h"
 
 #include <TThread.h>
