@@ -73,11 +73,9 @@ bool JPetManager::run()
   return true;
 }
 
-void JPetManager::parseCmdLine(int argc, char** argv)
+void JPetManager::parseCmdLine(int argc, const char** argv)
 {
-  JPetCmdParser parser;
-  fOptions = parser.parseAndGenerateOptions(argc, (const char**)argv);
-  // check whether connection to DB will be needed
+  fOptions = fParser.parseAndGenerateOptions(argc, argv);
 }
 
 void JPetManager::addValidationFunctionForUserOptions(const std::string& name, bool(*validatorFunction)(std::pair <std::string, boost::any>) )

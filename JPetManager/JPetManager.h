@@ -36,15 +36,17 @@ public:
   ~JPetManager();
   bool run();
   void registerTask(const TaskGenerator& taskGen);
-  void parseCmdLine(int argc, char** argv);
-  inline std::vector<JPetOptions> getOptions() const {
+  void parseCmdLine(int argc, const char** argv);
+  inline std::vector<JPetOptions> getOptions() const
+  {
     return fOptions;
   }
   void addValidationFunctionForUserOptions(const std::string& name, bool(*validatorFunction)(std::pair <std::string, boost::any>) );
   void addTransformationFunctionForUserOption(const std::string& name, std::function<std::pair<std::string, boost::any>(boost::any opt)> transformFunction);
   bool initDBConnection(const char* configFilePath = "../DBConfig/configDB.cfg");
 private:
-  JPetManager(): fParser() {
+  JPetManager(): fParser()
+  {
     fTaskGeneratorChain = new TaskGeneratorChain;
   }
   JPetManager(const JPetManager&);
