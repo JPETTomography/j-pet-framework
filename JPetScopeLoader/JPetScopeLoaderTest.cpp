@@ -6,27 +6,10 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 #include "../JPetManager/JPetManager.h"
+#include "../JPetCommonTools/JPetCommonTools.h"
 
 //#include "JPetScopeLoaderFixtures.h"
 #include "../JPetScopeLoader/JPetScopeLoader.h"
-
-char* convertStringToCharP(const std::string& s)
-{
-  char* pc = new char[s.size() + 1];
-  std::strcpy(pc, s.c_str());
-  return pc;
-}
-
-std::vector<char*> createArgs(const std::string& commandLine)
-{
-  std::istringstream iss(commandLine);
-  std::vector<std::string> args {std::istream_iterator<std::string>{iss},
-                                 std::istream_iterator<std::string>{}
-                                };
-  std::vector<char*> args_char;
-  std::transform(args.begin(), args.end(), std::back_inserter(args_char), convertStringToCharP);
-  return args_char;
-}
 
 
 BOOST_AUTO_TEST_SUITE (JPetScopeLoaderTestSuite)
@@ -88,7 +71,7 @@ BOOST_AUTO_TEST_CASE (generate_root_file)
   const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/test_file_test_0.reco.sig.root";
   boost::filesystem::remove(test_root_filename);
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1";
-  auto args_char = createArgs(commandLine);
+  auto args_char = JPetCommonTools::createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
 
@@ -106,7 +89,7 @@ BOOST_AUTO_TEST_CASE (position_does_not_exist)
   boost::filesystem::remove(test_root_filename);
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/wrong_file.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1";
   //contains a single position 30 that does not exist
-  auto args_char = createArgs(commandLine);
+  auto args_char = JPetCommonTools::createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
 
@@ -123,7 +106,7 @@ BOOST_AUTO_TEST_CASE (folder_does_not_exist)
   boost::filesystem::remove(test_root_filename);
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/wrong_file2.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1";
   //contains a wrong data folder name
-  auto args_char = createArgs(commandLine);
+  auto args_char = JPetCommonTools::createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
 
@@ -142,7 +125,7 @@ BOOST_AUTO_TEST_CASE (generate_root_file2)
   boost::filesystem::remove(test_root_filename1);
   boost::filesystem::remove(test_root_filename2);
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file2.json -l unitTestData/JPetScopeLoaderTest/test_params2.json -i 1";
-  auto args_char = createArgs(commandLine);
+  auto args_char = JPetCommonTools::createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
 
