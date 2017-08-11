@@ -37,6 +37,7 @@ public:
   bool run();
   void registerTask(const TaskGenerator& taskGen);
   void parseCmdLine(int argc, const char** argv);
+  bool initDBConnection(const char* configFilePath);
   inline std::vector<JPetOptions> getOptions() const
   {
     return fOptions;
