@@ -39,11 +39,13 @@ public:
 
   static std::size_t findSubstring(const std::string& p_string, const std::string& p_substring);
 
-  static std::string Itoa(int x) {
+  static std::string Itoa(int x)
+  {
     return intToString(x);
   }
 
-  static std::string intToString(int x) {
+  static std::string intToString(int x)
+  {
     std::ostringstream out;
     out << x;
     return out.str();
@@ -53,7 +55,8 @@ public:
 
   static int stringToInt(const std::string& str);
 
-  static bool to_bool(std::string str) {
+  static bool to_bool(std::string str)
+  {
     std::transform(str.begin(), str.end(), str.begin(), ::tolower);
     std::istringstream is(str);
     bool b;
@@ -61,7 +64,8 @@ public:
     return b;
   }
 
-  static bool ifFileExisting(const std::string& name) {
+  static bool ifFileExisting(const std::string& name)
+  {
     std::ifstream f(name.c_str());
     if (f.good()) {
       f.close();
@@ -74,7 +78,8 @@ public:
   /**
     * @brief returns the time std::string in the format dd.mm.yyyy HH:MM
     */
-  static std::string getTimeString() {
+  static std::string getTimeString()
+  {
     time_t _tm = time(NULL );
     struct tm* curtime = localtime ( &_tm );
     char buf[100];
@@ -84,7 +89,8 @@ public:
   }
 
   template <typename Map>
-  static bool mapComparator(Map const& lhs, Map const& rhs) {
+  static bool mapComparator(Map const& lhs, Map const& rhs)
+  {
     auto pred = [](decltype(*lhs.begin()) a, decltype(a) b) {
       return a.first == b.first
              && a.second == b.second;
@@ -95,33 +101,45 @@ public:
   }
 
   ///removes the suffix of the file
-  inline static std::string stripFileNameSuffix(const std::string& filename) {
+  inline static std::string stripFileNameSuffix(const std::string& filename)
+  {
     return  boost::filesystem::change_extension(filename, "").string();
   }
-  inline static std::string exctractFileNameSuffix(const std::string& filename){
+  inline static std::string exctractFileNameSuffix(const std::string& filename)
+  {
     return boost::filesystem::extension(filename);
   }
-  
-  inline static std::string currentFullPath() {
+
+  inline static std::string currentFullPath()
+  {
     return boost::filesystem::path( boost::filesystem::current_path() ).string();
   }
 
-  inline static std::string extractPathFromFile(const std::string& fileWithPath) {
+  inline static std::string extractPathFromFile(const std::string& fileWithPath)
+  {
     return boost::filesystem::path( fileWithPath ).parent_path().string();
   }
 
-  inline static std::string extractFileNameFromFullPath(const std::string& fileWithPath) {
+  inline static std::string extractFileNameFromFullPath(const std::string& fileWithPath)
+  {
     return boost::filesystem::path( fileWithPath ).filename().string();
   }
 
-  inline static std::string appendSlashToPathIfAbsent(const std::string& path) {
+  inline static std::string appendSlashToPathIfAbsent(const std::string& path)
+  {
     if (!path.empty() && path.back() != '/') return path + '/';
     else return path;
   }
 
-  inline static bool isDirectory( const std::string& dir) {
+  inline static bool isDirectory( const std::string& dir)
+  {
     return boost::filesystem::is_directory(dir);
   }
+
+  /// Creates vector of const char* arguments to emulate int arc, const char** argv parameters
+  /// in commandLine="./blabla.x -p test" will be transformed to a vector of
+  /// const char c-strings "./blabla.x", "-p", "test"
+  static std::vector<const char*> createArgs(const std::string& commandLine);
 };
 
 #endif // COMMON_TOOLS_H
