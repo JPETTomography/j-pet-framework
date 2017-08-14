@@ -116,7 +116,7 @@ bool JPetReader::loadData(const char* treename)
     ERROR("empty tree name");
     return false;
   }
-  fTree = static_cast<TTree*>(fFile->Get(treename));
+  fTree = dynamic_cast<TTree*>(fFile->Get(treename));
   if (!fTree) {
     ERROR("in reading tree");
     return false;
