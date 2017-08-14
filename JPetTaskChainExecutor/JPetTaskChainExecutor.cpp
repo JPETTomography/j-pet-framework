@@ -78,7 +78,7 @@ bool JPetTaskChainExecutor::process()
         currOpts.at("inputFile_std::string") = outPath + JPetCommonTools::extractPathFromFile(any_cast<std::string>(currOpts.at("inputFile_std::string"))) + JPetCommonTools::extractFileNameFromFullPath(any_cast<std::string>(currOpts.at("inputFile_std::string")));
       }
     }
-    auto taskCurr = dynamic_cast<JPetTask*> (dynamic_cast<JPetTaskLoader*>(*currentTask)->getTask());
+    auto taskCurr = dynamic_cast<JPetTask*> ((*currentTask)->getTask());
     //auto taskCurr = std::dynamic_pointer_cast<JPetTask>((*currentTask)->getTask());
     auto taskName = taskCurr->GetName();
     INFO(Form("Starting task: %s", taskName));
