@@ -61,7 +61,8 @@ boost::any JPetOptionsGenerator::getOptionValue(const std::map<std::string, boos
 {
   return optionsMap.at(option);
 }
-std::vector<std::string> JPetOptionsGenerator::getVectorOfOptionFromUser() const{
+std::vector<std::string> JPetOptionsGenerator::getVectorOfOptionFromUser() const
+{
   return fVectorOfOptionFromUser;
 }
 
@@ -95,12 +96,24 @@ std::pair <std::string, boost::any>JPetOptionsGenerator::setInputFileType(boost:
   return std::make_pair("inputFileType_std::string", inputFileType);
 }
 
-std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap) 
+std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap)
 {
   std::map<std::string, boost::any> optionsMap;
-  for (auto & option : variablesMap) {
+  for (auto& option : variablesMap) {
     optionsMap[option.first] = option.second.value();
   }
+/// @todo bad code ;) should be clean up later
+  std::map<std::string, std::string> optCmdLineNameToExtendedName = {{"type", "type_std::string"}, {"file", "file_std::vector<std::string>"}, {"outputPath", "outputPath_std::string"}, {"range", "range_std::vector<int>"}, {"unpackerConfigFile", "unpackerConfigFile_std::string"}, {"unpackerCalibFile", "unpackerCalibFile_std::string"}, {"runId", "runId_int"}, {"progressBar", "progressBar_bool"}, {"localDB", "localDB_std::string"}, {"localDBCreate", "localDBCreate_std::string"}, {"userCfg", "userCfg_std::string"}};
+  for (auto& elem : optCmdLineNameToExtendedName) {
+    auto oldKey = elem.first;
+    auto newKey = elem.second;
+    const auto it = optionsMap.find(oldKey);
+    if (it != optionsMap.end()) {
+      std::swap(optionsMap[newKey], it->second);
+      optionsMap.erase(it);
+    }
+  }
+/// end of the bad code
   return optionsMap;
 }
 
@@ -121,16 +134,16 @@ void JPetOptionsGenerator::addTransformFunction(const std::string& name, Transfo
 
 void JPetOptionsGenerator::createMapOfBoolOptionFromUser(const std::map<std::string, boost::any>& optionsMap)
 {
-  for( auto & opt: optionsMap){
+  for ( auto& opt : optionsMap) {
     fVectorOfOptionFromUser.push_back(opt.first);
   }
 }
 
 std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::map<std::string, boost::any>& optionsMap) const
 {
-  for (auto & validGroup : fTransformationMap) {
+  for (auto& validGroup : fTransformationMap) {
     if (optionsMap.count(validGroup.first)) {
-      for (auto & validFunct : validGroup.second) {
+      for (auto& validFunct : validGroup.second) {
         auto transformed = validFunct(optionsMap.at(validGroup.first));
         optionsMap[transformed.first] = transformed.second;
       }
@@ -161,7 +174,8 @@ void JPetOptionsGenerator::addMissingDefaultOptions(std::map<std::string, boost:
   auto defaultOptions = JPetOptionsGenerator::getDefaultOptions();
   options.insert(defaultOptions.begin(), defaultOptions.end());
 }
-JPetOptionValidator& JPetOptionsGenerator::getValidator(){
+JPetOptionValidator& JPetOptionsGenerator::getValidator()
+{
   return fValidator;
 }
 std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variables_map& cmdLineArgs)
@@ -184,7 +198,7 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
   std::vector<JPetOptions>  optionContainer;
 
   /// @todo change it to be properly initialized
- // JPetOptionsTypeHandler optTypeHandler({"int", "std::string", "bool"});
+// JPetOptionsTypeHandler optTypeHandler({"int", "std::string", "bool"});
 
   /// In case of scope there is one special input file
   /// which is a json config file which must be parsed.
@@ -202,13 +216,13 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
     /// also added. The container of pairs <directory, fileName> is generated
     /// based on the content of the configuration file.
     JPetScopeConfigParser::DirFileContainer dirsAndFiles = scopeConfigParser.getInputDirectoriesAndFakeInputFiles(configFileName);
-    for (const auto & dirAndFile : dirsAndFiles) {
+    for (const auto& dirAndFile : dirsAndFiles) {
       options["scopeInputDirectory_std::string"] = dirAndFile.first;
       options["inputFile_std::string"] = dirAndFile.second;
       optionContainer.push_back(JPetOptions(options));
     }
   } else {
-    for (const auto & file : files) {
+    for (const auto& file : files) {
       options["inputFile_std::string"] = file;
       optionContainer.push_back(JPetOptions(options));
     }

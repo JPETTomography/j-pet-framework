@@ -25,17 +25,30 @@ JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options"), fGenera
 {
   fOptionsDescriptions.add_options()
   ("help,h", "Displays this help message.")
-  ("type_std::string,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, zip, root or scope.")
-  ("file_std::vector<std::string>,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
-  ("outputPath_std::string,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
-  ("range_std::vector<int>,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
-  ("unpackerConfigFile_std::string,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
-  ("unpackerCalibFile_std::string,c", po::value<std::string>(), "ROOT file with TRB calibration used by the unpacker program.")
-  ("runId_int,i", po::value<int>(), "Run id.")
-  ("progressBar_bool,b", po::bool_switch()->default_value(false), "Progress bar.")
-  ("localDB_std::string,l", po::value<std::string>(), "The file to use as the parameter database.")
-  ("localDBCreate_std::string,L", po::value<std::string>(), "File name to which the parameter database will be saved.")
-  ("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
+  ("type,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, zip, root or scope.")
+  ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
+  ("outputPath,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
+  ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
+  ("unpackerConfigFile,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
+  ("unpackerCalibFile,c", po::value<std::string>(), "ROOT file with TRB calibration used by the unpacker program.")
+  ("runId,i", po::value<int>(), "Run id.")
+  ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
+  ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
+  ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.")
+  ("userCfg,u", po::value<std::string>(), "Json file with optional user parameters.");
+
+  //("help,h", "Displays this help message.")
+  //("type_std::string,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, zip, root or scope.")
+  //("file_std::vector<std::string>,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
+  //("outputPath_std::string,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
+  //("range_std::vector<int>,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
+  //("unpackerConfigFile_std::string,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
+  //("unpackerCalibFile_std::string,c", po::value<std::string>(), "ROOT file with TRB calibration used by the unpacker program.")
+  //("runId_int,i", po::value<int>(), "Run id.")
+  //("progressBar_bool,b", po::bool_switch()->default_value(false), "Progress bar.")
+  //("localDB_std::string,l", po::value<std::string>(), "The file to use as the parameter database.")
+  //("localDBCreate_std::string,L", po::value<std::string>(), "File name to which the parameter database will be saved.")
+  //("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
 }
 
 JPetCmdParser::~JPetCmdParser()
@@ -43,7 +56,8 @@ JPetCmdParser::~JPetCmdParser()
   /**/
 }
 
-JPetOptionsGenerator& JPetCmdParser::getGenerator(){
+JPetOptionsGenerator& JPetCmdParser::getGenerator()
+{
   return fGenerator;
 }
 

@@ -37,6 +37,7 @@ BOOST_AUTO_TEST_CASE( parsing_1 )
 
   JPetCmdParser parser;
   auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  assert(1 == 0);
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
   BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCmdParserTest/testfile.hld");
