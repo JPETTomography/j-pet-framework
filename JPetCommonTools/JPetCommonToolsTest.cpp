@@ -19,6 +19,8 @@
 #include <map>
 #include "JPetCommonTools.h"
 
+#include <iostream>
+
 
 BOOST_AUTO_TEST_SUITE(CommonToolsTestSuite)
 
@@ -140,6 +142,56 @@ BOOST_AUTO_TEST_CASE(appendSlashToPathIfAbsent)
   BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("/home"), "/home/");
   BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("home/bbl/be"), "home/bbl/be/");
   BOOST_REQUIRE_EQUAL(JPetCommonTools::appendSlashToPathIfAbsent("test"), "test/");
+}
+
+BOOST_AUTO_TEST_CASE(createArgsTest)
+{
+  auto result = JPetCommonTools::createArgs("");
+  auto argc = result.size();
+  BOOST_REQUIRE_EQUAL(argc, 0);
+}
+
+BOOST_AUTO_TEST_CASE(createArgsTest2)
+{
+  auto result = JPetCommonTools::createArgs("./main.x");
+  auto argc = result.size();
+  auto argv = result.data();
+  BOOST_REQUIRE_EQUAL(argc, 1);
+  BOOST_REQUIRE_EQUAL(strcmp(argv[0], "./main.x"), 0 );
+  for (auto i = 0u; i < argc; i++) {
+    delete argv[i];
+  }
+}
+
+BOOST_AUTO_TEST_CASE(createArgsTest3)
+{
+  auto result = JPetCommonTools::createArgs("./main.x -i 123 --file ./blabla.txt");
+  auto argc = result.size();
+  auto argv = result.data();
+  BOOST_REQUIRE_EQUAL(argc, 5);
+  BOOST_REQUIRE_EQUAL(strcmp(argv[0], "./main.x"), 0 );
+  BOOST_REQUIRE_EQUAL(strcmp(argv[1], "-i"), 0 );
+  BOOST_REQUIRE_EQUAL(strcmp(argv[2], "123"), 0 );
+  BOOST_REQUIRE_EQUAL(strcmp(argv[3], "--file"), 0 );
+  BOOST_REQUIRE_EQUAL(strcmp(argv[4], "./blabla.txt"), 0 );
+  for (auto i = 0u; i < argc; i++) {
+    delete argv[i];
+  }
+}
+
+BOOST_AUTO_TEST_CASE(createArgsTest4)
+{
+  auto result = JPetCommonTools::createArgs(" -i 123 --file ./blabla.txt ");
+  auto argc = result.size();
+  auto argv = result.data();
+  BOOST_REQUIRE_EQUAL(argc, 4);
+  BOOST_REQUIRE_EQUAL(strcmp(argv[0], "-i"), 0 );
+  BOOST_REQUIRE_EQUAL(strcmp(argv[1], "123"), 0 );
+  BOOST_REQUIRE_EQUAL(strcmp(argv[2], "--file"), 0 );
+  BOOST_REQUIRE_EQUAL(strcmp(argv[3], "./blabla.txt"), 0 );
+  for (auto i = 0u; i < argc; i++) {
+    delete argv[i];
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
