@@ -14,6 +14,7 @@
  */
 
 #include "JPetCommonTools.h"
+#include <iostream>
 
 
 const std::string JPetCommonTools::currentDateTime()
@@ -58,7 +59,9 @@ std::vector<const char*> JPetCommonTools::createArgs(const std::string& commandL
                                 };
   std::vector<const char*> args_char;
   std::transform(args.begin(), args.end(), std::back_inserter(args_char), [](const std::string & s) {
-    return s.c_str();
+    char* pc = new char[s.size() + 1];
+    std::strcpy(pc, s.c_str());
+    return pc;
   });
   return args_char;
 }

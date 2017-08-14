@@ -136,9 +136,11 @@ public:
     return boost::filesystem::is_directory(dir);
   }
 
-  /// Creates vector of const char* arguments to emulate int arc, const char** argv parameters
-  /// in commandLine="./blabla.x -p test" will be transformed to a vector of
+  /// Creates a pair int and const char* arguments to emulate int arc, const char** argv parameters
+  /// in commandLine="./blabla.x -p test" will be transformed to a array of
   /// const char c-strings "./blabla.x", "-p", "test"
+  /// Watch out the returned array contains the dynamically allocated  c-strings
+  /// of const char* that should be deallocated by delete to avoid the memory leak.
   static std::vector<const char*> createArgs(const std::string& commandLine);
 };
 
