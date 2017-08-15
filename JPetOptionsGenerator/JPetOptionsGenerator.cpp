@@ -98,6 +98,7 @@ std::pair <std::string, boost::any>JPetOptionsGenerator::setInputFileType(boost:
 
 std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(const po::variables_map& variablesMap)
 {
+
   std::map<std::string, boost::any> optionsMap;
   for (auto& option : variablesMap) {
     optionsMap[option.first] = option.second.value();
@@ -109,7 +110,7 @@ std::map<std::string, boost::any> JPetOptionsGenerator::variablesMapToOption(con
     auto newKey = elem.second;
     const auto it = optionsMap.find(oldKey);
     if (it != optionsMap.end()) {
-      std::swap(optionsMap[newKey], it->second);
+      optionsMap[newKey] = it->second;
       optionsMap.erase(it);
     }
   }
@@ -160,10 +161,11 @@ void JPetOptionsGenerator::addNewOptionsFromCfgFile(const std::string& cfgFile, 
   options.insert(optionsFromJson.begin(), optionsFromJson.end());
 }
 
-std::string JPetOptionsGenerator::getConfigFileName(const po::variables_map& optsMap) const
+/// @todo add tests
+std::string JPetOptionsGenerator::getConfigFileName(const std::map<std::string, boost::any>& optsMap) const
 {
   if (optsMap.count("userCfg_std::string")) {
-    return optsMap["userCfg_std::string"].as<std::string>();
+    return any_cast<std::string>(optsMap.at("userCfg_std::string"));
   } else {
     return "";
   }
@@ -174,14 +176,17 @@ void JPetOptionsGenerator::addMissingDefaultOptions(std::map<std::string, boost:
   auto defaultOptions = JPetOptionsGenerator::getDefaultOptions();
   options.insert(defaultOptions.begin(), defaultOptions.end());
 }
+
 JPetOptionValidator& JPetOptionsGenerator::getValidator()
 {
   return fValidator;
 }
+
+/// It throws exceptions
 std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variables_map& cmdLineArgs)
 {
   auto options = variablesMapToOption(cmdLineArgs);
-  auto cfgFileName = getConfigFileName(cmdLineArgs);
+  auto cfgFileName = getConfigFileName(options);
   if (!cfgFileName.empty()) {
     addNewOptionsFromCfgFile(cfgFileName, options);
   }

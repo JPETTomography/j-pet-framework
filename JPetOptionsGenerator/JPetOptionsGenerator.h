@@ -44,7 +44,8 @@ public:
   JPetOptionsGenerator();
 
   std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap);
-  std::string getConfigFileName(const po::variables_map& optsMap) const;
+  std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap) const;
+
   void addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, boost::any>& options) const;
   void addMissingDefaultOptions(std::map<std::string, boost::any>& options) const;
 
@@ -64,7 +65,8 @@ public:
   static std::pair <std::string, boost::any>getLowerEventBound(boost::any option);
   static std::pair <std::string, boost::any>getHigherEventBound(boost::any option);
 
-  static std::map<std::string, boost::any> getDefaultOptions() {
+  static std::map<std::string, boost::any> getDefaultOptions()
+  {
     return kDefaultOptions;
   }
   std::vector<std::string> getVectorOfOptionFromUser() const;
@@ -77,7 +79,7 @@ private:
   std::map<std::string, std::vector<Transformer> > fTransformationMap;
   std::vector<std::string> fVectorOfOptionFromUser;
   JPetOptionValidator fValidator;
-  
+
 
 };
 #endif

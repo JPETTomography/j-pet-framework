@@ -27,7 +27,7 @@ using namespace std;
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE(runIdTest)
 {
-  JPetOptionsGenerator cmdParser;
+  JPetOptionsGenerator optGenerator;
 
   auto commandLine = "main.x -i 231";
   auto args_char = JPetCommonTools::createArgs(commandLine);
@@ -36,19 +36,17 @@ BOOST_AUTO_TEST_CASE(runIdTest)
 
   po::options_description description("Allowed options");
   description.add_options()
-  ("runId_int,i", po::value<int>(), "Run id.")
-  ;
+  ("runId_int,i", po::value<int>(), "Run id.");
 
   po::variables_map variablesMap;
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
 
-  std::map<std::string, boost::any> mapFromVariableMap = cmdParser.variablesMapToOption(variablesMap);
+  std::map<std::string, boost::any> mapFromVariableMap = optGenerator.variablesMapToOption(variablesMap);
+  BOOST_REQUIRE(optGenerator.isOptionSet(mapFromVariableMap, "runId_int"));
+  BOOST_REQUIRE_EQUAL(any_cast<int>(optGenerator.getOptionValue(mapFromVariableMap, "runId_int")), 231);
 
-  BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "runId_int"));
-  BOOST_REQUIRE_EQUAL(any_cast<int>(cmdParser.getOptionValue(mapFromVariableMap, "runId_int")), 231);
-
-  auto runId = any_cast<int>(cmdParser.getOptionValue(mapFromVariableMap, "runId_int"));
+  auto runId = any_cast<int>(optGenerator.getOptionValue(mapFromVariableMap, "runId_int"));
   BOOST_REQUIRE(variablesMap.size() == 1);
   BOOST_REQUIRE(variablesMap.count("runId_int") == 1);
   BOOST_REQUIRE(runId == 231);
@@ -72,15 +70,13 @@ BOOST_AUTO_TEST_CASE(localDBTest)
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
 
-  JPetOptionsGenerator cmdParser;
-  std::map<std::string, boost::any> mapFromVariableMap = cmdParser.variablesMapToOption(variablesMap);
-  BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "localDB_std::string"));
-  BOOST_REQUIRE_EQUAL(any_cast<std::string>(cmdParser.getOptionValue(mapFromVariableMap, "localDB_std::string")), std::string("input.json"));
-  BOOST_REQUIRE(cmdParser.isOptionSet(mapFromVariableMap, "localDBCreate_std::string"));
-  BOOST_REQUIRE_EQUAL(any_cast<std::string>(cmdParser.getOptionValue(mapFromVariableMap, "localDBCreate_std::string")), std::string("output.json"));
-
+  JPetOptionsGenerator optGenerator;
+  std::map<std::string, boost::any> mapFromVariableMap = optGenerator.variablesMapToOption(variablesMap);
+  BOOST_REQUIRE(optGenerator.isOptionSet(mapFromVariableMap, "localDB_std::string"));
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(optGenerator.getOptionValue(mapFromVariableMap, "localDB_std::string")), std::string("input.json"));
+  BOOST_REQUIRE(optGenerator.isOptionSet(mapFromVariableMap, "localDBCreate_std::string"));
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(optGenerator.getOptionValue(mapFromVariableMap, "localDBCreate_std::string")), std::string("output.json"));
 }
-
 
 BOOST_AUTO_TEST_CASE(generateOptionsTest)
 {
@@ -229,7 +225,7 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionGetConfigFileNameWork)
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
 
-  BOOST_REQUIRE_EQUAL(generator.getConfigFileName(variablesMap), "example.json");
+  BOOST_REQUIRE_EQUAL(generator.getConfigFileName(generator.variablesMapToOption(variablesMap)), "example.json");
 
   auto commandLine2 = "main.x ";
   auto args_char2 = JPetCommonTools::createArgs(commandLine2);
@@ -245,10 +241,10 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionGetConfigFileNameWork)
   po::store(po::parse_command_line(argc2, argv2, description2), variablesMap2);
   po::notify(variablesMap2);
 
-  BOOST_REQUIRE_EQUAL(generator.getConfigFileName(variablesMap2), "");
+  BOOST_REQUIRE_EQUAL(generator.getConfigFileName(generator.variablesMapToOption(variablesMap2)), "");
 }
 
-BOOST_AUTO_TEST_CASE(checkIfFumctionToAddOptionsFromCfgFileWork)
+BOOST_AUTO_TEST_CASE(checkIfFunctionToAddOptionsFromCfgFileWork)
 {
   JPetOptionsGenerator generator;
 
@@ -267,22 +263,20 @@ BOOST_AUTO_TEST_CASE(checkIfFumctionToAddOptionsFromCfgFileWork)
   ("progressBar_bool,b", po::bool_switch()->default_value(false), "Progress bar.")
   ("localDB_std::string,l", po::value<std::string>(), "The file to use as the parameter database.")
   ("localDBCreate_std::string,L", po::value<std::string>(), "Where to save the parameter database.")
-  ("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.")
-  ;
+  ("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
 
   po::variables_map variablesMap;
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
 
   auto options = generator.variablesMapToOption(variablesMap);
-  auto cfgFileName = generator.getConfigFileName(variablesMap);
+  auto cfgFileName = generator.getConfigFileName(options);
   if (!cfgFileName.empty()) {
     generator.addNewOptionsFromCfgFile(cfgFileName, options);
   }
   BOOST_REQUIRE(options.count("myOption_std::string"));
   BOOST_REQUIRE(options.count("myAnotherOption_std::string"));
 }
-
 
 BOOST_AUTO_TEST_CASE(checkIfGetOptionAndIsOptionWork)
 {
@@ -301,6 +295,6 @@ BOOST_AUTO_TEST_CASE(checkIfGetOptionAndIsOptionWork)
 
   BOOST_REQUIRE_EQUAL(any_cast<int>(generator.getOptionValue(options, "firstEvent_int")), -1);
   BOOST_REQUIRE_EQUAL(any_cast<int>(generator.getOptionValue(options, "lastEvent_int")), -1);
-
 }
+
 BOOST_AUTO_TEST_SUITE_END()
