@@ -36,8 +36,7 @@ BOOST_AUTO_TEST_CASE( parsing_1 )
   auto argv = args_char.data();
 
   JPetCmdParser parser;
-  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
-  assert(1 == 0);
+  auto options = parser.parseAndGenerateOptions(argc, argv);
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
   BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCmdParserTest/testfile.hld");
@@ -59,7 +58,7 @@ BOOST_AUTO_TEST_CASE( parsing_2 )
 
   JPetCmdParser parser;
 
-  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  auto options = parser.parseAndGenerateOptions(argc, argv);
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
   BOOST_REQUIRE_EQUAL(std::string(option.getInputFile()), "unitTestData/JPetCmdParserTest/testfile_config1_6");
@@ -81,14 +80,12 @@ BOOST_AUTO_TEST_CASE( parsing_zip_file )
   auto argv = args_char.data();
 
   JPetCmdParser parser;
-  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  auto options = parser.parseAndGenerateOptions(argc, argv);
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
   BOOST_REQUIRE(std::string(option.getInputFile()) == "unitTestData/JPetCommonToolsTest/goodZip.gz");
   BOOST_REQUIRE_EQUAL(option.getInputFileType(), JPetOptions::kZip);
 }
-
-//ToDo: remake unit tests without calling private methods
 
 BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
 {
@@ -101,33 +98,33 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
 
   BOOST_REQUIRE(std::string(helpOptionDescription.format_name()) == "-h [ --help ]");
 
-  auto typeOptionDescription = optionDescription.find("type_std::string", true);
+  auto typeOptionDescription = optionDescription.find("type", true);
   BOOST_REQUIRE(std::string(typeOptionDescription.description()) == "Type of file: hld, zip, root or scope.");
-  BOOST_REQUIRE(std::string(typeOptionDescription.format_name()) == "-t [ --type_std::string ]");
+  BOOST_REQUIRE(std::string(typeOptionDescription.format_name()) == "-t [ --type ]");
 
-  auto fileOptionDescription = optionDescription.find("file_std::vector<std::string>", true);
+  auto fileOptionDescription = optionDescription.find("file", true);
   BOOST_REQUIRE(std::string(fileOptionDescription.description()) == "File(s) to open.");
-  BOOST_REQUIRE(std::string(fileOptionDescription.format_name()) == "-f [ --file_std::vector<std::string> ]");
+  BOOST_REQUIRE(std::string(fileOptionDescription.format_name()) == "-f [ --file ]");
 
-  auto rangeOptionDescription = optionDescription.find("range_std::vector<int>", true);
+  auto rangeOptionDescription = optionDescription.find("range", true);
   BOOST_REQUIRE(std::string(rangeOptionDescription.description()) == "Range of events to process e.g. -r 1 1000 .");
-  BOOST_REQUIRE(std::string(rangeOptionDescription.format_name()) == "-r [ --range_std::vector<int> ]");
+  BOOST_REQUIRE(std::string(rangeOptionDescription.format_name()) == "-r [ --range ]");
 
-  auto unpackerConfigOptionDescription = optionDescription.find("unpackerConfigFile_std::string", true);
+  auto unpackerConfigOptionDescription = optionDescription.find("unpackerConfigFile", true);
   BOOST_REQUIRE(std::string(unpackerConfigOptionDescription.description()) == "xml file with TRB settings used by the unpacker program.");
-  BOOST_REQUIRE(std::string(unpackerConfigOptionDescription.format_name()) == "-p [ --unpackerConfigFile_std::string ]");
+  BOOST_REQUIRE(std::string(unpackerConfigOptionDescription.format_name()) == "-p [ --unpackerConfigFile ]");
 
-  auto unpackerCalibOptionDescription = optionDescription.find("unpackerCalibFile_std::string", true);
+  auto unpackerCalibOptionDescription = optionDescription.find("unpackerCalibFile", true);
   BOOST_REQUIRE(std::string(unpackerCalibOptionDescription.description()) == "ROOT file with TRB calibration used by the unpacker program.");
-  BOOST_REQUIRE(std::string(unpackerCalibOptionDescription.format_name()) == "-c [ --unpackerCalibFile_std::string ]");
+  BOOST_REQUIRE(std::string(unpackerCalibOptionDescription.format_name()) == "-c [ --unpackerCalibFile ]");
 
-  auto runIdOptionDescription = optionDescription.find("runId_int", true);
+  auto runIdOptionDescription = optionDescription.find("runId", true);
   BOOST_REQUIRE(std::string(runIdOptionDescription.description()) == "Run id.");
-  BOOST_REQUIRE(std::string(runIdOptionDescription.format_name()) == "-i [ --runId_int ]");
+  BOOST_REQUIRE(std::string(runIdOptionDescription.format_name()) == "-i [ --runId ]");
 
-  auto progressBarOptionDescription = optionDescription.find("progressBar_bool", true);
+  auto progressBarOptionDescription = optionDescription.find("progressBar", true);
   BOOST_REQUIRE(std::string(progressBarOptionDescription.description()) == "Progress bar.");
-  BOOST_REQUIRE(std::string(progressBarOptionDescription.format_name()) == "-b [ --progressBar_bool ]");
+  BOOST_REQUIRE(std::string(progressBarOptionDescription.format_name()) == "-b [ --progressBar ]");
 }
 
 
@@ -139,7 +136,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
   auto argv = args_char.data();
 
   JPetCmdParser parser;
-  std::vector<JPetOptions> options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  std::vector<JPetOptions> options = parser.parseAndGenerateOptions(argc, argv);
 
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   JPetOptions firstOption = options.front();
@@ -164,7 +161,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
   auto argc = args_char.size();
   auto argv = args_char.data();
   JPetCmdParser parser;
-  std::vector<JPetOptions> options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  std::vector<JPetOptions> options = parser.parseAndGenerateOptions(argc, argv);
 
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   JPetOptions firstOption = options.front();
@@ -186,7 +183,7 @@ BOOST_AUTO_TEST_CASE(runNumberNotObligatoryIfHldType)
   auto argc = args_char.size();
   auto argv = args_char.data();
   JPetCmdParser parser;
-  BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv)));
+  BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, argv));
 }
 
 BOOST_AUTO_TEST_CASE(runNumberNotObligatoryIfScopeType)
@@ -195,13 +192,13 @@ BOOST_AUTO_TEST_CASE(runNumberNotObligatoryIfScopeType)
   auto argc = args_char.size();
   auto argv = args_char.data();
   JPetCmdParser parser;
-  BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv)));
+  BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, argv));
 
   args_char = JPetCommonTools::createArgs("main.x -t scope -f unitTestData/JPetCmdParserTest/testfile.json -i 10");
   argc = args_char.size();
   argv = args_char.data();
 
-  BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv)));
+  BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, argv));
 }
 
 
@@ -211,7 +208,7 @@ BOOST_AUTO_TEST_CASE(checkOutputPath)
   auto argc = args_char.size();
   auto argv = args_char.data();
   JPetCmdParser parser;
-  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  auto options = parser.parseAndGenerateOptions(argc, argv);
   auto option = options.at(0);
   BOOST_REQUIRE_EQUAL(option.getOutputPath(), "./");
 }
@@ -224,7 +221,7 @@ BOOST_AUTO_TEST_CASE(checkOptionsWithAddedFromJson)
   auto argc = args_char.size();
   auto argv = args_char.data();
   JPetCmdParser parser;
-  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  auto options = parser.parseAndGenerateOptions(argc, argv);
   auto option = options.at(0);
   auto allOptions = option.getOptions();
   BOOST_REQUIRE_EQUAL(allOptions.count("myOption_std::string"), 1);
