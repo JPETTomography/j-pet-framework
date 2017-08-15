@@ -20,15 +20,16 @@
 
 using boost::any_cast;
 
-JPetOptionValidator::JPetOptionValidator(){
+JPetOptionValidator::JPetOptionValidator()
+{
   fValidatorMap = generateValidationMap();
 }
 
 bool JPetOptionValidator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap, std::vector<std::string>& isOption)
 {
-  for (auto & checkGroup : fValidatorMap) {
+  for (auto& checkGroup : fValidatorMap) {
     if (std::find(isOption.begin(), isOption.end(), checkGroup.first ) != isOption.end()) {
-      for (auto & checkFunc : checkGroup.second) {
+      for (auto& checkFunc : checkGroup.second) {
         if (( !checkFunc(std::make_pair(checkGroup.first, optionsMap.at(checkGroup.first))) )) {
           ERROR("ERROR VALIDATON FOR " + checkGroup.first);
           return false;
@@ -60,8 +61,7 @@ void JPetOptionValidator::addValidatorFunction(const std::string& name, bool(*va
 bool JPetOptionValidator::isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option)
 {
   if ( any_cast<std::vector<int>>(option.second).size() != 2) {
-    ERROR("Wrong number of bounds in range.");
-    std::cerr << "Wrong number of bounds in range: " << (any_cast<std::vector<int>>(option.second).size()) << std::endl;
+    ERROR("Wrong number of bounds in range: " + std::to_string(any_cast<std::vector<int>>(option.second).size()));
     return false;
   }
   return true;
@@ -70,8 +70,7 @@ bool JPetOptionValidator::isNumberBoundsInRangeValid(std::pair <std::string, boo
 bool JPetOptionValidator::isRangeOfEventsValid(std::pair <std::string, boost::any> option)
 {
   if ( any_cast<std::vector<int>>(option.second).at(0) > any_cast<std::vector<int>>(option.second).at(1)) {
-    ERROR("Wrong number of bounds in range.");
-    std::cerr << "Wrong number of bounds in range: " << (any_cast<std::vector<int>>(option.second).size()) << std::endl;
+    ERROR("Wrong number of bounds in range: " + std::to_string(any_cast<std::vector<int>>(option.second).size()));
     return false;
   }
   return true;
@@ -83,8 +82,7 @@ bool JPetOptionValidator::isCorrectFileType(std::pair <std::string, boost::any> 
   if (type == "hld" || type == "root" || type == "scope" || type == "zip") {
     return true;
   } else {
-    ERROR("Wrong type of file.");
-    std::cerr << "Possible options: hld, zip, root or scope" << std::endl;
+    ERROR("Wrong type of file:" + type);
     return false;
   }
 }
