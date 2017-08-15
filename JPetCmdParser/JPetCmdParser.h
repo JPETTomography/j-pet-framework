@@ -33,7 +33,8 @@ public:
   ~JPetCmdParser();
   std::vector<JPetOptions> parseAndGenerateOptions(int argc, const char** argv);
 
-  inline const po::options_description getOptionsDescription() const {
+  inline const po::options_description getOptionsDescription() const
+  {
     return fOptionsDescriptions;
   }
   JPetOptionsGenerator& getGenerator();
