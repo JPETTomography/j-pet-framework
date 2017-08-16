@@ -11,7 +11,7 @@
  *  limitations under the License.
  *
  *  @file SDAMatchLORs.h
- *  @brief Producer of JPetLOR 
+ *  @brief Producer of JPetLOR
  *  Reads a TTree of JPetHit and transforms them into JPetLOR objects
  */
 
@@ -31,11 +31,11 @@ public:
 
   SDAMatchLORs(const char* name, const char* description);
   virtual ~SDAMatchLORs();
+  virtual void init(const JPetOptionsInterface& inOptions) override;
   virtual void exec()override;
-  virtual void init(const JPetTaskInterface::Options&)override;
-  virtual void terminate()override;
+  virtual std::unique_ptr<JPetOptionsInterface> terminate() override;
   virtual void setWriter(JPetWriter* writer)override;
- private:
+private:
   std::vector<JPetLOR> createLORs(std::vector<JPetHit>& hits);
   void saveLORs(std::vector<JPetLOR> lors);
   JPetWriter* fWriter;

@@ -27,18 +27,29 @@ JPetTask::JPetTask(const char* name, const char* description):
 }
 
 
-void JPetTask::init(const JPetTaskInterface::Options&)
+void JPetTask::init(const JPetOptionsInterface&)
 {
 }
+
+//void JPetTask::init(const JPetTaskInterface::Options&)
+//{
+//}
 
 void JPetTask::exec()
 {
   // do something with event
 }
 
-void JPetTask::terminate()
+
+std::unique_ptr<JPetOptionsInterface> JPetTask::terminate()
 {
+  std::unique_ptr<JPetOptionsInterface> p(new JPetOptionsInterface);  
+  return p;
 }
+
+//void JPetTask::terminate()
+//{
+//}
 
 void JPetTask::setEvent(TObject* ev)
 {

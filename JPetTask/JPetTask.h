@@ -24,13 +24,19 @@
 
 class JPetWriter;
 
+/**
+ * @brief class being an implementation of a computing task unit.
+ *
+ */
 class JPetTask: public JPetTaskInterface
 {
 public:
   JPetTask(const char* name = "", const char* description = "");
-  virtual void init (const JPetTaskInterface::Options&) override;
+  virtual void init(const JPetOptionsInterface& inOptions) override;
+  //virtual void init (const JPetTaskInterface::Options&) override;
   virtual void exec() override;
-  virtual void terminate() override;
+  virtual std::unique_ptr<JPetOptionsInterface> terminate() override;
+  //virtual void terminate() override;
   virtual void setParamManager(JPetParamManager* paramManager) override;
   virtual void setStatistics(JPetStatistics* statistics);
   virtual void setAuxilliaryData(JPetAuxilliaryData* auxData);
@@ -39,14 +45,17 @@ public:
   const JPetParamBank& getParamBank();
   JPetStatistics& getStatistics();
   JPetAuxilliaryData& getAuxilliaryData();
-  virtual TObject* getEvent() {
+  virtual TObject* getEvent()
+  {
     return fEvent;
   }
 
-  virtual const char* GetName() {
+  virtual const char* GetName()
+  {
     return fName.GetName();
   }
-  virtual const char* GetTitle() {
+  virtual const char* GetTitle()
+  {
     return fName.GetTitle();
   }
 

@@ -25,7 +25,7 @@
 
 using boost::any_cast;
 
-class JPetOptions: public JPetOptionsInterface
+class JPetOptions
 {
 
 public:
