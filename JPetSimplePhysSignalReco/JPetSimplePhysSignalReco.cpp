@@ -114,11 +114,6 @@ JPetPhysSignal JPetSimplePhysSignalReco::createPhysSignal(JPetRecoSignal& recoSi
   return physSignal;
 }
 
-void JPetSimplePhysSignalReco::terminate()
-{
-  /**/
-}
-
 void JPetSimplePhysSignalReco::readConfigFileAndSetAlphaAndThreshParams(const char* filename)
 {
   boost::property_tree::ptree content;

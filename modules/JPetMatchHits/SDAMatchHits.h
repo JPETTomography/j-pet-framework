@@ -12,7 +12,7 @@
  *
  *  @file SDAMatchHits.h
  *  @brief Producer of JPetHit objects for SDA signals
- *  Reads a TTree of PhysSignals matches the ones with the same TSlot 
+ *  Reads a TTree of PhysSignals matches the ones with the same TSlot
  *  and joins the ones from the same scintillator into JPetHit object
  */
 
@@ -25,15 +25,16 @@
 #include "../../JPetHit/JPetHit.h"
 #include "../../JPetPhysSignal/JPetPhysSignal.h"
 #include "../../JPetWriter/JPetWriter.h"
-class SDAMatchHits: public JPetTask{
+class SDAMatchHits: public JPetTask
+{
 public:
   SDAMatchHits(const char* name, const char* description);
   virtual ~SDAMatchHits();
+  virtual void init(const JPetOptionsInterface& inOptions) override;
   virtual void exec()override;
-  virtual void init(const JPetTaskInterface::Options&)override;
-  virtual void terminate()override;
+  virtual std::unique_ptr<JPetOptionsInterface> terminate() override;
   virtual void setWriter(JPetWriter* writer)override;
- private:
+private:
   std::vector<JPetHit> createHits(std::vector<JPetPhysSignal>& signals);
   void saveHits(std::vector<JPetHit> hits);
   std::vector<JPetHit> matchHitsWithinSlot(std::vector<JPetPhysSignal>);

@@ -28,8 +28,7 @@ public:
   JPetSimplePhysSignalReco();
   virtual ~JPetSimplePhysSignalReco();
 
-  virtual void exec();
-  virtual void terminate();
+  virtual void exec() override;
   virtual void setWriter(JPetWriter* writer) {fWriter =writer;}
   inline int getAlpha() const { return fAlpha; }
   inline float getThresholdSel() const { return fThresholdSel; }

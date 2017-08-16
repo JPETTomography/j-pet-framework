@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -10,19 +10,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetOptionsInterface.h
+ *  @file JPetOptions2.cpp
  */
 
-#ifndef JPETOPTIONSINTERFACE_H
-#define JPETOPTIONSINTERFACE_H
+#include "./JPetOptions2.h"
 
-/**
- * @brief Interface class representing a most general option object that can be accepted by the JPetTaskInterface.
- *
- */
-class JPetOptionsInterface
+JPetOptions2::JPetOptions2(const Options& opts):
+  fOptions(opts)
 {
-public:
-  virtual ~JPetOptionsInterface() {};
-};
-#endif /*  !JPETOPTIONSINTERFACE_H */
+}

@@ -23,18 +23,19 @@
 #include "../../JPetTask/JPetTask.h"
 #include "../../JPetWriter/JPetWriter.h"
 
-class SDARecoChargeCalc: public JPetTask{
+class SDARecoChargeCalc: public JPetTask
+{
 public:
-	SDARecoChargeCalc(const char* name, const char* description);
-	virtual ~SDARecoChargeCalc();
-	virtual void exec()override;
-	virtual void init(const JPetTaskInterface::Options&)override;
-	virtual void terminate()override;
-	virtual void setWriter(JPetWriter* writer)override;
+  SDARecoChargeCalc(const char* name, const char* description);
+  virtual ~SDARecoChargeCalc();
+  virtual void init(const JPetOptionsInterface& inOptions) override;
+  virtual void exec()override;
+  virtual std::unique_ptr<JPetOptionsInterface> terminate() override;
+  virtual void setWriter(JPetWriter* writer)override;
 private:
-	int fBadSignals;
-	int fCurrentEventNumber;
-	JPetWriter* fWriter;
+  int fBadSignals;
+  int fCurrentEventNumber;
+  JPetWriter* fWriter;
 };
 
 #endif

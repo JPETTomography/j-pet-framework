@@ -21,7 +21,6 @@ SDAMakePhysSignals::SDAMakePhysSignals(const char* name, const char* description
 {}
 
 SDAMakePhysSignals::~SDAMakePhysSignals(){}
-void SDAMakePhysSignals::init(const JPetTaskInterface::Options&){}
 void SDAMakePhysSignals::exec(){
 	if(auto signal=dynamic_cast<const JPetRecoSignal*const>(getEvent())){
 		JPetPhysSignal physSignal;
@@ -35,4 +34,3 @@ void SDAMakePhysSignals::exec(){
 void SDAMakePhysSignals::setWriter(JPetWriter* writer) {
 	fWriter = writer;
 }
-void SDAMakePhysSignals::terminate(){}
