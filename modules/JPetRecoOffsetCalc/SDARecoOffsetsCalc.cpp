@@ -18,34 +18,40 @@
 #include "../../tools/JPetRecoSignalTools/JPetRecoSignalTools.h"
 #include "SDARecoOffsetsCalc.h"
 
-SDARecoOffsetsCalc::SDARecoOffsetsCalc(const char* name, const char* description) 
-: JPetTask(name, description),fCurrentEventNumber(0){}
-SDARecoOffsetsCalc::~SDARecoOffsetsCalc(){}
-void SDARecoOffsetsCalc::init(const JPetTaskInterface::Options&){
-	fBadSignals = 0;
-}
-void SDARecoOffsetsCalc::exec(){
-	if(auto signal = dynamic_cast<const JPetRecoSignal*const>(getEvent())){
-		fOffset = JPetRecoSignalTools::calculateOffset(*signal);
-		if ( fOffset == JPetRecoSignalTools::ERRORS::badOffset ) {
-			WARNING( Form("Problem with calculating fOffset for event: %d", fCurrentEventNumber) );
-			JPetRecoSignalTools::saveBadSignalIntoRootFile(*signal, fBadSignals, "badOffsets.root");
-			fBadSignals++;
-		}else{
-			auto signalWithOffset = *signal;
-			signalWithOffset.setOffset(fOffset);
-			fWriter->write(signalWithOffset);
-		}
-		fCurrentEventNumber++;
-	}
-}
-void SDARecoOffsetsCalc::terminate()
+SDARecoOffsetsCalc::SDARecoOffsetsCalc(const char* name, const char* description)
+  : JPetTask(name, description), fCurrentEventNumber(0) {}
+SDARecoOffsetsCalc::~SDARecoOffsetsCalc() {}
+
+void SDARecoOffsetsCalc::init(const JPetOptionsInterface&)
 {
-	int fEventNb = fCurrentEventNumber;
-	double goodPercent = (fEventNb-fBadSignals) * 100.0/fEventNb;
-	INFO(Form("Amount of signals in input file: %d", fEventNb ) );
-	INFO(Form("Offset calculation complete \nAmount of bad signals: %d \n %f %% of data is good" , fBadSignals, goodPercent) );
+  fBadSignals = 0;
 }
-void SDARecoOffsetsCalc::setWriter(JPetWriter* writer) {
-	fWriter = writer;
+void SDARecoOffsetsCalc::exec()
+{
+  if (auto signal = dynamic_cast<const JPetRecoSignal* const>(getEvent())) {
+    fOffset = JPetRecoSignalTools::calculateOffset(*signal);
+    if ( fOffset == JPetRecoSignalTools::ERRORS::badOffset ) {
+      WARNING( Form("Problem with calculating fOffset for event: %d", fCurrentEventNumber) );
+      JPetRecoSignalTools::saveBadSignalIntoRootFile(*signal, fBadSignals, "badOffsets.root");
+      fBadSignals++;
+    } else {
+      auto signalWithOffset = *signal;
+      signalWithOffset.setOffset(fOffset);
+      fWriter->write(signalWithOffset);
+    }
+    fCurrentEventNumber++;
+  }
+}
+
+std::unique_ptr<JPetOptionsInterface> SDARecoOffsetsCalc::terminate()
+{
+  int fEventNb = fCurrentEventNumber;
+  double goodPercent = (fEventNb - fBadSignals) * 100.0 / fEventNb;
+  INFO(Form("Amount of signals in input file: %d", fEventNb ) );
+  INFO(Form("Offset calculation complete \nAmount of bad signals: %d \n %f %% of data is good" , fBadSignals, goodPercent) );
+  return JPetTask::terminate();
+}
+void SDARecoOffsetsCalc::setWriter(JPetWriter* writer)
+{
+  fWriter = writer;
 }

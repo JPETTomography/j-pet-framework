@@ -112,7 +112,9 @@ size_t LargeBarrelMapping::calcGlobalPMTNumber(const JPetPM& pmt) const
 LargeBarrelTask::LargeBarrelTask(const char* name, const char* description)
   : JPetTask(name, description) {}
 LargeBarrelTask::~LargeBarrelTask() {}
-void LargeBarrelTask::init(const JPetTaskInterface::Options&)
+
+void LargeBarrelTask::init(const JPetOptionsInterface&)
+//void LargeBarrelTask::init(const JPetTaskInterface::Options&)
 {
   fBarrelMap = make_shared<LargeBarrelMapping>(getParamBank());
 }
@@ -129,7 +131,9 @@ const std::shared_ptr<LargeBarrelMapping>LargeBarrelTask::map() const
 {
   return fBarrelMap;
 }
-void TOT_Hists::init(const JPetTaskInterface::Options& opts)
+
+void TOT_Hists::init(const JPetOptionsInterface& opts)
+//void TOT_Hists::init(const JPetTaskInterface::Options& opts)
 {
   LargeBarrelTask::init(opts);
 }

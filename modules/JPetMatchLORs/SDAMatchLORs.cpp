@@ -24,7 +24,7 @@ SDAMatchLORs::SDAMatchLORs(const char* name, const char* description) :
 
 SDAMatchLORs::~SDAMatchLORs(){}
 
-void SDAMatchLORs::init(const JPetTaskInterface::Options&)
+void SDAMatchLORs::init(const JPetOptionsInterface&)
 {
   fMatched=0;
   fCurrentEventNumber=0;  
@@ -48,12 +48,13 @@ void SDAMatchLORs::exec(){
 }
 
 
-void SDAMatchLORs::terminate()
+std::unique_ptr<JPetOptionsInterface> SDAMatchLORs::terminate()
 {
   int fEventNb = fCurrentEventNumber;
   INFO(Form("Matching complete \nAmount of LORs mathed: %d out of %d hits" , fMatched, fEventNb) );
   double goodPercent = fMatched* 100.0 /fEventNb ;
   INFO(Form("%f %% of data was matched \n " , goodPercent) );
+  return JPetTask::terminate();
 }
 
 vector<JPetLOR> SDAMatchLORs::createLORs(vector<JPetHit>& hits){

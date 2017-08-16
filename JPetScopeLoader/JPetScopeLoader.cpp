@@ -48,6 +48,8 @@
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 
+#include "../JPetOptions2/JPetOptions2.h"
+
 #include <iostream>
 
 using namespace std;
@@ -160,7 +162,7 @@ void JPetScopeLoader::exec()
   assert(fTask);
   fTask->setParamManager(fParamManager);
   JPetTaskInterface::Options emptyOpts;
-  fTask->init(emptyOpts);
+  fTask->init(JPetOptions2(emptyOpts));
   fTask->exec();
   fTask->terminate();
 }
