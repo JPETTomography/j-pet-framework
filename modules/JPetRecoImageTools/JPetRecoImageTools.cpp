@@ -367,18 +367,19 @@ void JPetRecoImageTools::doFFTW(Matrix2DProj &sinogram, FilterFunction &filter)
     {
       // go by columns
       uint gid = y * inFTLength + x;
-      // shifting coordinates normalized to [-0.5 ... 0.5]
-      double xN = ((double)x - ((double)inFTLength / 2.)) / (double)inFTLength;
-      double yN = ((double)y - ((double)nScanSize / 2.)) / (double)nScanSize;
+      // shifting coordinates
+      double xN = ((double)x - ((double)inFTLength / 2.));
+      double yN = ((double)y - ((double)nScanSize / 2.));
 
       // max radius
-      double maxR = sqrt(0.5 * 0.5 + 0.5 * 0.5);
+      double maxR = std::sqrt((inFTLength / 2. * inFTLength / 2.) +
+                              (nScanSize / 2. * nScanSize / 2.));
 
       // current radius normalized to [0 .. 1]
-      double r = sqrt(xN * xN + yN * yN) / maxR;
+      double r = std::sqrt((xN * xN + yN * yN)) / maxR;
 
-      out[gid][0] *= filter(1 - r);
-      out[gid][1] *= filter(1 - r);
+      out[gid][0] *= std::abs(filter(1 - r));
+      out[gid][1] *= std::abs(filter(1 - r));
     }
   }
   fftw_execute(invPlan);
