@@ -26,18 +26,23 @@
 using boost::any_cast;
 using namespace std;
 
+std::vector<JPetOptions> getOptionsBasedOnCmdLineArgs(const std::string& cmdLine)
+{
+  auto args_char = JPetCommonTools::createArgs(cmdLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
+
+  JPetCmdParser parser;
+  JPetOptionsGenerator optGenerator;
+  return optGenerator.generateOptions(parser.parseCmdLineArgs(argc, const_cast<const char**>(argv)));
+}
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE(parsing_1)
 {
   auto commandLine = "main.x -t hld -f unitTestData/JPetCmdParserTest/testfile.hld -i 10";
-  auto args_char = JPetCommonTools::createArgs(commandLine);
-  auto argc = args_char.size();
-  auto argv = args_char.data();
-
-  JPetCmdParser parser;
-  auto options = parser.parseAndGenerateOptions(argc, argv);
+  auto options = getOptionsBasedOnCmdLineArgs(commandLine);
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
   BOOST_REQUIRE(std::string(option.getInputFile()) ==
@@ -53,13 +58,7 @@ BOOST_AUTO_TEST_CASE(parsing_1)
 BOOST_AUTO_TEST_CASE(parsing_2)
 {
   auto commandLine = "main.x -t scope -f unitTestData/JPetCmdParserTest/testfile.json ";
-  auto args_char = JPetCommonTools::createArgs(commandLine);
-  auto argc = args_char.size();
-  auto argv = args_char.data();
-
-  JPetCmdParser parser;
-
-  auto options = parser.parseAndGenerateOptions(argc, argv);
+  auto options = getOptionsBasedOnCmdLineArgs(commandLine);
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
   BOOST_REQUIRE_EQUAL(std::string(option.getInputFile()),
@@ -79,12 +78,7 @@ BOOST_AUTO_TEST_CASE(parsing_2)
 BOOST_AUTO_TEST_CASE(parsing_zip_file)
 {
   auto commandLine = "main.x -t zip -f unitTestData/JPetCommonToolsTest/goodZip.gz";
-  auto args_char = JPetCommonTools::createArgs(commandLine);
-  auto argc = args_char.size();
-  auto argv = args_char.data();
-
-  JPetCmdParser parser;
-  auto options = parser.parseAndGenerateOptions(argc, argv);
+  auto options = getOptionsBasedOnCmdLineArgs(commandLine);
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   auto option = options.at(0);
   BOOST_REQUIRE_EQUAL(std::string(option.getInputFile()),
@@ -137,12 +131,7 @@ BOOST_AUTO_TEST_CASE(getOptionsDescriptionTest)
 BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
 {
   auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 4 -p unitTestData/JPetCmdParserTest/data.hld -c unitTestData/JPetUnpackerTest/calib.root -i 231 -L output.json";
-  auto args_char = JPetCommonTools::createArgs(commandLine);
-  auto argc = args_char.size();
-  auto argv = args_char.data();
-
-  JPetCmdParser parser;
-  std::vector<JPetOptions> options = parser.parseAndGenerateOptions(argc, argv);
+  auto options = getOptionsBasedOnCmdLineArgs(commandLine);
 
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   JPetOptions firstOption = options.front();
@@ -163,11 +152,7 @@ BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsTest)
 BOOST_AUTO_TEST_CASE(parseAndGenerateOptionsDefaultValuesTest)
 {
   auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -i 4";
-  auto args_char = JPetCommonTools::createArgs(commandLine);
-  auto argc = args_char.size();
-  auto argv = args_char.data();
-  JPetCmdParser parser;
-  std::vector<JPetOptions> options = parser.parseAndGenerateOptions(argc, argv);
+  auto options = getOptionsBasedOnCmdLineArgs(commandLine);
 
   BOOST_REQUIRE_EQUAL(options.size(), 1);
   JPetOptions firstOption = options.front();
@@ -191,7 +176,7 @@ BOOST_AUTO_TEST_CASE(runNumberNotObligatoryIfHldType)
   auto argc = args_char.size();
   auto argv = args_char.data();
   JPetCmdParser parser;
-  BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, argv));
+  BOOST_REQUIRE_NO_THROW(parser.parseCmdLineArgs(argc, argv));
 }
 
 BOOST_AUTO_TEST_CASE(runNumberNotObligatoryIfScopeType)
@@ -200,22 +185,19 @@ BOOST_AUTO_TEST_CASE(runNumberNotObligatoryIfScopeType)
   auto argc = args_char.size();
   auto argv = args_char.data();
   JPetCmdParser parser;
-  BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, argv));
+  BOOST_REQUIRE_NO_THROW(parser.parseCmdLineArgs(argc, argv));
 
   args_char = JPetCommonTools::createArgs("main.x -t scope -f unitTestData/JPetCmdParserTest/testfile.json -i 10");
   argc = args_char.size();
   argv = args_char.data();
 
-  BOOST_REQUIRE_NO_THROW(parser.parseAndGenerateOptions(argc, argv));
+  BOOST_REQUIRE_NO_THROW(parser.parseCmdLineArgs(argc, argv));
 }
 
 BOOST_AUTO_TEST_CASE(checkOutputPath)
 {
-  auto args_char = JPetCommonTools::createArgs("main.x -o ./ -f unitTestData/JPetCmdParserTest/data.hld -t hld");
-  auto argc = args_char.size();
-  auto argv = args_char.data();
-  JPetCmdParser parser;
-  auto options = parser.parseAndGenerateOptions(argc, argv);
+  auto commandLine = "main.x -o ./ -f unitTestData/JPetCmdParserTest/data.hld -t hld";
+  auto options = getOptionsBasedOnCmdLineArgs(commandLine);
   auto option = options.at(0);
   BOOST_REQUIRE_EQUAL(option.getOutputPath(), "./");
 }
@@ -230,11 +212,8 @@ BOOST_AUTO_TEST_CASE(checkWrongOutputPath)
 
 BOOST_AUTO_TEST_CASE(checkOptionsWithAddedFromJson)
 {
-  auto args_char = JPetCommonTools::createArgs("main.x -o ./ -f unitTestData/JPetCmdParserTest/data.hld -t hld -u unitTestData/JPetOptionsToolsTest/newInputTestCfg.json");
-  auto argc = args_char.size();
-  auto argv = args_char.data();
-  JPetCmdParser parser;
-  auto options = parser.parseAndGenerateOptions(argc, argv);
+  auto commandLine = "main.x -o ./ -f unitTestData/JPetCmdParserTest/data.hld -t hld -u unitTestData/JPetOptionsToolsTest/newInputTestCfg.json";
+  auto options = getOptionsBasedOnCmdLineArgs(commandLine);
   auto option = options.at(0);
   auto allOptions = option.getOptions();
   BOOST_REQUIRE_EQUAL(allOptions.count("myOption_std::string"), 1);
