@@ -21,6 +21,7 @@
 #include "../JPetLoggerInclude.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../DBHandler/HeaderFiles/DBHandler.h"
+#include "../JPetCmdParser/JPetCmdParser.h"
 
 #include <TThread.h>
 #include <TDSet.h>
@@ -72,17 +73,19 @@ bool JPetManager::run()
 
 void JPetManager::parseCmdLine(int argc, const char** argv)
 {
-  fOptions = fParser.parseAndGenerateOptions(argc, argv);
+  JPetCmdParser parser;
+  auto optionsFromCmdLine = parser.parseCmdLineArgs(argc, argv);
+  fOptions  = fOptionsGenerator.generateOptions(optionsFromCmdLine);
 }
 
 void JPetManager::addValidationFunctionForUserOptions(const std::string& name, bool(*validatorFunction)(std::pair <std::string, boost::any>) )
 {
-  fParser.getGenerator().getValidator().addValidatorFunction(name, validatorFunction);
+  fOptionsGenerator.getValidator().addValidatorFunction(name, validatorFunction);
 }
 
 void JPetManager::addTransformationFunctionForUserOption(const std::string& name, std::function<std::pair<std::string, boost::any>(boost::any opt)> transformFunction)
 {
-  fParser.getGenerator().addTransformFunction(name, transformFunction);
+  fOptionsGenerator.addTransformFunction(name, transformFunction);
 }
 
 JPetManager::~JPetManager()

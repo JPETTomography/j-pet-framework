@@ -19,8 +19,8 @@
 
 #include "../JPetOptions/JPetOptions.h"
 #include "../JPetTaskChainExecutor/JPetTaskChainExecutor.h"
-#include "../JPetCmdParser/JPetCmdParser.h"
-#include <boost/any.hpp>
+#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
+
 /**
  * @brief Main manager of the analysis performed with the J-PET Framework.
  *
@@ -46,7 +46,7 @@ public:
   void addTransformationFunctionForUserOption(const std::string& name, std::function<std::pair<std::string, boost::any>(boost::any opt)> transformFunction);
   bool initDBConnection(const char* configFilePath = "../DBConfig/configDB.cfg");
 private:
-  JPetManager(): fParser()
+  JPetManager()
   {
     fTaskGeneratorChain = new TaskGeneratorChain;
   }
@@ -56,6 +56,6 @@ private:
   std::vector<JPetOptions> fOptions; /// fOptions are input options.
   /// Its number corresponds to the number of independent input files.
   TaskGeneratorChain* fTaskGeneratorChain; /// fTaskGeneratorChain is a sequences of registered computing tasks.
-  JPetCmdParser fParser;
+  JPetOptionsGenerator fOptionsGenerator;
 };
 #endif /*  !JPETMANAGER_H */

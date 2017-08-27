@@ -16,33 +16,32 @@
 #ifndef _JPET_CMD_PARSER_H_
 #define _JPET_CMD_PARSER_H_
 
-class JPetCmdParser;
 
 #include "boost/program_options.hpp" // Library parsing command line arguments
 #include <string>
-#include "../JPetOptions/JPetOptions.h"
-#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
-
 
 namespace po = boost::program_options;
 
+/**
+ * @brief Parser of the command line arguments provided by users.
+ *
+ * It is based on boost program_options.
+ */
 class JPetCmdParser
 {
 public:
   JPetCmdParser();
   ~JPetCmdParser();
-  std::vector<JPetOptions> parseAndGenerateOptions(int argc, const char** argv);
+  po::variables_map parseCmdLineArgs(int argc, const char** argv);
 
   inline const po::options_description getOptionsDescription() const
   {
     return fOptionsDescriptions;
   }
-  JPetOptionsGenerator& getGenerator();
 protected:
   po::options_description fOptionsDescriptions;
 
 private:
-  JPetOptionsGenerator fGenerator;
   JPetCmdParser(const JPetCmdParser& cmdParser);
   JPetCmdParser& operator=(const JPetCmdParser& cmdParser);
 };
