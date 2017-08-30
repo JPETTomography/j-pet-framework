@@ -21,7 +21,7 @@
 #include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetTimeWindow/JPetTimeWindow.h"
 
-#include "TNamed.h"
+#include "TObject.h"
 #include "TVector3.h"
 #include <TRef.h>
 
@@ -38,7 +38,7 @@ class JPetTimeWindow;
  *
  * It contains two objects of type JPetPhysSignal (from "Side A" and "Side B" of the Barrel) which represent signals at two ends of a scintillator strip, from which the hit was reconstructed.
  */
-class JPetHit : public TNamed
+class JPetHit : public TObject
 {
 
 public:
@@ -64,7 +64,6 @@ public:
   float getPosY() const ;
   float getPosZ() const;
   float getPos(int index) const;
-  int getScinID()const;
   const TVector3& getPos() const;
   const JPetPhysSignal& getSignal(Signal pos) const;
   const JPetPhysSignal& getSignalA() const;
@@ -90,7 +89,6 @@ public:
   void setPos (float x, float y, float z) ;
   void setBarrelSlot( JPetBarrelSlot& bs) ;
   void setScintillator(JPetScin& sc) ;
-  void setScinID (const int scinID);
 
   void setSignals(JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB);
   void setSignalA(JPetPhysSignal& p_sig);
@@ -132,13 +130,11 @@ private:
   bool fIsSignalAset = false;
   bool fIsSignalBset = false;
 
-  int fScinID = 0; ///< For simple reconstruction
-
   // references to parametric objects
   TRef fBarrelSlot = NULL; ///< BarrelSlot in which the hit was recorded
   TRef fScintillator = NULL; ///< Scintillator strip which was hit
 
-  ClassDef(JPetHit, 3);
+  ClassDef(JPetHit, 4);
 };
 
 #endif

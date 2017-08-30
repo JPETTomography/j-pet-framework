@@ -15,16 +15,18 @@
 
 #include <math.h>
 #include <cassert>
-#include <libconfig.h++>  // For reading configuration files
-#include "HelperMathFunctions.h"
 #include "JPetSimplePhysSignalReco.h"
 #include "../JPetWriter/JPetWriter.h"
+#include "HelperMathFunctions.h"
+#include <boost/property_tree/json_parser.hpp>
+
+using namespace boost::numeric::ublas;
 
 JPetSimplePhysSignalReco::JPetSimplePhysSignalReco():
   fAlpha(1),
   fThresholdSel(-1)
 {
-  readConfigFileAndSetAlphaAndThreshParams("configParams.cfg");
+  readConfigFileAndSetAlphaAndThreshParams("configParams.json");
 }
 
 JPetSimplePhysSignalReco::~JPetSimplePhysSignalReco()
@@ -119,23 +121,15 @@ void JPetSimplePhysSignalReco::terminate()
 
 void JPetSimplePhysSignalReco::readConfigFileAndSetAlphaAndThreshParams(const char* filename)
 {
-  libconfig::Config cfg;
-
+  boost::property_tree::ptree content;
   try {
-    cfg.readFile(filename);
-  } catch (const libconfig::FileIOException& fioex) {
-    std::cerr << "I/O error while reading file." << std::endl;
-  } catch (const libconfig::ParseException& pex) {
-    std::cerr << "Parse error" << std::endl;
-  }
-
-  try {
-    libconfig::Setting& l_settings = cfg.lookup("Configuration");
-    int alpha = l_settings[0]["alpha"];
-    float thresholdSel = l_settings[0]["thresholdSel"];
+    read_json(filename, content);
+    int alpha = content.get<int>("alpha");
+    float thresholdSel = content.get<float>("thresholdSel");
     setAlpha(alpha);
     setThresholdSel(thresholdSel);
-  } catch (const libconfig::SettingNotFoundException& nfex) {
-    std::cerr << "No 'name' setting in configuration file." << std::endl;
+  } catch (const std::runtime_error& error) {
+    std::string message = "Error opening config file. Error = " + std::string(error.what());
+    std::cerr << message << std::endl;
   }
 }

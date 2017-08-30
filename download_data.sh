@@ -22,7 +22,7 @@ CHECKSUM_COMMAND="check_sums"
 #for scp
 CFG_DIR=/home/framework_configs
 CFG_OUTPUT=$BASE_PATH/DBHandler/Config
-declare -a CFG_FILES=("configDB.cfg" "configDB.cfg.koza" "ReadMe.txt")
+declare -a CFG_FILES=("configDB.json" "configDB.json.sphinx" "ReadMe.txt")
 CFG_SERVER=sphinx.if.uj.edu.pl
 
 declare -a CFG_FILES_IN=()

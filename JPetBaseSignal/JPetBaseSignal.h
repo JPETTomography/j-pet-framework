@@ -19,24 +19,26 @@
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetPM/JPetPM.h"
 #include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include <TNamed.h>
+#include <TObject.h>
 #include <TRef.h>
 
 /**
  * @brief Base class for all signal data classes
  */
-class JPetBaseSignal: public TNamed
+class JPetBaseSignal: public TObject
 {
 public:
 
   JPetBaseSignal();
   virtual ~JPetBaseSignal();
-
+  explicit JPetBaseSignal(bool isNull);
   /**
    * @brief Set number of the Time Slot this signal belongs to.
    *
    * Should be set to the value returned by JPetTimeWindow::getIndex() for the respective Time Window
    */
+  bool isNullObject() const;
+  static  JPetBaseSignal& getDummyResult();
   inline void setTimeWindowIndex(unsigned int index) {
     fTimeWindowIndex = index;
   }
@@ -79,7 +81,15 @@ private:
 
   unsigned int fTimeWindowIndex; // index of original TSlot
 
-ClassDef(JPetBaseSignal, 1)
-  ;
+protected:
+
+#ifndef __CINT__
+bool fIsNullObject = false;
+#else
+bool fIsNullObject;
+#endif
+
+ClassDef(JPetBaseSignal, 2);
+
 };
 #endif /*  !JPETBASESIGNAL_H */
