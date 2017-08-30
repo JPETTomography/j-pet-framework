@@ -32,6 +32,7 @@ BOOST_AUTO_TEST_CASE( minimal_basic_data_read )
 
   BOOST_REQUIRE_EQUAL(description["id"], "1");
   BOOST_REQUIRE_EQUAL(description["is_right_side"], "1");
+  BOOST_REQUIRE_EQUAL(description["description"], "no writing");
 }
 
 BOOST_AUTO_TEST_CASE( minimal_relational_data_read )
@@ -84,6 +85,7 @@ BOOST_AUTO_TEST_CASE( minimal_example_write )
   JPetPM& repm = reparamBank.getPM(1);
   BOOST_REQUIRE(pm.getID() == repm.getID());
   BOOST_REQUIRE(pm.getSide() == repm.getSide());
+  BOOST_REQUIRE(pm.getDescription() == repm.getDescription());
 
   JPetFEB& feb = paramBank.getFEB(1);
   JPetFEB& refeb = reparamBank.getFEB(1);

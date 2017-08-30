@@ -40,23 +40,24 @@ JPetLayer makeLayer(int id, bool isActive, const std::string& name, float radius
 
 JPetHit makeHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSignal& siga, JPetPhysSignal& sigb, JPetBarrelSlot& bslot, JPetScin& scin, float qtd, float td)
 {
-  JPetHit hitObject(e, qe, t, qt, pos, siga, sigb, bslot, scin); 
+  JPetHit hitObject(e, qe, t, qt, pos, siga, sigb, bslot, scin);
   hitObject.setQualityOfTimeDiff(qtd);
   hitObject.setTimeDiff(td);
   return hitObject;
 }
 
-JPetSigCh makeSigCh(JPetPM & pm, JPetTRB & trb, JPetFEB & feb, JPetTOMBChannel & channel, float val, JPetSigCh::EdgeType type, float thr, Int_t daqch, unsigned int threshold_number){
-   JPetSigCh sigChObject(type, val );
-   sigChObject.setPM(pm);
-   sigChObject.setTRB(trb);
-   sigChObject.setFEB(feb);
-   sigChObject.setTOMBChannel(channel);
-   sigChObject.setThreshold(thr);
-   sigChObject.setDAQch(daqch);
-   sigChObject.setThresholdNumber(threshold_number);
-   return sigChObject;
-  }
+JPetSigCh makeSigCh(JPetPM& pm, JPetTRB& trb, JPetFEB& feb, JPetTOMBChannel& channel, float val, JPetSigCh::EdgeType type, float thr, Int_t daqch, unsigned int threshold_number)
+{
+  JPetSigCh sigChObject(type, val );
+  sigChObject.setPM(pm);
+  sigChObject.setTRB(trb);
+  sigChObject.setFEB(feb);
+  sigChObject.setTOMBChannel(channel);
+  sigChObject.setThreshold(thr);
+  sigChObject.setDAQch(daqch);
+  sigChObject.setThresholdNumber(threshold_number);
+  return sigChObject;
+}
 
 JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, const std::string& name, float theta, int inFrameID)
 {
@@ -68,24 +69,23 @@ JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, const s
 JPetTimeWindow makeTimeWindow(const std::vector<JPetSigCh>& vec, unsigned int window_id)
 {
   JPetTimeWindow timeWindowObject;
-  for(auto sigch: vec)
-  {
+  for (auto sigch : vec) {
     timeWindowObject.addCh(sigch);
   }
   timeWindowObject.setIndex(window_id);
   return timeWindowObject;
 }
 
-JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot)
+JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, float>& gain, std::string description, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot)
 {
-  JPetPM pmObject(side, id, set, opt, gain);
+  JPetPM pmObject(side, id, set, opt, gain, description);
   pmObject.setFEB(p_FEB);
   pmObject.setScin(p_scin);
   pmObject.setBarrelSlot(p_barrelSlot);
   return pmObject;
 }
 
-JPetBaseSignal makeBaseSignal(unsigned int index, JPetPM & pm, JPetBarrelSlot & bs)
+JPetBaseSignal makeBaseSignal(unsigned int index, JPetPM& pm, JPetBarrelSlot& bs)
 {
   JPetBaseSignal baseSignalObject;
   baseSignalObject.setTimeWindowIndex(index);
@@ -107,11 +107,10 @@ JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, doubl
 
 JPetRawSignal makeRawSignal(const std::vector<JPetSigCh>& vec)
 {
-  JPetRawSignal rawSignalObject(vec.size()); 
-  for(const auto& sigch: vec) 
-  { 
-    rawSignalObject.addPoint(sigch); 
-  } 
+  JPetRawSignal rawSignalObject(vec.size());
+  for (const auto& sigch : vec) {
+    rawSignalObject.addPoint(sigch);
+  }
   return rawSignalObject;
 }
 

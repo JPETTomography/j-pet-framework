@@ -26,7 +26,7 @@ JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
 {
   fOptionsDescriptions.add_options()
   ("help,h", "Displays this help message.")
-  ("type,t", po::value<std::string>()->required()->implicit_value(""), "Type of file: hld, zip, root or scope.")
+  ("type,t", po::value<std::string>()->required(), "Type of file: hld, zip, root or scope.")
   ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
   ("outputPath,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
   ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
@@ -118,7 +118,7 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
     }
   }
 
-  if(isUnpackerConfigFileSet(variablesMap)){
+  if (isUnpackerConfigFileSet(variablesMap)) {
     std::string unpackerConfigFileName = getUnpackerConfigFile(variablesMap);
     if ( !JPetCommonTools::ifFileExisting(unpackerConfigFileName) ) {
       ERROR("The provided Unpacker config file : " + unpackerConfigFileName + " does not exist.");
@@ -127,7 +127,7 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
     }
   }
 
-  if(isUnpackerCalibFileSet(variablesMap)){
+  if (isUnpackerCalibFileSet(variablesMap)) {
     std::string unpackerCalibFileName = getUnpackerCalibFile(variablesMap);
     if ( !JPetCommonTools::ifFileExisting(unpackerCalibFileName) ) {
       ERROR("The provided Unpacker calibration file : " + unpackerCalibFileName + " does not exist.");
@@ -135,7 +135,7 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
       return false;
     }
   }
-  
+
   std::vector<std::string> fileNames(variablesMap["file"].as< std::vector<std::string> >());
   for (unsigned int i = 0; i < fileNames.size(); i++) {
     if ( ! JPetCommonTools::ifFileExisting(fileNames[i]) ) {
@@ -143,14 +143,6 @@ bool JPetCmdParser::areCorrectOptions(const po::variables_map& variablesMap) con
       ERROR("File : " + fileName + " does not exist.");
       std::cerr << "File : " << fileNames[i] << " does not exist" << std::endl;
       return false;
-    }
-  }
-
-
-  /// The run number option is neclegted if the input file is set as "scope"
-  if (isRunNumberSet(variablesMap)) {
-    if (getFileType(variablesMap) == "scope") {
-      WARNING("Run number was specified but the input file type is a scope!\n The run number will be ignored!");
     }
   }
 
@@ -222,14 +214,14 @@ std::vector<JPetOptions> JPetCmdParser::generateOptions(const po::variables_map&
     /// also added. The container of pairs <directory, fileName> is generated
     /// based on the content of the configuration file.
     JPetScopeConfigParser::DirFileContainer dirsAndFiles = scopeConfigParser.getInputDirectoriesAndFakeInputFiles(configFileName);
-    for (const auto & dirAndFile : dirsAndFiles) {
+    for (const auto& dirAndFile : dirsAndFiles) {
       options.at("scopeInputDirectory") = dirAndFile.first;
       options.at("inputFile") = dirAndFile.second;
       optionContainer.push_back(JPetOptions(options));
     }
   } else {
     /// for every single input file we create separate JPetOptions
-    for (const auto & file : files) {
+    for (const auto& file : files) {
       options.at("inputFile") = file;
       optionContainer.push_back(JPetOptions(options));
     }
