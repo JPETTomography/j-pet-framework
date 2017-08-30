@@ -40,7 +40,7 @@ public:
   void clear();
 
   JPetParamBank(const bool dummy);
-  const bool isDummy()const;
+  bool isDummy() const;
 
   int getSize(ParamObjectType type) const;
 

@@ -54,6 +54,12 @@ class JPetTreeHeader: public TObject{
 
   inline int getRunNumber()  const { return fRunNo; }
   inline void setRunNumber(int p_run_no) { fRunNo = p_run_no; }
+
+  inline std::string getFrameworkVersion() const {return fFrameworkVersion;}
+  inline std::string getFrameworkRevision() const {return fFrameworkRevision;}
+
+  inline void setFrameworkVersion(const char * p_version) {fFrameworkVersion = p_version;}
+  inline void setFrameworkRevision(const char * p_revision) {fFrameworkRevision = p_revision;}
   
   inline std::string getBaseFileName() const {return fBaseFilename;}
   inline void setBaseFileName(const char * p_name){ fBaseFilename = p_name; }
@@ -84,6 +90,9 @@ protected:
   std::string stringifyDictionary() const;
   std::string stringifyHistory() const;
 
+  std::string fFrameworkVersion;
+  std::string fFrameworkRevision;
+  
   int fRunNo;
   std::string fBaseFilename;
   double fSourcePosition;

@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE( AllSignalsTest2 ) {
   JPetPhysSignal & phys = (JPetPhysSignal&) reader.getCurrentEvent();
   BOOST_CHECK_CLOSE(phys.getTime(), 42.42f, epsilon);
 
-  BOOST_CHECK_EQUAL(phys.getRecoSignal().getShape().size(), 502);
+  BOOST_CHECK_EQUAL(phys.getRecoSignal().getShape().size(), 502u);
   BOOST_CHECK_CLOSE(phys.getRecoSignal().getShape().front().time, 501.f,
                     epsilon);
   BOOST_CHECK_CLOSE(phys.getRecoSignal().getShape().back().amplitude, 0.43f,

@@ -10,8 +10,6 @@
 /// @todo update the method list - tests are outdated
 //  JPetSigCh() { init(); }
 //  JPetSigCh(EdgeType Edge, float EdgeTime);
-//  bool isCharge() const;
-//  bool isTime() const;
 //  inline float getValue() const { return fValue; }
 //  inline EdgeType getType() const { return fType; }
 //  inline JPetPM * getPM() const { return (JPetPM*) fPM.GetObject(); }
@@ -35,8 +33,6 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( first )
 {
   JPetSigCh test;
-  BOOST_REQUIRE_EQUAL(test.isCharge(), 0);
-  BOOST_REQUIRE_EQUAL(test.isTime(), 1);
   BOOST_REQUIRE_EQUAL(test.getValue(), JPetSigCh::kUnset);
   BOOST_REQUIRE_EQUAL(test.getType(), JPetSigCh::Leading);
   BOOST_REQUIRE_EQUAL(test.getThreshold(), JPetSigCh::kUnset);
@@ -61,8 +57,6 @@ BOOST_AUTO_TEST_CASE( second )
   test.setType(JPetSigCh::Leading);
   test.setValue(time_test);
   
-  BOOST_REQUIRE_EQUAL(test.isTime(), 1);
-  BOOST_REQUIRE_EQUAL(test.isCharge(), 0);
   BOOST_REQUIRE_CLOSE(test.getValue(), time_test, epsilon);
   BOOST_REQUIRE_EQUAL(test.getType(), JPetSigCh::Leading);
   BOOST_REQUIRE_EQUAL(test.getChannel(), 12);

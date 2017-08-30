@@ -14,20 +14,20 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( noExisting_file_read )
 {
   JPetParamGetterAscii getter(dataDir + "noExisting.json");
-  BOOST_REQUIRE_EQUAL(getter.getAllBasicData(ParamObjectType::kPM, 1).size(), 0);
+  BOOST_REQUIRE_EQUAL(getter.getAllBasicData(ParamObjectType::kPM, 1).size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( empty_file_read )
 {
   JPetParamGetterAscii getter(dataDir + "empty.json");
-  BOOST_REQUIRE_EQUAL(getter.getAllBasicData(ParamObjectType::kPM, 1).size(), 0);
+  BOOST_REQUIRE_EQUAL(getter.getAllBasicData(ParamObjectType::kPM, 1).size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( minimal_basic_data_read )
 {
   JPetParamGetterAscii getter(dataDir + "DB1.json");
   ParamObjectsDescriptions descriptions = getter.getAllBasicData(ParamObjectType::kPM, 1);
-  BOOST_REQUIRE_EQUAL(descriptions.size(), 1);
+  BOOST_REQUIRE_EQUAL(descriptions.size(), 1u);
   ParamObjectDescription& description = descriptions[1];
 
   BOOST_REQUIRE_EQUAL(description["id"], "1");
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE( minimal_relational_data_read )
 {
   JPetParamGetterAscii getter(dataDir + "DB1.json");
   ParamRelationalData relations = getter.getAllRelationalData(ParamObjectType::kPM, ParamObjectType::kBarrelSlot, 1);
-  BOOST_REQUIRE_EQUAL(relations.size(), 1);
+  BOOST_REQUIRE_EQUAL(relations.size(), 1u);
 
   BOOST_REQUIRE_EQUAL(relations[1], 1);
 }

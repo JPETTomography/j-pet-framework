@@ -255,7 +255,7 @@ BOOST_AUTO_TEST_CASE( no_pms )
   JPetScinFactory scinFactory(paramGetter, 0, barrelSlotFactory);
   JPetPMFactory factory(paramGetter, 0, febFactory, scinFactory, barrelSlotFactory);
   auto & pms = factory.getPMs();
-  BOOST_REQUIRE_EQUAL(pms.size(), 0);
+  BOOST_REQUIRE_EQUAL(pms.size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( single_object )
@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE( single_object )
   JPetScinFactory scinFactory(paramGetter, 1, barrelSlotFactory);
   JPetPMFactory factory(paramGetter, 1, febFactory, scinFactory, barrelSlotFactory);
   auto & pms = factory.getPMs();
-  BOOST_REQUIRE_EQUAL(pms.size(), 1);
+  BOOST_REQUIRE_EQUAL(pms.size(), 1u);
   auto pm = pms[1];
   BOOST_REQUIRE_EQUAL(pm->getID(), 1);
   BOOST_REQUIRE_EQUAL(pm->getSide(), JPetPM::SideB);
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   JPetScinFactory scinFactory(paramGetter, 2, barrelSlotFactory);
   JPetPMFactory factory(paramGetter, 2, febFactory, scinFactory, barrelSlotFactory);
   auto & pms = factory.getPMs();
-  BOOST_REQUIRE_EQUAL(pms.size(), 2);
+  BOOST_REQUIRE_EQUAL(pms.size(), 2u);
   auto pm = pms[1];
   BOOST_REQUIRE_EQUAL(pm->getID(), 1);
   BOOST_REQUIRE_EQUAL(pm->getSide(), JPetPM::SideB);

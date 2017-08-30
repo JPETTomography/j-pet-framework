@@ -16,7 +16,7 @@ git clone --recursive https://github.com/JPETTomography/j-pet-framework.git myFr
 Documentation
 -------------
 
-The program documentation will be added along the framework development. 
+The program documentation is being added along the framework development. 
 
 The code documentation can be generated with Doxygen package using:
 $> make documentation
@@ -31,13 +31,14 @@ Please see the file called INSTALL.
 Authors
 -------
 
-J-PET Analysis Framework is being developed by Wojciech Krzemien, Aleksander Gajos, Szymon Niedźwiecki, Oleksandr Rundel, Tomasz Kisielewski, Nikodem Krawczyk and Klara Muzalewska.
+J-PET Analysis Framework is being developed by Wojciech Krzemien, Aleksander Gajos, Szymon Niedźwiecki, Oleksandr Rundel, Tomasz Kisielewski, Nikodem Krawczyk, Klara Muzalewska, Krzysztof Kacprzak 
+and Kamil Rakoczy.
 The former developers are Karol Stola, Damian Trybek and Andrzej Gruntowski.
 
 Citation:
 ---------
 
-In case you want to refer to J-PET Analysis Framework in your own articles, you can use this reference:
+In case you want to refer to J-PET Analysis Framework you can use this reference:
 W. Krzemien et al.
 Analysis framework for the J-PET scanner 
 Acta Phys.Polon. A127 (2015) 1491-1494

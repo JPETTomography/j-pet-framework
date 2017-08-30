@@ -53,11 +53,9 @@ Requirements
   
   5. libpqxx (connection between framework and database) [1]
   
-  6. libconfig++ [2]
+  6. cmake [3]
 
-  7. cmake [3]
-
-  8. tinyxml
+  7. tinyxml
 
   9. FFTW3 (http://www.fftw.org/)
 
@@ -89,12 +87,6 @@ Annotation
   Other packages related to libpqxx:
     http://packages.ubuntu.com/lucid/libpqxx-dev
 
-  [2]
-  Official website:
-    http://www.hyperrealm.com/libconfig/
-  Documentation:
-    http://www.hyperrealm.com/libconfig/libconfig_manual.html
-
   [3]
   Official website:
     https://cmake.org/
@@ -106,7 +98,7 @@ Requirements installation
 
 For Ubuntu:
 
-sudo apt-get install libboost-all-dev libpqxx-3.1 libpqxx3-dev libconfig++ cmake libtinyxml2-0.0.0
+sudo apt-get install libboost-all-dev libpqxx-3.1 libpqxx3-dev cmake libtinyxml2-0.0.0
 
 For Fedora 20:
-sudo yum install boost-devel libpqxx libpqxx-devel libconfig libconfig-devel cmake
+sudo yum install boost-devel libpqxx libpqxx-devel cmake
