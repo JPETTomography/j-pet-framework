@@ -142,51 +142,67 @@ void JPetParamManager::fillParameterBank(const int run)
     fBank = 0;
   }
   fBank = new JPetParamBank();
-  for (auto& trbp : getTRBs(run)) {
-    auto& trb = *trbp.second;
-    fBank->addTRB(trb);
-  }
-  for (auto& febp : getFEBs(run)) {
-    auto& feb = *febp.second;
-    fBank->addFEB(feb);
-    fBank->getFEB(feb.getID()).setTRB(fBank->getTRB(feb.getTRB().getID()));
-  }
-  for (auto& framep : getFrames(run)) {
-    auto& frame = *framep.second;
-    fBank->addFrame(frame);
-  }
-  for (auto& layerp : getLayers(run)) {
-    auto& layer = *layerp.second;
-    fBank->addLayer(layer);
-    fBank->getLayer(layer.getID()).setFrame(fBank->getFrame(layer.getFrame().getID()));
-  }
-  for (auto& barrelSlotp : getBarrelSlots(run)) {
-    auto& barrelSlot = *barrelSlotp.second;
-    fBank->addBarrelSlot(barrelSlot);
-    if (barrelSlot.hasLayer()) {
-      fBank->getBarrelSlot(barrelSlot.getID()).setLayer(fBank->getLayer(barrelSlot.getLayer().getID()));
+  if (!fExpectMissing.count(ParamObjectType::kTRB)) {
+    for (auto& trbp : getTRBs(run)) {
+      auto& trb = *trbp.second;
+      fBank->addTRB(trb);
     }
   }
-  for (auto& scinp : getScins(run)) {
-    auto& scin = *scinp.second;
-    fBank->addScintillator(scin);
-    fBank->getScintillator(scin.getID()).setBarrelSlot(fBank->getBarrelSlot(scin.getBarrelSlot().getID()));
-  }
-  for (auto& pmp : getPMs(run)) {
-    auto& pm = *pmp.second;
-    fBank->addPM(pm);
-    if (pm.hasFEB()) {
-      fBank->getPM(pm.getID()).setFEB(fBank->getFEB(pm.getFEB().getID()));
+  if (!fExpectMissing.count(ParamObjectType::kFEB)) {
+    for (auto& febp : getFEBs(run)) {
+      auto& feb = *febp.second;
+      fBank->addFEB(feb);
+      fBank->getFEB(feb.getID()).setTRB(fBank->getTRB(feb.getTRB().getID()));
     }
-    fBank->getPM(pm.getID()).setScin(fBank->getScintillator(pm.getScin().getID()));
-    fBank->getPM(pm.getID()).setBarrelSlot(fBank->getBarrelSlot(pm.getBarrelSlot().getID()));
   }
-  for (auto& tombChannelp : getTOMBChannels(run)) {
-    auto& tombChannel = *tombChannelp.second;
-    fBank->addTOMBChannel(tombChannel);
-    fBank->getTOMBChannel(tombChannel.getChannel()).setFEB(fBank->getFEB(tombChannel.getFEB().getID()));
-    fBank->getTOMBChannel(tombChannel.getChannel()).setTRB(fBank->getTRB(tombChannel.getTRB().getID()));
-    fBank->getTOMBChannel(tombChannel.getChannel()).setPM(fBank->getPM(tombChannel.getPM().getID()));
+  if (!fExpectMissing.count(ParamObjectType::kFrame)) {
+    for (auto& framep : getFrames(run)) {
+      auto& frame = *framep.second;
+      fBank->addFrame(frame);
+    }
+  }
+  if (!fExpectMissing.count(ParamObjectType::kLayer)) {
+    for (auto& layerp : getLayers(run)) {
+      auto& layer = *layerp.second;
+      fBank->addLayer(layer);
+      fBank->getLayer(layer.getID()).setFrame(fBank->getFrame(layer.getFrame().getID()));
+    }
+  }
+  if (!fExpectMissing.count(ParamObjectType::kBarrelSlot)) {
+    for (auto& barrelSlotp : getBarrelSlots(run)) {
+      auto& barrelSlot = *barrelSlotp.second;
+      fBank->addBarrelSlot(barrelSlot);
+      if (barrelSlot.hasLayer()) {
+        fBank->getBarrelSlot(barrelSlot.getID()).setLayer(fBank->getLayer(barrelSlot.getLayer().getID()));
+      }
+    }
+  }
+  if (!fExpectMissing.count(ParamObjectType::kScintillator)) {
+    for (auto& scinp : getScins(run)) {
+      auto& scin = *scinp.second;
+      fBank->addScintillator(scin);
+      fBank->getScintillator(scin.getID()).setBarrelSlot(fBank->getBarrelSlot(scin.getBarrelSlot().getID()));
+    }
+  }
+  if (!fExpectMissing.count(ParamObjectType::kPM)) {
+    for (auto& pmp : getPMs(run)) {
+      auto& pm = *pmp.second;
+      fBank->addPM(pm);
+      if (pm.hasFEB()) {
+        fBank->getPM(pm.getID()).setFEB(fBank->getFEB(pm.getFEB().getID()));
+      }
+      fBank->getPM(pm.getID()).setScin(fBank->getScintillator(pm.getScin().getID()));
+      fBank->getPM(pm.getID()).setBarrelSlot(fBank->getBarrelSlot(pm.getBarrelSlot().getID()));
+    }
+  }
+  if (!fExpectMissing.count(ParamObjectType::kTOMBChannel)) {
+    for (auto& tombChannelp : getTOMBChannels(run)) {
+      auto& tombChannel = *tombChannelp.second;
+      fBank->addTOMBChannel(tombChannel);
+      fBank->getTOMBChannel(tombChannel.getChannel()).setFEB(fBank->getFEB(tombChannel.getFEB().getID()));
+      fBank->getTOMBChannel(tombChannel.getChannel()).setTRB(fBank->getTRB(tombChannel.getTRB().getID()));
+      fBank->getTOMBChannel(tombChannel.getChannel()).setPM(fBank->getPM(tombChannel.getPM().getID()));
+    }
   }
 }
 

@@ -81,7 +81,15 @@ void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long neve
 JPetParamManager* JPetTaskChainExecutorUtils::generateParamManager(const JPetOptions& options)
 {
   if (options.isLocalDB()) {
-    return new JPetParamManager(new JPetParamGetterAscii(options.getLocalDB()));
+    std::set<ParamObjectType> expectMissing;
+    if (options.getInputFileType() == JPetOptions::kScope) {
+      expectMissing.insert(ParamObjectType::kTRB);
+      expectMissing.insert(ParamObjectType::kFEB);
+      expectMissing.insert(ParamObjectType::kFrame);
+      expectMissing.insert(ParamObjectType::kLayer);
+      expectMissing.insert(ParamObjectType::kTOMBChannel);
+    }
+    return new JPetParamManager(new JPetParamGetterAscii(options.getLocalDB()), expectMissing);
   } else {
     return new JPetParamManager();
   }

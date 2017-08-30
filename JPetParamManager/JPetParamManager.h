@@ -20,6 +20,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <set>
 #include "../JPetLoggerInclude.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetDBParamGetter/JPetDBParamGetter.h"
@@ -41,6 +42,7 @@ class JPetParamManager
 public:
   JPetParamManager() : fParamGetter(new JPetDBParamGetter()), fBank(0), fIsNullObject(false) {}
   JPetParamManager(JPetParamGetter* paramGetter) : fParamGetter(paramGetter), fBank(0) , fIsNullObject(false) {}
+  JPetParamManager(JPetParamGetter* paramGetter, std::set<ParamObjectType> expectMissing) : fParamGetter(paramGetter), fExpectMissing(expectMissing), fBank(0) , fIsNullObject(false) {}
   /// Special constructor to create NullObject.
   /// This object can be returned if JPetParamManager is not created,
   /// and the const& is expected to be returned.
@@ -77,6 +79,7 @@ private:
   JPetParamManager& operator=(const JPetParamManager&);
 
   JPetParamGetter* fParamGetter;
+  std::set<ParamObjectType> fExpectMissing;
   JPetParamBank* fBank;
   bool fIsNullObject;
 
