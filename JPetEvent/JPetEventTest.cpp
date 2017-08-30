@@ -2,7 +2,9 @@
 #define BOOST_TEST_MODULE JPetEventTest
 #include <boost/test/unit_test.hpp>
 
+#include "../JPetWriter/JPetWriter.h"
 #include "../JPetEvent/JPetEvent.h"
+#include "../JPetLoggerInclude.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )
@@ -23,7 +25,7 @@ BOOST_AUTO_TEST_CASE(constructor)
   JPetEvent event({firstHit, secondHit}, JPetEventType::kUnknown);
 
   BOOST_REQUIRE(!event.getHits().empty());
-  BOOST_REQUIRE_EQUAL(event.getHits().size(), 2);
+  BOOST_REQUIRE_EQUAL(event.getHits().size(), 2u);
 }
 
 BOOST_AUTO_TEST_CASE(constructor_orderedHits)
@@ -96,9 +98,9 @@ BOOST_AUTO_TEST_CASE(addHit)
   JPetHit thirdHit;
   event.setHits( {firstHit, secondHit});
   BOOST_REQUIRE(!event.getHits().empty());
-  BOOST_REQUIRE_EQUAL(event.getHits().size(), 2);
+  BOOST_REQUIRE_EQUAL(event.getHits().size(), 2u);
   event.addHit(thirdHit);
-  BOOST_REQUIRE_EQUAL(event.getHits().size(), 3);
+  BOOST_REQUIRE_EQUAL(event.getHits().size(), 3u);
 }
 
 BOOST_AUTO_TEST_CASE(eventTypes)
@@ -205,7 +207,6 @@ BOOST_AUTO_TEST_CASE(addEventType2)
   BOOST_REQUIRE((type & JPetEventType::kPrompt) != JPetEventType::kPrompt);
   BOOST_REQUIRE((type & JPetEventType::kScattered) != JPetEventType::kScattered);
 }
-
 
 BOOST_AUTO_TEST_CASE(addEventType3)
 {

@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE( no_scins )
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 0, layerFactory);
   JPetScinFactory factory(paramGetter, 0, barrelSlotFactory);
   auto & scins = factory.getScins();
-  BOOST_REQUIRE_EQUAL(scins.size(), 0);
+  BOOST_REQUIRE_EQUAL(scins.size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( single_object )
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE( single_object )
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 1, layerFactory);
   JPetScinFactory factory(paramGetter, 1, barrelSlotFactory);
   auto & scins = factory.getScins();
-  BOOST_REQUIRE_EQUAL(scins.size(), 1);
+  BOOST_REQUIRE_EQUAL(scins.size(), 1u);
   auto scin = scins[1];
   BOOST_REQUIRE_EQUAL(scin->getID(), 1);
   BOOST_REQUIRE_CLOSE(scin->getAttenLen(), 10.34, epsilon);
@@ -240,7 +240,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 2, layerFactory);
   JPetScinFactory factory(paramGetter, 2, barrelSlotFactory);
   auto & scins = factory.getScins();
-  BOOST_REQUIRE_EQUAL(scins.size(), 2);
+  BOOST_REQUIRE_EQUAL(scins.size(), 2u);
   auto scin = scins[1];
   BOOST_REQUIRE_EQUAL(scin->getID(), 1);
   BOOST_REQUIRE_CLOSE(scin->getAttenLen(), 10.34, epsilon);

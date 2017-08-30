@@ -18,12 +18,13 @@
 
 ClassImp(JPetEvent);
 
-JPetEvent::JPetEvent()
+JPetEvent::JPetEvent(): TObject()
 {
   /**/
 }
 
 JPetEvent::JPetEvent(const std::vector<JPetHit>& hits, JPetEventType eventType, bool orderedByTime):
+  TObject(),
   fType(eventType)
 {
   setHits(hits, orderedByTime);
