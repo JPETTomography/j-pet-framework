@@ -59,6 +59,8 @@ Requirements
 
   8. tinyxml
 
+  9. FFTW3 (http://www.fftw.org/)
+
 Tested Platforms
 ----------------
 
