@@ -46,23 +46,9 @@ public:
   static void FilterSinogram(FilterFunction callableFunction,
                              Matrix2DProj &sinogram)
   {
-    // namespace ft = boost::function_types;
-    //
-    // typedef typename ft::result_type< Functor >::type result_type;
-    // typedef ft::parameter_types< Functor > parameter_types;
-    // typedef
-    //    typename boost::mpl::push_front< parameter_types, result_type >::type
-    //        sequence_type;
-    //// sequence_type is now a Boost.MPL sequence in the style of
-    //// mpl::vector<int, double, long> if the signature of the
-    //// analyzed functor were int(double, long)
-    //
-    //// We now build a function type out of the MPL sequence
-    // typedef typename ft::function_type< sequence_type >::type function_type;
-    //
-    // std::function< function_type > callableFunction = std::move(f);
     doFFTW(sinogram, callableFunction);
   }
+
   /// Returns a matrixGetter, that can be used to return matrix elements in the
   /// following way:
   /// if isTransposed is set to false, matrixGetter returns matrix[i][j]
