@@ -167,25 +167,15 @@ foreach(test_source ${UNIT_TEST_SOURCES})
   get_filename_component(test ${test_source} NAME_WE)
   generate_root_dictionaries(test_dictionaries SOURCES ${test_source})
   list(APPEND test_binaries ${test}.x)
-  if(${test} MATCHES "JPetRecoImageTools")
-    add_executable(${test}.x EXCLUDE_FROM_ALL ${test_source}
-      ${test_dictionaries}
-      )
-    set_target_properties(${test}.x PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_DIR} )
-    target_link_libraries(${test}.x
-      JPetFramework
-      ${Boost_LIBRARIES}
-      ${FFTW_LIBRARIES}
-      )
-  else(${test})
-    add_executable(${test}.x EXCLUDE_FROM_ALL ${test_source}
-      ${test_dictionaries}
-      )
-    set_target_properties(${test}.x PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_DIR} )
-    target_link_libraries(${test}.x
-      JPetFramework
-      ${Boost_LIBRARIES}
-  endif()
+  add_executable(${test}.x EXCLUDE_FROM_ALL ${test_source}
+    ${test_dictionaries}
+    )
+  set_target_properties(${test}.x PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_DIR} )
+  target_link_libraries(${test}.x
+    JPetFramework
+    ${Boost_LIBRARIES}
+    ${FFTW_LIBRARIES}
+    )
 
 endforeach()
 
