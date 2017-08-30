@@ -26,14 +26,16 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )
 {
   JPetPM pm;
-  float epsilon = 0.0001; 
+  float epsilon = 0.0001;
   BOOST_REQUIRE_EQUAL(pm.getSide(), JPetPM::SideA);
   BOOST_REQUIRE_EQUAL(pm.getID(), 0);
   BOOST_REQUIRE_EQUAL(pm.getHVset(), 0);
   BOOST_REQUIRE_EQUAL(pm.getHVopt(), 0);
   BOOST_REQUIRE_CLOSE(pm.getHVgain(JPetPM::kFirst), 0, epsilon);
   BOOST_REQUIRE_CLOSE(pm.getHVgain(JPetPM::kSecond), 0, epsilon);
+  BOOST_REQUIRE_EQUAL(pm.getDescription(), "");
   BOOST_CHECK_EQUAL(pm.isNullObject(), false);
+  BOOST_REQUIRE(!pm.hasFEB());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -46,130 +48,146 @@ class TestParamGetter : public JPetParamGetter
   {
     ParamObjectsDescriptions result;
     switch (type) {
-      case ParamObjectType::kPM:
-        switch (runId) {
-          case 0: //No PMs
-            break;
-          case 1: //Simple single object
-          case 5: //Wrong FEB relation
-          case 6: //Wrong scin relation
-          case 7: //Wrong barrel slot relation
-            result = {
-              {1, {
-                    {"id", "1"},
-                    {"is_right_side", "1"}
-                  }
-              }
-            };
-            break;
-          case 2: //Simple two objects
-            result = {
-              {1, {
-                    {"id", "1"},
-                    {"is_right_side", "1"}
-                  }
-              },
-              {5, {
-                    {"id", "5"},
-                    {"is_right_side", "0"}
-                  }
-              }
-            };
-            break;
-          case 3: //Object with missing field
-            result = {
-              {1, {
-                    {"id", "1"},
-                  }
-              }
-            };
-            break;
-          case 4: //Object with wrong field
-            result = {
-              {1, {
-                    {"id", "1"},
-                    {"is_right_side", "probably"}
-                  }
-              }
-            };
-            break;
+    case ParamObjectType::kPM:
+      switch (runId) {
+      case 0: //No PMs
+        break;
+      case 1: //Simple single object
+      case 5: //Wrong FEB relation
+      case 6: //Wrong scin relation
+      case 7: //Wrong barrel slot relation
+        result = {
+          {
+            1, {
+              {"id", "1"},
+              {"is_right_side", "1"},
+              {"description", "no writing"}
+            }
+          }
+        };
+        break;
+      case 2: //Simple two objects
+        result = {
+          {
+            1, {
+              {"id", "1"},
+              {"is_right_side", "1"},
+              {"description", "no writing"}
+            }
+          },
+          {
+            5, {
+              {"id", "5"},
+              {"is_right_side", "0"},
+              {"description", "some writing"}
+            }
+          }
+        };
+        break;
+      case 3: //Object with missing field
+        result = {
+          {
+            1, {
+              {"id", "1"},
+              {"description", "some writing"}
+            }
+          }
+        };
+        break;
+      case 4: //Object with wrong field
+        result = {
+          {
+            1, {
+              {"id", "1"},
+              {"is_right_side", "probably"},
+              {"description", "some writing"}
+            }
+          }
+        };
+        break;
+      }
+      break;
+    case ParamObjectType::kFEB:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"active", "1"},
+            {"status", "healthy"},
+            {"description", "tall"},
+            {"version", "27"},
+            {"creator_id", "44"},
+            {"time_outputs_per_input", "2"},
+            {"no_time_outputs_per_input", "3"}
+          }
         }
-        break;
-      case ParamObjectType::kFEB:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"status", "healthy"},
-                {"description", "tall"},
-                {"version", "27"},
-                {"creator_id", "44"},
-                {"time_outputs_per_input", "2"},
-                {"no_time_outputs_per_input", "3"}
-              }
+      };
+      break;
+    case ParamObjectType::kTRB:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"type", "1"},
+            {"channel", "224"}
           }
-        };
-        break;
-      case ParamObjectType::kTRB:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"type", "1"},
-                {"channel", "224"}
-              }
+        }
+      };
+      break;
+    case ParamObjectType::kScintillator:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"attenuation_length", "10.34"},
+            {"length", "100"},
+            {"width", "4.5"},
+            {"height", "2.5"}
           }
-        };
-        break;
-      case ParamObjectType::kScintillator:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"attenuation_length", "10.34"},
-                {"length", "100"},
-                {"width", "4.5"},
-                {"height", "2.5"}
-              }
+        }
+      };
+      break;
+    case ParamObjectType::kBarrelSlot:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"active", "1"},
+            {"name", "pepe"},
+            {"theta1", "5.5"},
+            {"frame_id", "6"}
           }
-        };
-        break;
-      case ParamObjectType::kBarrelSlot:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"name", "pepe"},
-                {"theta1", "5.5"},
-                {"frame_id", "6"}
-              }
+        }
+      };
+      break;
+    case ParamObjectType::kLayer:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"active", "1"},
+            {"name", "ala"},
+            {"radius", "10.5"}
           }
-        };
-        break;
-      case ParamObjectType::kLayer:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"name", "ala"},
-                {"radius", "10.5"}
-              }
+        }
+      };
+      break;
+    case ParamObjectType::kFrame:
+      result = {
+        {
+          1, {
+            {"id", "1"},
+            {"active", "1"},
+            {"status", "ok"},
+            {"description", "descr1"},
+            {"version", "2"},
+            {"creator_id", "1"}
           }
-        };
-        break;
-      case ParamObjectType::kFrame:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"status", "ok"},
-                {"description", "descr1"},
-                {"version", "2"},
-                {"creator_id", "1"}
-              }
-          }
-        };
-        break;
-      default: //Other cases not needed.
-        break;
+        }
+      };
+      break;
+    default: //Other cases not needed.
+      break;
     }
     return result;
   }
@@ -177,67 +195,67 @@ class TestParamGetter : public JPetParamGetter
   {
     ParamRelationalData result;
     switch (type1) {
-      case ParamObjectType::kPM:
-        switch (runId) {
-          case 0: //No relations
-            break;
-          case 1: //Simple single object
-            result = {
-              {1, 1}
-            };
-            break;
-          case 2: //Simple two objects
-            result = {
-              {1, 1},
-              {5, 1}
-            };
-            break;
-          case 5: //Wrong FEB relation
-            switch (type2) {
-              case ParamObjectType::kFEB:
-                result = {
-                  {1, 43}
-                };
-                break;
-              default:
-                result = {
-                  {1, 1}
-                };
-                break;
-            }
-          case 6: //Wrong scin relation
-            switch (type2) {
-              case ParamObjectType::kScintillator:
-                result = {
-                  {1, 43}
-                };
-                break;
-              default:
-                result = {
-                  {1, 1}
-                };
-                break;
-            }
-          case 7: //Wrong barrel slot relation
-            switch (type2) {
-              case ParamObjectType::kBarrelSlot:
-                result = {
-                  {1, 43}
-                };
-                break;
-              default:
-                result = {
-                  {1, 1}
-                };
-                break;
-            }
-        }
+    case ParamObjectType::kPM:
+      switch (runId) {
+      case 0: //No relations
         break;
-      default:
+      case 1: //Simple single object
         result = {
           {1, 1}
         };
         break;
+      case 2: //Simple two objects
+        result = {
+          {1, 1},
+          {5, 1}
+        };
+        break;
+      case 5: //Wrong FEB relation
+        switch (type2) {
+        case ParamObjectType::kFEB:
+          result = {
+            {1, 43}
+          };
+          break;
+        default:
+          result = {
+            {1, 1}
+          };
+          break;
+        }
+      case 6: //Wrong scin relation
+        switch (type2) {
+        case ParamObjectType::kScintillator:
+          result = {
+            {1, 43}
+          };
+          break;
+        default:
+          result = {
+            {1, 1}
+          };
+          break;
+        }
+      case 7: //Wrong barrel slot relation
+        switch (type2) {
+        case ParamObjectType::kBarrelSlot:
+          result = {
+            {1, 43}
+          };
+          break;
+        default:
+          result = {
+            {1, 1}
+          };
+          break;
+        }
+      }
+      break;
+    default:
+      result = {
+        {1, 1}
+      };
+      break;
     }
     return result;
   }
@@ -254,7 +272,7 @@ BOOST_AUTO_TEST_CASE( no_pms )
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 0, layerFactory);
   JPetScinFactory scinFactory(paramGetter, 0, barrelSlotFactory);
   JPetPMFactory factory(paramGetter, 0, febFactory, scinFactory, barrelSlotFactory);
-  auto & pms = factory.getPMs();
+  auto& pms = factory.getPMs();
   BOOST_REQUIRE_EQUAL(pms.size(), 0u);
 }
 
@@ -267,12 +285,13 @@ BOOST_AUTO_TEST_CASE( single_object )
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 1, layerFactory);
   JPetScinFactory scinFactory(paramGetter, 1, barrelSlotFactory);
   JPetPMFactory factory(paramGetter, 1, febFactory, scinFactory, barrelSlotFactory);
-  auto & pms = factory.getPMs();
+  auto& pms = factory.getPMs();
   BOOST_REQUIRE_EQUAL(pms.size(), 1u);
   auto pm = pms[1];
   BOOST_REQUIRE_EQUAL(pm->getID(), 1);
   BOOST_REQUIRE_EQUAL(pm->getSide(), JPetPM::SideB);
 
+  BOOST_REQUIRE(pm->hasFEB());
   BOOST_REQUIRE_EQUAL(pm->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
   BOOST_REQUIRE_EQUAL(pm->getScin().getID(), scinFactory.getScins().at(1)->getID());
   BOOST_REQUIRE_EQUAL(pm->getBarrelSlot().getID(), barrelSlotFactory.getBarrelSlots().at(1)->getID());
@@ -287,12 +306,13 @@ BOOST_AUTO_TEST_CASE( two_objects )
   JPetBarrelSlotFactory barrelSlotFactory(paramGetter, 2, layerFactory);
   JPetScinFactory scinFactory(paramGetter, 2, barrelSlotFactory);
   JPetPMFactory factory(paramGetter, 2, febFactory, scinFactory, barrelSlotFactory);
-  auto & pms = factory.getPMs();
+  auto& pms = factory.getPMs();
   BOOST_REQUIRE_EQUAL(pms.size(), 2u);
   auto pm = pms[1];
   BOOST_REQUIRE_EQUAL(pm->getID(), 1);
   BOOST_REQUIRE_EQUAL(pm->getSide(), JPetPM::SideB);
 
+  BOOST_REQUIRE(pm->hasFEB());
   BOOST_REQUIRE_EQUAL(pm->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
   BOOST_REQUIRE_EQUAL(pm->getScin().getID(), scinFactory.getScins().at(1)->getID());
   BOOST_REQUIRE_EQUAL(pm->getBarrelSlot().getID(), barrelSlotFactory.getBarrelSlots().at(1)->getID());
@@ -301,6 +321,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   BOOST_REQUIRE_EQUAL(pm->getID(), 5);
   BOOST_REQUIRE_EQUAL(pm->getSide(), JPetPM::SideA);
 
+  BOOST_REQUIRE(pm->hasFEB());
   BOOST_REQUIRE_EQUAL(pm->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
   BOOST_REQUIRE_EQUAL(pm->getScin().getID(), scinFactory.getScins().at(1)->getID());
   BOOST_REQUIRE_EQUAL(pm->getBarrelSlot().getID(), barrelSlotFactory.getBarrelSlots().at(1)->getID());

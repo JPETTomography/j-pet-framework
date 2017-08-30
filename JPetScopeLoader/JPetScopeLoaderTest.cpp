@@ -33,8 +33,6 @@ BOOST_AUTO_TEST_SUITE (JPetScopeLoaderTestSuite)
 
 BOOST_AUTO_TEST_CASE (getFilePrefix)
 {
-  JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
   JPetScopeLoader reader(0);
   BOOST_REQUIRE(reader.getFilePrefix("").empty());
   BOOST_REQUIRE(reader.getFilePrefix("abkabd").empty());
@@ -47,8 +45,6 @@ BOOST_AUTO_TEST_CASE (getFilePrefix)
 
 BOOST_AUTO_TEST_CASE (createInputScopeFileNames)
 {
-  JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
   JPetScopeLoader reader(0);
   BOOST_REQUIRE(reader.createInputScopeFileNames("", {}).empty());
   BOOST_REQUIRE(reader.createInputScopeFileNames("non_existing", {}).empty());
@@ -59,7 +55,7 @@ BOOST_AUTO_TEST_CASE (createInputScopeFileNames)
   };
   std::map<std::string, int>  expectedRes;
   std::string pathToFiles = "unitTestData/JPetScopeLoaderTest/scope_files/0";
-  for (const auto & el : expectedRes0) {
+  for (const auto& el : expectedRes0) {
     expectedRes[pathToFiles + "/" + el.first] = el.second;
   }
   std::map<std::string, int> obtainedRes = reader.createInputScopeFileNames(pathToFiles, {{"C1", 0}, {"C2", 1}, {"C3", 2}, {"C4", 3}});
@@ -75,8 +71,6 @@ BOOST_AUTO_TEST_CASE (createInputScopeFileNames)
 
 BOOST_AUTO_TEST_CASE (isCorrectScopeFileName)
 {
-  JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
   JPetScopeLoader reader(0);
   BOOST_REQUIRE(!reader.isCorrectScopeFileName(""));
   BOOST_REQUIRE(!reader.isCorrectScopeFileName("C1_004.gif"));
@@ -91,11 +85,9 @@ BOOST_AUTO_TEST_CASE (isCorrectScopeFileName)
 
 BOOST_AUTO_TEST_CASE (generate_root_file)
 {
-  JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
   const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/test_file_test_0.reco.sig.root";
   boost::filesystem::remove(test_root_filename);
-  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file.json";
+  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
@@ -109,11 +101,10 @@ BOOST_AUTO_TEST_CASE (generate_root_file)
 BOOST_AUTO_TEST_CASE (position_does_not_exist)
 {
   JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
 
   const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/wrong_file_test_30.reco.sig.root";
   boost::filesystem::remove(test_root_filename);
-  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/wrong_file.json";
+  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/wrong_file.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1";
   //contains a single position 30 that does not exist
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
@@ -128,10 +119,9 @@ BOOST_AUTO_TEST_CASE (position_does_not_exist)
 BOOST_AUTO_TEST_CASE (folder_does_not_exist)
 {
   JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
   const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/wrong_file2_test_0.reco.sig.root";
   boost::filesystem::remove(test_root_filename);
-  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/wrong_file2.json";
+  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/wrong_file2.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1";
   //contains a wrong data folder name
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
@@ -146,13 +136,12 @@ BOOST_AUTO_TEST_CASE (folder_does_not_exist)
 BOOST_AUTO_TEST_CASE (generate_root_file2)
 {
   JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
 
   const char* test_root_filename1 = "unitTestData/JPetScopeLoaderTest/test_file2_test_0.reco.sig.root";
   const char* test_root_filename2 = "unitTestData/JPetScopeLoaderTest/test_file2_test_1.reco.sig.root";
   boost::filesystem::remove(test_root_filename1);
   boost::filesystem::remove(test_root_filename2);
-  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file2.json";
+  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file2.json -l unitTestData/JPetScopeLoaderTest/test_params2.json -i 1";
   auto args_char = createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();

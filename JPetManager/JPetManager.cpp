@@ -62,7 +62,7 @@ bool JPetManager::run()
   //assert(thread);
   //thread->Join();
   //}
-  for (auto & executor : executors) {
+  for (auto& executor : executors) {
     if (executor) {
       delete executor;
       executor = 0;
@@ -86,7 +86,6 @@ JPetManager::~JPetManager()
   /// delete shared caches for paramBanks
   /// @todo I think that should be changed
   JPetDBParamGetter::clearParamCache();
-  JPetScopeParamGetter::clearParamCache();
 }
 
 void JPetManager::registerTask(const TaskGenerator& taskGen)
@@ -106,24 +105,25 @@ void JPetManager::registerTask(const TaskGenerator& taskGen)
  * Database connection is only initialized if the user provided the run number
  * ("-i" option) and did not provide local database ("-l") at the same time.
  */
-bool JPetManager::initDBConnection(const char * configFilePath = "../DBConfig/configDB.cfg"){
+bool JPetManager::initDBConnection(const char* configFilePath = "../DBConfig/configDB.cfg")
+{
 
   bool isDBrequired = false;
-  
-  if(fOptions.size() > 0){ // if at least one input file to process
-    if(fOptions.at(0).getRunNumber() >= 0){ // if run number is not default -1
-      if(!fOptions.at(0).isLocalDB()){ // unless local DB file was provided
-	isDBrequired = true;
+
+  if (fOptions.size() > 0) { // if at least one input file to process
+    if (fOptions.at(0).getRunNumber() >= 0) { // if run number is not default -1
+      if (!fOptions.at(0).isLocalDB()) { // unless local DB file was provided
+        isDBrequired = true;
       }
     }
   }
 
-  if(isDBrequired){
+  if (isDBrequired) {
     INFO("Attempting to set up connection to the database.");
     DB::SERVICES::DBHandler::createDBConnection(configFilePath);
-  }else{
+  } else {
     INFO("Setting connection to database skipped.");
   }
-  
+
   return isDBrequired;
 }

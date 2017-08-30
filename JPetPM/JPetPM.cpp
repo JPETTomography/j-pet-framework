@@ -24,9 +24,10 @@ JPetPM::JPetPM() :
   SetName("JPetPM");
 }
 
-JPetPM::JPetPM(int id) :
+JPetPM::JPetPM(int id, std::string description) :
   fID(id),
-  fHVgain(std::make_pair(0.0, 0.0))
+  fHVgain(std::make_pair(0.0, 0.0)),
+  fDescription(description)
 {
   SetName("JPetPM");
 }
@@ -35,12 +36,14 @@ JPetPM::JPetPM(Side side,
                int id,
                int HVset,
                int HVopt,
-               std::pair<float, float> HVgainNumber):
+               std::pair<float, float> HVgainNumber,
+               std::string description):
   fSide(side),
   fID(id),
   fHVset(HVset),
   fHVopt(HVopt),
-  fHVgain(HVgainNumber)
+  fHVgain(HVgainNumber),
+  fDescription(description)
 {
   SetName("JPetPM");
 }
@@ -50,6 +53,22 @@ JPetPM::JPetPM(bool isNull) :
   fIsNullObject(isNull)
 {
   SetName("JPetPM");
+}
+
+JPetPM::JPetPM(const JPetPM& pm):
+  fSide(pm.fSide),
+  fID(pm.fID),
+  fHVset(pm.fHVset),
+  fHVopt(pm.fHVopt),
+  fHVgain(pm.fHVgain),
+  fDescription(pm.fDescription),
+  fTRefScin(pm.fTRefScin),
+  fTRefBarrelSlot(pm.fTRefBarrelSlot)
+{
+  SetName("JPetPM");
+  if (pm.hasFEB()) {
+    fTRefFEB = pm.fTRefFEB;
+  }
 }
 
 JPetPM::~JPetPM()
@@ -110,6 +129,10 @@ std::pair<float, float> JPetPM::getHVgain()
 {
   return fHVgain;
 }
+std::string JPetPM::getDescription() const
+{
+  return fDescription;
+}
 void JPetPM::setSide(JPetPM::Side side)
 {
   fSide = side;
@@ -135,6 +158,11 @@ void JPetPM::setHVgain(const std::pair<float, float>& gain)
 void JPetPM::setFEB(JPetFEB& p_FEB)
 {
   fTRefFEB = &p_FEB;
+}
+
+bool JPetPM::hasFEB() const
+{
+  return fTRefFEB.GetObject() != 0;
 }
 
 const JPetFEB& JPetPM::getFEB() const
