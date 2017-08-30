@@ -37,6 +37,7 @@ class boost::noncopyable;
 #include "../JPetSigCh/JPetSigCh.h"
 #include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetTimeWindow/JPetTimeWindow.h"
+#include "../JPetEvent/JPetEvent.h"
 
 #include "../JPetScin/JPetScin.h"
 #include "../JPetPM/JPetPM.h"
@@ -68,6 +69,7 @@ public:
     return fFile->WriteTObject(obj, name);
   }
 
+  void writeCollection(const TCollection * hash, const char* dirname, const char* subdirname="");
 
 protected:
   std::string fFileName;
@@ -94,7 +96,7 @@ bool JPetWriter::write(const T& obj)
   T* filler = const_cast<T*>(&obj);
   assert(filler);
   if (!fIsBranchCreated) {
-    DEBUG("Branch");
+    DEBUG("Branch name:" + std::string(filler->GetName()));
     assert(fTree);
     fTree->Branch(filler->GetName(), filler->GetName(), &filler);
     fIsBranchCreated = true;

@@ -18,7 +18,7 @@
 ClassImp(JPetLOR);
 
 JPetLOR::JPetLOR() :
-    TNamed("JPetLOR", "Event Structure"), 
+    TObject(),
     fTime(0.0f), 
     fQualityOfTime(0.0f),
     fTimeDiff(0.0f), 
@@ -30,7 +30,7 @@ JPetLOR::JPetLOR() :
 
 JPetLOR::JPetLOR(float Time, float QualityOfTime, JPetHit& firstHit,
                  JPetHit& secondHit) :
-    TNamed("JPetLOR", "Event Structure"), 
+    TObject(), 
     fTime(Time),
     fQualityOfTime(QualityOfTime),
     fTimeDiff(0.0f),
@@ -44,10 +44,10 @@ JPetLOR::JPetLOR(float Time, float QualityOfTime, JPetHit& firstHit,
 
 JPetLOR::~JPetLOR(){}
 
-const float JPetLOR::getTime() const {
+float JPetLOR::getTime() const {
 	return fTime;
 }
-const float JPetLOR::getQualityOfTime() const{
+float JPetLOR::getQualityOfTime() const{
 	return fQualityOfTime;
 }
 void JPetLOR::setTime(const float time){
@@ -82,13 +82,13 @@ void JPetLOR::setTimeDiff(const float td) {
 void JPetLOR::setQualityOfTimeDiff(const float qtd) {
 	fQualityOfTime = qtd;
 }
-const float JPetLOR::getTimeDiff() const {
+float JPetLOR::getTimeDiff() const {
 	return fTimeDiff;
 }
-const float JPetLOR::getQualityOfTimeDiff() const{
+float JPetLOR::getQualityOfTimeDiff() const{
 	return fQualityOfTimeDiff;
 }
-const bool JPetLOR::isHitSet(const unsigned int index){
+bool JPetLOR::isHitSet(const unsigned int index){
 	switch(index){
 		case 0:
 			return fIsHitSet[0];
@@ -99,7 +99,7 @@ const bool JPetLOR::isHitSet(const unsigned int index){
 	};
 }
 
-const bool JPetLOR::isFromSameBarrelSlot() const {  
+bool JPetLOR::isFromSameBarrelSlot() const {  
 	if(fIsHitSet[0]&&fIsHitSet[1] ){// do not claim inconsistency if signals are not set yet
 		const int slot_a = getFirstHit().getBarrelSlot().getID();
 		const int slot_b = getSecondHit().getBarrelSlot().getID();

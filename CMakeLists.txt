@@ -45,10 +45,6 @@ find_package(PQXX REQUIRED)
 include_directories(${PQXX_INCLUDE_DIRS})
 add_definitions(${PQXX_DEFINITIONS})
 
-find_package(Config++ REQUIRED)
-include_directories(${CONFIG++_INCLUDE_DIRS})
-add_definitions(${CONFIG++_DEFINITIONS})
-
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
@@ -57,7 +53,7 @@ find_package(Boost 1.50.0 REQUIRED COMPONENTS
   unit_test_framework
   )
 
-include_directories(${Boost_INCLUDE_DIRS})
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 add_definitions(${Boost_DEFINITIONS})
 
 find_package(FFTW REQUIRED)
@@ -192,7 +188,6 @@ file(GLOB DBHANDLER_SOURCES DBHandler/SourceFiles/*.cpp)
 add_library(dbhandler SHARED ${DBHANDLER_HEADERS} ${DBHANDLER_SOURCES})
 target_link_libraries(dbhandler
   ${PQXX_LIBRARIES}
-  ${CONFIG++_LIBRARIES}
   )
 
 # copy the DB config file to an expected location
@@ -209,6 +204,23 @@ target_link_libraries(JPetFramework
   ${ROOT_LIBRARIES}
   ${Boost_LIBRARIES}
   )
+
+# read the version from git tag and git revision
+exec_program(
+  "git"
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ARGS "describe --tags --abbrev=0"
+  OUTPUT_VARIABLE FRAMEWORK_VERSION )
+
+exec_program(
+  "git"
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ARGS "rev-parse HEAD"
+  OUTPUT_VARIABLE FRAMEWORK_REVISION )
+
+# create the header file with framework version information
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
+  ${CMAKE_CURRENT_SOURCE_DIR}/version.h ESCAPE_QUOTES @ONLY)
 
 # extra files, so they are visible in your editor
 file(GLOB EXTRAS extras/**)

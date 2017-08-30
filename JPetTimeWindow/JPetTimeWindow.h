@@ -18,21 +18,18 @@
 
 #include <vector>
 #include <map>
-#include <TNamed.h>
+#include <TObject.h>
 #include "../JPetSigCh/JPetSigCh.h"
-#include <TClonesArray.h>
 
 /**
  * @brief Data class representing a time window of the TRB board.
  *
  * A single TSlot contains many SigCh objects representing TDC hits recorded during a time window of the TRB board.
  */
-class JPetTimeWindow: public TNamed
+class JPetTimeWindow: public TObject
 {
 public:
-/// @todo think about changing TClonesArray to something else ? what about cleaning
   JPetTimeWindow() {
-    SetName("JPetTimeWindow");
   }
 
   void addCh(JPetSigCh& new_ch);
@@ -71,7 +68,7 @@ public:
     fIndex = index;
   }
 
-  ClassDef(JPetTimeWindow, 2);
+  ClassDef(JPetTimeWindow, 3);
 
 private:
   std::vector<JPetSigCh> fSigChannels;

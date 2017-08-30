@@ -126,14 +126,14 @@ BOOST_AUTO_TEST_CASE( no_frames )
 {
   JPetFrameFactory factory(paramGetter, 0);
   auto & frames = factory.getFrames();
-  BOOST_REQUIRE_EQUAL(frames.size(), 0);
+  BOOST_REQUIRE_EQUAL(frames.size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( single_object )
 {
   JPetFrameFactory factory(paramGetter, 1);
   auto & frames = factory.getFrames();
-  BOOST_REQUIRE_EQUAL(frames.size(), 1);
+  BOOST_REQUIRE_EQUAL(frames.size(), 1u);
   auto frame = frames[1];
   BOOST_REQUIRE_EQUAL(frame->getID(), 1);
   BOOST_REQUIRE(frame->getIsActive());
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
 {
   JPetFrameFactory factory(paramGetter, 2);
   auto & frames = factory.getFrames();
-  BOOST_REQUIRE_EQUAL(frames.size(), 2);
+  BOOST_REQUIRE_EQUAL(frames.size(), 2u);
   auto frame = frames[1];
   BOOST_REQUIRE_EQUAL(frame->getID(), 1);
   BOOST_REQUIRE(frame->getIsActive());
