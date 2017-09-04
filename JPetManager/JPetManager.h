@@ -37,7 +37,6 @@ public:
   bool run();
   void registerTask(const TaskGenerator& taskGen);
   void parseCmdLine(int argc, const char** argv);
-  bool initDBConnection(const char* configFilePath);
   inline std::vector<JPetOptions> getOptions() const
   {
     return fOptions;
@@ -46,12 +45,13 @@ public:
   void addTransformationFunctionForUserOption(const std::string& name, std::function<std::pair<std::string, boost::any>(boost::any opt)> transformFunction);
   bool initDBConnection(const char* configFilePath = "../DBConfig/configDB.cfg");
 private:
+  JPetManager(const JPetManager&);
+  void operator=(const JPetManager&);
+
   JPetManager()
   {
     fTaskGeneratorChain = new TaskGeneratorChain;
   }
-  JPetManager(const JPetManager&);
-  void operator=(const JPetManager&);
 
   std::vector<JPetOptions> fOptions; /// fOptions are input options.
   /// Its number corresponds to the number of independent input files.
