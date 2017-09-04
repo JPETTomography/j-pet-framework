@@ -111,13 +111,11 @@ bool JPetTaskChainExecutor::process()
 void JPetTaskChainExecutor::printCurrentOptionsToLog(const JPetOptions::Options& currOpts)
 {
   INFO("Current options:");
-  std::vector<std::string> allowedTypes;
-  JPetOptionsTypeHandler forGettingAllowedTypes(allowedTypes);
+  auto allowedTypes = JPetOptionsTypeHandler::getAllowedTypes();
   for (auto a : currOpts) {
-    allowedTypes.push_back(forGettingAllowedTypes.getTypeOfOption(a.first));
+    allowedTypes.push_back(JPetOptionsTypeHandler::getTypeOfOption(a.first));
   }
-  JPetOptionsTypeHandler typeHandler(allowedTypes);
-  auto stringOptions = typeHandler.anyMapToStringMap(currOpts);
+  auto stringOptions = JPetOptionsTypeHandler::anyMapToStringMap(currOpts);
   for (const auto& el : stringOptions) {
     INFO(el.first + "=" + el.second);
   }
@@ -147,4 +145,3 @@ JPetTaskChainExecutor::~JPetTaskChainExecutor()
     }
   }
 }
-
