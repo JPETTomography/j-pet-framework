@@ -66,6 +66,7 @@ bool JPetTaskChainExecutor::process()
 
   for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
     JPetOptions::Options currOpts = fOptions.getOptions();
+    // @TODO this part of code should be moved to JPetOptionsGenerator
     if (currentTask != fTasks.begin()) {
       /// Ignore the event range options for all but the first task.
       currOpts = JPetOptions::resetEventRange(currOpts);
@@ -83,7 +84,7 @@ bool JPetTaskChainExecutor::process()
     auto taskName = taskCurr->GetName();
     INFO(Form("Starting task: %s", taskName));
     JPetTaskChainExecutor::printCurrentOptionsToLog(currOpts);
-    /// @todo fix it
+    /// @todo this casting is probably not necessary, add a test to show it and remove it.
     auto taskRunnerCurr =  dynamic_cast<JPetTaskIO*> (*currentTask);
     taskRunnerCurr->init(currOpts);
     taskRunnerCurr->exec();
