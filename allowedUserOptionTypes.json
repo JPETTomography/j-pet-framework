@@ -1,3 +1,0 @@
-{
-	"allowedTypes": ["int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>", "float"]
-}

@@ -27,15 +27,12 @@
 class JPetOptionsTypeHandler
 {
 public:
-  JPetOptionsTypeHandler(const std::vector<std::string>& allowedTypes);
-  JPetOptionsTypeHandler(const std::string& allowedTypes);
-  std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& optionsMap) const;
-  std::string getTypeOfOption(const std::string& option) const;
-  std::string getNameOfOption(const std::string& option) const;
-  std::vector<std::string> getAllowedTypes() const;
-  std::vector<std::string> getAllowedTypesFromFile(const std::string& filename);
+  static std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& optionsMap);
+  static std::vector<std::string> getAllowedTypes();
+  static std::string getTypeOfOption(const std::string& option);
+  static std::string getNameOfOption(const std::string& option);
 
 private:
-  const std::vector<std::string> fAllowedTypes;
+  static const std::vector<std::string> kAllowedTypes;
 };
 #endif /*  !JPETOPTIONSTYPEHANDLER_H */
