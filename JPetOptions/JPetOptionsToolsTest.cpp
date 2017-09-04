@@ -31,18 +31,18 @@ BOOST_AUTO_TEST_CASE(createOptionsFromConfigFile)
   std::map<std::string, boost::any> expected(expectedStringMap.begin(), expectedStringMap.end());
   expected["intOption_int"] = 123;
   expected["boolOption_bool"] = true;
-  std::vector<std::string> v1 = {"firstOption","secondOption", "thirdOption"};
+  std::vector<std::string> v1 = {"firstOption", "secondOption", "thirdOption"};
   expected["vectorOfStringOtption_std::vector<std::string>"] = v1;
-  std::vector<int> v2 = {1,2,3};
+  std::vector<int> v2 = {1, 2, 3};
   expected["vectorOfIntOption_std::vector<int>"] = v2;
   BOOST_REQUIRE_EQUAL(options.size(), 7);
 
   std::vector<std::string> keys_expected;
   std::vector<std::string> keys;
-  for (const auto & el : expected) {
+  for (const auto& el : expected) {
     keys_expected.push_back(el.first);
   }
-  for (const auto & el : options) {
+  for (const auto& el : options) {
     keys.push_back(el.first);
   }
   std::sort(keys.begin(), keys.end());
@@ -50,22 +50,17 @@ BOOST_AUTO_TEST_CASE(createOptionsFromConfigFile)
   BOOST_REQUIRE_EQUAL_COLLECTIONS(keys.begin(), keys.end(), keys_expected.begin(), keys_expected.end());
 
   std::vector<std::string> allowedTypes = { "int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>"};
-  JPetOptionsTypeHandler typeHandler(allowedTypes);
-  for(const auto & opt:  options){
-    if (typeHandler.getTypeOfOption(opt.first) == "std::string"){
+  for (const auto& opt :  options) {
+    if (JPetOptionsTypeHandler::getTypeOfOption(opt.first) == "std::string") {
       BOOST_REQUIRE_EQUAL(any_cast<std::string>(opt.second), any_cast<std::string>(expected[opt.first]));
-    }
-    else if (typeHandler.getTypeOfOption(opt.first) == "int"){
+    } else if (JPetOptionsTypeHandler::getTypeOfOption(opt.first) == "int") {
       BOOST_REQUIRE_EQUAL(any_cast<int>(opt.second), any_cast<int>(expected[opt.first]));
-    }
-    else if (typeHandler.getTypeOfOption(opt.first) == "bool"){
+    } else if (JPetOptionsTypeHandler::getTypeOfOption(opt.first) == "bool") {
       BOOST_REQUIRE_EQUAL(any_cast<bool>(opt.second), any_cast<bool>(expected[opt.first]));
-    }
-    else if (typeHandler.getTypeOfOption(opt.first) == "std::vector<std::string>"){
+    } else if (JPetOptionsTypeHandler::getTypeOfOption(opt.first) == "std::vector<std::string>") {
       auto vectorStringOption =  any_cast< std::vector<std::string> >(opt.second);
       BOOST_REQUIRE_EQUAL_COLLECTIONS(vectorStringOption.begin(), vectorStringOption.end(), v1.begin(), v1.end());
-    }
-    else if (typeHandler.getTypeOfOption(opt.first) == "std::vector<int>"){
+    } else if (JPetOptionsTypeHandler::getTypeOfOption(opt.first) == "std::vector<int>") {
       auto vectorIntOption =  any_cast< std::vector<int> >(opt.second);
       BOOST_REQUIRE_EQUAL_COLLECTIONS(vectorIntOption.begin(), vectorIntOption.end(), v2.begin(), v2.end());
     }
@@ -83,11 +78,11 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptionsAndReadItBack )
   std::vector<std::string> values_expected;
   std::vector<std::string> keys;
   std::vector<std::string> values;
-  for (const auto & el : loadedOptions) {
+  for (const auto& el : loadedOptions) {
     keys_expected.push_back(el.first);
     values_expected.push_back(any_cast<std::string>(el.second));
   }
-  for (const auto & el : options) {
+  for (const auto& el : options) {
     keys.push_back(el.first);
     values.push_back(el.second);
   }

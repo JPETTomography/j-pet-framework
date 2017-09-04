@@ -30,7 +30,7 @@ namespace jpet_options_tools
 bool createConfigFileFromOptions(const Options& options, const std::string& outFile)
 {
   pt::ptree optionsTree;
-  for (auto & entry : options)
+  for (auto& entry : options)
     optionsTree.put(entry.first, entry.second);
   try {
     pt::write_json(outFile, optionsTree);
@@ -48,42 +48,35 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
   if (JPetCommonTools::ifFileExisting(filename)) {
     try {
       pt::read_json(filename, optionsTree);
-      JPetOptionsTypeHandler typeHandler(kFileWithAllowedOptionType);
-      for (auto & item : optionsTree) {
+      for (auto& item : optionsTree) {
         auto key = item.first;
-        std::string typeOfOption = typeHandler.getTypeOfOption(key);
-        auto allowedTypes = typeHandler.getAllowedTypes(); 
-        if(std::find(allowedTypes.begin(), allowedTypes.end(), typeOfOption) != allowedTypes.end()){ 
-          if(typeOfOption == "int"){
+        std::string typeOfOption = JPetOptionsTypeHandler::getTypeOfOption(key);
+        auto allowedTypes = JPetOptionsTypeHandler::getAllowedTypes();
+        if (std::find(allowedTypes.begin(), allowedTypes.end(), typeOfOption) != allowedTypes.end()) {
+          if (typeOfOption == "int") {
             auto value = item.second.get_value<int>();
             mapOptions.insert(std::make_pair(key, value));
-          }
-          else if(typeOfOption == "std::string"){
+          } else if (typeOfOption == "std::string") {
             auto value = item.second.get_value<std::string>();
             mapOptions.insert(std::make_pair(key, value));
-          }
-          else if(typeOfOption == "float"){
+          } else if (typeOfOption == "float") {
             auto value = item.second.get_value<float>();
             mapOptions.insert(std::make_pair(key, value));
-          }
-          else if(typeOfOption == "double"){
+          } else if (typeOfOption == "double") {
             auto value = item.second.get_value<double>();
             mapOptions.insert(std::make_pair(key, value));
-          }
-          else if(typeOfOption == "bool"){
+          } else if (typeOfOption == "bool") {
             auto value = item.second.get_value<bool>();
             mapOptions.insert(std::make_pair(key, value));
-          }
-          else if(typeOfOption == "std::vector<std::string>"){
+          } else if (typeOfOption == "std::vector<std::string>") {
             std::vector<std::string> values;
-            for(pt::ptree::value_type & value : optionsTree.get_child(key)){
+            for (pt::ptree::value_type& value : optionsTree.get_child(key)) {
               values.push_back(value.second.get_value<std::string>());
             }
             mapOptions.insert(std::make_pair(key, values));
-           }
-          else if(typeOfOption == "std::vector<int>"){
+          } else if (typeOfOption == "std::vector<int>") {
             std::vector<int> values;
-            for(pt::ptree::value_type & value : optionsTree.get_child(key)){
+            for (pt::ptree::value_type& value : optionsTree.get_child(key)) {
               values.push_back(value.second.get_value<int>());
             }
             mapOptions.insert(std::make_pair(key, values));
