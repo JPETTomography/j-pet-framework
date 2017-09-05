@@ -37,9 +37,7 @@ JPetTaskLoader::JPetTaskLoader(const char* in_file_type,
   setTask(dynamic_cast<JPetTaskInterface*>(taskToExecute));
 }
 
-
-
-void JPetTaskLoader::init(const JPetOptions::Options& opts)
+bool JPetTaskLoader::init(const JPetOptions::Options& opts)
 {
   auto newOpts(opts);
   auto inFile = any_cast<std::string>(newOpts.at("inputFile_std::string"));
@@ -58,6 +56,7 @@ void JPetTaskLoader::init(const JPetOptions::Options& opts)
   auto outputFilename = outputPath + std::string(fOptions.getOutputFile());
   createInputObjects(inputFilename.c_str());
   createOutputObjects(outputFilename.c_str());
+  return true;
 }
 
 std::string JPetTaskLoader::generateProperNameFile(const std::string& srcFilename, const std::string& fileType) const

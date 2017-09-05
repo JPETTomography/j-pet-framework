@@ -36,18 +36,26 @@ JPetTaskIO::JPetTaskIO():
 {
 }
 
-void JPetTaskIO::init(const JPetOptions::Options& opts)
+bool JPetTaskIO::init(const JPetOptions::Options& opts)
 {
+  bool noError = true;
   setOptions(JPetOptions(opts));
   std::string inputFilename(fOptions.getInputFile());
   std::string outputPath(fOptions.getOutputPath());
   auto outputFilename = outputPath + std::string(fOptions.getOutputFile());
-  createInputObjects(inputFilename.c_str());
-  createOutputObjects(outputFilename.c_str());
+  if (!createInputObjects(inputFilename.c_str())) {
+    ERROR("createInputObjects");
+    return false;
+  }
+  if (!createOutputObjects(outputFilename.c_str())) {
+    ERROR("createOutputObjects");
+    return false;
+  }
+  return true;
 }
 
 
-void JPetTaskIO::exec()
+bool JPetTaskIO::exec()
 {
   assert(fTask);
   assert(fReader);
@@ -76,9 +84,10 @@ void JPetTaskIO::exec()
     fReader->nextEvent();
   }
   fTask->terminate();
+  return true;
 }
 
-void JPetTaskIO::terminate()
+bool JPetTaskIO::terminate()
 {
   assert(fReader);
   assert(fWriter);
@@ -99,7 +108,7 @@ void JPetTaskIO::terminate()
 
   fWriter->closeFile();
   fReader->closeFile();
-
+  return true;
 }
 
 void JPetTaskIO::setOptions(const JPetOptions& opts)
@@ -125,7 +134,7 @@ JPetParamManager& JPetTaskIO::getParamManager()
   }
 }
 
-void JPetTaskIO::createInputObjects(const char* inputFilename)
+bool JPetTaskIO::createInputObjects(const char* inputFilename)
 {
   auto treeName = "";
   fReader = new JPetReader;
@@ -167,11 +176,12 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
 
   } else {
     ERROR(inputFilename + std::string(": Unable to open the input file or load the tree"));
-    exit(-1);
+    return false;
   }
+  return true;
 }
 
-void JPetTaskIO::createOutputObjects(const char* outputFilename)
+bool JPetTaskIO::createOutputObjects(const char* outputFilename)
 {
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
@@ -186,7 +196,9 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
     task->setAuxilliaryData(fAuxilliaryData);
   } else {
     WARNING("the subTask does not exist, so Write was not passed to it");
+    return false;
   }
+  return true;
 }
 
 

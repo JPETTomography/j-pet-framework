@@ -41,14 +41,15 @@ class JPetTaskIO: public JPetTaskRunner
 {
 public:
   JPetTaskIO();
-  virtual void init(const JPetOptions::Options& opts);
-  virtual void exec();
-  virtual void terminate();
+  virtual bool init(const JPetOptions::Options& opts);
+  virtual bool exec();
+  virtual bool terminate();
   virtual ~JPetTaskIO();
   virtual void runTask() {};
 
   void setOptions(const JPetOptions& opts);
-  inline JPetOptions getOptions() const {
+  inline JPetOptions getOptions() const
+  {
     return fOptions;
   }
 
@@ -57,8 +58,8 @@ public:
   void setParamManager(JPetParamManager* paramManager);
 
 protected:
-  virtual void createInputObjects(const char* inputFilename);
-  virtual void createOutputObjects(const char* outputFilename);
+  virtual bool createInputObjects(const char* inputFilename);
+  virtual bool createOutputObjects(const char* outputFilename);
   void setUserLimits(const JPetOptions& opts, const long long totEventsFromReader, long long& firstEvent, long long& lastEvent) const;
 
   const JPetParamBank& getParamBank();

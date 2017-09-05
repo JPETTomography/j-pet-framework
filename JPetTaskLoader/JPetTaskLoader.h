@@ -27,15 +27,15 @@ public:
                  const char* out_file_type,
                  JPetTask* taskToExecute);
 
-  virtual void init(const JPetOptions::Options& opts); /// Overloading JPetTaskIO init
+  virtual bool init(const JPetOptions::Options& opts) override;
   virtual ~JPetTaskLoader();
 protected:
   std::string generateProperNameFile(const std::string& srcFilename, const std::string& fileType) const;
-  
+
   /**
    * @brief Strips the framework file "extension" from full file path
    *
-   * The "extension" can be composed of multiple parts, dot-separated. 
+   * The "extension" can be composed of multiple parts, dot-separated.
    * The extension carries information not only about file type but also
    * about types of the objects within the ROOT file.
    * Everything following the first dot in the file name (but not in the file
