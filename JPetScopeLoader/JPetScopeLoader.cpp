@@ -72,7 +72,7 @@ JPetScopeLoader::~JPetScopeLoader()
 }
 
 
-void JPetScopeLoader::createInputObjects(const char*)
+bool JPetScopeLoader::createInputObjects(const char*)
 {
   JPetScopeConfigParser confParser;
   auto config = confParser.getConfig(fOptions.getScopeConfigFile());
@@ -91,6 +91,7 @@ void JPetScopeLoader::createInputObjects(const char*)
   fHeader->setBaseFileName(fOptions.getInputFile());
   fHeader->addStageInfo(task->GetName(), task->GetTitle(), 0, JPetCommonTools::getTimeString());
   //fHeader->setSourcePosition((*fIter).pCollPosition);
+  return true;
 }
 
 std::map<std::string, int> JPetScopeLoader::getPMPrefixToPMIdMap() const
@@ -151,13 +152,14 @@ bool JPetScopeLoader::isCorrectScopeFileName(const std::string& filename) const
   return regex_match(filename, pattern);
 }
 
-void JPetScopeLoader::init(const JPetOptions::Options& opts)
+bool JPetScopeLoader::init(const JPetOptions::Options& opts)
 {
   INFO( "Initialize Scope Loader Module." );
   JPetTaskLoader::init(opts);
+  return true;
 }
 
-void JPetScopeLoader::exec()
+bool JPetScopeLoader::exec()
 {
   assert(fTask);
   fTask->setParamManager(fParamManager);
@@ -165,9 +167,10 @@ void JPetScopeLoader::exec()
   fTask->init(JPetOptions2(emptyOpts));
   fTask->exec();
   fTask->terminate();
+  return true;
 }
 
-void JPetScopeLoader::terminate()
+bool JPetScopeLoader::terminate()
 {
   assert(fWriter);
   assert(fHeader);
@@ -178,4 +181,5 @@ void JPetScopeLoader::terminate()
   getParamManager().saveParametersToFile(fWriter);
   getParamManager().clearParameters();
   fWriter->closeFile();
+  return true;
 }

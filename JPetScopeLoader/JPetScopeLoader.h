@@ -51,11 +51,11 @@ public:
   JPetScopeLoader(JPetScopeTask* task);
   virtual ~JPetScopeLoader();
 
-  virtual void createInputObjects(const char* inputFilename);
+  virtual bool createInputObjects(const char* inputFilename) override;
 
-  virtual void init(const JPetOptions::Options& opts);
-  virtual void exec();
-  virtual void terminate();
+  virtual bool init(const JPetOptions::Options& opts) override;
+  virtual bool exec() override;
+  virtual bool terminate() override;
 
   std::map<std::string, int> createInputScopeFileNames(const std::string& inputPathToScopeFiles,
       std::map<std::string, int> pmPref2Id
