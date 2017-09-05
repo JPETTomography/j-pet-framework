@@ -60,7 +60,7 @@ public:
 protected:
   virtual bool createInputObjects(const char* inputFilename);
   virtual bool createOutputObjects(const char* outputFilename);
-  void setUserLimits(const JPetOptions& opts, const long long totEventsFromReader, long long& firstEvent, long long& lastEvent) const;
+  bool setUserLimits(const JPetOptions& opts, const long long totEventsFromReader, long long& firstEvent, long long& lastEvent) const;
 
   const JPetParamBank& getParamBank();
   JPetParamManager& getParamManager();
