@@ -232,5 +232,34 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
       optionContainer.push_back(JPetOptions(options));
     }
   }
-  return optionContainer;
+  return JPetOptionsGenerator::setCorrectRangeAndOutputForNonFirstOption(optionContainer);
+}
+
+/// @todo add unit test
+std::vector<JPetOptions> JPetOptionsGenerator::setCorrectRangeAndOutputForNonFirstOption(const std::vector<JPetOptions>& oldOptions)
+{
+  std::vector<JPetOptions> newOptions;
+  newOptions.reserve(oldOptions.size());
+  auto it = oldOptions.begin();
+  /// We don't change the first element
+  if (it != oldOptions.end()) {
+    newOptions.push_back(*it);
+    ++it;
+  }
+  /// we start with the second element, or it is already end.
+  for (; it != oldOptions.end(); ++it) {
+    auto currOpts = it->getOptions();
+    /// Ignore the event range options for all but the first task.
+    currOpts = JPetOptions::resetEventRange(currOpts);
+    /// For all but the first task,
+    /// the input path must be changed if
+    /// the output path argument -o was given, because the input
+    /// data for them will lay in the location defined by -o.
+    auto outPath  = any_cast<std::string>(currOpts.at("outputPath_std::string"));
+    if (!outPath.empty()) {
+      currOpts.at("inputFile_std::string") = outPath + JPetCommonTools::extractPathFromFile(any_cast<std::string>(currOpts.at("inputFile_std::string"))) + JPetCommonTools::extractFileNameFromFullPath(any_cast<std::string>(currOpts.at("inputFile_std::string")));
+    }
+    newOptions.push_back(JPetOptions(currOpts));
+  }
+  return newOptions;
 }
