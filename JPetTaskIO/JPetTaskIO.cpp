@@ -71,7 +71,10 @@ bool JPetTaskIO::exec()
   }
   auto firstEvent = 0ll;
   auto lastEvent = 0ll;
-  setUserLimits(fOptions, totalEvents,  firstEvent, lastEvent);
+  if (!setUserLimits(fOptions, totalEvents,  firstEvent, lastEvent)) {
+    ERROR("in setUserLimits");
+    return false;
+  }
   assert(lastEvent >= 0);
   for (auto i = firstEvent; i <= lastEvent; i++) {
 
@@ -89,6 +92,27 @@ bool JPetTaskIO::exec()
 
 bool JPetTaskIO::terminate()
 {
+  if (!fReader) {
+    ERROR("fReader set to null");
+    return false;
+  }
+  if (!fWriter) {
+    ERROR("fWriter set to null");
+    return false;
+  }
+  if (!fHeader) {
+    ERROR("fHeader set to null");
+    return false;
+  }
+  if (!fStatistics) {
+    ERROR("fStatistics set to null");
+    return false;
+  }
+  if (!fAuxilliaryData) {
+    ERROR("fAuxilliaryData set to null");
+    return false;
+  }
+
   assert(fReader);
   assert(fWriter);
   assert(fHeader);
@@ -236,10 +260,9 @@ JPetTaskIO::~JPetTaskIO()
 
 }
 
-
 /// Sets values of firstEvent and lastEvent based on user options opts and total number of events from JPetReader
 // if the totEventsFromReader is less than 0, than first and last are set to -1.
-void JPetTaskIO::setUserLimits(const JPetOptions& opts, const long long kTotEventsFromReader, long long& first, long long& last) const
+bool JPetTaskIO::setUserLimits(const JPetOptions& opts, const long long kTotEventsFromReader, long long& first, long long& last) const
 {
   const auto kLastEvent = opts.getLastEvent();
   const auto kFirstEvent = opts.getFirstEvent();
@@ -258,7 +281,20 @@ void JPetTaskIO::setUserLimits(const JPetOptions& opts, const long long kTotEven
       last = kLastEvent < kTotEventsFromReader ? kLastEvent : kTotEventsFromReader - 1;
     }
   }
+  if (first < 0) {
+    ERROR("first <0");
+    return false;
+  }
+  if (last < 0) {
+    ERROR("last < 0");
+    return false;
+  }
+  if (first > last) {
+    ERROR("first > last");
+    return false;
+  }
   assert(first >= 0);
   assert(last >= 0);
   assert(first <= last);
+  return true;
 }

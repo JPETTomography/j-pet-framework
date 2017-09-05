@@ -65,6 +65,14 @@ public:
   static std::pair <std::string, boost::any>getLowerEventBound(boost::any option);
   static std::pair <std::string, boost::any>getHigherEventBound(boost::any option);
 
+  ///@todo that should be moved to tools
+  /// Ignore the event range options for all but the first task.
+  /// For all but the first task,
+  /// the input path must be changed if
+  /// the output path argument -o was given, because the input
+  /// data for them will lay in the location defined by -o.
+  static std::vector<JPetOptions> setCorrectRangeAndOutputForNonFirstOption(const std::vector<JPetOptions>& oldOptions);
+
   static std::map<std::string, boost::any> getDefaultOptions()
   {
     return kDefaultOptions;
