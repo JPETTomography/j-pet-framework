@@ -43,7 +43,7 @@ void JPetTask::exec()
 
 std::unique_ptr<JPetOptionsInterface> JPetTask::terminate()
 {
-  std::unique_ptr<JPetOptionsInterface> p(new JPetOptionsInterface);  
+  std::unique_ptr<JPetOptionsInterface> p(new JPetOptionsInterface);
   return p;
 }
 
