@@ -80,6 +80,10 @@ bool JPetTaskChainExecutor::process()
       }
     }
     auto taskCurr = dynamic_cast<JPetTask*> ((*currentTask)->getTask());
+    if (!taskCurr) {
+      ERROR("task is not set, so it cannot be run!");
+      return false;
+    }
     //auto taskCurr = std::dynamic_pointer_cast<JPetTask>((*currentTask)->getTask());
     auto taskName = taskCurr->GetName();
     INFO(Form("Starting task: %s", taskName));
