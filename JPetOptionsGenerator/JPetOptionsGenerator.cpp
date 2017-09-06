@@ -232,7 +232,7 @@ std::vector<JPetOptions> JPetOptionsGenerator::generateOptions(const po::variabl
       optionContainer.push_back(JPetOptions(options));
     }
   }
-  return JPetOptionsGenerator::setCorrectRangeAndOutputForNonFirstOption(optionContainer);
+  return optionContainer;
 }
 
 /// @todo add unit test
