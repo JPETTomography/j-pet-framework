@@ -16,6 +16,10 @@
 #ifndef JPETOPTIONSINTERFACE_H
 #define JPETOPTIONSINTERFACE_H
 
+/**
+ * @brief Interface class representing a most general option object that can be accepted by the JPetTaskInterface.
+ *
+ */
 class JPetOptionsInterface
 {
 public:

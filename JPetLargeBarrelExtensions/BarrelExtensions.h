@@ -56,7 +56,8 @@ protected:
   LargeBarrelTask(const char* name, const char* description);
 public:
   virtual ~LargeBarrelTask();
-  virtual void init(const JPetTaskInterface::Options& opts)override;
+  //virtual void init(const JPetTaskInterface::Options& opts)override;
+  virtual void init(const JPetOptionsInterface& opts)override;
   virtual void setWriter(JPetWriter* writer)override;
 protected:
   JPetWriter& writter()const;
@@ -88,7 +89,8 @@ protected:
   TOT_Hists(const char* name, const char* description);
 public:
   virtual ~TOT_Hists();
-  virtual void init(const JPetTaskInterface::Options& opts)override;
+  virtual void init(const JPetOptionsInterface& opts)override;
+  //virtual void init(const JPetTaskInterface::Options& opts)override;
 protected:
   void createTOTHistos(const std::string& suffix, const size_t bins, const double min, const double max);
   void fillTOTHistos(const JPetHit& hit, const std::string& suffix);

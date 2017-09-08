@@ -25,9 +25,9 @@ class SDARecoDrawAllOffsets: public JPetTask{
 public:
   SDARecoDrawAllOffsets(const char* name, const char* description);
   virtual ~SDARecoDrawAllOffsets();
+  virtual void init(const JPetOptionsInterface& inOptions) override;
   virtual void exec()override;
-  virtual void init(const JPetTaskInterface::Options&)override;
-  virtual void terminate()override;
+  virtual std::unique_ptr<JPetOptionsInterface> terminate() override;
 private:
     std::vector<TH1F*> fOffsetHistos;
     std::vector<std::vector<double> > fOffsets;

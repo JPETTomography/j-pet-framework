@@ -20,6 +20,7 @@
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 #include "../JPetTask/JPetTask.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
+#include "../JPetOptions2/JPetOptions2.h"
 
 #include "../JPetLoggerInclude.h"
 #include "../version.h"
@@ -52,7 +53,7 @@ void JPetTaskIO::exec()
   assert(fReader);
   assert(fParamManager);
   fTask->setParamManager(fParamManager);
-  fTask->init(fOptions.getOptions()); //prepare current task for file
+  fTask->init(JPetOptions2(fOptions.getOptions())); //prepare current task for file
   auto totalEvents = 0ll;
   if (fReader) {
     totalEvents = fReader->getNbOfAllEvents();
@@ -88,7 +89,7 @@ void JPetTaskIO::terminate()
   fWriter->writeHeader(fHeader);
 
   fWriter->writeCollection(fStatistics->getStatsTable(), "Stats");
-  
+
   fWriter->writeObject(fAuxilliaryData, "Auxilliary Data");
 
   // store the parametric objects in the ouptut ROOT file
@@ -139,7 +140,7 @@ void JPetTaskIO::createInputObjects(const char* inputFilename)
       fHeader = new JPetTreeHeader(fOptions.getRunNumber());
       fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
       fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
-      
+
       // add general info to the Tree header
       fHeader->setBaseFileName(fOptions.getInputFile());
 

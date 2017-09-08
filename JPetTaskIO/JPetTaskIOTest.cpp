@@ -4,27 +4,9 @@
 #include "../DBHandler/HeaderFiles/DBHandler.h"
 #include "../JPetCmdParser/JPetCmdParser.h"
 #include "../JPetTaskIO/JPetTaskIO.h"
+#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
-
-
-char* convertStringToCharP(const std::string& s)
-{
-  char* pc = new char[s.size() + 1];
-  std::strcpy(pc, s.c_str());
-  return pc;
-}
-
-std::vector<char*> createArgs(const std::string& commandLine)
-{
-  std::istringstream iss(commandLine);
-  std::vector<std::string> args {std::istream_iterator<std::string>{iss},
-                                 std::istream_iterator<std::string>{}
-                                };
-  std::vector<char*> args_char;
-  std::transform(args.begin(), args.end(), std::back_inserter(args_char), convertStringToCharP);
-  return args_char;
-}
 
 BOOST_AUTO_TEST_CASE(progressBarTest)
 {
@@ -39,15 +21,22 @@ public:
 
   using JPetTaskIO::setUserLimits;
 };
-BOOST_AUTO_TEST_CASE( setUserLimits)
+
+std::vector<JPetOptions> getOptionsBasedOnCmdLineArgs(const std::string& cmdLine)
 {
-  auto commandLine = "./main.x -t root -f unitTestData/JPetTaskIOTest/cosm_barrel.hld.root -i 26 -r 1000 1001";
-  auto args_char = createArgs(commandLine);
+  auto args_char = JPetCommonTools::createArgs(cmdLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
 
   JPetCmdParser parser;
-  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  JPetOptionsGenerator optGenerator;
+  return optGenerator.generateOptions(parser.parseCmdLineArgs(argc, const_cast<const char**>(argv)));
+}
+
+BOOST_AUTO_TEST_CASE( setUserLimits)
+{
+  auto commandLine = "./main.x -t root -f unitTestData/JPetTaskIOTest/cosm_barrel.hld.root -i 26 -r 1000 1001";
+  auto options = getOptionsBasedOnCmdLineArgs(commandLine); //optGenerator.generateOptions(parser.parseCmdLineArgs(argc, const_cast<const char**>(argv)));
   auto first = 0ll;
   auto last = 0ll;
   auto opt = options.front().getOptions();
@@ -61,12 +50,7 @@ BOOST_AUTO_TEST_CASE( setUserLimits)
 BOOST_AUTO_TEST_CASE( setUserLimits2 )
 {
   auto commandLine = "./main.x -t root -f unitTestData/JPetTaskIOTest/cosm_barrel.hld.root -i 26 -r 1000 1001";
-  auto args_char = createArgs(commandLine);
-  auto argc = args_char.size();
-  auto argv = args_char.data();
-
-  JPetCmdParser parser;
-  auto options = parser.parseAndGenerateOptions(argc, const_cast<const char**>(argv));
+  auto options = getOptionsBasedOnCmdLineArgs(commandLine);
   auto first = 0ll;
   auto last = 0ll;
   auto opt = options.front().getOptions();

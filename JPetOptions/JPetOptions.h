@@ -18,79 +18,82 @@
 
 #include <string>
 #include <map>
+#include <boost/any.hpp>
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetOptionsInterface/JPetOptionsInterface.h"
 
-class JPetOptions: public JPetOptionsInterface
+
+using boost::any_cast;
+
+class JPetOptions
 {
 
 public:
   enum FileType {
     kNoType, kScope, kRaw, kRoot, kHld, kZip, kPhysEve, kPhysHit, kPhysSig, kRawSig, kRecoSig, kTslotCal, kTslotRaw, kUndefinedFileType
   };
-  typedef std::map<std::string, std::string> Options;
+  typedef std::map<std::string, boost::any> Options;
   typedef std::vector<std::string> InputFileNames;
 
   JPetOptions();
   explicit JPetOptions(const Options& opts);
 
-  bool areCorrect(const Options&) const;
   inline const char* getInputFile() const {
-    return fOptions.at("inputFile").c_str();
+    return any_cast<std::string>(fOptions.at("inputFile_std::string")).c_str();
   }
   inline const char* getScopeConfigFile() const {
-    return fOptions.at("scopeConfigFile").c_str();
+    return any_cast<std::string>(fOptions.at("scopeConfigFile_std::string")).c_str();
   }
   inline const char* getScopeInputDirectory() const {
-    return fOptions.at("scopeInputDirectory").c_str();
+    return any_cast<std::string>(fOptions.at("scopeInputDirectory_std::string")).c_str();
   }
   inline const char* getOutputFile() const {
-    return fOptions.at("outputFile").c_str();
+    return any_cast<std::string>(fOptions.at("outputFile_std::string")).c_str();
   }
   inline const char* getOutputPath() const {
-    return fOptions.at("outputPath").c_str();
+    return any_cast<std::string>(fOptions.at("outputPath_std::string")).c_str();
   }
   inline long long getFirstEvent() const {
-    return std::stoll(fOptions.at("firstEvent"));
+    return any_cast<int>(fOptions.at("firstEvent_int"));
   }
   inline long long getLastEvent() const {
-    return std::stoll(fOptions.at("lastEvent"));
+    return any_cast<int>(fOptions.at("lastEvent_int"));
   }
   long long getTotalEvents() const;
 
   inline int getRunNumber() const {
-    return std::stoi(fOptions.at("runId"));
+    return any_cast<int>(fOptions.at("runId_int"));
   }
   inline bool isProgressBar() const {
-    return JPetCommonTools::to_bool(fOptions.at("progressBar"));
+    return any_cast<bool>(fOptions.at("progressBar_bool"));
   }
   inline bool isLocalDB() const {
-    return fOptions.count("localDB") > 0;
+    return (bool)fOptions.count("localDB_std::string");
   }
   inline std::string getLocalDB() const {
     std::string result("");
     if (isLocalDB()) {
-      result = fOptions.at("localDB");
+      result = any_cast<std::string>(fOptions.at("localDB_std::string"));
     }
     return result;
   }
   inline bool isLocalDBCreate() const {
-    return fOptions.count("localDBCreate") > 0;
+    return (bool)fOptions.count("localDBCreate_std::string");
   }
   inline std::string getLocalDBCreate() const {
     std::string result("");
     if (isLocalDBCreate()) {
-      result = fOptions.at("localDBCreate");
+      result = any_cast<std::string>(fOptions.at("localDBCreate_std::string"));
     }
     return result;
   }
 
   inline const char* getUnpackerConfigFile() const {
-    return fOptions.at("unpackerConfigFile").c_str();
+    return any_cast<std::string>(fOptions.at("unpackerConfigFile_std::string")).c_str();
   }
 
   inline const char* getUnpackerCalibFile() const {
-    return fOptions.at("unpackerCalibFile").c_str();
+    return any_cast<std::string>(fOptions.at("unpackerCalibFile_std::string")).c_str();
   }
   
   FileType getInputFileType() const;
@@ -104,12 +107,7 @@ public:
   static Options resetEventRange(const Options& srcOpts);
 
 
-  static  Options getDefaultOptions() {
-    return kDefaultOptions;
-  }
-
 protected:
-  static Options kDefaultOptions;
 
   void handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException) const;
   FileType handleFileType(const std::string& fileType) const;
