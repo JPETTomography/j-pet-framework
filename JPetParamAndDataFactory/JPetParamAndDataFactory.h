@@ -47,7 +47,6 @@ JPetSigCh makeSigCh(JPetPM& pm, JPetTRB& trb, JPetFEB& feb, JPetTOMBChannel& cha
 JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, const std::string& name, float theta, int inFrameID);
 JPetTimeWindow makeTimeWindow(const std::vector<JPetSigCh>& vec); 
 JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot); 
-JPetSigCh makeSigCh(JPetPM & pm, JPetTRB & trb, JPetFEB & feb, JPetTOMBChannel & channel, float val, JPetSigCh::EdgeType type, float thr, Int_t daqch, unsigned int threshold_number); 
 JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, const std::string& name, float theta, int inFrameID); 
 JPetBaseSignal makeBaseSignal(JPetPM & pm, JPetBarrelSlot & bs);
 JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, double qualityOfPhe, JPetRecoSignal& recoSignal);
