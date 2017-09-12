@@ -29,7 +29,6 @@ public:
   virtual ~JPetSimplePhysSignalReco();
 
   virtual void exec() override;
-  virtual void setWriter(JPetWriter* writer) {fWriter =writer;}
   inline int getAlpha() const { return fAlpha; }
   inline float getThresholdSel() const { return fThresholdSel; }
   inline void setAlpha(int val) { fAlpha = val; }
@@ -41,7 +40,6 @@ private:
   void savePhysSignal( JPetPhysSignal signal);
   int fAlpha;
   float fThresholdSel;
-  JPetWriter* fWriter;
 
 };
 #endif
