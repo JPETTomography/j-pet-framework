@@ -177,9 +177,7 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
   if (fTask) {
-    //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
     auto task = dynamic_cast<JPetTask*>(fTask);
-    task->setWriter(fWriter);
     if (!fAuxilliaryData) {
       fAuxilliaryData = new JPetAuxilliaryData();
     }
