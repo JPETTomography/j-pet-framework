@@ -35,7 +35,6 @@ public:
   virtual void setParamManager(JPetParamManager* paramManager) override;
   virtual void setStatistics(JPetStatistics* statistics);
   virtual void setAuxilliaryData(JPetAuxilliaryData* auxData);
-  virtual void setWriter(JPetWriter*) {};
   virtual void setEvent(TObject* ev);
   const JPetParamBank& getParamBank();
   JPetStatistics& getStatistics();
