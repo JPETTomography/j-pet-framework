@@ -18,6 +18,8 @@
 #include "./JPetFilterInterface.h"
 #include <cmath>
 
+/*! \brief Filter F(x) = sqrt(x)
+*/
 class JPetFilterRidgelet : public JPetFilterInterface
 {
 public:

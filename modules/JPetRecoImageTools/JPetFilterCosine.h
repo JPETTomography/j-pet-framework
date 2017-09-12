@@ -18,6 +18,8 @@
 #include "./JPetFilterInterface.h"
 #include <cmath>
 
+/*! \brief Filter F(x) = x * cos(x * pi)
+*/
 class JPetFilterCosine : public JPetFilterInterface
 {
 public:

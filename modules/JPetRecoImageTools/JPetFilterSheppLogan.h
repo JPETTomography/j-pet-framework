@@ -19,6 +19,8 @@
 #include "./JPetFilterInterface.h"
 #include <cmath>
 
+/*! \brief Filter F(x) = sin(x * pi) / pi
+*/
 class JPetFilterSheppLogan : public JPetFilterInterface
 {
 public:

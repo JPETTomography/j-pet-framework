@@ -18,6 +18,9 @@
 #include "./JPetFilterInterface.h"
 #include <cmath>
 
+/*! \brief Filter F(x) = x * (alpha + (1. - alpha * cos (2. * pi * x)))
+ * default alpha = 0.54
+*/
 class JPetFilterHamming : public JPetFilterInterface
 {
 public:

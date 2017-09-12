@@ -16,6 +16,8 @@
 #ifndef _JPetFilterInterface_H_
 #define _JPetFilterInterface_H_
 
+/*! \brief Interface that all filters should implement.
+*/
 class JPetFilterInterface
 {
 public:

@@ -17,6 +17,9 @@
 #define _JPetFilterNone_H_
 #include "./JPetFilterInterface.h"
 
+/*! \brief Dummy filter not filtering data.
+ *
+*/
 class JPetFilterNone : public JPetFilterInterface
 {
 public:
