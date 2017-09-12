@@ -56,9 +56,7 @@ protected:
   LargeBarrelTask(const char* name, const char* description);
 public:
   virtual ~LargeBarrelTask();
-  //virtual void init(const JPetTaskInterface::Options& opts)override;
-  virtual void init(const JPetOptionsInterface& opts)override;
-  virtual void setWriter(JPetWriter* writer)override;
+  virtual void init(const JPetTaskInterface::Options& opts)override;
 protected:
   JPetWriter& writter()const;
   const std::shared_ptr<LargeBarrelMapping>map()const;
