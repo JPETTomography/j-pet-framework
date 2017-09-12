@@ -116,10 +116,7 @@ void LargeBarrelTask::init(const JPetTaskInterface::Options&)
 {
   fBarrelMap = make_shared<LargeBarrelMapping>(getParamBank());
 }
-void LargeBarrelTask::setWriter(JPetWriter* writer)
-{
-  fWriter = writer;
-}
+
 JPetWriter& LargeBarrelTask::writter() const
 {
   //ToDo: provide control
