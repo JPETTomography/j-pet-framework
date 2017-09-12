@@ -21,13 +21,15 @@
 #include <vector>
 
 #include <cassert>
-#include <cmath>
 #include <fftw3.h>
-#include <functional>
 #include <memory>
 #include <utility>
-#include <vector>
 
+<<<<<<< HEAD
+=======
+#include "JPetFilterInterface.h"
+
+>>>>>>> 9212657... Change FilterSinogram, refactor
 #include <boost/function_types/function_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/function_types/result_type.hpp>
@@ -41,6 +43,7 @@ public:
       int i, double y, std::function< double(int, int) > &) >;
   using RescaleFunc = std::function< void(Matrix2DProj &v, double minCutoff,
                                           double rescaleFactor) >;
+<<<<<<< HEAD
   using FilterFunction = std::function< double(double) >;
 
   static void FilterSinogram(FilterFunction callableFunction,
@@ -48,6 +51,10 @@ public:
   {
     doFFTW(sinogram, callableFunction);
   }
+=======
+  using FourierTransformFunction = std::function< Matrix2DProj(
+      Matrix2DProj &sinogram, JPetFilterInterface &filterFunction) >;
+>>>>>>> 9212657... Change FilterSinogram, refactor
 
   /// Returns a matrixGetter, that can be used to return matrix elements in the
   /// following way:
@@ -141,41 +148,6 @@ public:
   static Matrix2DProj backProject(Matrix2DProj &sinogram, int angles,
                                   RescaleFunc rescaleFunc, int rescaleMinCutoff,
                                   int rescaleFactor);
-  /*! \brief Filter used in FT by function FilterSinogram, should be passed, not
-  * used directly
-  *  Dummy filter, not filtering data at all.
-  */
-  static double NoneFilter(double radius);
-
-  /*! \brief Filter used in FT by function FilterSinogram, should be passed, not
-   * used directly
-   * Ramp filter: F(x) = |x|
-  */
-  static double RamLakFilter(double radius);
-
-  /*! \brief Filter used in FT by function FilterSinogram, should be passed, not
-   * used directly
-   * F(x) = sin(x * pi) / pi
-  */
-  static double SheppLoganFilter(double radius);
-
-  /*! \brief Filter used in FT by function FilterSinogram, should be passed, not
-   * used directly
-   * F(x) = x * cos(x * pi)
-  */
-  static double CosineFilter(double radius);
-
-  /*! \brief Filter used in FT by function FilterSinogram, should be passed, not
-   * used directly
-   * Not usable for now
-  */
-  static double HammingFilter(double radius, double alpha);
-
-  /*! \brief Filter used in FT by function FilterSinogram, should be passed, not
-   * used directly
-   * F(x) = sqrt(x)
-  */
-  static double RidgeletFilter(double radius);
 
 private:
   JPetRecoImageTools();

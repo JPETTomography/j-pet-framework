@@ -7,6 +7,12 @@
 #include <vector>
 
 #include "../../JPetCommonTools/JPetCommonTools.h"
+#include "./JPetFilterCosine.h"
+#include "./JPetFilterHamming.h"
+#include "./JPetFilterNone.h"
+#include "./JPetFilterRamLak.h"
+#include "./JPetFilterRidgelet.h"
+#include "./JPetFilterSheppLogan.h"
 #include "./JPetRecoImageTools.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
@@ -692,9 +698,18 @@ BOOST_AUTO_TEST_CASE(backProjectNone)
   JPetRecoImageTools::Matrix2DProj sinogram =
       JPetRecoImageTools::createSinogramWithDoubleInterpolation(
           m, 180, JPetRecoImageTools::rescale, 0, 255);
+<<<<<<< HEAD
   JPetRecoImageTools::FilterSinogram(JPetRecoImageTools::NoneFilter, sinogram);
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
       sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
+=======
+  JPetFilterNone noneFilter;
+  JPetRecoImageTools::FourierTransformFunction f = JPetRecoImageTools::doFFTW;
+  JPetRecoImageTools::Matrix2DProj filteredSinogram =
+      JPetRecoImageTools::FilterSinogram(f, noneFilter, sinogram);
+  JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
+      filteredSinogram, 180, JPetRecoImageTools::rescale, 0, 255);
+>>>>>>> 9212657... Change FilterSinogram, refactor
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
@@ -738,10 +753,17 @@ BOOST_AUTO_TEST_CASE(backProjectRamLak)
   JPetRecoImageTools::Matrix2DProj sinogram =
       JPetRecoImageTools::createSinogramWithDoubleInterpolation(
           m, 180, JPetRecoImageTools::rescale, 0, 255);
+<<<<<<< HEAD
   JPetRecoImageTools::FilterSinogram(JPetRecoImageTools::RamLakFilter,
                                      sinogram);
+=======
+  JPetFilterRamLak ramlakFilter;
+  JPetRecoImageTools::FourierTransformFunction f = JPetRecoImageTools::doFFTW;
+  JPetRecoImageTools::Matrix2DProj filteredSinogram =
+      JPetRecoImageTools::FilterSinogram(f, ramlakFilter, sinogram);
+>>>>>>> 9212657... Change FilterSinogram, refactor
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
-      sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
+      filteredSinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
@@ -785,10 +807,17 @@ BOOST_AUTO_TEST_CASE(backProjectSheppLogan)
   JPetRecoImageTools::Matrix2DProj sinogram =
       JPetRecoImageTools::createSinogramWithDoubleInterpolation(
           m, 180, JPetRecoImageTools::rescale, 0, 255);
+<<<<<<< HEAD
   JPetRecoImageTools::FilterSinogram(JPetRecoImageTools::SheppLoganFilter,
                                      sinogram);
+=======
+  JPetFilterSheppLogan shepploganFilter;
+  JPetRecoImageTools::FourierTransformFunction f = JPetRecoImageTools::doFFTW;
+  JPetRecoImageTools::Matrix2DProj filteredSinogram =
+      JPetRecoImageTools::FilterSinogram(f, shepploganFilter, sinogram);
+>>>>>>> 9212657... Change FilterSinogram, refactor
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
-      sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
+      filteredSinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
@@ -832,10 +861,17 @@ BOOST_AUTO_TEST_CASE(backProjectCosine)
   JPetRecoImageTools::Matrix2DProj sinogram =
       JPetRecoImageTools::createSinogramWithDoubleInterpolation(
           m, 180, JPetRecoImageTools::rescale, 0, 255);
+<<<<<<< HEAD
   JPetRecoImageTools::FilterSinogram(JPetRecoImageTools::CosineFilter,
                                      sinogram);
+=======
+  JPetFilterCosine cosineFilter;
+  JPetRecoImageTools::FourierTransformFunction f = JPetRecoImageTools::doFFTW;
+  JPetRecoImageTools::Matrix2DProj filteredSinogram =
+      JPetRecoImageTools::FilterSinogram(f, cosineFilter, sinogram);
+>>>>>>> 9212657... Change FilterSinogram, refactor
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
-      sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
+      filteredSinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
@@ -851,7 +887,7 @@ BOOST_AUTO_TEST_CASE(backProjectCosine)
   res.close();
   BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
 }
-/*
+
 BOOST_AUTO_TEST_CASE(backProjectHamming)
 {
   const auto inFile = "unitTestData/JPetRecoImageToolsTest/phantom.pgm";
@@ -876,12 +912,15 @@ BOOST_AUTO_TEST_CASE(backProjectHamming)
       m[i][j] = val;
     }
   }
-  JPetRecoImageTools::Matrix2DProj sinogram = JPetRecoImageTools::sinogram2(
-      m, 180, JPetRecoImageTools::rescale, 0, 255);
-  JPetRecoImageTools::Hamming(sinogram);
-  // JPetRecoImageTools::FilterFunc(JPetRecoImageTools::Hamming, sinogram);
+  JPetRecoImageTools::Matrix2DProj sinogram =
+      JPetRecoImageTools::createSinogramWithDoubleInterpolation(
+          m, 180, JPetRecoImageTools::rescale, 0, 255);
+  JPetFilterHamming hammingFilter(0.45);
+  JPetRecoImageTools::FourierTransformFunction f = JPetRecoImageTools::doFFTW;
+  JPetRecoImageTools::Matrix2DProj filteredSinogram =
+      JPetRecoImageTools::FilterSinogram(f, hammingFilter, sinogram);
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
-      sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
+      filteredSinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
@@ -925,10 +964,17 @@ BOOST_AUTO_TEST_CASE(backProjectRidgelet)
   JPetRecoImageTools::Matrix2DProj sinogram =
       JPetRecoImageTools::createSinogramWithDoubleInterpolation(
           m, 180, JPetRecoImageTools::rescale, 0, 255);
+<<<<<<< HEAD
   JPetRecoImageTools::FilterSinogram(JPetRecoImageTools::RidgeletFilter,
                                      sinogram);
+=======
+  JPetFilterRidgelet ridgeletFilter;
+  JPetRecoImageTools::FourierTransformFunction f = JPetRecoImageTools::doFFTW;
+  JPetRecoImageTools::Matrix2DProj filteredSinogram =
+      JPetRecoImageTools::FilterSinogram(f, ridgeletFilter, sinogram);
+>>>>>>> 9212657... Change FilterSinogram, refactor
   JPetRecoImageTools::Matrix2DProj result = JPetRecoImageTools::backProject(
-      sinogram, 180, JPetRecoImageTools::rescale, 0, 255);
+      filteredSinogram, 180, JPetRecoImageTools::rescale, 0, 255);
   std::ofstream res(outFile);
   res << "P2" << std::endl;
   res << result[0].size() << " " << result.size() << std::endl;
@@ -944,4 +990,8 @@ BOOST_AUTO_TEST_CASE(backProjectRidgelet)
   res.close();
   BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9212657... Change FilterSinogram, refactor
 BOOST_AUTO_TEST_SUITE_END()

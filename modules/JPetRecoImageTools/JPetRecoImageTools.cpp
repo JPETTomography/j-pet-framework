@@ -306,6 +306,7 @@ JPetRecoImageTools::backProject(Matrix2DProj &sinogram, int nAngles,
   return reconstructedProjection;
 }
 
+<<<<<<< HEAD
 double JPetRecoImageTools::NoneFilter(double) { return 1.; }
 
 double JPetRecoImageTools::RamLakFilter(double radius)
@@ -331,12 +332,26 @@ double JPetRecoImageTools::HammingFilter(double radius, double alpha)
 double JPetRecoImageTools::RidgeletFilter(double radius)
 {
   return std::sqrt(radius);
+=======
+JPetRecoImageTools::Matrix2DProj JPetRecoImageTools::FilterSinogram(
+    JPetRecoImageTools::FourierTransformFunction &ftf,
+    JPetFilterInterface &filterFunction,
+    JPetRecoImageTools::Matrix2DProj &sinogram)
+{
+  return ftf(sinogram, filterFunction);
+>>>>>>> 9212657... Change FilterSinogram, refactor
 }
 
 // see http://www.fftw.org/doc/One_002dDimensional-DFTs-of-Real-Data.html
 // http://www.fftw.org/fftw3.pdf
 void JPetRecoImageTools::doFFTW(Matrix2DProj &sinogram, FilterFunction &filter)
 {
+<<<<<<< HEAD
+=======
+  assert(sinogram.size() > 1);
+  JPetRecoImageTools::Matrix2DProj result(
+      sinogram.size(), std::vector< double >(sinogram[0].size()));
+>>>>>>> 9212657... Change FilterSinogram, refactor
   int nAngles = sinogram[0].size();
   int nScanSize = sinogram.size();
   int inFTLength = std::floor(((nAngles / 2.)) + 1);
