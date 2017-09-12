@@ -17,15 +17,22 @@
 
 #include <cassert>
 #include <string>
+#include <exception>
 
 #include "../JPetLoggerInclude.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../DBHandler/HeaderFiles/DBHandler.h"
 #include "../JPetCmdParser/JPetCmdParser.h"
+#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
 
 #include <TThread.h>
-#include <TDSet.h>
 
+using namespace jpet_options_tools;
+
+JPetManager::JPetManager()
+{
+  fTaskGeneratorChain = new TaskGeneratorChain;
+}
 
 JPetManager& JPetManager::getManager()
 {
@@ -33,8 +40,22 @@ JPetManager& JPetManager::getManager()
   return instance;
 }
 
-bool JPetManager::run()
+bool JPetManager::areThreadsEnabled() const
 {
+  return fThreadsEnabled;
+}
+
+void JPetManager::setThreadsEnabled(bool enable)
+{
+  fThreadsEnabled = enable;
+}
+
+bool JPetManager::run(int argc, const char** argv)
+{
+  if (!parseCmdLine(argc, argv)) {
+    ERROR("While parsing command line arguments");
+    return false;
+  }
   INFO( "======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
   std::vector<JPetTaskChainExecutor*> executors;
   std::vector<TThread*> threads;
@@ -42,50 +63,55 @@ bool JPetManager::run()
   /// For every input option, new TaskChainExecutor is created, which creates the chain of previously
   /// registered tasks. The inputDataSeq is the identifier of given chain.
   for (auto opt : fOptions) {
-    JPetTaskChainExecutor* executor = new JPetTaskChainExecutor(fTaskGeneratorChain, inputDataSeq, opt);
+    JPetTaskChainExecutor* executor = new JPetTaskChainExecutor(fTaskGeneratorChain, inputDataSeq, opt.second);
     executors.push_back(executor);
-    if (!executor->process()) {
-      ERROR("While running process");
-      return false;
+    if (areThreadsEnabled()) {
+      auto thr = executor->run();
+      if (thr) {
+        threads.push_back(thr);
+      } else {
+        ERROR("thread pointer is null");
+      }
+    } else {
+      if (!executor->process()) {
+        ERROR("While running process");
+        return false;
+      }
     }
-    //auto thr = executor->run();
-    //if (thr) {
-    //threads.push_back(thr);
-    //} else {
-    //ERROR("thread pointer is null");
-    //}
     inputDataSeq++;
   }
-  //for (auto thread : threads) {
-  //assert(thread);
-  //thread->Join();
-  //}
+  if (areThreadsEnabled()) {
+    for (auto thread : threads) {
+      assert(thread);
+      thread->Join();
+    }
+  }
   for (auto& executor : executors) {
     if (executor) {
       delete executor;
       executor = 0;
     }
   }
-
   INFO( "======== Finished processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
   return true;
 }
 
-void JPetManager::parseCmdLine(int argc, const char** argv)
+bool JPetManager::parseCmdLine(int argc, const char** argv)
 {
-  JPetCmdParser parser;
-  auto optionsFromCmdLine = parser.parseCmdLineArgs(argc, argv);
-  fOptions  = fOptionsGenerator.generateOptions(optionsFromCmdLine);
-}
-
-void JPetManager::addValidationFunctionForUserOptions(const std::string& name, bool(*validatorFunction)(std::pair <std::string, boost::any>) )
-{
-  fOptionsGenerator.getValidator().addValidatorFunction(name, validatorFunction);
-}
-
-void JPetManager::addTransformationFunctionForUserOption(const std::string& name, std::function<std::pair<std::string, boost::any>(boost::any opt)> transformFunction)
-{
-  fOptionsGenerator.addTransformFunction(name, transformFunction);
+  try {
+    JPetOptionsGenerator optionsGenerator;
+    JPetCmdParser parser;
+    auto optionsFromCmdLine = parser.parseCmdLineArgs(argc, argv);
+    int numberOfRegisteredTasks = 1;
+    if (fTaskGeneratorChain) {
+      numberOfRegisteredTasks = fTaskGeneratorChain->size();
+    }
+    fOptions  = optionsGenerator.generateOptions(optionsFromCmdLine, numberOfRegisteredTasks);
+  } catch (std::exception& e) {
+    ERROR(e.what());
+    return false;
+  }
+  return true;
 }
 
 JPetManager::~JPetManager()
@@ -101,6 +127,11 @@ void JPetManager::registerTask(const TaskGenerator& taskGen)
   fTaskGeneratorChain->push_back(taskGen);
 }
 
+JPetManager::Options JPetManager::getOptions() const
+{
+  return fOptions;
+}
+
 /**
  * @brief Initialize connection to database if such connection is necessary
  *
@@ -114,23 +145,24 @@ void JPetManager::registerTask(const TaskGenerator& taskGen)
  */
 bool JPetManager::initDBConnection(const char* configFilePath)
 {
-
   bool isDBrequired = false;
 
-  if (fOptions.size() > 0) { // if at least one input file to process
-    if (fOptions.at(0).getRunNumber() >= 0) { // if run number is not default -1
-      if (!fOptions.at(0).isLocalDB()) { // unless local DB file was provided
-        isDBrequired = true;
+  if (fOptions.size() > 0) { // If at least one input file to process.
+    auto optsVect = fOptions.begin()->second;
+    if (optsVect.size() > 0) {
+      auto opt = optsVect.front();
+      if (getRunNumber(opt) >= 0) { // if run number is not default -1
+        if (!isLocalDB(opt)) { // unless local DB file was provided
+          isDBrequired = true;
+        }
       }
     }
   }
-
   if (isDBrequired) {
     INFO("Attempting to set up connection to the database.");
     DB::SERVICES::DBHandler::createDBConnection(configFilePath);
   } else {
     INFO("Setting connection to database skipped.");
   }
-
   return isDBrequired;
 }

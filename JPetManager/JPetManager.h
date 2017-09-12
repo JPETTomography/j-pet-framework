@@ -17,9 +17,9 @@
 #ifndef JPETMANAGER_H
 #define JPETMANAGER_H
 
-#include "../JPetOptions/JPetOptions.h"
 #include "../JPetTaskChainExecutor/JPetTaskChainExecutor.h"
-#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "../JPetOptions/JPetOptionsTools.h"
+#include <memory>
 
 /**
  * @brief Main manager of the analysis performed with the J-PET Framework.
@@ -32,30 +32,31 @@
 class JPetManager
 {
 public:
+  using Options = std::map<std::string, std::vector<jpet_options_tools::OptionsStrAny>>;
+  using TaskGenerator = std::function< JPetTaskInterface* () >;
+  using TaskGeneratorChain = std::vector<TaskGenerator>;
+
   static JPetManager& getManager();
   ~JPetManager();
-  bool run();
+
+  bool run(int argc, const char** argv);
   void registerTask(const TaskGenerator& taskGen);
-  void parseCmdLine(int argc, const char** argv);
-  inline std::vector<JPetOptions> getOptions() const
-  {
-    return fOptions;
-  }
-  void addValidationFunctionForUserOptions(const std::string& name, bool(*validatorFunction)(std::pair <std::string, boost::any>) );
-  void addTransformationFunctionForUserOption(const std::string& name, std::function<std::pair<std::string, boost::any>(boost::any opt)> transformFunction);
+  /// Function parses command line arguments and generates options for tasks.
+  /// The fOptions is filled with the generated options.
+  bool parseCmdLine(int argc, const char** argv);
+  Options getOptions() const;
+  bool areThreadsEnabled() const;
+  void setThreadsEnabled(bool enable);
   bool initDBConnection(const char* configFilePath = "../DBConfig/configDB.cfg");
+
 private:
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&);
 
-  JPetManager()
-  {
-    fTaskGeneratorChain = new TaskGeneratorChain;
-  }
-
-  std::vector<JPetOptions> fOptions; /// fOptions are input options.
-  /// Its number corresponds to the number of independent input files.
-  TaskGeneratorChain* fTaskGeneratorChain; /// fTaskGeneratorChain is a sequences of registered computing tasks.
-  JPetOptionsGenerator fOptionsGenerator;
+  JPetManager();
+  /// Number of elements in the fOptions container corresponds to the number of independent input files.
+  Options fOptions;
+  TaskGeneratorChain* fTaskGeneratorChain = nullptr; /// fTaskGeneratorChain is a sequences of registered computing tasks.
+  bool fThreadsEnabled = false;
 };
 #endif /*  !JPETMANAGER_H */
