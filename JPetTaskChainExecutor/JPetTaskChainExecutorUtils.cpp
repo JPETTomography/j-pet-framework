@@ -18,11 +18,17 @@
 #include "../JPetTaskLoader/JPetTaskLoader.h"
 #include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
+#include "../JPetOptions/JPetOptionsTools.h"
 
-bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamManager* paramMgr, std::list<JPetTaskRunnerInterface*>& tasks)
+bool JPetTaskChainExecutorUtils::process(const std::vector<JPetParams>& params, std::list<JPetTaskInterface*>& tasks)
 {
+  using namespace jpet_options_tools;
+
+  assert(params.size() > 0);
+  auto options =  params.front().getOptions();
+  auto paramMgr = params.front().getParamManager();
   assert(paramMgr);
-  auto runNum = options.getRunNumber();
+  auto runNum = getRunNumber(options);
   if (runNum >= 0) {
     try {
       paramMgr->fillParameterBank(runNum);
@@ -30,22 +36,23 @@ bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamMa
       ERROR(std::string("Param bank was not generated correctly with error: ") + e.what() + "\n The run number used:" + JPetCommonTools::intToString(runNum));
       return false;
     }
-    if (options.isLocalDBCreate()) {
+    if (isLocalDBCreate(options)) {
       JPetParamSaverAscii saver;
-      saver.saveParamBank(paramMgr->getParamBank(), runNum, options.getLocalDBCreate());
+      saver.saveParamBank(paramMgr->getParamBank(), runNum, getLocalDBCreate(options));
     }
   }
-  auto inputFile = options.getInputFile();
-  auto inputFileType = options.getInputFileType();
-  auto unpackerConfigFile = options.getUnpackerConfigFile();
-  auto unpackerCalibFile = options.getUnpackerCalibFile();
+
+  auto inputFile = getInputFile(options);
+  auto inputFileType = FileTypeChecker::getInputFileType(options);
+  auto unpackerConfigFile = getUnpackerConfigFile(options);
+  auto unpackerCalibFile = getUnpackerCalibFile(options);
 
   if (inputFileType == JPetOptions::kScope) {
-    JPetScopeLoader* module = new JPetScopeLoader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
-    module->setParamManager(paramMgr);
-    tasks.push_front(module);
+    //JPetScopeLoader* module = new JPetScopeLoader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
+    //module->setParamManager(paramMgr);
+    //tasks.push_front(module);
   } else if (inputFileType == JPetOptions::kHld) {
-    unpackFile(inputFile, options.getTotalEvents(), unpackerConfigFile, unpackerCalibFile);
+    unpackFile(inputFile, getTotalEvents(options), unpackerConfigFile, unpackerCalibFile);
   }
   /// Assumption that if the file is zipped than it is in the hld format
   /// and we will also unpack if from hld  after unzipping.
@@ -57,15 +64,16 @@ bool JPetTaskChainExecutorUtils::process(const JPetOptions& options, JPetParamMa
     } else {
       INFO( std::string("Unpacking") );
       auto unzippedFilename = JPetCommonTools::stripFileNameSuffix(std::string(inputFile)).c_str();
-      unpackFile(unzippedFilename, options.getTotalEvents(), unpackerConfigFile, unpackerCalibFile);
+      unpackFile(unzippedFilename, getTotalEvents(options), unpackerConfigFile, unpackerCalibFile);
     }
   }
 
-  if (options.getInputFileType() == JPetOptions::kUndefinedFileType)
-    ERROR( Form("Unknown file type provided for file: %s", options.getInputFile()) );
+  if (FileTypeChecker::getInputFileType(options) == JPetOptions::kUndefinedFileType)
+    ERROR( Form("Unknown file type provided for file: %s", getInputFile(options)) );
   return true;
 }
 
+/// Function unpacks file of the hld format into a root tree
 void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long nevents, const char* configfile = "", const char* calibfile = "")
 {
   JPetUnpacker unpacker;
@@ -78,19 +86,43 @@ void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long neve
   unpacker.exec();
 }
 
-JPetParamManager* JPetTaskChainExecutorUtils::generateParamManager(const JPetOptions& options)
+///@todo this function should be moved to some other class
+std::vector<JPetParams> JPetTaskChainExecutorUtils::generateParams(const OptionsPerFile& opts)
 {
-  if (options.isLocalDB()) {
+  std::vector<JPetParams> params;
+  auto paramManager = JPetTaskChainExecutorUtils::generateParamManager(opts.front());
+  params.reserve(opts.size());
+  for (const auto& opt : opts) {
+    params.push_back(JPetParams(opt, paramManager));
+  }
+  return params;
+}
+
+///@todo this function should be moved to some other class
+std::shared_ptr<JPetParamManager> JPetTaskChainExecutorUtils::generateParamManager(const std::map<std::string, boost::any>& options)
+{
+  using namespace jpet_options_tools;
+  if (isLocalDB(options)) {
     std::set<ParamObjectType> expectMissing;
-    if (options.getInputFileType() == JPetOptions::kScope) {
+    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kScope) {
       expectMissing.insert(ParamObjectType::kTRB);
       expectMissing.insert(ParamObjectType::kFEB);
       expectMissing.insert(ParamObjectType::kFrame);
       expectMissing.insert(ParamObjectType::kLayer);
       expectMissing.insert(ParamObjectType::kTOMBChannel);
     }
-    return new JPetParamManager(new JPetParamGetterAscii(options.getLocalDB()), expectMissing);
+    return std::make_shared<JPetParamManager>(new JPetParamManager(new JPetParamGetterAscii(getLocalDB(options)), expectMissing));
   } else {
-    return new JPetParamManager();
+    return std::make_shared<JPetParamManager>(new JPetParamManager());
   }
+}
+
+bool JPetTaskChainExecutorUtils::unzipFile(const char* filename)
+{
+  if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".gz")
+    return !( system( ( std::string("gzip -dk ") + std::string(filename) ).c_str() ) );
+  else if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".xz" )
+    return !( system( (std::string("xz -dk ") + std::string(filename) ).c_str() ) );
+  else
+    return false;
 }
