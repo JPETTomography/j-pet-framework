@@ -33,11 +33,12 @@ class JPetParams: public JPetParamsInterface
 public:
 
   JPetParams();
-  JPetParams(const jpet_options_tools::OptionsStrAny& opts, JPetParamManager* mgr);
+  /// JPetParams shares ownership of the JPetParamManager instance.
+  JPetParams(const jpet_options_tools::OptionsStrAny& opts, std::shared_ptr<JPetParamManager> mgr);
 
   jpet_options_tools::OptionsStrAny getOptions() const;
-  std::shared_ptr<JPetParamManager> getParamManager();
-  void setParamManager(JPetParamManager* mgr);
+  JPetParamManager* getParamManager() const;
+  void setParamManager(std::shared_ptr<JPetParamManager> mgr);
 
 protected:
   jpet_options_tools::OptionsStrAny fOptions;
