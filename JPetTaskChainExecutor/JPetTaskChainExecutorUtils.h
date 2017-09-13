@@ -20,6 +20,7 @@
 #include "../JPetOptions/JPetOptions.h"
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetScopeLoader/JPetScopeLoader.h"
+#include "../JPetParams/JPetParams.h"
 #include <boost/concept_check.hpp>
 
 /**
@@ -30,21 +31,15 @@
 class JPetTaskChainExecutorUtils
 {
 public:
+  using OptionsPerFile = std::vector<jpet_options_tools::OptionsStrAny>;
   /// process() method depends on the options can: 1.saves paramBank locally in ASCII format , 2. generate and add ScopeLoader
   /// 3. unpack the hld file.
-  bool process(const JPetOptions& options, JPetParamManager* fParamManager, std::list<JPetTaskRunnerInterface*>& tasks);
-  void unpackFile(const char* filename, long long nevents, const char* configfile, const char* calibfile);
-  static JPetParamManager* generateParamManager(const  JPetOptions& options);
+  static bool process(const std::vector<JPetParams>& params, std::list<JPetTaskInterface*>& tasks);
+  static void unpackFile(const char* filename, long long nevents, const char* configfile, const char* calibfile);
   /// system(...) is returning integer, 0 when everything went smoothly and error code when not.
   /// Here I just convert return value into boolean type - Sz.N.
-  inline static bool unzipFile(const char* filename)
-  {
-    if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".gz")
-      return !( system( ( std::string("gzip -dk ") + std::string(filename) ).c_str() ) );
-    else if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".xz" )
-      return !( system( (std::string("xz -dk ") + std::string(filename) ).c_str() ) );
-    else
-      return false;
-  }
+  static bool unzipFile(const char* filename);
+  static std::vector<JPetParams> generateParams(const OptionsPerFile& opts);
+  static std::shared_ptr<JPetParamManager> generateParamManager(const std::map<std::string, boost::any>& options);
 };
 #endif /*  !JPETTASKCHAINEXECUTORUTILS_H */
