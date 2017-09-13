@@ -21,22 +21,21 @@ JPetParams::JPetParams(): fParamManager(0)
 {
 }
 
-JPetParams::JPetParams(const OptionsStrAny& opts, JPetParamManager* mgr): fOptions(opts), fParamManager(mgr)
+JPetParams::JPetParams(const OptionsStrAny& opts, std::shared_ptr<JPetParamManager> mgr): fOptions(opts), fParamManager(mgr)
 {
 }
-
 
 OptionsStrAny JPetParams::getOptions() const
 {
   return fOptions;
 }
 
-std::shared_ptr<JPetParamManager> JPetParams::getParamManager()
+JPetParamManager* JPetParams::getParamManager() const
 {
-  return fParamManager;
+  return fParamManager.get();
 }
 
-void JPetParams::setParamManager(JPetParamManager* mgr)
+void JPetParams::setParamManager(std::shared_ptr<JPetParamManager> mgr)
 {
-  fParamManager = std::make_shared<JPetParamManager>(mgr);
+  fParamManager = mgr;
 }
