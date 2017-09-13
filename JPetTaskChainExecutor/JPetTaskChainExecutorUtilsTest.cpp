@@ -83,4 +83,12 @@ BOOST_AUTO_TEST_CASE(generateParams2)
   BOOST_REQUIRE_EQUAL(first.getParamManager(), second.getParamManager());
 }
 
+BOOST_AUTO_TEST_CASE(process)
+{
+  JPetParams params;
+  std::list<JPetTaskInterface*> tasks;
+  BOOST_REQUIRE(!JPetTaskChainExecutorUtils::process(params, tasks));
+  BOOST_REQUIRE(tasks.empty());
+}
+
 BOOST_AUTO_TEST_SUITE_END()
