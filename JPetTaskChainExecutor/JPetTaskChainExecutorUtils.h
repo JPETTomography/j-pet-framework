@@ -34,7 +34,7 @@ public:
   using OptionsPerFile = std::vector<jpet_options_tools::OptionsStrAny>;
   /// process() method depends on the options can: 1.saves paramBank locally in ASCII format , 2. generate and add ScopeLoader
   /// 3. unpack the hld file.
-  static bool process(const std::vector<JPetParams>& params, std::list<JPetTaskInterface*>& tasks);
+  static bool process(const JPetParams& params, std::list<JPetTaskInterface*>& tasks);
   static void unpackFile(const char* filename, long long nevents, const char* configfile, const char* calibfile);
   /// system(...) is returning integer, 0 when everything went smoothly and error code when not.
   /// Here I just convert return value into boolean type - Sz.N.

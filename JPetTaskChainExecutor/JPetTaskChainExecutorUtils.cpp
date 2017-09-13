@@ -20,14 +20,15 @@
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
 #include "../JPetOptions/JPetOptionsTools.h"
 
-bool JPetTaskChainExecutorUtils::process(const std::vector<JPetParams>& params, std::list<JPetTaskInterface*>& tasks)
+bool JPetTaskChainExecutorUtils::process(const JPetParams& params, std::list<JPetTaskInterface*>& tasks)
 {
   using namespace jpet_options_tools;
-
-  assert(params.size() > 0);
-  auto options =  params.front().getOptions();
-  auto paramMgr = params.front().getParamManager();
-  assert(paramMgr);
+  auto options =  params.getOptions();
+  auto paramMgr = params.getParamManager();
+  if (!paramMgr) {
+    ERROR("Param manager is not set");
+    return false;
+  }
   auto runNum = getRunNumber(options);
   if (runNum >= 0) {
     try {
@@ -68,8 +69,10 @@ bool JPetTaskChainExecutorUtils::process(const std::vector<JPetParams>& params, 
     }
   }
 
-  if (FileTypeChecker::getInputFileType(options) == JPetOptions::kUndefinedFileType)
+  if (FileTypeChecker::getInputFileType(options) == JPetOptions::kUndefinedFileType) {
     ERROR( Form("Unknown file type provided for file: %s", getInputFile(options)) );
+    return false;
+  }
   return true;
 }
 
