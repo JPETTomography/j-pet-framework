@@ -29,7 +29,7 @@ class JPetTaskInterface
 public:
   virtual ~JPetTaskInterface() {}
   virtual bool init(const JPetParamsInterface& inOptions) = 0;
-  virtual bool exec() = 0;
+  virtual bool run() = 0;
   virtual bool terminate(JPetParamsInterface& outOptions) = 0;
   virtual void setSubTask(std::unique_ptr<JPetTaskInterface> subTask) = 0;
   virtual JPetTaskInterface* getSubTask() const = 0;

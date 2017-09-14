@@ -15,55 +15,33 @@
 
 #ifndef JPETTASK_H
 #define JPETTASK_H
+#include "../JPetParamsInterface/JPetParamsInterface.h"
 #include "../JPetTaskInterface/JPetTaskInterface.h"
-#include "../JPetParamBank/JPetParamBank.h"
-#include "../JPetStatistics/JPetStatistics.h"
-#include "../JPetAuxilliaryData/JPetAuxilliaryData.h"
-#include <TNamed.h>
-#include "../JPetWriter/JPetWriter.h"
+#include <string>
 
 class JPetWriter;
 
 /**
- * @brief class being an implementation of a computing task unit.
- *
+ * @brief abstract class being an implementation of a computing task unit.
+ * The user should implement init, exec and terminate methods in the inherited class.
  */
 class JPetTask: public JPetTaskInterface
 {
 public:
-  JPetTask(const char* name = "", const char* description = "");
-  virtual void init(const JPetOptionsInterface& inOptions) override;
-  //virtual void init (const JPetTaskInterface::Options&) override;
-  virtual void exec() override;
-  virtual std::unique_ptr<JPetOptionsInterface> terminate() override;
-  //virtual void terminate() override;
-  virtual void setParamManager(JPetParamManager* paramManager) override;
-  virtual void setStatistics(JPetStatistics* statistics);
-  virtual void setAuxilliaryData(JPetAuxilliaryData* auxData);
-  virtual void setWriter(JPetWriter*) {};
-  virtual void setEvent(TObject* ev);
-  const JPetParamBank& getParamBank();
-  JPetStatistics& getStatistics();
-  JPetAuxilliaryData& getAuxilliaryData();
-  virtual TObject* getEvent()
-  {
-    return fEvent;
-  }
+  JPetTask(const char* name = "");
+  virtual ~JPetTask() {}
+  virtual bool init(const JPetParamsInterface& inOptions) = 0;
+  virtual bool run() = 0;
+  virtual bool terminate(JPetParamsInterface& inOptions) = 0;
 
-  virtual const char* GetName()
-  {
-    return fName.GetName();
-  }
-  virtual const char* GetTitle()
-  {
-    return fName.GetTitle();
-  }
+  virtual void setSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
+  virtual JPetTaskInterface* getSubTask() const override;
+
+  void setName(const std::string& name);
+  std::string getName() const;
 
 protected:
-  TNamed fName;
-  TObject* fEvent;
-  JPetParamManager* fParamManager;
-  JPetStatistics* fStatistics;
-  JPetAuxilliaryData* fAuxilliaryData;
+  std::string fName;
+  std::unique_ptr<JPetTaskInterface> fSubTask = 0;
 };
 #endif /*  !JPETTASK_H */
