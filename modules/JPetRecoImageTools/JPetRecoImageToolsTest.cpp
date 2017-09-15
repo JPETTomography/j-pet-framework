@@ -1265,5 +1265,4 @@ BOOST_AUTO_TEST_CASE(backProjectRidgeletSlow)
   BOOST_REQUIRE(JPetCommonTools::ifFileExisting(outFile));
 }
 
->>>>>>> c3a2804... Add another method to filter sinogram
 BOOST_AUTO_TEST_SUITE_END()
