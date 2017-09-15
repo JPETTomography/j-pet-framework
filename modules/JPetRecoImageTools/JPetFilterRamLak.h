@@ -34,4 +34,4 @@ private:
   double threshold = 0.9;
 };
 
-#endif
+#endif /*  !_JPetFilterRamLak_H_ */

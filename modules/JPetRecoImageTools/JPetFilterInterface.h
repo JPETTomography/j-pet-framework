@@ -26,4 +26,4 @@ public:
   virtual double operator()(double) = 0;
 };
 
-#endif
+#endif /*  !_JPetFilterInterface_H_ */
