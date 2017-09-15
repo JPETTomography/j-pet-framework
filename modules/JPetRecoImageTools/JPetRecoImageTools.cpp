@@ -392,8 +392,8 @@ JPetRecoImageTools::doFFTSLOW(Matrix2DProj &sinogram,
   int nScanSize = sinogram.size();
   int pow = std::round(std::log(nScanSize) / std::log(2.0));
   int padlen = std::round(std::pow(2.0, pow + 1));
-  JPetRecoImageTools::Matrix2DProj result(
-      sinogram.size(), std::vector< double >(sinogram[0].size()));
+  JPetRecoImageTools::Matrix2DProj result(nScanSize,
+                                          std::vector< double >(nAngles));
   std::vector< double > Re(padlen);
   std::vector< double > Im(padlen);
   for (int x = 0; x < nAngles; x++)
