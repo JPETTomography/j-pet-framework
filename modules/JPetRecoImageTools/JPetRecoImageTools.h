@@ -25,11 +25,8 @@
 #include <memory>
 #include <utility>
 
-<<<<<<< HEAD
-=======
 #include "JPetFilterInterface.h"
 
->>>>>>> 9212657... Change FilterSinogram, refactor
 #include <boost/function_types/function_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/function_types/result_type.hpp>
@@ -43,18 +40,8 @@ public:
       int i, double y, std::function< double(int, int) > &) >;
   using RescaleFunc = std::function< void(Matrix2DProj &v, double minCutoff,
                                           double rescaleFactor) >;
-<<<<<<< HEAD
-  using FilterFunction = std::function< double(double) >;
-
-  static void FilterSinogram(FilterFunction callableFunction,
-                             Matrix2DProj &sinogram)
-  {
-    doFFTW(sinogram, callableFunction);
-  }
-=======
   using FourierTransformFunction = std::function< Matrix2DProj(
       Matrix2DProj &sinogram, JPetFilterInterface &filterFunction) >;
->>>>>>> 9212657... Change FilterSinogram, refactor
 
   /// Returns a matrixGetter, that can be used to return matrix elements in the
   /// following way:
@@ -149,8 +136,6 @@ public:
                                   RescaleFunc rescaleFunc, int rescaleMinCutoff,
                                   int rescaleFactor);
 
-<<<<<<< HEAD
-=======
   /*! \brief Function filtering given sinogram using fouriner implementation and
    filter
    *  \param ftf function filtering sinogram with given filter
@@ -175,22 +160,17 @@ public:
   static Matrix2DProj doFFTSLOW(Matrix2DProj &sinogram,
                                 JPetFilterInterface &filter);
 
->>>>>>> c3a2804... Add another method to filter sinogram
 private:
   JPetRecoImageTools();
   ~JPetRecoImageTools();
   JPetRecoImageTools(const JPetRecoImageTools &) = delete;
   JPetRecoImageTools &operator=(const JPetRecoImageTools &) = delete;
 
-<<<<<<< HEAD
-  static void doFFTW(Matrix2DProj &sinogram, FilterFunction &filter);
-=======
   static void doFFTSLOWT(std::vector< double > &Re, std::vector< double > &Im,
                          int size, int shift);
 
   static void doFFTSLOWI(std::vector< double > &Re, std::vector< double > &Im,
                          int size, int shift);
->>>>>>> c3a2804... Add another method to filter sinogram
 
   static inline double setToZeroIfSmall(double value, double epsilon)
   {
