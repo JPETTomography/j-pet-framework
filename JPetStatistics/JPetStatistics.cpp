@@ -18,37 +18,35 @@
 ClassImp(JPetStatistics);
 
 JPetStatistics::~JPetStatistics(){
-  fHistos.Clear("nodelete");
-  fGraphs.Clear("nodelete");
-  fCanvas.Clear("nodelete");
+  fStats.Clear("nodelete");
 }
 
 void JPetStatistics::createHistogram(TObject * object){
-  fHistos.Add(object);
+  fStats.Add(object);
 }
 
 void JPetStatistics::createGraph(TObject * object){
-  fGraphs.Add(object);
+  fStats.Add(object);
 }
 
 void JPetStatistics::createCanvas(TObject * object){
-  fCanvas.Add(object);
+  fStats.Add(object);
 }
 
 TH1F & JPetStatistics::getHisto1D(const char * name){
-  return dynamic_cast<TH1F&>(*(fHistos.FindObject(name)));
+  return dynamic_cast<TH1F&>(*(fStats.FindObject(name)));
 }
 
 TH2F & JPetStatistics::getHisto2D(const char * name){
-  return dynamic_cast<TH2F&>(*(fHistos.FindObject(name)));
+  return dynamic_cast<TH2F&>(*(fStats.FindObject(name)));
 }
 
 TGraph & JPetStatistics::getGraph(const char * name){
-  return dynamic_cast<TGraph&>(*(fGraphs.FindObject(name)));
+  return dynamic_cast<TGraph&>(*(fStats.FindObject(name)));
 }
 
 TCanvas & JPetStatistics::getCanvas(const char * name){
-  return dynamic_cast<TCanvas&>(*(fCanvas.FindObject(name)));
+  return dynamic_cast<TCanvas&>(*(fStats.FindObject(name)));
 }
 
 void JPetStatistics::createCounter(const char * name){
@@ -60,6 +58,6 @@ double & JPetStatistics::getCounter(const char * name){
   return fCounters[name];
 }
 
-const THashTable * JPetStatistics::getHistogramsTable() const{
-  return &fHistos;
+const THashTable * JPetStatistics::getStatsTable() const{
+  return &fStats;
 }

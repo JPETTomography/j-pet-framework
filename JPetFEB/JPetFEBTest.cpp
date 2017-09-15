@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE( no_febs )
   JPetTRBFactory trbFactory(paramGetter, 0);
   JPetFEBFactory factory(paramGetter, 0, trbFactory);
   auto & febs = factory.getFEBs();
-  BOOST_REQUIRE_EQUAL(febs.size(), 0);
+  BOOST_REQUIRE_EQUAL(febs.size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( single_object )
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE( single_object )
   JPetTRBFactory trbFactory(paramGetter, 1);
   JPetFEBFactory factory(paramGetter, 1, trbFactory);
   auto & febs = factory.getFEBs();
-  BOOST_REQUIRE_EQUAL(febs.size(), 1);
+  BOOST_REQUIRE_EQUAL(febs.size(), 1u);
   auto feb = febs[1];
   BOOST_REQUIRE_EQUAL(feb->getID(), 1);
   BOOST_REQUIRE(feb->isActive());
@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
   JPetTRBFactory trbFactory(paramGetter, 2);
   JPetFEBFactory factory(paramGetter, 2, trbFactory);
   auto & febs = factory.getFEBs();
-  BOOST_REQUIRE_EQUAL(febs.size(), 2);
+  BOOST_REQUIRE_EQUAL(febs.size(), 2u);
   auto feb = febs[1];
   BOOST_REQUIRE_EQUAL(feb->getID(), 1);
   BOOST_REQUIRE(feb->isActive());

@@ -35,11 +35,11 @@ public:
   virtual void setStatistics(JPetStatistics* statistics);
   virtual void setAuxilliaryData(JPetAuxilliaryData* auxData);
   virtual void setWriter(JPetWriter*) {};
-  virtual void setEvent(TNamed* ev);
+  virtual void setEvent(TObject* ev);
   const JPetParamBank& getParamBank();
   JPetStatistics& getStatistics();
   JPetAuxilliaryData& getAuxilliaryData();
-  virtual TNamed* getEvent() {
+  virtual TObject* getEvent() {
     return fEvent;
   }
 
@@ -52,7 +52,7 @@ public:
 
 protected:
   TNamed fName;
-  TNamed* fEvent;
+  TObject* fEvent;
   JPetParamManager* fParamManager;
   JPetStatistics* fStatistics;
   JPetAuxilliaryData* fAuxilliaryData;

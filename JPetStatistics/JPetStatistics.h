@@ -44,14 +44,12 @@ class JPetStatistics: public TObject{
   void createCounter(const char * name);
   double & getCounter(const char * name);
 
-  const THashTable * getHistogramsTable() const;
+  const THashTable * getStatsTable() const;
   
-  ClassDef(JPetStatistics,2); 
+  ClassDef(JPetStatistics,3); 
     
  protected:
-  THashTable fHistos;
-  THashTable fGraphs;
-  THashTable fCanvas;
+  THashTable fStats;
   std::map<TString, double> fCounters;
  
 };

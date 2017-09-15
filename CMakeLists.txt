@@ -53,8 +53,11 @@ find_package(Boost 1.50.0 REQUIRED COMPONENTS
   unit_test_framework
   )
 
-include_directories(${Boost_INCLUDE_DIRS})
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 add_definitions(${Boost_DEFINITIONS})
+
+find_package(FFTW REQUIRED)
+include_directories(${FFTW_INCLUDE_DIRS})
 
 get_directory_property(has_parent PARENT_DIRECTORY)
 if(has_parent)
@@ -167,7 +170,9 @@ foreach(test_source ${UNIT_TEST_SOURCES})
   target_link_libraries(${test}.x
     JPetFramework
     ${Boost_LIBRARIES}
+    ${FFTW_LIBRARIES}
     )
+
 endforeach()
 
 add_custom_target(tests DEPENDS ${test_binaries} ${TESTS_DIR}/unitTestData)
@@ -199,6 +204,23 @@ target_link_libraries(JPetFramework
   ${ROOT_LIBRARIES}
   ${Boost_LIBRARIES}
   )
+
+# read the version from git tag and git revision
+exec_program(
+  "git"
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ARGS "describe --tags --abbrev=0"
+  OUTPUT_VARIABLE FRAMEWORK_VERSION )
+
+exec_program(
+  "git"
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ARGS "rev-parse HEAD"
+  OUTPUT_VARIABLE FRAMEWORK_REVISION )
+
+# create the header file with framework version information
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
+  ${CMAKE_CURRENT_SOURCE_DIR}/version.h ESCAPE_QUOTES @ONLY)
 
 # extra files, so they are visible in your editor
 file(GLOB EXTRAS extras/**)

@@ -52,14 +52,14 @@ BOOST_AUTO_TEST_CASE(getFilesInTimeWindowOrder)
   JPetScopeTask testTask("testScopeTask", "It is a test scope task");
   BOOST_REQUIRE(testTask.getFilesInTimeWindowOrder({}).empty());
   auto result = testTask.getFilesInTimeWindowOrder({std::make_pair("C1_0003.txt", 5)});
-  BOOST_REQUIRE_EQUAL(result.size(), 1);
+  BOOST_REQUIRE_EQUAL(result.size(), 1u);
   BOOST_REQUIRE_EQUAL(result.find("C1_0003.txt")->second, 5);
   std::map<std::string, int> inputMap = {std::make_pair("C1_0003.txt", 1), 
                                           std::make_pair("C1_0001.txt", 7),
                                           std::make_pair("C2_0003.txt", 5)
                                         };
   auto result2 = testTask.getFilesInTimeWindowOrder(inputMap);
-  BOOST_REQUIRE_EQUAL(result2.size(), 3);
+  BOOST_REQUIRE_EQUAL(result2.size(), 3u);
   std::set<std::string> expectedFiles = { "C1_0003.txt", "C2_0003.txt"};
   std::set<int> expectedIds = {1, 5};
   std::set<int> obtainedIds;

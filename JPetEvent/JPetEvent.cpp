@@ -18,13 +18,13 @@
 
 ClassImp(JPetEvent);
 
-JPetEvent::JPetEvent(): TNamed("JPetEvent", "event structure")
+JPetEvent::JPetEvent(): TObject()
 {
   /**/
 }
 
 JPetEvent::JPetEvent(const std::vector<JPetHit>& hits, JPetEventType eventType, bool orderedByTime):
-  TNamed("JPetEvent", "event structure"),
+  TObject(),
   fType(eventType)
 {
   setHits(hits, orderedByTime);

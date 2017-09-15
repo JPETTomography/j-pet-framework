@@ -128,14 +128,14 @@ BOOST_AUTO_TEST_CASE( no_pmCalibs )
 {
   JPetPMCalibFactory factory(paramGetter, 0);
   auto& pmCalibs = factory.getPMCalibs();
-  BOOST_REQUIRE_EQUAL(pmCalibs.size(), 0);
+  BOOST_REQUIRE_EQUAL(pmCalibs.size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( single_object )
 {
   JPetPMCalibFactory factory(paramGetter, 1);
   auto& pmCalibs = factory.getPMCalibs();
-  BOOST_REQUIRE_EQUAL(pmCalibs.size(), 1);
+  BOOST_REQUIRE_EQUAL(pmCalibs.size(), 1u);
   auto pmCalib = pmCalibs[1];
   BOOST_REQUIRE_EQUAL(pmCalib->getID(), 1);
   BOOST_REQUIRE_EQUAL(pmCalib->GetNamePM(), "PMCalib");
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
 {
   JPetPMCalibFactory factory(paramGetter, 2);
   auto& pmCalibs = factory.getPMCalibs();
-  BOOST_REQUIRE_EQUAL(pmCalibs.size(), 2);
+  BOOST_REQUIRE_EQUAL(pmCalibs.size(), 2u);
   auto pmCalib = pmCalibs[1];
   BOOST_REQUIRE_EQUAL(pmCalib->getID(), 1);
   BOOST_REQUIRE_EQUAL(pmCalib->GetNamePM(), "PMCalib");

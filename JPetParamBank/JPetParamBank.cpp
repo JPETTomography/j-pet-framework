@@ -19,7 +19,7 @@ ClassImp (JPetParamBank);
 
 JPetParamBank::JPetParamBank():fDummy(false){}
 JPetParamBank::JPetParamBank(const bool d):fDummy(d){}
-const bool JPetParamBank::isDummy()const{return fDummy;}
+bool JPetParamBank::isDummy()const{return fDummy;}
 JPetParamBank::JPetParamBank(const JPetParamBank& paramBank):fDummy(false){
   copyMapValues(fScintillators, paramBank.fScintillators);
   copyMapValues(fPMs, paramBank.fPMs);

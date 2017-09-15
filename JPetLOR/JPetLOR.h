@@ -30,7 +30,7 @@ class JPetHit;
  * An event consists of two hits (JPetHit objects) in two barel slots, referred to as "first" and "second" according to their chronological order in a time slot.
  * The user is responsible for setting the first and second hit in the appropriate order
  */
-class JPetLOR: public TNamed
+class JPetLOR: public TObject
 {
 public:
   JPetLOR();
@@ -39,8 +39,8 @@ public:
   virtual ~JPetLOR();
 
 public:
-	const float getTime() const;
-	const float getQualityOfTime() const;
+	float getTime() const;
+	float getQualityOfTime() const;
 	void setTime(const float time);
 	void setQualityOfTime(const float qualityOfTime);
 	const JPetHit& getFirstHit() const;
@@ -69,11 +69,11 @@ public:
 
   void setTimeDiff(const float td);
   void setQualityOfTimeDiff(const float qtd);
-  const float getTimeDiff() const;
-  const float getQualityOfTimeDiff() const;
-  const bool isHitSet(const unsigned int index);
+  float getTimeDiff() const;
+  float getQualityOfTimeDiff() const;
+  bool isHitSet(const unsigned int index);
   
-ClassDef(JPetLOR,1);
+ClassDef(JPetLOR,2);
 
 /** @brief Checks whether both Hit objects set in this LOR object
  *  come from different barrel slots and are properly time-ordered
@@ -90,7 +90,7 @@ ClassDef(JPetLOR,1);
  *
  *  @return true if both signals are consistently from the same barrel slot.
  */
-const bool isFromSameBarrelSlot() const; 
+bool isFromSameBarrelSlot() const; 
 private:
 
   float fTime; ///< reconstructed absolute time of the event wrt to beginning of the run [ps]

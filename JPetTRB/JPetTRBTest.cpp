@@ -104,14 +104,14 @@ BOOST_AUTO_TEST_CASE( no_trbs )
 {
   JPetTRBFactory factory(paramGetter, 0);
   auto & trbs = factory.getTRBs();
-  BOOST_REQUIRE_EQUAL(trbs.size(), 0);
+  BOOST_REQUIRE_EQUAL(trbs.size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( single_object )
 {
   JPetTRBFactory factory(paramGetter, 1);
   auto & trbs = factory.getTRBs();
-  BOOST_REQUIRE_EQUAL(trbs.size(), 1);
+  BOOST_REQUIRE_EQUAL(trbs.size(), 1u);
   auto trb = trbs[1];
   BOOST_REQUIRE_EQUAL(trb->getID(), 1);
   BOOST_REQUIRE_EQUAL(trb->getType(), 1);
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE( two_objects )
 {
   JPetTRBFactory factory(paramGetter, 2);
   auto & trbs = factory.getTRBs();
-  BOOST_REQUIRE_EQUAL(trbs.size(), 2);
+  BOOST_REQUIRE_EQUAL(trbs.size(), 2u);
   auto trb = trbs[1];
   BOOST_REQUIRE_EQUAL(trb->getID(), 1);
   BOOST_REQUIRE_EQUAL(trb->getType(), 1);
