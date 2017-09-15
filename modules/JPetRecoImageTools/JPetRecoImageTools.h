@@ -149,13 +149,48 @@ public:
                                   RescaleFunc rescaleFunc, int rescaleMinCutoff,
                                   int rescaleFactor);
 
+<<<<<<< HEAD
+=======
+  /*! \brief Function filtering given sinogram using fouriner implementation and
+   filter
+   *  \param ftf function filtering sinogram with given filter
+   *  \param filter type of filter
+   *  \param sinogram data to filter
+  */
+  static Matrix2DProj FilterSinogram(FourierTransformFunction &ftf,
+                                     JPetFilterInterface &filter,
+                                     Matrix2DProj &sinogram);
+
+  /*! \brief Fourier transform implementation using FFTW library
+   *  \param sinogram data to filter
+   *  \param filter type of filter
+  */
+  static Matrix2DProj doFFTW(Matrix2DProj &sinogram,
+                             JPetFilterInterface &filter);
+
+  /*! \brief Fourier transform implementation
+   *  \param sinogram data to filter
+   *  \param filter type of filter
+   */
+  static Matrix2DProj doFFTSLOW(Matrix2DProj &sinogram,
+                                JPetFilterInterface &filter);
+
+>>>>>>> c3a2804... Add another method to filter sinogram
 private:
   JPetRecoImageTools();
   ~JPetRecoImageTools();
   JPetRecoImageTools(const JPetRecoImageTools &) = delete;
   JPetRecoImageTools &operator=(const JPetRecoImageTools &) = delete;
 
+<<<<<<< HEAD
   static void doFFTW(Matrix2DProj &sinogram, FilterFunction &filter);
+=======
+  static void doFFTSLOWT(std::vector< double > &Re, std::vector< double > &Im,
+                         int size, int shift);
+
+  static void doFFTSLOWI(std::vector< double > &Re, std::vector< double > &Im,
+                         int size, int shift);
+>>>>>>> c3a2804... Add another method to filter sinogram
 
   static inline double setToZeroIfSmall(double value, double epsilon)
   {
