@@ -18,21 +18,20 @@
 
 
 #include "boost/program_options.hpp" // Library parsing command line arguments
-#include <string>
-
 namespace po = boost::program_options;
 
 /**
  * @brief Parser of the command line arguments provided by users.
  *
  * It is based on boost program_options.
+ * The exception std::invalid_argument can be thrown in case of parsing error.
  */
 class JPetCmdParser
 {
 public:
   JPetCmdParser();
   ~JPetCmdParser();
-  po::variables_map parseCmdLineArgs(int argc, const char** argv);
+  po::variables_map parseCmdLineArgs(int argc, const char** argv) const; ///This function can throw std::invalid_argument exception.
 
   inline const po::options_description getOptionsDescription() const
   {
