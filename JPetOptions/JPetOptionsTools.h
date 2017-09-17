@@ -22,68 +22,72 @@
  * @brief Set of helper methods to operate on options provided by users.
  *
  * Options are represented as:
- *  1)std::map<std::string, boost::any> a.k.a. OptionsStrAny
- *  2)std::map<std::string, std::string> a.k.a. OptionsStrStr
+ *  1)std::map<std::string, boost::any> a.k.a. OptsStrAny
+ *  2)std::map<std::string, std::string> a.k.a. OptsStrStr
  *
  */
 namespace jpet_options_tools
 {
 
-typedef std::map<std::string, std::string> OptionsStrStr;
-typedef std::map<std::string, boost::any> OptionsStrAny;
+using OptsStrStr = std::map<std::string, std::string> ;
+using OptsStrAny = std::map<std::string, boost::any> ;
 
-bool isOptionSet(const OptionsStrAny& opts, const std::string& optionName);
-boost::any getOptionValue(const OptionsStrAny& opts, std::string optionName);
+bool isOptionSet(const OptsStrAny& opts, const std::string& optionName);
+boost::any getOptionValue(const OptsStrAny& opts, std::string optionName);
 
 class FileTypeChecker
 {
 public:
-  FileTypeChecker();
   enum FileType {
     kNoType, kScope, kRaw, kRoot, kHld, kZip, kPhysEve, kPhysHit, kPhysSig, kRawSig, kRecoSig, kTslotCal, kTslotRaw, kUndefinedFileType
   };
-  static FileType getInputFileType(const OptionsStrAny& opts);
-  static FileType getOutputFileType(const OptionsStrAny& opts);
+  static FileType getInputFileType(const OptsStrAny& opts);
+  static FileType getOutputFileType(const OptsStrAny& opts);
 
 private:
   static void handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException);
-  static FileType getFileType(const OptionsStrAny& opts, const std::string& fileType);
+  static FileType getFileType(const OptsStrAny& opts, const std::string& fileType);
+
+  FileTypeChecker();
+  FileTypeChecker(const FileTypeChecker&);
+  void operator=(const FileTypeChecker&);
 
   static std::map<std::string, FileType> fStringToFileType;
 };
 
-///Helper functions to extract option values with correct types
+void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine);
+
+///Specialized getter functions to extract option values with correct types
 
 /// This function returns a valid result only if the inputFile option is given
 /// in the untransformed form std::vector<std::string>
-std::vector<std::string> getInputFiles(const OptionsStrAny& opts);
-
+std::vector<std::string> getInputFiles(const OptsStrAny& opts);
 /// This function returns a valid result only if the inputFile option is given
 /// in the transformed form std::string
-const char* getInputFile(const OptionsStrAny& opts);
+const char* getInputFile(const OptsStrAny& opts);
+const char* getScopeConfigFile(const OptsStrAny& opts);
+const char* getScopeInputDirectory(const OptsStrAny& opts);
+const char* getOutputFile(const OptsStrAny& opts);
+const char* getOutputPath(const OptsStrAny& opts);
+long long getFirstEvent(const OptsStrAny& opts);
+long long getLastEvent(const OptsStrAny& opts);
+long long getTotalEvents(const OptsStrAny& opts);
+int getRunNumber(const OptsStrAny& opts);
+bool isProgressBar(const OptsStrAny& opts);
+bool isLocalDB(const OptsStrAny& opts);
+std::string getLocalDB(const OptsStrAny& opts);
+bool isLocalDBCreate(const OptsStrAny& opts);
+std::string getLocalDBCreate(const OptsStrAny& opts);
+const char* getUnpackerConfigFile(const OptsStrAny& opts);
+const char* getUnpackerCalibFile(const OptsStrAny& opts);
+std::string getConfigFileName(const OptsStrAny& optsMap);
 
-const char* getScopeConfigFile(const OptionsStrAny& opts);
-const char* getScopeInputDirectory(const OptionsStrAny& opts);
-const char* getOutputFile(const OptionsStrAny& opts);
-const char* getOutputPath(const OptionsStrAny& opts);
-long long getFirstEvent(const OptionsStrAny& opts);
-long long getLastEvent(const OptionsStrAny& opts);
-long long getTotalEvents(const OptionsStrAny& opts);
-int getRunNumber(const OptionsStrAny& opts);
-bool isProgressBar(const OptionsStrAny& opts);
-bool isLocalDB(const OptionsStrAny& opts);
-std::string getLocalDB(const OptionsStrAny& opts);
-bool isLocalDBCreate(const OptionsStrAny& opts);
-std::string getLocalDBCreate(const OptionsStrAny& opts);
-const char* getUnpackerConfigFile(const OptionsStrAny& opts);
-const char* getUnpackerCalibFile(const OptionsStrAny& opts);
+///Functions returning the sets of changed options
+OptsStrAny resetEventRange(const OptsStrAny& srcOpts);
 
-OptionsStrAny resetEventRange(const OptionsStrAny& srcOpts);
+bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile = "");
+OptsStrAny createOptionsFromConfigFile(const std::string& inFile);
 
-bool createConfigFileFromOptions(const OptionsStrStr& options, const std::string& outFile = "");
-OptionsStrAny createOptionsFromConfigFile(const std::string& inFile);
-
-void printOptionsToLog(const OptionsStrAny& opts, const std::string& firstLine);
 
 }
 #endif /*  !JPETOPTIONSTOOLS_H */

@@ -27,21 +27,6 @@ namespace pt = boost::property_tree;
 namespace jpet_options_tools
 {
 
-bool isOptionSet(const OptionsStrAny& opts, const std::string& optionName)
-{
-  return static_cast<bool>(opts.count(optionName));
-}
-
-boost::any getOptionValue(const OptionsStrAny& opts, std::string optionName)
-{
-  return opts.at(optionName);
-
-}
-
-FileTypeChecker::FileTypeChecker()
-{
-///@todo to remove this function and move it to private - we dont need any construct
-}
 std::map<std::string, FileTypeChecker::FileType> FileTypeChecker::fStringToFileType = {
   {"", kNoType},
   {"root", kRoot},
@@ -57,6 +42,16 @@ std::map<std::string, FileTypeChecker::FileType> FileTypeChecker::fStringToFileT
   {"tslot.cal", kTslotCal},
   {"tslot.raw", kTslotRaw}
 };
+
+bool isOptionSet(const OptsStrAny& opts, const std::string& optionName)
+{
+  return static_cast<bool>(opts.count(optionName));
+}
+
+boost::any getOptionValue(const OptsStrAny& opts, std::string optionName)
+{
+  return opts.at(optionName);
+}
 
 FileTypeChecker::FileType FileTypeChecker::getInputFileType(const std::map<std::string, boost::any>& opts)
 {
@@ -89,7 +84,7 @@ FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::strin
   return FileType::kUndefinedFileType;
 }
 
-bool createConfigFileFromOptions(const OptionsStrStr& options, const std::string& outFile)
+bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile)
 {
   pt::ptree optionsTree;
   for (auto& entry : options)
@@ -253,15 +248,25 @@ const char* getUnpackerCalibFile(const std::map<std::string, boost::any>& opts)
   return any_cast<std::string>(opts.at("unpackerCalibFile_std::string")).c_str();
 }
 
-OptionsStrAny resetEventRange(const OptionsStrAny& srcOpts)
+std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap)
 {
-  OptionsStrAny opts(srcOpts);
+  if (optsMap.count("userCfg_std::string")) {
+    return any_cast<std::string>(optsMap.at("userCfg_std::string"));
+  } else {
+    return "";
+  }
+}
+
+
+OptsStrAny resetEventRange(const OptsStrAny& srcOpts)
+{
+  OptsStrAny opts(srcOpts);
   opts.at("firstEvent_int") = -1;
   opts.at("lastEvent_int") = -1;
   return opts;
 }
 
-void printOptionsToLog(const OptionsStrAny& opts, const std::string& firstLine)
+void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine)
 {
   if (!firstLine.empty()) {
     INFO(firstLine.c_str());
@@ -271,7 +276,6 @@ void printOptionsToLog(const OptionsStrAny& opts, const std::string& firstLine)
   for (const auto& el : stringOptions) {
     INFO(el.first + "=" + el.second);
   }
-
 }
 
 }
