@@ -95,7 +95,7 @@ JPetOptionsGenerator::OptsForFiles JPetOptionsGenerator::generateOptions(const p
   auto files = getInputFiles(options);
 
   ///Now generate set of options for every file
-  std::map<std::string, OptionsStrAny> optionsPerFile;
+  std::map<std::string, OptsStrAny> optionsPerFile;
 
   /// In case of scope there is one special input file
   /// which is a json config file which must be parsed.
@@ -128,7 +128,7 @@ JPetOptionsGenerator::OptsForFiles JPetOptionsGenerator::generateOptions(const p
 
   /// Finally, multiple the options for every task.
   for (const auto& el : optionsPerFile) {
-    std::vector<OptionsStrAny>  currOpts(nbOfRegisteredTasks, el.second);
+    std::vector<OptsStrAny>  currOpts(nbOfRegisteredTasks, el.second);
     optsForAllFiles[el.first] = JPetOptionsGenerator::setCorrectRangeAndOutputForNonFirstOption(currOpts);
   }
   return optsForAllFiles;
@@ -158,16 +158,6 @@ JPetOptionsGenerator::OptsStrAny JPetOptionsGenerator::generateAndValidateOption
   return options;
 }
 
-
-bool JPetOptionsGenerator::isOptionSet(const std::map<std::string, boost::any>& optionsMap, const std::string& option) const
-{
-  return (bool)optionsMap.count(option);
-}
-
-boost::any JPetOptionsGenerator::getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const
-{
-  return optionsMap.at(option);
-}
 std::vector<std::string> JPetOptionsGenerator::getVectorOfOptionFromUser() const
 {
   return fVectorOfOptionFromUser;
@@ -272,15 +262,6 @@ void JPetOptionsGenerator::addNewOptionsFromCfgFile(const std::string& cfgFile, 
   options.insert(optionsFromJson.begin(), optionsFromJson.end());
 }
 
-/// @todo add tests
-std::string JPetOptionsGenerator::getConfigFileName(const std::map<std::string, boost::any>& optsMap) const
-{
-  if (optsMap.count("userCfg_std::string")) {
-    return any_cast<std::string>(optsMap.at("userCfg_std::string"));
-  } else {
-    return "";
-  }
-}
 
 void JPetOptionsGenerator::addMissingDefaultOptions(std::map<std::string, boost::any>& options) const
 {
@@ -288,9 +269,9 @@ void JPetOptionsGenerator::addMissingDefaultOptions(std::map<std::string, boost:
   options.insert(defaultOptions.begin(), defaultOptions.end());
 }
 
-std::vector<OptionsStrAny> JPetOptionsGenerator::setCorrectRangeAndOutputForNonFirstOption(const std::vector<OptionsStrAny>& oldOptions)
+std::vector<OptsStrAny> JPetOptionsGenerator::setCorrectRangeAndOutputForNonFirstOption(const std::vector<OptsStrAny>& oldOptions)
 {
-  std::vector<OptionsStrAny> newOptions;
+  std::vector<OptsStrAny> newOptions;
   newOptions.reserve(oldOptions.size());
   auto it = oldOptions.begin();
   /// We don't change the first element

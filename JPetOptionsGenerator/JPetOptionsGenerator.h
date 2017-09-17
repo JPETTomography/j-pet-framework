@@ -18,9 +18,6 @@
 
 class JPetOptionsGenerator;
 
-#include <typeinfo>
-#include <iostream>
-#include <utility>
 #include <vector>
 #include <map>
 #include <string>
@@ -28,7 +25,6 @@ class JPetOptionsGenerator;
 #include "boost/program_options.hpp" // Library parsing command line arguments
 #include <boost/any.hpp>
 
-#include "../JPetOptionValidator/JPetOptionValidator.h"
 #include "../JPetOptions/JPetOptionsTools.h"
 
 
@@ -43,34 +39,28 @@ public:
 
   using OptNameValPair = std::pair<std::string, boost::any>;
   using Transformer = std::function<OptNameValPair(boost::any opt)>;
-  using CmdLineArgs = po::variables_map;
 
   JPetOptionsGenerator();
 
-  OptsForFiles generateOptions(const po::variables_map& cmdLineArgs, int nbOfRegisteredTasks = 1);
+  OptsForFiles generateOptions(const po::variables_map& args, int nbOfRegisteredTasks = 1);
 
-  ///Method generates the options set: option_name->value based on the input sets of command line args.
-  ///Also missing options are added from the default set.
-  std::map<std::string, boost::any> generateAndValidateOptions(const po::variables_map& cmdLineArgs);
+  /// Method generates the options set: option_name->value based on the input sets of command line args.
+  /// Also missing options are added from the default set.
+  /// And the basic validation is performed.
+  /// The option set is common for all files and tasks.
+  OptsStrAny generateAndValidateOptions(const po::variables_map& cmdLineArgs);
 
   static OptsStrAny transformToStrAnyMap(const po::variables_map& variablesMap);
-  ///Methods add type suffixes to the elements of the map
+  /// Methods add type suffixes to the elements of
+  /// the map according to the key name.
   static OptsStrAny addTypeSuffixes(const OptsStrAny& oldMap);
 
-  std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap) const;
-
-  void addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, boost::any>& options) const;
-  void addMissingDefaultOptions(std::map<std::string, boost::any>& options) const;
-
-  void createMapOfBoolOptionFromUser(const std::map<std::string, boost::any>& optionsMap);
-
-  bool isOptionSet(const std::map<std::string, boost::any>& optionsMap, const std::string& option) const;
-  boost::any getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const;
+  void addNewOptionsFromCfgFile(const std::string& cfgFile, OptsStrAny& options) const;
+  void addMissingDefaultOptions(OptsStrAny& options) const;
 
   std::map<std::string, std::vector<Transformer> > generateTransformationMap() const;
   void addTransformFunction(const std::string& name, Transformer transformFunction);
-
-  std::map<std::string, boost::any> transformOptions(std::map<std::string, boost::any>& optionsMap) const;
+  std::map<std::string, boost::any> transformOptions(OptsStrAny& optionsMap) const;
 
   static std::pair <std::string, boost::any>appendSlash(boost::any option);
   static std::pair <std::string, boost::any>setInputFileType(boost::any option);
@@ -83,10 +73,11 @@ public:
   /// the input path must be changed if
   /// the output path argument -o was given, because the input
   /// data for them will lay in the location defined by -o.
-  static std::vector<jpet_options_tools::OptionsStrAny> setCorrectRangeAndOutputForNonFirstOption(const std::vector<jpet_options_tools::OptionsStrAny>& oldOptions);
+  static std::vector<OptsStrAny> setCorrectRangeAndOutputForNonFirstOption(const std::vector<OptsStrAny>& oldOptions);
+  static OptsStrAny getDefaultOptions();
 
-  static std::map<std::string, boost::any> getDefaultOptions();
   std::vector<std::string> getVectorOfOptionFromUser() const;
+  void createMapOfBoolOptionFromUser(const OptsStrAny& optionsMap);
 
 protected:
   static std::map<std::string, boost::any> kDefaultOptions;
