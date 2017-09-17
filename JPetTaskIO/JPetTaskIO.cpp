@@ -19,30 +19,29 @@
 #include "../JPetReader/JPetReader.h"
 #include "../JPetTreeHeader/JPetTreeHeader.h"
 #include "../JPetTask/JPetTask.h"
+#include "../JPetUserTask/JPetUserTask.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetOptions2/JPetOptions2.h"
+#include "../JPetData/JPetData.h"
 
 #include "../JPetLoggerInclude.h"
 #include "../version.h"
 
-JPetTaskIO::JPetTaskIO():
-  fEventNb(-1),
-  fWriter(0),
-  fReader(0),
-  fHeader(0),
-  fStatistics(0),
-  fAuxilliaryData(0),
-  fParamManager(0)
+using namespace jpet_options_tools;
+
+JPetTaskIO::JPetTaskIO(const char* name): JPetTask(name)
 {
 }
 
-bool JPetTaskIO::init(const JPetOptions::Options& opts)
+bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
 {
+  using namespace jpet_options_tools;
+  auto params = dynamic_cast<const JPetParams&>(paramsI);
   bool noError = true;
-  setOptions(JPetOptions(opts));
-  std::string inputFilename(fOptions.getInputFile());
-  std::string outputPath(fOptions.getOutputPath());
-  auto outputFilename = outputPath + std::string(fOptions.getOutputFile());
+  setOptions(params);
+  auto opts = fParams.getOptions();
+  std::string inputFilename(getInputFile(opts));
+  std::string outputPath(getOutputPath(opts));
+  auto outputFilename = outputPath + std::string(getOutputFile(opts));
   if (!createInputObjects(inputFilename.c_str())) {
     ERROR("createInputObjects");
     return false;
@@ -55,13 +54,12 @@ bool JPetTaskIO::init(const JPetOptions::Options& opts)
 }
 
 
-bool JPetTaskIO::exec()
+bool JPetTaskIO::run(const JPetDataInterface& inData)
 {
-  assert(fTask);
+  assert(fSubTask);
   assert(fReader);
-  assert(fParamManager);
-  fTask->setParamManager(fParamManager);
-  fTask->init(JPetOptions2(fOptions.getOptions())); //prepare current task for file
+  fSubTask->init(fParams); //prepare current task for file
+
   auto totalEvents = 0ll;
   if (fReader) {
     totalEvents = fReader->getNbOfAllEvents();
@@ -71,7 +69,7 @@ bool JPetTaskIO::exec()
   }
   auto firstEvent = 0ll;
   auto lastEvent = 0ll;
-  if (!setUserLimits(fOptions, totalEvents,  firstEvent, lastEvent)) {
+  if (!setUserLimits(fParams.getOptions(), totalEvents,  firstEvent, lastEvent)) {
     ERROR("in setUserLimits");
     return false;
   }
@@ -79,18 +77,20 @@ bool JPetTaskIO::exec()
   for (auto i = firstEvent; i <= lastEvent; i++) {
 
     //(std::dynamic_pointer_cast<JPetTask>(fTask))->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
-    (dynamic_cast<JPetTask*>(fTask))->setEvent(&(static_cast<TObject&>(fReader->getCurrentEvent())));
-    if (fOptions.isProgressBar()) {
+    //(dynamic_cast<JPetUserTask*>(fSubTask))->setEvent(&(static_cast<TObject&>(fReader->getCurrentEvent())));
+    if (isProgressBar(fParams.getOptions())) {
       displayProgressBar(i, lastEvent);
     }
-    fTask->exec();
+    JPetData event(fReader->getCurrentEvent());
+    fSubTask->run(event);
     fReader->nextEvent();
   }
-  fTask->terminate();
+  fSubTask->terminate(fParams);
   return true;
 }
 
-bool JPetTaskIO::terminate()
+
+bool JPetTaskIO::terminate(JPetParamsInterface&)
 {
   if (!fReader) {
     ERROR("fReader set to null");
@@ -108,24 +108,17 @@ bool JPetTaskIO::terminate()
     ERROR("fStatistics set to null");
     return false;
   }
-  if (!fAuxilliaryData) {
-    ERROR("fAuxilliaryData set to null");
-    return false;
-  }
 
   assert(fReader);
   assert(fWriter);
   assert(fHeader);
   assert(fStatistics);
-  assert(fAuxilliaryData);
 
   fWriter->writeHeader(fHeader);
 
   fWriter->writeCollection(fStatistics->getStatsTable(), "Stats");
 
-  fWriter->writeObject(fAuxilliaryData, "Auxilliary Data");
-
-  // store the parametric objects in the ouptut ROOT file
+  //store the parametric objects in the ouptut ROOT file
   getParamManager().saveParametersToFile(
     fWriter);
   getParamManager().clearParameters();
@@ -135,23 +128,19 @@ bool JPetTaskIO::terminate()
   return true;
 }
 
-void JPetTaskIO::setOptions(const JPetOptions& opts)
+void JPetTaskIO::setOptions(const JPetParams& opts)
 {
-  fOptions = opts;
-}
-void JPetTaskIO::setParamManager(JPetParamManager* paramManager)
-{
-  DEBUG("JPetTaskIO");
-  fParamManager = paramManager;
+  fParams = opts;
 }
 
 JPetParamManager& JPetTaskIO::getParamManager()
 {
   DEBUG("JPetTaskIO");
+  auto paramManager = fParams.getParamManager();
   static JPetParamManager NullManager(true);
-  if (fParamManager) {
+  if (paramManager) {
     DEBUG("JPetParamManger returning normal parammanager");
-    return *fParamManager;
+    return *paramManager;
   } else {
     DEBUG("JPetParamManger returning NullManager ");
     return NullManager;
@@ -160,42 +149,43 @@ JPetParamManager& JPetTaskIO::getParamManager()
 
 bool JPetTaskIO::createInputObjects(const char* inputFilename)
 {
+  using namespace jpet_options_tools;
+  auto options = fParams.getOptions();
   auto treeName = "";
   fReader = new JPetReader;
-  if (fOptions.getInputFileType() == JPetOptions::kHld ) {
+  if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHld ) {
     treeName = "T";
   } else {
     treeName = "tree";
   }
   if ( fReader->openFileAndLoadData( inputFilename, treeName )) {
-    if (fOptions.getInputFileType() == JPetOptions::kHld ) {
+    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHld ) {
       // create a header to be stored along with the output tree
-      fHeader = new JPetTreeHeader(fOptions.getRunNumber());
+      fHeader = new JPetTreeHeader(getRunNumber(options));
       fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
       fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
 
       // add general info to the Tree header
-      fHeader->setBaseFileName(fOptions.getInputFile());
+      fHeader->setBaseFileName(getInputFile(options));
 
     } else {
-      assert(fParamManager);
-      fParamManager->readParametersFromFile(dynamic_cast<JPetReader*> (fReader));
+      auto paramManager = fParams.getParamManager();
+      assert(paramManager);
+      paramManager->readParametersFromFile(dynamic_cast<JPetReader*> (fReader));
       // read the header from the previous analysis stage
       //
       fHeader = dynamic_cast<JPetReader*>(fReader)->getHeaderClone();
       //fParamManager.readParametersFromFile( fReader );
     }
     // create an object for storing histograms and counters during processing
-    fStatistics = new JPetStatistics();
-
-    // read the Auxilliary data from input file
-    // or create it if it was non-existent
-    fAuxilliaryData = dynamic_cast<JPetAuxilliaryData*>(fReader->getObjectFromFile("Auxilliary Data"));
+    // make_unique is not available in c++11 :(
+    std::unique_ptr<JPetStatistics> tmpUnique(new JPetStatistics);
+    fStatistics = std::move(tmpUnique);
 
     // add info about this module to the processing stages' history in Tree header
     //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
-    auto task = dynamic_cast<JPetTask*>(fTask);
-    fHeader->addStageInfo(task->GetName(), task->GetTitle(), 0,
+    auto task = dynamic_cast<JPetUserTask*>(fSubTask.get());
+    fHeader->addStageInfo(task->getName(), "", 0,
                           JPetCommonTools::getTimeString());
 
   } else {
@@ -209,22 +199,16 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
 {
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
-  if (fTask) {
+  if (fSubTask) {
     //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
-    auto task = dynamic_cast<JPetTask*>(fTask);
-    task->setWriter(fWriter);
-    if (!fAuxilliaryData) {
-      fAuxilliaryData = new JPetAuxilliaryData();
-    }
-    task->setStatistics(fStatistics);
-    task->setAuxilliaryData(fAuxilliaryData);
+    auto task = dynamic_cast<JPetUserTask*>(fSubTask.get());
+    task->setStatistics(std::move(fStatistics));
   } else {
     WARNING("the subTask does not exist, so Write was not passed to it");
     return false;
   }
   return true;
 }
-
 
 void JPetTaskIO::displayProgressBar(int currentEventNumber, int numberOfEvents) const
 {
@@ -235,8 +219,9 @@ void JPetTaskIO::displayProgressBar(int currentEventNumber, int numberOfEvents) 
 const JPetParamBank& JPetTaskIO::getParamBank()
 {
   DEBUG("from JPetTaskIO");
-  assert(fParamManager);
-  return fParamManager->getParamBank();
+  auto paramManager = fParams.getParamManager();
+  assert(paramManager);
+  return paramManager->getParamBank();
 }
 
 JPetTaskIO::~JPetTaskIO()
@@ -249,23 +234,14 @@ JPetTaskIO::~JPetTaskIO()
     delete fReader;
     fReader = 0;
   }
-  if (fStatistics) {
-    delete fStatistics;
-    fStatistics = 0;
-  }
-  if (fAuxilliaryData) {
-    delete fAuxilliaryData;
-    fAuxilliaryData = 0;
-  }
-
 }
 
 /// Sets values of firstEvent and lastEvent based on user options opts and total number of events from JPetReader
 // if the totEventsFromReader is less than 0, than first and last are set to -1.
-bool JPetTaskIO::setUserLimits(const JPetOptions& opts, const long long kTotEventsFromReader, long long& first, long long& last) const
+bool JPetTaskIO::setUserLimits(const OptsStrAny& opts, const long long kTotEventsFromReader, long long& first, long long& last) const
 {
-  const auto kLastEvent = opts.getLastEvent();
-  const auto kFirstEvent = opts.getFirstEvent();
+  const auto kLastEvent = getLastEvent(opts);
+  const auto kFirstEvent = getFirstEvent(opts);
   if ( kTotEventsFromReader < 1) {
     WARNING("kTotEvetnsFromReader < 1, first and last set to -1");
     first = last = -1;

@@ -42,7 +42,7 @@ public:
   virtual ~JPetUserTask() {};
 
   bool init(const JPetParamsInterface& inOptions) override;
-  bool run() override;
+  bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParamsInterface& outOptions) override;
 
   virtual void setStatistics(std::unique_ptr<JPetStatistics> statistics);

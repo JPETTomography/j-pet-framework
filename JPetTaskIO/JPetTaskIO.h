@@ -16,63 +16,56 @@
 #ifndef JPETTASKIO_H
 #define JPETTASKIO_H
 #include "../JPetTaskInterface/JPetTaskInterface.h"
-#include "../JPetTaskRunner/JPetTaskRunner.h"
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetStatistics/JPetStatistics.h"
-#include "../JPetAuxilliaryData/JPetAuxilliaryData.h"
-#include "../JPetOptions/JPetOptions.h"
 #include "../JPetTask/JPetTask.h"
 #include "../JPetProgressBarManager/JPetProgressBarManager.h"
+
+#include "../JPetParams/JPetParams.h"
+
 #include <memory>
 
 class JPetWriter;
 class JPetReader;
 class JPetTreeHeader;
 class JPetStatistics;
-class JPetAuxilliaryData;
-//class JPetTask;
 
 
 /**
  * @brief Class representing computing task with input/output operations.
  *
  */
-class JPetTaskIO: public JPetTaskRunner
+class JPetTaskIO: public JPetTask
 {
 public:
-  JPetTaskIO();
-  virtual bool init(const JPetOptions::Options& opts);
-  virtual bool exec();
-  virtual bool terminate();
+  JPetTaskIO(const char* name = "");
+  virtual bool init(const JPetParamsInterface& inOptions) override;
+  virtual bool run(const JPetDataInterface& inData) override;
+  virtual bool terminate(JPetParamsInterface& outOptions) override;
   virtual ~JPetTaskIO();
-  virtual void runTask() {};
+  void setOptions(const JPetParams& opts);
 
-  void setOptions(const JPetOptions& opts);
-  inline JPetOptions getOptions() const
+  inline JPetParams getOptions() const
   {
-    return fOptions;
+    return fParams;
   }
 
   void displayProgressBar(int currentEventNumber, int numberOfEvents) const;
 
-  void setParamManager(JPetParamManager* paramManager);
-
 protected:
   virtual bool createInputObjects(const char* inputFilename);
   virtual bool createOutputObjects(const char* outputFilename);
-  bool setUserLimits(const JPetOptions& opts, const long long totEventsFromReader, long long& firstEvent, long long& lastEvent) const;
+  bool setUserLimits(const jpet_options_tools::OptsStrAny& opts, const long long kTotEventsFromReader, long long& first, long long& last) const;
 
   const JPetParamBank& getParamBank();
   JPetParamManager& getParamManager();
 
-  int fEventNb;
-  JPetOptions fOptions; //options like max num of events, first event, last event, inputFileType, outputFileType
-  JPetWriter* fWriter;
-  JPetReaderInterface* fReader;
-  JPetTreeHeader* fHeader;
-  JPetStatistics* fStatistics;
-  JPetAuxilliaryData* fAuxilliaryData;
-  JPetParamManager* fParamManager;
+  int fEventNb = -1;
+  JPetParams fParams;
+  JPetWriter* fWriter = 0;
+  JPetReaderInterface* fReader = 0;
+  JPetTreeHeader* fHeader = 0;
+  std::unique_ptr<JPetStatistics> fStatistics = 0;
   JPetProgressBarManager fProgressBar;
 };
 #endif /*  !JPETTASKIO_H */

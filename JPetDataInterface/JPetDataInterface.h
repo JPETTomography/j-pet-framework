@@ -10,32 +10,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetParams.cpp
+ *  @file JPetDataInterface.h
  */
 
-#include "./JPetParams.h"
+#ifndef JPETDATAINTERFACE_H
+#define JPETDATAINTERFACE_H
 
-using namespace jpet_options_tools;
-
-JPetParams::JPetParams(): fParamManager(0)
+class JPetDataInterface
 {
-}
-
-JPetParams::JPetParams(const OptsStrAny& opts, std::shared_ptr<JPetParamManager> mgr): fOptions(opts), fParamManager(mgr)
-{
-}
-
-OptsStrAny JPetParams::getOptions() const
-{
-  return fOptions;
-}
-
-JPetParamManager* JPetParams::getParamManager() const
-{
-  return fParamManager.get();
-}
-
-void JPetParams::setParamManager(std::shared_ptr<JPetParamManager> mgr)
-{
-  fParamManager = mgr;
-}
+public:
+  virtual ~JPetDataInterface() {};
+};
+#endif /*  !JPETDATAINTERFACE_H */

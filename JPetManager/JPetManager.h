@@ -18,7 +18,7 @@
 #define JPETMANAGER_H
 
 #include "../JPetTaskChainExecutor/JPetTaskChainExecutor.h"
-#include "../JPetOptions/JPetOptionsTools.h"
+#include "../JPetOptionsTools/JPetOptionsTools.h"
 #include <memory>
 
 /**
@@ -32,7 +32,7 @@
 class JPetManager
 {
 public:
-  using Options = std::map<std::string, std::vector<jpet_options_tools::OptionsStrAny>>;
+  using Options = std::map<std::string, std::vector<jpet_options_tools::OptsStrAny>>;
   using TaskGenerator = std::function< JPetTaskInterface* () >;
   using TaskGeneratorChain = std::vector<TaskGenerator>;
 
