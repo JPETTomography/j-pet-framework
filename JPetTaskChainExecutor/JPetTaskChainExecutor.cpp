@@ -14,30 +14,25 @@
  */
 
 #include "JPetTaskChainExecutor.h"
+
 #include <cassert>
-#include "../JPetTaskInterface/JPetTaskInterface.h"
-#include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
-#include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
-#include "../JPetLoggerInclude.h"
-#include "JPetTaskChainExecutorUtils.h"
-#include "../JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 #include <memory>
 #include <chrono>
 
-using boost::any_cast;
+#include "JPetTaskChainExecutorUtils.h"
+#include "../JPetLoggerInclude.h"
 
-JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, JPetOptions opt) :
+JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, const OptionsPerFile& opts):
   fInputSeqId(processedFileId),
-  fParamManager(0),
-  ftaskGeneratorChain(taskGeneratorChain),
-  fOptions(opt)
+  ftaskGeneratorChain(taskGeneratorChain)
 {
-  fParamManager = JPetTaskChainExecutorUtils::generateParamManager(fOptions);
+  assert(taskGeneratorChain->size() == opts.size());
+  /// ParamManager is generated and added to fParams
+  fParams = JPetTaskChainExecutorUtils::generateParams(opts);
+  assert(fParams.front().getParamManager());
   if (taskGeneratorChain) {
     for (auto taskGenerator : *ftaskGeneratorChain) {
       auto task = taskGenerator();
-      ///@todo change it
-      (dynamic_cast<JPetTaskIO*>(task))->setParamManager(fParamManager);
       fTasks.push_back(task);
     }
   } else {
@@ -45,10 +40,15 @@ JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorCh
   }
 }
 
-bool JPetTaskChainExecutor::preprocessing(const JPetOptions& options, JPetParamManager* manager, std::list<JPetTaskRunnerInterface*>& tasks)
+
+bool JPetTaskChainExecutor::preprocessing(const std::vector<JPetParams>& params, std::list<JPetTaskInterface*>& tasks)
 {
-  JPetTaskChainExecutorUtils utils;
-  return utils.process(options, manager, tasks);
+  if (params.empty()) {
+    ERROR("No parameters provided!");
+    return false;
+  } else {
+    return JPetTaskChainExecutorUtils::process(params.front(), tasks);
+  }
 }
 
 bool JPetTaskChainExecutor::process()
@@ -56,47 +56,39 @@ bool JPetTaskChainExecutor::process()
   namespace stdc = std::chrono;
   std::vector<std::pair<std::string, stdc::seconds>> elapsedTime;
   auto startTime = stdc::system_clock::now();
-
-  if (!preprocessing(fOptions, fParamManager, fTasks)) {
-    ERROR("Error in preprocessing");
+  if (!preprocessing(fParams, fTasks)) {
+    ERROR("Error in preprocessing phase");
     return false;
   }
-
   elapsedTime.push_back(std::make_pair("Preprocessing", stdc::duration_cast< stdc::seconds > (stdc::system_clock::now() - startTime)));
 
-  for (auto currentTask = fTasks.begin(); currentTask != fTasks.end(); currentTask++) {
-    JPetOptions::Options currOpts = fOptions.getOptions();
-    // @TODO this part of code should be moved to JPetOptionsGenerator
-    if (currentTask != fTasks.begin()) {
-      /// Ignore the event range options for all but the first task.
-      currOpts = JPetOptions::resetEventRange(currOpts);
-      /// For all but the first task,
-      /// the input path must be changed if
-      /// the output path argument -o was given, because the input
-      /// data for them will lay in the location defined by -o.
-      auto outPath  = any_cast<std::string>(currOpts.at("outputPath_std::string"));
-      if (!outPath.empty()) {
-        currOpts.at("inputFile_std::string") = outPath + JPetCommonTools::extractPathFromFile(any_cast<std::string>(currOpts.at("inputFile_std::string"))) + JPetCommonTools::extractFileNameFromFullPath(any_cast<std::string>(currOpts.at("inputFile_std::string")));
-      }
-    }
-    auto taskCurr = dynamic_cast<JPetTask*> ((*currentTask)->getTask());
-    if (!taskCurr) {
-      ERROR("task is not set, so it cannot be run!");
-      return false;
-    }
-    //auto taskCurr = std::dynamic_pointer_cast<JPetTask>((*currentTask)->getTask());
-    auto taskName = taskCurr->GetName();
-    INFO(Form("Starting task: %s", taskName));
-    JPetTaskChainExecutor::printCurrentOptionsToLog(currOpts);
-    /// @todo this casting is probably not necessary, add a test to show it and remove it.
-    auto taskRunnerCurr =  dynamic_cast<JPetTaskIO*> (*currentTask);
-    taskRunnerCurr->init(currOpts);
-    taskRunnerCurr->exec();
-    taskRunnerCurr->terminate();
+  JPetDataInterface nullDataObject;
+  JPetParams outputParams;
 
-    elapsedTime.push_back(std::make_pair("task " + std::string(taskName), stdc::duration_cast< stdc::seconds > (stdc::system_clock::now() - startTime)));
-    INFO(Form("Finished task: %s", taskName));
+  assert(fTasks.size() == fParams.size());
+  auto currParamsIt = fParams.begin();
+
+  /// We iterate over both tasks and parameters
+  for (auto currentTaskIt = fTasks.begin(); currentTaskIt != fTasks.end(); currentTaskIt++) {
+
+    auto currentTask  =  *currentTaskIt;
+    auto taskName = currentTask->getName();
+
+    assert(currParamsIt != fParams.end());
+    auto currParams = *currParamsIt;
+    jpet_options_tools::printOptionsToLog(currParams.getOptions(), std::string("Options for ") + taskName);
+    currParamsIt++;
+
+    INFO(Form("Starting task: %s", taskName.c_str()));
+
+    currentTask->init(currParams);
+    currentTask->run(nullDataObject);
+    currentTask->terminate(outputParams);
+
+    elapsedTime.push_back(std::make_pair("task " + taskName, stdc::duration_cast< stdc::seconds > (stdc::system_clock::now() - startTime)));
+    INFO(Form("Finished task: %s", taskName.c_str()));
   }
+
   for (auto& el : elapsedTime) {
     INFO("Elapsed time for " + el.first + ":" + el.second.count() + " [s]");
   }
@@ -108,21 +100,7 @@ bool JPetTaskChainExecutor::process()
   }
                               );
   INFO(std::string("Total elapsed time:") + total.count() + " [s]");
-
   return true;
-}
-
-void JPetTaskChainExecutor::printCurrentOptionsToLog(const JPetOptions::Options& currOpts)
-{
-  INFO("Current options:");
-  auto allowedTypes = JPetOptionsTypeHandler::getAllowedTypes();
-  for (auto a : currOpts) {
-    allowedTypes.push_back(JPetOptionsTypeHandler::getTypeOfOption(a.first));
-  }
-  auto stringOptions = JPetOptionsTypeHandler::anyMapToStringMap(currOpts);
-  for (const auto& el : stringOptions) {
-    INFO(el.first + "=" + el.second);
-  }
 }
 
 void* JPetTaskChainExecutor::processProxy(void* runner)

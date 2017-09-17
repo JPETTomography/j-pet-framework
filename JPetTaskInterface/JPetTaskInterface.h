@@ -17,6 +17,8 @@
 #define JPETTASKINTERFACE_H
 
 #include "../JPetParamsInterface/JPetParamsInterface.h"
+#include "../JPetDataInterface/JPetDataInterface.h"
+#include <string>
 #include <memory>
 
 
@@ -29,9 +31,10 @@ class JPetTaskInterface
 public:
   virtual ~JPetTaskInterface() {}
   virtual bool init(const JPetParamsInterface& inOptions) = 0;
-  virtual bool run() = 0;
+  virtual bool run(const JPetDataInterface& inData) = 0;
   virtual bool terminate(JPetParamsInterface& outOptions) = 0;
   virtual void setSubTask(std::unique_ptr<JPetTaskInterface> subTask) = 0;
   virtual JPetTaskInterface* getSubTask() const = 0;
+  virtual std::string getName() const =0;
 };
 #endif /*  !JPETTASKINTERFACE_H */

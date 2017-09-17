@@ -17,11 +17,11 @@
 #define JPETTASKCHAINEXECUTORUTILS_H
 
 #include "../JPetUnpacker/JPetUnpacker.h"
-#include "../JPetOptions/JPetOptions.h"
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetScopeLoader/JPetScopeLoader.h"
 #include "../JPetParams/JPetParams.h"
 #include <boost/concept_check.hpp>
+#include <list>
 
 /**
  * JPetTaskChainExecutorUtils contains methods that can be used by JPetTaskExecutor
@@ -31,7 +31,7 @@
 class JPetTaskChainExecutorUtils
 {
 public:
-  using OptionsPerFile = std::vector<jpet_options_tools::OptionsStrAny>;
+  using OptionsPerFile = std::vector<jpet_options_tools::OptsStrAny>;
   /// process() method depends on the options can: 1.saves paramBank locally in ASCII format , 2. generate and add ScopeLoader
   /// 3. unpack the hld file.
   static bool process(const JPetParams& params, std::list<JPetTaskInterface*>& tasks);
