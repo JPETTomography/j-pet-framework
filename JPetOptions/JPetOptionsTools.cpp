@@ -27,7 +27,69 @@ namespace pt = boost::property_tree;
 namespace jpet_options_tools
 {
 
-bool createConfigFileFromOptions(const Options& options, const std::string& outFile)
+bool isOptionSet(const OptionsStrAny& opts, const std::string& optionName)
+{
+  return static_cast<bool>(opts.count(optionName));
+}
+
+boost::any getOptionValue(const OptionsStrAny& opts, std::string optionName)
+{
+  return opts.at(optionName);
+
+}
+
+FileTypeChecker::FileTypeChecker()
+{
+///@todo to remove this function and move it to private - we dont need any construct
+}
+std::map<std::string, FileTypeChecker::FileType> FileTypeChecker::fStringToFileType = {
+  {"", kNoType},
+  {"root", kRoot},
+  {"scope", kScope},
+  {"raw", kRaw},
+  {"hld", kHld},
+  {"zip", kZip},
+  {"phys.eve", kPhysEve},
+  {"phys.hit", kPhysHit},
+  {"phys.sig", kPhysSig},
+  {"raw.sig", kRawSig},
+  {"reco.sig", kRecoSig},
+  {"tslot.cal", kTslotCal},
+  {"tslot.raw", kTslotRaw}
+};
+
+FileTypeChecker::FileType FileTypeChecker::getInputFileType(const std::map<std::string, boost::any>& opts)
+{
+  return getFileType(opts, "inputFileType_std::string");
+}
+
+FileTypeChecker::FileType FileTypeChecker::getOutputFileType(const std::map<std::string, boost::any>& opts)
+{
+  return getFileType(opts, "outputFileType_std::string");
+}
+
+void FileTypeChecker::handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException)
+{
+  std::cerr << errorMessage << outOfRangeException.what() << '\n';
+  ERROR(errorMessage);
+}
+
+FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::string, boost::any>& opts, const std::string& fileTypeName)
+{
+  try {
+    auto option = any_cast<std::string>(opts.at(fileTypeName));
+    try {
+      return fStringToFileType.at(option);
+    } catch (const std::out_of_range& outOfRangeFileTypeException) {
+    }
+  } catch (const std::out_of_range& outOfRangeOptionException) {
+    std::string errorMessage = "Out of range error in Options container ";
+    handleErrorMessage(errorMessage, outOfRangeOptionException);
+  }
+  return FileType::kUndefinedFileType;
+}
+
+bool createConfigFileFromOptions(const OptionsStrStr& options, const std::string& outFile)
 {
   pt::ptree optionsTree;
   for (auto& entry : options)
@@ -92,4 +154,124 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
   }
   return mapOptions;
 }
+
+std::vector<std::string> getInputFiles(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<std::vector<std::string>>(opts.at("file_std::vector<std::string>"));
+}
+
+const char* getInputFile(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<std::string>(opts.at("inputFile_std::string")).c_str();
+}
+
+const char* getScopeConfigFile(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<std::string>(opts.at("scopeConfigFile_std::string")).c_str();
+}
+const char* getScopeInputDirectory(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<std::string>(opts.at("scopeInputDirectory_std::string")).c_str();
+}
+const char* getOutputFile(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<std::string>(opts.at("outputFile_std::string")).c_str();
+}
+const char* getOutputPath(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<std::string>(opts.at("outputPath_std::string")).c_str();
+}
+long long getFirstEvent(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<int>(opts.at("firstEvent_int"));
+}
+long long getLastEvent(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<int>(opts.at("lastEvent_int"));
+}
+
+/// It returns the total number of events calculated from
+/// first and last event given in the range of events to calculate.
+/// If first or last event is set to -1 then the -1 is returned.
+/// If last - first < 0 then -1 is returned.
+/// Otherwise last - first +1 is returned.
+long long getTotalEvents(const std::map<std::string, boost::any>& opts)
+{
+  long long first = getFirstEvent(opts);
+  long long last = getLastEvent(opts);
+  long long diff = -1;
+  if ((first >= 0) && (last >= 0) && ((last - first) >= 0)) {
+    diff = last - first + 1;
+  }
+  return diff;
+}
+
+int getRunNumber(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<int>(opts.at("runId_int"));
+}
+
+bool isProgressBar(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<bool>(opts.at("progressBar_bool"));
+}
+
+bool isLocalDB(const std::map<std::string, boost::any>& opts)
+{
+  return (bool)opts.count("localDB_std::string");
+}
+
+std::string getLocalDB(const std::map<std::string, boost::any>& opts)
+{
+  std::string result("");
+  if (isLocalDB(opts)) {
+    result = any_cast<std::string>(opts.at("localDB_std::string"));
+  }
+  return result;
+}
+bool isLocalDBCreate(const std::map<std::string, boost::any>& opts)
+{
+  return (bool)opts.count("localDBCreate_std::string");
+}
+
+std::string getLocalDBCreate(const std::map<std::string, boost::any>& opts)
+{
+  std::string result("");
+  if (isLocalDBCreate(opts)) {
+    result = any_cast<std::string>(opts.at("localDBCreate_std::string"));
+  }
+  return result;
+}
+
+const char* getUnpackerConfigFile(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<std::string>(opts.at("unpackerConfigFile_std::string")).c_str();
+}
+
+const char* getUnpackerCalibFile(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<std::string>(opts.at("unpackerCalibFile_std::string")).c_str();
+}
+
+OptionsStrAny resetEventRange(const OptionsStrAny& srcOpts)
+{
+  OptionsStrAny opts(srcOpts);
+  opts.at("firstEvent_int") = -1;
+  opts.at("lastEvent_int") = -1;
+  return opts;
+}
+
+void printOptionsToLog(const OptionsStrAny& opts, const std::string& firstLine)
+{
+  if (!firstLine.empty()) {
+    INFO(firstLine.c_str());
+  }
+  INFO("Current options:");
+  auto stringOptions = JPetOptionsTypeHandler::anyMapToStringMap(opts);
+  for (const auto& el : stringOptions) {
+    INFO(el.first + "=" + el.second);
+  }
+
+}
+
 }

@@ -28,22 +28,35 @@ class JPetOptionsGenerator;
 #include "boost/program_options.hpp" // Library parsing command line arguments
 #include <boost/any.hpp>
 
-#include "../JPetOptions/JPetOptions.h"
-#include "../JPetOption/JPetOption.h"
 #include "../JPetOptionValidator/JPetOptionValidator.h"
+#include "../JPetOptions/JPetOptionsTools.h"
+
 
 namespace po = boost::program_options;
 
 class JPetOptionsGenerator
 {
 public:
+  using OptsStrAny = std::map<std::string, boost::any>;
+  using OptsForTasks =  std::vector<OptsStrAny>;
+  using OptsForFiles = std::map<std::string, OptsForTasks>;
+
   using OptNameValPair = std::pair<std::string, boost::any>;
   using Transformer = std::function<OptNameValPair(boost::any opt)>;
   using CmdLineArgs = po::variables_map;
 
   JPetOptionsGenerator();
 
-  std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap);
+  OptsForFiles generateOptions(const po::variables_map& cmdLineArgs, int nbOfRegisteredTasks = 1);
+
+  ///Method generates the options set: option_name->value based on the input sets of command line args.
+  ///Also missing options are added from the default set.
+  std::map<std::string, boost::any> generateAndValidateOptions(const po::variables_map& cmdLineArgs);
+
+  static OptsStrAny transformToStrAnyMap(const po::variables_map& variablesMap);
+  ///Methods add type suffixes to the elements of the map
+  static OptsStrAny addTypeSuffixes(const OptsStrAny& oldMap);
+
   std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap) const;
 
   void addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, boost::any>& options) const;
@@ -54,7 +67,6 @@ public:
   bool isOptionSet(const std::map<std::string, boost::any>& optionsMap, const std::string& option) const;
   boost::any getOptionValue(const std::map<std::string, boost::any>& optionsMap, std::string option) const;
 
-  std::map<std::string, boost::any> variablesMapToOption(const po::variables_map& variablesMap);
   std::map<std::string, std::vector<Transformer> > generateTransformationMap() const;
   void addTransformFunction(const std::string& name, Transformer transformFunction);
 
@@ -71,23 +83,17 @@ public:
   /// the input path must be changed if
   /// the output path argument -o was given, because the input
   /// data for them will lay in the location defined by -o.
-  static std::vector<JPetOptions> setCorrectRangeAndOutputForNonFirstOption(const std::vector<JPetOptions>& oldOptions);
+  static std::vector<jpet_options_tools::OptionsStrAny> setCorrectRangeAndOutputForNonFirstOption(const std::vector<jpet_options_tools::OptionsStrAny>& oldOptions);
 
-  static std::map<std::string, boost::any> getDefaultOptions()
-  {
-    return kDefaultOptions;
-  }
+  static std::map<std::string, boost::any> getDefaultOptions();
   std::vector<std::string> getVectorOfOptionFromUser() const;
-
-  JPetOptionValidator& getValidator();
 
 protected:
   static std::map<std::string, boost::any> kDefaultOptions;
+  static std::map<std::string, std::string> kOptCmdLineNameToExtendedName;
+
 private:
   std::map<std::string, std::vector<Transformer> > fTransformationMap;
   std::vector<std::string> fVectorOfOptionFromUser;
-  JPetOptionValidator fValidator;
-
-
 };
 #endif
