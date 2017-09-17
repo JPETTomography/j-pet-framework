@@ -10,12 +10,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetOptions2.cpp
+ *  @file JPetOptionsTransformators.h
  */
 
-#include "./JPetOptions2.h"
+#ifndef JPETOPTIONSTRANSFORMATORS_H
+#define JPETOPTIONSTRANSFORMATORS_H
 
-JPetOptions2::JPetOptions2(const Options& opts):
-  fOptions(opts)
+#include <boost/any.hpp>
+
+namespace jpet_options_tools
 {
+std::pair <std::string, boost::any>appendSlash(boost::any option);
+std::pair <std::string, boost::any>setInputFileType(boost::any option);
+std::pair <std::string, boost::any>generateLowerEventBound(boost::any option);
+std::pair <std::string, boost::any>generateHigherEventBound(boost::any option);
 }
+#endif /*  !JPETOPTIONSTRANSFORMATORS_H */
