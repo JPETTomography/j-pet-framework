@@ -15,10 +15,8 @@
 
 #include "JPetCmdParser.h"
 #include <iostream>
-#include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetLoggerInclude.h"
-#include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include <stdexcept>
+#include "../JPetLoggerInclude.h"
 
 
 JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
@@ -44,7 +42,7 @@ JPetCmdParser::~JPetCmdParser()
 }
 
 
-po::variables_map JPetCmdParser::parseCmdLineArgs(int argc, const char** argv)
+po::variables_map JPetCmdParser::parseCmdLineArgs(int argc, const char** argv) const
 {
   po::variables_map variablesMap;
   if (argc == 1) {
@@ -62,5 +60,3 @@ po::variables_map JPetCmdParser::parseCmdLineArgs(int argc, const char** argv)
   po::notify(variablesMap);
   return variablesMap;
 }
-
-//#endif /* __CINT__ */
