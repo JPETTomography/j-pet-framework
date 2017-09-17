@@ -23,7 +23,7 @@
 
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetParamsInterface/JPetParamsInterface.h"
-#include "../JPetOptions/JPetOptionsTools.h"
+#include "../JPetOptionsTools/JPetOptionsTools.h"
 
 
 
@@ -34,14 +34,14 @@ public:
 
   JPetParams();
   /// JPetParams shares ownership of the JPetParamManager instance.
-  JPetParams(const jpet_options_tools::OptionsStrAny& opts, std::shared_ptr<JPetParamManager> mgr);
+  JPetParams(const jpet_options_tools::OptsStrAny& opts, std::shared_ptr<JPetParamManager> mgr);
 
-  jpet_options_tools::OptionsStrAny getOptions() const;
+  jpet_options_tools::OptsStrAny getOptions() const;
   JPetParamManager* getParamManager() const;
   void setParamManager(std::shared_ptr<JPetParamManager> mgr);
 
 protected:
-  jpet_options_tools::OptionsStrAny fOptions;
+  jpet_options_tools::OptsStrAny fOptions;
   std::shared_ptr<JPetParamManager> fParamManager;
 };
 #endif /*  !JPETPARAMS_H */

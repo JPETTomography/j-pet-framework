@@ -237,6 +237,7 @@ std::map<std::string, boost::any>  JPetOptionsGenerator::addMissingDefaultOption
   std::map<std::string, boost::any> newOptions(oldOptions);
   auto defaultOptions = JPetOptionsGenerator::getDefaultOptions();
   newOptions.insert(defaultOptions.begin(), defaultOptions.end());
+  return newOptions;
 }
 
 std::map<std::string, boost::any> JPetOptionsGenerator::getDefaultOptions()

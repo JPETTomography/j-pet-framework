@@ -18,7 +18,9 @@
 #include "../JPetTaskLoader/JPetTaskLoader.h"
 #include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
-#include "../JPetOptions/JPetOptionsTools.h"
+#include "../JPetOptionsTools/JPetOptionsTools.h"
+#include "../JPetCommonTools/JPetCommonTools.h"
+
 
 bool JPetTaskChainExecutorUtils::process(const JPetParams& params, std::list<JPetTaskInterface*>& tasks)
 {
@@ -48,16 +50,16 @@ bool JPetTaskChainExecutorUtils::process(const JPetParams& params, std::list<JPe
   auto unpackerConfigFile = getUnpackerConfigFile(options);
   auto unpackerCalibFile = getUnpackerCalibFile(options);
 
-  if (inputFileType == JPetOptions::kScope) {
+  if (inputFileType == FileTypeChecker::kScope) {
     //JPetScopeLoader* module = new JPetScopeLoader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
     //module->setParamManager(paramMgr);
     //tasks.push_front(module);
-  } else if (inputFileType == JPetOptions::kHld) {
+  } else if (inputFileType == FileTypeChecker::kHld) {
     unpackFile(inputFile, getTotalEvents(options), unpackerConfigFile, unpackerCalibFile);
   }
   /// Assumption that if the file is zipped than it is in the hld format
   /// and we will also unpack if from hld  after unzipping.
-  else if ( inputFileType == JPetOptions::kZip) {
+  else if ( inputFileType == FileTypeChecker::kZip) {
     INFO( std::string("Unzipping file before unpacking") );
     if ( !unzipFile(inputFile) ) {
       ERROR( std::string("Problem with unpacking file: ") + inputFile );
@@ -69,7 +71,7 @@ bool JPetTaskChainExecutorUtils::process(const JPetParams& params, std::list<JPe
     }
   }
 
-  if (FileTypeChecker::getInputFileType(options) == JPetOptions::kUndefinedFileType) {
+  if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kUndefinedFileType) {
     ERROR( Form("Unknown file type provided for file: %s", getInputFile(options)) );
     return false;
   }

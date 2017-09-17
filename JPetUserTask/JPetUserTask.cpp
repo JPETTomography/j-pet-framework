@@ -14,6 +14,7 @@
  */
 
 #include "./JPetUserTask.h"
+#include "../JPetData/JPetData.h"
 
 JPetUserTask::JPetUserTask(const char* name):
   JPetTask(name)
@@ -26,8 +27,10 @@ bool JPetUserTask::init(const JPetParamsInterface& inOptions)
   return init(); /// virtual function must be defined in the descendent class
 }
 
-bool JPetUserTask::run()
+bool JPetUserTask::run(const JPetDataInterface& inData)
 {
+  auto event = dynamic_cast<const JPetData&>(inData);
+  setEvent(&(event.getEvent()));
   return exec();
 }
 
