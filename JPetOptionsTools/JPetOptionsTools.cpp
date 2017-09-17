@@ -16,13 +16,13 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include "./JPetOptionsTools.h"
-#include "../JPetOptions/JPetOptions.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetLoggerInclude.h"
 #include "../JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 #include <typeinfo>
 
 namespace pt = boost::property_tree;
+using boost::any_cast;
 
 namespace jpet_options_tools
 {
@@ -257,7 +257,6 @@ std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap)
   }
 }
 
-
 OptsStrAny resetEventRange(const OptsStrAny& srcOpts)
 {
   OptsStrAny opts(srcOpts);
@@ -276,6 +275,34 @@ void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine)
   for (const auto& el : stringOptions) {
     INFO(el.first + "=" + el.second);
   }
+}
+
+std::vector<OptsStrAny> setCorrectRangeAndOutputForNonFirstOption(const std::vector<OptsStrAny>& oldOptions)
+{
+  std::vector<OptsStrAny> newOptions;
+  newOptions.reserve(oldOptions.size());
+  auto it = oldOptions.begin();
+  /// We don't change the first element
+  if (it != oldOptions.end()) {
+    newOptions.push_back(*it);
+    ++it;
+  }
+  /// we start with the second element, or it is already end.
+  for (; it != oldOptions.end(); ++it) {
+    auto currOpts = *it;
+    /// Ignore the event range options for all but the first task.
+    currOpts = resetEventRange(currOpts);
+    /// For all but the first task,
+    /// the input file must be changed if
+    /// the output path argument -o was given, because the input
+    /// data for them will lay in the location defined by -o.
+    std::string outPath  = getOutputPath(currOpts);
+    if (!outPath.empty()) {
+      currOpts.at("inputFile_std::string") = outPath + JPetCommonTools::extractFileNameFromFullPath(getInputFile(currOpts));
+    }
+    newOptions.push_back(currOpts);
+  }
+  return newOptions;
 }
 
 }

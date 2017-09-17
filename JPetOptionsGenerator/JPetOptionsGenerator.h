@@ -25,7 +25,7 @@ class JPetOptionsGenerator;
 #include "boost/program_options.hpp" // Library parsing command line arguments
 #include <boost/any.hpp>
 
-#include "../JPetOptions/JPetOptionsTools.h"
+#include "../JPetOptionsTools/JPetOptionsTools.h"
 
 
 namespace po = boost::program_options;
@@ -54,28 +54,14 @@ public:
   /// Methods add type suffixes to the elements of
   /// the map according to the key name.
   static OptsStrAny addTypeSuffixes(const OptsStrAny& oldMap);
+  static OptsStrAny getDefaultOptions();
+  static OptsStrAny addMissingDefaultOptions(const OptsStrAny& options);
 
-  void addNewOptionsFromCfgFile(const std::string& cfgFile, OptsStrAny& options) const;
-  void addMissingDefaultOptions(OptsStrAny& options) const;
-
+  OptsStrAny transformOptions(const OptsStrAny& optionsMap) const;
   std::map<std::string, std::vector<Transformer> > generateTransformationMap() const;
   void addTransformFunction(const std::string& name, Transformer transformFunction);
-  std::map<std::string, boost::any> transformOptions(OptsStrAny& optionsMap) const;
 
-  static std::pair <std::string, boost::any>appendSlash(boost::any option);
-  static std::pair <std::string, boost::any>setInputFileType(boost::any option);
-  static std::pair <std::string, boost::any>getLowerEventBound(boost::any option);
-  static std::pair <std::string, boost::any>getHigherEventBound(boost::any option);
-
-  ///@todo that should be moved to tools
-  /// Ignore the event range options for all but the first task.
-  /// For all but the first task,
-  /// the input path must be changed if
-  /// the output path argument -o was given, because the input
-  /// data for them will lay in the location defined by -o.
-  static std::vector<OptsStrAny> setCorrectRangeAndOutputForNonFirstOption(const std::vector<OptsStrAny>& oldOptions);
-  static OptsStrAny getDefaultOptions();
-
+  void addNewOptionsFromCfgFile(const std::string& cfgFile, OptsStrAny& options) const;
   std::vector<std::string> getVectorOfOptionFromUser() const;
   void createMapOfBoolOptionFromUser(const OptsStrAny& optionsMap);
 
