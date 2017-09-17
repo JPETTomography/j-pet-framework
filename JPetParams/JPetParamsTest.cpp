@@ -5,7 +5,6 @@
 
 #include "../JPetParams/JPetParams.h"
 
-
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE(defaultConstr)
@@ -18,7 +17,7 @@ BOOST_AUTO_TEST_CASE(defaultConstr)
 
 BOOST_AUTO_TEST_CASE(nonDefaultConstr)
 {
-  jpet_options_tools::OptionsStrAny opts;
+  jpet_options_tools::OptsStrAny opts;
   opts["blaOption"] = "value";
   auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager);
   JPetParams params(opts, mgr);
@@ -28,7 +27,7 @@ BOOST_AUTO_TEST_CASE(nonDefaultConstr)
 
 BOOST_AUTO_TEST_CASE(copyCtr)
 {
-  jpet_options_tools::OptionsStrAny opts;
+  jpet_options_tools::OptsStrAny opts;
   opts["blaOption"] = "value";
   auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager);
   JPetParams params(opts, mgr);
@@ -39,7 +38,7 @@ BOOST_AUTO_TEST_CASE(copyCtr)
 
 BOOST_AUTO_TEST_CASE(memoryLeaks)
 {
-  jpet_options_tools::OptionsStrAny opts;
+  jpet_options_tools::OptsStrAny opts;
   opts["blaOption"] = "value";
   JPetParams* params = new JPetParams(opts, std::make_shared<JPetParamManager>(new JPetParamManager));
   auto mgr = params->getParamManager();
