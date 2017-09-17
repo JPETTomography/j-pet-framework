@@ -17,6 +17,7 @@
 #define JPETOPTIONSTOOLS_H
 #include <map>
 #include <boost/any.hpp>
+#include "../JPetOptionsTools/JPetOptionsTransformators.h"
 
 /**
  * @brief Set of helper methods to operate on options provided by users.
@@ -84,10 +85,15 @@ std::string getConfigFileName(const OptsStrAny& optsMap);
 
 ///Functions returning the sets of changed options
 OptsStrAny resetEventRange(const OptsStrAny& srcOpts);
+/// Ignore the event range options for all but the first task.
+/// For all but the first task,
+/// the input path must be changed if
+/// the output path argument -o was given, because the input
+/// data for them will lay in the location defined by -o.
+std::vector<OptsStrAny> setCorrectRangeAndOutputForNonFirstOption(const std::vector<OptsStrAny>& oldOptions);
 
 bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile = "");
 OptsStrAny createOptionsFromConfigFile(const std::string& inFile);
-
 
 }
 #endif /*  !JPETOPTIONSTOOLS_H */

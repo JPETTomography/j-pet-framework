@@ -22,7 +22,6 @@
 #include "JPetOptionsGenerator.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetLoggerInclude.h"
-#include "../JPetOptions/JPetOptionsTools.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include "../JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 #include "../JPetOptionValidator/JPetOptionValidator.h"
@@ -129,7 +128,7 @@ JPetOptionsGenerator::OptsForFiles JPetOptionsGenerator::generateOptions(const p
   /// Finally, multiple the options for every task.
   for (const auto& el : optionsPerFile) {
     std::vector<OptsStrAny>  currOpts(nbOfRegisteredTasks, el.second);
-    optsForAllFiles[el.first] = JPetOptionsGenerator::setCorrectRangeAndOutputForNonFirstOption(currOpts);
+    optsForAllFiles[el.first] = setCorrectRangeAndOutputForNonFirstOption(currOpts);
   }
   return optsForAllFiles;
 }
@@ -149,7 +148,7 @@ JPetOptionsGenerator::OptsStrAny JPetOptionsGenerator::generateAndValidateOption
   }
   createMapOfBoolOptionFromUser(options);
 
-  addMissingDefaultOptions(options);
+  options = addMissingDefaultOptions(options);
   options = transformOptions(options);
 
   if (!validator.areCorrectOptions(options, fVectorOfOptionFromUser)) {
@@ -161,36 +160,6 @@ JPetOptionsGenerator::OptsStrAny JPetOptionsGenerator::generateAndValidateOption
 std::vector<std::string> JPetOptionsGenerator::getVectorOfOptionFromUser() const
 {
   return fVectorOfOptionFromUser;
-}
-
-std::pair <std::string, boost::any>JPetOptionsGenerator::appendSlash(boost::any option)
-{
-  auto path = JPetCommonTools::appendSlashToPathIfAbsent(any_cast<std::string>(option));
-  return std::make_pair("outputPath_std::string", path);
-}
-
-std::pair <std::string, boost::any>JPetOptionsGenerator::getLowerEventBound(boost::any option)
-{
-  int firstEvent = any_cast<std::vector<int>>(option)[0];
-  if (firstEvent >= 0) {
-    return std::make_pair("firstEvent_int", firstEvent);
-  } else
-    return std::make_pair("wrongFirstEvent_int", -1);
-}
-
-std::pair <std::string, boost::any>JPetOptionsGenerator::getHigherEventBound(boost::any option)
-{
-  int lastEvent = any_cast<std::vector<int>>(option)[1];
-  if (lastEvent >= 0) {
-    return std::make_pair("lastEvent_int", lastEvent);
-  } else
-    return std::make_pair("wrongLastEvent_int", -1);
-}
-
-std::pair <std::string, boost::any>JPetOptionsGenerator::setInputFileType(boost::any option)
-{
-  auto inputFileType = any_cast<std::string>(option);
-  return std::make_pair("inputFileType_std::string", inputFileType);
 }
 
 
@@ -223,8 +192,8 @@ std::map<std::string, std::vector<JPetOptionsGenerator::Transformer> > JPetOptio
 {
   std::map<std::string, std::vector<Transformer> > transformationMap;
   transformationMap["outputPath_std::string"].push_back(appendSlash);
-  transformationMap["range_std::vector<int>"].push_back(getLowerEventBound);
-  transformationMap["range_std::vector<int>"].push_back(getHigherEventBound);
+  transformationMap["range_std::vector<int>"].push_back(generateLowerEventBound);
+  transformationMap["range_std::vector<int>"].push_back(generateHigherEventBound);
   transformationMap["type_std::string"].push_back(setInputFileType);
   return transformationMap;
 }
@@ -241,17 +210,18 @@ void JPetOptionsGenerator::createMapOfBoolOptionFromUser(const std::map<std::str
   }
 }
 
-std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(std::map<std::string, boost::any>& optionsMap) const
+std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(const std::map<std::string, boost::any>& oldOptionsMap) const
 {
+  std::map<std::string, boost::any> newOptionsMap(oldOptionsMap);
   for (auto& validGroup : fTransformationMap) {
-    if (optionsMap.count(validGroup.first)) {
+    if (newOptionsMap.count(validGroup.first)) {
       for (auto& validFunct : validGroup.second) {
-        auto transformed = validFunct(optionsMap.at(validGroup.first));
-        optionsMap[transformed.first] = transformed.second;
+        auto transformed = validFunct(newOptionsMap.at(validGroup.first));
+        newOptionsMap[transformed.first] = transformed.second;
       }
     }
   }
-  return optionsMap;
+  return newOptionsMap;
 }
 
 /// We add additional options to already existing one.
@@ -262,39 +232,11 @@ void JPetOptionsGenerator::addNewOptionsFromCfgFile(const std::string& cfgFile, 
   options.insert(optionsFromJson.begin(), optionsFromJson.end());
 }
 
-
-void JPetOptionsGenerator::addMissingDefaultOptions(std::map<std::string, boost::any>& options) const
+std::map<std::string, boost::any>  JPetOptionsGenerator::addMissingDefaultOptions(const std::map<std::string, boost::any>& oldOptions)
 {
+  std::map<std::string, boost::any> newOptions(oldOptions);
   auto defaultOptions = JPetOptionsGenerator::getDefaultOptions();
-  options.insert(defaultOptions.begin(), defaultOptions.end());
-}
-
-std::vector<OptsStrAny> JPetOptionsGenerator::setCorrectRangeAndOutputForNonFirstOption(const std::vector<OptsStrAny>& oldOptions)
-{
-  std::vector<OptsStrAny> newOptions;
-  newOptions.reserve(oldOptions.size());
-  auto it = oldOptions.begin();
-  /// We don't change the first element
-  if (it != oldOptions.end()) {
-    newOptions.push_back(*it);
-    ++it;
-  }
-  /// we start with the second element, or it is already end.
-  for (; it != oldOptions.end(); ++it) {
-    auto currOpts = *it;
-    /// Ignore the event range options for all but the first task.
-    currOpts = resetEventRange(currOpts);
-    /// For all but the first task,
-    /// the input file must be changed if
-    /// the output path argument -o was given, because the input
-    /// data for them will lay in the location defined by -o.
-    std::string outPath  = getOutputPath(currOpts);
-    if (!outPath.empty()) {
-      currOpts.at("inputFile_std::string") = outPath + JPetCommonTools::extractFileNameFromFullPath(getInputFile(currOpts));
-    }
-    newOptions.push_back(currOpts);
-  }
-  return newOptions;
+  newOptions.insert(defaultOptions.begin(), defaultOptions.end());
 }
 
 std::map<std::string, boost::any> JPetOptionsGenerator::getDefaultOptions()
