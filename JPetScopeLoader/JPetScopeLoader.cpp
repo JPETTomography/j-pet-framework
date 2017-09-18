@@ -48,7 +48,6 @@
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
 
-#include "../JPetOptions2/JPetOptions2.h"
 
 #include <iostream>
 
@@ -74,32 +73,32 @@ JPetScopeLoader::~JPetScopeLoader()
 
 bool JPetScopeLoader::createInputObjects(const char*)
 {
-  JPetScopeConfigParser confParser;
-  auto config = confParser.getConfig(fOptions.getScopeConfigFile());
+  //JPetScopeConfigParser confParser;
+  //auto config = confParser.getConfig(fOptions.getScopeConfigFile());
 
-  auto prefix2PM =  getPMPrefixToPMIdMap();
-  std::map<std::string, int> inputScopeFiles = createInputScopeFileNames(fOptions.getScopeInputDirectory(), prefix2PM);
-  auto task = dynamic_cast<JPetScopeTask*>(fTask);
-  task->setInputFiles(inputScopeFiles);
+  //auto prefix2PM =  getPMPrefixToPMIdMap();
+  //std::map<std::string, int> inputScopeFiles = createInputScopeFileNames(fOptions.getScopeInputDirectory(), prefix2PM);
+  //auto task = dynamic_cast<JPetScopeTask*>(fTask);
+  //task->setInputFiles(inputScopeFiles);
 
 
-  // create an object for storing histograms and counters during processing
-  fStatistics = new JPetStatistics();
-  assert(fStatistics);
-  fHeader = new JPetTreeHeader(fOptions.getRunNumber());
-  assert(fHeader);
-  fHeader->setBaseFileName(fOptions.getInputFile());
-  fHeader->addStageInfo(task->GetName(), task->GetTitle(), 0, JPetCommonTools::getTimeString());
-  //fHeader->setSourcePosition((*fIter).pCollPosition);
+  //// create an object for storing histograms and counters during processing
+  //fStatistics = new JPetStatistics();
+  //assert(fStatistics);
+  //fHeader = new JPetTreeHeader(fOptions.getRunNumber());
+  //assert(fHeader);
+  //fHeader->setBaseFileName(fOptions.getInputFile());
+  //fHeader->addStageInfo(task->GetName(), task->GetTitle(), 0, JPetCommonTools::getTimeString());
+  ////fHeader->setSourcePosition((*fIter).pCollPosition);
   return true;
 }
 
 std::map<std::string, int> JPetScopeLoader::getPMPrefixToPMIdMap() const
 {
   std::map< std::string, int> prefixToId;
-  for (const auto&   pm : fParamManager->getParamBank().getPMs()) {
-    prefixToId[pm.second->getDescription()] = pm.first;
-  }
+  //for (const auto&   pm : fParamManager->getParamBank().getPMs()) {
+  //prefixToId[pm.second->getDescription()] = pm.first;
+  //}
   return prefixToId;
 }
 
@@ -152,34 +151,34 @@ bool JPetScopeLoader::isCorrectScopeFileName(const std::string& filename) const
   return regex_match(filename, pattern);
 }
 
-bool JPetScopeLoader::init(const JPetOptions::Options& opts)
+bool JPetScopeLoader::init(const JPetParamsInterface& opts)
 {
-  INFO( "Initialize Scope Loader Module." );
-  JPetTaskLoader::init(opts);
+  //INFO( "Initialize Scope Loader Module." );
+  //JPetTaskLoader::init(opts);
   return true;
 }
 
-bool JPetScopeLoader::exec()
+bool JPetScopeLoader::run(const JPetDataInterface& inData)
 {
-  assert(fTask);
-  fTask->setParamManager(fParamManager);
-  JPetTaskInterface::Options emptyOpts;
-  fTask->init(JPetOptions2(emptyOpts));
-  fTask->exec();
-  fTask->terminate();
+  //assert(fTask);
+  //fTask->setParamManager(fParamManager);
+  //JPetTaskInterface::Options emptyOpts;
+  //fTask->init(JPetOptions2(emptyOpts));
+  //fTask->exec();
+  //fTask->terminate();
   return true;
 }
 
-bool JPetScopeLoader::terminate()
+bool JPetScopeLoader::terminate(JPetParamsInterface& opts)
 {
-  assert(fWriter);
-  assert(fHeader);
-  assert(fStatistics);
-  fWriter->writeHeader(fHeader);
-  fWriter->writeCollection(fStatistics->getStatsTable(), "Stats");
-  //store the parametric objects in the ouptut ROOT file
-  getParamManager().saveParametersToFile(fWriter);
-  getParamManager().clearParameters();
-  fWriter->closeFile();
+  //assert(fWriter);
+  //assert(fHeader);
+  //assert(fStatistics);
+  //fWriter->writeHeader(fHeader);
+  //fWriter->writeCollection(fStatistics->getStatsTable(), "Stats");
+  ////store the parametric objects in the ouptut ROOT file
+  //getParamManager().saveParametersToFile(fWriter);
+  //getParamManager().clearParameters();
+  //fWriter->closeFile();
   return true;
 }

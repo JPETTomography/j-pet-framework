@@ -25,13 +25,13 @@ BOOST_AUTO_TEST_SUITE(JPetScopeTaskTestTestSuite)
 
 BOOST_AUTO_TEST_CASE(defaultConstructor)
 {
-  JPetScopeTask sTask("blabla", "ble");
+  JPetScopeTask sTask("blabla");
   ///check all gets
 }
 
 BOOST_AUTO_TEST_CASE(getTimeWindowIndex)
 {
-  JPetScopeTask sTask("testScopeTask", "It is a test scope task");
+  JPetScopeTask sTask("testScopeTask");
   ///always 4th character if it is a number or digit
   BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex(""), -1);
   BOOST_REQUIRE_EQUAL(sTask.getTimeWindowIndex("02"), -1);
@@ -49,14 +49,14 @@ BOOST_AUTO_TEST_CASE(getTimeWindowIndex)
 
 BOOST_AUTO_TEST_CASE(getFilesInTimeWindowOrder)
 {
-  JPetScopeTask testTask("testScopeTask", "It is a test scope task");
+  JPetScopeTask testTask("testScopeTask");
   BOOST_REQUIRE(testTask.getFilesInTimeWindowOrder({}).empty());
   auto result = testTask.getFilesInTimeWindowOrder({std::make_pair("C1_0003.txt", 5)});
   BOOST_REQUIRE_EQUAL(result.size(), 1u);
   BOOST_REQUIRE_EQUAL(result.find("C1_0003.txt")->second, 5);
-  std::map<std::string, int> inputMap = {std::make_pair("C1_0003.txt", 1), 
-                                          std::make_pair("C1_0001.txt", 7),
-                                          std::make_pair("C2_0003.txt", 5)
+  std::map<std::string, int> inputMap = {std::make_pair("C1_0003.txt", 1),
+                                         std::make_pair("C1_0001.txt", 7),
+                                         std::make_pair("C2_0003.txt", 5)
                                         };
   auto result2 = testTask.getFilesInTimeWindowOrder(inputMap);
   BOOST_REQUIRE_EQUAL(result2.size(), 3u);
@@ -70,8 +70,8 @@ BOOST_AUTO_TEST_CASE(getFilesInTimeWindowOrder)
   iterBeg++;
   obtainedFiles.insert(iterBeg->first);
   obtainedIds.insert(iterBeg->second);
-  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedFiles.begin(), obtainedFiles.end(),expectedFiles.begin(), expectedFiles.end());
-  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedIds.begin(), obtainedIds.end(),expectedIds.begin(), expectedIds.end());
-  
+  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedFiles.begin(), obtainedFiles.end(), expectedFiles.begin(), expectedFiles.end());
+  BOOST_REQUIRE_EQUAL_COLLECTIONS(obtainedIds.begin(), obtainedIds.end(), expectedIds.begin(), expectedIds.end());
+
 }
 BOOST_AUTO_TEST_SUITE_END()

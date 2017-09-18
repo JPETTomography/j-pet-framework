@@ -25,6 +25,5 @@ public:
   virtual ~JPetTaskRunnerInterface() {};
   virtual void setTask(JPetTaskInterface*) = 0;
   virtual JPetTaskInterface* getTask() const = 0;
-  virtual void runTask() = 0;
 };
 #endif /*  !JPETTASKRUNNERINTERFACE_H */
