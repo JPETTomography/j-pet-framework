@@ -77,3 +77,8 @@ void JPetEvent::addEventType(JPetEventType type)
     fType = static_cast<JPetEventType>(fType | type); /// adding flag to the existing one
   }
 }
+
+void JPetEvent::Clear(Option_t *){
+  fType = kUnknown;
+  fHits.clear();
+}

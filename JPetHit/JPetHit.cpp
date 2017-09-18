@@ -218,16 +218,10 @@ bool JPetHit::checkConsistency() const
     return false;
   }
 
-  if ( getSignalA().getTimeWindowIndex() != getSignalB().getTimeWindowIndex() ) {
-    ERROR( Form("Signals added to Hit come from different time windows: %d and %d." ,
-                getSignalA().getTimeWindowIndex(), getSignalB().getTimeWindowIndex()) );
-    return false;
-  }
-
   return true;
 }
 
-void JPetHit::setSignals(JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB)
+void JPetHit::setSignals(const JPetPhysSignal& p_sigA, const JPetPhysSignal& p_sigB)
 {
   fSignalA = p_sigA;
   fIsSignalAset = true;
@@ -237,7 +231,7 @@ void JPetHit::setSignals(JPetPhysSignal& p_sigA, JPetPhysSignal& p_sigB)
     return;
 }
 
-void JPetHit::setSignalA(JPetPhysSignal& p_sig)
+void JPetHit::setSignalA(const JPetPhysSignal& p_sig)
 {
   fSignalA = p_sig;
   fIsSignalAset = true;
@@ -245,7 +239,7 @@ void JPetHit::setSignalA(JPetPhysSignal& p_sig)
     return;
 }
 
-void JPetHit::setSignalB(JPetPhysSignal& p_sig)
+void JPetHit::setSignalB(const JPetPhysSignal& p_sig)
 {
   fSignalB = p_sig;
   fIsSignalBset = true;
@@ -253,7 +247,19 @@ void JPetHit::setSignalB(JPetPhysSignal& p_sig)
     return;
 }
 
-unsigned int JPetHit::getTimeWindowIndex() const
-{
-  return getSignalA().getTimeWindowIndex();
+void JPetHit::Clear(Option_t *){
+  fEnergy = 0.0f;
+  fQualityOfEnergy = 0.0f;
+  fTime = 0.0f;
+  fQualityOfTime = 0.0f;
+  fTimeDiff = 0.0f;
+  fQualityOfTimeDiff = 0.0f;
+  fPos = TVector3();
+  fSignalA = JPetPhysSignal();
+  fSignalB = JPetPhysSignal();
+  fIsSignalAset = false;
+  fIsSignalBset = false;
+  
+  fBarrelSlot = NULL;
+  fScintillator = NULL;
 }

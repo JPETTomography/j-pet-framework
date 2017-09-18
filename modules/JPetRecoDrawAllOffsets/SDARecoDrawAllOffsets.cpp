@@ -4,9 +4,9 @@
 #include <sstream>
 #include <TLegend.h>
 using namespace std;
-SDARecoDrawAllOffsets::SDARecoDrawAllOffsets(const char* name, const char* description): JPetTask(name, description) {}
+SDARecoDrawAllOffsets::SDARecoDrawAllOffsets(const char* name): JPetUserTask(name) {}
 SDARecoDrawAllOffsets::~SDARecoDrawAllOffsets() {}
-void SDARecoDrawAllOffsets::init(const JPetOptionsInterface&)
+bool SDARecoDrawAllOffsets::init()
 {
   const auto& paramBank = getParamBank();
   fNumberOfPMTs = paramBank.getPMsSize();
@@ -16,20 +16,22 @@ void SDARecoDrawAllOffsets::init(const JPetOptionsInterface&)
     vector<double> k;
     fOffsets.push_back( k);
   }
+  return true;
 }
 
-void SDARecoDrawAllOffsets::exec()
+bool SDARecoDrawAllOffsets::exec()
 {
-  if (auto signal = dynamic_cast<const JPetRecoSignal* const>(getEvent()))
+  if (auto signal = dynamic_cast<const JPetRecoSignal* const>(fEvent))
     for (unsigned int j = 0; j < fNumberOfPMTs; j++)
       if ( (signal->getPM().getID()) == fIDs[j] ) {
         fOffset = signal->getOffset();
         fOffsets[j].push_back(fOffset);
         break;
       }
+  return true;
 }
 
-std::unique_ptr<JPetOptionsInterface> SDARecoDrawAllOffsets::terminate()
+bool SDARecoDrawAllOffsets::terminate()
 {
   auto c1 = new TCanvas();
   vector<double> minimums, maximums;
@@ -85,5 +87,5 @@ std::unique_ptr<JPetOptionsInterface> SDARecoDrawAllOffsets::terminate()
   }
   string title = "fOffsetsForAll.root";
   c1->SaveAs( title.c_str() );
-  return JPetTask::terminate();
+  return true;
 }

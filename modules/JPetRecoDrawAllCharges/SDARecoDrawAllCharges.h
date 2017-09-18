@@ -20,16 +20,16 @@
 
 #include <map>
 #include <TCanvas.h>
-#include "../../JPetTask/JPetTask.h"
+#include "../../JPetUserTask/JPetUserTask.h"
 
-class SDARecoDrawAllCharges: public JPetTask
+class SDARecoDrawAllCharges: public JPetUserTask
 {
 public:
-  SDARecoDrawAllCharges(const char* name, const char* description);
+  SDARecoDrawAllCharges(const char* name);
   virtual ~SDARecoDrawAllCharges();
-  virtual void init(const JPetOptionsInterface& inOptions) override;
-  virtual void exec()override;
-  virtual std::unique_ptr<JPetOptionsInterface> terminate() override;
+  virtual bool init() override;
+  virtual bool exec()override;
+  virtual bool terminate() override;
 private:
   std::map<int, TH1F*> fChargeHistos;
   std::map<int, std::vector<double> > fCharges;

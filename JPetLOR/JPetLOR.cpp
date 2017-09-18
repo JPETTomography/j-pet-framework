@@ -115,3 +115,12 @@ bool JPetLOR::isFromSameBarrelSlot() const {
 	}
 	return true;
 }
+
+void JPetLOR::Clear(Option_t *){
+  fTime = 0.0f;
+  fQualityOfTime = 0.0f;
+  fTimeDiff = 0.0f;
+  fQualityOfTimeDiff = 0.0f;
+  fIsHitSet[0] = false;
+  fIsHitSet[1] = false;  
+}

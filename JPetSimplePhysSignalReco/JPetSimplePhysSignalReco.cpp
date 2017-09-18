@@ -34,17 +34,13 @@ JPetSimplePhysSignalReco::~JPetSimplePhysSignalReco()
   /**/
 }
 
-void JPetSimplePhysSignalReco::exec()
+bool JPetSimplePhysSignalReco::exec()
 {
-  // Get a Reco Signal
-  auto currSignal = (JPetRecoSignal&) (*getEvent());
-  savePhysSignal(createPhysSignal(currSignal));
+  return true;
 }
 
 void JPetSimplePhysSignalReco::savePhysSignal(JPetPhysSignal sig)
 {
-  assert(fWriter);
-  fWriter->write(sig);
 }
 
 JPetPhysSignal JPetSimplePhysSignalReco::createPhysSignal(JPetRecoSignal& recoSignal)
