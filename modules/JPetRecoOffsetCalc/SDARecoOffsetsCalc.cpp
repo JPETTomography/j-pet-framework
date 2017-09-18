@@ -18,17 +18,19 @@
 #include "../../tools/JPetRecoSignalTools/JPetRecoSignalTools.h"
 #include "SDARecoOffsetsCalc.h"
 
-SDARecoOffsetsCalc::SDARecoOffsetsCalc(const char* name, const char* description)
-  : JPetTask(name, description), fCurrentEventNumber(0) {}
+SDARecoOffsetsCalc::SDARecoOffsetsCalc(const char* name)
+  : JPetUserTask(name), fCurrentEventNumber(0) {}
 SDARecoOffsetsCalc::~SDARecoOffsetsCalc() {}
 
-void SDARecoOffsetsCalc::init(const JPetOptionsInterface&)
+bool SDARecoOffsetsCalc::init()
 {
   fBadSignals = 0;
+  return true;
 }
-void SDARecoOffsetsCalc::exec()
+
+bool SDARecoOffsetsCalc::exec()
 {
-  if (auto signal = dynamic_cast<const JPetRecoSignal* const>(getEvent())) {
+  if (auto signal = dynamic_cast<const JPetRecoSignal* const>(fEvent)) {
     fOffset = JPetRecoSignalTools::calculateOffset(*signal);
     if ( fOffset == JPetRecoSignalTools::ERRORS::badOffset ) {
       WARNING( Form("Problem with calculating fOffset for event: %d", fCurrentEventNumber) );
@@ -37,21 +39,19 @@ void SDARecoOffsetsCalc::exec()
     } else {
       auto signalWithOffset = *signal;
       signalWithOffset.setOffset(fOffset);
-      fWriter->write(signalWithOffset);
+      // @todo: replace with fOutputEvents
+      //      fWriter->write(signalWithOffset);
     }
     fCurrentEventNumber++;
   }
+  return true;
 }
 
-std::unique_ptr<JPetOptionsInterface> SDARecoOffsetsCalc::terminate()
+bool SDARecoOffsetsCalc::terminate()
 {
   int fEventNb = fCurrentEventNumber;
   double goodPercent = (fEventNb - fBadSignals) * 100.0 / fEventNb;
   INFO(Form("Amount of signals in input file: %d", fEventNb ) );
   INFO(Form("Offset calculation complete \nAmount of bad signals: %d \n %f %% of data is good" , fBadSignals, goodPercent) );
-  return JPetTask::terminate();
-}
-void SDARecoOffsetsCalc::setWriter(JPetWriter* writer)
-{
-  fWriter = writer;
+  return true;
 }
