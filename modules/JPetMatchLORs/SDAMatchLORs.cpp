@@ -15,8 +15,8 @@
 
 #include "SDAMatchLORs.h"
 using namespace std;
-SDAMatchLORs::SDAMatchLORs(const char* name, const char* description) : 
-  JPetTask(name, description),
+SDAMatchLORs::SDAMatchLORs(const char* name) : 
+  JPetUserTask(name),
   fMatched(0),
   fCurrentEventNumber(0)
 {
@@ -24,14 +24,15 @@ SDAMatchLORs::SDAMatchLORs(const char* name, const char* description) :
 
 SDAMatchLORs::~SDAMatchLORs(){}
 
-void SDAMatchLORs::init(const JPetOptionsInterface&)
+bool SDAMatchLORs::init()
 {
   fMatched=0;
   fCurrentEventNumber=0;  
+  return true;
 }
 
-void SDAMatchLORs::exec(){
-	if(auto currHit = dynamic_cast<const JPetHit*const>(getEvent())){
+bool SDAMatchLORs::exec(){
+	if(auto currHit = dynamic_cast<const JPetHit*const>(fEvent)){
 		if (fHitsArray.empty()) {
 			fHitsArray.push_back(*currHit);
 		} else {
@@ -45,16 +46,17 @@ void SDAMatchLORs::exec(){
 		}
 		fCurrentEventNumber++;
 	}
+	return true;
 }
 
 
-std::unique_ptr<JPetOptionsInterface> SDAMatchLORs::terminate()
+bool SDAMatchLORs::terminate()
 {
   int fEventNb = fCurrentEventNumber;
   INFO(Form("Matching complete \nAmount of LORs mathed: %d out of %d hits" , fMatched, fEventNb) );
   double goodPercent = fMatched* 100.0 /fEventNb ;
   INFO(Form("%f %% of data was matched \n " , goodPercent) );
-  return JPetTask::terminate();
+  return true;
 }
 
 vector<JPetLOR> SDAMatchLORs::createLORs(vector<JPetHit>& hits){
@@ -86,12 +88,10 @@ vector<JPetLOR> SDAMatchLORs::createLORs(vector<JPetHit>& hits){
 
 
 void SDAMatchLORs::saveLORs(std::vector<JPetLOR> lors){
-  assert(fWriter);
   fMatched += lors.size();
   for (auto&lor : lors) {
-    fWriter->write(lor);
+    // @todo: replace with fOutputEvents
+    //    fWriter->write(lor);
   }
 }
-void SDAMatchLORs::setWriter(JPetWriter* writer) {
-	fWriter = writer;
-}
+

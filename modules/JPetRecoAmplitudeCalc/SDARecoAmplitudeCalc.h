@@ -19,22 +19,19 @@
 #ifndef _JPETANALYSISMODULE_SDAAMPLITIDE_H_
 #define _JPETANALYSISMODULE_SDAAMPLITIDE_H_
 
-#include "../../JPetTask/JPetTask.h"
-#include "../../JPetWriter/JPetWriter.h"
+#include "../../JPetUserTask/JPetUserTask.h"
 
-class SDARecoAmplitudeCalc: public JPetTask
+class SDARecoAmplitudeCalc: public JPetUserTask
 {
 public:
-  SDARecoAmplitudeCalc(const char* name, const char* description);
+  SDARecoAmplitudeCalc(const char* name);
   virtual ~SDARecoAmplitudeCalc();
-  virtual void init(const JPetOptionsInterface& inOptions) override;
-  virtual void exec()override;
-  virtual std::unique_ptr<JPetOptionsInterface> terminate() override;
-  virtual void setWriter(JPetWriter* writer)override;
+  virtual bool init() override;
+  virtual bool exec() override;
+  virtual bool terminate() override;
 private:
   int fBadSignals;
   int fCurrentEventNumber;
-  JPetWriter* fWriter;
 };
 
 #endif
