@@ -56,8 +56,14 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
 
 bool JPetTaskIO::run(const JPetDataInterface& inData)
 {
-  assert(fSubTask);
-  assert(fReader);
+  if(!fSubTask) {
+    ERROR("No subTask set");
+    return false;
+  }
+  if(!fReader) {
+    ERROR("No reader set");
+    return false;
+  }
   fSubTask->init(fParams); //prepare current task for file
 
   auto totalEvents = 0ll;

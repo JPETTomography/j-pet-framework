@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(test2)
 
   BOOST_REQUIRE_EQUAL(chain->size(), 2u);
   JPetTaskChainExecutor taskExecutor(chain, 1, opts);
-  BOOST_REQUIRE(taskExecutor.process());
+  BOOST_REQUIRE(!taskExecutor.process());
   delete chain;
 }
 
