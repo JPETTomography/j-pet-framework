@@ -80,10 +80,18 @@ bool JPetTaskChainExecutor::process()
     currParamsIt++;
 
     INFO(Form("Starting task: %s", taskName.c_str()));
-
-    currentTask->init(currParams);
-    currentTask->run(nullDataObject);
-    currentTask->terminate(outputParams);
+    if (!currentTask->init(currParams)) {
+      ERROR("In task initialization");
+      return false;  
+    }
+    if (currentTask->run(nullDataObject)) {
+      ERROR("In task run()");
+      return false;  
+    }
+    if (currentTask->terminate(outputParams)) {
+      ERROR("In task terminate() ");
+      return false;  
+    }
 
     elapsedTime.push_back(std::make_pair("task " + taskName, stdc::duration_cast< stdc::seconds > (stdc::system_clock::now() - startTime)));
     INFO(Form("Finished task: %s", taskName.c_str()));
