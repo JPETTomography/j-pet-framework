@@ -27,7 +27,7 @@ public:
                  const char* out_file_type,
                  JPetTask* taskToExecute);
 
-  virtual bool init(const JPetOptions::Options& opts) override;
+  virtual bool init(const JPetParamsInterface& opts) override;
   virtual ~JPetTaskLoader();
 protected:
   std::string generateProperNameFile(const std::string& srcFilename, const std::string& fileType) const;
