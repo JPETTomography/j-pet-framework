@@ -30,7 +30,6 @@ public:
 
   virtual void exec();
   virtual void terminate();
-  virtual void setWriter(JPetWriter* writer) {fWriter =writer;}
   inline int getAlpha() const { return fAlpha; }
   inline float getThresholdSel() const { return fThresholdSel; }
   inline void setAlpha(int val) { fAlpha = val; }

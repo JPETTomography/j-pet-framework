@@ -22,7 +22,8 @@ JPetTask::JPetTask(const char* name, const char* description):
   fEvent(0),
   fParamManager(0),
   fStatistics(0),
-  fAuxilliaryData(0)
+  fAuxilliaryData(0),
+  fOutputEvents(0)
 {
 }
 

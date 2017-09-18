@@ -15,6 +15,7 @@
 
 #ifndef JPETTASK_H
 #define JPETTASK_H
+#include "../JPetTimeWindow/JPetTimeWindow.h"
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetStatistics/JPetStatistics.h"
@@ -34,7 +35,6 @@ public:
   virtual void setParamManager(JPetParamManager* paramManager) override;
   virtual void setStatistics(JPetStatistics* statistics);
   virtual void setAuxilliaryData(JPetAuxilliaryData* auxData);
-  virtual void setWriter(JPetWriter*) {};
   virtual void setEvent(TObject* ev);
   const JPetParamBank& getParamBank();
   JPetStatistics& getStatistics();
@@ -50,11 +50,16 @@ public:
     return fName.GetTitle();
   }
 
+  virtual JPetTimeWindow * getOutputEvents(){
+    return fOutputEvents;
+  }
+  
 protected:
   TNamed fName;
   TObject* fEvent;
   JPetParamManager* fParamManager;
   JPetStatistics* fStatistics;
   JPetAuxilliaryData* fAuxilliaryData;
+  JPetTimeWindow * fOutputEvents;
 };
 #endif /*  !JPETTASK_H */

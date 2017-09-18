@@ -71,7 +71,9 @@ void JPetTaskIO::exec()
     if (fOptions.isProgressBar()) {
       displayProgressBar(i, lastEvent);
     }
+    (dynamic_cast<JPetTask*>(fTask))->getOutputEvents()->Clear();
     fTask->exec();
+    fWriter->write(*((dynamic_cast<JPetTask*>(fTask))->getOutputEvents()));
     fReader->nextEvent();
   }
   fTask->terminate();
@@ -175,9 +177,7 @@ void JPetTaskIO::createOutputObjects(const char* outputFilename)
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
   if (fTask) {
-    //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
     auto task = dynamic_cast<JPetTask*>(fTask);
-    task->setWriter(fWriter);
     if (!fAuxilliaryData) {
       fAuxilliaryData = new JPetAuxilliaryData();
     }
