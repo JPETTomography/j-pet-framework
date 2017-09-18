@@ -16,19 +16,28 @@
 #ifndef JPETTASKRUNNER_H
 #define JPETTASKRUNNER_H
 
+#include <memory>
 #include "../JPetTaskInterface/JPetTaskInterface.h"
-#include "../JPetTaskRunnerInterface/JPetTaskRunnerInterface.h"
 
-class JPetTaskRunner: public JPetTaskRunnerInterface
+/**
+ * @brief Interface class representing a computing task unit which can contain some subtasks
+ * 
+ * *
+ */
+class JPetTaskRunner: public JPetTaskInterface
 {
 public:
   JPetTaskRunner();
   virtual ~JPetTaskRunner();
-  virtual void setTask(JPetTaskInterface* task);
-  virtual JPetTaskInterface* getTask() const;
-  virtual void runTask() = 0;
+  void setSubTask(std::unique_ptr<JPetTaskInterface> subtask) override;
+  JPetTaskInterface* getSubTask() const override;
+  virtual bool init(const JPetParamsInterface& inOptions) = 0;
+  virtual bool exec() = 0;
+  virtual bool terminate(JPetParamsInterface& outOptions) = 0;
+
 protected:
-  JPetTaskInterface* fTask; /// maybe as unique_ptr ?
+  std::unique_ptr<JPetTaskInterface> fTask;
+
 private:
   void operator=(const JPetTaskRunner&);
   JPetTaskRunner(const JPetTaskRunner&);
