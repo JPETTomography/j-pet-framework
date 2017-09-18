@@ -20,7 +20,7 @@
 #include <string>
 #include <map>
 
-#include "../JPetTask/JPetTask.h"
+#include "../JPetUserTask/JPetUserTask.h"
 #include "../JPetRawSignal/JPetRawSignal.h"
 #include "../JPetTimeWindow/JPetTimeWindow.h"
 #include "../JPetParamBank/JPetParamBank.h"
@@ -29,37 +29,43 @@
 class JPetWriter;
 struct cmpByTimeWindowIndex;
 
-class JPetScopeTask: public JPetTask
+class JPetScopeTask: public JPetUserTask
 {
 
 public:
-  JPetScopeTask(const char* name, const char* description);
-  virtual void exec();
+  JPetScopeTask(const char* name);
   static int getTimeWindowIndex(const std::string&  pathAndFileName);
   /// getting oscilloscope data full file names to process
-  inline std::map<std::string, int> getInputFiles() const {
-    return fInputFiles;    
+  inline std::map<std::string, int> getInputFiles() const
+  {
+    return fInputFiles;
   }
-  inline void setInputFiles(const std::map<std::string, int>& inputFiles) {
+  inline void setInputFiles(const std::map<std::string, int>& inputFiles)
+  {
     fInputFiles = inputFiles;
   }
 
-  virtual void setWriter(JPetWriter* writer) {
+  virtual void setWriter(JPetWriter* writer)
+  {
     fWriter = writer;
   }
 
   std::multimap<std::string, int, cmpByTimeWindowIndex> getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const;
 
 protected:
+  bool init() override;
+  bool exec() override;
+  bool terminate() override;
+
   std::map<std::string, int> fInputFiles;
   JPetWriter* fWriter;
 };
 
 struct cmpByTimeWindowIndex {
-    bool operator()(const std::string& a, const std::string& b) const {
-        return JPetScopeTask::getTimeWindowIndex(a) < JPetScopeTask::getTimeWindowIndex(b);
-    }
+  bool operator()(const std::string& a, const std::string& b) const
+  {
+    return JPetScopeTask::getTimeWindowIndex(a) < JPetScopeTask::getTimeWindowIndex(b);
+  }
 };
 
 #endif /*  !JPETSCOPETASK_H */
-
