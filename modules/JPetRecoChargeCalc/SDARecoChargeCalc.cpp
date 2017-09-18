@@ -16,23 +16,24 @@
 #include "../../tools/JPetRecoSignalTools/JPetRecoSignalTools.h"
 #include "SDARecoChargeCalc.h"
 
-SDARecoChargeCalc::SDARecoChargeCalc(const char* name, const char* description)
-  : JPetTask(name, description),
+SDARecoChargeCalc::SDARecoChargeCalc(const char* name)
+  : JPetUserTask(name),
     fBadSignals(0),
     fCurrentEventNumber(0)
 {}
 
 SDARecoChargeCalc::~SDARecoChargeCalc() {}
 
-void SDARecoChargeCalc::init(const JPetOptionsInterface&)
+bool SDARecoChargeCalc::init()
 {
   INFO(Form("Starting charge calculation"));
   fBadSignals = 0;
+  return true;
 }
 
-void SDARecoChargeCalc::exec()
+bool SDARecoChargeCalc::exec()
 {
-  if (auto signal = dynamic_cast<const JPetRecoSignal* const>(getEvent())) {
+  if (auto signal = dynamic_cast<const JPetRecoSignal* const>(fEvent)) {
     double charge = JPetRecoSignalTools::calculateAreaFromStartingIndex(*signal);
     if (charge == JPetRecoSignalTools::ERRORS::badCharge) {
       WARNING( Form("Something went wrong when calculating charge for event: %d", fCurrentEventNumber) );
@@ -41,21 +42,19 @@ void SDARecoChargeCalc::exec()
     } else {
       auto signalWithCharge = *signal;
       signalWithCharge.setCharge(charge);
-      fWriter->write(signalWithCharge);
+      // @todo: replace with fOutputEvents
+      //      fWriter->write(signalWithCharge);
     }
     fCurrentEventNumber++;
   }
+  return true;
 }
 
-std::unique_ptr<JPetOptionsInterface> SDARecoChargeCalc::terminate()
+bool SDARecoChargeCalc::terminate()
 {
   int fEventNb = fCurrentEventNumber;
   double goodPercent = (fEventNb - fBadSignals) * 100.0 / fEventNb;
   INFO(Form("Charge` calculation complete \nAmount of bad signals: %d \n %f %% of data is good" , fBadSignals, goodPercent));
-  return JPetTask::terminate();
-}
-void SDARecoChargeCalc::setWriter(JPetWriter* writer)
-{
-  fWriter = writer;
+  return true;
 }
 

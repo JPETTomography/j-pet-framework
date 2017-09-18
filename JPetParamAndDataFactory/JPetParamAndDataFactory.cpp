@@ -66,13 +66,12 @@ JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, const s
   return barrelSlotObject;
 }
 
-JPetTimeWindow makeTimeWindow(const std::vector<JPetSigCh>& vec, unsigned int window_id)
+JPetTimeWindow makeTimeWindow(const std::vector<JPetSigCh>& vec)
 {
   JPetTimeWindow timeWindowObject;
   for (auto sigch : vec) {
-    timeWindowObject.addCh(sigch);
+    timeWindowObject.add<JPetSigCh>(sigch);
   }
-  timeWindowObject.setIndex(window_id);
   return timeWindowObject;
 }
 
@@ -85,10 +84,9 @@ JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, floa
   return pmObject;
 }
 
-JPetBaseSignal makeBaseSignal(unsigned int index, JPetPM& pm, JPetBarrelSlot& bs)
+JPetBaseSignal makeBaseSignal(JPetPM& pm, JPetBarrelSlot& bs)
 {
   JPetBaseSignal baseSignalObject;
-  baseSignalObject.setTimeWindowIndex(index);
   baseSignalObject.setPM(pm);
   baseSignalObject.setBarrelSlot(bs);
   return baseSignalObject;

@@ -16,23 +16,24 @@
 #include "../../tools/JPetRecoSignalTools/JPetRecoSignalTools.h"
 #include "SDARecoAmplitudeCalc.h"
 
-SDARecoAmplitudeCalc::SDARecoAmplitudeCalc(const char* name, const char* description)
-  : JPetTask(name, description),
+SDARecoAmplitudeCalc::SDARecoAmplitudeCalc(const char* name)
+  : JPetUserTask(name),
     fBadSignals(0),
     fCurrentEventNumber(0)
 {}
 
 SDARecoAmplitudeCalc::~SDARecoAmplitudeCalc() {}
 
-void SDARecoAmplitudeCalc::init(const JPetOptionsInterface&)
+bool SDARecoAmplitudeCalc::init()
 {
   INFO(Form("Starting amplitude calculation"));
   fBadSignals = 0;
+  return true;
 }
 
-void SDARecoAmplitudeCalc::exec()
+bool SDARecoAmplitudeCalc::exec()
 {
-  if (auto signal = dynamic_cast<const JPetRecoSignal* const>(getEvent())) {
+  if (auto signal = dynamic_cast<const JPetRecoSignal* const>(fEvent)) {
     double amplitude = JPetRecoSignalTools::calculateAmplitude(*signal);
     if (amplitude == JPetRecoSignalTools::ERRORS::badAmplitude) {
       WARNING( Form("Something went wrong when calculating charge for event: %d", fCurrentEventNumber) );
@@ -41,19 +42,18 @@ void SDARecoAmplitudeCalc::exec()
     } else {
       auto signalWithAmplitude = *signal;
       signalWithAmplitude.setAmplitude(amplitude);
-      fWriter->write(signalWithAmplitude);
+      // @todo: replace by fOutputEvents
+      //      fWriter->write(signalWithAmplitude);
     }
     fCurrentEventNumber++;
   }
+  return true;
 }
-void SDARecoAmplitudeCalc::setWriter(JPetWriter* writer)
-{
-  fWriter = writer;
-}
-std::unique_ptr<JPetOptionsInterface> SDARecoAmplitudeCalc::terminate()
+
+bool SDARecoAmplitudeCalc::terminate()
 {
   int fEventNb = fCurrentEventNumber;
   double goodPercent = (fEventNb - fBadSignals) * 100.0 / fEventNb;
   INFO(Form("Amplitude calculation complete \nAmount of bad signals: %d \n %f %% of data is good" , fBadSignals, goodPercent) );
-  return JPetTask::terminate();
+  return true;
 }

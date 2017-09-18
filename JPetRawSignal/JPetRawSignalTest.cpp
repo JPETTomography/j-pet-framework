@@ -127,12 +127,6 @@ BOOST_AUTO_TEST_CASE(GetMapOfTimesVsThrValueTest) {
   BOOST_REQUIRE_EQUAL(map[4].second, sigch3.getValue());
 }
 
-BOOST_AUTO_TEST_CASE(SetAndGetTSlotIndexTest) {
-  JPetRawSignal signal;
-  signal.setTimeWindowIndex(8);
-  BOOST_CHECK(signal.getTimeWindowIndex() == 8);
-}
-
 BOOST_AUTO_TEST_CASE(SetAndGetTRefPMObjectTest) {
   JPetRawSignal signal;
   JPetPM PM;

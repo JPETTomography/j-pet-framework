@@ -20,19 +20,16 @@
 #define _JPETANALYSISMODULE_SDARECOOFFSETCALC_H_
 
 #include <TCanvas.h>
-#include "../../JPetTask/JPetTask.h"
-#include "../../JPetWriter/JPetWriter.h"
-class SDARecoOffsetsCalc: public JPetTask
+#include "../../JPetUserTask/JPetUserTask.h"
+class SDARecoOffsetsCalc: public JPetUserTask
 {
 public:
-  SDARecoOffsetsCalc(const char* name, const char* title);
+  SDARecoOffsetsCalc(const char* name);
   virtual ~SDARecoOffsetsCalc();
-  virtual void init(const JPetOptionsInterface& inOptions) override;
-  virtual void exec()override;
-  virtual std::unique_ptr<JPetOptionsInterface> terminate() override;
-  virtual void setWriter(JPetWriter* writer)override;
+  virtual bool init() override;
+  virtual bool exec()override;
+  virtual bool terminate() override;
 private:
-  JPetWriter* fWriter;
   int fCurrentEventNumber;
   double fOffset;
   int fBadSignals;
