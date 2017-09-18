@@ -44,7 +44,7 @@ public:
   const static float kUnset;
 
   JPetSigCh() {
-    Init();
+    init();
   }
   JPetSigCh(EdgeType Edge, float EdgeTime);
   ~JPetSigCh() {
@@ -177,6 +177,8 @@ public:
    */
   static bool compareByThresholdNumber(const JPetSigCh & A,
                                        const JPetSigCh & B);
+
+  void Clear(Option_t * = "");
   
   ClassDef(JPetSigCh, 6);
   
@@ -193,7 +195,7 @@ protected:
   TRef fTRB;
   TRef fTOMBChannel;
   
-  void Init();
+  void init();
 };
 
 #endif

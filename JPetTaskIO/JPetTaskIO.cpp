@@ -87,8 +87,10 @@ bool JPetTaskIO::run(const JPetDataInterface& inData)
     if (isProgressBar(fParams.getOptions())) {
       displayProgressBar(i, lastEvent);
     }
+    (dynamic_cast<JPetUserTask*>(fSubTask.get()))->getOutputEvents()->Clear();
     JPetData event(fReader->getCurrentEvent());
     fSubTask->run(event);
+    fWriter->write(*((dynamic_cast<JPetUserTask*>(fSubTask.get()))->getOutputEvents()));
     fReader->nextEvent();
   }
   fSubTask->terminate(fParams);
