@@ -19,10 +19,10 @@
 #include "../../tools/JPetRecoSignalTools/JPetRecoSignalTools.h"
 #include "SDARecoDrawAllCharges.h"
 using namespace std;
-SDARecoDrawAllCharges::SDARecoDrawAllCharges(const char* name, const char* description): JPetTask(name, description) {}
+SDARecoDrawAllCharges::SDARecoDrawAllCharges(const char* name): JPetUserTask(name) {}
 SDARecoDrawAllCharges::~SDARecoDrawAllCharges() {}
 
-void SDARecoDrawAllCharges::init(const JPetOptionsInterface&)
+bool SDARecoDrawAllCharges::init()
 {
   const auto& paramBank = getParamBank();
   fNumberOfPMTs = paramBank.getPMsSize();
@@ -32,15 +32,17 @@ void SDARecoDrawAllCharges::init(const JPetOptionsInterface&)
     std::vector<double> k;
     fCharges[id_pm_pair.first] = k;
   }
+  return true;
 }
 
-void SDARecoDrawAllCharges::exec()
+bool SDARecoDrawAllCharges::exec()
 {
-  if (auto signal = dynamic_cast<const JPetRecoSignal* const>(getEvent()))
+  if (auto signal = dynamic_cast<const JPetRecoSignal* const>(fEvent))
     fCharges[signal->getPM().getID()].push_back(signal->getCharge());
+  return true;
 }
 
-std::unique_ptr<JPetOptionsInterface> SDARecoDrawAllCharges::terminate()
+bool SDARecoDrawAllCharges::terminate()
 {
   auto c1 = new TCanvas();
   //looking for max and min value for all offsets
@@ -90,6 +92,6 @@ std::unique_ptr<JPetOptionsInterface> SDARecoDrawAllCharges::terminate()
   c1->SaveAs( title.c_str() );
   delete c1; // I propose to use shared_ptr here (Rundel)
   delete stack;
-  return JPetTask::terminate();
+  return true;
 }
 
