@@ -26,9 +26,8 @@
 using namespace boost::filesystem;
 
 
-JPetScopeTask::JPetScopeTask(const char * name, const char * description):
-  JPetTask(name, description),
-  fWriter(0)
+JPetScopeTask::JPetScopeTask(const char* name):
+  JPetUserTask(name)
 {
 }
 
@@ -37,7 +36,7 @@ int JPetScopeTask::getTimeWindowIndex(const std::string&  pathAndFileName)
   DEBUG("JPetScopeTask");
   int time_window_index = -1;
   if (!boost::filesystem::exists(pathAndFileName)) {
-    ERROR("File does not exist "); 
+    ERROR("File does not exist ");
   }
   int res = sscanf(JPetCommonTools::extractFileNameFromFullPath(pathAndFileName).c_str(), "%*3s %d", &time_window_index);
   if (res <= 0) {
@@ -48,22 +47,23 @@ int JPetScopeTask::getTimeWindowIndex(const std::string&  pathAndFileName)
   }
 }
 
-void JPetScopeTask::exec() 
+bool JPetScopeTask::init() {}
+
+bool JPetScopeTask::exec()
 {
-  DEBUG("JPetScopeTask getParamBank() called"); 
-  assert(fParamManager);
-  auto& bank = fParamManager->getParamBank(); 
+  DEBUG("JPetScopeTask getParamBank() called");
+  auto& bank = getParamBank();
   if (bank.isDummy()) {
     ERROR("bank is Dummy");
   } else {
     auto inputFilesInTimeWindowOrder = getFilesInTimeWindowOrder(fInputFiles);
-    for(const auto & file : inputFilesInTimeWindowOrder){
-      DEBUG(std::string("file to open:")+file.first);
+    for (const auto& file : inputFilesInTimeWindowOrder) {
+      DEBUG(std::string("file to open:") + file.first);
       JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.first.c_str());
       sig.setTimeWindowIndex(getTimeWindowIndex(file.first));
       DEBUG("before setPM");
-      const JPetPM & pm = bank.getPM(file.second);
-      const JPetBarrelSlot & bs = pm.getBarrelSlot();
+      const JPetPM& pm = bank.getPM(file.second);
+      const JPetBarrelSlot& bs = pm.getBarrelSlot();
       sig.setPM(pm);
       sig.setBarrelSlot(bs);
       DEBUG("after setPM");
@@ -71,8 +71,10 @@ void JPetScopeTask::exec()
       fWriter->write(sig);
     }
   }
+  return true;
 }
 
+bool JPetScopeTask::terminate() {}
 
 std::multimap<std::string, int, cmpByTimeWindowIndex> JPetScopeTask::getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const
 {

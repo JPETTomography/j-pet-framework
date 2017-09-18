@@ -53,9 +53,9 @@ public:
 
   virtual bool createInputObjects(const char* inputFilename) override;
 
-  virtual bool init(const JPetOptions::Options& opts) override;
-  virtual bool exec() override;
-  virtual bool terminate() override;
+  virtual bool init(const JPetParamsInterface& opts) override;
+  virtual bool run(const JPetDataInterface& inData) override;
+  virtual bool terminate(JPetParamsInterface& opts) override;
 
   std::map<std::string, int> createInputScopeFileNames(const std::string& inputPathToScopeFiles,
       std::map<std::string, int> pmPref2Id

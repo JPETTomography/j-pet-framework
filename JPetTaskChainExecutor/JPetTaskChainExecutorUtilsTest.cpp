@@ -16,7 +16,10 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetTaskChainExecutorUtilsTest
 #include <boost/test/unit_test.hpp>
+#include <boost/filesystem.hpp>
+
 #include "../JPetTaskChainExecutor/JPetTaskChainExecutorUtils.h"
+
 
 BOOST_AUTO_TEST_SUITE(JPetTaskChainExecutorTestSuite)
 

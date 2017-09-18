@@ -25,9 +25,6 @@
 #include "../JPetParamsInterface/JPetParamsInterface.h"
 #include "../JPetOptionsTools/JPetOptionsTools.h"
 
-
-
-
 class JPetParams: public JPetParamsInterface
 {
 public:

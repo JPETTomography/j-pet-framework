@@ -19,21 +19,73 @@
 #include "../JPetTaskChainExecutor/JPetTaskChainExecutor.h"
 #include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
 #include "../JPetTaskIO/JPetTaskIO.h"
+#include "../JPetUserTask/JPetUserTask.h"
 #include "../JPetLoggerInclude.h"
 
+
+class TestTask: public JPetUserTask
+{
+public:
+  TestTask(const char* name = ""): JPetUserTask(name) {}
+  bool init() override
+  {
+    return true;
+  }
+  bool exec() override
+  {
+    return true;
+  }
+  bool terminate() override
+  {
+    return true;
+  }
+
+};
 
 BOOST_AUTO_TEST_SUITE(JPetTaskChainExecutorTestSuite)
 
 BOOST_AUTO_TEST_CASE(test1)
 {
-  auto opts = JPetOptionsGenerator::getDefaultOptions();
+  std::vector<jpet_options_tools::OptsStrAny> opts;
+  auto opt = JPetOptionsGenerator::getDefaultOptions();
+  opts.push_back(opt);
   auto taskGenerator1 = []() {
     return new JPetTaskIO;
   };
   TaskGeneratorChain* chain =  new TaskGeneratorChain;
   chain->push_back(taskGenerator1);
 
-  JPetTaskChainExecutor taskExecutor(chain, 1, JPetOptions(opts));
+  JPetTaskChainExecutor taskExecutor(chain, 1, opts);
+  BOOST_REQUIRE(!taskExecutor.process());
+  delete chain;
+}
+
+BOOST_AUTO_TEST_CASE(test2)
+{
+  std::vector<jpet_options_tools::OptsStrAny> opts;
+  auto opt = JPetOptionsGenerator::getDefaultOptions();
+  opt["firstEvent_int"] = 0;
+  opt["lastEvent_int"] = 10;
+  opts.push_back(opt);
+  opts.push_back(opt);
+
+  auto taskGenerator1 = []() {
+    auto taskIO =  new JPetTaskIO("TaskA");
+    taskIO->setSubTask(std::unique_ptr<TestTask>(new TestTask));
+    return taskIO;
+  };
+  auto taskGenerator2 = []() {
+    auto taskIO =  new JPetTaskIO("TaskB");
+    taskIO->setSubTask(std::unique_ptr<TestTask>(new TestTask));
+    return taskIO;
+  };
+  TaskGeneratorChain* chain =  new TaskGeneratorChain;
+  chain->push_back(taskGenerator1);
+  chain->push_back(taskGenerator2);
+
+  BOOST_REQUIRE_EQUAL(chain->size(), 2u);
+  JPetTaskChainExecutor taskExecutor(chain, 1, opts);
+  BOOST_REQUIRE(taskExecutor.process());
   delete chain;
 }
 
