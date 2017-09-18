@@ -56,8 +56,9 @@ using namespace boost::filesystem;
 using boost::property_tree::ptree;
 
 
-JPetScopeLoader::JPetScopeLoader(JPetScopeTask* task): JPetTaskLoader("", "reco.sig", task)
+JPetScopeLoader::JPetScopeLoader(std::unique_ptr<JPetScopeTask> task): JPetTaskIO("ScopeTask")
 {
+  setSubTask(std::move(task));
   gSystem->Load("libTree");
   /**/
 }
@@ -73,32 +74,35 @@ JPetScopeLoader::~JPetScopeLoader()
 
 bool JPetScopeLoader::createInputObjects(const char*)
 {
-  //JPetScopeConfigParser confParser;
-  //auto config = confParser.getConfig(fOptions.getScopeConfigFile());
+  using namespace jpet_options_tools;
+  JPetScopeConfigParser confParser;
+  auto opts = fParams.getOptions();
+  auto config = confParser.getConfig(getScopeConfigFile(opts));
 
-  //auto prefix2PM =  getPMPrefixToPMIdMap();
-  //std::map<std::string, int> inputScopeFiles = createInputScopeFileNames(fOptions.getScopeInputDirectory(), prefix2PM);
-  //auto task = dynamic_cast<JPetScopeTask*>(fTask);
-  //task->setInputFiles(inputScopeFiles);
+  auto prefix2PM =  getPMPrefixToPMIdMap();
+  std::map<std::string, int> inputScopeFiles = createInputScopeFileNames(getScopeInputDirectory(opts), prefix2PM);
+  auto task = dynamic_cast<JPetScopeTask*>(fSubTask.get());
+  task->setInputFiles(inputScopeFiles);
 
 
-  //// create an object for storing histograms and counters during processing
-  //fStatistics = new JPetStatistics();
-  //assert(fStatistics);
-  //fHeader = new JPetTreeHeader(fOptions.getRunNumber());
-  //assert(fHeader);
-  //fHeader->setBaseFileName(fOptions.getInputFile());
-  //fHeader->addStageInfo(task->GetName(), task->GetTitle(), 0, JPetCommonTools::getTimeString());
-  ////fHeader->setSourcePosition((*fIter).pCollPosition);
+  // create an object for storing histograms and counters during processing
+  std::unique_ptr<JPetStatistics> tmp(new JPetStatistics());
+  fStatistics = std::move(tmp);
+  assert(fStatistics);
+  fHeader = new JPetTreeHeader(getRunNumber(opts));
+  assert(fHeader);
+  fHeader->setBaseFileName(getInputFile(opts));
+  fHeader->addStageInfo(task->getName(), "", 0, JPetCommonTools::getTimeString());
+  //fHeader->setSourcePosition((*fIter).pCollPosition);
   return true;
 }
 
-std::map<std::string, int> JPetScopeLoader::getPMPrefixToPMIdMap() const
+std::map<std::string, int> JPetScopeLoader::getPMPrefixToPMIdMap()
 {
   std::map< std::string, int> prefixToId;
-  //for (const auto&   pm : fParamManager->getParamBank().getPMs()) {
-  //prefixToId[pm.second->getDescription()] = pm.first;
-  //}
+  for (const auto&   pm : getParamBank().getPMs()) {
+    prefixToId[pm.second->getDescription()] = pm.first;
+  }
   return prefixToId;
 }
 
@@ -151,34 +155,36 @@ bool JPetScopeLoader::isCorrectScopeFileName(const std::string& filename) const
   return regex_match(filename, pattern);
 }
 
-bool JPetScopeLoader::init(const JPetParamsInterface& opts)
+bool JPetScopeLoader::init(const JPetParamsInterface& paramsI)
 {
-  //INFO( "Initialize Scope Loader Module." );
-  //JPetTaskLoader::init(opts);
+  using namespace jpet_options_tools;
+  INFO( "Initialize Scope Loader Module." );
+  auto params = dynamic_cast<const JPetParams&>(paramsI);
+  fParams = params;
+  createInputObjects("");
   return true;
 }
 
 bool JPetScopeLoader::run(const JPetDataInterface& inData)
 {
-  //assert(fTask);
-  //fTask->setParamManager(fParamManager);
-  //JPetTaskInterface::Options emptyOpts;
-  //fTask->init(JPetOptions2(emptyOpts));
-  //fTask->exec();
-  //fTask->terminate();
+  assert(fSubTask);
+  fSubTask->init(fParams);
+  fSubTask->run(inData);
+  fSubTask->terminate(fParams);
   return true;
 }
 
-bool JPetScopeLoader::terminate(JPetParamsInterface& opts)
+
+bool JPetScopeLoader::terminate(JPetParamsInterface&)
 {
-  //assert(fWriter);
-  //assert(fHeader);
-  //assert(fStatistics);
-  //fWriter->writeHeader(fHeader);
-  //fWriter->writeCollection(fStatistics->getStatsTable(), "Stats");
-  ////store the parametric objects in the ouptut ROOT file
-  //getParamManager().saveParametersToFile(fWriter);
-  //getParamManager().clearParameters();
-  //fWriter->closeFile();
+  assert(fWriter);
+  assert(fHeader);
+  assert(fStatistics);
+  fWriter->writeHeader(fHeader);
+  fWriter->writeCollection(fStatistics->getStatsTable(), "Stats");
+  //store the parametric objects in the ouptut ROOT file
+  getParamManager().saveParametersToFile(fWriter);
+  getParamManager().clearParameters();
+  fWriter->closeFile();
   return true;
 }
