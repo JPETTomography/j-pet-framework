@@ -17,7 +17,7 @@
 #include <cassert>
 #include <iostream>
 
-JPetTaskRunner::JPetTaskRunner(): fTask(0)
+JPetTaskRunner::JPetTaskRunner(): fTask(nullptr)
 {
 }
 
@@ -25,13 +25,13 @@ JPetTaskRunner::~JPetTaskRunner()
 {
 }
 
-void JPetTaskRunner::setTask(JPetTaskInterface* subtask)
+void JPetTaskRunner::setSubTask(std::unique_ptr<JPetTaskInterface> subtask)
 {
-  fTask = subtask;
+  fTask = std::move(subtask);
 }
 
-JPetTaskInterface* JPetTaskRunner::getTask() const
+JPetTaskInterface* JPetTaskRunner::getSubTask() const
 {
-  return fTask;
+  return fTask.get();
 }
 
