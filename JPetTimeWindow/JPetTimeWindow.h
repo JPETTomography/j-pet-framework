@@ -18,61 +18,58 @@
 
 #include <vector>
 #include <map>
-#include <TObject.h>
-#include "../JPetSigCh/JPetSigCh.h"
+#include <TNamed.h>
+#include <TClonesArray.h>
+#include <iostream>
 
 /**
- * @brief Data class representing a time window of the TRB board.
+ * @brief Container class representing a time window of the DAQ system
  *
- * A single TSlot contains many SigCh objects representing TDC hits recorded during a time window of the TRB board.
+ * A single TimeWindow contains many objects (referred to as "events") representing events which happened during one time window of the DAQ system.
  */
 class JPetTimeWindow: public TObject
 {
 public:
-  JPetTimeWindow() {
+
+  JPetTimeWindow() : fEvents()
+  {}
+  
+  JPetTimeWindow(const char * event_type) : fEvents(event_type, 2000)
+  {}
+  
+  template<typename T>
+  void add(const T & evt){
+    dynamic_cast<T&>(*(fEvents.ConstructedAt(fEventCount++))) = evt;
+  }
+  
+  inline size_t getNumberOfEvents() const {
+    return fEventCount;
   }
 
-  void addCh(JPetSigCh& new_ch);
-
-  inline size_t getNumberOfSigCh() const {
-    return fSigChannels.size();
-  }
-  inline const std::vector<JPetSigCh>& getSigChVect() const {
-    return fSigChannels;
-  }
-  /**
-   * @brief Get i-th SigCh object from this time window as if from an array
-   *
-   * @param i number of SigCh object to be returned; i should be between 0 and getNumberOfSigCh-1
-   */
-  inline const JPetSigCh& operator[](int i) const {
-    return fSigChannels[i];
+  inline const TObject & operator[](int i) const {
+    return *fEvents[i];
   }
 
+  template<typename T>
+  inline const T& getEvent(int i) const {
+    return *(dynamic_cast<T*>(fEvents[i]));
+  }
 
   virtual ~JPetTimeWindow() {
-    fSigChannels.clear();
+    fEvents.Clear("C");
+    fEventCount = 0;
   }
 
-  /**
-   * @brief Get the index number of this TSlot
-   *
-   * Each TSlot (time window) in a HLD file is assigned an index number, counting from first TSlot in the file. This number may be useful if empty TSlots are skipped during analysis.
-   * @oaram index a squential number of this TSlot counting from sirst TSlot in a HLD file
-   */
-  inline unsigned int getIndex() const {
-    return fIndex;
+  virtual void Clear() {
+    fEvents.Clear("C");
+    fEventCount = 0;
   }
-
-  inline void setIndex(unsigned int index) {
-    fIndex = index;
-  }
-
+  
   ClassDef(JPetTimeWindow, 3);
 
 private:
-  std::vector<JPetSigCh> fSigChannels;
-  unsigned int fIndex = 0; ///< sequential number of this TSlot in the HLD file
+  TClonesArray fEvents;
+  unsigned int fEventCount = 0;
 };
 
 #endif
