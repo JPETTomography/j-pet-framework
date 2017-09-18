@@ -15,8 +15,8 @@
 
 #include "SDAMatchHits.h"
 using namespace std;
-SDAMatchHits::SDAMatchHits(const char* name, const char* description)
-  : JPetTask(name, description),
+SDAMatchHits::SDAMatchHits(const char* name)
+  : JPetUserTask(name),
     fMatched(0),
     fCurrentEventNumber(0)
 {
@@ -26,15 +26,17 @@ SDAMatchHits::~SDAMatchHits()
 {
 }
 
-void SDAMatchHits::init(const JPetOptionsInterface&)
+bool SDAMatchHits::init()
 {
   fMatched = 0;
   fCurrentEventNumber = 0;
+
+  return true;
 }
 
-void SDAMatchHits::exec()
+bool SDAMatchHits::exec()
 {
-  if (auto currSignal = dynamic_cast<const JPetPhysSignal* const>(getEvent())) {
+  if (auto currSignal = dynamic_cast<const JPetPhysSignal* const>(fEvent)) {
     if (fSignalsArray.empty()) {
       fSignalsArray.push_back(*currSignal);
     } else {
@@ -48,13 +50,14 @@ void SDAMatchHits::exec()
     }
     fCurrentEventNumber++;
   }
+  return true;
 }
 
-std::unique_ptr<JPetOptionsInterface> SDAMatchHits::terminate()
+bool SDAMatchHits::terminate()
 {
   int fEventNb = fCurrentEventNumber;
   INFO(Form("Matching complete \nAmount of fMatched hits: %d out of initial %d signals" , fMatched, fEventNb) );
-  return JPetTask::terminate();
+  return true;
 }
 
 vector<JPetHit> SDAMatchHits::createHits(vector<JPetPhysSignal>& signals)
@@ -115,14 +118,12 @@ std::vector<JPetHit> SDAMatchHits::matchHitsWithinSlot(std::vector<JPetPhysSigna
   }
   return hits;
 }
-void SDAMatchHits::setWriter(JPetWriter* writer)
-{
-  fWriter = writer;
-}
+
 void SDAMatchHits::saveHits(std::vector<JPetHit> hits)
 {
-  assert(fWriter);
   fMatched += hits.size();
   for (auto hit : hits)
-    fWriter->write(hit);
+    // @todo: replace with fOutputEvents
+    ;
+    //    fWriter->write(hit);
 }
