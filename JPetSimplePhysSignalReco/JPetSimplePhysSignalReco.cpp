@@ -34,13 +34,13 @@ JPetSimplePhysSignalReco::~JPetSimplePhysSignalReco()
   /**/
 }
 
-void JPetSimplePhysSignalReco::exec()
-{}
+bool JPetSimplePhysSignalReco::exec()
+{
+  return true;
+}
 
 void JPetSimplePhysSignalReco::savePhysSignal(JPetPhysSignal sig)
 {
-  assert(fWriter);
-  fWriter->write(sig);
 }
 
 JPetPhysSignal JPetSimplePhysSignalReco::createPhysSignal(JPetRecoSignal& recoSignal)
