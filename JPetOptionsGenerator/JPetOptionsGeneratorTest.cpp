@@ -289,5 +289,29 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionToAddOptionsFromCfgFileWork)
   BOOST_REQUIRE(options.count("myAnotherOption_std::string"));
 }
 
+BOOST_AUTO_TEST_CASE(ScopeOptions)
+{
+  JPetOptionsGenerator gener;
+  auto inArgs =  getCmdLineArgs("main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1");
+  auto result = gener.generateOptions(inArgs, 1);
+  BOOST_REQUIRE(!result.empty());
+  BOOST_REQUIRE_EQUAL(result.size(), 1u); //one file
+
+  auto it = result.begin();
+  BOOST_REQUIRE_EQUAL(it->first, "unitTestData/JPetScopeLoaderTest/test_file_test_0");  ///fake input file
+  BOOST_REQUIRE_EQUAL(it->second.size(), 1u); // one tasks
+  auto itTaskOpts = it->second.begin();
+  auto opts = *itTaskOpts; //get option for first task
+  BOOST_REQUIRE_EQUAL(getRunNumber(opts),  1);
+  BOOST_REQUIRE_EQUAL(getInputFile(opts), "unitTestData/JPetScopeLoaderTest/test_file_test_0"); /// fake input file
+  BOOST_REQUIRE_EQUAL(getScopeConfigFile(opts), "unitTestData/JPetScopeLoaderTest/test_file.json");
+  BOOST_REQUIRE_EQUAL(getScopeInputDirectory(opts), "unitTestData/JPetScopeLoaderTest/scope_files/0");
+  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts), FileTypeChecker::kScope);
+  BOOST_REQUIRE_EQUAL(getFirstEvent(opts),  -1);
+  BOOST_REQUIRE_EQUAL(getLastEvent(opts),   -1);
+  BOOST_REQUIRE(!isProgressBar(opts));
+  BOOST_REQUIRE(isLocalDB(opts) );
+  BOOST_REQUIRE(!isLocalDBCreate(opts));
+}
 
 BOOST_AUTO_TEST_SUITE_END()
