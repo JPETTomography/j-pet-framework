@@ -166,10 +166,12 @@ BOOST_AUTO_TEST_CASE( timeWindow )
 BOOST_AUTO_TEST_CASE( pm )
 {
   JPetPM::Side side = JPetPM::SideA;
-  JPetBarrelSlot p_barrelSlot(1, true, "name", 2, 3);
+  //JPetBarrelSlot p_barrelSlot(1, true, "name", 2, 3);
+  JPetBarrelSlot p_barrelSlot;
   JPetScin p_scin(1, 2, 3, 4, 5);
   JPetFEB p_FEB(1, true, "p_status", "p_description", 2, 3, 4, 5);
   std::pair<float, float> gain(3.0, 4.0);
+  JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB & p_FEB, JPetScin & p_scin, JPetBarrelSlot & p_barrelSlot);
   JPetPM pm = param_and_data_factory::makePM(side, 1, 1, 2, gain, "no writing", p_FEB, p_scin, p_barrelSlot);
 
   BOOST_REQUIRE_EQUAL(pm.getID(), 1);
