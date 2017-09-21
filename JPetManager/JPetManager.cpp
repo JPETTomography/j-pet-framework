@@ -23,6 +23,7 @@
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../DBHandler/HeaderFiles/DBHandler.h"
 #include "../JPetCmdParser/JPetCmdParser.h"
+#include "../JPetScopeLoader/JPetScopeLoader.h"
 #include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
 
 #include <TThread.h>
@@ -98,10 +99,23 @@ bool JPetManager::run(int argc, const char** argv)
 
 bool JPetManager::parseCmdLine(int argc, const char** argv)
 {
+  auto addDefaultTasksFromOptions = [&](const boost::program_options::variables_map & optionsFromCmdLine) {
+    auto it = optionsFromCmdLine.find("type");
+    if (it != optionsFromCmdLine.end()) {
+      if (boost::any_cast<std::string>(it->second.value()) == "scope") {
+        auto task = []() {
+          return new JPetScopeLoader(std::unique_ptr<JPetScopeTask>(new JPetScopeTask("JPetScopeReader")));
+        };
+        fTaskGeneratorChain->push_back(task);
+      }
+    }
+  };
+
   try {
     JPetOptionsGenerator optionsGenerator;
     JPetCmdParser parser;
     auto optionsFromCmdLine = parser.parseCmdLineArgs(argc, argv);
+    addDefaultTasksFromOptions(optionsFromCmdLine); /// Currently only scope task can be added.
     int numberOfRegisteredTasks = 1;
     if (fTaskGeneratorChain) {
       numberOfRegisteredTasks = fTaskGeneratorChain->size();
@@ -114,6 +128,7 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
   return true;
 }
 
+//
 JPetManager::~JPetManager()
 {
   /// delete shared caches for paramBanks
