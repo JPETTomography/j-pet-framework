@@ -22,7 +22,7 @@
 #include "../JPetCommonTools/JPetCommonTools.h"
 
 
-bool JPetTaskChainExecutorUtils::process(const JPetParams& params, std::list<JPetTaskInterface*>& tasks)
+bool JPetTaskChainExecutorUtils::process(const JPetParams& params)
 {
   using namespace jpet_options_tools;
   auto options =  params.getOptions();
@@ -50,11 +50,7 @@ bool JPetTaskChainExecutorUtils::process(const JPetParams& params, std::list<JPe
   auto unpackerConfigFile = getUnpackerConfigFile(options);
   auto unpackerCalibFile = getUnpackerCalibFile(options);
 
-  if (inputFileType == FileTypeChecker::kScope) {
-    //JPetScopeLoader* module = new JPetScopeLoader(new JPetScopeTask("JPetScopeReader", "Process Oscilloscope ASCII data into JPetRecoSignal structures."));
-    //module->setParamManager(paramMgr);
-    //tasks.push_front(module);
-  } else if (inputFileType == FileTypeChecker::kHld) {
+  if (inputFileType == FileTypeChecker::kHld) {
     unpackFile(inputFile, getTotalEvents(options), unpackerConfigFile, unpackerCalibFile);
   }
   /// Assumption that if the file is zipped than it is in the hld format
@@ -95,10 +91,11 @@ void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long neve
 std::vector<JPetParams> JPetTaskChainExecutorUtils::generateParams(const OptionsPerFile& opts)
 {
   std::vector<JPetParams> params;
-  auto paramManager = JPetTaskChainExecutorUtils::generateParamManager(opts.front());
+  std::shared_ptr<JPetParamManager> paramManager2 = JPetTaskChainExecutorUtils::generateParamManager(opts.front());
+
   params.reserve(opts.size());
   for (const auto& opt : opts) {
-    params.push_back(JPetParams(opt, paramManager));
+    params.push_back(JPetParams(opt, paramManager2));
   }
   return params;
 }
@@ -116,9 +113,9 @@ std::shared_ptr<JPetParamManager> JPetTaskChainExecutorUtils::generateParamManag
       expectMissing.insert(ParamObjectType::kLayer);
       expectMissing.insert(ParamObjectType::kTOMBChannel);
     }
-    return std::make_shared<JPetParamManager>(new JPetParamManager(new JPetParamGetterAscii(getLocalDB(options)), expectMissing));
+    return std::make_shared<JPetParamManager>(new JPetParamGetterAscii(getLocalDB(options)), expectMissing);
   } else {
-    return std::make_shared<JPetParamManager>(new JPetParamManager());
+    return std::make_shared<JPetParamManager>();
   }
 }
 
