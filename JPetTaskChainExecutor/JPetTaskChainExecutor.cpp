@@ -41,13 +41,13 @@ JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorCh
 }
 
 
-bool JPetTaskChainExecutor::preprocessing(const std::vector<JPetParams>& params, std::list<JPetTaskInterface*>& tasks)
+bool JPetTaskChainExecutor::preprocessing(const std::vector<JPetParams>& params)
 {
   if (params.empty()) {
     ERROR("No parameters provided!");
     return false;
   } else {
-    return JPetTaskChainExecutorUtils::process(params.front(), tasks);
+    return JPetTaskChainExecutorUtils::process(params.front());
   }
 }
 
@@ -56,7 +56,7 @@ bool JPetTaskChainExecutor::process()
   namespace stdc = std::chrono;
   std::vector<std::pair<std::string, stdc::seconds>> elapsedTime;
   auto startTime = stdc::system_clock::now();
-  if (!preprocessing(fParams, fTasks)) {
+  if (!preprocessing(fParams)) {
     ERROR("Error in preprocessing phase");
     return false;
   }
@@ -82,15 +82,15 @@ bool JPetTaskChainExecutor::process()
     INFO(Form("Starting task: %s", taskName.c_str()));
     if (!currentTask->init(currParams)) {
       ERROR("In task initialization");
-      return false;  
+      return false;
     }
     if (currentTask->run(nullDataObject)) {
       ERROR("In task run()");
-      return false;  
+      return false;
     }
     if (currentTask->terminate(outputParams)) {
       ERROR("In task terminate() ");
-      return false;  
+      return false;
     }
 
     elapsedTime.push_back(std::make_pair("task " + taskName, stdc::duration_cast< stdc::seconds > (stdc::system_clock::now() - startTime)));

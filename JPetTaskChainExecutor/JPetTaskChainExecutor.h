@@ -40,7 +40,7 @@ public :
   bool process(); /// Method to be called directly only in case of non-thread running;
 private:
   static void* processProxy(void*);
-  bool preprocessing(const std::vector<JPetParams>& params, std::list<JPetTaskInterface*>& tasks);
+  bool preprocessing(const std::vector<JPetParams>& params);
 
   int fInputSeqId = -1;
   std::list<JPetTaskInterface*> fTasks;
