@@ -71,7 +71,6 @@ JPetScopeLoader::~JPetScopeLoader()
   }
 }
 
-
 bool JPetScopeLoader::createInputObjects(const char*)
 {
   using namespace jpet_options_tools;
@@ -159,9 +158,7 @@ bool JPetScopeLoader::init(const JPetParamsInterface& paramsI)
 {
   using namespace jpet_options_tools;
   INFO( "Initialize Scope Loader Module." );
-  auto params = dynamic_cast<const JPetParams&>(paramsI);
-  fParams = params;
-  createInputObjects("");
+  JPetTaskIO::init(paramsI);
   return true;
 }
 
@@ -186,5 +183,21 @@ bool JPetScopeLoader::terminate(JPetParamsInterface&)
   getParamManager().saveParametersToFile(fWriter);
   getParamManager().clearParameters();
   fWriter->closeFile();
+  return true;
+}
+
+bool JPetScopeLoader::createOutputObjects(const char* outputFilename)
+{
+
+  fWriter = new JPetWriter( outputFilename );
+  assert(fWriter);
+  if (fSubTask) {
+    auto task = dynamic_cast<JPetScopeTask*>(fSubTask.get());
+    task->setStatistics(std::move(fStatistics));
+    task->setWriter(fWriter);
+  } else {
+    WARNING("the subTask does not exist, so JPetWriter and JPetStatistics not passed to it");
+    return false;
+  }
   return true;
 }
