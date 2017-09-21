@@ -54,6 +54,7 @@ public:
   virtual bool terminate(JPetParamsInterface& opts) override;
 
   bool createInputObjects(const char* inputFilename) override;
+  bool createOutputObjects(const char* inputFilename) override;
 
   std::map<std::string, int> createInputScopeFileNames(
     const std::string& inputPathToScopeFiles,

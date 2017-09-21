@@ -29,11 +29,16 @@
 class JPetWriter;
 struct cmpByTimeWindowIndex;
 
-class JPetScopeTask: public JPetUserTask
+class JPetScopeTask: public JPetTask
 {
-
 public:
   JPetScopeTask(const char* name);
+  virtual ~JPetScopeTask() {};
+
+  bool init(const JPetParamsInterface& inOptions) override;
+  bool run(const JPetDataInterface& inData) override;
+  bool terminate(JPetParamsInterface& outOptions) override;
+
   static int getTimeWindowIndex(const std::string&  pathAndFileName);
   /// getting oscilloscope data full file names to process
   inline std::map<std::string, int> getInputFiles() const
@@ -50,15 +55,21 @@ public:
     fWriter = writer;
   }
 
+  const JPetParamBank& getParamBank();
+  virtual void setStatistics(std::unique_ptr<JPetStatistics> statistics);
+  JPetStatistics& getStatistics();
+
   std::multimap<std::string, int, cmpByTimeWindowIndex> getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const;
 
 protected:
-  bool init() override;
-  bool exec() override;
-  bool terminate() override;
+  bool init();
+  bool exec();
+  bool terminate();
 
   std::map<std::string, int> fInputFiles;
-  JPetWriter* fWriter;
+  JPetWriter* fWriter = 0;
+  std::unique_ptr<JPetStatistics> fStatistics = 0;
+  JPetParams fParams;
 };
 
 struct cmpByTimeWindowIndex {

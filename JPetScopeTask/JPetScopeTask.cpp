@@ -27,8 +27,24 @@ using namespace boost::filesystem;
 
 
 JPetScopeTask::JPetScopeTask(const char* name):
-  JPetUserTask(name)
+  JPetTask(name)
 {
+}
+
+bool JPetScopeTask::init(const JPetParamsInterface& inOptions)
+{
+  fParams = dynamic_cast<const JPetParams&>(inOptions);
+  return init();
+}
+
+bool JPetScopeTask::run(const JPetDataInterface&)
+{
+  return exec();
+}
+
+bool JPetScopeTask::terminate(JPetParamsInterface&)
+{
+  return terminate();
 }
 
 int JPetScopeTask::getTimeWindowIndex(const std::string&  pathAndFileName)
@@ -47,7 +63,10 @@ int JPetScopeTask::getTimeWindowIndex(const std::string&  pathAndFileName)
   }
 }
 
-bool JPetScopeTask::init() {}
+bool JPetScopeTask::init()
+{
+  return true;
+}
 
 bool JPetScopeTask::exec()
 {
@@ -73,10 +92,32 @@ bool JPetScopeTask::exec()
   return true;
 }
 
-bool JPetScopeTask::terminate() {}
+bool JPetScopeTask::terminate()
+{
+  return true;
+}
 
 std::multimap<std::string, int, cmpByTimeWindowIndex> JPetScopeTask::getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const
 {
   std::multimap<std::string, int, cmpByTimeWindowIndex> orderedMap(inputFiles.begin(), inputFiles.end());
   return orderedMap;
+}
+
+void JPetScopeTask::setStatistics(std::unique_ptr<JPetStatistics> statistics)
+{
+  fStatistics = std::move(statistics);
+}
+
+JPetStatistics& JPetScopeTask::getStatistics()
+{
+  assert(fStatistics);
+  return *fStatistics;
+}
+
+const JPetParamBank& JPetScopeTask::getParamBank()
+{
+  DEBUG("JPetScopeTask");
+  auto paramManager = fParams.getParamManager();
+  assert(paramManager);
+  return paramManager->getParamBank();
 }
