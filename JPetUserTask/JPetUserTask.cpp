@@ -43,7 +43,7 @@ bool JPetUserTask::terminate(JPetParamsInterface& outOptions)
 
 const JPetParamBank& JPetUserTask::getParamBank()
 {
-  DEBUG("JPetTask");
+  DEBUG("JPetUserTask");
   auto paramManager = fParams.getParamManager();
   assert(paramManager);
   return paramManager->getParamBank();
