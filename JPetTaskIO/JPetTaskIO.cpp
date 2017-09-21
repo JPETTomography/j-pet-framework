@@ -56,11 +56,11 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
 
 bool JPetTaskIO::run(const JPetDataInterface& inData)
 {
-  if(!fSubTask) {
+  if (!fSubTask) {
     ERROR("No subTask set");
     return false;
   }
-  if(!fReader) {
+  if (!fReader) {
     ERROR("No reader set");
     return false;
   }
@@ -212,7 +212,7 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
     auto task = dynamic_cast<JPetUserTask*>(fSubTask.get());
     task->setStatistics(std::move(fStatistics));
   } else {
-    WARNING("the subTask does not exist, so Write was not passed to it");
+    WARNING("the subTask does not exist, so JPetStatistics not passed to it");
     return false;
   }
   return true;
