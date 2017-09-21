@@ -20,7 +20,7 @@
 //This line below should be included in Boost 1.64
 //To fix this bug in ublast: https://svn.boost.org/trac10/ticket/12978
 //However It does not exit in 1.54 which is used currently in travis
-//#include <boost/serialization/array_wrapper.hpp>
+#include <boost/serialization/array_wrapper.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/io.hpp>
 
