@@ -56,9 +56,9 @@ using namespace boost::filesystem;
 using boost::property_tree::ptree;
 
 
-JPetScopeLoader::JPetScopeLoader(std::unique_ptr<JPetScopeTask> task): JPetTaskIO("ScopeTask")
+JPetScopeLoader::JPetScopeLoader(std::shared_ptr<JPetScopeTask> task): JPetTaskIO("ScopeTask")
 {
-  setSubTask(std::move(task));
+  addSubTask(task);
   gSystem->Load("libTree");
   /**/
 }
@@ -80,19 +80,21 @@ bool JPetScopeLoader::createInputObjects(const char*)
 
   auto prefix2PM =  getPMPrefixToPMIdMap();
   std::map<std::string, int> inputScopeFiles = createInputScopeFileNames(getScopeInputDirectory(opts), prefix2PM);
-  auto task = dynamic_cast<JPetScopeTask*>(fSubTask.get());
-  task->setInputFiles(inputScopeFiles);
+  for (auto fSubTask : fSubTasks) {
+    auto task = dynamic_cast<JPetScopeTask*>(fSubTask.get());
+    task->setInputFiles(inputScopeFiles);
 
 
-  // create an object for storing histograms and counters during processing
-  std::unique_ptr<JPetStatistics> tmp(new JPetStatistics());
-  fStatistics = std::move(tmp);
-  assert(fStatistics);
-  fHeader = new JPetTreeHeader(getRunNumber(opts));
-  assert(fHeader);
-  fHeader->setBaseFileName(getInputFile(opts));
-  fHeader->addStageInfo(task->getName(), "", 0, JPetCommonTools::getTimeString());
-  //fHeader->setSourcePosition((*fIter).pCollPosition);
+    // create an object for storing histograms and counters during processing
+    std::unique_ptr<JPetStatistics> tmp(new JPetStatistics());
+    fStatistics = std::move(tmp);
+    assert(fStatistics);
+    fHeader = new JPetTreeHeader(getRunNumber(opts));
+    assert(fHeader);
+    fHeader->setBaseFileName(getInputFile(opts));
+    fHeader->addStageInfo(task->getName(), "", 0, JPetCommonTools::getTimeString());
+    //fHeader->setSourcePosition((*fIter).pCollPosition);
+  }
   return true;
 }
 
@@ -164,10 +166,12 @@ bool JPetScopeLoader::init(const JPetParamsInterface& paramsI)
 
 bool JPetScopeLoader::run(const JPetDataInterface& inData)
 {
-  assert(fSubTask);
-  fSubTask->init(fParams);
-  fSubTask->run(inData);
-  fSubTask->terminate(fParams);
+  assert(!fSubTasks.empty());
+  for (auto fSubTask : fSubTasks) {
+    fSubTask->init(fParams);
+    fSubTask->run(inData);
+    fSubTask->terminate(fParams);
+  }
   return true;
 }
 

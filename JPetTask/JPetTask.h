@@ -19,6 +19,7 @@
 #include "../JPetTaskInterface/JPetTaskInterface.h"
 #include "../JPetDataInterface/JPetDataInterface.h"
 #include <string>
+#include <vector>
 
 class JPetWriter;
 
@@ -35,14 +36,14 @@ public:
   virtual bool run(const JPetDataInterface& inData) = 0;
   virtual bool terminate(JPetParamsInterface& outOptions) = 0;
 
-  virtual void setSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
-  virtual JPetTaskInterface* getSubTask() const override;
+  virtual void addSubTask(std::shared_ptr<JPetTaskInterface> subTask) override;
+  virtual std::vector<std::shared_ptr<JPetTaskInterface>> getSubTasks() const override;
 
   void setName(const std::string& name);
   std::string getName() const override;
 
 protected:
   std::string fName;
-  std::unique_ptr<JPetTaskInterface> fSubTask = 0;
+  std::vector<std::shared_ptr<JPetTaskInterface>> fSubTasks;
 };
 #endif /*  !JPETTASK_H */
