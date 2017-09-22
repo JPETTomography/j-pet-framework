@@ -54,7 +54,6 @@ std::vector<JPetOptions> JPetCmdParser::parseAndGenerateOptions(int argc, const 
   }
 
   po::store(po::parse_command_line(argc, argv, fOptionsDescriptions), variablesMap);
-
   /* print out help */
   if (variablesMap.count("help")) {
     std::cout << getOptionsDescription() << "\n";
