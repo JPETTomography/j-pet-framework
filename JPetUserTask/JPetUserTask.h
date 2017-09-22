@@ -51,9 +51,9 @@ public:
 
   virtual void setEvent(TObject* ev);
   const JPetParamBank& getParamBank();
+  jpet_options_tools::OptsStrAny getOptions() const;
+  virtual JPetTimeWindow* getOutputEvents();
 
-  virtual JPetTimeWindow * getOutputEvents(){return fOutputEvents; }
-  
 protected:
   virtual bool init() = 0; /// should be implemented in descendent class
   virtual bool exec() = 0; /// should be implemented in descendent class
@@ -62,6 +62,6 @@ protected:
   TObject* fEvent = 0;
   std::unique_ptr<JPetStatistics> fStatistics = 0;
   JPetParams fParams;
-  JPetTimeWindow * fOutputEvents;
+  JPetTimeWindow* fOutputEvents;
 };
 #endif /*  !JPETUSERTASK_H */
