@@ -98,9 +98,12 @@ boost::property_tree::ptree JPetParamSaverAscii::PMToInfo(const JPetPM& pm)
   boost::property_tree::ptree info;
   info.put("id", pm.getID());
   info.put("is_right_side", (pm.getSide() == JPetPM::Side::SideB));
+  info.put("description", pm.getDescription());
 
   info.put(objectsNames.at(ParamObjectType::kBarrelSlot) + "_id", pm.getBarrelSlot().getID());
-  info.put(objectsNames.at(ParamObjectType::kFEB) + "_id", pm.getFEB().getID());
+  if (pm.hasFEB()) {
+    info.put(objectsNames.at(ParamObjectType::kFEB) + "_id", pm.getFEB().getID());
+  }
   info.put(objectsNames.at(ParamObjectType::kScintillator) + "_id", pm.getScin().getID());
   return info;
 }
@@ -150,7 +153,9 @@ boost::property_tree::ptree JPetParamSaverAscii::barrelSlotToInfo(const JPetBarr
   info.put("theta1", bs.getTheta());
   info.put("frame_id", bs.getInFrameID());
 
-  info.put(objectsNames.at(ParamObjectType::kLayer) + "_id", bs.getLayer().getID());
+  if (bs.hasLayer()) {
+    info.put(objectsNames.at(ParamObjectType::kLayer) + "_id", bs.getLayer().getID());
+  }
   return info;
 }
 

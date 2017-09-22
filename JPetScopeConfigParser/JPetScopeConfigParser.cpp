@@ -53,9 +53,6 @@ scope_config::Config JPetScopeConfigParser::getConfig(std::string configName, bo
   config.fName = configName;
   config.fLocation = getLocation(configContent);
   config.fCollimatorPositions = getPositions(configContent);
-  config.fBSlots = getBSlots(configContent);
-  config.fPMs = getPMs(configContent);
-  config.fScins = getScins(configContent);
   return config;
 }
 
@@ -190,78 +187,6 @@ std::vector<std::string> JPetScopeConfigParser::getPositions(boost::property_tre
   return positions;
 }
 
-std::vector<scope_config::BSlot> JPetScopeConfigParser::getBSlots(boost::property_tree::ptree const& content) const
-{
-  using namespace scope_config;
-  std::vector<BSlot> bslots;
-  try {
-    int bslotid1 = content.get("bslot1.id", -1);
-    int bslotid2 = content.get("bslot2.id", -1);
-
-    bool bslotactive1 = content.get("bslot1.active", false);
-    bool bslotactive2 = content.get("bslot2.active", false);
-
-    std::string bslotname1 = content.get("bslot1.name", std::string(""));
-    std::string bslotname2 = content.get("bslot2.name", std::string(""));
-
-    float bslottheta1 = content.get("bslot1.theta", -1.f);
-    float bslottheta2 = content.get("bslot2.theta", -1.f);
-
-    int bslotframe1 = content.get("bslot1.frame", -1);
-    int bslotframe2 = content.get("bslot2.frame", -1);
-
-    bslots.push_back(BSlot(bslotid1, bslotactive1, bslotname1, bslottheta1, bslotframe1));
-    bslots.push_back(BSlot(bslotid2, bslotactive2, bslotname2, bslottheta2, bslotframe2));
-  } catch (const std::runtime_error& error) {
-    std::string message = "BSlot data error parsing. Error = " + std::string(error.what());
-    ERROR(message);
-  }
-  return bslots;
-}
-
-std::vector<scope_config::PM> JPetScopeConfigParser::getPMs(boost::property_tree::ptree const& content) const
-{
-  using namespace scope_config;
-  std::vector<PM> pms;
-  try {
-    int pmid1 = content.get("pm1.id", -1);
-    int pmid2 = content.get("pm2.id", -1);
-    int pmid3 = content.get("pm3.id", -1);
-    int pmid4 = content.get("pm4.id", -1);
-
-    std::string pmPrefix1 = content.get<std::string>("pm1.prefix");
-    std::string pmPrefix2 = content.get<std::string>("pm2.prefix");
-    std::string pmPrefix3 = content.get<std::string>("pm3.prefix");
-    std::string pmPrefix4 = content.get<std::string>("pm4.prefix");
-
-    pms.push_back(PM(pmid1, pmPrefix1));
-    pms.push_back(PM(pmid2, pmPrefix2));
-    pms.push_back(PM(pmid3, pmPrefix3));
-    pms.push_back(PM(pmid4, pmPrefix4));
-
-  } catch (const std::runtime_error& error) {
-    std::string message = "PM data error parsing. Error = " + std::string(error.what());
-    ERROR(message);
-  }
-  return pms;
-}
-
-std::vector<scope_config::Scin> JPetScopeConfigParser::getScins(boost::property_tree::ptree const& content) const
-{
-  using namespace scope_config;
-  std::vector<Scin> scins;
-  try {
-    int scinid1 = content.get("scin1.id", 0);
-    int scinid2 = content.get("scin2.id", 0);
-    scins.push_back(Scin(scinid1));
-    scins.push_back(Scin(scinid2));
-  } catch (const std::runtime_error& error) {
-    std::string message = "Scin data error parsing. Error = " + std::string(error.what());
-    ERROR(message);
-  }
-  return scins;
-}
-
 boost::property_tree::ptree JPetScopeConfigParser::getJsonContent(const std::string& configFileName) const
 {
   boost::property_tree::ptree propTree;
@@ -272,32 +197,4 @@ boost::property_tree::ptree JPetScopeConfigParser::getJsonContent(const std::str
     ERROR(message);
   }
   return propTree;
-}
-
-
-
-/// We store id of given types in a set. Set can contain only unique id, therefore in case of
-/// duplication the set size will be smaller that orginal vector size.
-bool JPetScopeConfigParser::areObjectsWithDuplicatedIds(const scope_config::Config& config) const
-{
-  using namespace scope_config;
-  std::set<int> bSlotIdSet;
-  for (const auto &  bslot : config.fBSlots) {
-    bSlotIdSet.insert(bslot.fId);
-  }
-  if (bSlotIdSet.size() < config.fBSlots.size()) return true;
-
-  std::set<int> pmIdSet;
-  for (const auto &  pm : config.fPMs) {
-    pmIdSet.insert(pm.fId);
-  }
-  if (pmIdSet.size() < config.fPMs.size()) return true;
-
-  std::set<int> scinIdSet;
-  for (const auto &  scin : config.fScins) {
-    scinIdSet.insert(scin.fId);
-  }
-  if (scinIdSet.size() < config.fScins.size()) return true;
-
-  return false;
 }

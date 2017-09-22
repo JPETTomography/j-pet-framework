@@ -39,15 +39,15 @@
 
 namespace param_and_data_factory
 {
-JPetScin makeScin(int id, float attenLen, float length, float height, float width, JPetBarrelSlot& p_barrelSlot ); 
+JPetScin makeScin(int id, float attenLen, float length, float height, float width, JPetBarrelSlot& p_barrelSlot );
 JPetFEB makeFEB(int p_id, bool p_isActive, const std::string& p_status, const std::string& p_description, int p_version, int p_userId, int p_n_time_outputs_per_input, int p_n_notime_outputs_per_input, JPetTRB& p_TRB);
-JPetLayer makeLayer(int id, bool isActive, const std::string& name, float radius,JPetFrame& frame); 
+JPetLayer makeLayer(int id, bool isActive, const std::string& name, float radius, JPetFrame& frame);
 JPetHit makeHit(float e, float qe, float t, float qt, TVector3& pos, JPetPhysSignal& siga, JPetPhysSignal& sigb, JPetBarrelSlot& bslot, JPetScin& scin, float qtd, float td);
-JPetSigCh makeSigCh(JPetPM & pm, JPetTRB & trb, JPetFEB & feb, JPetTOMBChannel & channel, float val, JPetSigCh::EdgeType type, float thr, Int_t daqch, unsigned int threshold_number); 
-JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, const std::string& name, float theta, int inFrameID); 
-JPetTimeWindow makeTimeWindow(const std::vector<JPetSigCh>& vec, unsigned int window_id); 
-JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot); 
-JPetBaseSignal makeBaseSignal(unsigned int index, JPetPM & pm, JPetBarrelSlot & bs);
+JPetSigCh makeSigCh(JPetPM& pm, JPetTRB& trb, JPetFEB& feb, JPetTOMBChannel& channel, float val, JPetSigCh::EdgeType type, float thr, Int_t daqch, unsigned int threshold_number);
+JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive, const std::string& name, float theta, int inFrameID);
+JPetTimeWindow makeTimeWindow(const std::vector<JPetSigCh>& vec, unsigned int window_id);
+JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, float>& gain, std::string description, JPetFEB& p_FEB, JPetScin& p_scin, JPetBarrelSlot& p_barrelSlot);
+JPetBaseSignal makeBaseSignal(unsigned int index, JPetPM& pm, JPetBarrelSlot& bs);
 JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe, double qualityOfPhe, JPetRecoSignal& recoSignal);
 JPetRawSignal makeRawSignal(const std::vector<JPetSigCh>& vec);
 JPetTOMBChannel makeTOMBChannel(int p_channel, JPetFEB& p_FEB, JPetTRB& p_TRB, JPetPM& p_PM, float p_threshold, unsigned int lcn, unsigned int fin);

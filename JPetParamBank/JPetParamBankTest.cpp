@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
 {
   JPetParamBank bank;
   JPetScin scint(111, 8.f, 2.f, 4.f, 8.f);
-  JPetPM pm(JPetPM::SideB, 222, 32, 64, std::make_pair(16.f, 32.f));
+  JPetPM pm(JPetPM::SideB, 222, 32, 64, std::make_pair(16.f, 32.f), "testTest");
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
   JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 6);
   JPetLayer layer(1, true, "layerTest", 35.f);
@@ -88,6 +88,7 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   BOOST_REQUIRE(bank.getPM(222).getID() == 222);
   BOOST_REQUIRE(bank.getPM(222).getHVset() == 32);
   BOOST_REQUIRE(bank.getPM(222).getHVopt() == 64);
+  BOOST_REQUIRE_EQUAL(bank.getPM(222).getDescription(), "testTest");
   BOOST_CHECK_CLOSE(bank.getPM(222).getHVgain(JPetPM::kFirst), 16.f, epsilon);
   BOOST_CHECK_CLOSE(bank.getPM(222).getHVgain(JPetPM::kSecond), 32.f, epsilon);
   std::pair<float, float> HVgain = bank.getPM(222).getHVgain();
@@ -139,7 +140,7 @@ BOOST_AUTO_TEST_CASE(clearAllContainersTest)
 {
   JPetParamBank bank;
   JPetScin scint(111, 8.f, 2.f, 4.f, 8.f);
-  JPetPM pm(JPetPM::SideB, 222, 32, 64, std::make_pair(16.f, 32.f));
+  JPetPM pm(JPetPM::SideB, 222, 32, 64, std::make_pair(16.f, 32.f), "testTest");
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
   JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 6);
   JPetLayer layer(1, true, "layerTest", 35.f);
@@ -185,7 +186,7 @@ BOOST_AUTO_TEST_CASE(getSizeTest)
 {
   JPetParamBank bank;
   JPetScin scint(111, 8.f, 2.f, 4.f, 8.f);
-  JPetPM pm(JPetPM::SideB, 222, 32, 64, std::make_pair(16.f, 32.f));
+  JPetPM pm(JPetPM::SideB, 222, 32, 64, std::make_pair(16.f, 32.f), "testTest");
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
   JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 6);
   JPetLayer layer(1, true, "layerTest", 35.f);
@@ -220,10 +221,10 @@ BOOST_AUTO_TEST_CASE( saving_reading_file )
   JPetParamBank bank;
   JPetScin scint1(1, 0, 0, 0, 0);
   JPetScin scint2(2, 0, 0, 0, 0);
-  JPetPM pm1(1);
-  JPetPM pm2(2);
-  JPetPM pm3(3);
-  JPetPM pm4(4);
+  JPetPM pm1(1, "test1");
+  JPetPM pm2(2, "test2");
+  JPetPM pm3(3, "test3");
+  JPetPM pm4(4, "test4");
   JPetPMCalib pmCalib(256, "JPetPMCalibTest", 2.f, 4.f, 8.f, 16.f, 32.f, 128, 512);
   JPetBarrelSlot barrelSlot(1, true, "barrelSlotTest", 35.f, 6);
   JPetLayer layer(1, true, "layerTest", 35.f);
