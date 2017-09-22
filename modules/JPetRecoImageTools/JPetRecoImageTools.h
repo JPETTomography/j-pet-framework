@@ -21,12 +21,11 @@
 #include <vector>
 
 #include <cassert>
-#include <cmath>
 #include <fftw3.h>
-#include <functional>
 #include <memory>
 #include <utility>
-#include <vector>
+
+#include "JPetFilterInterface.h"
 
 #include <boost/function_types/function_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
@@ -41,13 +40,8 @@ public:
       int i, double y, std::function< double(int, int) > &) >;
   using RescaleFunc = std::function< void(Matrix2DProj &v, double minCutoff,
                                           double rescaleFactor) >;
-  using FilterFunction = std::function< double(double) >;
-
-  static void FilterSinogram(FilterFunction callableFunction,
-                             Matrix2DProj &sinogram)
-  {
-    doFFTW(sinogram, callableFunction);
-  }
+  using FourierTransformFunction = std::function< Matrix2DProj(
+      Matrix2DProj &sinogram, JPetFilterInterface &filterFunction) >;
 
   /// Returns a matrixGetter, that can be used to return matrix elements in the
   /// following way:
@@ -141,41 +135,30 @@ public:
   static Matrix2DProj backProject(Matrix2DProj &sinogram, int angles,
                                   RescaleFunc rescaleFunc, int rescaleMinCutoff,
                                   int rescaleFactor);
-  /*! \brief Filter used in FT by function FilterSinogram, should be passed, not
-  * used directly
-  *  Dummy filter, not filtering data at all.
-  */
-  static double NoneFilter(double radius);
 
-  /*! \brief Filter used in FT by function FilterSinogram, should be passed, not
-   * used directly
-   * Ramp filter: F(x) = |x|
+  /*! \brief Function filtering given sinogram using fouriner implementation and
+   filter
+   *  \param ftf function filtering sinogram with given filter
+   *  \param filter type of filter
+   *  \param sinogram data to filter
   */
-  static double RamLakFilter(double radius);
+  static Matrix2DProj FilterSinogram(FourierTransformFunction &ftf,
+                                     JPetFilterInterface &filter,
+                                     Matrix2DProj &sinogram);
 
-  /*! \brief Filter used in FT by function FilterSinogram, should be passed, not
-   * used directly
-   * F(x) = sin(x * pi) / pi
+  /*! \brief Fourier transform implementation using FFTW library
+   *  \param sinogram data to filter
+   *  \param filter type of filter
   */
-  static double SheppLoganFilter(double radius);
+  static Matrix2DProj doFFTW(Matrix2DProj &sinogram,
+                             JPetFilterInterface &filter);
 
-  /*! \brief Filter used in FT by function FilterSinogram, should be passed, not
-   * used directly
-   * F(x) = x * cos(x * pi)
-  */
-  static double CosineFilter(double radius);
-
-  /*! \brief Filter used in FT by function FilterSinogram, should be passed, not
-   * used directly
-   * Not usable for now
-  */
-  static double HammingFilter(double radius, double alpha);
-
-  /*! \brief Filter used in FT by function FilterSinogram, should be passed, not
-   * used directly
-   * F(x) = sqrt(x)
-  */
-  static double RidgeletFilter(double radius);
+  /*! \brief Fourier transform implementation
+   *  \param sinogram data to filter
+   *  \param filter type of filter
+   */
+  static Matrix2DProj doFFTSLOW(Matrix2DProj &sinogram,
+                                JPetFilterInterface &filter);
 
 private:
   JPetRecoImageTools();
@@ -183,7 +166,11 @@ private:
   JPetRecoImageTools(const JPetRecoImageTools &) = delete;
   JPetRecoImageTools &operator=(const JPetRecoImageTools &) = delete;
 
-  static void doFFTW(Matrix2DProj &sinogram, FilterFunction &filter);
+  static void doFFTSLOWT(std::vector< double > &Re, std::vector< double > &Im,
+                         int size, int shift);
+
+  static void doFFTSLOWI(std::vector< double > &Re, std::vector< double > &Im,
+                         int size, int shift);
 
   static inline double setToZeroIfSmall(double value, double epsilon)
   {
