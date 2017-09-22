@@ -56,9 +56,9 @@ using namespace boost::filesystem;
 using boost::property_tree::ptree;
 
 
-JPetScopeLoader::JPetScopeLoader(std::shared_ptr<JPetScopeTask> task): JPetTaskIO("ScopeTask")
+JPetScopeLoader::JPetScopeLoader(std::unique_ptr<JPetScopeTask> task): JPetTaskIO("ScopeTask")
 {
-  addSubTask(task);
+  addSubTask(std::move(task));
   gSystem->Load("libTree");
   /**/
 }
@@ -80,8 +80,8 @@ bool JPetScopeLoader::createInputObjects(const char*)
 
   auto prefix2PM =  getPMPrefixToPMIdMap();
   std::map<std::string, int> inputScopeFiles = createInputScopeFileNames(getScopeInputDirectory(opts), prefix2PM);
-  for (auto fSubTask : fSubTasks) {
-    auto task = dynamic_cast<JPetScopeTask*>(fSubTask.get());
+  for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
+    auto task = dynamic_cast<JPetScopeTask*>((*fSubTask).get());
     task->setInputFiles(inputScopeFiles);
 
 
@@ -167,10 +167,10 @@ bool JPetScopeLoader::init(const JPetParamsInterface& paramsI)
 bool JPetScopeLoader::run(const JPetDataInterface& inData)
 {
   assert(!fSubTasks.empty());
-  for (auto fSubTask : fSubTasks) {
-    fSubTask->init(fParams);
-    fSubTask->run(inData);
-    fSubTask->terminate(fParams);
+  for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
+    (*fSubTask)->init(fParams);
+    (*fSubTask)->run(inData);
+    (*fSubTask)->terminate(fParams);
   }
   return true;
 }
@@ -195,10 +195,12 @@ bool JPetScopeLoader::createOutputObjects(const char* outputFilename)
 
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
-  if (fSubTask) {
-    auto task = dynamic_cast<JPetScopeTask*>(fSubTask.get());
-    task->setStatistics(std::move(fStatistics));
-    task->setWriter(fWriter);
+  if (!fSubTasks.empty()) {
+    for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
+      auto task = dynamic_cast<JPetScopeTask*>((*fSubTask).get());
+      task->setStatistics(std::move(fStatistics));
+      task->setWriter(fWriter);
+    }
   } else {
     WARNING("the subTask does not exist, so JPetWriter and JPetStatistics not passed to it");
     return false;
