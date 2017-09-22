@@ -36,7 +36,7 @@ public:
   virtual bool run(const JPetDataInterface& inData) = 0;
   virtual bool terminate(JPetParamsInterface& outOptions) = 0;
   virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) = 0;
-  virtual const std::vector<std::unique_ptr<JPetTaskInterface>>* getSubTasks() const = 0;
+  virtual const std::vector<JPetTaskInterface*> getSubTasks() const = 0;
   virtual std::string getName() const = 0;
 };
 #endif /*  !JPETTASKINTERFACE_H */

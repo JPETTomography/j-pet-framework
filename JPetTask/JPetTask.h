@@ -37,7 +37,7 @@ public:
   virtual bool terminate(JPetParamsInterface& outOptions) = 0;
 
   virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
-  virtual const std::vector<std::unique_ptr<JPetTaskInterface>>* getSubTasks() const override;
+  virtual const std::vector<JPetTaskInterface*> getSubTasks() const override;
 
   void setName(const std::string& name);
   std::string getName() const override;
