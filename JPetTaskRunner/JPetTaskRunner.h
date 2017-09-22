@@ -21,7 +21,7 @@
 
 /**
  * @brief Interface class representing a computing task unit which can contain some subtasks
- * 
+ *
  * *
  */
 class JPetTaskRunner: public JPetTaskInterface
@@ -29,14 +29,14 @@ class JPetTaskRunner: public JPetTaskInterface
 public:
   JPetTaskRunner();
   virtual ~JPetTaskRunner();
-  void setSubTask(std::unique_ptr<JPetTaskInterface> subtask) override;
-  JPetTaskInterface* getSubTask() const override;
+  void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
+  virtual const std::vector<std::unique_ptr<JPetTaskInterface>>* getSubTasks() const override;
   virtual bool init(const JPetParamsInterface& inOptions) = 0;
   virtual bool exec() = 0;
   virtual bool terminate(JPetParamsInterface& outOptions) = 0;
 
 protected:
-  std::unique_ptr<JPetTaskInterface> fTask;
+  std::vector<std::unique_ptr<JPetTaskInterface>> fSubTasks;
 
 private:
   void operator=(const JPetTaskRunner&);

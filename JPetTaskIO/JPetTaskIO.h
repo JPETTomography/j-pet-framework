@@ -65,7 +65,7 @@ protected:
   JPetWriter* fWriter = 0;
   JPetReaderInterface* fReader = 0;
   JPetTreeHeader* fHeader = 0;
-  std::unique_ptr<JPetStatistics> fStatistics = 0;
+  std::shared_ptr<JPetStatistics> fStatistics = 0;
   JPetProgressBarManager fProgressBar;
 };
 #endif /*  !JPETTASKIO_H */

@@ -32,12 +32,12 @@ std::string JPetTask::getName() const
   return fName;
 }
 
-void JPetTask::addSubTask(std::shared_ptr<JPetTaskInterface> subTask)
+void JPetTask::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
 {
-  fSubTasks.push_back(subTask);
+  fSubTasks.push_back(std::move(subTask));
 }
 
-std::vector<std::shared_ptr<JPetTaskInterface>> JPetTask::getSubTasks() const
+const std::vector<std::unique_ptr<JPetTaskInterface>>* JPetTask::getSubTasks() const
 {
-  return fSubTasks;
+  return &fSubTasks;
 }

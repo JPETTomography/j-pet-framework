@@ -46,7 +46,7 @@ class JPetWriter;
 class JPetScopeLoader: public JPetTaskIO
 {
 public:
-  JPetScopeLoader(std::shared_ptr<JPetScopeTask> task);
+  JPetScopeLoader(std::unique_ptr<JPetScopeTask> task);
   virtual ~JPetScopeLoader();
 
   virtual bool init(const JPetParamsInterface& opts) override;

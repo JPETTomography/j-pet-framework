@@ -64,8 +64,8 @@ bool JPetTaskIO::run(const JPetDataInterface& inData)
     ERROR("No reader set");
     return false;
   }
-  for (auto fSubTask : fSubTasks) {
-    fSubTask->init(fParams); //prepare current task for file
+  for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
+    (*fSubTask)->init(fParams); //prepare current task for file
 
     auto totalEvents = 0ll;
     if (fReader) {
@@ -88,13 +88,13 @@ bool JPetTaskIO::run(const JPetDataInterface& inData)
       if (isProgressBar(fParams.getOptions())) {
         displayProgressBar(i, lastEvent);
       }
-      (dynamic_cast<JPetUserTask*>(fSubTask.get()))->getOutputEvents()->Clear();
+      (dynamic_cast<JPetUserTask*>((*fSubTask).get()))->getOutputEvents()->Clear();
       JPetData event(fReader->getCurrentEvent());
-      fSubTask->run(event);
-      fWriter->write(*((dynamic_cast<JPetUserTask*>(fSubTask.get()))->getOutputEvents()));
+      (*fSubTask)->run(event);
+      fWriter->write(*((dynamic_cast<JPetUserTask*>((*fSubTask).get()))->getOutputEvents()));
       fReader->nextEvent();
     }
-    fSubTask->terminate(fParams);
+    (*fSubTask)->terminate(fParams);
   }
   return true;
 }
@@ -189,13 +189,13 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
     }
     // create an object for storing histograms and counters during processing
     // make_unique is not available in c++11 :(
-    std::unique_ptr<JPetStatistics> tmpUnique(new JPetStatistics);
-    fStatistics = std::move(tmpUnique);
+    // std::shared_ptr<JPetStatistics> tmpUnique(new JPetStatistics);
+    fStatistics = std::make_shared<JPetStatistics>();
 
     // add info about this module to the processing stages' history in Tree header
     //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
-    for (auto fSubTask : fSubTasks) {
-      auto task = dynamic_cast<JPetUserTask*>(fSubTask.get());
+    for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
+      auto task = dynamic_cast<JPetUserTask*>((*fSubTask).get());
       fHeader->addStageInfo(task->getName(), "", 0,
                             JPetCommonTools::getTimeString());
     }
@@ -213,9 +213,9 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
   assert(fWriter);
   if (!fSubTasks.empty()) {
     //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
-    for (auto fSubTask : fSubTasks) {
-      auto task = dynamic_cast<JPetUserTask*>(fSubTask.get());
-      task->setStatistics(std::move(fStatistics));
+    for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
+      auto task = dynamic_cast<JPetUserTask*>((*fSubTask).get());
+      task->setStatistics(fStatistics);
     }
   } else {
     WARNING("the subTask does not exist, so JPetStatistics not passed to it");
