@@ -30,7 +30,7 @@ public:
   JPetTaskRunner();
   virtual ~JPetTaskRunner();
   void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
-  virtual const std::vector<std::unique_ptr<JPetTaskInterface>>* getSubTasks() const override;
+  virtual const std::vector<JPetTaskInterface*> getSubTasks() const override;
   virtual bool init(const JPetParamsInterface& inOptions) = 0;
   virtual bool exec() = 0;
   virtual bool terminate(JPetParamsInterface& outOptions) = 0;
