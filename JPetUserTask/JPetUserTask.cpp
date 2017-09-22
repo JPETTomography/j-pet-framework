@@ -64,3 +64,13 @@ void JPetUserTask::setEvent(TObject* ev)
 {
   fEvent = ev;
 }
+
+jpet_options_tools::OptsStrAny JPetUserTask::getOptions() const
+{
+  return fParams.getOptions();
+}
+
+JPetTimeWindow* JPetUserTask::getOutputEvents()
+{
+  return fOutputEvents;
+}
