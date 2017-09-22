@@ -49,9 +49,9 @@ const JPetParamBank& JPetUserTask::getParamBank()
   return paramManager->getParamBank();
 }
 
-void JPetUserTask::setStatistics(std::unique_ptr<JPetStatistics> statistics)
+void JPetUserTask::setStatistics(std::shared_ptr<JPetStatistics> statistics)
 {
-  fStatistics = std::move(statistics);
+  fStatistics = statistics;
 }
 
 JPetStatistics& JPetUserTask::getStatistics()

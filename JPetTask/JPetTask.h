@@ -36,14 +36,14 @@ public:
   virtual bool run(const JPetDataInterface& inData) = 0;
   virtual bool terminate(JPetParamsInterface& outOptions) = 0;
 
-  virtual void addSubTask(std::shared_ptr<JPetTaskInterface> subTask) override;
-  virtual std::vector<std::shared_ptr<JPetTaskInterface>> getSubTasks() const override;
+  virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
+  virtual const std::vector<std::unique_ptr<JPetTaskInterface>>* getSubTasks() const override;
 
   void setName(const std::string& name);
   std::string getName() const override;
 
 protected:
   std::string fName;
-  std::vector<std::shared_ptr<JPetTaskInterface>> fSubTasks;
+  std::vector<std::unique_ptr<JPetTaskInterface>> fSubTasks;
 };
 #endif /*  !JPETTASK_H */
