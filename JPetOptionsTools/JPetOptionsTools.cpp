@@ -53,6 +53,57 @@ boost::any getOptionValue(const OptsStrAny& opts, std::string optionName)
   return opts.at(optionName);
 }
 
+std::string getOptionAsString(const OptsStrAny& opts, std::string optionName)
+{
+  try {
+    return any_cast<std::string>(getOptionValue(opts, optionName));
+  } catch (const std::exception& excep) {
+    ERROR("Bad option type:" + std::string(excep.what()));
+    return "";
+  }
+}
+
+int getOptionAsInt(const OptsStrAny& opts, std::string optionName)
+{
+  try {
+    return any_cast<int>(getOptionValue(opts, optionName));
+  } catch (const std::exception& excep) {
+    ERROR("Bad option type:" + std::string(excep.what()));
+    return -1;
+  }
+}
+
+float getOptionAsFloat(const OptsStrAny& opts, std::string optionName)
+{
+  try {
+    return any_cast<float>(getOptionValue(opts, optionName));
+  } catch (const std::exception& excep) {
+    ERROR("Bad option type:" + std::string(excep.what()));
+    return -1.;
+  }
+}
+
+double getOptionAsDouble(const OptsStrAny& opts, std::string optionName)
+{
+  try {
+    return any_cast<double>(getOptionValue(opts, optionName));
+  } catch (const std::exception& excep) {
+    ERROR("Bad option type:" + std::string(excep.what()));
+    return -1.;
+  }
+}
+
+std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, std::string optionName)
+{
+  try {
+    return any_cast<std::vector<std::string>>(getOptionValue(opts, optionName));
+  } catch (const std::exception& excep) {
+    std::vector<std::string> emptyV;
+    ERROR("Bad option type:" + std::string(excep.what()));
+    return emptyV;
+  }
+}
+
 FileTypeChecker::FileType FileTypeChecker::getInputFileType(const std::map<std::string, boost::any>& opts)
 {
   return getFileType(opts, "inputFileType_std::string");
