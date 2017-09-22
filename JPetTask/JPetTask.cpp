@@ -37,7 +37,11 @@ void JPetTask::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
   fSubTasks.push_back(std::move(subTask));
 }
 
-const std::vector<std::unique_ptr<JPetTaskInterface>>* JPetTask::getSubTasks() const
+const std::vector<JPetTaskInterface*> JPetTask::getSubTasks() const
 {
-  return &fSubTasks;
+  std::vector<JPetTaskInterface*> tmp;
+  for (auto subtask = fSubTasks.begin(); subtask != fSubTasks.end(); subtask++) {
+    tmp.push_back(subtask->get());
+  }
+  return tmp;
 }
