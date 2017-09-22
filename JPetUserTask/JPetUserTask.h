@@ -51,11 +51,8 @@ public:
 
   virtual void setEvent(TObject* ev);
   const JPetParamBank& getParamBank();
-
-  virtual JPetTimeWindow* getOutputEvents()
-  {
-    return fOutputEvents;
-  }
+  jpet_options_tools::OptsStrAny getOptions() const;
+  virtual JPetTimeWindow* getOutputEvents();
 
 protected:
   virtual bool init() = 0; /// should be implemented in descendent class

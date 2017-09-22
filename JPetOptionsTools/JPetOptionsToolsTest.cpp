@@ -187,4 +187,23 @@ BOOST_AUTO_TEST_CASE(getTotalEventsTest)
   BOOST_REQUIRE_EQUAL(getTotalEvents(options), -1);
 }
 
+BOOST_AUTO_TEST_CASE(getOptionBy)
+{
+  std::vector<std::string> tmp = {"aa", "bb"};
+  std::map<std::string, boost::any> opts = {
+    {"my_string", std::string("my_value")},
+    {"my_int", int(12)},
+    {"my_float", float(12.5)},
+    {"my_double", double(14.6)},
+    {"my_vectS", tmp}
+  };
+  BOOST_REQUIRE_EQUAL(getOptionAsString(opts, "my_string"), std::string("my_value"));
+  BOOST_REQUIRE_EQUAL(getOptionAsInt(opts, "my_int"), 12);
+  BOOST_REQUIRE_EQUAL(getOptionAsFloat(opts, "my_float"), 12.5);
+  BOOST_REQUIRE_EQUAL(getOptionAsDouble(opts, "my_double"), 14.6);
+  BOOST_REQUIRE(!getOptionAsVectorOfStrings(opts, "my_vectS").empty());
+  BOOST_REQUIRE_EQUAL(getOptionAsVectorOfStrings(opts, "my_vectS").size(), 2u);
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()

@@ -35,6 +35,11 @@ using OptsStrAny = std::map<std::string, boost::any> ;
 
 bool isOptionSet(const OptsStrAny& opts, const std::string& optionName);
 boost::any getOptionValue(const OptsStrAny& opts, std::string optionName);
+std::string getOptionAsString(const OptsStrAny& opts, std::string optionName);
+int getOptionAsInt(const OptsStrAny& opts, std::string optionName);
+float getOptionAsFloat(const OptsStrAny& opts, std::string optionName);
+double getOptionAsDouble(const OptsStrAny& opts, std::string optionName);
+std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, std::string optionName);
 
 class FileTypeChecker
 {
