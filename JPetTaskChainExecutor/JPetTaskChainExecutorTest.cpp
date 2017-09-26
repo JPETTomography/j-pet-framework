@@ -71,12 +71,12 @@ BOOST_AUTO_TEST_CASE(test2)
 
   auto taskGenerator1 = []() {
     auto taskIO =  new JPetTaskIO("TaskA");
-    taskIO->setSubTask(std::unique_ptr<TestTask>(new TestTask));
+    taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask));
     return taskIO;
   };
   auto taskGenerator2 = []() {
     auto taskIO =  new JPetTaskIO("TaskB");
-    taskIO->setSubTask(std::unique_ptr<TestTask>(new TestTask));
+    taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask));
     return taskIO;
   };
   TaskGeneratorChain* chain =  new TaskGeneratorChain;
