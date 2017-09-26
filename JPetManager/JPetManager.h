@@ -20,6 +20,7 @@
 #include "../JPetTaskChainExecutor/JPetTaskChainExecutor.h"
 #include "../JPetOptionsTools/JPetOptionsTools.h"
 #include <memory>
+#include <map>
 
 /**
  * @brief Main manager of the analysis performed with the J-PET Framework.
@@ -40,7 +41,12 @@ public:
   ~JPetManager();
 
   bool run(int argc, const char** argv);
-  void registerTask(const TaskGenerator& taskGen);
+  
+  template<typename T> void registerTask(const char * name){
+    fTasksDictionary[name] = [name]() {
+      return new T(name);
+    };
+  }
   /// Function parses command line arguments and generates options for tasks.
   /// The fOptions is filled with the generated options.
   bool parseCmdLine(int argc, const char** argv);
@@ -48,7 +54,9 @@ public:
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
   bool initDBConnection(const char* configFilePath = "../DBConfig/configDB.cfg");
-
+  // @todo: replace the need to call this method with task list passed as an option  
+  void useTask(const char * name, const char * inputFileType="", const char * outputFileType="");
+  
 private:
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&);
@@ -58,5 +66,13 @@ private:
   Options fOptions;
   TaskGeneratorChain* fTaskGeneratorChain = nullptr; /// fTaskGeneratorChain is a sequences of registered computing tasks.
   bool fThreadsEnabled = false;
+  std::map<const char *, TaskGenerator> fTasksDictionary;
 };
 #endif /*  !JPETMANAGER_H */
+
+
+
+
+
+
+
