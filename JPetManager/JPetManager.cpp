@@ -148,10 +148,21 @@ JPetManager::~JPetManager()
   JPetDBParamGetter::clearParamCache();
 }
 
-void JPetManager::registerTask(const TaskGenerator& taskGen)
-{
+
+void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType){
   assert(fTaskGeneratorChain);
-  fTaskGeneratorChain->push_back(taskGen);
+  if( fTasksDictionary.count(name) > 0 ){
+    TaskGenerator userTaskGen = fTasksDictionary.at(name);
+    // wrap the JPetUserTask-based task in a JPetTaskIO
+    fTaskGeneratorChain->push_back( [name, inputFileType, outputFileType, userTaskGen]() {
+	JPetTaskIO * task = new JPetTaskIO(name, inputFileType, outputFileType);
+	task->setSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
+	return task;
+      });
+  }else{
+    ERROR(Form("The requested task %s is unknown", name));
+    exit(1);
+  }
 }
 
 JPetManager::Options JPetManager::getOptions() const

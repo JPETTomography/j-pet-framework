@@ -28,7 +28,12 @@
 
 using namespace jpet_options_tools;
 
-JPetTaskIO::JPetTaskIO(const char* name): JPetTask(name)
+JPetTaskIO::JPetTaskIO(const char* name,
+		       const char* in_file_type,
+		       const char* out_file_type):
+  JPetTask(name),
+  fInFileType(in_file_type),
+  fOutFileType(out_file_type)
 {
 }
 
@@ -45,9 +50,9 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
   auto params = dynamic_cast<const JPetParams&>(paramsI);
   setOptions(params);
   auto opts = fParams.getOptions();
-  std::string inputFilename(getInputFile(opts));
+  std::string inputFilename(generateProperNameFile(getInputFile(opts), fInFileType));
   std::string outputPath(getOutputPath(opts));
-  auto outputFilename = outputPath + std::string(getOutputFile(opts));
+  auto outputFilename = outputPath + std::string(generateProperNameFile(getOutputFile(opts), fOutFileType));
   if (!createInputObjects(inputFilename.c_str())) {
     ERROR("createInputObjects");
     return false;
@@ -307,4 +312,29 @@ bool JPetTaskIO::setUserLimits(const OptsStrAny& opts, const long long kTotEvent
   assert(last >= 0);
   assert(first <= last);
   return true;
+}
+
+std::string JPetTaskIO::generateProperNameFile(const std::string& srcFilename, const std::string& fileType) const
+{
+  auto baseFileName = getBaseFilePath(srcFilename);
+  if (!fileType.empty()) {
+    baseFileName = baseFileName + "." + fileType;
+  }
+  return baseFileName + ".root";
+}
+
+std::string JPetTaskIO::getBaseFilePath(const std::string& srcName) const
+{
+  boost::filesystem::path p(srcName);
+  // the file name and path are treated separately not to strip dots from the path
+  std::string name = p.filename().native();
+  boost::filesystem::path dir = p.parent_path().native();
+  //strip the "extension" starting from the first dot in the file name
+  auto pos = name.find(".");
+  if ( pos != std::string::npos ) {
+    name.erase( pos );
+  }
+  boost::filesystem::path bare_name(name);
+
+  return (dir / bare_name).native();
 }
