@@ -49,7 +49,7 @@ const JPetParamBank& JPetUserTask::getParamBank()
   return paramManager->getParamBank();
 }
 
-void JPetUserTask::setStatistics(std::shared_ptr<JPetStatistics> statistics)
+void JPetUserTask::setStatistics(JPetStatistics* statistics)
 {
   fStatistics = statistics;
 }

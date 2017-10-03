@@ -46,7 +46,7 @@ public:
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParamsInterface& outOptions) override;
 
-  virtual void setStatistics(std::shared_ptr<JPetStatistics> statistics);
+  virtual void setStatistics(JPetStatistics* statistics);
   JPetStatistics& getStatistics();
 
   virtual void setEvent(TObject* ev);
@@ -63,7 +63,7 @@ protected:
   virtual bool terminate() = 0; /// should be implemented in descendent class
 
   TObject* fEvent = 0;
-  std::shared_ptr<JPetStatistics> fStatistics = 0;
+  JPetStatistics* fStatistics = 0;
   JPetParams fParams;
   JPetTimeWindow* fOutputEvents;
 };
