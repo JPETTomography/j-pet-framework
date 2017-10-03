@@ -49,7 +49,7 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
   if (!createOutputObjects(outputFilename.c_str())) {
     ERROR("createOutputObjects");
     return false;
-  }
+ }
   return true;
 }
 
@@ -82,8 +82,6 @@ bool JPetTaskIO::run(const JPetDataInterface& inData)
   assert(lastEvent >= 0);
   for (auto i = firstEvent; i <= lastEvent; i++) {
 
-    //(std::dynamic_pointer_cast<JPetTask>(fTask))->setEvent(&(static_cast<TNamed&>(fReader->getCurrentEvent())));
-    //(dynamic_cast<JPetUserTask*>(fSubTask))->setEvent(&(static_cast<TObject&>(fReader->getCurrentEvent())));
     if (isProgressBar(fParams.getOptions())) {
       displayProgressBar(i, lastEvent);
     }
@@ -208,9 +206,8 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
   if (fSubTask) {
-    //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
     auto task = dynamic_cast<JPetUserTask*>(fSubTask.get());
-    task->setStatistics(std::move(fStatistics));
+    task->setStatistics(fStatistics.get());
   } else {
     WARNING("the subTask does not exist, so JPetStatistics not passed to it");
     return false;
