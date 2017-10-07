@@ -153,14 +153,9 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
 {
   using namespace jpet_options_tools;
   auto options = fParams.getOptions();
-  auto treeName = "";
+  assert(!fReader);
   fReader = new JPetReader;
-  if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHld ) {
-    treeName = "T";
-  } else {
-    treeName = "tree";
-  }
-  if ( fReader->openFileAndLoadData( inputFilename, treeName )) {
+  if ( fReader->openFileAndLoadData(inputFilename, JPetReader::kRootTreeName.c_str())) {
     if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHld ) {
       // create a header to be stored along with the output tree
       fHeader = new JPetTreeHeader(getRunNumber(options));
