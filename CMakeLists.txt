@@ -110,8 +110,6 @@ add_subdirectory(Unpacker2/Unpacker2)
 file(GLOB HEADERS JPet*/*.h tools/JPet*/*.h)
 file(GLOB SOURCES JPet*/*.cpp tools/JPet*/*.cpp)
 file(GLOB UNIT_TEST_SOURCES JPet*/*Test.cpp)
-file(GLOB MODULES_UNIT_TEST_SOURCES)
-list(APPEND UNIT_TEST_SOURCES ${MODULES_UNIT_TEST_SOURCES})
 list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
 
 ##download test files and config files
