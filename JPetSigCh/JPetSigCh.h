@@ -180,7 +180,7 @@ public:
 
   void Clear(Option_t * = "");
   
-  ClassDef(JPetSigCh, 6);
+  ClassDef(JPetSigCh, 7);
   
 protected:
   EdgeType fType; ///< type of the SigCh: Leading or Trailing
