@@ -79,6 +79,7 @@ bool JPetTaskChainExecutor::process()
     jpet_options_tools::printOptionsToLog(currParams.getOptions(), std::string("Options for ") + taskName);
     currParamsIt++;
 
+    startTime = stdc::system_clock::now();
     INFO(Form("Starting task: %s", taskName.c_str()));
     if (!currentTask->init(currParams)) {
       ERROR("In task initialization");
