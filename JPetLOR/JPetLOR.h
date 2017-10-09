@@ -73,7 +73,7 @@ public:
   float getQualityOfTimeDiff() const;
   bool isHitSet(const unsigned int index);
   
-ClassDef(JPetLOR,2);
+ClassDef(JPetLOR,3);
 
 /** @brief Checks whether both Hit objects set in this LOR object
  *  come from different barrel slots and are properly time-ordered

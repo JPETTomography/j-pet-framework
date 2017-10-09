@@ -235,7 +235,7 @@ private:
 
   std::map<float, float> fRecoTimesAtThreshold;
 
-ClassDef(JPetRecoSignal, 1)
+ClassDef(JPetRecoSignal, 2)
   ;
 };
 

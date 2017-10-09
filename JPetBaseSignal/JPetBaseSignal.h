@@ -75,7 +75,7 @@ bool fIsNullObject = false;
 bool fIsNullObject;
 #endif
 
-ClassDef(JPetBaseSignal, 2);
+ClassDef(JPetBaseSignal, 3);
 
 };
 #endif /*  !JPETBASESIGNAL_H */
