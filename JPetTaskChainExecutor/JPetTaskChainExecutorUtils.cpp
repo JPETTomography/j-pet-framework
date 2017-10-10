@@ -45,32 +45,33 @@ bool JPetTaskChainExecutorUtils::process(const JPetParams& params)
     }
   }
 
-  auto inputFile = getInputFile(options);
-  auto inputFileType = FileTypeChecker::getInputFileType(options);
-  auto unpackerConfigFile = getUnpackerConfigFile(options);
-  auto unpackerCalibFile = getUnpackerCalibFile(options);
+  /// @todo this part of the code should be removed after new construct check
+  //auto inputFile = getInputFile(options);
+  //auto inputFileType = FileTypeChecker::getInputFileType(options);
+  //auto unpackerConfigFile = getUnpackerConfigFile(options);
+  //auto unpackerCalibFile = getUnpackerCalibFile(options);
 
-  if (inputFileType == FileTypeChecker::kHld) {
-    unpackFile(inputFile, getTotalEvents(options), unpackerConfigFile, unpackerCalibFile);
-  }
-  /// Assumption that if the file is zipped than it is in the hld format
-  /// and we will also unpack if from hld  after unzipping.
-  else if ( inputFileType == FileTypeChecker::kZip) {
-    INFO( std::string("Unzipping file before unpacking") );
-    if ( !unzipFile(inputFile) ) {
-      ERROR( std::string("Problem with unpacking file: ") + inputFile );
-      return false;
-    } else {
-      INFO( std::string("Unpacking") );
-      auto unzippedFilename = JPetCommonTools::stripFileNameSuffix(std::string(inputFile)).c_str();
-      unpackFile(unzippedFilename, getTotalEvents(options), unpackerConfigFile, unpackerCalibFile);
-    }
-  }
+  //if (inputFileType == FileTypeChecker::kHld) {
+  //unpackFile(inputFile, getTotalEvents(options), unpackerConfigFile, unpackerCalibFile);
+  //}
+  ///// Assumption that if the file is zipped than it is in the hld format
+  ///// and we will also unpack if from hld  after unzipping.
+  //else if ( inputFileType == FileTypeChecker::kZip) {
+  //INFO( std::string("Unzipping file before unpacking") );
+  //if ( !unzipFile(inputFile) ) {
+  //ERROR( std::string("Problem with unpacking file: ") + inputFile );
+  //return false;
+  //} else {
+  //INFO( std::string("Unpacking") );
+  //auto unzippedFilename = JPetCommonTools::stripFileNameSuffix(std::string(inputFile)).c_str();
+  //unpackFile(unzippedFilename, getTotalEvents(options), unpackerConfigFile, unpackerCalibFile);
+  //}
+  //}
 
-  if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kUndefinedFileType) {
-    ERROR( Form("Unknown file type provided for file: %s", getInputFile(options)) );
-    return false;
-  }
+  //if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kUndefinedFileType) {
+  //ERROR( Form("Unknown file type provided for file: %s", getInputFile(options)) );
+  //return false;
+  //}
   return true;
 }
 
