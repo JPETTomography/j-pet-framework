@@ -44,48 +44,7 @@ bool JPetTaskChainExecutorUtils::process(const JPetParams& params)
       saver.saveParamBank(paramMgr->getParamBank(), runNum, getLocalDBCreate(options));
     }
   }
-
-  /// @todo this part of the code should be removed after new construct check
-  //auto inputFile = getInputFile(options);
-  //auto inputFileType = FileTypeChecker::getInputFileType(options);
-  //auto unpackerConfigFile = getUnpackerConfigFile(options);
-  //auto unpackerCalibFile = getUnpackerCalibFile(options);
-
-  //if (inputFileType == FileTypeChecker::kHld) {
-  //unpackFile(inputFile, getTotalEvents(options), unpackerConfigFile, unpackerCalibFile);
-  //}
-  ///// Assumption that if the file is zipped than it is in the hld format
-  ///// and we will also unpack if from hld  after unzipping.
-  //else if ( inputFileType == FileTypeChecker::kZip) {
-  //INFO( std::string("Unzipping file before unpacking") );
-  //if ( !unzipFile(inputFile) ) {
-  //ERROR( std::string("Problem with unpacking file: ") + inputFile );
-  //return false;
-  //} else {
-  //INFO( std::string("Unpacking") );
-  //auto unzippedFilename = JPetCommonTools::stripFileNameSuffix(std::string(inputFile)).c_str();
-  //unpackFile(unzippedFilename, getTotalEvents(options), unpackerConfigFile, unpackerCalibFile);
-  //}
-  //}
-
-  //if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kUndefinedFileType) {
-  //ERROR( Form("Unknown file type provided for file: %s", getInputFile(options)) );
-  //return false;
-  //}
   return true;
-}
-
-/// Function unpacks file of the hld format into a root tree
-void JPetTaskChainExecutorUtils::unpackFile(const char* filename, long long nevents, const char* configfile = "", const char* calibfile = "")
-{
-  JPetUnpacker unpacker;
-  if (nevents > 0) {
-    unpacker.setParams(filename, nevents, configfile, calibfile);
-    WARNING(std::string("Even though the range of events was set, only the first ") + JPetCommonTools::intToString(nevents) + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file."));
-  } else {
-    unpacker.setParams(filename, 100000000, configfile, calibfile);
-  }
-  unpacker.exec();
 }
 
 ///@todo this function should be moved to some other class
@@ -118,14 +77,4 @@ std::shared_ptr<JPetParamManager> JPetTaskChainExecutorUtils::generateParamManag
   } else {
     return std::make_shared<JPetParamManager>();
   }
-}
-
-bool JPetTaskChainExecutorUtils::unzipFile(const char* filename)
-{
-  if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".gz")
-    return !( system( ( std::string("gzip -dk ") + std::string(filename) ).c_str() ) );
-  else if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".xz" )
-    return !( system( (std::string("xz -dk ") + std::string(filename) ).c_str() ) );
-  else
-    return false;
 }
