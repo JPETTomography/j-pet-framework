@@ -48,12 +48,12 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
   if (!createOutputObjects(outputFilename.c_str())) {
     ERROR("createOutputObjects");
     return false;
- }
+  }
   return true;
 }
 
 
-bool JPetTaskIO::run(const JPetDataInterface& inData)
+bool JPetTaskIO::run(const JPetDataInterface&)
 {
 
   if (fSubTasks.empty()) {
