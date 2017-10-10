@@ -67,6 +67,69 @@ JPetOptionsGenerator::JPetOptionsGenerator()
 }
 
 /// Function returns a map of Options
+/// based on the number of registered tasks and provided options.
+/// The elements of the map are pairs filename -> OptionsForAllTasks
+/// , where OptionsForAllTasks is a container with elements correspondig to the
+/// options assigned for given task.
+/// e.g. if there are 4 files and for each file there are 3 tasks, then the map
+/// should have 4 containers with 3 option elements each.
+/// In this version it is assumed that for every file the same number of tasks are
+/// provided defined by nbOfRegisteredTasks arguments.
+JPetOptionsGenerator::OptsForFiles JPetOptionsGenerator::generateOptionsForTasks(const OptsStrAny& inOptions,  int nbOfRegisteredTasks)
+{
+  using namespace jpet_options_tools;
+  OptsForFiles  optsForAllFiles;
+
+  if (nbOfRegisteredTasks <= 0) {
+    ERROR("nbOfRegisteredTasks <= 0");
+    return optsForAllFiles;
+  }
+
+  auto options(inOptions);
+  ///Generate general set of options
+  auto files = getInputFiles(options);
+
+  ///Now generate set of options for every file
+  std::map<std::string, OptsStrAny> optionsPerFile;
+
+  /// In case of scope there is one special input file
+  /// which is a json config file which must be parsed.
+  /// Based on its content the set of input directories are generated.
+  /// The input directories contain data files.
+  /// The config input file name also should be stored in a special option field.
+  if (any_cast<std::string>(getOptionValue(options, "type_std::string")) == "scope") {
+    assert(files.size() == 1); /// there should be only file which is config.
+    auto configFileName = files.front();
+    options["scopeConfigFile_std::string"] =  configFileName;
+    JPetScopeConfigParser scopeConfigParser;
+    /// The scope module must use a fake input file name which will be used to
+    /// produce the correct output file names by the following modules.
+    /// At the same time, the input directory with true input files must be
+    /// also added. The container of pairs <directory, fileName> is generated
+    /// based on the content of the configuration file.
+    JPetScopeConfigParser::DirFileContainer dirsAndFiles = scopeConfigParser.getInputDirectoriesAndFakeInputFiles(configFileName);
+    for (const auto& dirAndFile : dirsAndFiles) {
+      options["scopeInputDirectory_std::string"] = dirAndFile.first;
+      options["inputFile_std::string"] = dirAndFile.second;
+      optionsPerFile[dirAndFile.second] = options;
+    }
+  } else {
+    for (const auto& file : files) {
+      options["inputFile_std::string"] = file;
+      optionsPerFile[file] = options;
+    }
+  }
+  assert(nbOfRegisteredTasks > 0);
+
+  /// Finally, multiple the options for every task.
+  for (const auto& el : optionsPerFile) {
+    std::vector<OptsStrAny>  currOpts(nbOfRegisteredTasks, el.second);
+    optsForAllFiles[el.first] = setCorrectRangeAndOutputForNonFirstOption(currOpts);
+  }
+  return optsForAllFiles;
+}
+
+/// Function returns a map of Options
 /// based on the number of registered tasks and provided command line arguments.
 /// The elements of the map are pairs filename -> OptionsForAllTasks
 /// , where OptionsForAllTasks is a container with elements correspondig to the

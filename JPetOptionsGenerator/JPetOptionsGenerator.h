@@ -42,7 +42,10 @@ public:
 
   JPetOptionsGenerator();
 
+  ///@todo this method should be moved to independent class. It will be removed
   OptsForFiles generateOptions(const po::variables_map& args, int nbOfRegisteredTasks = 1);
+
+  OptsForFiles generateOptionsForTasks(const OptsStrAny& opt, int nbOfRegisteredTasks = 1);
 
   /// Method generates the options set: option_name->value based on the input sets of command line args.
   /// Also missing options are added from the default set.

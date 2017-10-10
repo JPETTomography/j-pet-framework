@@ -328,17 +328,25 @@ void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine)
   }
 }
 
+///@todo refactor it.
 std::vector<OptsStrAny> setCorrectRangeAndOutputForNonFirstOption(const std::vector<OptsStrAny>& oldOptions)
 {
   std::vector<OptsStrAny> newOptions;
   newOptions.reserve(oldOptions.size());
   auto it = oldOptions.begin();
-  /// We don't change the first element
+  if (it != oldOptions.end()) {
+    if ( (FileTypeChecker::getInputFileType(*it) == FileTypeChecker::kHld) || (FileTypeChecker::getInputFileType(*it) == FileTypeChecker::kZip)) {
+      newOptions.push_back(*it);
+      ++it;
+    }
+  }
+  /// We don't change the first element after Unpacker/Unzipper
   if (it != oldOptions.end()) {
     newOptions.push_back(*it);
     ++it;
   }
-  /// we start with the second element, or it is already end.
+
+  /// we start with the third element, or it is already end.
   for (; it != oldOptions.end(); ++it) {
     auto currOpts = *it;
     /// Ignore the event range options for all but the first task.
