@@ -36,7 +36,6 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
 {
   using namespace jpet_options_tools;
   auto params = dynamic_cast<const JPetParams&>(paramsI);
-  bool noError = true;
   setOptions(params);
   auto opts = fParams.getOptions();
   std::string inputFilename(getInputFile(opts));
@@ -49,12 +48,12 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
   if (!createOutputObjects(outputFilename.c_str())) {
     ERROR("createOutputObjects");
     return false;
- }
+  }
   return true;
 }
 
 
-bool JPetTaskIO::run(const JPetDataInterface& inData)
+bool JPetTaskIO::run(const JPetDataInterface&)
 {
   if (!fSubTask) {
     ERROR("No subTask set");
