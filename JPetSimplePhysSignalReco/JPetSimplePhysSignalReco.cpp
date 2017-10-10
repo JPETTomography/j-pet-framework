@@ -39,7 +39,7 @@ bool JPetSimplePhysSignalReco::exec()
   return true;
 }
 
-void JPetSimplePhysSignalReco::savePhysSignal(JPetPhysSignal sig)
+void JPetSimplePhysSignalReco::savePhysSignal(JPetPhysSignal)
 {
 }
 
