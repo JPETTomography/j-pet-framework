@@ -34,7 +34,7 @@ JPetTaskIO::JPetTaskIO(const char* name): JPetTask(name)
 
 void JPetTaskIO::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
 {
-  if (!dynamic_cast<JPetUserTask*>(subTask.get()))
+  if (dynamic_cast<JPetUserTask*>(subTask.get()) == nullptr)
     ERROR("JPetTaskIO currently only allows JPetUserTask as subtask");
   fSubTasks.push_back(std::move(subTask));
 }
@@ -89,8 +89,26 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     assert(lastEvent >= 0);
     for (auto i = firstEvent; i <= lastEvent; i++) {
 
-    if (isProgressBar(fParams.getOptions())) {
-      displayProgressBar(i, lastEvent);
+      if (isProgressBar(fParams.getOptions())) {
+        displayProgressBar(i, lastEvent);
+      }
+      auto pOutputEvent = (dynamic_cast<JPetUserTask*>(fSubTask->get()))->getOutputEvents();
+      if (pOutputEvent != nullptr) {
+        pOutputEvent->Clear();
+      } else {
+        WARNING("No proper timeWindow object returned to clear events");
+        //return false;
+      }
+      JPetData event(fReader->getCurrentEvent());
+      fSubTask->get()->run(event);
+      pOutputEvent = (dynamic_cast<JPetUserTask*>(fSubTask->get()))->getOutputEvents();
+      if (pOutputEvent != nullptr) {
+        fWriter->write(*pOutputEvent);
+      } else {
+        ERROR("No proper timeWindow object returned to save to file, returning from subtask " + fSubTask->get()->getName());
+        return false;
+      }
+      fReader->nextEvent();
     }
   }
   return true;
@@ -122,8 +140,10 @@ bool JPetTaskIO::terminate(JPetParamsInterface&)
   assert(fStatistics.get());
 
   fWriter->writeHeader(fHeader);
+  fWriter->writeCollection(fStatistics->getStatsTable(), "Main Task Stats");
   for (auto it = fSubTasksStatistics.begin(); it != fSubTasksStatistics.end(); it++) {
-    fWriter->writeCollection(it->second->getStatsTable(), it->first.c_str());
+    if (it->second)
+      fWriter->writeCollection(it->second->getStatsTable(), it->first.c_str());
   }
 
 
@@ -207,18 +227,21 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
   if (!fSubTasks.empty()) {
+    int i = 0;
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
       auto task = dynamic_cast<JPetUserTask*>(fSubTask->get());
       fSubTasksStatistics[task->getName()
                           + std::string(" subtask ")
-                          + std::to_string(fSubTasksStatistics.size())]
+                          + std::to_string(i)
+                          + std::string(" stats")]
         = std::move(std::unique_ptr<JPetStatistics>(new JPetStatistics(*fStatistics)));
 
       task->setStatistics(fSubTasksStatistics[task->getName()].get());
+      i++;
     }
   } else {
     WARNING("the subTask does not exist, so JPetStatistics not passed to it");
-    return false;
+    //return false;
   }
   return true;
 }
