@@ -27,7 +27,7 @@ using boost::any_cast;
 
 JPetTaskLoader::JPetTaskLoader(const char* in_file_type,
                                const char* out_file_type,
-                               JPetTask* taskToExecute):
+                               JPetTask*):
   JPetTaskIO(),
 
   fInFileType(in_file_type),
