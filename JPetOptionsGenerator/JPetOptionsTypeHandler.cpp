@@ -52,7 +52,7 @@ std::map<std::string, std::string> JPetOptionsTypeHandler::anyMapToStringMap(con
 
 std::string JPetOptionsTypeHandler::getTypeOfOption(const std::string& nameOfOption)
 {
-  std::size_t pos = nameOfOption.find("_");
+  std::size_t pos = nameOfOption.rfind("_");
   if (pos == std::string::npos) {
     return "default";
   }
@@ -61,7 +61,7 @@ std::string JPetOptionsTypeHandler::getTypeOfOption(const std::string& nameOfOpt
 
 std::string JPetOptionsTypeHandler::getNameOfOption(const std::string& option)
 {
-  std::size_t pos = option.find("_");
+  std::size_t pos = option.rfind("_");
   return option.substr(0, pos);
 }
 
