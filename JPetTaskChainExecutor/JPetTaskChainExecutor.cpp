@@ -85,11 +85,11 @@ bool JPetTaskChainExecutor::process()
       ERROR("In task initialization");
       return false;
     }
-    if (currentTask->run(nullDataObject)) {
+    if (!currentTask->run(nullDataObject)) {
       ERROR("In task run()");
       return false;
     }
-    if (currentTask->terminate(outputParams)) {
+    if (!currentTask->terminate(outputParams)) {
       ERROR("In task terminate() ");
       return false;
     }
