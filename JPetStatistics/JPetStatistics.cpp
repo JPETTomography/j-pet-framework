@@ -17,47 +17,64 @@
 
 ClassImp(JPetStatistics);
 
-JPetStatistics::~JPetStatistics(){
+JPetStatistics::JPetStatistics(const JPetStatistics& copy)
+{
+  fStats.AddAll(copy.getStatsTable());
+  fCounters = copy.fCounters;
+}
+
+JPetStatistics::~JPetStatistics()
+{
   fStats.Clear("nodelete");
 }
 
-void JPetStatistics::createHistogram(TObject * object){
+void JPetStatistics::createHistogram(TObject* object)
+{
   fStats.Add(object);
 }
 
-void JPetStatistics::createGraph(TObject * object){
+void JPetStatistics::createGraph(TObject* object)
+{
   fStats.Add(object);
 }
 
-void JPetStatistics::createCanvas(TObject * object){
+void JPetStatistics::createCanvas(TObject* object)
+{
   fStats.Add(object);
 }
 
-TH1F & JPetStatistics::getHisto1D(const char * name){
+TH1F& JPetStatistics::getHisto1D(const char* name)
+{
   return dynamic_cast<TH1F&>(*(fStats.FindObject(name)));
 }
 
-TH2F & JPetStatistics::getHisto2D(const char * name){
+TH2F& JPetStatistics::getHisto2D(const char* name)
+{
   return dynamic_cast<TH2F&>(*(fStats.FindObject(name)));
 }
 
-TGraph & JPetStatistics::getGraph(const char * name){
+TGraph& JPetStatistics::getGraph(const char* name)
+{
   return dynamic_cast<TGraph&>(*(fStats.FindObject(name)));
 }
 
-TCanvas & JPetStatistics::getCanvas(const char * name){
+TCanvas& JPetStatistics::getCanvas(const char* name)
+{
   return dynamic_cast<TCanvas&>(*(fStats.FindObject(name)));
 }
 
-void JPetStatistics::createCounter(const char * name){
+void JPetStatistics::createCounter(const char* name)
+{
   fCounters[name] = 0.0;
 }
 
 
-double & JPetStatistics::getCounter(const char * name){
+double& JPetStatistics::getCounter(const char* name)
+{
   return fCounters[name];
 }
 
-const THashTable * JPetStatistics::getStatsTable() const{
+const THashTable* JPetStatistics::getStatsTable() const
+{
   return &fStats;
 }
