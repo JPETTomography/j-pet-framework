@@ -25,33 +25,35 @@
 #include <TCanvas.h>
 
 /**
- * @brief An class for storing statistics of the processing (e.g histograms and counters) during execution of a JPetTask 
+ * @brief An class for storing statistics of the processing (e.g histograms and counters) during execution of a JPetTask
  *
  */
 
-class JPetStatistics: public TObject{
-  
- public:
-  JPetStatistics(){}
-  ~JPetStatistics();
-  void createHistogram(TObject * object);
-  void createGraph(TObject * object);
-  void createCanvas(TObject * object);
-  TH1F & getHisto1D(const char * name);
-  TH2F & getHisto2D(const char * name);
-  TGraph & getGraph(const char * name);
-  TCanvas & getCanvas(const char * name);
-  void createCounter(const char * name);
-  double & getCounter(const char * name);
+class JPetStatistics: public TObject
+{
 
-  const THashTable * getStatsTable() const;
-  
-  ClassDef(JPetStatistics,3); 
-    
- protected:
+public:
+  JPetStatistics() {}
+  JPetStatistics(const JPetStatistics& copy);
+  ~JPetStatistics();
+  void createHistogram(TObject* object);
+  void createGraph(TObject* object);
+  void createCanvas(TObject* object);
+  TH1F& getHisto1D(const char* name);
+  TH2F& getHisto2D(const char* name);
+  TGraph& getGraph(const char* name);
+  TCanvas& getCanvas(const char* name);
+  void createCounter(const char* name);
+  double& getCounter(const char* name);
+
+  const THashTable* getStatsTable() const;
+
+  ClassDef(JPetStatistics, 3);
+
+protected:
   THashTable fStats;
   std::map<TString, double> fCounters;
- 
+
 };
 
 #endif

@@ -198,7 +198,7 @@ bool JPetScopeLoader::createOutputObjects(const char* outputFilename)
   if (!fSubTasks.empty()) {
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
       auto task = dynamic_cast<JPetScopeTask*>((*fSubTask).get());
-      task->setStatistics(fStatistics);
+      task->setStatistics(std::move(fStatistics));
       task->setWriter(fWriter);
     }
   } else {
