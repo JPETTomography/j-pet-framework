@@ -33,6 +33,7 @@ public:
   }
   bool exec() override
   {
+    fOutputEvents = dynamic_cast<JPetTimeWindow*>(fEvent);
     return true;
   }
   bool terminate() override
