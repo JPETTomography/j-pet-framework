@@ -31,6 +31,7 @@ bool JPetUserTask::run(const JPetDataInterface& inData)
 {
   auto event = dynamic_cast<const JPetData&>(inData);
   setEvent(&(event.getEvent()));
+  setOutputEvents(dynamic_cast<JPetTimeWindow*>(&(event.getEvent())));
   return exec();
 }
 
@@ -52,6 +53,11 @@ const JPetParamBank& JPetUserTask::getParamBank()
 void JPetUserTask::setStatistics(JPetStatistics* statistics)
 {
   fStatistics = statistics;
+}
+
+void JPetUserTask::setOutputEvents(JPetTimeWindow* timeWindow)
+{
+  fOutputEvents = timeWindow;
 }
 
 JPetStatistics& JPetUserTask::getStatistics()
