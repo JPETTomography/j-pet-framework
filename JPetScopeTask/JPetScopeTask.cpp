@@ -103,9 +103,9 @@ std::multimap<std::string, int, cmpByTimeWindowIndex> JPetScopeTask::getFilesInT
   return orderedMap;
 }
 
-void JPetScopeTask::setStatistics(std::shared_ptr<JPetStatistics> statistics)
+void JPetScopeTask::setStatistics(std::unique_ptr<JPetStatistics> statistics)
 {
-  fStatistics = statistics;
+  fStatistics = std::move(statistics);
 }
 
 JPetStatistics& JPetScopeTask::getStatistics()
