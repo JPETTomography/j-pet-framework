@@ -44,21 +44,25 @@ public:
 
 BOOST_AUTO_TEST_SUITE(JPetTaskChainExecutorTestSuite)
 
+/*
 BOOST_AUTO_TEST_CASE(test1)
 {
   std::vector<jpet_options_tools::OptsStrAny> opts;
   auto opt = JPetOptionsGenerator::getDefaultOptions();
+  opt["inputFile_std::string"] = std::string("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root");
+  opt["inputFileType_std::string"] = std::string("root");
+  opt["outputFile_std::string"] = std::string("JPetTaskChainExecutorTest1.root");
   opts.push_back(opt);
   auto taskGenerator1 = []() {
-    return new JPetTaskIO;
+    return new JPetTaskIO("test1");
   };
   TaskGeneratorChain* chain =  new TaskGeneratorChain;
   chain->push_back(taskGenerator1);
 
   JPetTaskChainExecutor taskExecutor(chain, 1, opts);
-  BOOST_REQUIRE(!taskExecutor.process());
+  BOOST_REQUIRE(taskExecutor.process());
   delete chain;
-}
+}*/
 
 BOOST_AUTO_TEST_CASE(test2)
 {
@@ -66,17 +70,22 @@ BOOST_AUTO_TEST_CASE(test2)
   auto opt = JPetOptionsGenerator::getDefaultOptions();
   opt["firstEvent_int"] = 0;
   opt["lastEvent_int"] = 10;
+  opt["inputFile_std::string"] = std::string("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root");
+  opt["inputFileType_std::string"] = std::string("root");
+  opt["outputFile_std::string"] = std::string("JPetTaskChainExecutorTest2Chain1.root");
   opts.push_back(opt);
+  opt["outputFile_std::string"] = std::string("JPetTaskChainExecutorTest2Chain2.root");
   opts.push_back(opt);
 
   auto taskGenerator1 = []() {
     auto taskIO =  new JPetTaskIO("TaskA");
-    taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask));
+    taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask("test2 TestTask1")));
+    taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask("test2 TestTask2")));
     return taskIO;
   };
   auto taskGenerator2 = []() {
     auto taskIO =  new JPetTaskIO("TaskB");
-    taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask));
+    taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask("test2 TestTask3")));
     return taskIO;
   };
   TaskGeneratorChain* chain =  new TaskGeneratorChain;
@@ -85,7 +94,7 @@ BOOST_AUTO_TEST_CASE(test2)
 
   BOOST_REQUIRE_EQUAL(chain->size(), 2u);
   JPetTaskChainExecutor taskExecutor(chain, 1, opts);
-  BOOST_REQUIRE(!taskExecutor.process());
+  BOOST_REQUIRE(taskExecutor.process());
   delete chain;
 }
 
