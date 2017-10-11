@@ -84,10 +84,22 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     if (isProgressBar(fParams.getOptions())) {
       displayProgressBar(i, lastEvent);
     }
-    (dynamic_cast<JPetUserTask*>(fSubTask.get()))->getOutputEvents()->Clear();
+    auto pOutputEvent = (dynamic_cast<JPetUserTask*>(fSubTask.get()))->getOutputEvents();
+    if (pOutputEvent ) {
+      pOutputEvent ->Clear();
+    } else {
+      ERROR("No proper timeWindow object returned");
+      return false;
+    }
     JPetData event(fReader->getCurrentEvent());
     fSubTask->run(event);
-    fWriter->write(*((dynamic_cast<JPetUserTask*>(fSubTask.get()))->getOutputEvents()));
+    pOutputEvent = (dynamic_cast<JPetUserTask*>(fSubTask.get()))->getOutputEvents();
+    if (pOutputEvent ) {
+      fWriter->write(*pOutputEvent);
+    } else {
+      ERROR("No proper timeWindow object returned");
+      return false;
+    }
     fReader->nextEvent();
   }
   fSubTask->terminate(fParams);
