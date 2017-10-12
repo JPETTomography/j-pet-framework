@@ -148,7 +148,12 @@ JPetTreeHeader* JPetReader::getHeaderClone() const
     return 0;
   }
   // get a pointer to a header wchich belongs to fTree
-  JPetTreeHeader* header =  (JPetTreeHeader*)fTree->GetUserInfo()->At(JPetUserInfoStructure::kHeader);
+  auto  listOfObjects = fTree->GetUserInfo();
+  JPetTreeHeader* header =  static_cast<JPetTreeHeader*>(listOfObjects->At(JPetUserInfoStructure::kHeader));
+  if (!header) {
+    WARNING("No JPetTreeHeader found!! in the tree - it is ok if the tree is a hld.root type");
+    return nullptr;
+  }
   // return a COPY of this header
   return new JPetTreeHeader( *header );
 }

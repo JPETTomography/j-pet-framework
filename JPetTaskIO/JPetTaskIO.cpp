@@ -183,7 +183,7 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
   assert(!fReader);
   fReader = new JPetReader;
   if ( fReader->openFileAndLoadData(inputFilename, JPetReader::kRootTreeName.c_str())) {
-    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHld ) {
+    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ) {
       // create a header to be stored along with the output tree
       fHeader = new JPetTreeHeader(getRunNumber(options));
       fHeader->setFrameworkVersion(FRAMEWORK_VERSION);

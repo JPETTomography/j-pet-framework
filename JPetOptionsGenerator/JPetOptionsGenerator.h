@@ -36,35 +36,17 @@ public:
   using OptsStrAny = std::map<std::string, boost::any>;
   using OptsForTasks =  std::vector<OptsStrAny>;
   using OptsForFiles = std::map<std::string, OptsForTasks>;
-
-  using OptNameValPair = std::pair<std::string, boost::any>;
-  using Transformer = std::function<OptNameValPair(boost::any opt)>;
+  using TransformersMap = std::map<std::string, std::vector<jpet_options_tools::Transformer> >;
 
   JPetOptionsGenerator();
-
-  ///@todo this method should be moved to independent class. It will be removed
-  OptsForFiles generateOptions(const po::variables_map& args, int nbOfRegisteredTasks = 1);
-
-  OptsForFiles generateOptionsForTasks(const OptsStrAny& opt, int nbOfRegisteredTasks = 1);
 
   /// Method generates the options set: option_name->value based on the input sets of command line args.
   /// Also missing options are added from the default set.
   /// And the basic validation is performed.
   /// The option set is common for all files and tasks.
   OptsStrAny generateAndValidateOptions(const po::variables_map& cmdLineArgs);
+  OptsForFiles generateOptionsForTasks(const OptsStrAny& opt, int nbOfRegisteredTasks = 1);
 
-  static OptsStrAny transformToStrAnyMap(const po::variables_map& variablesMap);
-  /// Methods add type suffixes to the elements of
-  /// the map according to the key name.
-  static OptsStrAny addTypeSuffixes(const OptsStrAny& oldMap);
-  static OptsStrAny getDefaultOptions();
-  static OptsStrAny addMissingDefaultOptions(const OptsStrAny& options);
-
-  OptsStrAny transformOptions(const OptsStrAny& optionsMap) const;
-  std::map<std::string, std::vector<Transformer> > generateTransformationMap() const;
-  void addTransformFunction(const std::string& name, Transformer transformFunction);
-
-  void addNewOptionsFromCfgFile(const std::string& cfgFile, OptsStrAny& options) const;
   std::vector<std::string> getVectorOfOptionFromUser() const;
   void createMapOfBoolOptionFromUser(const OptsStrAny& optionsMap);
 
@@ -73,7 +55,6 @@ protected:
   static std::map<std::string, std::string> kOptCmdLineNameToExtendedName;
 
 private:
-  std::map<std::string, std::vector<Transformer> > fTransformationMap;
   std::vector<std::string> fVectorOfOptionFromUser;
 };
 #endif

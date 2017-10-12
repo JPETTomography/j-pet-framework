@@ -17,12 +17,18 @@
 #define JPETOPTIONSTRANSFORMATORS_H
 
 #include <boost/any.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <functional>
+#include <map>
 
 namespace jpet_options_tools
 {
+using OptNameValPair = std::pair<std::string, boost::any>;
+using Transformer = std::function<OptNameValPair(boost::any opt)>;
+
 std::pair <std::string, boost::any>appendSlash(boost::any option);
-std::pair <std::string, boost::any>setInputFileType(boost::any option);
 std::pair <std::string, boost::any>generateLowerEventBound(boost::any option);
 std::pair <std::string, boost::any>generateHigherEventBound(boost::any option);
+Transformer generateSetFileTypeTransformator(const std::map<std::string, boost::any>& options);
 }
 #endif /*  !JPETOPTIONSTRANSFORMATORS_H */
