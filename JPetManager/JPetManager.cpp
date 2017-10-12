@@ -119,11 +119,9 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
     JPetOptionsGenerator optionsGenerator;
     JPetCmdParser parser;
     auto optionsFromCmdLine = parser.parseCmdLineArgs(argc, argv);
-    /// A map of all options
+    /// One  common map of all options
     auto allValidatedOptions = optionsGenerator.generateAndValidateOptions(optionsFromCmdLine);
     addDefaultTasksFromOptions(allValidatedOptions);
-
-    //addDefaultTasksFromOptions(optionsFromCmdLine); /// Currently only scope task can be added.
 
     int numberOfRegisteredTasks = 1;
     if (fTaskGeneratorChain) {

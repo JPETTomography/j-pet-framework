@@ -38,33 +38,15 @@ public:
   using OptsForFiles = std::map<std::string, OptsForTasks>;
   using TransformersMap = std::map<std::string, std::vector<jpet_options_tools::Transformer> >;
 
-  static OptsStrAny transformToStrAnyMap(const po::variables_map& variablesMap);
-  /// Methods add type suffixes to the elements of
-  /// the map according to the key name.
-  static OptsStrAny addTypeSuffixes(const OptsStrAny& oldMap);
-  static OptsStrAny getDefaultOptions();
-  static OptsStrAny addMissingDefaultOptions(const OptsStrAny& options);
-
-  static OptsStrAny transformOptions(const TransformersMap& transformationMap, const OptsStrAny& optionsMap);
-
-  static TransformersMap generateTransformationMap(OptsStrAny& options);
-  static void addTransformFunction(TransformersMap& oldMap,  const std::string& name, jpet_options_tools::Transformer transformFunction);
-
-
   JPetOptionsGenerator();
-
-  ///@todo this method should be moved to independent class. It will be removed
-  OptsForFiles generateOptions(const po::variables_map& args, int nbOfRegisteredTasks = 1);
-
-  OptsForFiles generateOptionsForTasks(const OptsStrAny& opt, int nbOfRegisteredTasks = 1);
 
   /// Method generates the options set: option_name->value based on the input sets of command line args.
   /// Also missing options are added from the default set.
   /// And the basic validation is performed.
   /// The option set is common for all files and tasks.
   OptsStrAny generateAndValidateOptions(const po::variables_map& cmdLineArgs);
+  OptsForFiles generateOptionsForTasks(const OptsStrAny& opt, int nbOfRegisteredTasks = 1);
 
-  void addNewOptionsFromCfgFile(const std::string& cfgFile, OptsStrAny& options) const;
   std::vector<std::string> getVectorOfOptionFromUser() const;
   void createMapOfBoolOptionFromUser(const OptsStrAny& optionsMap);
 

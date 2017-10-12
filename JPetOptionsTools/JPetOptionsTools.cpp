@@ -196,6 +196,11 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
 
 std::vector<std::string> getInputFiles(const std::map<std::string, boost::any>& opts)
 {
+  std::vector<std::string> dummy;
+  if (!isOptionSet(opts, "file_std::vector<std::string>")) {
+    ERROR("key:file_std::vector<std::string> not found in options");
+    return dummy;
+  }
   return any_cast<std::vector<std::string>>(opts.at("file_std::vector<std::string>"));
 }
 
