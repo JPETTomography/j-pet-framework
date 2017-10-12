@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(test1)
   chain->push_back(taskGenerator1);
 
   JPetTaskChainExecutor taskExecutor(chain, 1, opts);
-  BOOST_REQUIRE(taskExecutor.process());
+  BOOST_REQUIRE(!taskExecutor.process()); //TaskIO with no subtask is no allowed
   delete chain;
 }*/
 
