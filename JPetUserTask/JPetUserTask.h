@@ -62,6 +62,6 @@ protected:
   TObject* fEvent = 0;
   JPetStatistics* fStatistics = 0;
   JPetParams fParams;
-  JPetTimeWindow* fOutputEvents;
+  JPetTimeWindow* fOutputEvents = 0;
 };
 #endif /*  !JPETUSERTASK_H */
