@@ -31,16 +31,9 @@ std::map<std::string, FileTypeChecker::FileType> FileTypeChecker::fStringToFileT
   {"", kNoType},
   {"root", kRoot},
   {"scope", kScope},
-  {"raw", kRaw},
   {"hld", kHld},
-  {"zip", kZip},
-  {"phys.eve", kPhysEve},
-  {"phys.hit", kPhysHit},
-  {"phys.sig", kPhysSig},
-  {"raw.sig", kRawSig},
-  {"reco.sig", kRecoSig},
-  {"tslot.cal", kTslotCal},
-  {"tslot.raw", kTslotRaw}
+  {"hldRoot", kHldRoot},
+  {"zip", kZip}
 };
 
 bool isOptionSet(const OptsStrAny& opts, const std::string& optionName)
@@ -203,6 +196,11 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
 
 std::vector<std::string> getInputFiles(const std::map<std::string, boost::any>& opts)
 {
+  std::vector<std::string> dummy;
+  if (!isOptionSet(opts, "file_std::vector<std::string>")) {
+    ERROR("key:file_std::vector<std::string> not found in options");
+    return dummy;
+  }
   return any_cast<std::vector<std::string>>(opts.at("file_std::vector<std::string>"));
 }
 

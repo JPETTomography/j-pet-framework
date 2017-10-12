@@ -17,11 +17,14 @@
 #include <string>
 #include <boost/any.hpp>
 #include "../JPetCommonTools/JPetCommonTools.h"
+#include <iostream>
+#include "./JPetOptionsTools.h"
 
 using boost::any_cast;
 
 namespace jpet_options_tools
 {
+
 
 std::pair <std::string, boost::any>appendSlash(boost::any option)
 {
@@ -29,11 +32,6 @@ std::pair <std::string, boost::any>appendSlash(boost::any option)
   return std::make_pair("outputPath_std::string", path);
 }
 
-std::pair <std::string, boost::any>setInputFileType(boost::any option)
-{
-  auto inputFileType = any_cast<std::string>(option);
-  return std::make_pair("inputFileType_std::string", inputFileType);
-}
 
 std::pair <std::string, boost::any>generateLowerEventBound(boost::any option)
 {
@@ -51,6 +49,38 @@ std::pair <std::string, boost::any>generateHigherEventBound(boost::any option)
     return std::make_pair("lastEvent_int", lastEvent);
   } else
     return std::make_pair("wrongLastEvent_int", -1);
+}
+
+
+/// Function generates transformation function for file type
+/// if the input file name terminates with hld.root and the file type value is set to root
+/// then the file type value is changed to hldRoot.
+/// At this stage the options might be for many input file names as there are stored std::vector<std::string> array
+/// , so getInputFiles() method must be used.
+/// This distinction is important because hld.root files have different internal structure than all other
+/// root files used in the framework
+Transformer generateSetFileTypeTransformator(const std::map<std::string, boost::any>& options)
+{
+  auto setFileType = [options](boost::any option)->std::pair <std::string, boost::any> {
+    std::string optionKey = "inputFileType_std::string";
+    if (!isOptionSet(options, "file_std::vector<std::string>"))
+    {
+      return std::make_pair(optionKey , any_cast<std::string>(option));
+    }
+    auto fileNames = getInputFiles(options);
+    bool areHLdRootType = true;
+    for (const auto& file : fileNames)
+    {
+      areHLdRootType = areHLdRootType & boost::algorithm::ends_with(file, "hld.root");
+    }
+    if (areHLdRootType )
+    {
+      return std::make_pair(optionKey , std::string("hldRoot"));
+    } else {
+      return std::make_pair(optionKey, any_cast<std::string>(option));
+    }
+  };
+  return setFileType;
 }
 
 }
