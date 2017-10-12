@@ -31,16 +31,9 @@ std::map<std::string, FileTypeChecker::FileType> FileTypeChecker::fStringToFileT
   {"", kNoType},
   {"root", kRoot},
   {"scope", kScope},
-  {"raw", kRaw},
   {"hld", kHld},
-  {"zip", kZip},
-  {"phys.eve", kPhysEve},
-  {"phys.hit", kPhysHit},
-  {"phys.sig", kPhysSig},
-  {"raw.sig", kRawSig},
-  {"reco.sig", kRecoSig},
-  {"tslot.cal", kTslotCal},
-  {"tslot.raw", kTslotRaw}
+  {"hldRoot", kHldRoot},
+  {"zip", kZip}
 };
 
 bool isOptionSet(const OptsStrAny& opts, const std::string& optionName)
@@ -106,6 +99,8 @@ std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, std:
 
 FileTypeChecker::FileType FileTypeChecker::getInputFileType(const std::map<std::string, boost::any>& opts)
 {
+  std::cout << "in getInputFileType" << std::endl;
+  std::cout << "inputFilteType :" << any_cast<std::string>(opts.at("inputFileType_std::string")) << std::endl;
   return getFileType(opts, "inputFileType_std::string");
 }
 

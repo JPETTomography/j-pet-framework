@@ -23,7 +23,6 @@ BOOST_AUTO_TEST_CASE( createConfigFileFromOptions )
   boost::filesystem::remove("test_cfg.json");
 }
 
-
 BOOST_AUTO_TEST_CASE(createOptionsFromConfigFile)
 {
   auto inFile = "unitTestData/JPetOptionsToolsTest/newInputTestCfg.json";
@@ -204,6 +203,5 @@ BOOST_AUTO_TEST_CASE(getOptionBy)
   BOOST_REQUIRE(!getOptionAsVectorOfStrings(opts, "my_vectS").empty());
   BOOST_REQUIRE_EQUAL(getOptionAsVectorOfStrings(opts, "my_vectS").size(), 2u);
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()

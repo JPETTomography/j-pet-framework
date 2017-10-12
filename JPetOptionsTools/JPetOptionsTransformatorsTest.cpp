@@ -21,10 +21,6 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionsToTransformOptionWork)
   BOOST_REQUIRE_EQUAL(any_cast<int>(generateLowerEventBound(secondOption).second), -1);
   BOOST_REQUIRE_EQUAL(any_cast<int>(generateHigherEventBound(secondOption).second), -1);
 
-  std::string inputFileType = "inputFileType";
-  BOOST_REQUIRE_EQUAL(setInputFileType(inputFileType).first, "inputFileType_std::string");
-  BOOST_REQUIRE_EQUAL(any_cast<std::string>(setInputFileType(inputFileType).second), inputFileType);
-
   std::string emptyPath = "";
   BOOST_REQUIRE_EQUAL(appendSlash(emptyPath).first, "outputPath_std::string");
   BOOST_REQUIRE_EQUAL(any_cast<std::string>(appendSlash(emptyPath).second), "");
@@ -38,6 +34,5 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionsToTransformOptionWork)
   BOOST_REQUIRE_EQUAL(any_cast<std::string>(appendSlash(pathForCorrection).second), correctPath);
 
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()

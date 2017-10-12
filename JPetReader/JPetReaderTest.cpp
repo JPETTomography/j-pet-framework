@@ -105,7 +105,6 @@ BOOST_AUTO_TEST_CASE (good_file_openFileAndLoadData)
   BOOST_REQUIRE_EQUAL(reader.getCurrentEventNumber(), 5);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), 10);
   BOOST_REQUIRE(reader.getHeaderClone());
-
 }
 
 BOOST_AUTO_TEST_CASE (good_file_closeFile)
@@ -128,4 +127,11 @@ BOOST_AUTO_TEST_CASE (good_file_closeFile)
   BOOST_REQUIRE(!reader.getObjectFromFile("testObj"));
 }
 
+/// @todo The correct file should be added
+//BOOST_AUTO_TEST_CASE (file_with_no_jpettreeheader)
+//{
+//JPetReader reader;
+//BOOST_REQUIRE(reader.openFileAndLoadData("unitTestData/JPetReaderTest/testWithNoJPetTreeHeader.root", "tree"));
+//BOOST_REQUIRE(!reader.getHeaderClone());
+//}
 BOOST_AUTO_TEST_SUITE_END()
