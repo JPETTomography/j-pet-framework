@@ -1,0 +1,129 @@
+/**
+ *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetOptionsGeneratorTools.cpp
+ */
+
+#include "./JPetOptionsGeneratorTools.h"
+using namespace jpet_options_tools;
+
+namespace jpet_options_generator_tools
+{
+std::map<std::string, boost::any> kDefaultOptions = {
+  {"inputFile_std::string", std::string("")},
+  {"inputFileType_std::string", std::string("")},
+  {"scopeConfigFile_std::string", std::string("")},
+  {"scopeInputDirectory_std::string", std::string("")},
+  {"outputPath_std::string", std::string("")},
+  {"outputFile_std::string", std::string("test.root")},
+  {"outputFileType_std::string", std::string("root")},
+  {"firstEvent_int", -1},
+  {"lastEvent_int", -1},
+  {"progressBar_bool", false},
+  {"runId_int", -1},
+  {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
+  {"unpackerCalibFile_std::string", std::string("")}
+};
+
+std::map<std::string, std::string> kOptCmdLineNameToExtendedName = {
+  {"type", "type_std::string"},
+  {"file", "file_std::vector<std::string>"},
+  {"outputPath", "outputPath_std::string"},
+  {"range", "range_std::vector<int>"},
+  {"unpackerConfigFile", "unpackerConfigFile_std::string"},
+  {"unpackerCalibFile", "unpackerCalibFile_std::string"},
+  {"runId", "runId_int"},
+  {"progressBar", "progressBar_bool"},
+  {"localDB", "localDB_std::string"},
+  {"localDBCreate", "localDBCreate_std::string"},
+  {"userCfg", "userCfg_std::string"}
+};
+
+std::map<std::string, boost::any> transformToStrAnyMap(const po::variables_map& inMap)
+{
+  std::map<std::string, boost::any> outMap;
+  for (auto& option : inMap) {
+    outMap[option.first] = option.second.value();
+  }
+  return outMap;
+}
+
+OptsStrAny addTypeSuffixes(const std::map<std::string, boost::any>& oldMap)
+{
+  std::map<std::string, boost::any> newMap(oldMap);
+
+  for (auto& elem : kOptCmdLineNameToExtendedName) {
+    auto oldKey = elem.first;
+    auto newKey = elem.second;
+    const auto it = newMap.find(oldKey);
+    if (it != newMap.end()) {
+      newMap[newKey] = it->second;
+      newMap.erase(it);
+    }
+  }
+  return newMap;
+}
+
+std::map<std::string, std::vector<Transformer> > generateTransformationMap(OptsStrAny& options)
+{
+  std::map<std::string, std::vector<Transformer> > transformationMap;
+  /// The keys used here corresponds to the keys defined in the CmdArgMap !!!
+  transformationMap["outputPath_std::string"].push_back(appendSlash);
+  transformationMap["range_std::vector<int>"].push_back(generateLowerEventBound);
+  transformationMap["range_std::vector<int>"].push_back(generateHigherEventBound);
+  addTransformFunction(transformationMap, "type_std::string", jpet_options_tools::generateSetFileTypeTransformator(options));
+  return transformationMap;
+}
+
+void addTransformFunction(TransformersMap& map,  const std::string& name, Transformer transformFunction)
+{
+  map[name].push_back(transformFunction);
+}
+
+
+std::map<std::string, boost::any> transformOptions(const TransformersMap& transformationMap, const std::map<std::string, boost::any>& oldOptionsMap)
+{
+  std::map<std::string, boost::any> newOptionsMap(oldOptionsMap);
+
+  for (auto& transformGroup : transformationMap) {
+    auto key = transformGroup.first;
+    if (newOptionsMap.find(key) != newOptionsMap.end()) {
+      for (auto& transformFunc : transformGroup.second) {
+        auto newOpt = transformFunc(newOptionsMap.at(key));
+        newOptionsMap[newOpt.first] = newOpt.second;
+      }
+    }
+  }
+  return newOptionsMap;
+}
+
+/// We add additional options to already existing one.
+/// If the key already exists the element will not be updated.
+void addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, boost::any>& options)
+{
+  std::map<std::string, boost::any> optionsFromJson = jpet_options_tools::createOptionsFromConfigFile(cfgFile);
+  options.insert(optionsFromJson.begin(), optionsFromJson.end());
+}
+
+std::map<std::string, boost::any>  addMissingDefaultOptions(const std::map<std::string, boost::any>& oldOptions)
+{
+  std::map<std::string, boost::any> newOptions(oldOptions);
+  auto defaultOptions = getDefaultOptions();
+  newOptions.insert(defaultOptions.begin(), defaultOptions.end());
+  return newOptions;
+}
+
+std::map<std::string, boost::any> getDefaultOptions()
+{
+  return kDefaultOptions;
+}
+}

@@ -18,6 +18,7 @@
 #include <boost/test/unit_test.hpp>
 #include "../JPetTaskChainExecutor/JPetTaskChainExecutor.h"
 #include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include "../JPetTaskIO/JPetTaskIO.h"
 #include "../JPetUserTask/JPetUserTask.h"
 #include "../JPetLoggerInclude.h"
@@ -49,10 +50,7 @@ BOOST_AUTO_TEST_SUITE(JPetTaskChainExecutorTestSuite)
 BOOST_AUTO_TEST_CASE(test1)
 {
   std::vector<jpet_options_tools::OptsStrAny> opts;
-  auto opt = JPetOptionsGenerator::getDefaultOptions();
-  opt["inputFile_std::string"] = std::string("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root");
-  opt["inputFileType_std::string"] = std::string("root");
-  opt["outputFile_std::string"] = std::string("JPetTaskChainExecutorTest1.root");
+  auto opt = jpet_options_generator_tools::getDefaultOptions();
   opts.push_back(opt);
   auto taskGenerator1 = []() {
     return new JPetTaskIO("test1");
@@ -68,7 +66,7 @@ BOOST_AUTO_TEST_CASE(test1)
 BOOST_AUTO_TEST_CASE(test2)
 {
   std::vector<jpet_options_tools::OptsStrAny> opts;
-  auto opt = JPetOptionsGenerator::getDefaultOptions();
+  auto opt = jpet_options_generator_tools::getDefaultOptions();
   opt["firstEvent_int"] = 0;
   opt["lastEvent_int"] = 10;
   opt["inputFile_std::string"] = std::string("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root");
