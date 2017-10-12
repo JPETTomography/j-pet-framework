@@ -20,6 +20,7 @@
 #include "../JPetCmdParser/JPetCmdParser.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include <iostream>
 using boost::any_cast;
 using namespace std;
 using namespace jpet_options_tools;
@@ -39,28 +40,30 @@ BOOST_AUTO_TEST_CASE(generateOptions_emptyOptions)
 {
   JPetOptionsGenerator gener;
   po::variables_map inArgs;
-  auto result = gener.generateOptions(inArgs, 1);
+  auto opt = gener.generateAndValidateOptions(inArgs);
+  auto result = gener.generateOptionsForTasks(opt, 1);
   BOOST_REQUIRE(result.empty());
-  result = gener.generateOptions(inArgs, -2);
+  result = gener.generateOptionsForTasks(opt, -2);
   BOOST_REQUIRE(result.empty());
-  result = gener.generateOptions(inArgs, 0);
+  result = gener.generateOptionsForTasks(opt, 0);
   BOOST_REQUIRE(result.empty());
 }
 
-///@todo add infile.root and infile2.root files to sphinx
+/// @todo add infile.root and infile2.root files to sphinx
 BOOST_AUTO_TEST_CASE(generateOptions_oneFileOneTask)
 {
   JPetOptionsGenerator gener;
   auto inArgs =  getCmdLineArgs("main.x -i 231 -f unitTestData/JPetOptionsGeneratorTest/infile.root -t root");
+  auto opt = gener.generateAndValidateOptions(inArgs);
 
-  /// bad second arg
-  auto result = gener.generateOptions(inArgs, -2);
+/// bad second arg
+  auto result = gener.generateOptionsForTasks(opt, -2);
   BOOST_REQUIRE(result.empty());
-  result = gener.generateOptions(inArgs, 0);
+  result = gener.generateOptionsForTasks(opt, 0);
   BOOST_REQUIRE(result.empty());
 
-  /// one in file one task
-  result = gener.generateOptions(inArgs, 1);
+/// one in file one task
+  result = gener.generateOptionsForTasks(opt, 1);
   BOOST_REQUIRE(!result.empty());
   BOOST_REQUIRE_EQUAL(result.size(), 1); //one file
   auto it = result.begin();
@@ -78,8 +81,9 @@ BOOST_AUTO_TEST_CASE(generateOptions_oneFileTwoTasks)
   JPetOptionsGenerator gener;
   auto inArgs =  getCmdLineArgs("main.x -i 231 -f unitTestData/JPetOptionsGeneratorTest/infile.root -t root");
 
-  /// one in file two task
-  auto result = gener.generateOptions(inArgs, 2);
+/// one in file two task
+  auto opt = gener.generateAndValidateOptions(inArgs);
+  auto result = gener.generateOptionsForTasks(opt, 2);
   BOOST_REQUIRE(!result.empty());
   BOOST_REQUIRE_EQUAL(result.size(), 1); //one file
   BOOST_REQUIRE_EQUAL(result.begin()->first, "unitTestData/JPetOptionsGeneratorTest/infile.root");
@@ -90,8 +94,9 @@ BOOST_AUTO_TEST_CASE(generateOptions_TwoFilesOneTasks)
 {
   JPetOptionsGenerator gener;
   auto inArgs =  getCmdLineArgs("main.x -i 231 -f unitTestData/JPetOptionsGeneratorTest/infile.root unitTestData/JPetOptionsGeneratorTest/infile2.root -t root");
-  /// one in file two tasks
-  auto result = gener.generateOptions(inArgs, 1);
+/// one in file two tasks
+  auto opt = gener.generateAndValidateOptions(inArgs);
+  auto result = gener.generateOptionsForTasks(opt, 1);
   BOOST_REQUIRE(!result.empty());
   BOOST_REQUIRE_EQUAL(result.size(), 2u); //two files
 
@@ -129,8 +134,9 @@ BOOST_AUTO_TEST_CASE(generateOptions_oneFileTwoTasksWithOutput)
   JPetOptionsGenerator gener;
   auto inArgs =  getCmdLineArgs("main.x -i 231 -f unitTestData/JPetOptionsGeneratorTest/infile.root -t root -o unitTestData/JPetCmdParserTest/ -r 2 100");
 
-  /// one in file two task
-  auto result = gener.generateOptions(inArgs, 2);
+/// one in file two task
+  auto opt = gener.generateAndValidateOptions(inArgs);
+  auto result = gener.generateOptionsForTasks(opt, 2);
   BOOST_REQUIRE(!result.empty());
   BOOST_REQUIRE_EQUAL(result.size(), 1); //one file
   auto it = result.begin();
@@ -166,7 +172,8 @@ BOOST_AUTO_TEST_CASE(generateOptions_TestWithUserOptions)
 
   auto commandLine = "main.x -i 231 -f unitTestData/JPetOptionsGeneratorTest/infile.root -t root -u unitTestData/JPetOptionsToolsTest/newInputTestCfg.json" ;
   auto inArgs =  getCmdLineArgs(commandLine);
-  auto result = generator.generateOptions(inArgs, 1);
+  auto opt = generator.generateAndValidateOptions(inArgs);
+  auto result = generator.generateOptionsForTasks(opt, 1);
   BOOST_REQUIRE(!result.empty());
   BOOST_REQUIRE_EQUAL(result.size(), 1); //one file
   auto it = result.begin();
@@ -204,7 +211,9 @@ BOOST_AUTO_TEST_CASE(ScopeOptions)
 {
   JPetOptionsGenerator gener;
   auto inArgs =  getCmdLineArgs("main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1");
-  auto result = gener.generateOptions(inArgs, 1);
+  auto opt = gener.generateAndValidateOptions(inArgs);
+
+  auto result = gener.generateOptionsForTasks(opt, 1);
   BOOST_REQUIRE(!result.empty());
   BOOST_REQUIRE_EQUAL(result.size(), 1u); //one file
 
@@ -280,112 +289,6 @@ BOOST_AUTO_TEST_CASE(generateAndValidateOptions_TestWithUserOptions)
   BOOST_REQUIRE_EQUAL(getOptionAsInt(result, "intOption_int"), 123);
 
   BOOST_REQUIRE(isOptionSet(result, "boolOption_bool"));
-}
-
-
-BOOST_AUTO_TEST_CASE(checkIfFunctionToGenerateTransformationMapWork)
-{
-  OptsStrAny options;
-  auto transformationMap = JPetOptionsGenerator::generateTransformationMap(options);
-  BOOST_REQUIRE(transformationMap.count("outputPath_std::string"));
-  BOOST_REQUIRE(transformationMap.count("range_std::vector<int>"));
-  BOOST_REQUIRE(transformationMap.count("type_std::string"));
-}
-
-BOOST_AUTO_TEST_CASE(checkIfFunctionToTransformOptionsWork)
-{
-  JPetOptionsGenerator generator;
-
-  OptsStrAny options;
-  auto transformationMap = JPetOptionsGenerator::generateTransformationMap(options);
-  std::map<std::string, boost::any> emptyOptions;
-  BOOST_REQUIRE(JPetOptionsGenerator::transformOptions(transformationMap , emptyOptions).empty());
-
-  std::string pathForCorrection = "a/b/c/d";
-  std::vector<int> range = {1, 2};
-  std::string inputFileType = "inputFileType";
-
-  std::map<std::string, boost::any> optionForTransformation;
-  optionForTransformation["outputPath_std::string"] = pathForCorrection;
-  optionForTransformation["range_std::vector<int>"] = range;
-  optionForTransformation["type_std::string"] = inputFileType;
-
-  auto mapAfterTransformation = JPetOptionsGenerator::transformOptions(transformationMap, optionForTransformation);
-  BOOST_REQUIRE_EQUAL(any_cast<std::string>(mapAfterTransformation.at("outputPath_std::string")), (pathForCorrection + '/'));
-  BOOST_REQUIRE_EQUAL(any_cast<int>(mapAfterTransformation.at("lastEvent_int")), 2);
-  BOOST_REQUIRE_EQUAL(any_cast<int>(mapAfterTransformation.at("firstEvent_int")), 1);
-  BOOST_REQUIRE_EQUAL(any_cast<std::string>(mapAfterTransformation.at("inputFileType_std::string")), inputFileType);
-}
-
-BOOST_AUTO_TEST_CASE(checkIfFunctionGetConfigFileNameWork)
-{
-  JPetOptionsGenerator generator;
-
-  auto commandLine = "main.x -u example.json";
-  auto args_char = JPetCommonTools::createArgs(commandLine);
-  auto argc = args_char.size();
-  auto argv = args_char.data();
-
-  po::options_description description("Allowed options");
-  description.add_options()
-  ("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
-  ;
-
-  po::variables_map variablesMap;
-  po::store(po::parse_command_line(argc, argv, description), variablesMap);
-  po::notify(variablesMap);
-
-  BOOST_REQUIRE_EQUAL(getConfigFileName(generator.transformToStrAnyMap(variablesMap)), "example.json");
-
-  auto commandLine2 = "main.x ";
-  auto args_char2 = JPetCommonTools::createArgs(commandLine2);
-  auto argc2 = args_char2.size();
-  auto argv2 = args_char2.data();
-
-  po::options_description description2("Allowed options");
-  description2.add_options()
-  ("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
-  ;
-
-  po::variables_map variablesMap2;
-  po::store(po::parse_command_line(argc2, argv2, description2), variablesMap2);
-  po::notify(variablesMap2);
-
-  BOOST_REQUIRE_EQUAL(getConfigFileName(generator.transformToStrAnyMap(variablesMap2)), "");
-}
-
-BOOST_AUTO_TEST_CASE(checkIfFunctionToAddOptionsFromCfgFileWork)
-{
-  JPetOptionsGenerator generator;
-
-  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -b 1 -l unitTestData/JPetCmdParserTest/input.json -L output.json -u unitTestData/JPetOptionsToolsTest/newInputTestCfg.json";
-  auto args_char = JPetCommonTools::createArgs(commandLine);
-  auto argc = args_char.size();
-  auto argv = args_char.data();
-
-  po::options_description description("Allowed options");
-  description.add_options()
-  ("file_std::vector<std::string>,f", po::value<std::vector<std::string>>(), "File(s) to open")
-  ("type_std::string,t", po::value<std::string>(), "type of file: hld, zip, root or scope")
-  ("range_std::vector<int>,r", po::value<std::vector<int>>(), "Range of events to process.")
-  ("param_std::string,p", po::value<std::string>(), "File with TRB numbers.")
-  ("runId_int,i", po::value<int>(), "Run id.")
-  ("progressBar_bool,b", po::bool_switch()->default_value(false), "Progress bar.")
-  ("localDB_std::string,l", po::value<std::string>(), "The file to use as the parameter database.")
-  ("localDBCreate_std::string,L", po::value<std::string>(), "Where to save the parameter database.")
-  ("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
-
-  po::variables_map variablesMap;
-  po::store(po::parse_command_line(argc, argv, description), variablesMap);
-  po::notify(variablesMap);
-
-  auto options = generator.transformToStrAnyMap(variablesMap);
-  auto cfgFileName = getConfigFileName(options);
-  if (!cfgFileName.empty()) {
-    generator.addNewOptionsFromCfgFile(cfgFileName, options);
-  }
-  BOOST_REQUIRE(options.count("myOption_std::string"));
-  BOOST_REQUIRE(options.count("myAnotherOption_std::string"));
 }
 
 struct MyFixture {
