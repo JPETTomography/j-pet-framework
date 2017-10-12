@@ -36,9 +36,20 @@ public:
   using OptsStrAny = std::map<std::string, boost::any>;
   using OptsForTasks =  std::vector<OptsStrAny>;
   using OptsForFiles = std::map<std::string, OptsForTasks>;
+  using TransformersMap = std::map<std::string, std::vector<jpet_options_tools::Transformer> >;
 
-  using OptNameValPair = std::pair<std::string, boost::any>;
-  using Transformer = std::function<OptNameValPair(boost::any opt)>;
+  static OptsStrAny transformToStrAnyMap(const po::variables_map& variablesMap);
+  /// Methods add type suffixes to the elements of
+  /// the map according to the key name.
+  static OptsStrAny addTypeSuffixes(const OptsStrAny& oldMap);
+  static OptsStrAny getDefaultOptions();
+  static OptsStrAny addMissingDefaultOptions(const OptsStrAny& options);
+
+  static OptsStrAny transformOptions(const TransformersMap& transformationMap, const OptsStrAny& optionsMap);
+
+  static TransformersMap generateTransformationMap(OptsStrAny& options);
+  static void addTransformFunction(TransformersMap& oldMap,  const std::string& name, jpet_options_tools::Transformer transformFunction);
+
 
   JPetOptionsGenerator();
 
@@ -53,17 +64,6 @@ public:
   /// The option set is common for all files and tasks.
   OptsStrAny generateAndValidateOptions(const po::variables_map& cmdLineArgs);
 
-  static OptsStrAny transformToStrAnyMap(const po::variables_map& variablesMap);
-  /// Methods add type suffixes to the elements of
-  /// the map according to the key name.
-  static OptsStrAny addTypeSuffixes(const OptsStrAny& oldMap);
-  static OptsStrAny getDefaultOptions();
-  static OptsStrAny addMissingDefaultOptions(const OptsStrAny& options);
-
-  OptsStrAny transformOptions(const OptsStrAny& optionsMap) const;
-  std::map<std::string, std::vector<Transformer> > generateTransformationMap() const;
-  void addTransformFunction(const std::string& name, Transformer transformFunction);
-
   void addNewOptionsFromCfgFile(const std::string& cfgFile, OptsStrAny& options) const;
   std::vector<std::string> getVectorOfOptionFromUser() const;
   void createMapOfBoolOptionFromUser(const OptsStrAny& optionsMap);
@@ -73,7 +73,6 @@ protected:
   static std::map<std::string, std::string> kOptCmdLineNameToExtendedName;
 
 private:
-  std::map<std::string, std::vector<Transformer> > fTransformationMap;
   std::vector<std::string> fVectorOfOptionFromUser;
 };
 #endif

@@ -63,7 +63,6 @@ std::map<std::string, std::string> JPetOptionsGenerator::kOptCmdLineNameToExtend
 
 JPetOptionsGenerator::JPetOptionsGenerator()
 {
-  fTransformationMap = generateTransformationMap();
 }
 
 /// Function returns a map of Options
@@ -212,7 +211,9 @@ JPetOptionsGenerator::OptsStrAny JPetOptionsGenerator::generateAndValidateOption
   createMapOfBoolOptionFromUser(options);
 
   options = addMissingDefaultOptions(options);
-  options = transformOptions(options);
+
+  auto transformationMap = generateTransformationMap(options);
+  options = transformOptions(transformationMap, options);
 
   if (!validator.areCorrectOptions(options, fVectorOfOptionFromUser)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");
@@ -251,19 +252,20 @@ JPetOptionsGenerator::OptsStrAny JPetOptionsGenerator::addTypeSuffixes(const std
   return newMap;
 }
 
-std::map<std::string, std::vector<JPetOptionsGenerator::Transformer> > JPetOptionsGenerator::generateTransformationMap() const
+std::map<std::string, std::vector<Transformer> > JPetOptionsGenerator::generateTransformationMap(OptsStrAny& options)
 {
   std::map<std::string, std::vector<Transformer> > transformationMap;
+  /// The keys used here corresponds to the keys defined in the CmdArgMap !!!
   transformationMap["outputPath_std::string"].push_back(appendSlash);
   transformationMap["range_std::vector<int>"].push_back(generateLowerEventBound);
   transformationMap["range_std::vector<int>"].push_back(generateHigherEventBound);
-  transformationMap["type_std::string"].push_back(setInputFileType);
+  addTransformFunction(transformationMap, "type_std::string", jpet_options_tools::generateSetFileTypeTransformator(options));
   return transformationMap;
 }
 
-void JPetOptionsGenerator::addTransformFunction(const std::string& name, Transformer transformFunction)
+void JPetOptionsGenerator::addTransformFunction(TransformersMap& map,  const std::string& name, Transformer transformFunction)
 {
-  fTransformationMap[name].push_back(transformFunction);
+  map[name].push_back(transformFunction);
 }
 
 void JPetOptionsGenerator::createMapOfBoolOptionFromUser(const std::map<std::string, boost::any>& optionsMap)
@@ -273,14 +275,17 @@ void JPetOptionsGenerator::createMapOfBoolOptionFromUser(const std::map<std::str
   }
 }
 
-std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(const std::map<std::string, boost::any>& oldOptionsMap) const
+std::map<std::string, boost::any> JPetOptionsGenerator::transformOptions(const TransformersMap& transformationMap, const std::map<std::string, boost::any>& oldOptionsMap)
 {
+  std::cout << "inTransform options" << std::endl;
   std::map<std::string, boost::any> newOptionsMap(oldOptionsMap);
-  for (auto& validGroup : fTransformationMap) {
-    if (newOptionsMap.count(validGroup.first)) {
-      for (auto& validFunct : validGroup.second) {
-        auto transformed = validFunct(newOptionsMap.at(validGroup.first));
-        newOptionsMap[transformed.first] = transformed.second;
+
+  for (auto& transformGroup : transformationMap) {
+    auto key = transformGroup.first;
+    if (newOptionsMap.find(key) != newOptionsMap.end()) {
+      for (auto& transformFunc : transformGroup.second) {
+        auto newOpt = transformFunc(newOptionsMap.at(key));
+        newOptionsMap[newOpt.first] = newOpt.second;
       }
     }
   }

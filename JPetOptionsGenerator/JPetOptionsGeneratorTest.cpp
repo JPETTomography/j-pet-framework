@@ -285,8 +285,8 @@ BOOST_AUTO_TEST_CASE(generateAndValidateOptions_TestWithUserOptions)
 
 BOOST_AUTO_TEST_CASE(checkIfFunctionToGenerateTransformationMapWork)
 {
-  JPetOptionsGenerator generator;
-  auto transformationMap = generator.generateTransformationMap();
+  OptsStrAny options;
+  auto transformationMap = JPetOptionsGenerator::generateTransformationMap(options);
   BOOST_REQUIRE(transformationMap.count("outputPath_std::string"));
   BOOST_REQUIRE(transformationMap.count("range_std::vector<int>"));
   BOOST_REQUIRE(transformationMap.count("type_std::string"));
@@ -296,8 +296,10 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionToTransformOptionsWork)
 {
   JPetOptionsGenerator generator;
 
+  OptsStrAny options;
+  auto transformationMap = JPetOptionsGenerator::generateTransformationMap(options);
   std::map<std::string, boost::any> emptyOptions;
-  BOOST_REQUIRE(generator.transformOptions(emptyOptions).empty());
+  BOOST_REQUIRE(JPetOptionsGenerator::transformOptions(transformationMap , emptyOptions).empty());
 
   std::string pathForCorrection = "a/b/c/d";
   std::vector<int> range = {1, 2};
@@ -308,7 +310,7 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionToTransformOptionsWork)
   optionForTransformation["range_std::vector<int>"] = range;
   optionForTransformation["type_std::string"] = inputFileType;
 
-  auto mapAfterTransformation = generator.transformOptions(optionForTransformation);
+  auto mapAfterTransformation = JPetOptionsGenerator::transformOptions(transformationMap, optionForTransformation);
   BOOST_REQUIRE_EQUAL(any_cast<std::string>(mapAfterTransformation.at("outputPath_std::string")), (pathForCorrection + '/'));
   BOOST_REQUIRE_EQUAL(any_cast<int>(mapAfterTransformation.at("lastEvent_int")), 2);
   BOOST_REQUIRE_EQUAL(any_cast<int>(mapAfterTransformation.at("firstEvent_int")), 1);
@@ -384,6 +386,39 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionToAddOptionsFromCfgFileWork)
   }
   BOOST_REQUIRE(options.count("myOption_std::string"));
   BOOST_REQUIRE(options.count("myAnotherOption_std::string"));
+}
+
+struct MyFixture {
+  MyFixture()
+  {
+    fInputFile = "dabc_17025151847.hld.root";
+    /// create empty file for tests
+    std::ofstream outfile (fInputFile);
+    outfile.close();
+  }
+  ~MyFixture()
+  {
+    boost::filesystem::remove(fInputFile);
+  }
+  std::string fInputFile;
+};
+
+BOOST_FIXTURE_TEST_CASE(generateAndValidateOptions_roothld, MyFixture)
+{
+  JPetOptionsGenerator gener;
+  auto inArgs =  getCmdLineArgs("./LargeBarrelAnalysisExtended.x -t root -f dabc_17025151847.hld.root");
+  auto result = gener.generateAndValidateOptions(inArgs);
+  BOOST_REQUIRE(!result.empty());
+  BOOST_REQUIRE_EQUAL(getRunNumber(result),  -1);
+  BOOST_REQUIRE_EQUAL(getInputFiles(result).size(), 1);
+  BOOST_REQUIRE_EQUAL(getInputFiles(result).at(0), "dabc_17025151847.hld.root");
+  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(result), FileTypeChecker::kHldRoot);
+
+  BOOST_REQUIRE_EQUAL(getFirstEvent(result),  -1);
+  BOOST_REQUIRE_EQUAL(getLastEvent(result),   -1);
+  BOOST_REQUIRE(!isProgressBar(result));
+  BOOST_REQUIRE(!isLocalDB(result) );
+  BOOST_REQUIRE(!isLocalDBCreate(result));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
