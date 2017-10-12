@@ -71,6 +71,15 @@ JPetScopeLoader::~JPetScopeLoader()
   }
 }
 
+void JPetScopeLoader::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
+{
+  if (dynamic_cast<JPetScopeTask*>(subTask.get()) == nullptr)
+    ERROR("JPetScopeLoader currently only allows JPetScopeTask as subtask");
+  if (fSubTasks.size() > 0)
+    ERROR("JPetScopeLoader currently only allows one subtask");
+  fSubTasks.push_back(std::move(subTask));
+}
+
 bool JPetScopeLoader::createInputObjects(const char*)
 {
   using namespace jpet_options_tools;
@@ -198,7 +207,7 @@ bool JPetScopeLoader::createOutputObjects(const char* outputFilename)
   if (!fSubTasks.empty()) {
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
       auto task = dynamic_cast<JPetScopeTask*>((*fSubTask).get());
-      task->setStatistics(std::move(fStatistics));
+      task->setStatistics(fStatistics.get());
       task->setWriter(fWriter);
     }
   } else {
