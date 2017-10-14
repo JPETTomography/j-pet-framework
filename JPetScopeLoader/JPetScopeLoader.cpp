@@ -76,7 +76,7 @@ void JPetScopeLoader::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
   if (dynamic_cast<JPetScopeTask*>(subTask.get()) == nullptr)
     ERROR("JPetScopeLoader currently only allows JPetScopeTask as subtask");
   if (fSubTasks.size() > 0)
-    ERROR("JPetScopeLoader currently only allows one subtask");
+    ERROR("JPetScopeLoader currently allows only one subtask");
   fSubTasks.push_back(std::move(subTask));
 }
 
