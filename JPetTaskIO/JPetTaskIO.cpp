@@ -230,13 +230,12 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
     int i = 0;
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
       auto task = dynamic_cast<JPetUserTask*>(fSubTask->get());
-      fSubTasksStatistics[task->getName()
-                          + std::string(" subtask ")
-                          + std::to_string(i)
-                          + std::string(" stats")]
-        = std::move(std::unique_ptr<JPetStatistics>(new JPetStatistics(*fStatistics)));
-
-      task->setStatistics(fSubTasksStatistics[task->getName()].get());
+      std::string subtaskStatisticsName = task->getName()
+                                          + std::string(" subtask ")
+                                          + std::to_string(i)
+                                          + std::string(" stats");
+      fSubTasksStatistics[subtaskStatisticsName] = std::move(std::unique_ptr<JPetStatistics>(new JPetStatistics(*fStatistics)));
+      task->setStatistics(fSubTasksStatistics[subtaskStatisticsName].get());
       i++;
     }
   } else {
