@@ -20,6 +20,8 @@
 #include "../JPetDataInterface/JPetDataInterface.h"
 #include <string>
 #include <memory>
+#include <vector>
+
 
 
 /**
@@ -33,8 +35,8 @@ public:
   virtual bool init(const JPetParamsInterface& inOptions) = 0;
   virtual bool run(const JPetDataInterface& inData) = 0;
   virtual bool terminate(JPetParamsInterface& outOptions) = 0;
-  virtual void setSubTask(std::unique_ptr<JPetTaskInterface> subTask) = 0;
-  virtual JPetTaskInterface* getSubTask() const = 0;
-  virtual std::string getName() const =0;
+  virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) = 0;
+  virtual const std::vector<JPetTaskInterface*> getSubTasks() const = 0;
+  virtual std::string getName() const = 0;
 };
 #endif /*  !JPETTASKINTERFACE_H */
