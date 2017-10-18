@@ -24,6 +24,7 @@
 #include "../JPetParams/JPetParams.h"
 
 #include <memory>
+#include <string>
 
 class JPetWriter;
 class JPetReader;
@@ -43,6 +44,7 @@ public:
   virtual bool run(const JPetDataInterface& inData) override;
   virtual bool terminate(JPetParamsInterface& outOptions) override;
   virtual ~JPetTaskIO();
+  virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
   void setOptions(const JPetParams& opts);
 
   inline JPetParams getOptions() const
@@ -66,6 +68,7 @@ protected:
   JPetReaderInterface* fReader = 0;
   JPetTreeHeader* fHeader = 0;
   std::unique_ptr<JPetStatistics> fStatistics = 0;
+  std::map<std::string, std::unique_ptr<JPetStatistics>> fSubTasksStatistics;
   JPetProgressBarManager fProgressBar;
 };
 #endif /*  !JPETTASKIO_H */

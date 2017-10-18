@@ -56,7 +56,7 @@ public:
   }
 
   const JPetParamBank& getParamBank();
-  virtual void setStatistics(std::unique_ptr<JPetStatistics> statistics);
+  virtual void setStatistics(JPetStatistics* statistics);
   JPetStatistics& getStatistics();
 
   std::multimap<std::string, int, cmpByTimeWindowIndex> getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const;
@@ -68,7 +68,7 @@ protected:
 
   std::map<std::string, int> fInputFiles;
   JPetWriter* fWriter = 0;
-  std::unique_ptr<JPetStatistics> fStatistics = 0;
+  JPetStatistics* fStatistics = 0;
   JPetParams fParams;
 };
 

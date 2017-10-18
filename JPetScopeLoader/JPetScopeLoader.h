@@ -56,6 +56,8 @@ public:
   bool createInputObjects(const char* inputFilename) override;
   bool createOutputObjects(const char* inputFilename) override;
 
+  virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
+
   std::map<std::string, int> createInputScopeFileNames(
     const std::string& inputPathToScopeFiles,
     std::map<std::string, int> pmPref2Id

@@ -58,7 +58,7 @@ using boost::property_tree::ptree;
 
 JPetScopeLoader::JPetScopeLoader(std::unique_ptr<JPetScopeTask> task): JPetTaskIO("ScopeTask")
 {
-  setSubTask(std::move(task));
+  addSubTask(std::move(task));
   gSystem->Load("libTree");
   /**/
 }
@@ -71,6 +71,15 @@ JPetScopeLoader::~JPetScopeLoader()
   }
 }
 
+void JPetScopeLoader::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
+{
+  if (dynamic_cast<JPetScopeTask*>(subTask.get()) == nullptr)
+    ERROR("JPetScopeLoader currently allows only JPetScopeTask as subtask");
+  if (fSubTasks.size() > 0)
+    ERROR("JPetScopeLoader currently allows only one subtask");
+  fSubTasks.push_back(std::move(subTask));
+}
+
 bool JPetScopeLoader::createInputObjects(const char*)
 {
   using namespace jpet_options_tools;
@@ -80,19 +89,21 @@ bool JPetScopeLoader::createInputObjects(const char*)
 
   auto prefix2PM =  getPMPrefixToPMIdMap();
   std::map<std::string, int> inputScopeFiles = createInputScopeFileNames(getScopeInputDirectory(opts), prefix2PM);
-  auto task = dynamic_cast<JPetScopeTask*>(fSubTask.get());
-  task->setInputFiles(inputScopeFiles);
+  for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
+    auto task = dynamic_cast<JPetScopeTask*>((*fSubTask).get());
+    task->setInputFiles(inputScopeFiles);
 
 
-  // create an object for storing histograms and counters during processing
-  std::unique_ptr<JPetStatistics> tmp(new JPetStatistics());
-  fStatistics = std::move(tmp);
-  assert(fStatistics);
-  fHeader = new JPetTreeHeader(getRunNumber(opts));
-  assert(fHeader);
-  fHeader->setBaseFileName(getInputFile(opts));
-  fHeader->addStageInfo(task->getName(), "", 0, JPetCommonTools::getTimeString());
-  //fHeader->setSourcePosition((*fIter).pCollPosition);
+    // create an object for storing histograms and counters during processing
+    std::unique_ptr<JPetStatistics> tmp(new JPetStatistics());
+    fStatistics = std::move(tmp);
+    assert(fStatistics);
+    fHeader = new JPetTreeHeader(getRunNumber(opts));
+    assert(fHeader);
+    fHeader->setBaseFileName(getInputFile(opts));
+    fHeader->addStageInfo(task->getName(), "", 0, JPetCommonTools::getTimeString());
+    //fHeader->setSourcePosition((*fIter).pCollPosition);
+  }
   return true;
 }
 
@@ -164,10 +175,12 @@ bool JPetScopeLoader::init(const JPetParamsInterface& paramsI)
 
 bool JPetScopeLoader::run(const JPetDataInterface& inData)
 {
-  assert(fSubTask);
-  fSubTask->init(fParams);
-  fSubTask->run(inData);
-  fSubTask->terminate(fParams);
+  assert(!fSubTasks.empty());
+  for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
+    (*fSubTask)->init(fParams);
+    (*fSubTask)->run(inData);
+    (*fSubTask)->terminate(fParams);
+  }
   return true;
 }
 
@@ -191,10 +204,12 @@ bool JPetScopeLoader::createOutputObjects(const char* outputFilename)
 
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
-  if (fSubTask) {
-    auto task = dynamic_cast<JPetScopeTask*>(fSubTask.get());
-    task->setStatistics(std::move(fStatistics));
-    task->setWriter(fWriter);
+  if (!fSubTasks.empty()) {
+    for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
+      auto task = dynamic_cast<JPetScopeTask*>((*fSubTask).get());
+      task->setStatistics(fStatistics.get());
+      task->setWriter(fWriter);
+    }
   } else {
     WARNING("the subTask does not exist, so JPetWriter and JPetStatistics not passed to it");
     return false;
