@@ -38,13 +38,21 @@ public:
   using OptsForFiles = std::map<std::string, OptsForTasks>;
   using TransformersMap = std::map<std::string, std::vector<jpet_options_tools::Transformer> >;
 
-  JPetOptionsGenerator();
-
   /// Method generates the options set: option_name->value based on the input sets of command line args.
   /// Also missing options are added from the default set.
   /// And the basic validation is performed.
   /// The option set is common for all files and tasks.
   OptsStrAny generateAndValidateOptions(const po::variables_map& cmdLineArgs);
+  
+  /// Method returns a map of Options
+  /// based on the number of registered tasks and provided options.
+  /// The elements of the map are pairs filename -> OptionsForAllTasks
+  /// , where OptionsForAllTasks is a container with elements correspondig to the
+  /// options assigned for given task.
+  /// e.g. if there are 4 files and for each file there are 3 tasks, then the map
+  /// should have 4 containers with 3 option elements each.
+  /// In this version it is assumed that for every file the same number of tasks are
+  /// provided defined by nbOfRegisteredTasks arguments.
   OptsForFiles generateOptionsForTasks(const OptsStrAny& opt, int nbOfRegisteredTasks = 1);
 
   std::vector<std::string> getVectorOfOptionFromUser() const;

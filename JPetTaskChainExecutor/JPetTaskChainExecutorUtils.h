@@ -32,5 +32,6 @@ public:
   static bool process(const JPetParams& params);
   static std::vector<JPetParams> generateParams(const OptionsPerFile& opts);
   static std::shared_ptr<JPetParamManager> generateParamManager(const std::map<std::string, boost::any>& options);
+  static JPetParams generateParams(const JPetParams& inParams, const JPetParams& controlParams);
 };
 #endif /*  !JPETTASKCHAINEXECUTORUTILS_H */

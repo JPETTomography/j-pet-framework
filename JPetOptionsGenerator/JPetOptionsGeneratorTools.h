@@ -28,6 +28,17 @@ using TransformersMap = std::map<std::string, std::vector<jpet_options_tools::Tr
 namespace jpet_options_generator_tools
 {
 
+/// Method returns a set of Options based on the input set and the control settings
+/// If no special options are present in the control settings the inOptions are just passed further
+/// Currenty if controlSettings contains option:
+/// 1. "resetEventRange_bool"->true then, the generated inOptions will contain first and last
+/// Event values set to -1, which means  process all available events
+/// 2option "outputFileType_std::string"->value set, then the generated inOptions will contain inputFileType_str::string
+/// set to value
+/// 3."outputPath_std::string"-> path then the generated inOptions will contain
+/// "inputFile_std::string " ->path/nameOfFile
+OptsStrAny generateOptionsForTask(const OptsStrAny& inOptions, const OptsStrAny& controlSettings);
+
 OptsStrAny transformToStrAnyMap(const po::variables_map& variablesMap);
 /// Methods add type suffixes to the elements of
 /// the map according to the key name.
@@ -40,6 +51,8 @@ OptsStrAny transformOptions(const TransformersMap& transformationMap, const Opts
 
 TransformersMap generateTransformationMap(OptsStrAny& options);
 void addTransformFunction(TransformersMap& oldMap,  const std::string& name, jpet_options_tools::Transformer transformFunction);
+
+OptsStrAny resetEventRange(const OptsStrAny& srcOpts);
 
 };
 #endif /*  !JPETOPTIONSGENERATORTOOLS_H */

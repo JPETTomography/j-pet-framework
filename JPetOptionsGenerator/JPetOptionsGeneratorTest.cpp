@@ -20,10 +20,12 @@
 #include "../JPetCmdParser/JPetCmdParser.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include <iostream>
 using boost::any_cast;
 using namespace std;
 using namespace jpet_options_tools;
+using namespace jpet_options_generator_tools;
 
 po::variables_map getCmdLineArgs(const char* cmdLine)
 {
@@ -154,16 +156,18 @@ BOOST_AUTO_TEST_CASE(generateOptions_oneFileTwoTasksWithOutput)
   BOOST_REQUIRE(!isLocalDB(opts) );
   BOOST_REQUIRE(!isLocalDBCreate(opts));
   itTaskOpts++;
-  opts = *itTaskOpts; //get option for second task
-  BOOST_REQUIRE_EQUAL(getRunNumber(opts),  231);
-  BOOST_REQUIRE_EQUAL(getInputFile(opts), "unitTestData/JPetCmdParserTest/infile.root");
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts), FileTypeChecker::kRoot);
-  BOOST_REQUIRE_EQUAL(getOutputPath(opts), "unitTestData/JPetCmdParserTest/");
-  BOOST_REQUIRE_EQUAL(getFirstEvent(opts),  -1); /// second task has event numbers reset
-  BOOST_REQUIRE_EQUAL(getLastEvent(opts),   -1);
-  BOOST_REQUIRE(!isProgressBar(opts));
-  BOOST_REQUIRE(!isLocalDB(opts) );
-  BOOST_REQUIRE(!isLocalDBCreate(opts));
+  opts["resetEventRange_bool"] = true; ///to reset event number
+  auto opts2 = *itTaskOpts; //get option for second task
+  opts2 = generateOptionsForTask(opts2, opts);
+  BOOST_REQUIRE_EQUAL(getRunNumber(opts2),  231);
+  BOOST_REQUIRE_EQUAL(getInputFile(opts2), "unitTestData/JPetCmdParserTest/infile.root");
+  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts2), FileTypeChecker::kRoot);
+  BOOST_REQUIRE_EQUAL(getOutputPath(opts2), "unitTestData/JPetCmdParserTest/");
+  BOOST_REQUIRE_EQUAL(getFirstEvent(opts2),  -1); /// second task has event numbers reset
+  BOOST_REQUIRE_EQUAL(getLastEvent(opts2),   -1);
+  BOOST_REQUIRE(!isProgressBar(opts2));
+  BOOST_REQUIRE(!isLocalDB(opts2) );
+  BOOST_REQUIRE(!isLocalDBCreate(opts2));
 }
 
 BOOST_AUTO_TEST_CASE(generateOptions_TestWithUserOptions)
