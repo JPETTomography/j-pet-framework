@@ -194,6 +194,7 @@ BOOST_AUTO_TEST_CASE(getOptionBy)
     {"my_int", int(12)},
     {"my_float", float(12.5)},
     {"my_double", double(14.6)},
+    {"my_bool", false},
     {"my_vectS", tmp}
   };
   BOOST_REQUIRE_EQUAL(getOptionAsString(opts, "my_string"), std::string("my_value"));
@@ -202,6 +203,7 @@ BOOST_AUTO_TEST_CASE(getOptionBy)
   BOOST_REQUIRE_EQUAL(getOptionAsDouble(opts, "my_double"), 14.6);
   BOOST_REQUIRE(!getOptionAsVectorOfStrings(opts, "my_vectS").empty());
   BOOST_REQUIRE_EQUAL(getOptionAsVectorOfStrings(opts, "my_vectS").size(), 2u);
+  BOOST_REQUIRE_EQUAL(getOptionAsBool(opts, "my_bool"), false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
