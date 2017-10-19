@@ -40,12 +40,13 @@ int getOptionAsInt(const OptsStrAny& opts, std::string optionName);
 float getOptionAsFloat(const OptsStrAny& opts, std::string optionName);
 double getOptionAsDouble(const OptsStrAny& opts, std::string optionName);
 std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, std::string optionName);
+bool getOptionAsBool(const OptsStrAny& opts, std::string optionName);
 
 class FileTypeChecker
 {
 public:
   enum FileType {
-    kNoType, kRoot, kScope, kHld, kHldRoot,kZip, kUndefinedFileType
+    kNoType, kRoot, kScope, kHld, kHldRoot, kZip, kUndefinedFileType
   };
   static FileType getInputFileType(const OptsStrAny& opts);
   static FileType getOutputFileType(const OptsStrAny& opts);
@@ -87,15 +88,6 @@ std::string getLocalDBCreate(const OptsStrAny& opts);
 const char* getUnpackerConfigFile(const OptsStrAny& opts);
 const char* getUnpackerCalibFile(const OptsStrAny& opts);
 std::string getConfigFileName(const OptsStrAny& optsMap);
-
-///Functions returning the sets of changed options
-OptsStrAny resetEventRange(const OptsStrAny& srcOpts);
-/// Ignore the event range options for all but the first task.
-/// For all but the first task,
-/// the input path must be changed if
-/// the output path argument -o was given, because the input
-/// data for them will lay in the location defined by -o.
-std::vector<OptsStrAny> setCorrectRangeAndOutputForNonFirstOption(const std::vector<OptsStrAny>& oldOptions);
 
 bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile = "");
 OptsStrAny createOptionsFromConfigFile(const std::string& inFile);

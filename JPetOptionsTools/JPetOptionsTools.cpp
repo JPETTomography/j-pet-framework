@@ -97,6 +97,16 @@ std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, std:
   }
 }
 
+bool getOptionAsBool(const OptsStrAny& opts, std::string optionName)
+{
+  try {
+    return any_cast<bool>(getOptionValue(opts, optionName));
+  } catch (const std::exception& excep) {
+    ERROR("Bad option type:" + std::string(excep.what()));
+    return false;
+  }
+}
+
 FileTypeChecker::FileType FileTypeChecker::getInputFileType(const std::map<std::string, boost::any>& opts)
 {
   return getFileType(opts, "inputFileType_std::string");
@@ -306,14 +316,6 @@ std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap)
   }
 }
 
-OptsStrAny resetEventRange(const OptsStrAny& srcOpts)
-{
-  OptsStrAny opts(srcOpts);
-  opts.at("firstEvent_int") = -1;
-  opts.at("lastEvent_int") = -1;
-  return opts;
-}
-
 void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine)
 {
   if (!firstLine.empty()) {
@@ -324,42 +326,6 @@ void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine)
   for (const auto& el : stringOptions) {
     INFO(el.first + "=" + el.second);
   }
-}
-
-///@todo refactor it.
-std::vector<OptsStrAny> setCorrectRangeAndOutputForNonFirstOption(const std::vector<OptsStrAny>& oldOptions)
-{
-  std::vector<OptsStrAny> newOptions;
-  newOptions.reserve(oldOptions.size());
-  auto it = oldOptions.begin();
-  if (it != oldOptions.end()) {
-    if ( (FileTypeChecker::getInputFileType(*it) == FileTypeChecker::kHld) || (FileTypeChecker::getInputFileType(*it) == FileTypeChecker::kZip)) {
-      newOptions.push_back(*it);
-      ++it;
-    }
-  }
-  /// We don't change the first element after Unpacker/Unzipper
-  if (it != oldOptions.end()) {
-    newOptions.push_back(*it);
-    ++it;
-  }
-
-  /// we start with the third element, or it is already end.
-  for (; it != oldOptions.end(); ++it) {
-    auto currOpts = *it;
-    /// Ignore the event range options for all but the first task.
-    currOpts = resetEventRange(currOpts);
-    /// For all but the first task,
-    /// the input file must be changed if
-    /// the output path argument -o was given, because the input
-    /// data for them will lay in the location defined by -o.
-    std::string outPath  = getOutputPath(currOpts);
-    if (!outPath.empty()) {
-      currOpts.at("inputFile_std::string") = outPath + JPetCommonTools::extractFileNameFromFullPath(getInputFile(currOpts));
-    }
-    newOptions.push_back(currOpts);
-  }
-  return newOptions;
 }
 
 }
