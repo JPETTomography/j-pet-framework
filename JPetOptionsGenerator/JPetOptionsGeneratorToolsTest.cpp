@@ -20,18 +20,45 @@
 #include "../JPetCmdParser/JPetCmdParser.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include <iostream>
 using boost::any_cast;
 using namespace std;
 using namespace jpet_options_tools;
 using namespace jpet_options_generator_tools;
 
-po::variables_map getCmdLineArgs(const char* cmdLine)
+OptsStrAny getOptions(const std::string& commandLine)
 {
-  auto args_char = JPetCommonTools::createArgs(cmdLine);
+  //auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -b 1 -l unitTestData/JPetCmdParserTest/input.json -L output.json -u unitTestData/JPetOptionsToolsTest/newInputTestCfg.json";
+  auto args_char = JPetCommonTools::createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
-  JPetCmdParser parser;
-  return parser.parseCmdLineArgs(argc, const_cast<const char**>(argv));
+
+  po::options_description description("Allowed options");
+  description.add_options()
+  ("help,h", "Displays this help message.")
+  ("type,t", po::value<std::string>()->required(), "Type of file: hld, zip, root or scope.")
+  ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
+  ("outputPath,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
+  ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
+  ("unpackerConfigFile,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
+  ("unpackerCalibFile,c", po::value<std::string>(), "ROOT file with TRB calibration used by the unpacker program.")
+  ("runId,i", po::value<int>(), "Run id.")
+  ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
+  ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
+  ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.")
+  ("userCfg,u", po::value<std::string>(), "Json file with optional user parameters.");
+
+  po::variables_map variablesMap;
+  po::store(po::parse_command_line(argc, argv, description), variablesMap);
+  po::notify(variablesMap);
+
+  auto options = addTypeSuffixes(transformToStrAnyMap(variablesMap));
+  options = addMissingDefaultOptions(options);
+
+  auto transformationMap = generateTransformationMap(options);
+  options = transformOptions(transformationMap, options);
+
+  return options;
 }
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
@@ -133,6 +160,105 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionToAddOptionsFromCfgFileWork)
   }
   BOOST_REQUIRE(options.count("myOption_std::string"));
   BOOST_REQUIRE(options.count("myAnotherOption_std::string"));
+}
+
+BOOST_AUTO_TEST_CASE(generateOptionsForTask_emptyControlSettings)
+{
+  std::vector<std::string> tmp = {"aa", "bb"};
+  std::map<std::string, boost::any> inOpts = {
+    {"my_string", std::string("my_value")},
+    {"my_int", int(12)},
+  };
+  std::map<std::string, boost::any> controlSettings;
+
+  auto result = generateOptionsForTask(inOpts, controlSettings);
+  for (auto it_r = result.cbegin(), end_r = result.cend(),  it_inOpts = inOpts.cbegin(), end_inOpts = inOpts.cend(); it_r != end_r || it_inOpts != end_inOpts; ) {
+    BOOST_REQUIRE_EQUAL(it_r->first, it_inOpts->first);
+    ++it_r;
+    ++it_inOpts;
+  }
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(result["my_string"]), any_cast<std::string>(inOpts["my_string"]));
+  BOOST_REQUIRE_EQUAL(any_cast<int>(result["my_int"]), any_cast<int>(inOpts["my_int"]));
+}
+
+
+BOOST_AUTO_TEST_CASE(generateOptionsForTask_hldRoot_after_hld)
+{
+  /// This is just a trick to create inOpts for a task. It is not necessary  that it is first time.
+  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld.root -t root -r 2 100  -i 231";
+  auto inOpts  = getOptions(commandLine);
+  /// OutputSettings defined in terminate by the previous task
+  std::map<std::string, boost::any> controlSettings = {{"outputFileType_std::string", std::string("hldRoot")}};
+
+  auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
+  BOOST_REQUIRE(isOptionSet(resultsOpt, "inputFileType_std::string"));
+  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(resultsOpt), FileTypeChecker::kHldRoot);
+}
+
+BOOST_AUTO_TEST_CASE(generateOptionsForTask_root_after_hldRoot)
+{
+  /// This is just a trick to create inOpts for a task. It is not necessary  that it is first time.
+  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.root -t root -r 2 100  -i 231";
+  auto inOpts  = getOptions(commandLine);
+  /// OutputSettings defined in terminate by the previous task
+  std::map<std::string, boost::any> controlSettings = {{"outputFileType_std::string", std::string("root")}};
+
+  auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
+  BOOST_REQUIRE(isOptionSet(resultsOpt, "inputFileType_std::string"));
+  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(resultsOpt), FileTypeChecker::kRoot);
+
+  BOOST_REQUIRE(isOptionSet(resultsOpt, "firstEvent_int"));
+  BOOST_REQUIRE(isOptionSet(resultsOpt, "lastEvent_int"));
+  BOOST_REQUIRE_EQUAL(getOptionAsInt(resultsOpt, "firstEvent_int"), 2);
+  BOOST_REQUIRE_EQUAL(getOptionAsInt(resultsOpt, "lastEvent_int"), 100);
+}
+
+BOOST_AUTO_TEST_CASE(generateOptionsForTask_root_after_Root)
+{
+  /// This is just a trick to create inOpts for a task. It is not necessary  that it is first time.
+  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.root -t root -r 2 100  -i 231";
+  auto inOpts  = getOptions(commandLine);
+  /// OutputSettings defined in terminate by the previous task
+  std::map<std::string, boost::any> controlSettings = {{"outputFileType_std::string", std::string("root")}};
+
+  auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
+  BOOST_REQUIRE(isOptionSet(resultsOpt, "inputFileType_std::string"));
+  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(resultsOpt), FileTypeChecker::kRoot);
+
+  BOOST_REQUIRE(isOptionSet(resultsOpt, "firstEvent_int"));
+  BOOST_REQUIRE(isOptionSet(resultsOpt, "lastEvent_int"));
+  BOOST_REQUIRE_EQUAL(getOptionAsInt(resultsOpt, "firstEvent_int"), 2);
+  BOOST_REQUIRE_EQUAL(getOptionAsInt(resultsOpt, "lastEvent_int"), 100);
+}
+
+BOOST_AUTO_TEST_CASE(generateOptionsForTask_resetEventRange)
+{
+  /// This is just a trick to create inOpts for a task. It is not necessary  that it is first time.
+  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.root -t root -r 2 100  -i 231";
+  auto inOpts  = getOptions(commandLine);
+  /// OutputSettings defined in terminate by the previous task
+  std::map<std::string, boost::any> controlSettings = {{"resetEventRange_bool", bool(true)}};
+
+  auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
+  BOOST_REQUIRE(isOptionSet(resultsOpt, "firstEvent_int"));
+  BOOST_REQUIRE(isOptionSet(resultsOpt, "lastEvent_int"));
+  BOOST_REQUIRE_EQUAL(getOptionAsInt(resultsOpt, "firstEvent_int"), -1);
+  BOOST_REQUIRE_EQUAL(getOptionAsInt(resultsOpt, "lastEvent_int"), -1);
+}
+
+BOOST_AUTO_TEST_CASE(generateOptionsForTask_outputPath)
+{
+  /// This is just a trick to create inOpts for a task. It is not necessary  that it is first time.
+  auto commandLine = "main.x -f data.root -t root -r 2 100  -i 231 ";
+  auto inOpts  = getOptions(commandLine);
+  /// Artificially add inputFile option, because it is still in form of vector
+  inOpts["inputFile_std::string"] = *(getInputFiles(inOpts).begin());
+  
+  /// OutputSettings defined in terminate by the previous task
+  std::map<std::string, boost::any> controlSettings = {{"outputPath_std::string", std::string("../../")}};
+  auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
+  BOOST_REQUIRE(isOptionSet(resultsOpt, "inputFile_std::string"));
+  BOOST_REQUIRE_EQUAL(getOptionAsString(resultsOpt, "inputFile_std::string"), std::string("../../data.root"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
