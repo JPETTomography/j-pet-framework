@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsForTask_outputPath)
   auto inOpts  = getOptions(commandLine);
   /// Artificially add inputFile option, because it is still in form of vector
   inOpts["inputFile_std::string"] = *(getInputFiles(inOpts).begin());
-  
+
   /// OutputSettings defined in terminate by the previous task
   std::map<std::string, boost::any> controlSettings = {{"outputPath_std::string", std::string("../../")}};
   auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
