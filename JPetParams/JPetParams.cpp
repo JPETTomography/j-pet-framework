@@ -35,6 +35,11 @@ JPetParamManager* JPetParams::getParamManager() const
   return fParamManager.get();
 }
 
+std::shared_ptr<JPetParamManager> JPetParams::getParamManagerAsShared() const
+{
+  return fParamManager;
+}
+
 void JPetParams::setParamManager(std::shared_ptr<JPetParamManager> mgr)
 {
   fParamManager = mgr;

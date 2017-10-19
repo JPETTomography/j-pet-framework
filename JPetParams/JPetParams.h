@@ -35,6 +35,7 @@ public:
 
   jpet_options_tools::OptsStrAny getOptions() const;
   JPetParamManager* getParamManager() const;
+  std::shared_ptr<JPetParamManager> getParamManagerAsShared() const;
   void setParamManager(std::shared_ptr<JPetParamManager> mgr);
 
 protected:
