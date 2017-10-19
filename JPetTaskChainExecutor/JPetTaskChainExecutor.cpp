@@ -76,12 +76,15 @@ bool JPetTaskChainExecutor::process()
 
     assert(currParamsIt != fParams.end());
     auto currParams = *currParamsIt;
+    /// We generate input parameters based on the current parameter set and the outputParams produced by
+    /// the previous task.
+    auto inputParams = JPetTaskChainExecutorUtils::generateParams(currParams, outputParams);
     jpet_options_tools::printOptionsToLog(currParams.getOptions(), std::string("Options for ") + taskName);
     currParamsIt++;
 
     startTime = stdc::system_clock::now();
     INFO(Form("Starting task: %s", taskName.c_str()));
-    if (!currentTask->init(currParams)) {
+    if (!currentTask->init(inputParams)) {
       ERROR("In task initialization");
       return false;
     }
