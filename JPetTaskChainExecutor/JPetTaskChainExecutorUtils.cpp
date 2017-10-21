@@ -20,6 +20,7 @@
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
 #include "../JPetOptionsTools/JPetOptionsTools.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
+#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
 
 bool JPetTaskChainExecutorUtils::process(const JPetParams& params)
@@ -77,4 +78,11 @@ std::shared_ptr<JPetParamManager> JPetTaskChainExecutorUtils::generateParamManag
   } else {
     return std::make_shared<JPetParamManager>();
   }
+}
+
+JPetParams JPetTaskChainExecutorUtils::generateParams(const JPetParams& inParams, const JPetParams& controlParams)
+{
+  using namespace jpet_options_generator_tools;
+  JPetParams newParams(generateOptionsForTask(inParams.getOptions(), controlParams.getOptions()), inParams.getParamManagerAsShared());
+  return  newParams;
 }
