@@ -34,19 +34,6 @@ using namespace jpet_options_tools;
 using namespace jpet_options_generator_tools;
 
 
-JPetOptionsGenerator::JPetOptionsGenerator()
-{
-}
-
-/// Function returns a map of Options
-/// based on the number of registered tasks and provided options.
-/// The elements of the map are pairs filename -> OptionsForAllTasks
-/// , where OptionsForAllTasks is a container with elements correspondig to the
-/// options assigned for given task.
-/// e.g. if there are 4 files and for each file there are 3 tasks, then the map
-/// should have 4 containers with 3 option elements each.
-/// In this version it is assumed that for every file the same number of tasks are
-/// provided defined by nbOfRegisteredTasks arguments.
 JPetOptionsGenerator::OptsForFiles JPetOptionsGenerator::generateOptionsForTasks(const OptsStrAny& inOptions,  int nbOfRegisteredTasks)
 {
   using namespace jpet_options_tools;
@@ -98,7 +85,7 @@ JPetOptionsGenerator::OptsForFiles JPetOptionsGenerator::generateOptionsForTasks
   /// Finally, multiple the options for every task.
   for (const auto& el : optionsPerFile) {
     std::vector<OptsStrAny>  currOpts(nbOfRegisteredTasks, el.second);
-    optsForAllFiles[el.first] = setCorrectRangeAndOutputForNonFirstOption(currOpts);
+    optsForAllFiles[el.first] = currOpts;
   }
   return optsForAllFiles;
 }

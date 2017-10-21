@@ -14,6 +14,7 @@
  */
 
 #include "./JPetOptionsGeneratorTools.h"
+#include "../JPetCommonTools/JPetCommonTools.h"
 using namespace jpet_options_tools;
 
 namespace jpet_options_generator_tools
@@ -126,4 +127,44 @@ std::map<std::string, boost::any> getDefaultOptions()
 {
   return kDefaultOptions;
 }
+
+
+/// Method returns a set of Options based on the input set and the control settings
+/// If no special options are present in the control settings the inOptions are just passed further
+/// Currenty if controlSettings contains option:
+/// 1. "resetEventRange_bool"->true then, the generated inOptions will contain first and last
+/// Event values set to -1, which means  process all available events
+/// 2. option "outputFileType_std::string"->value set, then the generated inOptions will contain inputFileType_str::string
+/// set to value
+/// 3."outputPath_std::string"-> path then the generated inOptions will contain
+/// "inputFile_std::string " ->path/nameOfFile
+OptsStrAny generateOptionsForTask(const OptsStrAny& inOptions, const OptsStrAny& controlSettings)
+{
+
+  auto newOpts(inOptions);
+  if (isOptionSet(controlSettings, "resetEventRange_bool")) {
+    if (getOptionAsBool(controlSettings, "resetEventRange_bool")) {
+      newOpts = resetEventRange(newOpts);
+    }
+  }
+  if (isOptionSet(controlSettings, "outputFileType_std::string")) {
+    newOpts["inputFileType_std::string"] = getOptionAsString(controlSettings, "outputFileType_std::string");
+  }
+  if (isOptionSet(controlSettings, "outputPath_std::string")) {
+    auto outPath  = std::string(getOutputPath(controlSettings));
+    if (!outPath.empty()) {
+      newOpts.at("inputFile_std::string") = outPath  + JPetCommonTools::extractFileNameFromFullPath(getInputFile(newOpts));
+    }
+  }
+  return newOpts;
+}
+
+OptsStrAny resetEventRange(const OptsStrAny& srcOpts)
+{
+  OptsStrAny opts(srcOpts);
+  opts.at("firstEvent_int") = -1;
+  opts.at("lastEvent_int") = -1;
+  return opts;
+}
+
 }
