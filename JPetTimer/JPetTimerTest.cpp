@@ -17,12 +17,43 @@
 #define BOOST_TEST_MODULE JPetTimerTest
 
 #include <boost/test/unit_test.hpp>
+#include "./JPetTimer.h"
+#include <thread>
+#include <chrono>
 
 BOOST_AUTO_TEST_SUITE(JPetTimerTestSuite)
 
-BOOST_AUTO_TEST_CASE(test1)
+BOOST_AUTO_TEST_CASE(constructors)
 {
-
+  JPetTimer timer;
+  timer.startMeasurement();
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+  timer.stopMeasurement("test");
+  BOOST_REQUIRE_EQUAL(timer.getElapsedTimes().size(), 1);
+  BOOST_REQUIRE_EQUAL(timer.getElapsedTimeInSeconds(), 1);
+  BOOST_REQUIRE_EQUAL(timer.getElapsedTimes()[0].second.count(), 1);
+  BOOST_REQUIRE_EQUAL(timer.getElapsedTimes()[0].first, "test");
+  JPetTimer copy = timer;
+  BOOST_REQUIRE_EQUAL(copy.getElapsedTimes().size(), 1);
+  BOOST_REQUIRE_EQUAL(copy.getElapsedTimeInSeconds(), 1);
+  BOOST_REQUIRE_EQUAL(copy.getElapsedTimes()[0].second.count(), 1);
+  BOOST_REQUIRE_EQUAL(copy.getElapsedTimes()[0].first, "test");
+  copy.startMeasurement();
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+  copy.stopMeasurement("test2");
+  BOOST_REQUIRE_EQUAL(copy.getElapsedTimes().size(), 2);
+  BOOST_REQUIRE_EQUAL(copy.getElapsedTimeInSeconds(), 2);
+  BOOST_REQUIRE_EQUAL(copy.getElapsedTimes()[0].second.count(), 1);
+  BOOST_REQUIRE_EQUAL(copy.getElapsedTimes()[1].second.count(), 1);
+  BOOST_REQUIRE_EQUAL(copy.getElapsedTimes()[0].first, "test");
+  BOOST_REQUIRE_EQUAL(copy.getElapsedTimes()[1].first, "test2");
+  JPetTimer copyConstructor(copy);
+  BOOST_REQUIRE_EQUAL(copyConstructor.getElapsedTimes().size(), 2);
+  BOOST_REQUIRE_EQUAL(copyConstructor.getElapsedTimeInSeconds(), 2);
+  BOOST_REQUIRE_EQUAL(copyConstructor.getElapsedTimes()[0].second.count(), 1);
+  BOOST_REQUIRE_EQUAL(copyConstructor.getElapsedTimes()[1].second.count(), 1);
+  BOOST_REQUIRE_EQUAL(copyConstructor.getElapsedTimes()[0].first, "test");
+  BOOST_REQUIRE_EQUAL(copyConstructor.getElapsedTimes()[1].first, "test2");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
