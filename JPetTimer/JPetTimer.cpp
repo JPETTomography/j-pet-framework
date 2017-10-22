@@ -47,3 +47,25 @@ void JPetTimer::printTotalElapsedTimeToInfo()
   });
   INFO(std::string("Total elapsed time:") + std::to_string(total.count()) + " [s]");
 }
+
+long int JPetTimer::getElapsedTimeInSeconds()
+{
+  auto total = std::accumulate(elapsedTimes.begin(),
+                               elapsedTimes.end(),
+                               std::chrono::seconds(0),
+  [](const std::chrono::seconds prev, const std::pair<std::string, std::chrono::seconds>& el) {
+    return prev + el.second;
+  });
+  return total.count();
+}
+
+JPetTimer::vectorElapsedTimes
+JPetTimer::getElapsedTimes()
+{
+  return elapsedTimes;
+}
+
+JPetTimer::startTimeType JPetTimer::getStartTime()
+{
+  return startTime;
+}

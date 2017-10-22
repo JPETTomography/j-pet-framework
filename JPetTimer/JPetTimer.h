@@ -25,8 +25,13 @@
 class JPetTimer
 {
 public:
+  using vectorElapsedTimes = std::vector<std::pair<std::string, std::chrono::seconds>>;
+  using startTimeType = std::chrono::time_point<std::chrono::_V2::system_clock, std::chrono::duration<long int, std::ratio<1l, 1000000000l>>>;
+
   JPetTimer();
   ~JPetTimer();
+  JPetTimer(const JPetTimer&) = default;
+  JPetTimer& operator=(const JPetTimer&) = default;
 
   void startMeasurement();
   void stopMeasurement(std::string measurementName);
@@ -34,12 +39,14 @@ public:
   void printElapsedTimeToInfo();
   void printTotalElapsedTimeToInfo();
 
-private:
-  JPetTimer(const JPetTimer&) = delete;
-  JPetTimer& operator=(const JPetTimer&) = delete;
+  vectorElapsedTimes getElapsedTimes();
+  startTimeType getStartTime();
+  long int getElapsedTimeInSeconds();
 
-  std::chrono::time_point<std::chrono::_V2::system_clock, std::chrono::duration<long int, std::ratio<1l, 1000000000l>>> startTime;
-  std::vector<std::pair<std::string, std::chrono::seconds>> elapsedTimes;
+private:
+
+  startTimeType startTime;
+  vectorElapsedTimes elapsedTimes;
 };
 
 #endif /*  !_JPET_TIMER_H_ */
