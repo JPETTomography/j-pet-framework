@@ -15,6 +15,7 @@
 
 
 #include "JPetPreprocessingTask.h"
+#include "../JPetCommonTools/JPetCommonTools.h"
 
 JPetPreprocessingTask::JPetPreprocessingTask(const char* name) : JPetTask(name)
 {
@@ -24,6 +25,27 @@ JPetPreprocessingTask::JPetPreprocessingTask(const char* name) : JPetTask(name)
 bool JPetPreprocessingTask::init(const JPetParamsInterface& inOptions)
 {
   auto params = dynamic_cast<const JPetParams&>(inOptions);
+  using namespace jpet_options_tools;
+  auto options = params.getOptions();
+  auto paramMgr = params.getParamManager();
+  if (!paramMgr) {
+    ERROR("Param manager is not set");
+    return false;
+  }
+  auto runNum = getRunNumber(options);
+  if (runNum >= 0) {
+    try {
+      paramMgr->fillParameterBank(runNum);
+    } catch (const std::exception& e) {
+      ERROR(std::string("Param bank was not generated correctly with error: ") + e.what() + "\n The run number used:" + JPetCommonTools::intToString(runNum));
+      return false;
+    }
+    if (isLocalDBCreate(options)) {
+      JPetParamSaverAscii saver;
+      saver.saveParamBank(paramMgr->getParamBank(), runNum, getLocalDBCreate(options));
+    }
+  }
+  return true;
 }
 
 bool JPetPreprocessingTask::run(const JPetDataInterface& inData)
