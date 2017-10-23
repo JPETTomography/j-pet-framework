@@ -20,6 +20,7 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include <numeric>
 
 class JPetTimer
 {
@@ -35,12 +36,12 @@ public:
   void startMeasurement();
   void stopMeasurement(std::string measurementName);
 
-  std::string getElapsedTime();
-  std::string getTotalElapsedTime();
+  std::string getAllMeasuredTimes();
+  std::string getTotalMeasuredTime();
 
-  vectorElapsedTimes getElapsedTimes();
-  startTimeType getStartTime();
-  long int getElapsedTimeInSeconds();
+  vectorElapsedTimes getVectorOfMeasuredTimes();
+  startTimeType getCurrentStartTime();
+  long int getTotalMeasuredTimeInSeconds();
 
 private:
 
