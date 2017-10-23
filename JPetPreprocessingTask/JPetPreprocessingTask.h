@@ -19,6 +19,7 @@
 
 #include "../JPetTask/JPetTask.h"
 #include "../JPetParams/JPetParams.h"
+#include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
 
 class JPetPreprocessingTask : public JPetTask
 {
