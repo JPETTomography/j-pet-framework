@@ -22,32 +22,6 @@
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
-
-bool JPetTaskChainExecutorUtils::process(const JPetParams& params)
-{
-  using namespace jpet_options_tools;
-  auto options =  params.getOptions();
-  auto paramMgr = params.getParamManager();
-  if (!paramMgr) {
-    ERROR("Param manager is not set");
-    return false;
-  }
-  auto runNum = getRunNumber(options);
-  if (runNum >= 0) {
-    try {
-      paramMgr->fillParameterBank(runNum);
-    } catch (const std::exception& e) {
-      ERROR(std::string("Param bank was not generated correctly with error: ") + e.what() + "\n The run number used:" + JPetCommonTools::intToString(runNum));
-      return false;
-    }
-    if (isLocalDBCreate(options)) {
-      JPetParamSaverAscii saver;
-      saver.saveParamBank(paramMgr->getParamBank(), runNum, getLocalDBCreate(options));
-    }
-  }
-  return true;
-}
-
 ///@todo this function should be moved to some other class
 std::vector<JPetParams> JPetTaskChainExecutorUtils::generateParams(const OptionsPerFile& opts)
 {

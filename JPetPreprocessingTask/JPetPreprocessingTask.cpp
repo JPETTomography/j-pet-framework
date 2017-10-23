@@ -50,10 +50,10 @@ bool JPetPreprocessingTask::init(const JPetParamsInterface& inOptions)
 
 bool JPetPreprocessingTask::run(const JPetDataInterface& inData)
 {
-
+  return true;
 }
 
 bool JPetPreprocessingTask::terminate(JPetParamsInterface& outOptions)
 {
-
+  return true;
 }
