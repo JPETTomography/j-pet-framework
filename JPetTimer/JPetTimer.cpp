@@ -30,7 +30,7 @@ void JPetTimer::stopMeasurement(std::string measurementName)
   fElapsedTimes.push_back(make_pair(measurementName, std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - fStartTime)));
 }
 
-std::string JPetTimer::getElapsedTime()
+std::string JPetTimer::getAllMeasuredTimes()
 {
   std::string tmp;
   for (auto& el : fElapsedTimes) {
@@ -39,18 +39,12 @@ std::string JPetTimer::getElapsedTime()
   return tmp;
 }
 
-std::string JPetTimer::getTotalElapsedTime()
+std::string JPetTimer::getTotalMeasuredTime()
 {
-  auto total = std::accumulate(fElapsedTimes.begin(),
-                               fElapsedTimes.end(),
-                               std::chrono::seconds(0),
-  [](const std::chrono::seconds prev, const std::pair<std::string, std::chrono::seconds>& el) {
-    return prev + el.second;
-  });
-  return std::string("Total elapsed time:") + std::to_string(total.count()) + " [s]\n";
+  return std::string("Total elapsed time:") + std::to_string(getTotalMeasuredTimeInSeconds()) + " [s]\n";
 }
 
-long int JPetTimer::getElapsedTimeInSeconds()
+long int JPetTimer::getTotalMeasuredTimeInSeconds()
 {
   auto total = std::accumulate(fElapsedTimes.begin(),
                                fElapsedTimes.end(),
@@ -62,12 +56,12 @@ long int JPetTimer::getElapsedTimeInSeconds()
 }
 
 JPetTimer::vectorElapsedTimes
-JPetTimer::getElapsedTimes()
+JPetTimer::getVectorOfMeasuredTimes()
 {
   return fElapsedTimes;
 }
 
-JPetTimer::startTimeType JPetTimer::getStartTime()
+JPetTimer::startTimeType JPetTimer::getCurrentStartTime()
 {
   return fStartTime;
 }
