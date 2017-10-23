@@ -53,14 +53,15 @@ bool JPetTaskChainExecutor::preprocessing(const std::vector<JPetParams>& params)
 
 bool JPetTaskChainExecutor::process()
 {
-  namespace stdc = std::chrono;
-  std::vector<std::pair<std::string, stdc::seconds>> elapsedTime;
-  auto startTime = stdc::system_clock::now();
+  JPetTimer timer;
+  timer.startMeasurement();
+
   if (!preprocessing(fParams)) {
     ERROR("Error in preprocessing phase");
     return false;
   }
-  elapsedTime.push_back(std::make_pair("Preprocessing", stdc::duration_cast< stdc::seconds > (stdc::system_clock::now() - startTime)));
+
+  timer.stopMeasurement("Preprocessing");
 
   JPetDataInterface nullDataObject;
   JPetParams outputParams;
@@ -82,7 +83,7 @@ bool JPetTaskChainExecutor::process()
     jpet_options_tools::printOptionsToLog(currParams.getOptions(), std::string("Options for ") + taskName);
     currParamsIt++;
 
-    startTime = stdc::system_clock::now();
+    timer.startMeasurement();
     INFO(Form("Starting task: %s", taskName.c_str()));
     if (!currentTask->init(inputParams)) {
       ERROR("In task initialization");
@@ -97,21 +98,10 @@ bool JPetTaskChainExecutor::process()
       return false;
     }
 
-    elapsedTime.push_back(std::make_pair("task " + taskName, stdc::duration_cast< stdc::seconds > (stdc::system_clock::now() - startTime)));
-    INFO(Form("Finished task: %s", taskName.c_str()));
+    timer.stopMeasurement("task " + taskName);
   }
-
-  for (auto& el : elapsedTime) {
-    INFO("Elapsed time for " + el.first + ":" + el.second.count() + " [s]");
-  }
-  auto total = std::accumulate(elapsedTime.begin(),
-                               elapsedTime.end(),
-                               stdc::seconds (0),
-  [](const stdc::seconds prev, const std::pair <std::string, stdc::seconds>& el) {
-    return prev + el.second;
-  }
-                              );
-  INFO(std::string("Total elapsed time:") + total.count() + " [s]");
+  INFO(timer.getAllMeasuredTimes());
+  INFO(timer.getTotalMeasuredTime());
   return true;
 }
 
