@@ -97,8 +97,8 @@ bool JPetTaskChainExecutor::process()
 
     timer.stopMeasurement("task " + taskName);
   }
-  timer.printElapsedTimeToInfo();
-  timer.printTotalElapsedTimeToInfo();
+  INFO(timer.getElapsedTime());
+  INFO(timer.getTotalElapsedTime());
   return true;
 }
 
