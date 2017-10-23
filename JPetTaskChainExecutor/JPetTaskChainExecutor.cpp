@@ -40,29 +40,9 @@ JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorCh
   }
 }
 
-
-bool JPetTaskChainExecutor::preprocessing(const std::vector<JPetParams>& params)
-{
-  if (params.empty()) {
-    ERROR("No parameters provided!");
-    return false;
-  } else {
-    return JPetTaskChainExecutorUtils::process(params.front());
-  }
-}
-
 bool JPetTaskChainExecutor::process()
 {
   JPetTimer timer;
-  timer.startMeasurement();
-
-  if (!preprocessing(fParams)) {
-    ERROR("Error in preprocessing phase");
-    return false;
-  }
-
-  timer.stopMeasurement("Preprocessing");
-
   JPetDataInterface nullDataObject;
   JPetParams outputParams;
 
