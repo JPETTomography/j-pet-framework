@@ -20,7 +20,6 @@
 #include <vector>
 #include <string>
 #include <chrono>
-#include "../JPetLoggerInclude.h"
 
 class JPetTimer
 {
@@ -36,8 +35,8 @@ public:
   void startMeasurement();
   void stopMeasurement(std::string measurementName);
 
-  void printElapsedTimeToInfo();
-  void printTotalElapsedTimeToInfo();
+  std::string getElapsedTime();
+  std::string getTotalElapsedTime();
 
   vectorElapsedTimes getElapsedTimes();
   startTimeType getStartTime();
@@ -45,8 +44,8 @@ public:
 
 private:
 
-  startTimeType startTime;
-  vectorElapsedTimes elapsedTimes;
+  startTimeType fStartTime;
+  vectorElapsedTimes fElapsedTimes;
 };
 
 #endif /*  !_JPET_TIMER_H_ */
