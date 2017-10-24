@@ -4,6 +4,8 @@
 
 #include "../JPetManager/JPetManager.h"
 
+#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
@@ -40,6 +42,13 @@ BOOST_AUTO_TEST_CASE( emptyRun )
   BOOST_REQUIRE(!manager.run(0, nullptr));
   auto options = manager.getOptions();
   BOOST_REQUIRE_EQUAL(options.size(), 0u);
+}
+
+BOOST_AUTO_TEST_CASE( goodRun )
+{
+  JPetManager& manager = JPetManager::getManager();
+  const char* args[5] = { "test/Path", "--file", "unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root", "--type", "root" };
+  manager.run(5, args);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
