@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE( goodRun )
 {
   JPetManager& manager = JPetManager::getManager();
   const char* args[5] = { "test/Path", "--file", "unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root", "--type", "root" };
-  manager.run(5, args);
+  BOOST_REQUIRE(manager.run(5, args));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
