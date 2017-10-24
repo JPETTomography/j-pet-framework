@@ -20,26 +20,33 @@
 #include <vector>
 #include <string>
 #include <chrono>
-#include "../JPetLoggerInclude.h"
+#include <numeric>
 
 class JPetTimer
 {
 public:
+  using vectorElapsedTimes = std::vector<std::pair<std::string, std::chrono::seconds>>;
+  using startTimeType = std::chrono::time_point<std::chrono::_V2::system_clock, std::chrono::duration<long int, std::ratio<1l, 1000000000l>>>;
+
   JPetTimer();
   ~JPetTimer();
+  JPetTimer(const JPetTimer&) = default;
+  JPetTimer& operator=(const JPetTimer&) = default;
 
   void startMeasurement();
   void stopMeasurement(std::string measurementName);
 
-  void printElapsedTimeToInfo();
-  void printTotalElapsedTimeToInfo();
+  std::string getAllMeasuredTimes();
+  std::string getTotalMeasuredTime();
+
+  vectorElapsedTimes getVectorOfMeasuredTimes();
+  startTimeType getCurrentStartTime();
+  long int getTotalMeasuredTimeInSeconds();
 
 private:
-  JPetTimer(const JPetTimer&) = delete;
-  JPetTimer& operator=(const JPetTimer&) = delete;
 
-  std::chrono::time_point<std::chrono::_V2::system_clock, std::chrono::duration<long int, std::ratio<1l, 1000000000l>>> startTime;
-  std::vector<std::pair<std::string, std::chrono::seconds>> elapsedTimes;
+  startTimeType fStartTime;
+  vectorElapsedTimes fElapsedTimes;
 };
 
 #endif /*  !_JPET_TIMER_H_ */
