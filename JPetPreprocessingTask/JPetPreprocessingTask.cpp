@@ -48,12 +48,12 @@ bool JPetPreprocessingTask::init(const JPetParamsInterface& inOptions)
   return true;
 }
 
-bool JPetPreprocessingTask::run(const JPetDataInterface& inData)
+bool JPetPreprocessingTask::run(const JPetDataInterface&)
 {
   return true;
 }
 
-bool JPetPreprocessingTask::terminate(JPetParamsInterface& outOptions)
+bool JPetPreprocessingTask::terminate(JPetParamsInterface&)
 {
   return true;
 }

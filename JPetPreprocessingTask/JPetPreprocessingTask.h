@@ -26,8 +26,8 @@ class JPetPreprocessingTask : public JPetTask
 public:
   explicit JPetPreprocessingTask(const char* name = "");
   bool init(const JPetParamsInterface& inOptions) override;
-  bool run(const JPetDataInterface& inData) override;
-  bool terminate(JPetParamsInterface& outOptions) override;
+  bool run(const JPetDataInterface&) override;
+  bool terminate(JPetParamsInterface&) override;
 
 private:
   JPetParams params;
