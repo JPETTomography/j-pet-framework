@@ -17,12 +17,43 @@
 #define BOOST_TEST_MODULE JPetTimerTest
 
 #include <boost/test/unit_test.hpp>
+#include "./JPetTimer.h"
+#include <thread>
+#include <chrono>
 
 BOOST_AUTO_TEST_SUITE(JPetTimerTestSuite)
 
-BOOST_AUTO_TEST_CASE(test1)
+BOOST_AUTO_TEST_CASE(constructors)
 {
-
+  JPetTimer timer;
+  timer.startMeasurement();
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+  timer.stopMeasurement("test");
+  BOOST_REQUIRE_EQUAL(timer.getVectorOfMeasuredTimes().size(), 1);
+  BOOST_REQUIRE_EQUAL(timer.getTotalMeasuredTimeInSeconds(), 1);
+  BOOST_REQUIRE_EQUAL(timer.getVectorOfMeasuredTimes()[0].second.count(), 1);
+  BOOST_REQUIRE_EQUAL(timer.getVectorOfMeasuredTimes()[0].first, "test");
+  JPetTimer copy = timer;
+  BOOST_REQUIRE_EQUAL(copy.getVectorOfMeasuredTimes().size(), 1);
+  BOOST_REQUIRE_EQUAL(copy.getTotalMeasuredTimeInSeconds(), 1);
+  BOOST_REQUIRE_EQUAL(copy.getVectorOfMeasuredTimes()[0].second.count(), 1);
+  BOOST_REQUIRE_EQUAL(copy.getVectorOfMeasuredTimes()[0].first, "test");
+  copy.startMeasurement();
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+  copy.stopMeasurement("test2");
+  BOOST_REQUIRE_EQUAL(copy.getVectorOfMeasuredTimes().size(), 2);
+  BOOST_REQUIRE_EQUAL(copy.getTotalMeasuredTimeInSeconds(), 2);
+  BOOST_REQUIRE_EQUAL(copy.getVectorOfMeasuredTimes()[0].second.count(), 1);
+  BOOST_REQUIRE_EQUAL(copy.getVectorOfMeasuredTimes()[1].second.count(), 1);
+  BOOST_REQUIRE_EQUAL(copy.getVectorOfMeasuredTimes()[0].first, "test");
+  BOOST_REQUIRE_EQUAL(copy.getVectorOfMeasuredTimes()[1].first, "test2");
+  JPetTimer copyConstructor(copy);
+  BOOST_REQUIRE_EQUAL(copyConstructor.getVectorOfMeasuredTimes().size(), 2);
+  BOOST_REQUIRE_EQUAL(copyConstructor.getTotalMeasuredTimeInSeconds(), 2);
+  BOOST_REQUIRE_EQUAL(copyConstructor.getVectorOfMeasuredTimes()[0].second.count(), 1);
+  BOOST_REQUIRE_EQUAL(copyConstructor.getVectorOfMeasuredTimes()[1].second.count(), 1);
+  BOOST_REQUIRE_EQUAL(copyConstructor.getVectorOfMeasuredTimes()[0].first, "test");
+  BOOST_REQUIRE_EQUAL(copyConstructor.getVectorOfMeasuredTimes()[1].first, "test2");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
