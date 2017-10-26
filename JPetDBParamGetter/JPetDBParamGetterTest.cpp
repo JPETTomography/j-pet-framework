@@ -9,6 +9,15 @@
 //const char* gDefaultConfigFile = "../DBConfig/configDB.json";
 
 BOOST_AUTO_TEST_SUITE(DBParamGetterTS)
+
+/// This is a dummy test that is just a placeholder cause empty tests
+/// are treated as errors by Travis in our setup.
+BOOST_AUTO_TEST_CASE(dummyTest)
+{
+  BOOST_REQUIRE(true);   
+}
+
+
 /*
 BOOST_AUTO_TEST_CASE(defaultConstructorTest)
 {
