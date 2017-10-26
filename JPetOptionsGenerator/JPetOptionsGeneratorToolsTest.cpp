@@ -261,4 +261,30 @@ BOOST_AUTO_TEST_CASE(generateOptionsForTask_outputPath)
   BOOST_REQUIRE_EQUAL(getOptionAsString(resultsOpt, "inputFile_std::string"), std::string("../../data.root"));
 }
 
+BOOST_AUTO_TEST_CASE(setResetEventRangeOption_test)
+{
+  std::map<std::string, boost::any> options;
+  setResetEventRangeOption(options, true);
+  BOOST_REQUIRE(isOptionSet(options, "resetEventRange_bool"));
+  BOOST_REQUIRE(getOptionAsBool(options, "resetEventRange_bool"));
+  setResetEventRangeOption(options, false);
+  BOOST_REQUIRE(!getOptionAsBool(options, "resetEventRange_bool"));
+}
+
+BOOST_AUTO_TEST_CASE(setOutputFileType_test)
+{
+  std::map<std::string, boost::any> options;
+  setOutputFileType(options, "root");
+  BOOST_REQUIRE(isOptionSet(options, "outputFileType_std::string"));
+  BOOST_REQUIRE_EQUAL(getOptionAsString(options, "outputFileType_std::string"), "root");
+}
+
+BOOST_AUTO_TEST_CASE(setOutputPath_test)
+{
+  std::map<std::string, boost::any> options;
+  setOutputPath(options, "/here/and/there");
+  BOOST_REQUIRE(isOptionSet(options, "outputPath_std::string"));
+  BOOST_REQUIRE_EQUAL(getOptionAsString(options, "outputPath_std::string"), "/here/and/there");
+}
+
 BOOST_AUTO_TEST_SUITE_END()

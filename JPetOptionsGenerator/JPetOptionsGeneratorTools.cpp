@@ -159,8 +159,6 @@ OptsStrAny generateOptionsForTask(const OptsStrAny& inOptions, const OptsStrAny&
   return newOpts;
 }
 
-
-
 void setResetEventRangeOption(OptsStrAny& options, bool isReset)
 {
   options["resetEventRange_bool"] = isReset;
