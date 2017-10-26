@@ -159,6 +159,23 @@ OptsStrAny generateOptionsForTask(const OptsStrAny& inOptions, const OptsStrAny&
   return newOpts;
 }
 
+
+
+void setResetEventRangeOption(OptsStrAny& options, bool isReset)
+{
+  options["resetEventRange_bool"] = isReset;
+}
+
+void setOutputFileType(OptsStrAny& options, const std::string& fileType)
+{
+  options["outputFileType_std::string"] = fileType;
+}
+
+void setOutputPath(OptsStrAny& options, const std::string& path)
+{
+  options["outputPath_std::string"] = path;
+}
+
 OptsStrAny resetEventRange(const OptsStrAny& srcOpts)
 {
   OptsStrAny opts(srcOpts);
