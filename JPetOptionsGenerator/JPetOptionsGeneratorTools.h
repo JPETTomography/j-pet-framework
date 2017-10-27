@@ -33,7 +33,7 @@ namespace jpet_options_generator_tools
 /// Currenty if controlSettings contains option:
 /// 1. "resetEventRange_bool"->true then, the generated inOptions will contain first and last
 /// Event values set to -1, which means  process all available events
-/// 2option "outputFileType_std::string"->value set, then the generated inOptions will contain inputFileType_str::string
+/// 2.option "outputFileType_std::string"->value set, then the generated inOptions will contain inputFileType_str::string
 /// set to value
 /// 3."outputPath_std::string"-> path then the generated inOptions will contain
 /// "inputFile_std::string " ->path/nameOfFile
@@ -53,6 +53,15 @@ TransformersMap generateTransformationMap(OptsStrAny& options);
 void addTransformFunction(TransformersMap& oldMap,  const std::string& name, jpet_options_tools::Transformer transformFunction);
 
 OptsStrAny resetEventRange(const OptsStrAny& srcOpts);
+
+/// Please note that those methods change the input options
+/// If the key does not exits it will be created, if it exists the value will be overwritten
+/// key resetEventRange_bool
+void setResetEventRangeOption(OptsStrAny& options, bool isReset);
+/// key outputFileType_std::string
+void setOutputFileType(OptsStrAny& options, const std::string& fileType);
+/// key outputPath_std::string
+void setOutputPath(OptsStrAny& options, const std::string& path);
 
 };
 #endif /*  !JPETOPTIONSGENERATORTOOLS_H */
