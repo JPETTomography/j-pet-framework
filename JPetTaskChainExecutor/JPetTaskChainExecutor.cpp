@@ -60,7 +60,7 @@ bool JPetTaskChainExecutor::process()
     /// We generate input parameters based on the current parameter set and the controlParams produced by
     /// the previous task.
     auto inputParams = JPetTaskChainExecutorUtils::generateParams(currParams, controlParams);
-    jpet_options_tools::printOptionsToLog(currParams.getOptions(), std::string("Options for ") + taskName);
+    jpet_options_tools::printOptionsToLog(inputParams.getOptions(), std::string("Options for ") + taskName);
     currParamsIt++;
 
     timer.startMeasurement();
