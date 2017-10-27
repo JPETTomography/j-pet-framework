@@ -156,7 +156,7 @@ void JPetManager::useTask(const char* name, const char* inputFileType, const cha
     // wrap the JPetUserTask-based task in a JPetTaskIO
     fTaskGeneratorChain->push_back( [name, inputFileType, outputFileType, userTaskGen]() {
 	JPetTaskIO * task = new JPetTaskIO(name, inputFileType, outputFileType);
-	task->setSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
+	task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
 	return task;
       });
   }else{
