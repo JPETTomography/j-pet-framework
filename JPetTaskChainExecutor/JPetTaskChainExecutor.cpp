@@ -44,7 +44,7 @@ bool JPetTaskChainExecutor::process()
 {
   JPetTimer timer;
   JPetDataInterface nullDataObject;
-  JPetParams outputParams;
+  JPetParams controlParams; /// Parameters used to control the input file type and event range.
 
   assert(fTasks.size() == fParams.size());
   auto currParamsIt = fParams.begin();
@@ -57,10 +57,10 @@ bool JPetTaskChainExecutor::process()
 
     assert(currParamsIt != fParams.end());
     auto currParams = *currParamsIt;
-    /// We generate input parameters based on the current parameter set and the outputParams produced by
+    /// We generate input parameters based on the current parameter set and the controlParams produced by
     /// the previous task.
-    auto inputParams = JPetTaskChainExecutorUtils::generateParams(currParams, outputParams);
-    jpet_options_tools::printOptionsToLog(inputParams.getOptions(), std::string("Options for ") + taskName);
+    auto inputParams = JPetTaskChainExecutorUtils::generateParams(currParams, controlParams);
+    jpet_options_tools::printOptionsToLog(currParams.getOptions(), std::string("Options for ") + taskName);
     currParamsIt++;
 
     timer.startMeasurement();
@@ -73,7 +73,7 @@ bool JPetTaskChainExecutor::process()
       ERROR("In task run()");
       return false;
     }
-    if (!currentTask->terminate(outputParams)) {
+    if (!currentTask->terminate(controlParams)) { /// Here controParams can be modified by the current task.
       ERROR("In task terminate() ");
       return false;
     }
