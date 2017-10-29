@@ -114,10 +114,10 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
       return new JPetUnzipAndUnpackTask("UnpackerAndUnzipper");
     };
     fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task);
-    auto preprocessingTask = []() {
-      return new JPetParamBankHandlerTask("Preprocessing");
+    auto paramBankHandlerTask = []() {
+      return new JPetParamBankHandlerTask("ParamBank Filling");
     };
-    fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), preprocessingTask);
+    fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), paramBankHandlerTask);
   };
 
   try {
