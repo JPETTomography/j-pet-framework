@@ -35,6 +35,10 @@ public:
   bool init(const JPetParamsInterface& inOptions) override;
   bool run(const JPetDataInterface&) override;
   bool terminate(JPetParamsInterface&) override;
+
+private:
+  bool generateParamBankFromConfig(const JPetParams& params);
+  bool generateParamBankFromRootFile(const JPetParams& params);
 };
 
 #endif /*  !JPETPARAMBANKHANDLERTASK_H */
