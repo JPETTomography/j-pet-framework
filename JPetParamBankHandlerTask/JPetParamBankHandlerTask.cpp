@@ -27,6 +27,91 @@ bool JPetParamBankHandlerTask::init(const JPetParamsInterface& inOptions)
   auto params = dynamic_cast<const JPetParams&>(inOptions);
   using namespace jpet_options_tools;
   auto options = params.getOptions();
+
+  /* 1. If the input file was hld or hldRoot, create ParamBank based on provided json file and run number
+     2. If the input file was root, the ParamBank should always be read from the input file;
+        even if the used provided the run number and localDB flags, they should be ignored as the TRef-s
+        contained in the ROOT file would only make sense with the ParamBank from the same file
+        a not with a newly created one.
+     3. For any other file type, try to generate ParamBank from file, if fail and run number and localDB is provided,
+        try to generate ParamBank from config.
+  */
+
+  switch (FileTypeChecker::getInputFileType(options)) {
+  case FileTypeChecker::FileType::kHld:
+  case FileTypeChecker::FileType::kHldRoot:
+    return generateParamBankFromConfig(params);
+    break;
+  case FileTypeChecker::FileType::kRoot:
+    return generateParamBankFromRootFile(params);
+    break;
+  default:
+    std::map<FileTypeChecker::FileType, std::string> fileTypeToString = {
+      {FileTypeChecker::kNoType, ""},
+      {FileTypeChecker::kRoot, "root"},
+      {FileTypeChecker::kScope, "scope"},
+      {FileTypeChecker::kHld, "hld"},
+      {FileTypeChecker::kHldRoot, "hldRoot"},
+      {FileTypeChecker::kZip, "zip"}
+    };
+
+    WARNING("Unrecognized file format: "
+            + fileTypeToString[FileTypeChecker::getInputFileType(options)]
+            + " but trying to generate ParamBank from file...");
+    if (generateParamBankFromRootFile(params))
+      return true;
+    else {
+      if (getRunNumber(options) != -1 && isLocalDB(options)) {
+        WARNING("Error while tring generate ParamBank from file: "
+                + fileTypeToString[FileTypeChecker::getInputFileType(options)]
+                + " but run number and localDB is set, trying to generate ParamBank from it...");
+        return generateParamBankFromConfig(params);
+      }
+      break;
+    }
+  }
+  return false;
+}
+
+bool JPetParamBankHandlerTask::run(const JPetDataInterface&)
+{
+  return true;
+}
+
+bool JPetParamBankHandlerTask::terminate(JPetParamsInterface&)
+{
+  return true;
+}
+
+bool JPetParamBankHandlerTask::generateParamBankFromRootFile(const JPetParams& params)
+{
+  using namespace jpet_options_tools;
+  auto options = params.getOptions();
+
+  if (getRunNumber(options) != -1) {
+    WARNING("Input file was ROOT, but run number option is set, ignoring it");
+  }
+  if (isLocalDB(options)) {
+    WARNING("Input file was ROOT, but localDB option is set, ignoring it");
+  }
+
+  JPetReader fReader;
+  fReader.openFileAndLoadData(getInputFile(options));
+  auto paramMgr = params.getParamManager();
+
+  return paramMgr->readParametersFromFile(&fReader);
+}
+
+bool JPetParamBankHandlerTask::generateParamBankFromConfig(const JPetParams& params)
+{
+  using namespace jpet_options_tools;
+  auto options = params.getOptions();
+
+  if (getRunNumber(options) == -1 || !isLocalDB(options)) {
+    ERROR("LocalDB and run number are required for Hld or HldRoot files");
+    return false;
+  }
+
   auto paramMgr = params.getParamManager();
   if (!paramMgr) {
     ERROR("Param manager is not set");
@@ -45,15 +130,5 @@ bool JPetParamBankHandlerTask::init(const JPetParamsInterface& inOptions)
       saver.saveParamBank(paramMgr->getParamBank(), runNum, getLocalDBCreate(options));
     }
   }
-  return true;
-}
-
-bool JPetParamBankHandlerTask::run(const JPetDataInterface&)
-{
-  return true;
-}
-
-bool JPetParamBankHandlerTask::terminate(JPetParamsInterface&)
-{
   return true;
 }
