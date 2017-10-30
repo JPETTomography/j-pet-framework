@@ -34,7 +34,7 @@ public:
   static bool unzipFile(const char* filename);
 protected:
   OptsStrAny fOptions;
-   
+  bool fUnpackHappened = false;
   
 };
 #endif /*  !JPETUNZIPANDUNPACKTASK_H */

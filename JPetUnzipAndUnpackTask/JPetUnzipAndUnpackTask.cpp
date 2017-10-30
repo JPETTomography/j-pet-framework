@@ -16,10 +16,11 @@
 #include "./JPetUnzipAndUnpackTask.h"
 #include "../JPetParams/JPetParams.h"
 #include "../JPetOptionsTools/JPetOptionsTools.h"
+#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetUnpacker/JPetUnpacker.h"
 
-JPetUnzipAndUnpackTask::JPetUnzipAndUnpackTask(const char* name): JPetTask(name)
+JPetUnzipAndUnpackTask::JPetUnzipAndUnpackTask(const char* name): JPetTask(name), fUnpackHappened(false)
 {
 }
 
@@ -40,6 +41,7 @@ bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
 
   if (inputFileType == FileTypeChecker::kHld) {
     unpackFile(inputFile, getTotalEvents(fOptions), unpackerConfigFile, unpackerCalibFile);
+    fUnpackHappened = true;
   }
   /// Assumption that if the file is zipped than it is in the hld format
   /// and we will also unpack if from hld  after unzipping.
@@ -62,8 +64,15 @@ bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
   return true;
 }
 
-bool JPetUnzipAndUnpackTask::terminate(JPetParamsInterface&)
+bool JPetUnzipAndUnpackTask::terminate(JPetParamsInterface& output_params)
 {
+  if(fUnpackHappened){
+    auto & params = dynamic_cast<JPetParams&>(output_params);
+    OptsStrAny new_opts;
+    jpet_options_generator_tools::setOutputFileType(new_opts, "hldRoot");
+    params = JPetParams(new_opts, params.getParamManagerAsShared());
+  }
+  
   return true;
 }
 
