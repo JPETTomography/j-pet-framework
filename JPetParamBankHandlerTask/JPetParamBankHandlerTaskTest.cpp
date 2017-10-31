@@ -6,6 +6,7 @@
 #include "../JPetParams/JPetParams.h"
 #include "../JPetParamManager/JPetParamManager.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
+#include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
@@ -99,7 +100,7 @@ BOOST_AUTO_TEST_CASE(goodUnknownFileFromConfig)
   options["localDB_std::string"] = std::string("unitTestData/JPetParamBankHandlerTask/large_barrel.json");
   options["inputFile_std::string"] = std::string("unitTestData/auxdata.root");
   options["inputFileType_std::string"] = std::string("unknown");
-  std::shared_ptr<JPetParamManager> manager = std::make_shared<JPetParamManager>();
+  std::shared_ptr<JPetParamManager> manager = std::make_shared<JPetParamManager>(new JPetParamGetterAscii("unitTestData/JPetParamBankHandlerTask/large_barrel.json"));
   JPetParams params(options, manager);
   auto& bank = manager->getParamBank();
   BOOST_REQUIRE(bank.isDummy());
@@ -116,7 +117,7 @@ BOOST_AUTO_TEST_CASE(badUnknownFileFromConfig)
   options["localDB_std::string"] = std::string("unitTestData/JPetParamBankHandlerTask/large_barrel.json");
   options["inputFile_std::string"] = std::string("unitTestData/auxdata.root");
   options["inputFileType_std::string"] = std::string("unknown");
-  std::shared_ptr<JPetParamManager> manager = std::make_shared<JPetParamManager>();
+  std::shared_ptr<JPetParamManager> manager = std::make_shared<JPetParamManager>(new JPetParamGetterAscii("unitTestData/JPetParamBankHandlerTask/large_barrel.json"));
   JPetParams params(options, manager);
   auto& bank = manager->getParamBank();
   BOOST_REQUIRE(bank.isDummy());
@@ -132,7 +133,8 @@ BOOST_AUTO_TEST_CASE(goodHldFile)
   options["runId_int"] = 44;
   options["localDB_std::string"] = std::string("unitTestData/JPetParamBankHandlerTask/large_barrel.json");
   options["inputFileType_std::string"] = std::string("hld");
-  std::shared_ptr<JPetParamManager> manager = std::make_shared<JPetParamManager>();
+  //JPetParamGetterAscii* getter = ;
+  std::shared_ptr<JPetParamManager> manager = std::make_shared<JPetParamManager>(new JPetParamGetterAscii("unitTestData/JPetParamBankHandlerTask/large_barrel.json"));
   JPetParams params(options, manager);
   auto& bank = manager->getParamBank();
   BOOST_REQUIRE(bank.isDummy());
