@@ -150,6 +150,9 @@ OptsStrAny generateOptionsForTask(const OptsStrAny& inOptions, const OptsStrAny&
   if (isOptionSet(controlSettings, "outputFileType_std::string")) {
     newOpts["inputFileType_std::string"] = getOptionAsString(controlSettings, "outputFileType_std::string");
   }
+  if (isOptionSet(controlSettings, "outputFile_std::string")) {
+    newOpts["inputFile_std::string"] = getOptionAsString(controlSettings, "outputFile_std::string");
+  }
   if (isOptionSet(controlSettings, "outputPath_std::string")) {
     auto outPath  = std::string(getOutputPath(controlSettings));
     if (!outPath.empty()) {
@@ -168,6 +171,11 @@ void setOutputFileType(OptsStrAny& options, const std::string& fileType)
 {
   options["outputFileType_std::string"] = fileType;
 }
+
+void setOutputFile(OptsStrAny& options, const std::string& file)
+{
+  options["outputFile_std::string"] = file;
+}  
 
 void setOutputPath(OptsStrAny& options, const std::string& path)
 {

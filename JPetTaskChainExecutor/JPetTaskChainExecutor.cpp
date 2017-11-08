@@ -52,26 +52,21 @@ bool JPetTaskChainExecutor::process()
   JPetDataInterface nullDataObject;
   JPetParams controlParams; /// Parameters used to control the input file type and event range.
 
-  assert(fTasks.size() == fParams.size());
-  auto currParamsIt = fParams.begin();
-
   /// We iterate over both tasks and parameters
   for (auto currentTaskIt = fTasks.begin(); currentTaskIt != fTasks.end(); currentTaskIt++) {
 
     auto currentTask  =  *currentTaskIt;
     auto taskName = currentTask->getName();
 
-    assert(currParamsIt != fParams.end());
-    auto currParams = *currParamsIt;
+    auto & currParams = fParams;
     /// We generate input parameters based on the current parameter set and the controlParams produced by
     /// the previous task.
-    auto inputParams = JPetTaskChainExecutorUtils::generateParams(currParams, controlParams);
-    jpet_options_tools::printOptionsToLog(inputParams.getOptions(), std::string("Options for ") + taskName);
-    currParamsIt++;
-
+    currParams = JPetTaskChainExecutorUtils::generateParams(currParams, controlParams);
+    jpet_options_tools::printOptionsToLog(currParams.getOptions(), std::string("Options for ") + taskName);
+    
     timer.startMeasurement();
     INFO(Form("Starting task: %s", taskName.c_str()));
-    if (!currentTask->init(inputParams)) {
+    if (!currentTask->init(currParams)) {
       ERROR("In task initialization");
       return false;
     }

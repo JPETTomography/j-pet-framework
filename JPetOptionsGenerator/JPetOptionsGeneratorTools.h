@@ -60,6 +60,7 @@ OptsStrAny resetEventRange(const OptsStrAny& srcOpts);
 void setResetEventRangeOption(OptsStrAny& options, bool isReset);
 /// key outputFileType_std::string
 void setOutputFileType(OptsStrAny& options, const std::string& fileType);
+void setOutputFile(OptsStrAny& options, const std::string& file);
 /// key outputPath_std::string
 void setOutputPath(OptsStrAny& options, const std::string& path);
 

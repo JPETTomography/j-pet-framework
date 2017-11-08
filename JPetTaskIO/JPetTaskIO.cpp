@@ -22,6 +22,7 @@
 #include "../JPetUserTask/JPetUserTask.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 #include "../JPetData/JPetData.h"
+#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
 #include "../JPetLoggerInclude.h"
 #include "../version.h"
@@ -33,7 +34,9 @@ JPetTaskIO::JPetTaskIO(const char* name,
 		       const char* out_file_type):
   JPetTask(name),
   fInFileType(in_file_type),
-  fOutFileType(out_file_type)
+  fOutFileType(out_file_type),
+  fOutFileFullPath(""),
+  fResetOutputPath(false)
 {
 }
 
@@ -50,14 +53,31 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
   auto params = dynamic_cast<const JPetParams&>(paramsI);
   setOptions(params);
   auto opts = fParams.getOptions();
-  std::string inputFilename(generateProperNameFile(getInputFile(opts), fInFileType));
-  std::string outputPath(getOutputPath(opts));
-  auto outputFilename = outputPath + std::string(generateProperNameFile(getOutputFile(opts), fOutFileType));
+
+  // handle input file path
+  std::string inputFilename = getInputFile(opts);
+  if( JPetCommonTools::extractDataTypeFromFile(inputFilename) != fInFileType ){
+    ERROR(Form("Input file type %s does not match the one provided by the previous module (%s).",
+	       fInFileType.c_str(), JPetCommonTools::extractDataTypeFromFile(inputFilename).c_str()));
+    return false;
+  }
+  inputFilename = JPetCommonTools::replaceDataTypeInFile(inputFilename, fInFileType);
+  // handle output file path
+  fOutFileFullPath = inputFilename;
+  if(isOptionSet(opts, "outputPath_std::string")){
+    std::string outputPath(getOutputPath(opts));
+    if(!outputPath.empty()){
+      fOutFileFullPath = outputPath + JPetCommonTools::extractFileNameFromFullPath(getInputFile(opts));
+      fResetOutputPath = true;
+    }
+  }
+  fOutFileFullPath = JPetCommonTools::replaceDataTypeInFile(fOutFileFullPath, fOutFileType);
+  
   if (!createInputObjects(inputFilename.c_str())) {
     ERROR("createInputObjects");
     return false;
   }
-  if (!createOutputObjects(outputFilename.c_str())) {
+  if (!createOutputObjects(fOutFileFullPath.c_str())) {
     ERROR("createOutputObjects");
     return false;
   }
@@ -120,8 +140,27 @@ bool JPetTaskIO::run(const JPetDataInterface&)
 }
 
 
-bool JPetTaskIO::terminate(JPetParamsInterface&)
+bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
 {
+  auto & params = dynamic_cast<JPetParams&>(output_params);
+  OptsStrAny new_opts;
+  if(FileTypeChecker::getInputFileType(fParams.getOptions()) == FileTypeChecker::kHldRoot){
+    jpet_options_generator_tools::setOutputFileType(new_opts, "root");
+  }
+
+  if( jpet_options_tools::getOptionAsInt(fParams.getOptions(), "firstEvent_int") != -1 &&
+      jpet_options_tools::getOptionAsInt(fParams.getOptions(), "lastEvent_int") != -1 ){
+    jpet_options_generator_tools::setResetEventRangeOption(new_opts, true);
+  }
+  
+  if(fResetOutputPath){
+    jpet_options_generator_tools::setOutputPath(new_opts, "");
+  }
+
+  jpet_options_generator_tools::setOutputFile(new_opts, fOutFileFullPath);
+  
+  params = JPetParams(new_opts, params.getParamManagerAsShared());
+  
   if (!fReader) {
     ERROR("fReader set to null");
     return false;
@@ -200,11 +239,14 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
     } else {
       auto paramManager = fParams.getParamManager();
       assert(paramManager);
-      paramManager->readParametersFromFile(dynamic_cast<JPetReader*> (fReader));
+      paramManager->clearParameters();
+      if(!paramManager->readParametersFromFile(dynamic_cast<JPetReader*> (fReader))){
+	ERROR("Failed to read paramBank from input file.");
+	return false;
+      }
+      assert(paramManager->getParamBank().getPMsSize() > 0);
       // read the header from the previous analysis stage
-      //
       fHeader = dynamic_cast<JPetReader*>(fReader)->getHeaderClone();
-      //fParamManager.readParametersFromFile( fReader );
     }
     // create an object for storing histograms and counters during processing
     // make_unique is not available in c++11 :(
@@ -314,27 +356,5 @@ bool JPetTaskIO::setUserLimits(const OptsStrAny& opts, const long long kTotEvent
   return true;
 }
 
-std::string JPetTaskIO::generateProperNameFile(const std::string& srcFilename, const std::string& fileType) const
-{
-  auto baseFileName = getBaseFilePath(srcFilename);
-  if (!fileType.empty()) {
-    baseFileName = baseFileName + "." + fileType;
-  }
-  return baseFileName + ".root";
-}
 
-std::string JPetTaskIO::getBaseFilePath(const std::string& srcName) const
-{
-  boost::filesystem::path p(srcName);
-  // the file name and path are treated separately not to strip dots from the path
-  std::string name = p.filename().native();
-  boost::filesystem::path dir = p.parent_path().native();
-  //strip the "extension" starting from the first dot in the file name
-  auto pos = name.find(".");
-  if ( pos != std::string::npos ) {
-    name.erase( pos );
-  }
-  boost::filesystem::path bare_name(name);
 
-  return (dir / bare_name).native();
-}

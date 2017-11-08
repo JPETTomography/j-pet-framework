@@ -82,12 +82,7 @@ JPetOptionsGenerator::OptsForFiles JPetOptionsGenerator::generateOptionsForTasks
   }
   assert(nbOfRegisteredTasks > 0);
 
-  /// Finally, multiple the options for every task.
-  for (const auto& el : optionsPerFile) {
-    std::vector<OptsStrAny>  currOpts(nbOfRegisteredTasks, el.second);
-    optsForAllFiles[el.first] = currOpts;
-  }
-  return optsForAllFiles;
+  return optionsPerFile;
 }
 
 JPetOptionsGenerator::OptsStrAny JPetOptionsGenerator::generateAndValidateOptions(const po::variables_map& cmdLineArgs)
