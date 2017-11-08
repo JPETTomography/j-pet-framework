@@ -127,7 +127,7 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
     if (fTaskGeneratorChain) {
       numberOfRegisteredTasks = fTaskGeneratorChain->size();
     }
-    fOptions  = optionsGenerator.generateOptionsForTasks(allValidatedOptions, numberOfRegisteredTasks);
+    fOptions = optionsGenerator.generateOptionsForTasks(allValidatedOptions, numberOfRegisteredTasks);
   } catch (std::exception& e) {
     ERROR(e.what());
     return false;
@@ -181,13 +181,10 @@ bool JPetManager::initDBConnection(const char* configFilePath)
   bool isDBrequired = false;
 
   if (fOptions.size() > 0) { // If at least one input file to process.
-    auto optsVect = fOptions.begin()->second;
-    if (optsVect.size() > 0) {
-      auto opt = optsVect.front();
-      if (getRunNumber(opt) >= 0) { // if run number is not default -1
-        if (!isLocalDB(opt)) { // unless local DB file was provided
-          isDBrequired = true;
-        }
+    auto opts = fOptions.begin()->second;
+    if (getRunNumber(opts) >= 0) { // if run number is not default -1
+      if (!isLocalDB(opts)) { // unless local DB file was provided
+	isDBrequired = true;
       }
     }
   }
