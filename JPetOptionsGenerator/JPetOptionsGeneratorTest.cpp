@@ -87,7 +87,6 @@ BOOST_AUTO_TEST_CASE(generateOptions_oneFileTwoTasks)
   BOOST_REQUIRE(!result.empty());
   BOOST_REQUIRE_EQUAL(result.size(), 1); //one file
   BOOST_REQUIRE_EQUAL(result.begin()->first, "unitTestData/JPetOptionsGeneratorTest/infile.root");
-  BOOST_REQUIRE_EQUAL(result.begin()->second.size(), 2u); // two tasks
 }
 
 BOOST_AUTO_TEST_CASE(generateOptions_TwoFilesOneTasks)
