@@ -33,7 +33,7 @@
 class JPetManager
 {
 public:
-  using Options = std::map<std::string, std::vector<jpet_options_tools::OptsStrAny>>;
+  using Options = std::map<std::string, jpet_options_tools::OptsStrAny>;
   using TaskGenerator = std::function< JPetTaskInterface* () >;
   using TaskGeneratorChain = std::vector<TaskGenerator>;
 
