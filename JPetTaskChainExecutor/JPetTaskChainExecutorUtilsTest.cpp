@@ -55,28 +55,10 @@ BOOST_AUTO_TEST_CASE(generateParamManagerForScopeCase)
 
 BOOST_AUTO_TEST_CASE(generateParams)
 {
-  std::map<std::string, boost::any> optPerFile;
-  std::vector<std::map<std::string, boost::any>> opts = {optPerFile};
+  std::map<std::string, boost::any> opts;
   auto params = JPetTaskChainExecutorUtils::generateParams(opts);
-  BOOST_REQUIRE_EQUAL(params.size(), 1u);
-  auto firstParam = params.front();
-  BOOST_REQUIRE(firstParam.getOptions().empty());
-  BOOST_REQUIRE(firstParam.getParamManager());
-}
-
-BOOST_AUTO_TEST_CASE(generateParams2)
-{
-  std::map<std::string, boost::any> optPerFile;
-  std::vector<std::map<std::string, boost::any>> opts = {optPerFile, optPerFile};
-  auto params = JPetTaskChainExecutorUtils::generateParams(opts);
-  BOOST_REQUIRE_EQUAL(params.size(), 2u);
-  auto first = params.front();
-  BOOST_REQUIRE(first.getOptions().empty());
-  BOOST_REQUIRE(first.getParamManager());
-  auto second = params.back();
-  BOOST_REQUIRE(second.getOptions().empty());
-  BOOST_REQUIRE(second.getParamManager());
-  BOOST_REQUIRE_EQUAL(first.getParamManager(), second.getParamManager());
+  BOOST_REQUIRE(params.getOptions().empty());
+  BOOST_REQUIRE(params.getParamManager());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
