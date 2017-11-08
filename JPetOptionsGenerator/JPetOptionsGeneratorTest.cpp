@@ -70,9 +70,7 @@ BOOST_AUTO_TEST_CASE(generateOptions_oneFileOneTask)
   BOOST_REQUIRE_EQUAL(result.size(), 1); //one file
   auto it = result.begin();
   BOOST_REQUIRE_EQUAL(it->first, "unitTestData/JPetOptionsGeneratorTest/infile.root");
-  BOOST_REQUIRE_EQUAL(it->second.size(), 1u); // one task
-  auto itTaskOpts = it->second.begin(); //get options for this one task
-  auto opts = *itTaskOpts;
+  auto opts = it->second;
   BOOST_REQUIRE_EQUAL(getRunNumber(opts),  231);
   BOOST_REQUIRE_EQUAL(getInputFile(opts), "unitTestData/JPetOptionsGeneratorTest/infile.root");
   BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts), FileTypeChecker::kRoot);
@@ -104,9 +102,7 @@ BOOST_AUTO_TEST_CASE(generateOptions_TwoFilesOneTasks)
 
   auto it = result.begin(); //first file
   BOOST_REQUIRE_EQUAL(it->first, "unitTestData/JPetOptionsGeneratorTest/infile.root");
-  BOOST_REQUIRE_EQUAL(it->second.size(), 1u); // one tasks
-  auto itTaskOpts = it->second.begin();
-  auto opts = *itTaskOpts; //get option for first task
+  auto opts = it->second;
   BOOST_REQUIRE_EQUAL(getRunNumber(opts),  231);
   BOOST_REQUIRE_EQUAL(getInputFile(opts), "unitTestData/JPetOptionsGeneratorTest/infile.root");
   BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts), FileTypeChecker::kRoot);
@@ -118,9 +114,7 @@ BOOST_AUTO_TEST_CASE(generateOptions_TwoFilesOneTasks)
 
   it++; //second file
   BOOST_REQUIRE_EQUAL(it->first, "unitTestData/JPetOptionsGeneratorTest/infile2.root");
-  BOOST_REQUIRE_EQUAL(it->second.size(), 1u);
-  itTaskOpts = it->second.begin();
-  opts = *itTaskOpts; //get option for first task of second file
+  opts = it->second;
   BOOST_REQUIRE_EQUAL(getRunNumber(opts),  231);
   BOOST_REQUIRE_EQUAL(getInputFile(opts), "unitTestData/JPetOptionsGeneratorTest/infile2.root");
   BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts), FileTypeChecker::kRoot);
@@ -143,9 +137,7 @@ BOOST_AUTO_TEST_CASE(generateOptions_oneFileTwoTasksWithOutput)
   BOOST_REQUIRE_EQUAL(result.size(), 1); //one file
   auto it = result.begin();
   BOOST_REQUIRE_EQUAL(it->first, "unitTestData/JPetOptionsGeneratorTest/infile.root");
-  BOOST_REQUIRE_EQUAL(it->second.size(), 2u); // two tasks
-  auto itTaskOpts = it->second.begin();
-  auto opts = *itTaskOpts; //get option for first task
+  auto opts = it->second;
   BOOST_REQUIRE_EQUAL(getRunNumber(opts),  231);
   BOOST_REQUIRE_EQUAL(getInputFile(opts), "unitTestData/JPetOptionsGeneratorTest/infile.root");
   BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts), FileTypeChecker::kRoot);
@@ -155,19 +147,6 @@ BOOST_AUTO_TEST_CASE(generateOptions_oneFileTwoTasksWithOutput)
   BOOST_REQUIRE(!isProgressBar(opts));
   BOOST_REQUIRE(!isLocalDB(opts) );
   BOOST_REQUIRE(!isLocalDBCreate(opts));
-  itTaskOpts++;
-  opts["resetEventRange_bool"] = true; ///to reset event number
-  auto opts2 = *itTaskOpts; //get option for second task
-  opts2 = generateOptionsForTask(opts2, opts);
-  BOOST_REQUIRE_EQUAL(getRunNumber(opts2),  231);
-  BOOST_REQUIRE_EQUAL(getInputFile(opts2), "unitTestData/JPetCmdParserTest/infile.root");
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts2), FileTypeChecker::kRoot);
-  BOOST_REQUIRE_EQUAL(getOutputPath(opts2), "unitTestData/JPetCmdParserTest/");
-  BOOST_REQUIRE_EQUAL(getFirstEvent(opts2),  -1); /// second task has event numbers reset
-  BOOST_REQUIRE_EQUAL(getLastEvent(opts2),   -1);
-  BOOST_REQUIRE(!isProgressBar(opts2));
-  BOOST_REQUIRE(!isLocalDB(opts2) );
-  BOOST_REQUIRE(!isLocalDBCreate(opts2));
 }
 
 BOOST_AUTO_TEST_CASE(generateOptions_TestWithUserOptions)
@@ -182,9 +161,7 @@ BOOST_AUTO_TEST_CASE(generateOptions_TestWithUserOptions)
   BOOST_REQUIRE_EQUAL(result.size(), 1); //one file
   auto it = result.begin();
   BOOST_REQUIRE_EQUAL(it->first, "unitTestData/JPetOptionsGeneratorTest/infile.root");
-  BOOST_REQUIRE_EQUAL(it->second.size(), 1u); // one task
-  auto itTaskOpts = it->second.begin();
-  auto opts = *itTaskOpts; //get option for first task
+  auto opts = it->second;
 
   BOOST_REQUIRE(!opts.empty());
   BOOST_REQUIRE_EQUAL(getRunNumber(opts),  231);
@@ -220,12 +197,9 @@ BOOST_AUTO_TEST_CASE(ScopeOptions)
   auto result = gener.generateOptionsForTasks(opt, 1);
   BOOST_REQUIRE(!result.empty());
   BOOST_REQUIRE_EQUAL(result.size(), 1u); //one file
-
   auto it = result.begin();
   BOOST_REQUIRE_EQUAL(it->first, "unitTestData/JPetScopeLoaderTest/test_file_test_0");  ///fake input file
-  BOOST_REQUIRE_EQUAL(it->second.size(), 1u); // one tasks
-  auto itTaskOpts = it->second.begin();
-  auto opts = *itTaskOpts; //get option for first task
+  auto opts = it->second;
   BOOST_REQUIRE_EQUAL(getRunNumber(opts),  1);
   BOOST_REQUIRE_EQUAL(getInputFile(opts), "unitTestData/JPetScopeLoaderTest/test_file_test_0"); /// fake input file
   BOOST_REQUIRE_EQUAL(getScopeConfigFile(opts), "unitTestData/JPetScopeLoaderTest/test_file.json");
