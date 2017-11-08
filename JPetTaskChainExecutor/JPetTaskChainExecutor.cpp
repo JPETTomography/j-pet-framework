@@ -21,15 +21,15 @@
 
 #include "JPetTaskChainExecutorUtils.h"
 #include "../JPetLoggerInclude.h"
+#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
-JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, const OptionsPerFile& opts):
+JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, const jpet_options_tools::OptsStrAny& opts):
   fInputSeqId(processedFileId),
   ftaskGeneratorChain(taskGeneratorChain)
 {
-  assert(taskGeneratorChain->size() == opts.size());
   /// ParamManager is generated and added to fParams
   fParams = JPetTaskChainExecutorUtils::generateParams(opts);
-  assert(fParams.front().getParamManager());
+  assert(fParams.getParamManager());
   if (taskGeneratorChain) {
     for (auto taskGenerator : *ftaskGeneratorChain) {
       auto task = taskGenerator();
@@ -38,6 +38,12 @@ JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorCh
   } else {
     ERROR("taskGeneratorChain is null while constructing JPetTaskChainExecutor");
   }
+}
+
+
+bool JPetTaskChainExecutor::preprocessing(const JPetParams& params)
+{
+  return JPetTaskChainExecutorUtils::process(params);
 }
 
 bool JPetTaskChainExecutor::process()

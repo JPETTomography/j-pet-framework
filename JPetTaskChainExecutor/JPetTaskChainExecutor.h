@@ -26,7 +26,6 @@
 
 using TaskGenerator = std::function< JPetTaskInterface* () >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
-using OptionsPerFile = std::vector<jpet_options_tools::OptsStrAny>;
 
 /**
  * JPetTaskChainExecutor generates the previously registered chain of tasks.
@@ -35,17 +34,18 @@ using OptionsPerFile = std::vector<jpet_options_tools::OptsStrAny>;
 class JPetTaskChainExecutor
 {
 public :
-  JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFile, const OptionsPerFile& opts);
+  JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFile, const jpet_options_tools::OptsStrAny&);
   TThread* run();
   virtual ~JPetTaskChainExecutor();
   bool process(); /// Method to be called directly only in case of non-thread running;
 private:
   static void* processProxy(void*);
+  bool preprocessing(const JPetParams& params);
 
   int fInputSeqId = -1;
   std::list<JPetTaskInterface*> fTasks;
   TaskGeneratorChain* ftaskGeneratorChain = nullptr;
-  std::vector<JPetParams> fParams;
+  JPetParams fParams;
 };
 
 
