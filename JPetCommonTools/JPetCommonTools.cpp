@@ -91,6 +91,14 @@ std::string JPetCommonTools::replaceDataTypeInFile(const std::string& filename, 
   if ( pos != std::string::npos ) {
     auto suffix = file.substr(pos+1);
     auto prefix = file.erase(pos+1);
+
+    // handle HLD files as a special case
+    if( suffix == "hld" ){
+      auto result = prefix.append(newType).append(".root");
+      if( !path.empty() ) result = path.append("/").append(result);
+      return result;
+    }
+
     auto pos2 = suffix.find(".root");
     if( pos2 != std::string::npos ){
       auto root_extension = suffix.substr(pos2);
