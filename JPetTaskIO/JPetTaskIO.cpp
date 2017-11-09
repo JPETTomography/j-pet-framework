@@ -239,7 +239,6 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
     } else {
       auto paramManager = fParams.getParamManager();
       assert(paramManager);
-      paramManager->clearParameters();
       if(!paramManager->readParametersFromFile(dynamic_cast<JPetReader*> (fReader))){
 	ERROR("Failed to read paramBank from input file.");
 	return false;
