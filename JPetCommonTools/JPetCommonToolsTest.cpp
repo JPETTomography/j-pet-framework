@@ -24,15 +24,6 @@
 
 BOOST_AUTO_TEST_SUITE(CommonToolsTestSuite)
 
-BOOST_AUTO_TEST_CASE(findSubstringTest)
-{
-  std::string str("There are two needles in this haystack with needles.");
-  std::string str2("needle");
-
-  std::size_t found = JPetCommonTools::findSubstring(str, str2);
-  BOOST_REQUIRE(found != std::string::npos);
-}
-
 BOOST_AUTO_TEST_CASE(ItoaTest)
 {
   int testNumber = 64;
@@ -197,27 +188,27 @@ BOOST_AUTO_TEST_CASE(createArgsTest4)
 BOOST_AUTO_TEST_CASE(fileTypeSuffixOperations)
 {
   std::string path = "../../file.tslot.raw.root";
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFile(path), "tslot.raw");
-  std::string path2 = JPetCommonTools::replaceDataTypeInFile(path, "phys.sig.cal");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFileName(path), "tslot.raw");
+  std::string path2 = JPetCommonTools::replaceDataTypeInFileName(path, "phys.sig.cal");
   BOOST_REQUIRE_EQUAL(path2, "../../file.phys.sig.cal.root");
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFile(path2), "phys.sig.cal");
-  
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFileName(path2), "phys.sig.cal");
+
   path = "test.hld.root";
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFile(path), "hld");
-  path2 = JPetCommonTools::replaceDataTypeInFile(path, "foo.bar");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFileName(path), "hld");
+  path2 = JPetCommonTools::replaceDataTypeInFileName(path, "foo.bar");
   BOOST_REQUIRE_EQUAL(path2, "test.foo.bar.root");
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFile(path2), "foo.bar");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFileName(path2), "foo.bar");
 
   path = "/home//whoever/somefile.a.b.c.d.root";
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFile(path), "a.b.c.d");
-  path2 = JPetCommonTools::replaceDataTypeInFile(path, "hits");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFileName(path), "a.b.c.d");
+  path2 = JPetCommonTools::replaceDataTypeInFileName(path, "hits");
   BOOST_REQUIRE_EQUAL(path2, "/home//whoever/somefile.hits.root");
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFile(path2), "hits");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFileName(path2), "hits");
 
   path = "/some/path/foo.hld";
-  path2 = JPetCommonTools::replaceDataTypeInFile(path, "tslot.raw");
+  path2 = JPetCommonTools::replaceDataTypeInFileName(path, "tslot.raw");
   BOOST_REQUIRE_EQUAL(path2, "/some/path/foo.tslot.raw.root");
-  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFile(path2), "tslot.raw");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFileName(path2), "tslot.raw");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
