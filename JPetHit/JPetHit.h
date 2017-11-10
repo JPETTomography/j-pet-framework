@@ -134,7 +134,7 @@ private:
   TRef fBarrelSlot = NULL; ///< BarrelSlot in which the hit was recorded
   TRef fScintillator = NULL; ///< Scintillator strip which was hit
 
-  ClassDef(JPetHit, 4);
+  ClassDef(JPetHit, 5);
 };
 
 #endif
