@@ -15,7 +15,6 @@
 
 #include <cassert>
 #include "./JPetTaskChainExecutorUtils.h"
-#include "../JPetTaskLoader/JPetTaskLoader.h"
 #include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
 #include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
 #include "../JPetOptionsTools/JPetOptionsTools.h"
