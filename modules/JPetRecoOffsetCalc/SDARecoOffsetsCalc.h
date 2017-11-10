@@ -13,28 +13,26 @@
  *  @file SDARecoOffsetsCalc.h
  *  @brief Calculates offsets for each JPetRecoSignal from SDA
  *  Reads a TTree of JPetRecoSignals and calculates is offset value. For more info
- *  look into Monika Pawlik-Niedzwiecka master thesis. 
+ *  look into Monika Pawlik-Niedzwiecka master thesis.
  */
 
 #ifndef _JPETANALYSISMODULE_SDARECOOFFSETCALC_H_
 #define _JPETANALYSISMODULE_SDARECOOFFSETCALC_H_
 
 #include <TCanvas.h>
-#include "../../JPetTask/JPetTask.h"
-#include "../../JPetWriter/JPetWriter.h"
-class SDARecoOffsetsCalc: public JPetTask{
+#include "../../JPetUserTask/JPetUserTask.h"
+class SDARecoOffsetsCalc: public JPetUserTask
+{
 public:
-	SDARecoOffsetsCalc(const char* name, const char* title);
-	virtual ~SDARecoOffsetsCalc();
-	virtual void init(const JPetTaskInterface::Options&)override;
-	virtual void exec()override;
-	virtual void terminate()override;
-	virtual void setWriter(JPetWriter* writer)override;
+  SDARecoOffsetsCalc(const char* name);
+  virtual ~SDARecoOffsetsCalc();
+  virtual bool init() override;
+  virtual bool exec()override;
+  virtual bool terminate() override;
 private:
-	JPetWriter* fWriter;
-	int fCurrentEventNumber;
-	double fOffset;
-	int fBadSignals;
+  int fCurrentEventNumber;
+  double fOffset;
+  int fBadSignals;
 };
 
 #endif

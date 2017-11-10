@@ -12,7 +12,7 @@
  *
  *  @file SDAMatchHits.h
  *  @brief Producer of JPetHit objects for SDA signals
- *  Reads a TTree of PhysSignals matches the ones with the same TSlot 
+ *  Reads a TTree of PhysSignals matches the ones with the same TSlot
  *  and joins the ones from the same scintillator into JPetHit object
  */
 
@@ -21,23 +21,22 @@
 
 #include <map>
 #include <TCanvas.h>
-#include "../../JPetTask/JPetTask.h"
+#include "../../JPetUserTask/JPetUserTask.h"
 #include "../../JPetHit/JPetHit.h"
 #include "../../JPetPhysSignal/JPetPhysSignal.h"
-#include "../../JPetWriter/JPetWriter.h"
-class SDAMatchHits: public JPetTask{
+
+class SDAMatchHits: public JPetUserTask
+{
 public:
-  SDAMatchHits(const char* name, const char* description);
+  SDAMatchHits(const char* name);
   virtual ~SDAMatchHits();
-  virtual void exec()override;
-  virtual void init(const JPetTaskInterface::Options&)override;
-  virtual void terminate()override;
-  virtual void setWriter(JPetWriter* writer)override;
- private:
+  virtual bool init() override;
+  virtual bool exec()override;
+  virtual bool terminate() override;
+private:
   std::vector<JPetHit> createHits(std::vector<JPetPhysSignal>& signals);
   void saveHits(std::vector<JPetHit> hits);
   std::vector<JPetHit> matchHitsWithinSlot(std::vector<JPetPhysSignal>);
-  JPetWriter* fWriter;
   int fMatched;
   int fTSlot;
   int fCurrentEventNumber;

@@ -152,22 +152,26 @@ BOOST_AUTO_TEST_CASE( barrelSlot )
   BOOST_REQUIRE_EQUAL(barrelSlot.getLayer().getRadius(), p_layer.getRadius());
 }
 
+/*
 BOOST_AUTO_TEST_CASE( timeWindow )
 {
   JPetSigCh::EdgeType type = JPetSigCh::Trailing;
-  std::vector<JPetSigCh> vec = {JPetSigCh(type, 1), JPetSigCh(type, 1)};
-  JPetTimeWindow timeWindow = param_and_data_factory::makeTimeWindow(vec, 1);
-  BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfSigCh(), 2);
-  BOOST_REQUIRE_EQUAL(timeWindow.getIndex(), 1);
+  std::vector<JPetSigCh> vec ={JPetSigCh(type, 1), JPetSigCh(type, 1)};
+  JPetTimeWindow timeWindow = param_and_data_factory::makeTimeWindow(vec);
+  BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfEvents(), 2);
+
 }
+*/
 
 BOOST_AUTO_TEST_CASE( pm )
 {
   JPetPM::Side side = JPetPM::SideA;
-  JPetBarrelSlot p_barrelSlot(1, true, "name", 2, 3);
+  //JPetBarrelSlot p_barrelSlot(1, true, "name", 2, 3);
+  JPetBarrelSlot p_barrelSlot;
   JPetScin p_scin(1, 2, 3, 4, 5);
   JPetFEB p_FEB(1, true, "p_status", "p_description", 2, 3, 4, 5);
   std::pair<float, float> gain(3.0, 4.0);
+  JPetPM makePM(JPetPM::Side side, int id, int set, int opt, std::pair<float, float>& gain, JPetFEB & p_FEB, JPetScin & p_scin, JPetBarrelSlot & p_barrelSlot);
   JPetPM pm = param_and_data_factory::makePM(side, 1, 1, 2, gain, "no writing", p_FEB, p_scin, p_barrelSlot);
 
   BOOST_REQUIRE_EQUAL(pm.getID(), 1);
@@ -197,8 +201,7 @@ BOOST_AUTO_TEST_CASE( baseSignal )
   pm.setHVopt(2);
   pm.setHVset(3);
   JPetBarrelSlot p_barrelSlot(1, true, "name", 2, 3);
-  JPetBaseSignal bs = param_and_data_factory::makeBaseSignal(1, pm, p_barrelSlot);
-  BOOST_REQUIRE_EQUAL(bs.getTimeWindowIndex(), 1 );
+  JPetBaseSignal bs = param_and_data_factory::makeBaseSignal(pm, p_barrelSlot);
 
   BOOST_REQUIRE_EQUAL(bs.getPM().getHVopt(), pm.getHVopt() );
   BOOST_REQUIRE_EQUAL(bs.getPM().getHVset(), pm.getHVset() );

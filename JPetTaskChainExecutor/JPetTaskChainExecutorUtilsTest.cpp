@@ -16,32 +16,57 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetTaskChainExecutorUtilsTest
 #include <boost/test/unit_test.hpp>
+#include <boost/filesystem.hpp>
+#include <list>
+
 #include "../JPetTaskChainExecutor/JPetTaskChainExecutorUtils.h"
+#include "../JPetTaskInterface/JPetTaskInterface.h"
 
-BOOST_AUTO_TEST_SUITE(JPetTaskChainExecutorTestSuite)
+BOOST_AUTO_TEST_SUITE(JPetTaskChainExecutorUtilsTestSuite)
 
-BOOST_AUTO_TEST_CASE(tryToUnzipSomethingNotExistingFile)
+BOOST_AUTO_TEST_CASE(generateParamManager)
 {
-  BOOST_REQUIRE(JPetTaskChainExecutorUtils::unzipFile("unitTestData/JPetTaskChainExecutorUtilsTest/goodZip.gz"));
-  std::string initialPath = boost::filesystem::path(boost::filesystem::current_path()).string();
-  initialPath = initialPath.substr(0, initialPath.find("build") );
-  std::string wrongZipPath = initialPath + "wrongZip.gz";
-  BOOST_REQUIRE(!JPetTaskChainExecutorUtils::unzipFile( wrongZipPath.c_str() ));
-  BOOST_REQUIRE(!JPetTaskChainExecutorUtils::unzipFile( "unitTestData/JPetTaskChainExecutorUtilsTest/wrongZip.gz" ));
-  BOOST_REQUIRE(boost::filesystem::exists("unitTestData/JPetTaskChainExecutorUtilsTest/goodZip"));
-  system("rm unitTestData/JPetTaskChainExecutorUtilsTest/goodZip");
+  std::map<std::string, boost::any> emptyOpts;
+  auto paramMgr = JPetTaskChainExecutorUtils::generateParamManager(emptyOpts);
+  BOOST_REQUIRE(paramMgr);
+  BOOST_REQUIRE(!paramMgr->isNullObject());
 }
 
-BOOST_AUTO_TEST_CASE(tryToUnzipSomethingNotExistingFileWithXz)
+BOOST_AUTO_TEST_CASE(generateParamManagerForScopeCase)
 {
-  BOOST_REQUIRE(JPetTaskChainExecutorUtils::unzipFile("unitTestData/JPetTaskChainExecutorUtilsTest/goodXZ.xz"));
-  std::string initialPath = boost::filesystem::path(boost::filesystem::current_path()).string();
-  initialPath = initialPath.substr(0, initialPath.find("build") );
-  std::string wrongZipPath = initialPath + "unitTestData/JPetTaskChainExecutorUtilsTest/wrongZip.Xz";
-  BOOST_REQUIRE(!JPetTaskChainExecutorUtils::unzipFile( wrongZipPath.c_str() ));
-  BOOST_REQUIRE(!JPetTaskChainExecutorUtils::unzipFile( "unitTestData/JPetTaskChainExecutorUtilsTest/wrongXZ.xz" ));
-  BOOST_REQUIRE(boost::filesystem::exists("unitTestData/JPetTaskChainExecutorUtilsTest/goodXZ"));
-  system("rm unitTestData/JPetTaskChainExecutorUtilsTest/goodXZ");
+  std::map<std::string, boost::any> opts;
+  opts["inputFileType_std::string"] = std::string("scope");
+  opts["localDB_std::string"] = std::string("unitTestData/JPetScopeLoaderTest/test_params.json");
+  opts["runId_int"] = int(1);
+  std::shared_ptr<JPetParamManager> paramMgr = JPetTaskChainExecutorUtils::generateParamManager(opts);
+  BOOST_REQUIRE(paramMgr);
+  BOOST_REQUIRE(!paramMgr->isNullObject());
+  BOOST_REQUIRE(!paramMgr->getExpectMissing().empty());
+  paramMgr->fillParameterBank(1);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().isDummy(), false);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getScintillatorsSize(), 2);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getPMsSize(), 4);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getPMCalibsSize(), 0);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getFEBsSize(), 0);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getTRBsSize(), 0);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getBarrelSlotsSize(), 2);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getTOMBChannelsSize(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(generateParams)
+{
+  std::map<std::string, boost::any> opts;
+  auto params = JPetTaskChainExecutorUtils::generateParams(opts);
+  BOOST_REQUIRE(params.getOptions().empty());
+  BOOST_REQUIRE(params.getParamManager());
+}
+
+BOOST_AUTO_TEST_CASE(process)
+{
+  JPetParams params;
+  std::list<JPetTaskInterface*> tasks;
+  BOOST_REQUIRE(!JPetTaskChainExecutorUtils::process(params));
+  BOOST_REQUIRE(tasks.empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

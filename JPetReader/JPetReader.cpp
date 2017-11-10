@@ -17,6 +17,7 @@
 #include <cassert>
 #include "../JPetUserInfoStructure/JPetUserInfoStructure.h"
 
+const std::string JPetReader::kRootTreeName = "T"; /// This tree name is compatible with the tree name produced by the unpacker.
 
 JPetReader::JPetReader() :
   fBranch(0),
@@ -24,16 +25,18 @@ JPetReader::JPetReader() :
   fTree(0),
   fFile(NULL),
   fCurrentEventNumber(-1)
-{/**/}
+{
+  /**/
+}
 
-JPetReader::JPetReader(const char* p_filename) :
+JPetReader::JPetReader(const char* p_filename, const char* treeName) :
   fBranch(0),
   fEvent(0),
   fTree(0),
   fFile(0),
   fCurrentEventNumber(-1)
 {
-  if (!openFileAndLoadData(p_filename, "tree")) {
+  if (!openFileAndLoadData(p_filename, treeName)) {
     ERROR("error in opening file");
   }
 }
@@ -100,7 +103,7 @@ bool JPetReader::openFile (const char* filename)
   closeFile();
   fFile = new TFile(filename);
   if ((!isOpen()) || fFile->IsZombie()) {
-    ERROR(std::string("Cannot open file:")+std::string(filename));
+    ERROR(std::string("Cannot open file:") + std::string(filename));
     return false;
   }
   return true;
@@ -116,7 +119,7 @@ bool JPetReader::loadData(const char* treename)
     ERROR("empty tree name");
     return false;
   }
-  fTree = static_cast<TTree*>(fFile->Get(treename));
+  fTree = dynamic_cast<TTree*>(fFile->Get(treename));
   if (!fTree) {
     ERROR("in reading tree");
     return false;
@@ -141,11 +144,16 @@ bool JPetReader::loadData(const char* treename)
 JPetTreeHeader* JPetReader::getHeaderClone() const
 {
   if (!fTree) {
-    ERROR("No tree available");  
+    ERROR("No tree available");
     return 0;
   }
   // get a pointer to a header wchich belongs to fTree
-  JPetTreeHeader* header =  (JPetTreeHeader*)fTree->GetUserInfo()->At(JPetUserInfoStructure::kHeader);
+  auto  listOfObjects = fTree->GetUserInfo();
+  JPetTreeHeader* header =  static_cast<JPetTreeHeader*>(listOfObjects->At(JPetUserInfoStructure::kHeader));
+  if (!header) {
+    WARNING("No JPetTreeHeader found!! in the tree - it is ok if the tree is a hld.root type");
+    return nullptr;
+  }
   // return a COPY of this header
   return new JPetTreeHeader( *header );
 }

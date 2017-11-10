@@ -20,7 +20,7 @@
 #include <string>
 #include <map>
 
-#include "../JPetTask/JPetTask.h"
+#include "../JPetUserTask/JPetUserTask.h"
 #include "../JPetRawSignal/JPetRawSignal.h"
 #include "../JPetTimeWindow/JPetTimeWindow.h"
 #include "../JPetParamBank/JPetParamBank.h"
@@ -31,35 +31,52 @@ struct cmpByTimeWindowIndex;
 
 class JPetScopeTask: public JPetTask
 {
-
 public:
-  JPetScopeTask(const char* name, const char* description);
-  virtual void exec();
+  JPetScopeTask(const char* name);
+  virtual ~JPetScopeTask() {};
+
+  bool init(const JPetParamsInterface& inOptions) override;
+  bool run(const JPetDataInterface& inData) override;
+  bool terminate(JPetParamsInterface& outOptions) override;
+
   static int getTimeWindowIndex(const std::string&  pathAndFileName);
   /// getting oscilloscope data full file names to process
-  inline std::map<std::string, int> getInputFiles() const {
-    return fInputFiles;    
+  inline std::map<std::string, int> getInputFiles() const
+  {
+    return fInputFiles;
   }
-  inline void setInputFiles(const std::map<std::string, int>& inputFiles) {
+  inline void setInputFiles(const std::map<std::string, int>& inputFiles)
+  {
     fInputFiles = inputFiles;
   }
 
-  virtual void setWriter(JPetWriter* writer) {
+  virtual void setWriter(JPetWriter* writer)
+  {
     fWriter = writer;
   }
+
+  const JPetParamBank& getParamBank();
+  virtual void setStatistics(JPetStatistics* statistics);
+  JPetStatistics& getStatistics();
 
   std::multimap<std::string, int, cmpByTimeWindowIndex> getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const;
 
 protected:
+  bool init();
+  bool exec();
+  bool terminate();
+
   std::map<std::string, int> fInputFiles;
-  JPetWriter* fWriter;
+  JPetWriter* fWriter = 0;
+  JPetStatistics* fStatistics = 0;
+  JPetParams fParams;
 };
 
 struct cmpByTimeWindowIndex {
-    bool operator()(const std::string& a, const std::string& b) const {
-        return JPetScopeTask::getTimeWindowIndex(a) < JPetScopeTask::getTimeWindowIndex(b);
-    }
+  bool operator()(const std::string& a, const std::string& b) const
+  {
+    return JPetScopeTask::getTimeWindowIndex(a) < JPetScopeTask::getTimeWindowIndex(b);
+  }
 };
 
 #endif /*  !JPETSCOPETASK_H */
-

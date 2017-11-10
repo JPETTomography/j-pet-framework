@@ -16,21 +16,19 @@
 #ifndef _JPETSIMPLEPHYSSIGNALRECO_H_
 #define _JPETSIMPLEPHYSSIGNALRECO_H_
 
-#include "../JPetTask/JPetTask.h"
+#include "../JPetUserTask/JPetUserTask.h"
 #include "../JPetPhysSignal/JPetPhysSignal.h"
 #include "../JPetRecoSignal/JPetRecoSignal.h"
 
 class JPetWriter;
 
-class JPetSimplePhysSignalReco : public JPetTask
+class JPetSimplePhysSignalReco : public JPetUserTask
 {
 public:
   JPetSimplePhysSignalReco();
   virtual ~JPetSimplePhysSignalReco();
 
-  virtual void exec();
-  virtual void terminate();
-  virtual void setWriter(JPetWriter* writer) {fWriter =writer;}
+  virtual bool exec() override;
   inline int getAlpha() const { return fAlpha; }
   inline float getThresholdSel() const { return fThresholdSel; }
   inline void setAlpha(int val) { fAlpha = val; }
@@ -42,7 +40,6 @@ private:
   void savePhysSignal( JPetPhysSignal signal);
   int fAlpha;
   float fThresholdSel;
-  JPetWriter* fWriter;
 
 };
 #endif

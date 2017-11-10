@@ -17,67 +17,31 @@
 #include "./JPetTask.h"
 
 
-JPetTask::JPetTask(const char* name, const char* description):
-  fName(name, description),
-  fEvent(0),
-  fParamManager(0),
-  fStatistics(0),
-  fAuxilliaryData(0)
+JPetTask::JPetTask(const char* name):
+  fName(name)
 {
 }
 
-
-void JPetTask::init(const JPetTaskInterface::Options&)
+void JPetTask::setName(const std::string& name)
 {
+  fName = name;
 }
 
-void JPetTask::exec()
+std::string JPetTask::getName() const
 {
-  // do something with event
+  return fName;
 }
 
-void JPetTask::terminate()
+void JPetTask::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
 {
+  fSubTasks.push_back(std::move(subTask));
 }
 
-void JPetTask::setEvent(TObject* ev)
+const std::vector<JPetTaskInterface*> JPetTask::getSubTasks() const
 {
-  fEvent = ev;
+  std::vector<JPetTaskInterface*> tmp;
+  for (auto subtask = fSubTasks.begin(); subtask != fSubTasks.end(); subtask++) {
+    tmp.push_back(subtask->get());
+  }
+  return tmp;
 }
-
-void JPetTask::setParamManager(JPetParamManager* paramManager)
-{
-  fParamManager = paramManager;
-}
-
-const JPetParamBank& JPetTask::getParamBank()
-{
-  DEBUG("JPetTask");
-  assert(fParamManager);
-  return fParamManager->getParamBank();
-}
-
-void JPetTask::setStatistics(JPetStatistics* statistics)
-{
-  assert(statistics);
-  fStatistics = statistics;
-}
-
-JPetAuxilliaryData& JPetTask::getAuxilliaryData()
-{
-  assert(fAuxilliaryData);
-  return *fAuxilliaryData;
-}
-
-void JPetTask::setAuxilliaryData(JPetAuxilliaryData* auxData)
-{
-  assert(auxData);
-  fAuxilliaryData = auxData;
-}
-
-JPetStatistics& JPetTask::getStatistics()
-{
-  assert(fStatistics);
-  return *fStatistics;
-}
-

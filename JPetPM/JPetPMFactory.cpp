@@ -57,7 +57,12 @@ JPetPM* JPetPMFactory::build(ParamObjectDescription data)
   try {
     int id = boost::lexical_cast<int>(data.at("id"));
     JPetPM::Side side = boost::lexical_cast<bool>(data.at("is_right_side")) ? JPetPM::Side::SideB : JPetPM::Side::SideA;
-    std::string description = boost::lexical_cast<std::string>(data.at("description"));
+    std::string description;
+    try{
+      description = boost::lexical_cast<std::string>(data.at("description"));
+    } catch (const std::exception& e) {
+      description = "";
+    }
     JPetPM* result = new JPetPM(id, description);
     result->setSide(side);
     return result;

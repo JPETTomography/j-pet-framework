@@ -20,11 +20,11 @@
 #include <TThread.h>
 #include <functional> // for TaskGenerator declaration
 #include <vector> // for TaskGeneratorChain declaration
-#include "../JPetParamManager/JPetParamManager.h"
-#include "../JPetOptions/JPetOptions.h"
+#include "../JPetParams/JPetParams.h"
+#include "../JPetTaskInterface/JPetTaskInterface.h"
+#include "../JPetTimer/JPetTimer.h"
 
-#include "../JPetTaskRunnerInterface/JPetTaskRunnerInterface.h"
-using TaskGenerator = std::function< JPetTaskRunnerInterface* () >;
+using TaskGenerator = std::function< JPetTaskInterface* () >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
 /**
@@ -34,21 +34,18 @@ using TaskGeneratorChain = std::vector<TaskGenerator>;
 class JPetTaskChainExecutor
 {
 public :
-  JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFile, JPetOptions opts);
+  JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFile, const jpet_options_tools::OptsStrAny&);
   TThread* run();
   virtual ~JPetTaskChainExecutor();
-
-  bool process(); /// That was private. I made it public to run without threads.
-  static void printCurrentOptionsToLog(const JPetOptions::Options& currOpts);
+  bool process(); /// Method to be called directly only in case of non-thread running;
 private:
   static void* processProxy(void*);
-  bool preprocessing(const JPetOptions& options, JPetParamManager* manager, std::list<JPetTaskRunnerInterface*>& tasks);
+  bool preprocessing(const JPetParams& params);
 
-  int fInputSeqId;
-  JPetParamManager* fParamManager;
-  std::list<JPetTaskRunnerInterface*> fTasks;
-  TaskGeneratorChain* ftaskGeneratorChain;
-  JPetOptions fOptions;
+  int fInputSeqId = -1;
+  std::list<JPetTaskInterface*> fTasks;
+  TaskGeneratorChain* ftaskGeneratorChain = nullptr;
+  JPetParams fParams;
 };
 
 

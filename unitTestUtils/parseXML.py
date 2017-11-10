@@ -20,7 +20,7 @@ def parseXmlReports():
       exceptions = root.findall('.//Exception')
       all_errors = all_errors + errors + exceptions
     except ParseError:
-      eprint("The file format is not a correct xml. There were some mistakes in the tests ")
+      eprint("The file format of:"+infile+" is not a correct xml. There were some mistakes in the tests ")
       sys.exit(1)
   if all_errors:
     for occur in all_errors:

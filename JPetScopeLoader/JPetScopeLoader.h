@@ -12,13 +12,13 @@
  *
  *  @file JPetScopeLoader.h
  *  @brief Module for oscilloscope data
- *  Reads oscilloscope ASCII data and procudes JPetRecoSignal structures.
+ *  Reads oscilloscope ASCII data and produces JPetRecoSignal structures.
  */
 
 #ifndef _SCOPE_LOADER_MODULE_H_
 #define _SCOPE_LOADER_MODULE_H_
 
-#include "../JPetTaskLoader/JPetTaskLoader.h"
+#include "../JPetTask/JPetTask.h"
 
 #include <cstddef>
 #include <fstream>
@@ -28,12 +28,12 @@
 
 #include <boost/property_tree/ptree.hpp>
 
+#include "../JPetTaskIO/JPetTaskIO.h"
 #include "../JPetScopeTask/JPetScopeTask.h"
 #include "../JPetScopeConfigParser/JPetScopeConfigPOD.h"
 
 class JPetParamBank;
 class JPetPM;
-class JPetRecoSignal;
 class JPetScin;
 class JPetTreeHeader;
 class JPetWriter;
@@ -43,24 +43,26 @@ class JPetWriter;
  * This module reads oscilloscope ACSII data based on config file passed through command line.
  * Example of usign this module is located in workdir/ScopeLoaderExample/ .
  */
-class JPetScopeLoader: public JPetTaskLoader
+class JPetScopeLoader: public JPetTaskIO
 {
-
 public:
-
-  JPetScopeLoader(JPetScopeTask* task);
+  JPetScopeLoader(std::unique_ptr<JPetScopeTask> task);
   virtual ~JPetScopeLoader();
 
-  virtual void createInputObjects(const char* inputFilename);
+  virtual bool init(const JPetParamsInterface& opts) override;
+  virtual bool run(const JPetDataInterface& inData) override;
+  virtual bool terminate(JPetParamsInterface& opts) override;
 
-  virtual void init(const JPetOptions::Options& opts);
-  virtual void exec();
-  virtual void terminate();
+  bool createInputObjects(const char* inputFilename) override;
+  bool createOutputObjects(const char* inputFilename) override;
 
-  std::map<std::string, int> createInputScopeFileNames(const std::string& inputPathToScopeFiles,
-      std::map<std::string, int> pmPref2Id
-                                                      ) const;
-  std::map<std::string, int> getPMPrefixToPMIdMap() const;
+  virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
+
+  std::map<std::string, int> createInputScopeFileNames(
+    const std::string& inputPathToScopeFiles,
+    std::map<std::string, int> pmPref2Id
+  ) const;
+  std::map<std::string, int> getPMPrefixToPMIdMap();
   bool isCorrectScopeFileName(const std::string& filename) const;
   std::string getFilePrefix(const std::string& filename) const;
 };

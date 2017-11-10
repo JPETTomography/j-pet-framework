@@ -21,7 +21,7 @@
 #include <string>
 #include "../JPetGeomMappingInterface/JPetGeomMappingInterface.h"
 #include "../JPetHit/JPetHit.h"
-#include "../JPetTask/JPetTask.h"
+#include "../JPetUserTask/JPetUserTask.h"
 #include "PetDict.h"
 const std::string Layer(const size_t layer);
 const std::string LayerSlot(const size_t layer, const size_t slot);
@@ -50,20 +50,17 @@ private:
   std::vector<std::vector<double>> fTheta;
 };
 
-class LargeBarrelTask: public JPetTask
+class LargeBarrelTask: public JPetUserTask
 {
 protected:
-  LargeBarrelTask(const char* name, const char* description);
+  LargeBarrelTask(const char* name);
 public:
   virtual ~LargeBarrelTask();
-  virtual void init(const JPetTaskInterface::Options& opts)override;
-  virtual void setWriter(JPetWriter* writer)override;
+  virtual bool init()override;
 protected:
-  JPetWriter& writter()const;
   const std::shared_ptr<LargeBarrelMapping>map()const;
 private:
   std::shared_ptr<LargeBarrelMapping>fBarrelMap;
-  JPetWriter* fWriter;
 };
 
 struct TOTs {
@@ -85,10 +82,11 @@ inline std::ostream& operator<<(std::ostream& str, const TOTs& item)
 class TOT_Hists: public LargeBarrelTask
 {
 protected:
-  TOT_Hists(const char* name, const char* description);
+  TOT_Hists(const char* name);
 public:
   virtual ~TOT_Hists();
-  virtual void init(const JPetTaskInterface::Options& opts)override;
+  virtual bool init()override;
+  //virtual void init(const JPetTaskInterface::Options& opts)override;
 protected:
   void createTOTHistos(const std::string& suffix, const size_t bins, const double min, const double max);
   void fillTOTHistos(const JPetHit& hit, const std::string& suffix);

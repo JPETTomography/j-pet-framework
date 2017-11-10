@@ -16,23 +16,22 @@
 #include "../../tools/JPetRecoSignalTools/JPetRecoSignalTools.h"
 #include "SDAMakePhysSignals.h"
 
-SDAMakePhysSignals::SDAMakePhysSignals(const char* name, const char* description) 
-: JPetTask(name, description)
+SDAMakePhysSignals::SDAMakePhysSignals(const char* name) 
+: JPetUserTask(name)
 {}
 
 SDAMakePhysSignals::~SDAMakePhysSignals(){}
-void SDAMakePhysSignals::init(const JPetTaskInterface::Options&){}
-void SDAMakePhysSignals::exec(){
-	if(auto signal=dynamic_cast<const JPetRecoSignal*const>(getEvent())){
+bool SDAMakePhysSignals::exec(){
+	if(auto signal=dynamic_cast<const JPetRecoSignal*const>(fEvent)){
 		JPetPhysSignal physSignal;
 		physSignal.setRecoSignal(*signal);
 		// NOTE: This module currently sets number of photoelectrons
 		// equal to charge of JPetRecoSignal
 		physSignal.setPhe(physSignal.getRecoSignal().getCharge() );
-		fWriter->write(physSignal);
+		// @todo: replace by fOutputEvents
+		//		fWriter->write(physSignal);
 	}
+	return true;
 }
-void SDAMakePhysSignals::setWriter(JPetWriter* writer) {
-	fWriter = writer;
-}
-void SDAMakePhysSignals::terminate(){}
+
+

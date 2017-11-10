@@ -21,40 +21,43 @@
 //ClassImp(JPetTaskLoader);
 
 #include <boost/filesystem.hpp>
+#include <boost/any.hpp>
+
+using boost::any_cast;
 
 JPetTaskLoader::JPetTaskLoader(const char* in_file_type,
                                const char* out_file_type,
-                               JPetTask* taskToExecute):
+                               JPetTask*):
   JPetTaskIO(),
 
   fInFileType(in_file_type),
   fOutFileType(out_file_type)
 {
   //setTask(std::shared_ptr<JPetTaskInterface>(taskToExecute));
-  setTask(dynamic_cast<JPetTaskInterface*>(taskToExecute));
+  //wk//setSubTask(dynamic_cast<JPetTaskInterface*>(taskToExecute));
 }
 
-
-
-void JPetTaskLoader::init(const JPetOptions::Options& opts)
+bool JPetTaskLoader::init(const JPetParamsInterface& params)
 {
-  auto newOpts(opts);
-  auto inFile = newOpts.at("inputFile");
-  auto outFile = inFile; /// @todo This line is potentially dangerous if the output directory is different than the input one.
-  inFile = generateProperNameFile(inFile, fInFileType);
-  outFile = generateProperNameFile(outFile, fOutFileType);
-  newOpts.at("inputFile") = inFile;
-  newOpts.at("inputFileType") = fInFileType;
-  newOpts.at("outputFile") = outFile;
-  newOpts.at("outputFileType") = fOutFileType;
-  setOptions(JPetOptions(newOpts));
+  auto opts = dynamic_cast<const JPetParams&> (params);
+  //auto newOpts(opts);
+  //auto inFile = any_cast<std::string>(newOpts.at("inputFile_std::string"));
+  //auto outFile = inFile; /// @todo This line is potentially dangerous if the output directory is different than the input one.
+  //inFile = generateProperNameFile(inFile, fInFileType);
+  //outFile = generateProperNameFile(outFile, fOutFileType);
+  //newOpts.at("inputFile_std::string") = inFile;
+  //newOpts.at("inputFileType_std::string") = fInFileType;
+  //newOpts.at("outputFile_std::string") = outFile;
+  //newOpts.at("outputFileType_std::string") = fOutFileType;
+  //setOptions(JPetOptions(newOpts));
 
-  //here we should call some function to parse options
-  std::string inputFilename(fOptions.getInputFile());
-  std::string outputPath(fOptions.getOutputPath());
-  auto outputFilename = outputPath + std::string(fOptions.getOutputFile());
-  createInputObjects(inputFilename.c_str());
-  createOutputObjects(outputFilename.c_str());
+  ////here we should call some function to parse options
+  //std::string inputFilename(fOptions.getInputFile());
+  //std::string outputPath(fOptions.getOutputPath());
+  //auto outputFilename = outputPath + std::string(fOptions.getOutputFile());
+  //createInputObjects(inputFilename.c_str());
+  //createOutputObjects(outputFilename.c_str());
+  return true;
 }
 
 std::string JPetTaskLoader::generateProperNameFile(const std::string& srcFilename, const std::string& fileType) const
