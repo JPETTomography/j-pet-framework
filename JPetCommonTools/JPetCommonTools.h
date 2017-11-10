@@ -37,8 +37,6 @@ class JPetCommonTools : public boost::noncopyable
 public:
   static const std::string currentDateTime();
 
-  static std::size_t findSubstring(const std::string& p_string, const std::string& p_substring);
-
   static std::string Itoa(int x)
   {
     return intToString(x);
@@ -125,9 +123,23 @@ public:
     return boost::filesystem::path( fileWithPath ).filename().string();
   }
 
-  static std::string extractDataTypeFromFile(const std::string& filename);
-  static std::string replaceDataTypeInFile(const std::string& filename, const std::string& newType);
-  
+  /// Function extracts from the file name a substring that corresponds to the data type.
+  /// according to the J-PET convention.
+  /// E.g. for input filename  file.data.type.can.have.several.dots.root
+  /// the returned data type should be "ata.type.can.have.several.dots"
+  /// The ".root" suffix is obligatory.
+  /// In other cases empty string is returned.
+  static std::string extractDataTypeFromFileName(const std::string& filename);
+
+  /// Function generates new file name by replacing the existing data type string
+  /// by the new newType string.
+  /// There are two different cases:
+  /// 1) the original filename contains ".hld" suffix. Then
+  /// the suffix is replaced by newType + ".root"
+  /// 2) the original filename contains ".root" suffix. Then
+  /// the oldType +".root" is replaced by newType+".root"
+  static std::string replaceDataTypeInFileName(const std::string& filename, const std::string& newType);
+
   inline static std::string appendSlashToPathIfAbsent(const std::string& path)
   {
     if (!path.empty() && path.back() != '/') return path + '/';

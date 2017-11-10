@@ -68,27 +68,27 @@ bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
 bool JPetUnzipAndUnpackTask::terminate(JPetParamsInterface& output_params)
 {
   using namespace jpet_options_tools;
-  
-  if(fUnpackHappened){
-    auto & params = dynamic_cast<JPetParams&>(output_params);
-                    OptsStrAny new_opts;
+
+  if (fUnpackHappened) {
+    auto& params = dynamic_cast<JPetParams&>(output_params);
+    OptsStrAny new_opts;
     jpet_options_generator_tools::setOutputFileType(new_opts, "hldRoot");
 
-    if(jpet_options_tools::isOptionSet(fOptions, "firstEvent_int") &&
-       jpet_options_tools::isOptionSet(fOptions, "lastEvent_int")){
-     
-      if( jpet_options_tools::getOptionAsInt(fOptions, "firstEvent_int") != -1 &&
-	  jpet_options_tools::getOptionAsInt(fOptions, "lastEvent_int") != -1 ){
-	jpet_options_generator_tools::setResetEventRangeOption(new_opts, true);
+    if (jpet_options_tools::isOptionSet(fOptions, "firstEvent_int") &&
+        jpet_options_tools::isOptionSet(fOptions, "lastEvent_int")) {
+
+      if ( jpet_options_tools::getOptionAsInt(fOptions, "firstEvent_int") != -1 &&
+           jpet_options_tools::getOptionAsInt(fOptions, "lastEvent_int") != -1 ) {
+        jpet_options_generator_tools::setResetEventRangeOption(new_opts, true);
       }
     }
 
-    jpet_options_generator_tools::setOutputFile(new_opts, JPetCommonTools::replaceDataTypeInFile(getInputFile(fOptions),"hld"));
-    
+    jpet_options_generator_tools::setOutputFile(new_opts, JPetCommonTools::replaceDataTypeInFileName(getInputFile(fOptions), "hld"));
+
     params = JPetParams(new_opts, params.getParamManagerAsShared());
-    
+
   }
-    
+
   return true;
 }
 
