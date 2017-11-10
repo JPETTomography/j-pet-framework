@@ -29,12 +29,6 @@ const std::string JPetCommonTools::currentDateTime()
   return buf;
 }
 
-std::size_t JPetCommonTools::findSubstring(const std::string& p_string, const std::string& p_substring)
-{
-  // TODO check extension of the file. If necessary change it to another.
-  return p_string.find(p_substring);
-}
-
 std::string JPetCommonTools::doubleToString(double x)
 {
   std::ostringstream out;
@@ -66,51 +60,47 @@ std::vector<const char*> JPetCommonTools::createArgs(const std::string& commandL
   return args_char;
 }
 
- std::string JPetCommonTools::extractDataTypeFromFile(const std::string& filename)
+std::string JPetCommonTools::extractDataTypeFromFileName(const std::string& filename)
 {
   auto file = extractFileNameFromFullPath(filename);
 
   auto pos = file.find(".");
   if ( pos != std::string::npos ) {
-    auto suffix = file.substr(pos+1);
+    auto suffix = file.substr(pos + 1);
     auto pos2 = suffix.find(".root");
-    if( pos2 != std::string::npos ){
+    if ( pos2 != std::string::npos ) {
       return suffix.erase(pos2);
     }
   }
-  
+
   return "";
 }
 
-std::string JPetCommonTools::replaceDataTypeInFile(const std::string& filename, const std::string& newType)
+std::string JPetCommonTools::replaceDataTypeInFileName(const std::string& filename, const std::string& newType)
 {
   auto file = extractFileNameFromFullPath(filename);
   auto path = extractPathFromFile(filename);
-  
+
   auto pos = file.find(".");
   if ( pos != std::string::npos ) {
-    auto suffix = file.substr(pos+1);
-    auto prefix = file.erase(pos+1);
+    auto suffix = file.substr(pos + 1);
+    auto prefix = file.erase(pos + 1);
 
     // handle HLD files as a special case
-    if( suffix == "hld" ){
+    if ( suffix == "hld" ) {
       auto result = prefix.append(newType).append(".root");
-      if( !path.empty() ) result = path.append("/").append(result);
+      if ( !path.empty() ) result = path.append("/").append(result);
       return result;
     }
 
     auto pos2 = suffix.find(".root");
-    if( pos2 != std::string::npos ){
+    if ( pos2 != std::string::npos ) {
       auto root_extension = suffix.substr(pos2);
       auto result = prefix.append(newType).append(root_extension);
-      if( !path.empty() ) result = path.append("/").append(result);
+      if ( !path.empty() ) result = path.append("/").append(result);
       return result;
     }
   }
-  
+
   return "";
 }
-
-
-
-
