@@ -12,7 +12,7 @@
  *
  *  @file SDARecoDrawAllCharges.h
  *  @brief Draws charges spectra for PMT
- *  Reads a TTree of JPetRecoSignals and fills charge values from PMTs to the histo. 
+ *  Reads a TTree of JPetRecoSignals and fills charge values from PMTs to the histo.
  */
 
 #ifndef _JPETANALYSISMODULE_DRAWALLCHARGES_H_
@@ -20,21 +20,22 @@
 
 #include <map>
 #include <TCanvas.h>
-#include "../../JPetTask/JPetTask.h"
+#include "../../JPetUserTask/JPetUserTask.h"
 
-class SDARecoDrawAllCharges: public JPetTask{
+class SDARecoDrawAllCharges: public JPetUserTask
+{
 public:
-	SDARecoDrawAllCharges(const char* name, const char* description);
-	virtual ~SDARecoDrawAllCharges();
-	virtual void exec()override;
-	virtual void init(const JPetTaskInterface::Options&)override;
-	virtual void terminate()override;
+  SDARecoDrawAllCharges(const char* name);
+  virtual ~SDARecoDrawAllCharges();
+  virtual bool init() override;
+  virtual bool exec()override;
+  virtual bool terminate() override;
 private:
-	std::map<int,TH1F*> fChargeHistos;
-	std::map<int,std::vector<double> > fCharges;
-	double fCharge;
-	std::vector<int> fIDs;
-	unsigned int fNumberOfPMTs;
-	std::string fFileName;
+  std::map<int, TH1F*> fChargeHistos;
+  std::map<int, std::vector<double> > fCharges;
+  double fCharge;
+  std::vector<int> fIDs;
+  unsigned int fNumberOfPMTs;
+  std::string fFileName;
 };
 #endif

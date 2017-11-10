@@ -10,17 +10,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetOptionsTools.h
+ *  @file JPetData.h
  */
 
-#ifndef JPETOPTIONSTOOLS_H
-#define JPETOPTIONSTOOLS_H
-#include <map>
+#ifndef JPETDATA_H
+#define JPETDATA_H
+#include "../JPetDataInterface/JPetDataInterface.h"
+#include <TObject.h>
 
-namespace jpet_options_tools
+class JPetData: public JPetDataInterface
 {
-typedef std::map<std::string, std::string> Options;
-bool createConfigFileFromOptions(const Options& options, const std::string& outFile);
-Options createOptionsFromConfigFile(const std::string& inFile);
-}
-#endif /*  !JPETOPTIONSTOOLS_H */
+public:
+  explicit JPetData(TObject& event);
+  TObject& getEvent() const;
+protected:
+  TObject& fEvent;
+};
+#endif /*  !JPETDATA_H */

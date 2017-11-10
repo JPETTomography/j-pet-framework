@@ -34,17 +34,13 @@ JPetSimplePhysSignalReco::~JPetSimplePhysSignalReco()
   /**/
 }
 
-void JPetSimplePhysSignalReco::exec()
+bool JPetSimplePhysSignalReco::exec()
 {
-  // Get a Reco Signal
-  auto currSignal = (JPetRecoSignal&) (*getEvent());
-  savePhysSignal(createPhysSignal(currSignal));
+  return true;
 }
 
-void JPetSimplePhysSignalReco::savePhysSignal(JPetPhysSignal sig)
+void JPetSimplePhysSignalReco::savePhysSignal(JPetPhysSignal)
 {
-  assert(fWriter);
-  fWriter->write(sig);
 }
 
 JPetPhysSignal JPetSimplePhysSignalReco::createPhysSignal(JPetRecoSignal& recoSignal)
@@ -112,11 +108,6 @@ JPetPhysSignal JPetSimplePhysSignalReco::createPhysSignal(JPetRecoSignal& recoSi
   // store the original JPetRecoSignal in the PhysSignal as a processing history
   physSignal.setRecoSignal(recoSignal);
   return physSignal;
-}
-
-void JPetSimplePhysSignalReco::terminate()
-{
-  /**/
 }
 
 void JPetSimplePhysSignalReco::readConfigFileAndSetAlphaAndThreshParams(const char* filename)

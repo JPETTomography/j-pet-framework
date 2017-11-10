@@ -16,20 +16,27 @@
 #ifndef JPETTASKINTERFACE_H
 #define JPETTASKINTERFACE_H
 
-#include <map>
+#include "../JPetParamsInterface/JPetParamsInterface.h"
+#include "../JPetDataInterface/JPetDataInterface.h"
 #include <string>
-//#include "../JPetOptionsInterface/JPetOptionsInterface.h"
+#include <memory>
+#include <vector>
 
-class JPetParamManager;
 
+
+/**
+ * @brief Interface class representing a computing task unit.
+ *
+ */
 class JPetTaskInterface
 {
 public:
-  typedef std::map<std::string, std::string> Options;
   virtual ~JPetTaskInterface() {}
-  virtual void init(const Options& options) = 0;
-  virtual void exec() = 0;
-  virtual void terminate() = 0;
-  virtual void setParamManager(JPetParamManager* paramManager) = 0;
+  virtual bool init(const JPetParamsInterface& inOptions) = 0;
+  virtual bool run(const JPetDataInterface& inData) = 0;
+  virtual bool terminate(JPetParamsInterface& outOptions) = 0;
+  virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) = 0;
+  virtual const std::vector<JPetTaskInterface*> getSubTasks() const = 0;
+  virtual std::string getName() const = 0;
 };
 #endif /*  !JPETTASKINTERFACE_H */

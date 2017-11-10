@@ -74,6 +74,11 @@ public:
     return fIsNullObject;
   }
 
+  inline std::set<ParamObjectType> getExpectMissing() const
+  {
+    return fExpectMissing;
+  }
+
 private:
   JPetParamManager(const JPetParamManager&);
   JPetParamManager& operator=(const JPetParamManager&);

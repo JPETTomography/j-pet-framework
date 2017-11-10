@@ -16,105 +16,27 @@
 #ifndef _JPET_CMD_PARSER_H_
 #define _JPET_CMD_PARSER_H_
 
-class JPetCmdParser;
 
 #include "boost/program_options.hpp" // Library parsing command line arguments
-#include <string>
-#include "../JPetOptions/JPetOptions.h"
-
-
 namespace po = boost::program_options;
 
+/**
+ * @brief Parser of the command line arguments provided by users.
+ *
+ * It is based on boost program_options.
+ * The exception std::invalid_argument can be thrown in case of parsing error.
+ */
 class JPetCmdParser
 {
 public:
   JPetCmdParser();
   ~JPetCmdParser();
-  std::vector<JPetOptions> parseAndGenerateOptions(int argc, const char** argv);
+  po::variables_map parseCmdLineArgs(int argc, const char** argv) const; ///This function can throw std::invalid_argument exception.
 
-  inline const po::options_description getOptionsDescription() const {
+  inline const po::options_description getOptionsDescription() const
+  {
     return fOptionsDescriptions;
   }
-  std::vector<JPetOptions> generateOptions(const po::variables_map& optsMap, const std::map<std::string, std::string>& additionalOptions = {}) const;
-
-  bool areCorrectOptions(const po::variables_map& options) const;
-  inline const std::vector<std::string>& getFileNames(const po::variables_map& variablesMap) const {
-    return variablesMap["file"].as< std::vector<std::string> >();
-  }
-  inline bool isCorrectFileType(const std::string& type) const {
-    if (type == "hld" || type == "root" || type == "scope" || type == "zip") {
-      return true;
-    }
-    return false;
-  }
-
-  inline const std::string& getOutputPath(const po::variables_map& variablesMap) const {
-    return variablesMap["outputPath"].as<std::string>();
-  }
-
-  inline bool isOutputPath(const po::variables_map& variablesMap) const {
-    return (bool)variablesMap.count("outputPath");
-  }
-
-  inline const std::string& getFileType(const po::variables_map& variablesMap) const {
-    return variablesMap["type"].as<std::string>();
-  }
-
-  inline bool IsFileTypeSet(const po::variables_map& variablesMap) const {
-    return (bool)variablesMap.count("type");
-  }
-  inline int getLowerEventBound(const po::variables_map& variablesMap) const {
-    return variablesMap["range"].as< std::vector<int> >()[0];
-  }
-  inline int getHigherEventBound(const po::variables_map& variablesMap) const {
-    return variablesMap["range"].as< std::vector<int> >()[1];
-  }
-  inline bool isParamSet(const po::variables_map& variablesMap) const {
-    return (bool)variablesMap.count("param");
-  }
-  inline const std::string& getParam(const po::variables_map& variablesMap) const {
-    return variablesMap["param"].as< std::string >();
-  }
-
-  inline bool isRunNumberSet(const po::variables_map& variablesMap) const {
-    return (bool)variablesMap.count("runId");
-  }
-  inline const int getRunNumber(const po::variables_map& variablesMap) const {
-    return variablesMap["runId"].as<int>();
-  }
-
-  inline bool isProgressBarSet(const po::variables_map& variablesMap) const {
-    return variablesMap["progressBar"].as<bool>();
-  }
-
-  static inline bool isLocalDBSet(const po::variables_map& variablesMap) {
-    return variablesMap.count("localDB") > 0;
-  }
-  static inline std::string getLocalDBName(const po::variables_map& variablesMap) {
-    return variablesMap["localDB"].as<std::string>();
-  }
-
-  static inline bool isLocalDBCreateSet(const po::variables_map& variablesMap) {
-    return variablesMap.count("localDBCreate") > 0;
-  }
-  static inline std::string getLocalDBCreateName(const po::variables_map& variablesMap) {
-    return variablesMap["localDBCreate"].as<std::string>();
-  }
-
-  static inline bool isUnpackerConfigFileSet(const po::variables_map& variablesMap) {
-    return variablesMap.count("unpackerConfigFile") > 0;
-  }
-  static inline std::string getUnpackerConfigFile(const po::variables_map& variablesMap) {
-    return variablesMap["unpackerConfigFile"].as<std::string>();
-  }
-
-  static inline bool isUnpackerCalibFileSet(const po::variables_map& variablesMap) {
-    return variablesMap.count("unpackerCalibFile") > 0;
-  }
-  static inline std::string getUnpackerCalibFile(const po::variables_map& variablesMap) {
-    return variablesMap["unpackerCalibFile"].as<std::string>();
-  }
-  
 protected:
   po::options_description fOptionsDescriptions;
 

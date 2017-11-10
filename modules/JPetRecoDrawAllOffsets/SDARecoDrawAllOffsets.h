@@ -19,15 +19,15 @@
 #define _JPETANALYSISMODULE_DRAWALLOFFSETS_H_
 
 #include <TCanvas.h>
-#include "../../JPetTask/JPetTask.h"
+#include "../../JPetUserTask/JPetUserTask.h"
 
-class SDARecoDrawAllOffsets: public JPetTask{
+class SDARecoDrawAllOffsets: public JPetUserTask{
 public:
-  SDARecoDrawAllOffsets(const char* name, const char* description);
+  SDARecoDrawAllOffsets(const char* name);
   virtual ~SDARecoDrawAllOffsets();
-  virtual void exec()override;
-  virtual void init(const JPetTaskInterface::Options&)override;
-  virtual void terminate()override;
+  virtual bool init() override;
+  virtual bool exec()override;
+  virtual bool terminate() override;
 private:
     std::vector<TH1F*> fOffsetHistos;
     std::vector<std::vector<double> > fOffsets;

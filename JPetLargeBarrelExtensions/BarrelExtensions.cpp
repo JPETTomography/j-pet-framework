@@ -109,34 +109,32 @@ size_t LargeBarrelMapping::calcGlobalPMTNumber(const JPetPM& pmt) const
   pmt_no += slot_number - 1;
   return pmt_no;
 }
-LargeBarrelTask::LargeBarrelTask(const char* name, const char* description)
-  : JPetTask(name, description) {}
+LargeBarrelTask::LargeBarrelTask(const char* name)
+  : JPetUserTask(name) {}
 LargeBarrelTask::~LargeBarrelTask() {}
-void LargeBarrelTask::init(const JPetTaskInterface::Options&)
+
+bool LargeBarrelTask::init()
+//void LargeBarrelTask::init(const JPetTaskInterface::Options&)
 {
   fBarrelMap = make_shared<LargeBarrelMapping>(getParamBank());
+  return true;
 }
-void LargeBarrelTask::setWriter(JPetWriter* writer)
-{
-  fWriter = writer;
-}
-JPetWriter& LargeBarrelTask::writter() const
-{
-  //ToDo: provide control
-  return *fWriter;
-}
+
 const std::shared_ptr<LargeBarrelMapping>LargeBarrelTask::map() const
 {
   return fBarrelMap;
 }
-void TOT_Hists::init(const JPetTaskInterface::Options& opts)
+
+bool TOT_Hists::init()
+//void TOT_Hists::init(const JPetTaskInterface::Options& opts)
 {
-  LargeBarrelTask::init(opts);
+  LargeBarrelTask::init();
+  return true;
 }
 
-TOT_Hists::TOT_Hists(const char* name, const char* description)
+TOT_Hists::TOT_Hists(const char* name)
   :
-  LargeBarrelTask(name, description) {}
+  LargeBarrelTask(name) {}
 TOT_Hists::~TOT_Hists() {}
 void TOT_Hists::createTOTHistos(const std::string& suffix, const size_t bins, const double min, const double max)
 {

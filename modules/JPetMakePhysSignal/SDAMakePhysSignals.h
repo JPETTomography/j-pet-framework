@@ -20,19 +20,15 @@
 #define _JPETANALYSISMODULE_SDAMAKEPHYSSIGNALS_H_
 
 #include <TCanvas.h>
-#include "../../JPetTask/JPetTask.h"
-#include "../../JPetWriter/JPetWriter.h"
+#include "../../JPetUserTask/JPetUserTask.h"
 
-class SDAMakePhysSignals: public JPetTask{
+class SDAMakePhysSignals: public JPetUserTask
+{
 public:
-  SDAMakePhysSignals(const char* name, const char* description);
+  SDAMakePhysSignals(const char* name);
   virtual ~SDAMakePhysSignals();
-  virtual void exec()override;
-  virtual void init(const JPetTaskInterface::Options&)override;
-  virtual void terminate()override;
-  virtual void setWriter(JPetWriter* writer)override;  
+  virtual bool exec() override;
 private:
-    JPetWriter* fWriter;
 };
 
 #endif
