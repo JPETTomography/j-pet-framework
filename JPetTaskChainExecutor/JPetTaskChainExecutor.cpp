@@ -21,15 +21,15 @@
 
 #include "JPetTaskChainExecutorUtils.h"
 #include "../JPetLoggerInclude.h"
+#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
-JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, const OptionsPerFile& opts):
+JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, const jpet_options_tools::OptsStrAny& opts):
   fInputSeqId(processedFileId),
   ftaskGeneratorChain(taskGeneratorChain)
 {
-  assert(taskGeneratorChain->size() == opts.size());
   /// ParamManager is generated and added to fParams
   fParams = JPetTaskChainExecutorUtils::generateParams(opts);
-  assert(fParams.front().getParamManager());
+  assert(fParams.getParamManager());
   if (taskGeneratorChain) {
     for (auto taskGenerator : *ftaskGeneratorChain) {
       auto task = taskGenerator();
@@ -41,14 +41,9 @@ JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorCh
 }
 
 
-bool JPetTaskChainExecutor::preprocessing(const std::vector<JPetParams>& params)
+bool JPetTaskChainExecutor::preprocessing(const JPetParams& params)
 {
-  if (params.empty()) {
-    ERROR("No parameters provided!");
-    return false;
-  } else {
-    return JPetTaskChainExecutorUtils::process(params.front());
-  }
+  return JPetTaskChainExecutorUtils::process(params);
 }
 
 bool JPetTaskChainExecutor::process()
@@ -66,26 +61,21 @@ bool JPetTaskChainExecutor::process()
   JPetDataInterface nullDataObject;
   JPetParams controlParams; /// Parameters used to control the input file type and event range.
 
-  assert(fTasks.size() == fParams.size());
-  auto currParamsIt = fParams.begin();
-
   /// We iterate over both tasks and parameters
   for (auto currentTaskIt = fTasks.begin(); currentTaskIt != fTasks.end(); currentTaskIt++) {
 
     auto currentTask  =  *currentTaskIt;
     auto taskName = currentTask->getName();
 
-    assert(currParamsIt != fParams.end());
-    auto currParams = *currParamsIt;
+    auto & currParams = fParams;
     /// We generate input parameters based on the current parameter set and the controlParams produced by
     /// the previous task.
-    auto inputParams = JPetTaskChainExecutorUtils::generateParams(currParams, controlParams);
+    currParams = JPetTaskChainExecutorUtils::generateParams(currParams, controlParams);
     jpet_options_tools::printOptionsToLog(currParams.getOptions(), std::string("Options for ") + taskName);
-    currParamsIt++;
-
+    
     timer.startMeasurement();
     INFO(Form("Starting task: %s", taskName.c_str()));
-    if (!currentTask->init(inputParams)) {
+    if (!currentTask->init(currParams)) {
       ERROR("In task initialization");
       return false;
     }
