@@ -34,7 +34,7 @@ class JPetOptionsGenerator
 {
 public:
   using OptsStrAny = std::map<std::string, boost::any>;
-  using OptsForTasks =  std::vector<OptsStrAny>;
+  using OptsForTasks = OptsStrAny;
   using OptsForFiles = std::map<std::string, OptsForTasks>;
   using TransformersMap = std::map<std::string, std::vector<jpet_options_tools::Transformer> >;
 
