@@ -20,19 +20,19 @@
 #include "../JPetOptionsTools/JPetOptionsTransformators.h"
 
 /**
- * @brief Set of helper methods to operate on options provided by users.
+ * @brief Set of helper methods to operate on options.
  *
  * Options are represented as:
- *  1)std::map<std::string, boost::any> a.k.a. OptsStrAny
- *  2)std::map<std::string, std::string> a.k.a. OptsStrStr
+ * std::map<std::string, boost::any> a.k.a. OptsStrAny
  *
  */
 namespace jpet_options_tools
 {
 
-using OptsStrStr = std::map<std::string, std::string> ;
 using OptsStrAny = std::map<std::string, boost::any> ;
+using OptsStrStr = std::map<std::string, std::string> ;
 
+/// General getter functions to extract option values
 bool isOptionSet(const OptsStrAny& opts, const std::string& optionName);
 boost::any getOptionValue(const OptsStrAny& opts, std::string optionName);
 std::string getOptionAsString(const OptsStrAny& opts, std::string optionName);
@@ -41,6 +41,47 @@ float getOptionAsFloat(const OptsStrAny& opts, std::string optionName);
 double getOptionAsDouble(const OptsStrAny& opts, std::string optionName);
 std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, std::string optionName);
 bool getOptionAsBool(const OptsStrAny& opts, std::string optionName);
+
+
+/// Specialized getter functions to extract option values with predefined names
+
+/// This function returns a valid result only if the inputFile option is given
+/// in the untransformed form: std::vector<std::string>
+std::vector<std::string> getInputFiles(const OptsStrAny& opts);
+
+/// This function returns a valid result only if the inputFile option is given
+/// in the transformed form with _std::string suffix
+const char* getInputFile(const OptsStrAny& opts);
+const char* getScopeConfigFile(const OptsStrAny& opts);
+const char* getScopeInputDirectory(const OptsStrAny& opts);
+const char* getOutputFile(const OptsStrAny& opts);
+const char* getOutputPath(const OptsStrAny& opts);
+long long getFirstEvent(const OptsStrAny& opts);
+long long getLastEvent(const OptsStrAny& opts);
+
+/// It returns the total number of events calculated from
+/// first and last event given in the range of events to calculate.
+/// If first or last event is set to -1 then the -1 is returned.
+/// If last - first < 0 then -1 is returned.
+/// Otherwise last - first +1 is returned.
+long long getTotalEvents(const OptsStrAny& opts);
+
+int getRunNumber(const OptsStrAny& opts);
+bool isProgressBar(const OptsStrAny& opts);
+bool isLocalDB(const OptsStrAny& opts);
+std::string getLocalDB(const OptsStrAny& opts);
+bool isLocalDBCreate(const OptsStrAny& opts);
+std::string getLocalDBCreate(const OptsStrAny& opts);
+const char* getUnpackerConfigFile(const OptsStrAny& opts);
+const char* getUnpackerCalibFile(const OptsStrAny& opts);
+std::string getConfigFileName(const OptsStrAny& optsMap);
+
+void printOptions(const OptsStrAny& opts);
+void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine);
+/// Creates json file based on given options.
+bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile = "");
+/// Creates option map based on the content of the json file.
+OptsStrAny createOptionsFromConfigFile(const std::string& inFile);
 
 class FileTypeChecker
 {
@@ -61,36 +102,6 @@ private:
 
   static std::map<std::string, FileType> fStringToFileType;
 };
-
-void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine);
-
-///Specialized getter functions to extract option values with correct types
-
-/// This function returns a valid result only if the inputFile option is given
-/// in the untransformed form std::vector<std::string>
-std::vector<std::string> getInputFiles(const OptsStrAny& opts);
-/// This function returns a valid result only if the inputFile option is given
-/// in the transformed form std::string
-const char* getInputFile(const OptsStrAny& opts);
-const char* getScopeConfigFile(const OptsStrAny& opts);
-const char* getScopeInputDirectory(const OptsStrAny& opts);
-const char* getOutputFile(const OptsStrAny& opts);
-const char* getOutputPath(const OptsStrAny& opts);
-long long getFirstEvent(const OptsStrAny& opts);
-long long getLastEvent(const OptsStrAny& opts);
-long long getTotalEvents(const OptsStrAny& opts);
-int getRunNumber(const OptsStrAny& opts);
-bool isProgressBar(const OptsStrAny& opts);
-bool isLocalDB(const OptsStrAny& opts);
-std::string getLocalDB(const OptsStrAny& opts);
-bool isLocalDBCreate(const OptsStrAny& opts);
-std::string getLocalDBCreate(const OptsStrAny& opts);
-const char* getUnpackerConfigFile(const OptsStrAny& opts);
-const char* getUnpackerCalibFile(const OptsStrAny& opts);
-std::string getConfigFileName(const OptsStrAny& optsMap);
-
-bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile = "");
-OptsStrAny createOptionsFromConfigFile(const std::string& inFile);
 
 }
 #endif /*  !JPETOPTIONSTOOLS_H */
