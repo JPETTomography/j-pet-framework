@@ -39,7 +39,7 @@ class JPetStatistics;
 class JPetTaskIO: public JPetTask
 {
 public:
-  JPetTaskIO(const char* name = "");
+  JPetTaskIO(const char* name = "", const char* in_file_type="", const char* out_file_type="");
   virtual bool init(const JPetParamsInterface& inOptions) override;
   virtual bool run(const JPetDataInterface& inData) override;
   virtual bool terminate(JPetParamsInterface& outOptions) override;
@@ -62,6 +62,11 @@ protected:
   const JPetParamBank& getParamBank();
   JPetParamManager& getParamManager();
 
+  std::string fInFileType;
+  std::string fOutFileType;
+  std::string fOutFileFullPath;
+  bool fResetOutputPath;
+  
   int fEventNb = -1;
   JPetParams fParams;
   JPetWriter* fWriter = 0;

@@ -125,6 +125,9 @@ public:
     return boost::filesystem::path( fileWithPath ).filename().string();
   }
 
+  static std::string extractDataTypeFromFile(const std::string& filename);
+  static std::string replaceDataTypeInFile(const std::string& filename, const std::string& newType);
+  
   inline static std::string appendSlashToPathIfAbsent(const std::string& path)
   {
     if (!path.empty() && path.back() != '/') return path + '/';
