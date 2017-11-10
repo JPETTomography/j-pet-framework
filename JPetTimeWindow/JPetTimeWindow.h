@@ -65,7 +65,7 @@ public:
     fEventCount = 0;
   }
   
-  ClassDef(JPetTimeWindow, 3);
+  ClassDef(JPetTimeWindow, 4);
 
 private:
   TClonesArray fEvents;
