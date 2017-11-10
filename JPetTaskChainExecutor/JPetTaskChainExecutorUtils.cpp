@@ -23,16 +23,10 @@
 #include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
 ///@todo this function should be moved to some other class
-std::vector<JPetParams> JPetTaskChainExecutorUtils::generateParams(const OptionsPerFile& opts)
+JPetParams JPetTaskChainExecutorUtils::generateParams(const jpet_options_tools::OptsStrAny& opts)
 {
-  std::vector<JPetParams> params;
-  std::shared_ptr<JPetParamManager> paramManager2 = JPetTaskChainExecutorUtils::generateParamManager(opts.front());
-
-  params.reserve(opts.size());
-  for (const auto& opt : opts) {
-    params.push_back(JPetParams(opt, paramManager2));
-  }
-  return params;
+  std::shared_ptr<JPetParamManager> paramManager2 = JPetTaskChainExecutorUtils::generateParamManager(opts);
+  return JPetParams(opts, paramManager2);
 }
 
 ///@todo this function should be moved to some other class

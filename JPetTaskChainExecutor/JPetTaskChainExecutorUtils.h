@@ -27,10 +27,9 @@
 class JPetTaskChainExecutorUtils
 {
 public:
-  using OptionsPerFile = std::vector<jpet_options_tools::OptsStrAny>;
   /// process() method depends on the options can: 1.saves paramBank locally in ASCII format
   static bool process(const JPetParams& params);
-  static std::vector<JPetParams> generateParams(const OptionsPerFile& opts);
+  static JPetParams generateParams(const jpet_options_tools::OptsStrAny& opts);
   static std::shared_ptr<JPetParamManager> generateParamManager(const std::map<std::string, boost::any>& options);
   static JPetParams generateParams(const JPetParams& inParams, const JPetParams& controlParams);
 };
