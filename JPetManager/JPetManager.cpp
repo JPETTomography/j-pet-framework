@@ -25,6 +25,7 @@
 #include "../JPetCmdParser/JPetCmdParser.h"
 #include "../JPetScopeLoader/JPetScopeLoader.h"
 #include "../JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
+#include "../JPetParamBankHandlerTask/JPetParamBankHandlerTask.h"
 #include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
 
 #include <TThread.h>
@@ -113,6 +114,10 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
       return new JPetUnzipAndUnpackTask("UnpackerAndUnzipper");
     };
     fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task);
+    auto paramBankHandlerTask = []() {
+      return new JPetParamBankHandlerTask("ParamBank Filling");
+    };
+    fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), paramBankHandlerTask);
   };
 
   try {
