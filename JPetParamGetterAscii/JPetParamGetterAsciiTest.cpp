@@ -59,7 +59,6 @@ BOOST_AUTO_TEST_CASE( minimal_example_write )
   BOOST_REQUIRE(paramBank.getBarrelSlotsSize() == reparamBank.getBarrelSlotsSize());
   BOOST_REQUIRE(paramBank.getPMsSize() == reparamBank.getPMsSize());
   BOOST_REQUIRE(paramBank.getFEBsSize() == reparamBank.getFEBsSize());
-  BOOST_REQUIRE(paramBank.getPMCalibsSize() == reparamBank.getPMCalibsSize());
   BOOST_REQUIRE(paramBank.getLayersSize() == reparamBank.getLayersSize());
   BOOST_REQUIRE(paramBank.getFramesSize() == reparamBank.getFramesSize());
   BOOST_REQUIRE(paramBank.getTOMBChannelsSize() == reparamBank.getTOMBChannelsSize());
