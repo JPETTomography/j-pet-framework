@@ -40,24 +40,9 @@ JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorCh
   }
 }
 
-
-bool JPetTaskChainExecutor::preprocessing(const JPetParams& params)
-{
-  return JPetTaskChainExecutorUtils::process(params);
-}
-
 bool JPetTaskChainExecutor::process()
 {
   JPetTimer timer;
-  timer.startMeasurement();
-
-  if (!preprocessing(fParams)) {
-    ERROR("Error in preprocessing phase");
-    return false;
-  }
-
-  timer.stopMeasurement("Preprocessing");
-
   JPetDataInterface nullDataObject;
   JPetParams controlParams; /// Parameters used to control the input file type and event range.
 
@@ -67,12 +52,12 @@ bool JPetTaskChainExecutor::process()
     auto currentTask  =  *currentTaskIt;
     auto taskName = currentTask->getName();
 
-    auto & currParams = fParams;
+    auto& currParams = fParams;
     /// We generate input parameters based on the current parameter set and the controlParams produced by
     /// the previous task.
     currParams = JPetTaskChainExecutorUtils::generateParams(currParams, controlParams);
     jpet_options_tools::printOptionsToLog(currParams.getOptions(), std::string("Options for ") + taskName);
-    
+
     timer.startMeasurement();
     INFO(Form("Starting task: %s", taskName.c_str()));
     if (!currentTask->init(currParams)) {
