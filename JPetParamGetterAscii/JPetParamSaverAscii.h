@@ -36,7 +36,6 @@ class JPetParamSaverAscii
 
     void fillScintillators(boost::property_tree::ptree & runContents, const JPetParamBank & bank);
     void fillPMs(boost::property_tree::ptree & runContents, const JPetParamBank & bank);
-    void fillPMCalibs(boost::property_tree::ptree & runContents, const JPetParamBank & bank);
     void fillBarrelSlots(boost::property_tree::ptree & runContents, const JPetParamBank & bank);
     void fillLayers(boost::property_tree::ptree & runContents, const JPetParamBank & bank);
     void fillFrames(boost::property_tree::ptree & runContents, const JPetParamBank & bank);
@@ -46,7 +45,6 @@ class JPetParamSaverAscii
 
     boost::property_tree::ptree scintillatorToInfo(const JPetScin & scin);
     boost::property_tree::ptree PMToInfo(const JPetPM & pm);
-    boost::property_tree::ptree PMCalibToInfo(const JPetPMCalib & pmCalib);
     boost::property_tree::ptree barrelSlotToInfo(const JPetBarrelSlot & bs);
     boost::property_tree::ptree layerToInfo(const JPetLayer & layer);
     boost::property_tree::ptree frameToInfo(const JPetFrame & frame);

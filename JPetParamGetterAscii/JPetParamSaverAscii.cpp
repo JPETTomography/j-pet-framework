@@ -48,7 +48,6 @@ void JPetParamSaverAscii::addToTree(boost::property_tree::ptree& tree, const JPe
 
   fillScintillators(runContents, bank);
   fillPMs(runContents, bank);
-  fillPMCalibs(runContents, bank);
   fillBarrelSlots(runContents, bank);
   fillLayers(runContents, bank);
   fillFrames(runContents, bank);
@@ -108,33 +107,6 @@ boost::property_tree::ptree JPetParamSaverAscii::PMToInfo(const JPetPM& pm)
   return info;
 }
 
-
-void JPetParamSaverAscii::fillPMCalibs(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
-{
-  boost::property_tree::ptree infos;
-  for (auto pmCalib : bank.getPMCalibs()) {
-    infos.push_back(std::make_pair("", PMCalibToInfo(*pmCalib.second)));
-  }
-  runContents.add_child(objectsNames.at(ParamObjectType::kPMCalib), infos);
-}
-
-boost::property_tree::ptree JPetParamSaverAscii::PMCalibToInfo(const JPetPMCalib& pmCalib)
-{
-  boost::property_tree::ptree info;
-  info.put("id", pmCalib.getID());
-  info.put("name", pmCalib.GetNamePM());
-  info.put("opthv", pmCalib.GetOpthv());
-  info.put("c2e1", pmCalib.GetECalConst1());
-  info.put("c2e2", pmCalib.GetECalConst2());
-  info.put("gain_alpha", pmCalib.GetGainalpha());
-  info.put("gain_beta", pmCalib.GetGainbeta());
-  auto assignment = pmCalib.GetPMCalibAssignment();
-  info.put("assignment_id", assignment.id);
-  info.put("assignment_photomultiplier_id", assignment.photomultiplier_id);
-  return info;
-}
-
-
 void JPetParamSaverAscii::fillBarrelSlots(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
 {
   boost::property_tree::ptree infos;
@@ -158,7 +130,6 @@ boost::property_tree::ptree JPetParamSaverAscii::barrelSlotToInfo(const JPetBarr
   }
   return info;
 }
-
 
 void JPetParamSaverAscii::fillLayers(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
 {

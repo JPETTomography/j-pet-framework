@@ -137,7 +137,6 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetHit
   JPetLOR
   JPetPM
-  JPetPMCalib
   JPetScin
   JPetTRB
   JPetTOMBChannel

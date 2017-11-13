@@ -17,7 +17,6 @@ void checkContainersSize(const JPetParamBank& bank)
   JPetDBParamGetter::clearParamCache();
   BOOST_REQUIRE_EQUAL(bank.getScintillatorsSize(), 2);
   BOOST_REQUIRE_EQUAL(bank.getPMsSize(), 4);
-  BOOST_REQUIRE_EQUAL(bank.getPMCalibsSize(), 0);// It is not 0 for e.g. run_id = 2 - FOR run_id=2 NOT for run_id=1 YES. In test run_id is set to 1 so the size=0
   BOOST_REQUIRE_EQUAL(bank.getFEBsSize(), 1);
   BOOST_REQUIRE_EQUAL(bank.getTRBsSize(), 1);
   BOOST_REQUIRE_EQUAL(bank.getBarrelSlotsSize(), 2);
@@ -89,7 +88,6 @@ BOOST_AUTO_TEST_CASE(some_Test_that_had_no_name)
 
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getScintillatorsSize(), 0);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getPMsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getPMCalibsSize(), 0);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getFEBsSize(), 0);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getTRBsSize(), 0);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getBarrelSlotsSize(), 0);
@@ -130,7 +128,6 @@ BOOST_AUTO_TEST_CASE(getParamBankTestWithScopeSettings)
 
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getScintillatorsSize(), 2);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getPMsSize(), 4);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getPMCalibsSize(), 0);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getFEBsSize(), 0);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getTRBsSize(), 0);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getBarrelSlotsSize(), 2);

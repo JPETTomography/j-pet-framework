@@ -46,7 +46,6 @@ BOOST_AUTO_TEST_CASE(generateParamManagerForScopeCase)
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().isDummy(), false);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getScintillatorsSize(), 2);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getPMsSize(), 4);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getPMCalibsSize(), 0);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getFEBsSize(), 0);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getTRBsSize(), 0);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getBarrelSlotsSize(), 2);
