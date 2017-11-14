@@ -222,7 +222,7 @@ private:
   std::map<int, JPetLayer*> fLayers;
   std::map<int, JPetFrame*> fFrames;
   std::map<int, JPetTOMBChannel*> fTOMBChannels;
-  ClassDef (JPetParamBank, 3);
+  ClassDef (JPetParamBank, 4);
 
   template <typename T>
   void copyMapValues(std::map<int, T*>& target, const std::map<int, T*>& source)
