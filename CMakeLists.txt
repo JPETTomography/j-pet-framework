@@ -107,10 +107,33 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 # add Unpacker subdirectory
 add_subdirectory(Unpacker2/Unpacker2)
 
-file(GLOB HEADERS JPet*/*.h tools/JPet*/*.h)
-file(GLOB SOURCES JPet*/*.cpp tools/JPet*/*.cpp)
-file(GLOB UNIT_TEST_SOURCES JPet*/*Test.cpp)
-list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
+set(foldersToLookForSource "Options")
+list(APPEND foldersToLookForSource "ParamObjects")
+list(APPEND foldersToLookForSource "DataObjects")
+list(APPEND foldersToLookForSource "Tasks")
+list(APPEND foldersToLookForSource "Core")
+list(APPEND foldersToLookForSource "ParametersTools")
+
+foreach(dir ${foldersToLookForSource})
+  file(GLOB HEADERS ${dir}/JPet*/*.h)
+  file(GLOB INCLUDE ${dir}/JPet*)
+  #list(REMOVE_ITEM INCLUDE ${dir}/JPet*/*.h)
+  list(REMOVE_ITEM INCLUDE ${dir}/*.h)
+  include_directories(${INCLUDE})
+  MESSAGE(STATUS ${INCLUDE})
+  file(GLOB SOURCES ${dir}/JPet*/*.cpp)
+  file(GLOB UNIT_TEST_SOURCES ${dir}/JPet*/*Test.cpp)
+  list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
+endforeach() 
+
+
+
+get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+foreach(dir ${dirs})
+  message(STATUS "dir='${dir}'")
+endforeach()
+
+
 
 ##download test files and config files
 # the script shouldn't do anything if the data is present and correct
@@ -118,11 +141,6 @@ set(DOWNLOAD_DATA ${CMAKE_CURRENT_SOURCE_DIR}/download_data.sh ${CMAKE_CURRENT_S
 execute_process( COMMAND ${DOWNLOAD_DATA} )
 
 generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
-  # exclude following sources from ROOT dictionary
-  # everything else will have dictionary generated
-  # FIXME: For some reason these are excluded, it should be some better way
-  # than writing them down explicitly to tell which file needs dictionary
-  # and which not.
   INCLUDE
   JPetTimeWindow
   JPetSigCh
