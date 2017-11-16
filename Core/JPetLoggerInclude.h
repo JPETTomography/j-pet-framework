@@ -31,34 +31,34 @@
 
 // don't touch this part
 #if JPETLOGGER_ON == 1
-  #include "./JPetLogger/JPetLogger.h"
-  #define DATE_AND_TIME()   JPetLogger::dateAndTime()
-  #if JPET_LOGGER_LEVEL_INFO == 1
-    #define INFO(X)   JPetLogger::info(__func__, X)
-  #else
-    #define INFO(X)
-  #endif
-  #if JPET_LOGGER_LEVEL_WARNING == 1
-    #define WARNING(X) JPetLogger::warning(__func__, X)
-  #else
-    #define WARNING(X)
-  #endif
-  #if JPET_LOGGER_LEVEL_ERROR == 1
-    #define ERROR(X)   JPetLogger::error(__func__, X)
-  #else
-    #define ERROR(X)
-  #endif
-  #if JPET_LOGGER_LEVEL_DEBUG == 1
-    #define DEBUG(X)   JPetLogger::debug(__func__, X)
-  #else
-    #define DEBUG(X)
-  #endif
+#include "../JPetLogger/JPetLogger.h"
+#define DATE_AND_TIME()   JPetLogger::dateAndTime()
+#if JPET_LOGGER_LEVEL_INFO == 1
+#define INFO(X)   JPetLogger::info(__func__, X)
 #else
-  #define WARNING(X)
-  #define ERROR(X)
-  #define INFO(X)
-  #define DEBUG(X)
-  #define DATE_AND_TIME()
+#define INFO(X)
+#endif
+#if JPET_LOGGER_LEVEL_WARNING == 1
+#define WARNING(X) JPetLogger::warning(__func__, X)
+#else
+#define WARNING(X)
+#endif
+#if JPET_LOGGER_LEVEL_ERROR == 1
+#define ERROR(X)   JPetLogger::error(__func__, X)
+#else
+#define ERROR(X)
+#endif
+#if JPET_LOGGER_LEVEL_DEBUG == 1
+#define DEBUG(X)   JPetLogger::debug(__func__, X)
+#else
+#define DEBUG(X)
+#endif
+#else
+#define WARNING(X)
+#define ERROR(X)
+#define INFO(X)
+#define DEBUG(X)
+#define DATE_AND_TIME()
 #endif
 
-#endif 
+#endif
