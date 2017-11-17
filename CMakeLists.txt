@@ -245,9 +245,7 @@ get_directory_property(has_parent PARENT_DIRECTORY)
 if(has_parent)
   # export ROOT, Boost and pqxx includes to depending projects
   set(Framework_INCLUDE_DIRS
-    ${ROOT_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-    ${PQXX_INCLUDE_DIRS}
+    ${INCLUDE_DIRECTORIES}
     PARENT_SCOPE
     )
   set(Framework_DEFINITIONS
