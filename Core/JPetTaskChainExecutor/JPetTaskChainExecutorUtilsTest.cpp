@@ -24,34 +24,6 @@
 
 BOOST_AUTO_TEST_SUITE(JPetTaskChainExecutorUtilsTestSuite)
 
-BOOST_AUTO_TEST_CASE(generateParamManager)
-{
-  std::map<std::string, boost::any> emptyOpts;
-  auto paramMgr = JPetTaskChainExecutorUtils::generateParamManager(emptyOpts);
-  BOOST_REQUIRE(paramMgr);
-  BOOST_REQUIRE(!paramMgr->isNullObject());
-}
-
-BOOST_AUTO_TEST_CASE(generateParamManagerForScopeCase)
-{
-  std::map<std::string, boost::any> opts;
-  opts["inputFileType_std::string"] = std::string("scope");
-  opts["localDB_std::string"] = std::string("unitTestData/JPetScopeLoaderTest/test_params.json");
-  opts["runId_int"] = int(1);
-  std::shared_ptr<JPetParamManager> paramMgr = JPetTaskChainExecutorUtils::generateParamManager(opts);
-  BOOST_REQUIRE(paramMgr);
-  BOOST_REQUIRE(!paramMgr->isNullObject());
-  BOOST_REQUIRE(!paramMgr->getExpectMissing().empty());
-  paramMgr->fillParameterBank(1);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().isDummy(), false);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getScintillatorsSize(), 2);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getPMsSize(), 4);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getFEBsSize(), 0);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getTRBsSize(), 0);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getBarrelSlotsSize(), 2);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getTOMBChannelsSize(), 0);
-}
-
 BOOST_AUTO_TEST_CASE(generateParams)
 {
   std::map<std::string, boost::any> opts;

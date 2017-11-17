@@ -17,6 +17,26 @@
 
 #include <TFile.h>
 #include <boost/property_tree/xml_parser.hpp>
+#include "../JPetOptionsTools/JPetOptionsTools.h"
+#include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
+
+std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const std::map<std::string, boost::any>& options)
+{
+  using namespace jpet_options_tools;
+  if (isLocalDB(options)) {
+    std::set<ParamObjectType> expectMissing;
+    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kScope) {
+      expectMissing.insert(ParamObjectType::kTRB);
+      expectMissing.insert(ParamObjectType::kFEB);
+      expectMissing.insert(ParamObjectType::kFrame);
+      expectMissing.insert(ParamObjectType::kLayer);
+      expectMissing.insert(ParamObjectType::kTOMBChannel);
+    }
+    return std::make_shared<JPetParamManager>(new JPetParamGetterAscii(getLocalDB(options)), expectMissing);
+  } else {
+    return std::make_shared<JPetParamManager>();
+  }
+}
 
 JPetParamManager::~JPetParamManager()
 {
