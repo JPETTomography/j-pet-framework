@@ -21,6 +21,7 @@
 #include <string>
 #include <sstream>
 #include <set>
+#include <boost/any.hpp>
 #include "../JPetLoggerInclude.h"
 #include "../JPetParamBank/JPetParamBank.h"
 #include "../JPetDBParamGetter/JPetDBParamGetter.h"
@@ -40,6 +41,9 @@
 class JPetParamManager
 {
 public:
+  /// factory method to produce JPetParamManager instance based on provided options
+  static std::shared_ptr<JPetParamManager> generateParamManager(const std::map<std::string, boost::any>& options);
+
   JPetParamManager() : fParamGetter(new JPetDBParamGetter()), fBank(0), fIsNullObject(false) {}
   JPetParamManager(JPetParamGetter* paramGetter) : fParamGetter(paramGetter), fBank(0) , fIsNullObject(false) {}
   JPetParamManager(JPetParamGetter* paramGetter, std::set<ParamObjectType> expectMissing) : fParamGetter(paramGetter), fExpectMissing(expectMissing), fBank(0) , fIsNullObject(false) {}

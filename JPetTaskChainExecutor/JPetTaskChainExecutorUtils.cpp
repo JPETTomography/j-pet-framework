@@ -24,28 +24,10 @@
 ///@todo this function should be moved to some other class
 JPetParams JPetTaskChainExecutorUtils::generateParams(const jpet_options_tools::OptsStrAny& opts)
 {
-  std::shared_ptr<JPetParamManager> paramManager2 = JPetTaskChainExecutorUtils::generateParamManager(opts);
+  std::shared_ptr<JPetParamManager> paramManager2 = JPetParamManager::generateParamManager(opts);
   return JPetParams(opts, paramManager2);
 }
 
-///@todo this function should be moved to some other class
-std::shared_ptr<JPetParamManager> JPetTaskChainExecutorUtils::generateParamManager(const std::map<std::string, boost::any>& options)
-{
-  using namespace jpet_options_tools;
-  if (isLocalDB(options)) {
-    std::set<ParamObjectType> expectMissing;
-    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kScope) {
-      expectMissing.insert(ParamObjectType::kTRB);
-      expectMissing.insert(ParamObjectType::kFEB);
-      expectMissing.insert(ParamObjectType::kFrame);
-      expectMissing.insert(ParamObjectType::kLayer);
-      expectMissing.insert(ParamObjectType::kTOMBChannel);
-    }
-    return std::make_shared<JPetParamManager>(new JPetParamGetterAscii(getLocalDB(options)), expectMissing);
-  } else {
-    return std::make_shared<JPetParamManager>();
-  }
-}
 
 JPetParams JPetTaskChainExecutorUtils::generateParams(const JPetParams& inParams, const JPetParams& controlParams)
 {
