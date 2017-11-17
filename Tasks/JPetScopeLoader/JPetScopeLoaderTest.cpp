@@ -8,7 +8,6 @@
 #include "../JPetManager/JPetManager.h"
 #include "../JPetCommonTools/JPetCommonTools.h"
 
-//#include "JPetScopeLoaderFixtures.h"
 #include "../JPetScopeLoader/JPetScopeLoader.h"
 
 
@@ -66,23 +65,21 @@ BOOST_AUTO_TEST_CASE (isCorrectScopeFileName)
   BOOST_REQUIRE(reader.isCorrectScopeFileName("AA_004.txt"));
 }
 
-/// @todo fix ScopeLoader
-//BOOST_AUTO_TEST_CASE (generate_root_file)
-//{
-//const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/test_file_test_0.reco.sig.root";
-//boost::filesystem::remove(test_root_filename);
-//auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1";
-//auto args_char = JPetCommonTools::createArgs(commandLine);
-//auto argc = args_char.size();
-//auto argv = args_char.data();
+BOOST_AUTO_TEST_CASE (generate_root_file)
+{
+  const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/test_file_test_0.reco.sig.root";
+  boost::filesystem::remove(test_root_filename);
+  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1";
+  auto args_char = JPetCommonTools::createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
 
-//JPetManager& manager = JPetManager::getManager();
-//manager.parseCmdLine(argc, argv);
-//manager.run(argc, argv);
-////This should be uncommented after fixing suffix module
-////BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " does not exist.");
-//BOOST_REQUIRE_MESSAGE(boost::filesystem::exists("test.root"), "File " << "test.root" << " does not exist.");
-//}
+  JPetManager& manager = JPetManager::getManager();
+  manager.parseCmdLine(argc, argv);
+  manager.run(argc, argv);
+  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " does not exist.");
+  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists("test.root"), "File " << "test.root" << " does not exist.");
+}
 
 BOOST_AUTO_TEST_CASE (position_does_not_exist)
 {
@@ -118,27 +115,24 @@ BOOST_AUTO_TEST_CASE (folder_does_not_exist)
   BOOST_REQUIRE_MESSAGE(!boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " exists.");
 }
 
-/// @todo fix ScopeLoader
-//BOOST_AUTO_TEST_CASE (generate_root_file2)
-//{
-//std::cout <<"root file2" <<std::endl;
-//JPetDBParamGetter::clearParamCache();
+BOOST_AUTO_TEST_CASE (generate_root_file2)
+{
+  JPetDBParamGetter::clearParamCache();
 
-//const char* test_root_filename1 = "unitTestData/JPetScopeLoaderTest/test_file2_test_0.reco.sig.root";
-//const char* test_root_filename2 = "unitTestData/JPetScopeLoaderTest/test_file2_test_1.reco.sig.root";
-//boost::filesystem::remove(test_root_filename1);
-//boost::filesystem::remove(test_root_filename2);
-//auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file2.json -l unitTestData/JPetScopeLoaderTest/test_params2.json -i 1";
-//auto args_char = JPetCommonTools::createArgs(commandLine);
-//auto argc = args_char.size();
-//auto argv = args_char.data();
+  const char* test_root_filename1 = "unitTestData/JPetScopeLoaderTest/test_file2_test_0.reco.sig.root";
+  const char* test_root_filename2 = "unitTestData/JPetScopeLoaderTest/test_file2_test_1.reco.sig.root";
+  boost::filesystem::remove(test_root_filename1);
+  boost::filesystem::remove(test_root_filename2);
+  auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/test_file2.json -l unitTestData/JPetScopeLoaderTest/test_params2.json -i 1";
+  auto args_char = JPetCommonTools::createArgs(commandLine);
+  auto argc = args_char.size();
+  auto argv = args_char.data();
 
-//JPetManager& manager = JPetManager::getManager();
-//manager.run(argc, argv);
-//BOOST_REQUIRE_MESSAGE(boost::filesystem::exists("test.root"), "File " << "test.root" << " does not exist.");
-////This should be uncommented after fixing suffix module
-////BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename1), "File " << test_root_filename1 << " does not exist.");
-////BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename2), "File " << test_root_filename2 << " does not exist.");
-//}
+  JPetManager& manager = JPetManager::getManager();
+  manager.run(argc, argv);
+  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists("test.root"), "File " << "test.root" << " does not exist.");
+  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename1), "File " << test_root_filename1 << " does not exist.");
+  BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename2), "File " << test_root_filename2 << " does not exist.");
+}
 
 BOOST_AUTO_TEST_SUITE_END()
