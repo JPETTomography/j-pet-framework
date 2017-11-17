@@ -28,7 +28,7 @@ bool JPetParamBankHandlerTask::init(const JPetParamsInterface& inOptions)
   using namespace jpet_options_tools;
   auto options = params.getOptions();
 
-  /* 1. If the input file was hld or hldRoot, create ParamBank based on provided json file and run number
+  /* 1. If the input file was hld, hldRoot or Scope create ParamBank based on provided json file and run number
      2. If the input file was root, the ParamBank should always be read from the input file;
         even if the used provided the run number and localDB flags, they should be ignored as the TRef-s
         contained in the ROOT file would only make sense with the ParamBank from the same file
@@ -44,6 +44,9 @@ bool JPetParamBankHandlerTask::init(const JPetParamsInterface& inOptions)
     break;
   case FileTypeChecker::FileType::kRoot:
     return generateParamBankFromRootFile(params);
+    break;
+  case FileTypeChecker::FileType::kScope:
+    return generateParamBankFromConfig(params);
     break;
   default:
     std::map<FileTypeChecker::FileType, std::string> fileTypeToString = {
@@ -108,7 +111,7 @@ bool JPetParamBankHandlerTask::generateParamBankFromConfig(const JPetParams& par
   auto options = params.getOptions();
 
   if (getRunNumber(options) == -1 || !isLocalDB(options)) {
-    ERROR("LocalDB and run number are required for Hld or HldRoot files");
+    ERROR("LocalDB and run number are required for Hld, HldRoot or Scope files");
     return false;
   }
 
