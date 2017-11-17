@@ -39,7 +39,7 @@ class JPetStatistics;
 class JPetTaskIO: public JPetTask
 {
 public:
-  JPetTaskIO(const char* name = "", const char* in_file_type="", const char* out_file_type="");
+  JPetTaskIO(const char* name = "", const char* in_file_type = "", const char* out_file_type = "");
   virtual bool init(const JPetParamsInterface& inOptions) override;
   virtual bool run(const JPetDataInterface& inData) override;
   virtual bool terminate(JPetParamsInterface& outOptions) override;
@@ -55,8 +55,12 @@ public:
   void displayProgressBar(int currentEventNumber, int numberOfEvents) const;
 
 protected:
+  /// Method returns (isOK, inputFile, outputFileFullPath, isResetOutputPath) based on provided options.
+  /// if isOK is set to false, that means that an error has occured.
+  virtual std::tuple<bool, std::string, std::string, bool> setInputAndOutputFile(const jpet_options_tools::OptsStrAny options) const;
   virtual bool createInputObjects(const char* inputFilename);
   virtual bool createOutputObjects(const char* outputFilename);
+
   bool setUserLimits(const jpet_options_tools::OptsStrAny& opts, const long long kTotEventsFromReader, long long& first, long long& last) const;
 
   const JPetParamBank& getParamBank();
@@ -66,7 +70,7 @@ protected:
   std::string fOutFileType;
   std::string fOutFileFullPath;
   bool fResetOutputPath;
-  
+
   int fEventNb = -1;
   JPetParams fParams;
   JPetWriter* fWriter = 0;
