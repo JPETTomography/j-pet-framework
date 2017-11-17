@@ -56,11 +56,10 @@ using namespace boost::filesystem;
 using boost::property_tree::ptree;
 
 
-JPetScopeLoader::JPetScopeLoader(std::unique_ptr<JPetScopeTask> task): JPetTaskIO("ScopeTask")
+JPetScopeLoader::JPetScopeLoader(std::unique_ptr<JPetScopeTask> task): JPetTaskIO("ScopeTask", "", "reco.sig")
 {
   addSubTask(std::move(task));
   gSystem->Load("libTree");
-  /**/
 }
 
 JPetScopeLoader::~JPetScopeLoader()
@@ -92,7 +91,6 @@ bool JPetScopeLoader::createInputObjects(const char*)
   for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
     auto task = dynamic_cast<JPetScopeTask*>((*fSubTask).get());
     task->setInputFiles(inputScopeFiles);
-
 
     // create an object for storing histograms and counters during processing
     std::unique_ptr<JPetStatistics> tmp(new JPetStatistics());
@@ -170,6 +168,7 @@ bool JPetScopeLoader::init(const JPetParamsInterface& paramsI)
   using namespace jpet_options_tools;
   INFO( "Initialize Scope Loader Module." );
   JPetTaskIO::init(paramsI);
+  DEBUG( "After initialization  of the JPetTaskIO in Scope Loader init." );
   return true;
 }
 
@@ -215,4 +214,24 @@ bool JPetScopeLoader::createOutputObjects(const char* outputFilename)
     return false;
   }
   return true;
+}
+
+std::tuple<bool, std::string, std::string, bool> JPetScopeLoader::setInputAndOutputFile(const jpet_options_tools::OptsStrAny opts) const
+{
+  using namespace jpet_options_tools;
+  bool resetOutputPath = fResetOutputPath;
+  std::string inputFilename = getInputFile(opts);
+
+  /// this argument is not really used by the ScopeLoader  since inputFiles are generated
+  /// based on json content
+  inputFilename =  inputFilename + "." + fOutFileType + ".root";
+  auto outFileFullPath = inputFilename;
+  if (isOptionSet(opts, "outputPath_std::string")) {
+    std::string outputPath(getOutputPath(opts));
+    if (!outputPath.empty()) {
+      outFileFullPath = outputPath + JPetCommonTools::extractFileNameFromFullPath(inputFilename);
+      resetOutputPath = true;
+    }
+  }
+  return std::make_tuple(true, inputFilename, outFileFullPath, resetOutputPath);
 }
