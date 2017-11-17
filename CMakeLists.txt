@@ -107,18 +107,19 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 # add Unpacker subdirectory
 add_subdirectory(Unpacker2/Unpacker2)
 
-set(foldersToLookForSource "Options")
-list(APPEND foldersToLookForSource "ParamObjects")
-list(APPEND foldersToLookForSource "DataObjects")
-list(APPEND foldersToLookForSource "Tasks")
-list(APPEND foldersToLookForSource "Core")
-list(APPEND foldersToLookForSource "ParametersTools")
+set(FOLDERS_WITH_SOURCE
+  Options
+  ParamObjects
+  DataObjects
+  Tasks
+  Core
+  ParametersTools
+  )
 
-foreach(dir ${foldersToLookForSource})
+foreach(dir ${FOLDERS_WITH_SOURCE})
   file(GLOB HEADERS ${dir}/JPet*/*.h)
   file(GLOB INCLUDE ${dir}/JPet*)
-  #list(REMOVE_ITEM INCLUDE ${dir}/JPet*/*.h)
-  list(REMOVE_ITEM INCLUDE ${dir}/*.h)
+  list(REMOVE_ITEM INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/JPetLoggerInclude.h) #remove header file from include
   include_directories(${INCLUDE})
   MESSAGE(STATUS ${INCLUDE})
   file(GLOB SOURCES ${dir}/JPet*/*.cpp)
