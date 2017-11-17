@@ -19,7 +19,7 @@
 #include <memory>
 #include <chrono>
 
-#include "JPetTaskChainExecutorUtils.h"
+#include "../JPetParamsFactory/JPetParamsFactory.h"
 #include "../JPetLoggerInclude.h"
 #include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
@@ -28,7 +28,7 @@ JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorCh
   ftaskGeneratorChain(taskGeneratorChain)
 {
   /// ParamManager is generated and added to fParams
-  fParams = JPetTaskChainExecutorUtils::generateParams(opts);
+  fParams = jpet_params_factory::generateParams(opts);
   assert(fParams.getParamManager());
   if (taskGeneratorChain) {
     for (auto taskGenerator : *ftaskGeneratorChain) {
@@ -61,7 +61,7 @@ bool JPetTaskChainExecutor::process()
     auto & currParams = fParams;
     /// We generate input parameters based on the current parameter set and the controlParams produced by
     /// the previous task.
-    currParams = JPetTaskChainExecutorUtils::generateParams(currParams, controlParams);
+    currParams = jpet_params_factory::generateParams(currParams, controlParams);
     jpet_options_tools::printOptionsToLog(currParams.getOptions(), std::string("Options for ") + taskName);
     
     timer.startMeasurement();
