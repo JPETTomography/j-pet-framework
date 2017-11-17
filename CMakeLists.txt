@@ -59,37 +59,6 @@ add_definitions(${Boost_DEFINITIONS})
 find_package(FFTW REQUIRED)
 include_directories(${FFTW_INCLUDE_DIRS})
 
-get_directory_property(has_parent PARENT_DIRECTORY)
-if(has_parent)
-  # export ROOT, Boost and pqxx includes to depending projects
-  set(Framework_INCLUDE_DIRS
-    ${ROOT_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-    ${PQXX_INCLUDE_DIRS}
-    PARENT_SCOPE
-    )
-  set(Framework_DEFINITIONS
-    ${ROOT_DEFINITIONS}
-    ${Boost_DEFINITIONS}
-    ${PQXX_DEFINITIONS}
-    PARENT_SCOPE
-    )
-  # ensure that projects use C++11 too
-  if(NOT MSVC)
-    set(Framework_DEFINITIONS
-      -std=c++11
-      ${Framework_DEFINITIONS}
-      PARENT_SCOPE
-      )
-  endif()
-  # export ROOT cint needed to generate dictionaries from projects
-  set(ROOT_rootcint_CMD   ${ROOT_rootcint_CMD}   PARENT_SCOPE)
-  set(rootcint_cmd        ${ROOT_rootcint_CMD}   PARENT_SCOPE)
-  set(ROOTCINT_EXECUTABLE ${ROOTCINT_EXECUTABLE} PARENT_SCOPE)
-  # export ROOT rpath needed for OS X
-  set(ROOT_LIBRARY_DIR    ${ROOT_LIBRARY_DIR}    PARENT_SCOPE)
-endif()
-
 # enable rpath on OS X and point it to ROOT
 if(APPLE)
   set(CMAKE_MACOSX_RPATH ON)
@@ -270,3 +239,35 @@ if(DOXYGEN_FOUND)
     COMMENT "Generating API documentation with Doxygen" VERBATIM
     )
 endif(DOXYGEN_FOUND)
+
+
+get_directory_property(has_parent PARENT_DIRECTORY)
+if(has_parent)
+  # export ROOT, Boost and pqxx includes to depending projects
+  set(Framework_INCLUDE_DIRS
+    ${ROOT_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
+    ${PQXX_INCLUDE_DIRS}
+    PARENT_SCOPE
+    )
+  set(Framework_DEFINITIONS
+    ${ROOT_DEFINITIONS}
+    ${Boost_DEFINITIONS}
+    ${PQXX_DEFINITIONS}
+    PARENT_SCOPE
+    )
+  # ensure that projects use C++11 too
+  if(NOT MSVC)
+    set(Framework_DEFINITIONS
+      -std=c++11
+      ${Framework_DEFINITIONS}
+      PARENT_SCOPE
+      )
+  endif()
+  # export ROOT cint needed to generate dictionaries from projects
+  set(ROOT_rootcint_CMD   ${ROOT_rootcint_CMD}   PARENT_SCOPE)
+  set(rootcint_cmd        ${ROOT_rootcint_CMD}   PARENT_SCOPE)
+  set(ROOTCINT_EXECUTABLE ${ROOTCINT_EXECUTABLE} PARENT_SCOPE)
+  # export ROOT rpath needed for OS X
+  set(ROOT_LIBRARY_DIR    ${ROOT_LIBRARY_DIR}    PARENT_SCOPE)
+endif()
