@@ -13,7 +13,7 @@
  *  @file JPetTask.cpp
  */
 
-#include "../JPetParamManager/JPetParamManager.h"
+#include "./JPetParamManager/JPetParamManager.h"
 #include "./JPetTask.h"
 
 

@@ -15,7 +15,7 @@
 
 #include "./JPetParamGetterAscii.h"
 #include "./JPetParamAsciiConstants.h"
-#include "../JPetParamBank/JPetParamBank.h"
+#include "./JPetParamBank/JPetParamBank.h"
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/property_tree/json_parser.hpp>

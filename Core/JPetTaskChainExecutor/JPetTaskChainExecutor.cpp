@@ -20,8 +20,8 @@
 #include <chrono>
 
 #include "JPetTaskChainExecutorUtils.h"
-#include "../JPetLoggerInclude.h"
-#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetLoggerInclude.h"
+#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
 JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, const jpet_options_tools::OptsStrAny& opts):
   fInputSeqId(processedFileId),

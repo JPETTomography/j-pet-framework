@@ -16,9 +16,9 @@
 #ifndef JPET_SCIN_FACTORY_H
 #define JPET_SCIN_FACTORY_H
 
-#include "../JPetParamGetter/JPetParamGetter.h"
+#include "./JPetParamGetter/JPetParamGetter.h"
 #include "JPetScin.h"
-#include "../JPetBarrelSlot/JPetBarrelSlotFactory.h"
+#include "./JPetBarrelSlot/JPetBarrelSlotFactory.h"
 
 #include <map>
 

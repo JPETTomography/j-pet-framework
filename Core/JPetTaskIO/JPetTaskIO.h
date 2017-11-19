@@ -15,13 +15,13 @@
 
 #ifndef JPETTASKIO_H
 #define JPETTASKIO_H
-#include "../JPetTaskInterface/JPetTaskInterface.h"
-#include "../JPetParamManager/JPetParamManager.h"
-#include "../JPetStatistics/JPetStatistics.h"
-#include "../JPetTask/JPetTask.h"
-#include "../JPetProgressBarManager/JPetProgressBarManager.h"
+#include "./JPetTaskInterface/JPetTaskInterface.h"
+#include "./JPetParamManager/JPetParamManager.h"
+#include "./JPetStatistics/JPetStatistics.h"
+#include "./JPetTask/JPetTask.h"
+#include "./JPetProgressBarManager/JPetProgressBarManager.h"
 
-#include "../JPetParams/JPetParams.h"
+#include "./JPetParams/JPetParams.h"
 
 #include <memory>
 #include <string>

@@ -19,7 +19,7 @@
 #include <memory>
 #include <functional>
 #include <list>
-#include "../JPetHit/JPetHit.h"
+#include "./JPetHit/JPetHit.h"
 #include "BarrelExtensions.h"
 #include "PetDict.h"
 struct SynchroStrip {

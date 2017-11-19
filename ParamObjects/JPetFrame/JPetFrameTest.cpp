@@ -2,8 +2,8 @@
 #define BOOST_TEST_MODULE JPetFrameTest
 #include <boost/test/unit_test.hpp>
 
-#include "../JPetFrame/JPetFrame.h"
-#include "../JPetFrame/JPetFrameFactory.h"
+#include "./JPetFrame/JPetFrame.h"
+#include "./JPetFrame/JPetFrameFactory.h"
 
 // JPetFrame();
 // JPetFrame(int id, bool isActive, std::string status, std::string description, int version, int creator_id);

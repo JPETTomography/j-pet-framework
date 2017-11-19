@@ -14,7 +14,7 @@
  */
 
 #include "./JPetOptionsGeneratorTools.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
 using namespace jpet_options_tools;
 
 namespace jpet_options_generator_tools

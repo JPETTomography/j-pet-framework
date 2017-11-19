@@ -2,7 +2,7 @@
 #define BOOST_TEST_MODULE JPetTreeHeaderTest
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
-#include "../JPetTreeHeader/JPetTreeHeader.h"
+#include "./JPetTreeHeader/JPetTreeHeader.h"
 
 
 BOOST_AUTO_TEST_SUITE(JPetTreeHeaderSuite)

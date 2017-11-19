@@ -15,11 +15,11 @@
 
 #include <cassert>
 #include "./JPetTaskChainExecutorUtils.h"
-#include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
-#include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
-#include "../JPetOptionsTools/JPetOptionsTools.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetParamGetterAscii/JPetParamGetterAscii.h"
+#include "./JPetParamGetterAscii/JPetParamSaverAscii.h"
+#include "./JPetOptionsTools/JPetOptionsTools.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
 ///@todo this function should be moved to some other class
 JPetParams JPetTaskChainExecutorUtils::generateParams(const jpet_options_tools::OptsStrAny& opts)

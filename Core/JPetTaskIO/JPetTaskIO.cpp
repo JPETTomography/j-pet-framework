@@ -16,16 +16,16 @@
 #include "JPetTaskIO.h"
 #include <memory>
 #include <cassert>
-#include "../JPetReader/JPetReader.h"
-#include "../JPetTreeHeader/JPetTreeHeader.h"
-#include "../JPetTask/JPetTask.h"
-#include "../JPetUserTask/JPetUserTask.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetData/JPetData.h"
-#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetReader/JPetReader.h"
+#include "./JPetTreeHeader/JPetTreeHeader.h"
+#include "./JPetTask/JPetTask.h"
+#include "./JPetUserTask/JPetUserTask.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetData/JPetData.h"
+#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
-#include "../JPetLoggerInclude.h"
-#include "../version.h"
+#include "./JPetLoggerInclude.h"
+#include "./version.h"
 
 using namespace jpet_options_tools;
 

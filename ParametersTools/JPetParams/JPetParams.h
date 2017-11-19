@@ -21,9 +21,9 @@
 #include <memory>
 #include <boost/any.hpp>
 
-#include "../JPetParamManager/JPetParamManager.h"
-#include "../JPetParamsInterface/JPetParamsInterface.h"
-#include "../JPetOptionsTools/JPetOptionsTools.h"
+#include "./JPetParamManager/JPetParamManager.h"
+#include "./JPetParamsInterface/JPetParamsInterface.h"
+#include "./JPetOptionsTools/JPetOptionsTools.h"
 
 class JPetParams: public JPetParamsInterface
 {

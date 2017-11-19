@@ -2,11 +2,11 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetDBParamGetterTest
 #include <boost/test/unit_test.hpp>
-//#include "../DBHandler/HeaderFiles/DBHandler.h"
-//#include "../JPetDBParamGetter/JPetDBParamGetter.h"
-//#include "../JPetParamManager/JPetParamManager.h"
+//#include "./DBHandler/HeaderFiles/DBHandler.h"
+//#include "./JPetDBParamGetter/JPetDBParamGetter.h"
+//#include "./JPetParamManager/JPetParamManager.h"
 
-//const char* gDefaultConfigFile = "../DBConfig/configDB.json";
+//const char* gDefaultConfigFile = "./DBConfig/configDB.json";
 
 BOOST_AUTO_TEST_SUITE(DBParamGetterTS)
 

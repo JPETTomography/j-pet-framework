@@ -1,8 +1,8 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetGeomMappingTest
 #include "./JPetGeomMapping.h"
-#include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
-#include "../JPetParamManager/JPetParamManager.h"
+#include "./JPetParamGetterAscii/JPetParamGetterAscii.h"
+#include "./JPetParamManager/JPetParamManager.h"
 #include <boost/test/unit_test.hpp>
 
 const std::string dataDir = "unitTestData/JPetGeomMappingTest/";

@@ -16,9 +16,9 @@
 #ifndef _JPETHIT_H_
 #define _JPETHIT_H_
 
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetScin/JPetScin.h"
-#include "../JPetPhysSignal/JPetPhysSignal.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetScin/JPetScin.h"
+#include "./JPetPhysSignal/JPetPhysSignal.h"
 
 #include "TObject.h"
 #include "TVector3.h"

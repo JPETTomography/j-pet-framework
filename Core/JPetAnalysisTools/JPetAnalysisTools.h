@@ -17,7 +17,7 @@
 #define JPETANALYSISTOOLS_H
 
 #include <vector>
-#include "../JPetHit/JPetHit.h"
+#include "./JPetHit/JPetHit.h"
 
 /**
  * @brief Class with the set of methods that can be useful for different analyses.

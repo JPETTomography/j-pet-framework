@@ -16,8 +16,8 @@
 #ifndef JPETRECOSIGNAL_H
 #define JPETRECOSIGNAL_H
 
-#include "../JPetBaseSignal/JPetBaseSignal.h"
-#include "../JPetRawSignal/JPetRawSignal.h"
+#include "./JPetBaseSignal/JPetBaseSignal.h"
+#include "./JPetRawSignal/JPetRawSignal.h"
 
 #include <vector>
 

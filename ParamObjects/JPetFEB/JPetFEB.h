@@ -18,8 +18,8 @@
 
 #include "TNamed.h"
 #include <TRef.h>
-#include "../JPetTRB/JPetTRB.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetTRB/JPetTRB.h"
+#include "./JPetLoggerInclude.h"
 
 /**
  * @brief Parametric class representing database information on parameters of a front-end board (FEB).

@@ -16,8 +16,8 @@
 #ifndef JPETTASKCHAINEXECUTORUTILS_H
 #define JPETTASKCHAINEXECUTORUTILS_H
 
-#include "../JPetParamManager/JPetParamManager.h"
-#include "../JPetParams/JPetParams.h"
+#include "./JPetParamManager/JPetParamManager.h"
+#include "./JPetParams/JPetParams.h"
 
 /**
  * JPetTaskChainExecutorUtils contains methods that can be used by JPetTaskExecutor.

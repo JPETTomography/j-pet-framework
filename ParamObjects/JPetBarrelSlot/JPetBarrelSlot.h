@@ -17,8 +17,8 @@
 #define	_JPETBARRELSLOT_H_
 
 #include <TRef.h>
-#include "../JPetLayer/JPetLayer.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetLayer/JPetLayer.h"
+#include "./JPetLoggerInclude.h"
 #include "TNamed.h"
 
 /**

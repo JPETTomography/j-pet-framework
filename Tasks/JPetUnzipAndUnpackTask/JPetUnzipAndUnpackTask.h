@@ -17,7 +17,7 @@
 #define JPETUNZIPANDUNPACKTASK_H 
 
 #include <map>
-#include "../JPetTask/JPetTask.h"
+#include "./JPetTask/JPetTask.h"
 #include <boost/any.hpp>
 
 class JPetUnzipAndUnpackTask: public JPetTask {

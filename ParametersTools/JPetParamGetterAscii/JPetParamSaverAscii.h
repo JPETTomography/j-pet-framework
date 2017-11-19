@@ -19,7 +19,7 @@
 #include<map>
 #include <string>
 #include <boost/property_tree/ptree.hpp>
-#include "../JPetParamBank/JPetParamBank.h"
+#include "./JPetParamBank/JPetParamBank.h"
 
 class JPetParamSaverAscii
 {

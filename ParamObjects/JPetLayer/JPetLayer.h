@@ -17,8 +17,8 @@
 #define JPET_LAYER_H
 
 #include <TRef.h>
-#include "../JPetFrame/JPetFrame.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetFrame/JPetFrame.h"
+#include "./JPetLoggerInclude.h"
 #include "TNamed.h"
 #include <cassert>
 

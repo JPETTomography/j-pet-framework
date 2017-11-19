@@ -19,7 +19,7 @@
 #include <map>
 #include <string>
 #include <boost/property_tree/ptree.hpp>
-#include "../JPetParamGetter/JPetParamGetter.h"
+#include "./JPetParamGetter/JPetParamGetter.h"
 
 class JPetParamGetterAscii : public JPetParamGetter
 {

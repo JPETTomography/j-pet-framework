@@ -16,11 +16,11 @@
  */
 
 #include "JPetScopeTask.h"
-#include "../JPetParamManager/JPetParamManager.h"
+#include "./JPetParamManager/JPetParamManager.h"
 
 #include <iostream>
 #include "JPetScopeTaskUtils.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
 
 #include <boost/filesystem.hpp>
 using namespace boost::filesystem;

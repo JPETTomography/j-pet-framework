@@ -15,7 +15,7 @@
 
 #ifndef JPETDATA_H
 #define JPETDATA_H
-#include "../JPetDataInterface/JPetDataInterface.h"
+#include "./JPetDataInterface/JPetDataInterface.h"
 #include <TObject.h>
 
 class JPetData: public JPetDataInterface

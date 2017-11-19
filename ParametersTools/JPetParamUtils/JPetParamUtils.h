@@ -17,15 +17,15 @@
 #ifndef JPETPARAMUTILS_H
 #define JPETPARAMUTILS_H
 
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetPM/JPetPM.h"
-#include "../JPetLayer/JPetLayer.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetPM/JPetPM.h"
+#include "./JPetLayer/JPetLayer.h"
+#include "./JPetLoggerInclude.h"
 #include "TMath.h"
 
 class JPetParamUtils
 {
- public:
+public:
   /**
      @brief Function for calculation distance between two barrel slots in XY plane (perpendicular to strips) based on JPetBarrelSlot objects
    **/
@@ -38,9 +38,9 @@ class JPetParamUtils
   **/
   static double distanceXY(const JPetPM& PM1, const JPetPM& PM2);
 
- private:
-  JPetParamUtils(const JPetParamUtils&){}
-  void operator=(const JPetParamUtils&){}
+private:
+  JPetParamUtils(const JPetParamUtils&) {}
+  void operator=(const JPetParamUtils&) {}
 };
 
 #endif /*  !JPETPARAMUTILS_H */

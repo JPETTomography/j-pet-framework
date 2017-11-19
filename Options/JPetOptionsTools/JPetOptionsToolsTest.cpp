@@ -7,7 +7,7 @@
 #include <boost/any.hpp>
 #include <string>
 #include <typeinfo>
-#include "../JPetOptionsGenerator/JPetOptionsTypeHandler.h"
+#include "./JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 using boost::any_cast;
 const std::string dataDir = "unitTestData/JPetOptionsToolsTest/";
 using namespace std;
