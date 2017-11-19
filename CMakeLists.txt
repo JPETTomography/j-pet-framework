@@ -34,16 +34,14 @@ foreach(mode QUIET REQUIRED)
   # root-config version from cmake/fallback/
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/fallback)
 endforeach()
-include_directories(${ROOT_INCLUDE_DIRS})
-add_definitions(${ROOT_DEFINITIONS})
+
 message(STATUS "ROOT version: ${ROOT_VERSION}")
+
 if(ROOT_FOUND AND NOT ROOT_VERSION VERSION_LESS "6.0")
   message(FATAL_ERROR "ROOT 6.0 is not compatible")
 endif()
 
 find_package(PQXX REQUIRED)
-include_directories(${PQXX_INCLUDE_DIRS})
-add_definitions(${PQXX_DEFINITIONS})
 
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
@@ -53,11 +51,9 @@ find_package(Boost 1.50.0 REQUIRED COMPONENTS
   unit_test_framework
   )
 
-include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+add_definitions(${ROOT_DEFINITIONS})
 add_definitions(${Boost_DEFINITIONS})
-
-find_package(FFTW REQUIRED)
-include_directories(${FFTW_INCLUDE_DIRS})
+add_definitions(${PQXX_DEFINITIONS})
 
 # enable rpath on OS X and point it to ROOT
 if(APPLE)
@@ -86,24 +82,19 @@ set(FOLDERS_WITH_SOURCE
   )
 
 foreach(dir ${FOLDERS_WITH_SOURCE})
-  file(GLOB HEADERS ${dir}/JPet*/*.h)
-  file(GLOB INCLUDE ${dir}/JPet*)
-  list(REMOVE_ITEM INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/JPetLoggerInclude.h) #remove header file from include
-  include_directories(${INCLUDE})
-  MESSAGE(STATUS ${INCLUDE})
-  file(GLOB SOURCES ${dir}/JPet*/*.cpp)
-  file(GLOB UNIT_TEST_SOURCES ${dir}/JPet*/*Test.cpp)
-  list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
-endforeach() 
-
-
-
-get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-foreach(dir ${dirs})
-  message(STATUS "dir='${dir}'")
+  file(GLOB HEADERS_TMP ${dir}/JPet*/*.h)
+  file(GLOB SOURCES_TMP ${dir}/JPet*/*.cpp)
+  file(GLOB UNIT_TEST_SOURCES_TMP ${dir}/JPet*/*Test.cpp)
+  file(GLOB FOLDERS_TMP ${dir})
+  list(REMOVE_ITEM FOLDERS_TMP ${HEADERS_TMP} ${SOURCES_TMP})
+  list(REMOVE_ITEM SOURCES_TMP ${UNIT_TEST_SOURCES_TMP})
+  list(APPEND HEADERS ${HEADERS_TMP})
+  list(APPEND SOURCES ${SOURCES_TMP})
+  list(APPEND UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES_TMP})
+  list(APPEND FOLDERS ${FOLDERS_TMP}) # path to include for dictionaries
 endforeach()
 
-
+list(APPEND FOLDERS ${CMAKE_CURRENT_SOURCE_DIR}) # for include to dictionaries for unpacker2
 
 ##download test files and config files
 # the script shouldn't do anything if the data is present and correct
@@ -136,8 +127,29 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetUser
   JPetUnpacker
   JPetEvent
+  INCLUDE_DIRS ${FOLDERS} #pass variable with include dirs for generating dictionaries
   )
+
 add_library(JPetFramework SHARED ${SOURCES} ${HEADERS} ${DICTIONARIES})
+
+foreach(dir ${FOLDERS_WITH_SOURCE})
+  target_include_directories(JPetFramework PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${dir}> #add each folder of FOLDERS_WITH_SOURCE variable to include
+    $<INSTALL_INTERFACE:${dir}>
+    )
+endforeach()
+
+target_include_directories(JPetFramework PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> #add main source folder for Unpaker2
+)
+
+target_include_directories(JPetFramework SYSTEM PUBLIC
+    $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}>
+)
+
+target_include_directories(JPetFramework SYSTEM PUBLIC
+    $<BUILD_INTERFACE:${ROOT_INCLUDE_DIRS}>
+)
 
 # unit tests
 set(TESTS_DIR ${CMAKE_CURRENT_BINARY_DIR}/tests)
@@ -146,7 +158,7 @@ file(COPY unitTestUtils/run_tests.pl DESTINATION ${TESTS_DIR})
 file(COPY unitTestUtils/parseXML.py DESTINATION ${TESTS_DIR})
 foreach(test_source ${UNIT_TEST_SOURCES})
   get_filename_component(test ${test_source} NAME_WE)
-  generate_root_dictionaries(test_dictionaries SOURCES ${test_source})
+  generate_root_dictionaries(test_dictionaries SOURCES ${test_source} INCLUDE_DIRS ${FOLDERS})
   list(APPEND test_binaries ${test}.x)
   add_executable(${test}.x EXCLUDE_FROM_ALL ${test_source}
     ${test_dictionaries}
@@ -155,9 +167,7 @@ foreach(test_source ${UNIT_TEST_SOURCES})
   target_link_libraries(${test}.x
     JPetFramework
     ${Boost_LIBRARIES}
-    ${FFTW_LIBRARIES}
     )
-
 endforeach()
 
 add_custom_target(tests DEPENDS ${test_binaries} ${TESTS_DIR}/unitTestData)
@@ -171,9 +181,18 @@ add_custom_command(OUTPUT ${TESTS_DIR}/unitTestData
 file(GLOB DBHANDLER_HEADERS DBHandler/HeaderFiles/*.h)
 file(GLOB DBHANDLER_SOURCES DBHandler/SourceFiles/*.cpp)
 add_library(dbhandler SHARED ${DBHANDLER_HEADERS} ${DBHANDLER_SOURCES})
+
+target_include_directories(dbhandler SYSTEM PUBLIC
+    $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}>
+)
+
+target_include_directories(dbhandler SYSTEM PUBLIC
+    $<BUILD_INTERFACE:${PQXX_INCLUDE_DIRS}>
+)
+
 target_link_libraries(dbhandler
   ${PQXX_LIBRARIES}
-  )
+)
 
 # copy the DB config file to an expected location
 set(db_config_dir ${CMAKE_CURRENT_BINARY_DIR}/DBConfig)
@@ -241,11 +260,16 @@ if(DOXYGEN_FOUND)
 endif(DOXYGEN_FOUND)
 
 
+get_target_property(framework_include JPetFramework INCLUDE_DIRECTORIES)
+get_target_property(dbhandler_include dbhandler INCLUDE_DIRECTORIES)
+list(REMOVE_ITEM framework_include ${dbhandler_include})
+list(APPEND framework_include ${dbhandler_include})
+
 get_directory_property(has_parent PARENT_DIRECTORY)
 if(has_parent)
   # export ROOT, Boost and pqxx includes to depending projects
   set(Framework_INCLUDE_DIRS
-    ${INCLUDE_DIRECTORIES}
+    ${framework_include}
     PARENT_SCOPE
     )
   set(Framework_DEFINITIONS
