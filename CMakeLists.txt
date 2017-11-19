@@ -104,8 +104,8 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 # add Unpacker subdirectory
 add_subdirectory(Unpacker2/Unpacker2)
 
-file(GLOB HEADERS JPet*/*.h tools/JPet*/*.h)
-file(GLOB SOURCES JPet*/*.cpp tools/JPet*/*.cpp)
+file(GLOB HEADERS JPet*/*.h)
+file(GLOB SOURCES JPet*/*.cpp)
 file(GLOB UNIT_TEST_SOURCES JPet*/*Test.cpp)
 list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
 
