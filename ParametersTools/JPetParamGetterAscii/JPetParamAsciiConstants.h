@@ -10,7 +10,7 @@
 
 #include <map>
 
-#include "../JPetParamGetter/JPetParamConstants.h"
+#include "./JPetParamGetter/JPetParamConstants.h"
 
 const std::map<ParamObjectType, std::string> objectsNames{
   {ParamObjectType::kScintillator, "scintillators"},

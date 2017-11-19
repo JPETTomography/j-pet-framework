@@ -17,7 +17,7 @@
 #ifndef _JPETLOR_H_
 #define _JPETLOR_H_
 
-#include "../JPetHit/JPetHit.h"
+#include "./JPetHit/JPetHit.h"
 
 #include <cstddef>
 #include <utility>

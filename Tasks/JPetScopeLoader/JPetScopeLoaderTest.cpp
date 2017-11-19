@@ -5,10 +5,11 @@
 #include <functional>
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
-#include "../JPetManager/JPetManager.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
+#include "./JPetManager/JPetManager.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
 
-#include "../JPetScopeLoader/JPetScopeLoader.h"
+//#include "JPetScopeLoaderFixtures.h"
+#include "./JPetScopeLoader/JPetScopeLoader.h"
 
 
 BOOST_AUTO_TEST_SUITE (JPetScopeLoaderTestSuite)

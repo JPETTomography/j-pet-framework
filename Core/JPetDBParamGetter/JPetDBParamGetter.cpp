@@ -16,7 +16,7 @@
 #include "./JPetDBParamGetter.h"
 #include <boost/lexical_cast.hpp>
 #include <TThread.h>
-#include "../DBHandler/HeaderFiles/DBHandler.h"
+#include "./DBHandler/HeaderFiles/DBHandler.h"
 #include <cstdint>
 
 const std::map<ParamObjectType, std::map<std::string, std::string>> fieldTranslations {

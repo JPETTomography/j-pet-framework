@@ -2,9 +2,9 @@
 #define BOOST_TEST_MODULE JPetEventTest
 #include <boost/test/unit_test.hpp>
 
-#include "../JPetWriter/JPetWriter.h"
-#include "../JPetEvent/JPetEvent.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetWriter/JPetWriter.h"
+#include "./JPetEvent/JPetEvent.h"
+#include "./JPetLoggerInclude.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )

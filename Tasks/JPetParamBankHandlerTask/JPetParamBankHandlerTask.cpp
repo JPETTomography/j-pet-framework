@@ -15,7 +15,7 @@
 
 
 #include "JPetParamBankHandlerTask.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
 
 JPetParamBankHandlerTask::JPetParamBankHandlerTask(const char* name) : JPetTask(name)
 {

@@ -19,9 +19,9 @@
 #include <map>
 #include <vector>
 #include <string>
-#include "../JPetGeomMappingInterface/JPetGeomMappingInterface.h"
-#include "../JPetHit/JPetHit.h"
-#include "../JPetUserTask/JPetUserTask.h"
+#include "./JPetGeomMappingInterface/JPetGeomMappingInterface.h"
+#include "./JPetHit/JPetHit.h"
+#include "./JPetUserTask/JPetUserTask.h"
 #include "PetDict.h"
 const std::string Layer(const size_t layer);
 const std::string LayerSlot(const size_t layer, const size_t slot);

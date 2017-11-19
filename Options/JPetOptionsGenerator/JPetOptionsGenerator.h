@@ -25,7 +25,7 @@ class JPetOptionsGenerator;
 #include "boost/program_options.hpp" // Library parsing command line arguments
 #include <boost/any.hpp>
 
-#include "../JPetOptionsTools/JPetOptionsTools.h"
+#include "./JPetOptionsTools/JPetOptionsTools.h"
 
 
 namespace po = boost::program_options;

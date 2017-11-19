@@ -17,7 +17,7 @@
 #define BOOST_TEST_MODULE JPetOptionsTypeHandlerTest
 #include <boost/test/unit_test.hpp>
 #include <cstdlib>
-#include "../JPetOptionsGenerator/JPetOptionsTypeHandler.h"
+#include "./JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 

@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetRecoSignalTest
 #include <boost/test/unit_test.hpp>
-#include "../JPetRecoSignal/JPetRecoSignal.h"
+#include "./JPetRecoSignal/JPetRecoSignal.h"
 
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)

@@ -15,7 +15,7 @@
  */
 
 #include "./JPetUnpacker.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetLoggerInclude.h"
 #include <boost/filesystem.hpp>
 #include <cassert>
 

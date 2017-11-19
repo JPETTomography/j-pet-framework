@@ -16,7 +16,7 @@
 #include "./JPetOptionsTransformators.h"
 #include <string>
 #include <boost/any.hpp>
-#include "../JPetCommonTools/JPetCommonTools.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
 #include <iostream>
 #include "./JPetOptionsTools.h"
 

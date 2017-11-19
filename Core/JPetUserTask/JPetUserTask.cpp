@@ -14,7 +14,7 @@
  */
 
 #include "./JPetUserTask.h"
-#include "../JPetData/JPetData.h"
+#include "./JPetData/JPetData.h"
 
 JPetUserTask::JPetUserTask(const char* name):
   JPetTask(name)

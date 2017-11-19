@@ -21,22 +21,21 @@
 #include <string>
 #include <sstream>
 #include <set>
-#include <boost/any.hpp>
-#include "../JPetLoggerInclude.h"
-#include "../JPetParamBank/JPetParamBank.h"
-#include "../JPetDBParamGetter/JPetDBParamGetter.h"
-#include "../JPetReader/JPetReader.h"
-#include "../JPetWriter/JPetWriter.h"
-#include "../JPetScopeConfigParser/JPetScopeConfigPOD.h" /// for generateParametersFromScopeConfig
+#include "./JPetLoggerInclude.h"
+#include "./JPetParamBank/JPetParamBank.h"
+#include "./JPetDBParamGetter/JPetDBParamGetter.h"
+#include "./JPetReader/JPetReader.h"
+#include "./JPetWriter/JPetWriter.h"
+#include "./JPetScopeConfigParser/JPetScopeConfigPOD.h" /// for generateParametersFromScopeConfig
 
-#include "../JPetTRB/JPetTRBFactory.h"
-#include "../JPetFEB/JPetFEBFactory.h"
-#include "../JPetFrame/JPetFrameFactory.h"
-#include "../JPetLayer/JPetLayerFactory.h"
-#include "../JPetBarrelSlot/JPetBarrelSlotFactory.h"
-#include "../JPetScin/JPetScinFactory.h"
-#include "../JPetPM/JPetPMFactory.h"
-#include "../JPetTOMBChannel/JPetTOMBChannelFactory.h"
+#include "./JPetTRB/JPetTRBFactory.h"
+#include "./JPetFEB/JPetFEBFactory.h"
+#include "./JPetFrame/JPetFrameFactory.h"
+#include "./JPetLayer/JPetLayerFactory.h"
+#include "./JPetBarrelSlot/JPetBarrelSlotFactory.h"
+#include "./JPetScin/JPetScinFactory.h"
+#include "./JPetPM/JPetPMFactory.h"
+#include "./JPetTOMBChannel/JPetTOMBChannelFactory.h"
 
 class JPetParamManager
 {

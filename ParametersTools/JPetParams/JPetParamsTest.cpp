@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/any.hpp>
 
-#include "../JPetParams/JPetParams.h"
+#include "./JPetParams/JPetParams.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 

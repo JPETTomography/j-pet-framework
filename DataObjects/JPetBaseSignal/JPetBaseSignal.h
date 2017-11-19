@@ -16,9 +16,9 @@
 #ifndef JPETBASESIGNAL_H
 #define JPETBASESIGNAL_H
 
-#include "../JPetSigCh/JPetSigCh.h"
-#include "../JPetPM/JPetPM.h"
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetSigCh/JPetSigCh.h"
+#include "./JPetPM/JPetPM.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
 #include <TObject.h>
 #include <TRef.h>
 

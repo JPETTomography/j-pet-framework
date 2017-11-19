@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include <TFile.h>
 
-#include "../JPetParamBank/JPetParamBank.h"
+#include "./JPetParamBank/JPetParamBank.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
 

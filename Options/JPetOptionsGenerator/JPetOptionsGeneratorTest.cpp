@@ -17,10 +17,10 @@
 #define BOOST_TEST_MODULE JPetOptionsGeneratorTest
 #include <boost/test/unit_test.hpp>
 #include <cstdlib>
-#include "../JPetCmdParser/JPetCmdParser.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
-#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetCmdParser/JPetCmdParser.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include <iostream>
 using boost::any_cast;
 using namespace std;

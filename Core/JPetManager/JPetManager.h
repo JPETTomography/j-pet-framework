@@ -17,8 +17,8 @@
 #ifndef JPETMANAGER_H
 #define JPETMANAGER_H
 
-#include "../JPetTaskChainExecutor/JPetTaskChainExecutor.h"
-#include "../JPetOptionsTools/JPetOptionsTools.h"
+#include "./JPetTaskChainExecutor/JPetTaskChainExecutor.h"
+#include "./JPetOptionsTools/JPetOptionsTools.h"
 #include <memory>
 #include <map>
 
@@ -53,7 +53,7 @@ public:
   Options getOptions() const;
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
-  bool initDBConnection(const char* configFilePath = "../DBConfig/configDB.cfg");
+  bool initDBConnection(const char* configFilePath = "./DBConfig/configDB.cfg");
   // @todo: replace the need to call this method with task list passed as an option  
   void useTask(const char * name, const char * inputFileType="", const char * outputFileType="");
   

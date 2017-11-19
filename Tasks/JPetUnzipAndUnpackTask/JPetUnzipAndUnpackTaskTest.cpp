@@ -18,7 +18,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 
-#include "../JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
+#include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
 
 
 BOOST_AUTO_TEST_SUITE(JPetUnzipAndUnpackTaskTestSuite)

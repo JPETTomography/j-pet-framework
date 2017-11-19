@@ -20,13 +20,13 @@
 #include <cassert>
 
 #include "JPetOptionsGenerator.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetLoggerInclude.h"
-#include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
-#include "../JPetOptionsGenerator/JPetOptionsTypeHandler.h"
-#include "../JPetOptionValidator/JPetOptionValidator.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetLoggerInclude.h"
+#include "./JPetScopeConfigParser/JPetScopeConfigParser.h"
+#include "./JPetOptionsGenerator/JPetOptionsTypeHandler.h"
+#include "./JPetOptionValidator/JPetOptionValidator.h"
 #include "./JPetAdditionalTransformations.h"
-#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
 using boost::any_cast;
 using namespace std;

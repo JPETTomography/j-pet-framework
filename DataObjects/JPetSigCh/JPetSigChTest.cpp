@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetSigChTest
 #include <boost/test/unit_test.hpp>
-#include "../JPetSigCh/JPetSigCh.h"
+#include "./JPetSigCh/JPetSigCh.h"
 
 
 

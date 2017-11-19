@@ -16,9 +16,9 @@
 #ifndef JPET_LAYER_FACTORY_H
 #define JPET_LAYER_FACTORY_H
 
-#include "../JPetParamGetter/JPetParamGetter.h"
+#include "./JPetParamGetter/JPetParamGetter.h"
 #include "JPetLayer.h"
-#include "../JPetFrame/JPetFrameFactory.h"
+#include "./JPetFrame/JPetFrameFactory.h"
 
 #include <map>
 

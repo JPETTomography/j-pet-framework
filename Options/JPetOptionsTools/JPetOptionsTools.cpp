@@ -16,9 +16,9 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include "./JPetOptionsTools.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetLoggerInclude.h"
-#include "../JPetOptionsGenerator/JPetOptionsTypeHandler.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetLoggerInclude.h"
+#include "./JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 #include <typeinfo>
 
 namespace pt = boost::property_tree;

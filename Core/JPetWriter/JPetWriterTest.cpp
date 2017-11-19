@@ -5,17 +5,17 @@
 #include <TNamed.h>
 #include <TList.h>
 #include <TFile.h>
-#include "../JPetSigCh/JPetSigCh.h"
-#include "../JPetTimeWindow/JPetTimeWindow.h"
-#include "../JPetBaseSignal/JPetBaseSignal.h"
-#include "../JPetRawSignal/JPetRawSignal.h"
-#include "../JPetRecoSignal/JPetRecoSignal.h"
-#include "../JPetPhysSignal/JPetPhysSignal.h"
-#include "../JPetHit/JPetHit.h"
-#include "../JPetLOR/JPetLOR.h"
-#include "../JPetEvent/JPetEvent.h"
-#include "../JPetWriter/JPetWriter.h"
-#include "../JPetReader/JPetReader.h"
+#include "./JPetSigCh/JPetSigCh.h"
+#include "./JPetTimeWindow/JPetTimeWindow.h"
+#include "./JPetBaseSignal/JPetBaseSignal.h"
+#include "./JPetRawSignal/JPetRawSignal.h"
+#include "./JPetRecoSignal/JPetRecoSignal.h"
+#include "./JPetPhysSignal/JPetPhysSignal.h"
+#include "./JPetHit/JPetHit.h"
+#include "./JPetLOR/JPetLOR.h"
+#include "./JPetEvent/JPetEvent.h"
+#include "./JPetWriter/JPetWriter.h"
+#include "./JPetReader/JPetReader.h"
 #include <iostream>
 
 

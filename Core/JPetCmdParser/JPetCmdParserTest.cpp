@@ -15,12 +15,12 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetCmdParserTest
-#include "../JPetCmdParser/JPetCmdParser.h"
+#include "./JPetCmdParser/JPetCmdParser.h"
 #include <boost/test/unit_test.hpp>
 #include <boost/any.hpp>
 #include <cstdlib>
-#include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetCmdParser/JPetCmdParser.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetCmdParser/JPetCmdParser.h"
 
 using boost::any_cast;
 using namespace std;

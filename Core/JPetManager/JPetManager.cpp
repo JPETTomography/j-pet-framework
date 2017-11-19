@@ -19,14 +19,14 @@
 #include <string>
 #include <exception>
 
-#include "../JPetLoggerInclude.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
-#include "../DBHandler/HeaderFiles/DBHandler.h"
-#include "../JPetCmdParser/JPetCmdParser.h"
-#include "../JPetScopeLoader/JPetScopeLoader.h"
-#include "../JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
-#include "../JPetParamBankHandlerTask/JPetParamBankHandlerTask.h"
-#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "./JPetLoggerInclude.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./DBHandler/HeaderFiles/DBHandler.h"
+#include "./JPetCmdParser/JPetCmdParser.h"
+#include "./JPetScopeLoader/JPetScopeLoader.h"
+#include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
+#include "./JPetParamBankHandlerTask/JPetParamBankHandlerTask.h"
+#include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
 
 #include <TThread.h>
 

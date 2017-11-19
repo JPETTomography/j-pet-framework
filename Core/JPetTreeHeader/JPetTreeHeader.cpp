@@ -14,7 +14,7 @@
  */
 
 #include "JPetTreeHeader.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
 #include <sstream>
 
 ClassImp(JPetTreeHeader);

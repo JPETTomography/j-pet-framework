@@ -16,11 +16,11 @@
 #ifndef JPET_TOMB_CHANNEL_FACTORY_H
 #define JPET_TOMB_CHANNEL_FACTORY_H
 
-#include "../JPetParamGetter/JPetParamGetter.h"
+#include "./JPetParamGetter/JPetParamGetter.h"
 #include "JPetTOMBChannel.h"
-#include "../JPetFEB/JPetFEBFactory.h"
-#include "../JPetTRB/JPetTRBFactory.h"
-#include "../JPetPM/JPetPMFactory.h"
+#include "./JPetFEB/JPetFEBFactory.h"
+#include "./JPetTRB/JPetTRBFactory.h"
+#include "./JPetPM/JPetPMFactory.h"
 
 #include <map>
 

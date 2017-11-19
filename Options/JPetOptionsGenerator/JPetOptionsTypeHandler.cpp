@@ -16,8 +16,8 @@
 #include "JPetOptionsTypeHandler.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetLoggerInclude.h"
 namespace pt = boost::property_tree;
 
 const std::vector<std::string> JPetOptionsTypeHandler::kAllowedTypes = {"int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>", "float"};

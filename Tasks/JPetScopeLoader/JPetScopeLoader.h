@@ -18,7 +18,7 @@
 #ifndef _SCOPE_LOADER_MODULE_H_
 #define _SCOPE_LOADER_MODULE_H_
 
-#include "../JPetTask/JPetTask.h"
+#include "./JPetTask/JPetTask.h"
 
 #include <cstddef>
 #include <fstream>
@@ -28,9 +28,9 @@
 
 #include <boost/property_tree/ptree.hpp>
 
-#include "../JPetTaskIO/JPetTaskIO.h"
-#include "../JPetScopeTask/JPetScopeTask.h"
-#include "../JPetScopeConfigParser/JPetScopeConfigPOD.h"
+#include "./JPetTaskIO/JPetTaskIO.h"
+#include "./JPetScopeTask/JPetScopeTask.h"
+#include "./JPetScopeConfigParser/JPetScopeConfigPOD.h"
 
 class JPetParamBank;
 class JPetPM;

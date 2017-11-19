@@ -35,18 +35,18 @@
 #include <TSystem.h>
 #include <TApplication.h>
 
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetManager/JPetManager.h"
-#include "../JPetParamBank/JPetParamBank.h"
-#include "../JPetPhysSignal/JPetPhysSignal.h"
-#include "../JPetPM/JPetPM.h"
-#include "../JPetRecoSignal/JPetRecoSignal.h"
-#include "../JPetScin/JPetScin.h"
-#include "../JPetScopeLoader/JPetScopeLoader.h"
-#include "../JPetTreeHeader/JPetTreeHeader.h"
-#include "../JPetWriter/JPetWriter.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetManager/JPetManager.h"
+#include "./JPetParamBank/JPetParamBank.h"
+#include "./JPetPhysSignal/JPetPhysSignal.h"
+#include "./JPetPM/JPetPM.h"
+#include "./JPetRecoSignal/JPetRecoSignal.h"
+#include "./JPetScin/JPetScin.h"
+#include "./JPetScopeLoader/JPetScopeLoader.h"
+#include "./JPetTreeHeader/JPetTreeHeader.h"
+#include "./JPetWriter/JPetWriter.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetScopeConfigParser/JPetScopeConfigParser.h"
 
 
 #include <iostream>

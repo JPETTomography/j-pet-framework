@@ -16,7 +16,7 @@
 #ifndef JPET_TRB_FACTORY_H
 #define JPET_TRB_FACTORY_H
 
-#include "../JPetParamGetter/JPetParamGetter.h"
+#include "./JPetParamGetter/JPetParamGetter.h"
 #include "JPetTRB.h"
 
 #include <map>

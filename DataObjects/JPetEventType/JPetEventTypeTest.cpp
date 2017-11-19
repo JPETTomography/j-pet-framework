@@ -2,7 +2,7 @@
 #define BOOST_TEST_MODULE JPetEventTypeTest
 #include <boost/test/unit_test.hpp>
 
-#include "../JPetEventType/JPetEventType.h"
+#include "./JPetEventType/JPetEventType.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 

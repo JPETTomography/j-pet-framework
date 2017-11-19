@@ -2,11 +2,11 @@
 #define BOOST_TEST_MODULE JPetParamBankHandlerTask
 #include <boost/test/unit_test.hpp>
 #include "./JPetParamBankHandlerTask.h"
-#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
-#include "../JPetParams/JPetParams.h"
-#include "../JPetParamManager/JPetParamManager.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
+#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetParams/JPetParams.h"
+#include "./JPetParamManager/JPetParamManager.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetParamGetterAscii/JPetParamGetterAscii.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 

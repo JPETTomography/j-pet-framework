@@ -19,8 +19,8 @@
 #include <boost/filesystem.hpp>
 #include <list>
 
-#include "../JPetTaskChainExecutor/JPetTaskChainExecutorUtils.h"
-#include "../JPetTaskInterface/JPetTaskInterface.h"
+#include "./JPetTaskChainExecutor/JPetTaskChainExecutorUtils.h"
+#include "./JPetTaskInterface/JPetTaskInterface.h"
 
 BOOST_AUTO_TEST_SUITE(JPetTaskChainExecutorUtilsTestSuite)
 

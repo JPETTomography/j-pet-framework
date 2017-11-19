@@ -7,8 +7,8 @@
 #include <TError.h> /// gErrorIgnoreLevel
 #include <TObjString.h>
 
-#include "../JPetReader/JPetReader.h"
-#include "../JPetWriter/JPetWriter.h"
+#include "./JPetReader/JPetReader.h"
+#include "./JPetWriter/JPetWriter.h"
 
 // method list
 //JPetReader(void); //maybe remove this one

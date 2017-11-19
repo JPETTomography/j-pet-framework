@@ -2,10 +2,10 @@
 #define BOOST_TEST_MODULE JPetManagerTest
 #include <boost/test/unit_test.hpp>
 
-#include "../JPetManager/JPetManager.h"
+#include "./JPetManager/JPetManager.h"
 
-#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
-#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 

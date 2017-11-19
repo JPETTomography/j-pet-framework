@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE HelperMathFunctionsTest
 #include <boost/test/unit_test.hpp>
-#include "../JPetSimplePhysSignalReco/HelperMathFunctions.h"
+#include "./JPetSimplePhysSignalReco/HelperMathFunctions.h"
 using namespace boost::numeric::ublas;
 
 //float polynomialFit(const vector<float>& t, const vector<float>& v_source, int alfa, float v0)

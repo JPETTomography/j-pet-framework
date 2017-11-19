@@ -2,7 +2,7 @@
 #define BOOST_TEST_MODULE JPetEventTest
 #include <boost/test/unit_test.hpp>
 
-#include "../JPetAnalysisTools/JPetAnalysisTools.h"
+#include "./JPetAnalysisTools/JPetAnalysisTools.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 

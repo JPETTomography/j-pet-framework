@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetProgressBarManagerTest
 #include <boost/test/unit_test.hpp>
-#include "../JPetProgressBarManager/JPetProgressBarManager.h"
+#include "./JPetProgressBarManager/JPetProgressBarManager.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 

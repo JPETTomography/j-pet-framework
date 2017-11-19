@@ -17,10 +17,10 @@
 #ifndef JPETEVENT_H
 #define JPETEVENT_H
 
-#include "../JPetHit/JPetHit.h"
+#include "./JPetHit/JPetHit.h"
 #include <TObject.h>
 #include <vector>
-#include "../JPetEventType/JPetEventType.h"
+#include "./JPetEventType/JPetEventType.h"
 
 /**
  * @brief Data class representing an event from a single emission.

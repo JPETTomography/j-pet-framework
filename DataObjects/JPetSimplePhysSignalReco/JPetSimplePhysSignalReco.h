@@ -16,9 +16,9 @@
 #ifndef _JPETSIMPLEPHYSSIGNALRECO_H_
 #define _JPETSIMPLEPHYSSIGNALRECO_H_
 
-#include "../JPetUserTask/JPetUserTask.h"
-#include "../JPetPhysSignal/JPetPhysSignal.h"
-#include "../JPetRecoSignal/JPetRecoSignal.h"
+#include "./JPetUserTask/JPetUserTask.h"
+#include "./JPetPhysSignal/JPetPhysSignal.h"
+#include "./JPetRecoSignal/JPetRecoSignal.h"
 
 class JPetWriter;
 

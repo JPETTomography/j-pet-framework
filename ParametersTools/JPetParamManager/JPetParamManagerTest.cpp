@@ -3,8 +3,8 @@
 #include <cstddef>
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
-#include "../JPetParamManager/JPetParamManager.h"
-#include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
+#include "./JPetParamManager/JPetParamManager.h"
+#include "./JPetParamGetterAscii/JPetParamGetterAscii.h"
 #include <string>
 
 const std::string dataDir = "unitTestData/JPetParamManagerTest/";

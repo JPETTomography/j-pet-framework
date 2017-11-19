@@ -17,7 +17,7 @@
 #define BOOST_TEST_MODULE JPetScopeTaskTest
 #include <boost/test/unit_test.hpp>
 #include "JPetScopeTask.h"
-#include "../JPetScopeConfigParser/JPetScopeConfigParser.h"
+#include "./JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include <algorithm>
 #include <set>
 

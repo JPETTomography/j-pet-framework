@@ -16,7 +16,7 @@
 #ifndef JPETDBPARAMGETTER_H
 #define JPETDBPARAMGETTER_H
 
-#include "../JPetParamGetter/JPetParamGetter.h"
+#include "./JPetParamGetter/JPetParamGetter.h"
 #ifndef __CINT__
 #include <pqxx/pqxx>
 #else

@@ -18,8 +18,8 @@
 
 #include <cstddef>
 #include <vector>
-#include "../JPetLayer/JPetLayer.h"
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetLayer/JPetLayer.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
 
 struct StripPos {
   size_t layer, slot;

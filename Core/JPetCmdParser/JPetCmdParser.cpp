@@ -16,7 +16,7 @@
 #include "JPetCmdParser.h"
 #include <iostream>
 #include <stdexcept>
-#include "../JPetLoggerInclude.h"
+#include "./JPetLoggerInclude.h"
 
 
 JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")

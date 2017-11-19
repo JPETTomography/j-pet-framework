@@ -13,7 +13,7 @@
  *  @file JPetScopeTaskUtils.h
  */
 
-#include "../JPetRecoSignal/JPetRecoSignal.h"
+#include "./JPetRecoSignal/JPetRecoSignal.h"
 
 
 const double ks2ps = 1.0e+12;

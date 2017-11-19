@@ -2,7 +2,7 @@
 #define BOOST_TEST_MODULE JPetUnpackerTest
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
-#include "../JPetUnpacker/JPetUnpacker.h"
+#include "./JPetUnpacker/JPetUnpacker.h"
 
 
 

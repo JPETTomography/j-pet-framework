@@ -16,17 +16,17 @@
 #ifndef JPETPARAMBANK_H
 #define JPETPARAMBANK_H
 
-#include "../JPetScin/JPetScin.h"
-#include "../JPetPM/JPetPM.h"
-#include "../JPetFEB/JPetFEB.h"
-#include "../JPetTRB/JPetTRB.h"
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetLayer/JPetLayer.h"
-#include "../JPetFrame/JPetFrame.h"
-#include "../JPetTOMBChannel/JPetTOMBChannel.h"
+#include "./JPetScin/JPetScin.h"
+#include "./JPetPM/JPetPM.h"
+#include "./JPetFEB/JPetFEB.h"
+#include "./JPetTRB/JPetTRB.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetLayer/JPetLayer.h"
+#include "./JPetFrame/JPetFrame.h"
+#include "./JPetTOMBChannel/JPetTOMBChannel.h"
 
-#include "../JPetParamGetter/JPetParamConstants.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetParamGetter/JPetParamConstants.h"
+#include "./JPetLoggerInclude.h"
 #include <map>
 #include <cassert>
 

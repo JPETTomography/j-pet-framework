@@ -16,21 +16,21 @@
 #ifndef JPETPARAM_AND_DATA_FACTORY_H
 #define JPETPARAM_AND_DATA_FACTORY_H
 
-#include "../JPetScin/JPetScin.h"
-#include "../JPetFEB/JPetFEB.h"
-#include "../JPetLayer/JPetLayer.h"
-#include "../JPetHit/JPetHit.h"
-#include "../JPetSigCh/JPetSigCh.h"
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetTimeWindow/JPetTimeWindow.h"
-#include "../JPetPM/JPetPM.h"
-#include "../JPetTRB/JPetTRB.h"
-#include "../JPetFrame/JPetFrame.h"
-#include "../JPetPhysSignal/JPetPhysSignal.h"
-#include "../JPetBaseSignal/JPetBaseSignal.h"
-#include "../JPetRawSignal/JPetRawSignal.h"
+#include "./JPetScin/JPetScin.h"
+#include "./JPetFEB/JPetFEB.h"
+#include "./JPetLayer/JPetLayer.h"
+#include "./JPetHit/JPetHit.h"
+#include "./JPetSigCh/JPetSigCh.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetTimeWindow/JPetTimeWindow.h"
+#include "./JPetPM/JPetPM.h"
+#include "./JPetTRB/JPetTRB.h"
+#include "./JPetFrame/JPetFrame.h"
+#include "./JPetPhysSignal/JPetPhysSignal.h"
+#include "./JPetBaseSignal/JPetBaseSignal.h"
+#include "./JPetRawSignal/JPetRawSignal.h"
 #include  "TVector3.h"
-#include "../JPetTOMBChannel/JPetTOMBChannel.h"
+#include "./JPetTOMBChannel/JPetTOMBChannel.h"
 
 /**
  * @brief A namespace contains set of factory methods to create fully operational parameter and data objects.

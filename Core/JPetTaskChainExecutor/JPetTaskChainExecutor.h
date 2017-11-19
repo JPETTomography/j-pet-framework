@@ -20,9 +20,9 @@
 #include <TThread.h>
 #include <functional> // for TaskGenerator declaration
 #include <vector> // for TaskGeneratorChain declaration
-#include "../JPetParams/JPetParams.h"
-#include "../JPetTaskInterface/JPetTaskInterface.h"
-#include "../JPetTimer/JPetTimer.h"
+#include "./JPetParams/JPetParams.h"
+#include "./JPetTaskInterface/JPetTaskInterface.h"
+#include "./JPetTimer/JPetTimer.h"
 
 using TaskGenerator = std::function< JPetTaskInterface* () >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;

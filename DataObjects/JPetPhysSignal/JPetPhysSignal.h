@@ -16,8 +16,8 @@
 #ifndef JPETPHYSSIGNAL_H
 #define JPETPHYSSIGNAL_H
 
-#include "../JPetBaseSignal/JPetBaseSignal.h"
-#include "../JPetRecoSignal/JPetRecoSignal.h"
+#include "./JPetBaseSignal/JPetBaseSignal.h"
+#include "./JPetRecoSignal/JPetRecoSignal.h"
 
 /**
  * @brief Data class representing a physical, reconstructed signal from a single photomultiplier

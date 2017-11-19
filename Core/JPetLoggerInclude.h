@@ -31,7 +31,7 @@
 
 // don't touch this part
 #if JPETLOGGER_ON == 1
-#include "../JPetLogger/JPetLogger.h"
+#include "./JPetLogger/JPetLogger.h"
 #define DATE_AND_TIME()   JPetLogger::dateAndTime()
 #if JPET_LOGGER_LEVEL_INFO == 1
 #define INFO(X)   JPetLogger::info(__func__, X)

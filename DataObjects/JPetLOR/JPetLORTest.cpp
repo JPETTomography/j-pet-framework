@@ -2,7 +2,7 @@
 #define BOOST_TEST_MODULE JPetLORTest
 #include <boost/test/unit_test.hpp>
 
-#include "../JPetLOR/JPetLOR.h"
+#include "./JPetLOR/JPetLOR.h"
 
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)

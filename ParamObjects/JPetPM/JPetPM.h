@@ -19,10 +19,10 @@
 #include "TNamed.h"
 #include <utility>
 #include <TRef.h>
-#include "../JPetFEB/JPetFEB.h"
-#include "../JPetScin/JPetScin.h"
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetFEB/JPetFEB.h"
+#include "./JPetScin/JPetScin.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetLoggerInclude.h"
 
 class JPetScin;
 
