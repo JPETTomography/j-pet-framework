@@ -104,34 +104,10 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 # add Unpacker subdirectory
 add_subdirectory(Unpacker2/Unpacker2)
 
-set(FOLDERS_WITH_SOURCE
-  Options
-  ParamObjects
-  DataObjects
-  Tasks
-  Core
-  ParametersTools
-  )
-
-foreach(dir ${FOLDERS_WITH_SOURCE})
-  file(GLOB HEADERS ${dir}/JPet*/*.h)
-  file(GLOB INCLUDE ${dir}/JPet*)
-  list(REMOVE_ITEM INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/JPetLoggerInclude.h) #remove header file from include
-  include_directories(${INCLUDE})
-  MESSAGE(STATUS ${INCLUDE})
-  file(GLOB SOURCES ${dir}/JPet*/*.cpp)
-  file(GLOB UNIT_TEST_SOURCES ${dir}/JPet*/*Test.cpp)
-  list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
-endforeach() 
-
-
-
-get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-foreach(dir ${dirs})
-  message(STATUS "dir='${dir}'")
-endforeach()
-
-
+file(GLOB HEADERS JPet*/*.h)
+file(GLOB SOURCES JPet*/*.cpp)
+file(GLOB UNIT_TEST_SOURCES JPet*/*Test.cpp)
+list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
 
 ##download test files and config files
 # the script shouldn't do anything if the data is present and correct
