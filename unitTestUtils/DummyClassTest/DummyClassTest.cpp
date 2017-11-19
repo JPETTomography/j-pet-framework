@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE DummyClassTest 
 #include <boost/test/unit_test.hpp>
-#include "../DummyClass/DummyClass.h"
+#include "./DummyClass/DummyClass.h"
 
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
