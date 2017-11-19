@@ -16,9 +16,9 @@
 #ifndef JPET_FEB_FACTORY_H
 #define JPET_FEB_FACTORY_H
 
-#include "../JPetParamGetter/JPetParamGetter.h"
+#include "./JPetParamGetter/JPetParamGetter.h"
 #include "JPetFEB.h"
-#include "../JPetTRB/JPetTRBFactory.h"
+#include "./JPetTRB/JPetTRBFactory.h"
 
 #include <map>
 

@@ -15,12 +15,12 @@
 
 #ifndef JPETUSERTASK_H
 #define JPETUSERTASK_H
-#include "../JPetTask/JPetTask.h"
-#include "../JPetParamsInterface/JPetParamsInterface.h"
-#include "../JPetParams/JPetParams.h"
-#include "../JPetStatistics/JPetStatistics.h"
-#include "../JPetParamBank/JPetParamBank.h"
-#include "../JPetTimeWindow/JPetTimeWindow.h"
+#include "./JPetTask/JPetTask.h"
+#include "./JPetParamsInterface/JPetParamsInterface.h"
+#include "./JPetParams/JPetParams.h"
+#include "./JPetStatistics/JPetStatistics.h"
+#include "./JPetParamBank/JPetParamBank.h"
+#include "./JPetTimeWindow/JPetTimeWindow.h"
 
 /**
  * @brief abstract class that should be used as a main parent class for user tasks

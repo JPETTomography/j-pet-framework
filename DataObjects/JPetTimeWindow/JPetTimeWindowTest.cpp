@@ -2,9 +2,9 @@
 #define BOOST_TEST_MODULE JPetTSlotTest
 #include <boost/test/unit_test.hpp>
 
-#include "../JPetSigCh/JPetSigCh.h"
-#include "../JPetHit/JPetHit.h"
-#include "../JPetTimeWindow/JPetTimeWindow.h"
+#include "./JPetSigCh/JPetSigCh.h"
+#include "./JPetHit/JPetHit.h"
+#include "./JPetTimeWindow/JPetTimeWindow.h"
 
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)

@@ -16,7 +16,7 @@
 #ifndef JPET_FRAME_FACTORY_H
 #define JPET_FRAME_FACTORY_H
 
-#include "../JPetParamGetter/JPetParamGetter.h"
+#include "./JPetParamGetter/JPetParamGetter.h"
 #include "JPetFrame.h"
 
 #include <map>

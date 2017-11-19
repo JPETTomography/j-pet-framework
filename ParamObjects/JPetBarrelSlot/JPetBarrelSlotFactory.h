@@ -16,9 +16,9 @@
 #ifndef JPET_BARREL_SLOT_FACTORY_H
 #define JPET_BARREL_SLOT_FACTORY_H
 
-#include "../JPetParamGetter/JPetParamGetter.h"
+#include "./JPetParamGetter/JPetParamGetter.h"
 #include "JPetBarrelSlot.h"
-#include "../JPetLayer/JPetLayerFactory.h"
+#include "./JPetLayer/JPetLayerFactory.h"
 
 #include <map>
 

@@ -14,7 +14,7 @@
  */
 
 #include "JPetWriter.h"
-#include "../JPetUserInfoStructure/JPetUserInfoStructure.h"
+#include "./JPetUserInfoStructure/JPetUserInfoStructure.h"
 
 const std::string JPetWriter::kRootTreeName = "T"; /// This tree name is compatible with the tree name produced by the unpacker.
 const long long JPetWriter::kTreeBufferSize = 10000;

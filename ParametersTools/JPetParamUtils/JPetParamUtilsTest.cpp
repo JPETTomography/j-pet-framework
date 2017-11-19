@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetParamUtilsTest
 #include <boost/test/unit_test.hpp>
-#include "../JPetParamUtils/JPetParamUtils.h"
+#include "./JPetParamUtils/JPetParamUtils.h"
 
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)

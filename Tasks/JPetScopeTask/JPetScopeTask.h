@@ -20,11 +20,11 @@
 #include <string>
 #include <map>
 
-#include "../JPetUserTask/JPetUserTask.h"
-#include "../JPetRawSignal/JPetRawSignal.h"
-#include "../JPetTimeWindow/JPetTimeWindow.h"
-#include "../JPetParamBank/JPetParamBank.h"
-#include "../JPetParamManager/JPetParamManager.h"
+#include "./JPetUserTask/JPetUserTask.h"
+#include "./JPetRawSignal/JPetRawSignal.h"
+#include "./JPetTimeWindow/JPetTimeWindow.h"
+#include "./JPetParamBank/JPetParamBank.h"
+#include "./JPetParamManager/JPetParamManager.h"
 
 class JPetWriter;
 struct cmpByTimeWindowIndex;

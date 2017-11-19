@@ -14,12 +14,12 @@
  */
 
 #include "./JPetUnzipAndUnpackTask.h"
-#include "../JPetParams/JPetParams.h"
-#include "../JPetOptionsTools/JPetOptionsTools.h"
-#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
-#include "../JPetCommonTools/JPetCommonTools.h"
-#include "../JPetUnpacker/JPetUnpacker.h"
-#include "../JPetOptionsTools/JPetOptionsTools.h"
+#include "./JPetParams/JPetParams.h"
+#include "./JPetOptionsTools/JPetOptionsTools.h"
+#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetUnpacker/JPetUnpacker.h"
+#include "./JPetOptionsTools/JPetOptionsTools.h"
 
 JPetUnzipAndUnpackTask::JPetUnzipAndUnpackTask(const char* name): JPetTask(name), fUnpackHappened(false)
 {

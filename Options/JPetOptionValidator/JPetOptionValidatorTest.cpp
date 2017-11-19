@@ -16,7 +16,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetOptionValidatorTest
 #include <boost/test/unit_test.hpp>
-#include "../JPetOptionValidator/JPetOptionValidator.h"
+#include "./JPetOptionValidator/JPetOptionValidator.h"
 #include <string>
 using boost::any_cast;
 

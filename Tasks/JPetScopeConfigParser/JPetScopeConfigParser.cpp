@@ -14,7 +14,7 @@
  */
 
 #include "JPetScopeConfigParser.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetLoggerInclude.h"
 
 #include <boost/regex.hpp>
 #include <boost/property_tree/ini_parser.hpp>
@@ -26,7 +26,7 @@
 #include <TApplication.h>
 #include <cstdio>
 #include <iostream>
-#include "../JPetCommonTools/JPetCommonTools.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
 
 
 scope_config::Config JPetScopeConfigParser::getConfig(const std::string& configFileName) const

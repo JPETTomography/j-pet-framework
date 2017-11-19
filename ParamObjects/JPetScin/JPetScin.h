@@ -18,8 +18,8 @@
 
 #include "TNamed.h"
 #include <TRef.h>
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetLoggerInclude.h"
 
 
 /**

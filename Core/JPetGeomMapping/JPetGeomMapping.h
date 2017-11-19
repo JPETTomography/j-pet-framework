@@ -15,11 +15,11 @@
 
 #ifndef JPETGEOMMAPPING_H
 #define JPETGEOMMAPPING_H
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetGeomMappingInterface/JPetGeomMappingInterface.h"
-#include "../JPetLayer/JPetLayer.h"
-#include "../JPetPM/JPetPM.h"
-#include "../JPetParamBank/JPetParamBank.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetGeomMappingInterface/JPetGeomMappingInterface.h"
+#include "./JPetLayer/JPetLayer.h"
+#include "./JPetPM/JPetPM.h"
+#include "./JPetParamBank/JPetParamBank.h"
 #include <cstddef>
 #include <map>
 #include <vector>

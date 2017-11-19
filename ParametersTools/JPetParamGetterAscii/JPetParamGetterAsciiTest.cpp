@@ -2,9 +2,9 @@
 #define BOOST_TEST_MODULE JPetParamGetterAsciiTest
 #include <boost/test/unit_test.hpp>
 
-#include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
-#include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
-#include "../JPetParamManager/JPetParamManager.h"
+#include "./JPetParamGetterAscii/JPetParamGetterAscii.h"
+#include "./JPetParamGetterAscii/JPetParamSaverAscii.h"
+#include "./JPetParamManager/JPetParamManager.h"
 #include <boost/filesystem.hpp>
 
 const std::string dataDir = "unitTestData/JPetParamGetterAsciiTest/";

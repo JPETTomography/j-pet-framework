@@ -17,12 +17,12 @@
 #define JPET_TOMB_CHANNEL_H
 
 #include "TNamed.h"
-#include "../JPetFEB/JPetFEB.h"
-#include "../JPetTRB/JPetTRB.h"
-#include "../JPetPM/JPetPM.h"
-#include "../JPetScin/JPetScin.h"
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetFEB/JPetFEB.h"
+#include "./JPetTRB/JPetTRB.h"
+#include "./JPetPM/JPetPM.h"
+#include "./JPetScin/JPetScin.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetLoggerInclude.h"
 
 
 /**

@@ -17,11 +17,11 @@
 #ifndef JPETHITUTILS_H
 #define JPETHITUTILS_H
 
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetPM/JPetPM.h"
-#include "../JPetLayer/JPetLayer.h"
-#include "../JPetHit/JPetHit.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetPM/JPetPM.h"
+#include "./JPetLayer/JPetLayer.h"
+#include "./JPetHit/JPetHit.h"
+#include "./JPetLoggerInclude.h"
 #include <map>
 
 class JPetHitUtils

@@ -29,15 +29,15 @@ class boost::noncopyable;
 #endif /* __CINT __ */
 
 /*
-#include "../JPetScin/JPetScin.h"
-#include "../JPetPM/JPetPM.h"
-#include "../JPetFEB/JPetFEB.h"
-#include "../JPetTRB/JPetTRB.h"
+#include "./JPetScin/JPetScin.h"
+#include "./JPetPM/JPetPM.h"
+#include "./JPetFEB/JPetFEB.h"
+#include "./JPetTRB/JPetTRB.h"
 */
-#include "../JPetTreeHeader/JPetTreeHeader.h"
-#include "../JPetReaderInterface/JPetReaderInterface.h"
+#include "./JPetTreeHeader/JPetTreeHeader.h"
+#include "./JPetReaderInterface/JPetReaderInterface.h"
 
-#include "../JPetLoggerInclude.h"
+#include "./JPetLoggerInclude.h"
 
 /**
  * @brief A class responsible for reading any data from ROOT trees.

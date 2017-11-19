@@ -16,7 +16,7 @@
 #include <math.h>
 #include <cassert>
 #include "JPetSimplePhysSignalReco.h"
-#include "../JPetWriter/JPetWriter.h"
+#include "./JPetWriter/JPetWriter.h"
 #include "HelperMathFunctions.h"
 #include <boost/property_tree/json_parser.hpp>
 

@@ -16,9 +16,9 @@
 #ifndef JPETPARAMBANKHANDLERTASK_H
 #define JPETPARAMBANKHANDLERTASK_H
 
-#include "../JPetTask/JPetTask.h"
-#include "../JPetParams/JPetParams.h"
-#include "../JPetParamGetterAscii/JPetParamSaverAscii.h"
+#include "./JPetTask/JPetTask.h"
+#include "./JPetParams/JPetParams.h"
+#include "./JPetParamGetterAscii/JPetParamSaverAscii.h"
 
 /**
  * @brief class that reads param manager and fill param bank, also if needed saves param bank to ascii file

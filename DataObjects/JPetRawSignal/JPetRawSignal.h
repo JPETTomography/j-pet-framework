@@ -16,8 +16,8 @@
 #ifndef JPETRAWSIGNAL_H
 #define JPETRAWSIGNAL_H
 
-#include "../JPetSigCh/JPetSigCh.h"
-#include "../JPetBaseSignal/JPetBaseSignal.h"
+#include "./JPetSigCh/JPetSigCh.h"
+#include "./JPetBaseSignal/JPetBaseSignal.h"
 #include <vector>
 #include <map>
 #include <algorithm>

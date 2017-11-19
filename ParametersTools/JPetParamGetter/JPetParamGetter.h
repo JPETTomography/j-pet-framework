@@ -16,7 +16,7 @@
 #ifndef JPET_PARAM_GETTER_H
 #define JPET_PARAM_GETTER_H
 
-#include "../JPetLoggerInclude.h"
+#include "./JPetLoggerInclude.h"
 #include "JPetParamConstants.h"
 
 #include <map>

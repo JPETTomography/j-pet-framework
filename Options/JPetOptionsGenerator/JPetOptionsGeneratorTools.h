@@ -19,7 +19,7 @@
 #include <string>
 #include <boost/any.hpp>
 #include "boost/program_options.hpp" // Library parsing command line arguments
-#include "../JPetOptionsTools/JPetOptionsTools.h"
+#include "./JPetOptionsTools/JPetOptionsTools.h"
 
 namespace po = boost::program_options;
 using OptsStrAny = std::map<std::string, boost::any>;

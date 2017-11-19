@@ -16,11 +16,11 @@
 #ifndef JPET_PM_FACTORY_H
 #define JPET_PM_FACTORY_H
 
-#include "../JPetParamGetter/JPetParamGetter.h"
+#include "./JPetParamGetter/JPetParamGetter.h"
 #include "JPetPM.h"
-#include "../JPetFEB/JPetFEBFactory.h"
-#include "../JPetScin/JPetScinFactory.h"
-#include "../JPetBarrelSlot/JPetBarrelSlotFactory.h"
+#include "./JPetFEB/JPetFEBFactory.h"
+#include "./JPetScin/JPetScinFactory.h"
+#include "./JPetBarrelSlot/JPetBarrelSlotFactory.h"
 
 #include <map>
 

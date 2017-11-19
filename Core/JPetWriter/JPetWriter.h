@@ -29,20 +29,20 @@ namespace boost;
 class boost::noncopyable;
 #endif /* __CINT __ */
 
-#include "../JPetLoggerInclude.h"
+#include "./JPetLoggerInclude.h"
 
-#include "../JPetBarrelSlot/JPetBarrelSlot.h"
-#include "../JPetLOR/JPetLOR.h"
-#include "../JPetHit/JPetHit.h"
-#include "../JPetSigCh/JPetSigCh.h"
-#include "../JPetPhysSignal/JPetPhysSignal.h"
-#include "../JPetTimeWindow/JPetTimeWindow.h"
-#include "../JPetEvent/JPetEvent.h"
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetLOR/JPetLOR.h"
+#include "./JPetHit/JPetHit.h"
+#include "./JPetSigCh/JPetSigCh.h"
+#include "./JPetPhysSignal/JPetPhysSignal.h"
+#include "./JPetTimeWindow/JPetTimeWindow.h"
+#include "./JPetEvent/JPetEvent.h"
 
-#include "../JPetScin/JPetScin.h"
-#include "../JPetPM/JPetPM.h"
-#include "../JPetFEB/JPetFEB.h"
-#include "../JPetTRB/JPetTRB.h"
+#include "./JPetScin/JPetScin.h"
+#include "./JPetPM/JPetPM.h"
+#include "./JPetFEB/JPetFEB.h"
+#include "./JPetTRB/JPetTRB.h"
 
 
 /**

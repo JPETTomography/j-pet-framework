@@ -16,12 +16,12 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetTaskChainExecutorTest
 #include <boost/test/unit_test.hpp>
-#include "../JPetTaskChainExecutor/JPetTaskChainExecutor.h"
-#include "../JPetOptionsGenerator/JPetOptionsGenerator.h"
-#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
-#include "../JPetTaskIO/JPetTaskIO.h"
-#include "../JPetUserTask/JPetUserTask.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetTaskChainExecutor/JPetTaskChainExecutor.h"
+#include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetTaskIO/JPetTaskIO.h"
+#include "./JPetUserTask/JPetUserTask.h"
+#include "./JPetLoggerInclude.h"
 
 
 class TestTask: public JPetUserTask

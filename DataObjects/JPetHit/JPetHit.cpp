@@ -14,7 +14,7 @@
  */
 
 #include "./JPetHit.h"
-#include "../JPetLoggerInclude.h"
+#include "./JPetLoggerInclude.h"
 
 #include "TString.h"
 

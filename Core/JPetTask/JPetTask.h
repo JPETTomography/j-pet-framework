@@ -15,9 +15,9 @@
 
 #ifndef JPETTASK_H
 #define JPETTASK_H
-#include "../JPetParamsInterface/JPetParamsInterface.h"
-#include "../JPetTaskInterface/JPetTaskInterface.h"
-#include "../JPetDataInterface/JPetDataInterface.h"
+#include "./JPetParamsInterface/JPetParamsInterface.h"
+#include "./JPetTaskInterface/JPetTaskInterface.h"
+#include "./JPetDataInterface/JPetDataInterface.h"
 #include <string>
 #include <vector>
 

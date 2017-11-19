@@ -17,7 +17,7 @@
 #define JPETOPTIONSTOOLS_H
 #include <map>
 #include <boost/any.hpp>
-#include "../JPetOptionsTools/JPetOptionsTransformators.h"
+#include "./JPetOptionsTools/JPetOptionsTransformators.h"
 
 /**
  * @brief Set of helper methods to operate on options.
