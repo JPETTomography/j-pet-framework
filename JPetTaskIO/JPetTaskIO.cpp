@@ -47,6 +47,7 @@ void JPetTaskIO::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
   fSubTasks.push_back(std::move(subTask));
 }
 
+
 bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
 {
   using namespace jpet_options_tools;
@@ -54,25 +55,13 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
   setOptions(params);
   auto opts = fParams.getOptions();
 
-  // handle input file path
-  std::string inputFilename = getInputFile(opts);
-  if ( JPetCommonTools::extractDataTypeFromFileName(inputFilename) != fInFileType ) {
-    ERROR(Form("Input file type %s does not match the one provided by the previous module (%s).",
-               fInFileType.c_str(), JPetCommonTools::extractDataTypeFromFileName(inputFilename).c_str()));
+  bool isOK = false;
+  std::string inputFilename;
+  std::tie(isOK, inputFilename, fOutFileFullPath, fResetOutputPath) = setInputAndOutputFile(opts);
+  if (!isOK) {
+    ERROR("Some error occured in setInputAndOutputFile");
     return false;
   }
-  inputFilename = JPetCommonTools::replaceDataTypeInFileName(inputFilename, fInFileType);
-  // handle output file path
-  fOutFileFullPath = inputFilename;
-  if (isOptionSet(opts, "outputPath_std::string")) {
-    std::string outputPath(getOutputPath(opts));
-    if (!outputPath.empty()) {
-      fOutFileFullPath = outputPath + JPetCommonTools::extractFileNameFromFullPath(getInputFile(opts));
-      fResetOutputPath = true;
-    }
-  }
-  fOutFileFullPath = JPetCommonTools::replaceDataTypeInFileName(fOutFileFullPath, fOutFileType);
-
   if (!createInputObjects(inputFilename.c_str())) {
     ERROR("createInputObjects");
     return false;
@@ -84,6 +73,30 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
   return true;
 }
 
+std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFile(const OptsStrAny opts) const
+{
+  bool resetOutputPath = fResetOutputPath;
+  // handle input file path
+  std::string inputFilename = getInputFile(opts);
+  if ( JPetCommonTools::extractDataTypeFromFileName(inputFilename) != fInFileType ) {
+    ERROR(Form("Input file type %s does not match the one provided by the previous module (%s).",
+               fInFileType.c_str(), JPetCommonTools::extractDataTypeFromFileName(inputFilename).c_str()));
+    return std::make_tuple(false, "", "", resetOutputPath);
+  }
+  inputFilename = JPetCommonTools::replaceDataTypeInFileName(inputFilename, fInFileType);
+
+  // handle output file path
+  auto outFileFullPath = inputFilename;
+  if (isOptionSet(opts, "outputPath_std::string")) {
+    std::string outputPath(getOutputPath(opts));
+    if (!outputPath.empty()) {
+      outFileFullPath = outputPath + JPetCommonTools::extractFileNameFromFullPath(getInputFile(opts));
+      resetOutputPath = true;
+    }
+  }
+  outFileFullPath = JPetCommonTools::replaceDataTypeInFileName(outFileFullPath, fOutFileType);
+  return std::make_tuple(true, inputFilename, outFileFullPath, resetOutputPath);
+}
 
 bool JPetTaskIO::run(const JPetDataInterface&)
 {
