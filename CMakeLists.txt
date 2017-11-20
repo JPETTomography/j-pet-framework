@@ -96,7 +96,7 @@ endforeach()
 
 list(APPEND FOLDERS ${CMAKE_CURRENT_SOURCE_DIR}) # for include to dictionaries for unpacker2
 
-##download test files and config files
+##download test files
 # the script shouldn't do anything if the data is present and correct
 set(DOWNLOAD_DATA ${CMAKE_CURRENT_SOURCE_DIR}/download_data.sh ${CMAKE_CURRENT_SOURCE_DIR})
 execute_process( COMMAND ${DOWNLOAD_DATA} )
@@ -193,13 +193,6 @@ target_include_directories(dbhandler SYSTEM PUBLIC
 target_link_libraries(dbhandler
   ${PQXX_LIBRARIES}
 )
-
-# copy the DB config file to an expected location
-set(db_config_dir ${CMAKE_CURRENT_BINARY_DIR}/DBConfig)
-add_custom_command(TARGET dbhandler
-  POST_BUILD 
-  COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/DBHandler/Config ${db_config_dir}
-  )
 
 # add dependencies
 target_link_libraries(JPetFramework
