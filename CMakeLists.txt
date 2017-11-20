@@ -96,7 +96,7 @@ endforeach()
 
 list(APPEND FOLDERS ${CMAKE_CURRENT_SOURCE_DIR}) # for include to dictionaries for unpacker2
 
-##download test files and config files
+##download test files
 # the script shouldn't do anything if the data is present and correct
 set(DOWNLOAD_DATA ${CMAKE_CURRENT_SOURCE_DIR}/download_data.sh ${CMAKE_CURRENT_SOURCE_DIR})
 execute_process( COMMAND ${DOWNLOAD_DATA} )
