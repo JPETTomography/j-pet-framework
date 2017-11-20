@@ -41,7 +41,12 @@ class JPetWriter;
 /** @brief Analysis Module for oscilloscope ASCII files.
  *
  * This module reads oscilloscope ACSII data based on config file passed through command line.
- * Example of usign this module is located in workdir/ScopeLoaderExample/ .
+ * Example of using this module is located in workdir/ScopeLoaderExample/ .
+ *
+ * Please, note that this class overrides the createInputObjects, createOutputObjects
+ * and setInputAndOutputFile methods from JPetTaskIO class.
+ * The overriden method setInputAndOutputFile is called in the original
+ * init from JPetTaskIO.
  */
 class JPetScopeLoader: public JPetTaskIO
 {
@@ -53,8 +58,6 @@ public:
   virtual bool run(const JPetDataInterface& inData) override;
   virtual bool terminate(JPetParamsInterface& opts) override;
 
-  bool createInputObjects(const char* inputFilename) override;
-  bool createOutputObjects(const char* inputFilename) override;
 
   virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
 
@@ -65,6 +68,15 @@ public:
   std::map<std::string, int> getPMPrefixToPMIdMap();
   bool isCorrectScopeFileName(const std::string& filename) const;
   std::string getFilePrefix(const std::string& filename) const;
+
+protected:
+  bool createInputObjects(const char*) override;
+  bool createOutputObjects(const char*) override;
+  /// Method returns (isOK, inputFile, outputFileFullPath, isResetOutputPath) based on the provided options.
+  /// if isOK is set to false, that means that an error has occured.
+  /// inputFile argument has no meaning, because input files are set based on json file in the createOutputObjects
+  /// which ignores this argument
+  std::tuple<bool, std::string, std::string, bool> setInputAndOutputFile(const jpet_options_tools::OptsStrAny options) const override;
 };
 
 #endif
