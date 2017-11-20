@@ -187,10 +187,10 @@ BOOST_AUTO_TEST_CASE(createArgsTest4)
 
 BOOST_AUTO_TEST_CASE(fileTypeSuffixOperations)
 {
-  std::string path = "././file.tslot.raw.root";
+  std::string path = "../../file.tslot.raw.root";
   BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFileName(path), "tslot.raw");
   std::string path2 = JPetCommonTools::replaceDataTypeInFileName(path, "phys.sig.cal");
-  BOOST_REQUIRE_EQUAL(path2, "././file.phys.sig.cal.root");
+  BOOST_REQUIRE_EQUAL(path2, "../../file.phys.sig.cal.root");
   BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFileName(path2), "phys.sig.cal");
 
   path = "test.hld.root";

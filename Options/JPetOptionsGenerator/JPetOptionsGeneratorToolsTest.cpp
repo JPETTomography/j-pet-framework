@@ -255,10 +255,10 @@ BOOST_AUTO_TEST_CASE(generateOptionsForTask_outputPath)
   inOpts["inputFile_std::string"] = *(getInputFiles(inOpts).begin());
 
   /// OutputSettings defined in terminate by the previous task
-  std::map<std::string, boost::any> controlSettings = {{"outputPath_std::string", std::string("././")}};
+  std::map<std::string, boost::any> controlSettings = {{"outputPath_std::string", std::string("../../")}};
   auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
   BOOST_REQUIRE(isOptionSet(resultsOpt, "inputFile_std::string"));
-  BOOST_REQUIRE_EQUAL(getOptionAsString(resultsOpt, "inputFile_std::string"), std::string("././data.root"));
+  BOOST_REQUIRE_EQUAL(getOptionAsString(resultsOpt, "inputFile_std::string"), std::string("../../data.root"));
 }
 
 BOOST_AUTO_TEST_CASE(setResetEventRangeOption_test)
