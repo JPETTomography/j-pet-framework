@@ -17,8 +17,8 @@
 
 #include <TFile.h>
 #include <boost/property_tree/xml_parser.hpp>
-#include "../JPetOptionsTools/JPetOptionsTools.h"
-#include "../JPetParamGetterAscii/JPetParamGetterAscii.h"
+#include "./JPetOptionsTools/JPetOptionsTools.h"
+#include "./JPetParamGetterAscii/JPetParamGetterAscii.h"
 
 std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const std::map<std::string, boost::any>& options)
 {
