@@ -56,9 +56,6 @@ find_package(Boost 1.50.0 REQUIRED COMPONENTS
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 add_definitions(${Boost_DEFINITIONS})
 
-find_package(FFTW REQUIRED)
-include_directories(${FFTW_INCLUDE_DIRS})
-
 get_directory_property(has_parent PARENT_DIRECTORY)
 if(has_parent)
   # export ROOT, Boost and pqxx includes to depending projects
@@ -107,8 +104,8 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 # add Unpacker subdirectory
 add_subdirectory(Unpacker2/Unpacker2)
 
-file(GLOB HEADERS JPet*/*.h tools/JPet*/*.h)
-file(GLOB SOURCES JPet*/*.cpp tools/JPet*/*.cpp)
+file(GLOB HEADERS JPet*/*.h)
+file(GLOB SOURCES JPet*/*.cpp)
 file(GLOB UNIT_TEST_SOURCES JPet*/*Test.cpp)
 list(REMOVE_ITEM SOURCES ${UNIT_TEST_SOURCES})
 
@@ -167,7 +164,6 @@ foreach(test_source ${UNIT_TEST_SOURCES})
   target_link_libraries(${test}.x
     JPetFramework
     ${Boost_LIBRARIES}
-    ${FFTW_LIBRARIES}
     )
 
 endforeach()
