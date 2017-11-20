@@ -28,7 +28,8 @@ LOCAL_TEST_CHECKSUM_FILE=$TEST_OUTPUT/$TEST_CHECKSUM_FILE
 # -x create subdirectories,
 # -nH  Disable generation of host-prefixed directories (so save only unitTestData and not full path)
 # --cut-dirs=1 ignore given level of directories (e.g. remove framework from path)
-declare -a WGET_FLAGS=(-x -nH --cut-dirs=1)
+# -nv not verbose
+declare -a WGET_FLAGS=(-x -nH -nv --cut-dirs=1)
 
 #downloading test data via wget
 # first get and check the checksums
