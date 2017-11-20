@@ -194,13 +194,6 @@ target_link_libraries(dbhandler
   ${PQXX_LIBRARIES}
 )
 
-# copy the DB config file to an expected location
-set(db_config_dir ${CMAKE_CURRENT_BINARY_DIR}/DBConfig)
-add_custom_command(TARGET dbhandler
-  POST_BUILD 
-  COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/DBHandler/Config ${db_config_dir}
-  )
-
 # add dependencies
 target_link_libraries(JPetFramework
   Unpacker2
