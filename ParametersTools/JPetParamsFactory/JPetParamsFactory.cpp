@@ -15,8 +15,8 @@
 
 
 #include "./JPetParamsFactory.h"
-#include "../JPetParamManager/JPetParamManager.h"
-#include "../JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetParamManager/JPetParamManager.h"
+#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
 namespace jpet_params_factory
 {

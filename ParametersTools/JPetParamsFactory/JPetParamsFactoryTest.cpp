@@ -17,7 +17,7 @@
 #define BOOST_TEST_MODULE JPetParamsFactoryTest
 #include <boost/test/unit_test.hpp>
 
-#include "../JPetParamsFactory/JPetParamsFactory.h"
+#include "./JPetParamsFactory/JPetParamsFactory.h"
 
 BOOST_AUTO_TEST_SUITE(JPetParamsFactoryTestSuite)
 
