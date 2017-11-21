@@ -47,6 +47,7 @@
 #include "./JPetWriter/JPetWriter.h"
 #include "./JPetCommonTools/JPetCommonTools.h"
 #include "./JPetScopeConfigParser/JPetScopeConfigParser.h"
+#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h" 
 
 
 #include <iostream>
@@ -184,8 +185,13 @@ bool JPetScopeLoader::run(const JPetDataInterface& inData)
 }
 
 
-bool JPetScopeLoader::terminate(JPetParamsInterface&)
+bool JPetScopeLoader::terminate(JPetParamsInterface& output_params)
 {
+  auto& params = dynamic_cast<JPetParams&>(output_params);
+  OptsStrAny new_opts;
+  jpet_options_generator_tools::setOutputFile(new_opts, fOutFileFullPath);
+  params = JPetParams(new_opts, params.getParamManagerAsShared());
+  
   assert(fWriter);
   assert(fHeader);
   assert(fStatistics);
