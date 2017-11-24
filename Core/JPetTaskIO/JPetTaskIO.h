@@ -34,7 +34,8 @@ class JPetStatistics;
 
 /**
  * @brief Class representing computing task with input/output operations.
- *
+ * In the current implementation the single entry that is read by the reader
+ * corresponds to a JPetTimeWindow object.
  */
 class JPetTaskIO: public JPetTask
 {

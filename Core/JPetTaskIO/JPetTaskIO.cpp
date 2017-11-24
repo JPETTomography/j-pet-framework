@@ -111,16 +111,16 @@ bool JPetTaskIO::run(const JPetDataInterface&)
   for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
     (*fSubTask)->init(fParams); //prepare current task for file
 
-    auto totalEvents = 0ll;
+    auto totalEntrys = 0ll;
     if (fReader) {
-      totalEvents = fReader->getNbOfAllEvents();
+      totalEntrys = fReader->getNbOfAllEntries();
     } else {
-      WARNING("no JPETReader set totalEvents set to -1");
-      totalEvents = -1;
+      WARNING("no JPETReader set totalEntrys set to -1");
+      totalEntrys = -1;
     }
     auto firstEvent = 0ll;
     auto lastEvent = 0ll;
-    if (!setUserLimits(fParams.getOptions(), totalEvents,  firstEvent, lastEvent)) {
+    if (!setUserLimits(fParams.getOptions(), totalEntrys,  firstEvent, lastEvent)) {
       ERROR("in setUserLimits");
       return false;
     }
@@ -130,23 +130,23 @@ bool JPetTaskIO::run(const JPetDataInterface&)
       if (isProgressBar(fParams.getOptions())) {
         displayProgressBar(i, lastEvent);
       }
-      auto pOutputEvent = (dynamic_cast<JPetUserTask*>(fSubTask->get()))->getOutputEvents();
-      if (pOutputEvent != nullptr) {
-        pOutputEvent->Clear();
+      auto pOutputEntry = (dynamic_cast<JPetUserTask*>(fSubTask->get()))->getOutputEvents();
+      if (pOutputEntry != nullptr) {
+        pOutputEntry->Clear();
       } else {
         WARNING("No proper timeWindow object returned to clear events");
         //return false;
       }
-      JPetData event(fReader->getCurrentEvent());
+      JPetData event(fReader->getCurrentEntry());
       fSubTask->get()->run(event);
-      pOutputEvent = (dynamic_cast<JPetUserTask*>(fSubTask->get()))->getOutputEvents();
-      if (pOutputEvent != nullptr) {
-        fWriter->write(*pOutputEvent);
+      pOutputEntry = (dynamic_cast<JPetUserTask*>(fSubTask->get()))->getOutputEvents();
+      if (pOutputEntry != nullptr) {
+        fWriter->write(*pOutputEntry);
       } else {
         ERROR("No proper timeWindow object returned to save to file, returning from subtask " + fSubTask->get()->getName());
         return false;
       }
-      fReader->nextEvent();
+      fReader->nextEntry();
     }
   }
   return true;

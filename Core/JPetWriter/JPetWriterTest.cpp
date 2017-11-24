@@ -52,8 +52,8 @@ BOOST_AUTO_TEST_CASE( my_test2 )
   writer.closeFile();
 
   JPetReader reader(fileName.c_str());
-  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), 1);
-  TNamed& objOut = (TNamed&)reader.getCurrentEvent();
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEntries(), 1);
+  TNamed& objOut = (TNamed&)reader.getCurrentEntry();
   BOOST_REQUIRE(std::string(objOut.GetName()) == "TNamed");
   BOOST_REQUIRE(std::string(objOut.GetTitle()) == "Title of this testObj");
 }
@@ -94,10 +94,10 @@ BOOST_AUTO_TEST_CASE( my_test3 )
   writer.closeFile();
 
   JPetReader reader(fileName.c_str());
-  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEntries(), kHugeNumberOfObjects);
   for (int i = 0; i < kHugeNumberOfObjects; i++) {
-    reader.nthEvent(i);
-    TNamed& objOut = (TNamed&)reader.getCurrentEvent();
+    reader.nthEntry(i);
+    TNamed& objOut = (TNamed&)reader.getCurrentEntry();
     BOOST_REQUIRE(std::string(objOut.GetName()) == "TNamed");
     BOOST_REQUIRE(std::string(objOut.GetTitle()) == Form("Title of this testObj%d", i));
   }
@@ -118,11 +118,11 @@ BOOST_AUTO_TEST_CASE( saving_different_objects1 )
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
-  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEntries(), kHugeNumberOfObjects);
   reader.closeFile();
-  if(boost::filesystem::exists(fileTest))
+  if (boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-} 
+}
 
 BOOST_AUTO_TEST_CASE( saving_different_objects2 )
 {
@@ -137,11 +137,11 @@ BOOST_AUTO_TEST_CASE( saving_different_objects2 )
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
-  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEntries(), kHugeNumberOfObjects);
   reader.closeFile();
-  if(boost::filesystem::exists(fileTest))
+  if (boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-} 
+}
 
 BOOST_AUTO_TEST_CASE( saving_different_objects3 )
 {
@@ -157,11 +157,11 @@ BOOST_AUTO_TEST_CASE( saving_different_objects3 )
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
-  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEntries(), kHugeNumberOfObjects);
   reader.closeFile();
-  if(boost::filesystem::exists(fileTest))
+  if (boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-} 
+}
 
 BOOST_AUTO_TEST_CASE( saving_different_objects4 )
 {
@@ -176,11 +176,11 @@ BOOST_AUTO_TEST_CASE( saving_different_objects4 )
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
-  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEntries(), kHugeNumberOfObjects);
   reader.closeFile();
-  if(boost::filesystem::exists(fileTest))
+  if (boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-} 
+}
 
 BOOST_AUTO_TEST_CASE( saving_different_objects5 )
 {
@@ -196,11 +196,11 @@ BOOST_AUTO_TEST_CASE( saving_different_objects5 )
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
-  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEntries(), kHugeNumberOfObjects);
   reader.closeFile();
-  if(boost::filesystem::exists(fileTest))
+  if (boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-} 
+}
 
 BOOST_AUTO_TEST_CASE( saving_different_objects6 )
 {
@@ -216,11 +216,11 @@ BOOST_AUTO_TEST_CASE( saving_different_objects6 )
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
-  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEntries(), kHugeNumberOfObjects);
   reader.closeFile();
-  if(boost::filesystem::exists(fileTest))
+  if (boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-} 
+}
 
 BOOST_AUTO_TEST_CASE( saving_different_objects7 )
 {
@@ -236,11 +236,11 @@ BOOST_AUTO_TEST_CASE( saving_different_objects7 )
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
-  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEntries(), kHugeNumberOfObjects);
   reader.closeFile();
-  if(boost::filesystem::exists(fileTest))
+  if (boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-} 
+}
 
 BOOST_AUTO_TEST_CASE( saving_different_objects8 )
 {
@@ -256,11 +256,11 @@ BOOST_AUTO_TEST_CASE( saving_different_objects8 )
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
-  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEvents(), kHugeNumberOfObjects);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEntries(), kHugeNumberOfObjects);
   reader.closeFile();
-  if(boost::filesystem::exists(fileTest))
+  if (boost::filesystem::exists(fileTest))
     boost::filesystem::remove(fileTest);
-} 
+}
 
 BOOST_AUTO_TEST_CASE( saving_ROOT_container )
 {
@@ -272,26 +272,26 @@ BOOST_AUTO_TEST_CASE( saving_ROOT_container )
   list.Add(new TNamed("test3", "test object 3"));
 
   writer.writeCollection(&list, "testdir");
-  writer.closeFile();  
+  writer.closeFile();
 
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
 
   TFile fread(fileTest, "READ");
 
-  TNamed * retrieved1 = dynamic_cast<TNamed*>(fread.Get("testdir/test1"));
-  TNamed * retrieved2 = dynamic_cast<TNamed*>(fread.Get("testdir/test2"));
-  TNamed * retrieved3 = dynamic_cast<TNamed*>(fread.Get("testdir/test3"));
+  TNamed* retrieved1 = dynamic_cast<TNamed*>(fread.Get("testdir/test1"));
+  TNamed* retrieved2 = dynamic_cast<TNamed*>(fread.Get("testdir/test2"));
+  TNamed* retrieved3 = dynamic_cast<TNamed*>(fread.Get("testdir/test3"));
 
   BOOST_CHECK(retrieved1);
   BOOST_CHECK(retrieved2);
   BOOST_CHECK(retrieved3);
-  
+
   BOOST_REQUIRE(std::string(retrieved1->GetName()) == "test1");
   BOOST_REQUIRE(std::string(retrieved2->GetName()) == "test2");
   BOOST_REQUIRE(std::string(retrieved3->GetName()) == "test3");
 
   BOOST_REQUIRE(std::string(retrieved1->GetTitle()) == "test object 1");
-    
+
   fread.Close();
 }
 
@@ -302,32 +302,32 @@ BOOST_AUTO_TEST_CASE( saving_ROOT_container_subdir )
   TList list;
   list.Add(new TNamed("test1", "test object 1"));
 
-  THashTable hash;  
+  THashTable hash;
   hash.Add(new TNamed("test2", "test object 2"));
   hash.Add(new TNamed("test3", "test object 3"));
 
   writer.writeCollection(&list, "testdir", "listcontents");
   writer.writeCollection(&hash, "testdir", "hashcontents");
-  writer.closeFile();  
+  writer.closeFile();
 
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
 
   TFile fread(fileTest, "READ");
 
-  TNamed * retrieved1 = dynamic_cast<TNamed*>(fread.Get("testdir/listcontents/test1"));
-  TNamed * retrieved2 = dynamic_cast<TNamed*>(fread.Get("testdir/hashcontents/test2"));
-  TNamed * retrieved3 = dynamic_cast<TNamed*>(fread.Get("testdir/hashcontents/test3"));
+  TNamed* retrieved1 = dynamic_cast<TNamed*>(fread.Get("testdir/listcontents/test1"));
+  TNamed* retrieved2 = dynamic_cast<TNamed*>(fread.Get("testdir/hashcontents/test2"));
+  TNamed* retrieved3 = dynamic_cast<TNamed*>(fread.Get("testdir/hashcontents/test3"));
 
   BOOST_CHECK(retrieved1);
   BOOST_CHECK(retrieved2);
   BOOST_CHECK(retrieved3);
-  
+
   BOOST_REQUIRE(std::string(retrieved1->GetName()) == "test1");
   BOOST_REQUIRE(std::string(retrieved2->GetName()) == "test2");
   BOOST_REQUIRE(std::string(retrieved3->GetName()) == "test3");
 
   BOOST_REQUIRE(std::string(retrieved1->GetTitle()) == "test object 1");
-    
+
   fread.Close();
 }
 
