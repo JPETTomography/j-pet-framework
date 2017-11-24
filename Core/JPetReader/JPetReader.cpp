@@ -13,28 +13,18 @@
  *  @file JPetReader.cpp
  */
 
-#include "JPetReader.h"
 #include <cassert>
+#include "JPetReader.h"
 #include "./JPetUserInfoStructure/JPetUserInfoStructure.h"
 
 const std::string JPetReader::kRootTreeName = "T"; /// This tree name is compatible with the tree name produced by the unpacker.
 
-JPetReader::JPetReader() :
-  fBranch(0),
-  fEvent(0),
-  fTree(0),
-  fFile(NULL),
-  fCurrentEventNumber(-1)
+JPetReader::JPetReader()
 {
   /**/
 }
 
-JPetReader::JPetReader(const char* p_filename, const char* treeName) :
-  fBranch(0),
-  fEvent(0),
-  fTree(0),
-  fFile(0),
-  fCurrentEventNumber(-1)
+JPetReader::JPetReader(const char* p_filename, const char* treeName)
 {
   if (!openFileAndLoadData(p_filename, treeName)) {
     ERROR("error in opening file");
@@ -49,42 +39,60 @@ JPetReader::~JPetReader()
   }
 }
 
-JPetReader::MyEvent& JPetReader::getCurrentEvent()
+JPetReader::MyEvent& JPetReader::getCurrentEntry()
 {
-  if (loadCurrentEvent()) {
-    return *fEvent;
+  if (loadCurrentEntry()) {
+    return *fEntry;
   } else {
     ERROR("Could not read the current event");
-    if (fEvent) {
-      delete fEvent;
+    if (fEntry) {
+      delete fEntry;
     }
-    fEvent = new TNamed("Empty event", "Empty event");
+    fEntry = new TNamed("Empty event", "Empty event");
   }
-  return *fEvent;
+  return *fEntry;
 }
 
-bool JPetReader::JPetReader::nextEvent()
+bool JPetReader::JPetReader::nextEntry()
 {
-  fCurrentEventNumber++;
-  return loadCurrentEvent();
+  fCurrentEntryNumber++;
+  return loadCurrentEntry();
 }
 
-bool JPetReader::firstEvent()
+bool JPetReader::firstEntry()
 {
-  fCurrentEventNumber = 0;
-  return loadCurrentEvent();
+  fCurrentEntryNumber = 0;
+  return loadCurrentEntry();
 }
 
-bool JPetReader::lastEvent()
+bool JPetReader::lastEntry()
 {
-  fCurrentEventNumber = getNbOfAllEvents() - 1;
-  return loadCurrentEvent();
+  fCurrentEntryNumber = getNbOfAllEntries() - 1;
+  return loadCurrentEntry();
 }
 
-bool JPetReader::nthEvent(long long n)
+bool JPetReader::nthEntry(long long n)
 {
-  fCurrentEventNumber = n;
-  return loadCurrentEvent();
+  fCurrentEntryNumber = n;
+  return loadCurrentEntry();
+}
+
+long long JPetReader::getCurrentEntryNumber() const
+{
+  return fCurrentEntryNumber;
+}
+
+long long JPetReader::getNbOfAllEntries() const
+{
+  return fTree ? fTree->GetEntries() : 0;
+}
+
+bool JPetReader::openFileAndLoadData(const char* filename, const char* treename)
+{
+  if (openFile(filename) ) {
+    return loadData(treename);
+  }
+  return false;
 }
 
 void JPetReader::closeFile ()
@@ -92,9 +100,9 @@ void JPetReader::closeFile ()
   if (fFile) delete fFile;
   fFile = 0;
   fBranch = 0;
-  fEvent = 0;
+  fEntry = 0;
   fTree = 0;
-  fCurrentEventNumber = -1;
+  fCurrentEntryNumber = -1;
 }
 
 
@@ -130,11 +138,10 @@ bool JPetReader::loadData(const char* treename)
     ERROR("in reading branch from tree");
     return false;
   }
-  fBranch->SetAddress(&fEvent);
-  firstEvent();
+  fBranch->SetAddress(&fEntry);
+  firstEntry();
   return true;
 }
-
 
 /**
  * @brief Returns a copy of the header read from input file.
@@ -156,4 +163,32 @@ JPetTreeHeader* JPetReader::getHeaderClone() const
   }
   // return a COPY of this header
   return new JPetTreeHeader( *header );
+}
+
+TObject* JPetReader::getObjectFromFile(const char* name)
+{
+  if (fFile) return fFile->Get(name);
+  else return 0;
+}
+
+bool JPetReader::isOpen() const
+{
+  if (fFile) return (fFile->IsOpen() && !fFile->IsZombie());
+  else return false;
+}
+
+bool JPetReader::loadCurrentEntry()
+{
+  if (fTree) {
+    int entryCode = fTree->GetEntry(fCurrentEntryNumber);
+    return isCorrectTreeEntryCode(entryCode);
+  }
+  return false;
+}
+
+inline bool JPetReader::isCorrectTreeEntryCode (int entryCode) const  ///see TTree GetEntry method
+{
+  if (entryCode == -1) return false;
+  if (entryCode == 0) return false;
+  return true;
 }

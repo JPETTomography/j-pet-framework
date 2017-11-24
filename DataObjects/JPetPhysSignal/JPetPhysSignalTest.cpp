@@ -7,7 +7,8 @@
 
 BOOST_AUTO_TEST_SUITE()
 
-BOOST_AUTO_TEST_CASE( ConstructorTest ) {
+BOOST_AUTO_TEST_CASE( ConstructorTest )
+{
   double epsilon = 1e-5;
   JPetPhysSignal signal;
   BOOST_CHECK_CLOSE(signal.getTime(), 0.f, epsilon);
@@ -16,7 +17,8 @@ BOOST_AUTO_TEST_CASE( ConstructorTest ) {
   BOOST_CHECK_CLOSE(signal.getQualityOfPhe(), 0.f, epsilon);
 }
 
-BOOST_AUTO_TEST_CASE( ScalarFieldsTest ) {
+BOOST_AUTO_TEST_CASE( ScalarFieldsTest )
+{
   double epsilon = 1e-5;
   JPetPhysSignal signal;
   signal.setTime(17.f);
@@ -26,7 +28,8 @@ BOOST_AUTO_TEST_CASE( ScalarFieldsTest ) {
   BOOST_CHECK_CLOSE(signal.getPhe(), 43.f, epsilon);
 }
 
-BOOST_AUTO_TEST_CASE( AllSignalsTest1 ) {
+BOOST_AUTO_TEST_CASE( AllSignalsTest1 )
+{
 
   // prepare raw signal
   JPetRawSignal raw(4);
@@ -57,12 +60,13 @@ BOOST_AUTO_TEST_CASE( AllSignalsTest1 ) {
 
 }
 
-BOOST_AUTO_TEST_CASE( AllSignalsTest2 ) {
+BOOST_AUTO_TEST_CASE( AllSignalsTest2 )
+{
 
   double epsilon = 1e-5;
   JPetReader reader;
   reader.openFileAndLoadData("signalTest.root");
-  JPetPhysSignal & phys = (JPetPhysSignal&) reader.getCurrentEvent();
+  JPetPhysSignal& phys = (JPetPhysSignal&) reader.getCurrentEntry();
   BOOST_CHECK_CLOSE(phys.getTime(), 42.42f, epsilon);
 
   BOOST_CHECK_EQUAL(phys.getRecoSignal().getShape().size(), 502u);
@@ -71,11 +75,11 @@ BOOST_AUTO_TEST_CASE( AllSignalsTest2 ) {
   BOOST_CHECK_CLOSE(phys.getRecoSignal().getShape().back().amplitude, 0.43f,
                     epsilon);
 
-  const     JPetRawSignal & raw = phys.getRecoSignal().getRawSignal();
+  const     JPetRawSignal& raw = phys.getRecoSignal().getRawSignal();
   BOOST_CHECK_EQUAL(raw.getNumberOfPoints(JPetSigCh::Leading), 2);
   BOOST_CHECK_CLOSE(
-      raw.getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrValue).front().getThreshold(),
-      100.f, epsilon);
+    raw.getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrValue).front().getThreshold(),
+    100.f, epsilon);
 
 }
 
