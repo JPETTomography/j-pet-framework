@@ -16,21 +16,19 @@
 #ifndef JPETREADERINTERFACE_H 
 #define JPETREADERINTERFACE_H 
 
-#include <TNamed.h> // for Event typedef
+#include <TObject.h> // for Event typedef
 
 class JPetReaderInterface {
  public:
   typedef TObject MyEvent; 
   virtual ~JPetReaderInterface() {;}
-  virtual MyEvent& getCurrentEvent()=0;   
-  virtual bool nextEvent()=0;
-  virtual bool firstEvent()=0;
-  virtual bool lastEvent()=0;
-  virtual bool nthEvent(long long int n)=0;
-  virtual long long getCurrentEventNumber() const =0;
-  virtual long long getNbOfAllEvents() const =0; 
-  virtual TObject* getObjectFromFile(const char* name)=0;
-  
+  virtual MyEvent& getCurrentEntry()=0;   
+  virtual bool nextEntry()=0;
+  virtual bool firstEntry()=0;
+  virtual bool lastEntry()=0;
+  virtual bool nthEntry(long long int n)=0;
+  virtual long long getCurrentEntryNumber() const =0;
+  virtual long long getNbOfAllEntries() const =0; 
   virtual bool openFileAndLoadData(const char* filename, const char* treename)=0;
   virtual void closeFile()=0; 
 };

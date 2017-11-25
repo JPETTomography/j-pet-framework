@@ -16,6 +16,7 @@
 #ifndef JPETREADER_H
 #define JPETREADER_H
 
+
 #include <TFile.h>
 #include <TTree.h>
 #include <TBranch.h>
@@ -53,65 +54,30 @@ public:
   JPetReader(const char* p_filename, const char* treeName = "T");
   virtual ~JPetReader(void);
 
-  virtual JPetReaderInterface::MyEvent& getCurrentEvent();
-  virtual bool nextEvent();
-  virtual bool firstEvent();
-  virtual bool lastEvent();
-  virtual bool nthEvent(long long n);
-  virtual long long getCurrentEventNumber() const
-  {
-    return fCurrentEventNumber;
-  }
-  virtual long long getNbOfAllEvents() const
-  {
-    return fTree ? fTree->GetEntries() : 0;
-  }
-
-  virtual bool openFileAndLoadData(const char* filename, const char* treename = "T")
-  {
-    if (openFile(filename) ) {
-      return loadData(treename);
-    }
-    return false;
-  }
+  virtual JPetReaderInterface::MyEvent& getCurrentEntry();
+  virtual bool nextEntry() override;
+  virtual bool firstEntry() override;
+  virtual bool lastEntry() override;
+  virtual bool nthEntry(long long n) override;
+  virtual long long getCurrentEntryNumber() const override;
+  virtual long long getNbOfAllEntries() const override;
+  virtual bool openFileAndLoadData(const char* filename, const char* treename = "T") override;
   virtual void closeFile();
   JPetTreeHeader* getHeaderClone() const;
-
-  virtual TObject* getObjectFromFile(const char* name)
-  {
-    if (fFile) return fFile->Get(name);
-    else return 0;
-  }
-  virtual bool isOpen() const
-  {
-    if (fFile) return (fFile->IsOpen() && !fFile->IsZombie());
-    else return false;
-  }
+  virtual TObject* getObjectFromFile(const char* name);
+  virtual bool isOpen() const;
 
 protected:
   virtual bool openFile(const char* filename);
   virtual bool loadData(const char* treename = "T");
-  bool loadCurrentEvent()
-  {
-    if (fTree) {
-      int entryCode = fTree->GetEntry(fCurrentEventNumber);
-      return isCorrectTreeEntryCode(entryCode);
-    }
-    return false;
-  }
+  bool loadCurrentEntry();
+  inline bool isCorrectTreeEntryCode (int entryCode) const;  ///see TTree GetEntry method
 
-  inline bool isCorrectTreeEntryCode (int entryCode) const  ///see TTree GetEntry method
-  {
-    if (entryCode == -1) return false;
-    if (entryCode == 0) return false;
-    return true;
-  }
-
-  TBranch* fBranch;
-  JPetReaderInterface::MyEvent* fEvent;
-  TTree* fTree;
-  TFile* fFile;
-  long long fCurrentEventNumber;
+  TBranch* fBranch = nullptr;
+  TObject* fEntry = nullptr;
+  TTree* fTree = nullptr;
+  TFile* fFile = nullptr;
+  long long fCurrentEntryNumber = -1;
 };
 
 #endif	// JPETREADER_H
