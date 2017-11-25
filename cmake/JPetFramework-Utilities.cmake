@@ -14,7 +14,7 @@
 # EXCLUDE or limiting to these given after INCLUDE.
 #
 function(generate_root_dictionaries OUT_VAR)
-  cmake_parse_arguments(ARG "" "" "SOURCES;EXCLUDE;INCLUDE" ${ARGN})
+  cmake_parse_arguments(ARG "" "" "SOURCES;EXCLUDE;INCLUDE;INCLUDE_DIRS" ${ARGN})
   # generate ROOT dictionaries for all other source files
   foreach(source ${ARG_SOURCES})
     get_filename_component(name ${source} NAME)
@@ -44,8 +44,7 @@ function(generate_root_dictionaries OUT_VAR)
       file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries)
       set(dictionary
         ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/${name}Dictionary)
-      get_directory_property(incdirs INCLUDE_DIRECTORIES)
-      set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${incdirs};/")
+      set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${ARG_INCLUDE_DIRS};/")
       string(REGEX REPLACE ^/ "" header "${header}")
       if(EXISTS ${linkdef})
         string(REGEX REPLACE ^/ "" linkdef "${linkdef}")
@@ -58,7 +57,7 @@ function(generate_root_dictionaries OUT_VAR)
           OPTIONS -p
           )
       endif()
-      set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${incdirs}")
+      set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${ARG_INCLUDE_DIRS}")
       list(APPEND dictionaries ${dictionary}.cxx)
     endif()
   endforeach()

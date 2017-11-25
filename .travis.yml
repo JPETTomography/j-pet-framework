@@ -5,10 +5,6 @@ compiler:
 - gcc
 os:
 - linux
-addons:
-  apt:
-    packages:
-      - sshpass
 install:
   - sudo apt-get -qq update
   - sudo apt-get install -y git
@@ -18,17 +14,11 @@ install:
   - sudo apt-get install -y libtinyxml2-dev
   - sudo apt-get install -y doxygen
   - sudo apt-get install -y root-system
+  - sudo apt-get install -y libfftw3-3 libfftw3-dev
 script:
-    - mkdir -p DBHandler/Config
-    - export SSHPASS=$SPHINX_PASSWORD
-    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SPHINX_USERNAME@sphinx.if.uj.edu.pl:/home/framework_configs/configDB.json DBHandler/Config/
-    - ls DBHandler/Config/
-    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SPHINX_USERNAME@sphinx.if.uj.edu.pl:/home/framework_configs/configDB.json.sphinx DBHandler/Config/
-    - sshpass -e scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SPHINX_USERNAME@sphinx.if.uj.edu.pl:/home/framework_configs/ReadMe.txt DBHandler/Config/
     - mkdir build
     - cd build
     - cmake ..
-    - cp ../DBHandler/Config/configDB.json.sphinx ../DBHandler/Config/configDB.json;
     - make all tests
     - cd tests
     - ./run_tests.pl -f xml
