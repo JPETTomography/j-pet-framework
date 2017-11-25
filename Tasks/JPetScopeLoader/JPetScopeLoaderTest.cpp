@@ -11,7 +11,6 @@
 //#include "JPetScopeLoaderFixtures.h"
 #include "./JPetScopeLoader/JPetScopeLoader.h"
 
-
 BOOST_AUTO_TEST_SUITE (JPetScopeLoaderTestSuite)
 
 BOOST_AUTO_TEST_CASE (getFilePrefix)
@@ -134,6 +133,48 @@ BOOST_AUTO_TEST_CASE (generate_root_file2)
   BOOST_REQUIRE_MESSAGE(boost::filesystem::exists("test.root"), "File " << "test.root" << " does not exist.");
   BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename1), "File " << test_root_filename1 << " does not exist.");
   BOOST_REQUIRE_MESSAGE(boost::filesystem::exists(test_root_filename2), "File " << test_root_filename2 << " does not exist.");
+}
+
+BOOST_AUTO_TEST_CASE (groupScopeFileNamesByTimeWindowIndex)
+{
+  std::map<std::string, int>  input {
+    {"/some/path/C1_00003.txt", 0}, {"/some/path/C1_00004.txt", 0},  {"/some/path/C2_00003.txt", 1}, {"/some/path/C2_00004.txt", 1},
+    {"/some/path/C3_00003.txt", 2}, {"/some/path/C3_00004.txt", 2}, {"/some/path/C4_00003.txt", 3}, {"/some/path/C4_00004.txt", 3}
+  };
+  auto obtainedRes = JPetScopeLoader::groupScopeFileNamesByTimeWindowIndex(input);
+  std::map<int, std::map<std::string, int>>  expectedRes {
+    {3, {{"/some/path/C1_00003.txt", 0}, {"/some/path/C2_00003.txt", 1}, {"/some/path/C3_00003.txt", 2}, {"/some/path/C4_00003.txt", 3}}},
+    {4, {{"/some/path/C1_00004.txt", 0}, {"/some/path/C2_00004.txt", 1}, {"/some/path/C3_00004.txt", 2}, {"/some/path/C4_00004.txt", 3}}}
+  };
+  auto it2 = obtainedRes.begin();
+  for (auto it = expectedRes.begin(); it != expectedRes.end(); ++it) {
+    BOOST_REQUIRE_EQUAL(it->first, it2->first);
+    auto mapExpected = it2->second;
+    auto mapObtained = it->second;
+    auto mIt2 = mapObtained.begin();
+    for (auto mIt = mapExpected.begin(); mIt != mapExpected.end(); ++mIt) {
+      BOOST_REQUIRE_EQUAL(mIt->first, mIt2->first);
+      BOOST_REQUIRE_EQUAL(mIt->second, mIt2->second);
+      ++mIt2;
+    }
+    ++it2;
+  }
+}
+
+BOOST_AUTO_TEST_CASE(getTimeWindowIndex)
+{
+  ///always 4th character if it is a number or digit
+  BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex(""), -1);
+  BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex("02"), -1);
+  BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex("023"), -1);
+  BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex("_000a"), 0);
+  BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex("0040a"), 0);
+  BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex("C1_0002"), 2);
+  BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex("C4_0004"), 4);
+  BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex("_0004"), 4);
+  BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex("_000a"), 0);
+  BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex("107349"), 349);
+  BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex("C1_0003.txt"), 3);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

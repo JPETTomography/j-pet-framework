@@ -16,55 +16,32 @@
  */
 
 #include "JPetScopeTask.h"
-#include "./JPetParamManager/JPetParamManager.h"
 
 #include <iostream>
-#include "JPetScopeTaskUtils.h"
-#include "./JPetCommonTools/JPetCommonTools.h"
-
+#include <memory>
 #include <boost/filesystem.hpp>
+#include "JPetScopeTaskUtils.h"
+#include "JPetScopeData/JPetScopeData.h"
+#include "JPetCommonTools/JPetCommonTools.h"
+
 using namespace boost::filesystem;
 
-
 JPetScopeTask::JPetScopeTask(const char* name):
-  JPetTask(name)
+  JPetUserTask(name)
 {
 }
 
-bool JPetScopeTask::init(const JPetParamsInterface& inOptions)
+bool JPetScopeTask::run(const JPetDataInterface& inData)
 {
-  fParams = dynamic_cast<const JPetParams&>(inOptions);
-  return init();
-}
-
-bool JPetScopeTask::run(const JPetDataInterface&)
-{
+  auto& currData = dynamic_cast<const JPetScopeData&>(inData);
+  fInputFilesInCurrentWindow = currData.getEvent();
   return exec();
-}
-
-bool JPetScopeTask::terminate(JPetParamsInterface&)
-{
-  return terminate();
-}
-
-int JPetScopeTask::getTimeWindowIndex(const std::string&  pathAndFileName)
-{
-  DEBUG("JPetScopeTask");
-  int time_window_index = -1;
-  if (!boost::filesystem::exists(pathAndFileName)) {
-    ERROR("File does not exist ");
-  }
-  int res = sscanf(JPetCommonTools::extractFileNameFromFullPath(pathAndFileName).c_str(), "%*3s %d", &time_window_index);
-  if (res <= 0) {
-    ERROR("scanf failed");
-    return -1;
-  } else {
-    return time_window_index;
-  }
 }
 
 bool JPetScopeTask::init()
 {
+  INFO("Scope Task started");
+  fOutputEvents = new JPetTimeWindow("JPetRecoSignal");
   return true;
 }
 
@@ -75,8 +52,9 @@ bool JPetScopeTask::exec()
   if (bank.isDummy()) {
     ERROR("bank is Dummy");
   } else {
-    auto inputFilesInTimeWindowOrder = getFilesInTimeWindowOrder(fInputFiles);
-    for (const auto& file : inputFilesInTimeWindowOrder) {
+    DEBUG(std::string("time window index:") + std::to_string(fInputFilesInCurrentWindow.first));
+    auto files = fInputFilesInCurrentWindow.second;
+    for (const auto& file : files ) {
       DEBUG(std::string("file to open:") + file.first);
       JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.first.c_str());
       DEBUG("before setPM");
@@ -85,8 +63,7 @@ bool JPetScopeTask::exec()
       sig.setPM(pm);
       sig.setBarrelSlot(bs);
       DEBUG("after setPM");
-      assert(fWriter);
-      fWriter->write(sig);
+      fOutputEvents->add<JPetRecoSignal>(sig);
     }
   }
   return true;
@@ -94,30 +71,7 @@ bool JPetScopeTask::exec()
 
 bool JPetScopeTask::terminate()
 {
+
+  INFO("Scope Task finished");
   return true;
-}
-
-std::multimap<std::string, int, cmpByTimeWindowIndex> JPetScopeTask::getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const
-{
-  std::multimap<std::string, int, cmpByTimeWindowIndex> orderedMap(inputFiles.begin(), inputFiles.end());
-  return orderedMap;
-}
-
-void JPetScopeTask::setStatistics(JPetStatistics* statistics)
-{
-  fStatistics = statistics;
-}
-
-JPetStatistics& JPetScopeTask::getStatistics()
-{
-  assert(fStatistics);
-  return *fStatistics;
-}
-
-const JPetParamBank& JPetScopeTask::getParamBank()
-{
-  DEBUG("JPetScopeTask");
-  auto paramManager = fParams.getParamManager();
-  assert(paramManager);
-  return paramManager->getParamBank();
 }
