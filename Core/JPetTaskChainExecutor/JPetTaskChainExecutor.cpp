@@ -17,7 +17,6 @@
 
 #include <cassert>
 #include <memory>
-#include <chrono>
 
 #include "JPetTaskChainExecutorUtils.h"
 #include "./JPetLoggerInclude.h"
