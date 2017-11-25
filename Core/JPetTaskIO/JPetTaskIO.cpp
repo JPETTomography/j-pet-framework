@@ -79,9 +79,8 @@ std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFi
   // handle input file path
   std::string inputFilename = getInputFile(opts);
   if ( JPetCommonTools::extractDataTypeFromFileName(inputFilename) != fInFileType ) {
-    ERROR(Form("Input file type %s does not match the one provided by the previous module (%s).",
-               fInFileType.c_str(), JPetCommonTools::extractDataTypeFromFileName(inputFilename).c_str()));
-    return std::make_tuple(false, "", "", resetOutputPath);
+    WARNING(Form("Input file type %s does not match the one provided by the previous module (%s).",
+                 fInFileType.c_str(), JPetCommonTools::extractDataTypeFromFileName(inputFilename).c_str()));
   }
   inputFilename = JPetCommonTools::replaceDataTypeInFileName(inputFilename, fInFileType);
 
@@ -148,6 +147,8 @@ bool JPetTaskIO::run(const JPetDataInterface&)
       }
       fReader->nextEntry();
     }
+    JPetParamsInterface fake_params;
+    (*fSubTask)->terminate(fake_params);
   }
   return true;
 }
