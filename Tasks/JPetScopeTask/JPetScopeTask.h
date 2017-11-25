@@ -17,66 +17,26 @@
 #ifndef JPETSCOPETASK_H
 #define JPETSCOPETASK_H
 
+#include "JPetUserTask/JPetUserTask.h"
 #include <string>
 #include <map>
 
-#include "./JPetUserTask/JPetUserTask.h"
-#include "./JPetRawSignal/JPetRawSignal.h"
-#include "./JPetTimeWindow/JPetTimeWindow.h"
-#include "./JPetParamBank/JPetParamBank.h"
-#include "./JPetParamManager/JPetParamManager.h"
-
-class JPetWriter;
-struct cmpByTimeWindowIndex;
-
-class JPetScopeTask: public JPetTask
+class JPetScopeTask: public JPetUserTask
 {
 public:
   JPetScopeTask(const char* name);
   virtual ~JPetScopeTask() {};
 
-  bool init(const JPetParamsInterface& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
-  bool terminate(JPetParamsInterface& outOptions) override;
 
-  static int getTimeWindowIndex(const std::string&  pathAndFileName);
   /// getting oscilloscope data full file names to process
-  inline std::map<std::string, int> getInputFiles() const
-  {
-    return fInputFiles;
-  }
-  inline void setInputFiles(const std::map<std::string, int>& inputFiles)
-  {
-    fInputFiles = inputFiles;
-  }
-
-  virtual void setWriter(JPetWriter* writer)
-  {
-    fWriter = writer;
-  }
-
-  const JPetParamBank& getParamBank();
-  virtual void setStatistics(JPetStatistics* statistics);
-  JPetStatistics& getStatistics();
-
-  std::multimap<std::string, int, cmpByTimeWindowIndex> getFilesInTimeWindowOrder(const std::map<std::string, int>& inputFiles) const;
 
 protected:
-  bool init();
-  bool exec();
-  bool terminate();
+  bool init() override;
+  bool exec() override;
+  bool terminate() override;
 
-  std::map<std::string, int> fInputFiles;
-  JPetWriter* fWriter = 0;
-  JPetStatistics* fStatistics = 0;
-  JPetParams fParams;
-};
-
-struct cmpByTimeWindowIndex {
-  bool operator()(const std::string& a, const std::string& b) const
-  {
-    return JPetScopeTask::getTimeWindowIndex(a) < JPetScopeTask::getTimeWindowIndex(b);
-  }
+  std::pair<int, std::map<std::string, int>> fInputFilesInCurrentWindow;
 };
 
 #endif /*  !JPETSCOPETASK_H */

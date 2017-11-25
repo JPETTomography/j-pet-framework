@@ -17,45 +17,19 @@
 
 #include "./JPetScopeLoader.h"
 
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
-#include <string>
-#include <utility>
-
 #include <boost/regex.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/ini_parser.hpp>
-#include <boost/property_tree/info_parser.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/property_tree/xml_parser.hpp>
 
 #include <TSystem.h>
-#include <TApplication.h>
 
-#include "./JPetBarrelSlot/JPetBarrelSlot.h"
-#include "./JPetManager/JPetManager.h"
-#include "./JPetParamBank/JPetParamBank.h"
-#include "./JPetPhysSignal/JPetPhysSignal.h"
-#include "./JPetPM/JPetPM.h"
-#include "./JPetRecoSignal/JPetRecoSignal.h"
-#include "./JPetScin/JPetScin.h"
-#include "./JPetScopeLoader/JPetScopeLoader.h"
-#include "./JPetTreeHeader/JPetTreeHeader.h"
-#include "./JPetWriter/JPetWriter.h"
-#include "./JPetCommonTools/JPetCommonTools.h"
-#include "./JPetScopeConfigParser/JPetScopeConfigParser.h"
-#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h" 
-
-
-#include <iostream>
+#include "JPetCommonTools/JPetCommonTools.h"
+#include "JPetScopeConfigParser/JPetScopeConfigParser.h"
+#include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "JPetScopeData/JPetScopeData.h"
 
 using namespace std;
 using namespace boost::filesystem;
 using boost::property_tree::ptree;
-
 
 JPetScopeLoader::JPetScopeLoader(std::unique_ptr<JPetScopeTask> task): JPetTaskIO("ScopeTask", "", "reco.sig")
 {
@@ -83,17 +57,9 @@ void JPetScopeLoader::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
 bool JPetScopeLoader::createInputObjects(const char*)
 {
   using namespace jpet_options_tools;
-  JPetScopeConfigParser confParser;
   auto opts = fParams.getOptions();
-  auto config = confParser.getConfig(getScopeConfigFile(opts));
-
-  auto prefix2PM =  getPMPrefixToPMIdMap();
-  std::map<std::string, int> inputScopeFiles = createInputScopeFileNames(getScopeInputDirectory(opts), prefix2PM);
   for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
     auto task = dynamic_cast<JPetScopeTask*>((*fSubTask).get());
-    task->setInputFiles(inputScopeFiles);
-
-    // create an object for storing histograms and counters during processing
     std::unique_ptr<JPetStatistics> tmp(new JPetStatistics());
     fStatistics = std::move(tmp);
     assert(fStatistics);
@@ -101,7 +67,6 @@ bool JPetScopeLoader::createInputObjects(const char*)
     assert(fHeader);
     fHeader->setBaseFileName(getInputFile(opts));
     fHeader->addStageInfo(task->getName(), "", 0, JPetCommonTools::getTimeString());
-    //fHeader->setSourcePosition((*fIter).pCollPosition);
   }
   return true;
 }
@@ -115,15 +80,13 @@ std::map<std::string, int> JPetScopeLoader::getPMPrefixToPMIdMap()
   return prefixToId;
 }
 
-/// Returns a map of list of scope input files. The key is the corresponding
+/// Returns a map of list of scope input files. The value is the corresponding
 /// index of the photomultiplier in the param bank.
 std::map<std::string, int> JPetScopeLoader::createInputScopeFileNames(
   const std::string& inputPathToScopeFiles,
   std::map<std::string, int> pmPref2Id
 ) const
 {
-  for (auto el : pmPref2Id) {
-  }
   std::map<std::string, int> scopeFiles;
   path current_dir(inputPathToScopeFiles);
   if (exists(current_dir)) {
@@ -176,11 +139,39 @@ bool JPetScopeLoader::init(const JPetParamsInterface& paramsI)
 bool JPetScopeLoader::run(const JPetDataInterface& inData)
 {
   assert(!fSubTasks.empty());
-  for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
-    (*fSubTask)->init(fParams);
-    (*fSubTask)->run(inData);
-    (*fSubTask)->terminate(fParams);
+  if (fSubTasks.size() != 1) {
+    ERROR("number of subtasks !=1");
+    return false;
   }
+  auto subTask = fSubTasks.begin()->get();
+  subTask->init(fParams);
+
+  using namespace jpet_options_tools;
+  JPetScopeConfigParser confParser;
+  auto opts = fParams.getOptions();
+  auto config = confParser.getConfig(getScopeConfigFile(opts));
+  auto prefix2PM =  getPMPrefixToPMIdMap();
+  auto inputScopeFiles = createInputScopeFileNames(getScopeInputDirectory(opts), prefix2PM);
+  auto events = JPetScopeLoader::groupScopeFileNamesByTimeWindowIndex(inputScopeFiles);
+
+  for (auto& ev : events) {
+    auto pOutputEvent = (dynamic_cast<JPetUserTask*>(subTask))->getOutputEvents();
+    if (pOutputEvent != nullptr) {
+      pOutputEvent->Clear();
+    } else {
+      WARNING("No proper timeWindow object returned to clear events");
+    }
+    JPetScopeData data(ev);
+    subTask->run(data);
+    pOutputEvent = (dynamic_cast<JPetUserTask*>(subTask))->getOutputEvents();
+    if (pOutputEvent != nullptr) {
+      fWriter->write(*pOutputEvent);
+    } else {
+      ERROR("No proper timeWindow object returned to save to file, returning from subtask " + subTask->getName());
+      return false;
+    }
+  }
+  subTask->terminate(fParams);
   return true;
 }
 
@@ -191,7 +182,7 @@ bool JPetScopeLoader::terminate(JPetParamsInterface& output_params)
   OptsStrAny new_opts;
   jpet_options_generator_tools::setOutputFile(new_opts, fOutFileFullPath);
   params = JPetParams(new_opts, params.getParamManagerAsShared());
-  
+
   assert(fWriter);
   assert(fHeader);
   assert(fStatistics);
@@ -213,7 +204,6 @@ bool JPetScopeLoader::createOutputObjects(const char* outputFilename)
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
       auto task = dynamic_cast<JPetScopeTask*>((*fSubTask).get());
       task->setStatistics(fStatistics.get());
-      task->setWriter(fWriter);
     }
   } else {
     WARNING("the subTask does not exist, so JPetWriter and JPetStatistics not passed to it");
@@ -240,4 +230,35 @@ std::tuple<bool, std::string, std::string, bool> JPetScopeLoader::setInputAndOut
     }
   }
   return std::make_tuple(true, inputFilename, outFileFullPath, resetOutputPath);
+}
+
+
+int JPetScopeLoader::getTimeWindowIndex(const std::string&  pathAndFileName)
+{
+  int time_window_index = -1;
+  if (!boost::filesystem::exists(pathAndFileName)) {
+    ERROR("File does not exist ");
+  }
+  int res = sscanf(JPetCommonTools::extractFileNameFromFullPath(pathAndFileName).c_str(), "%*3s %d", &time_window_index);
+  if (res <= 0) {
+    ERROR("scanf failed");
+    return -1;
+  } else {
+    return time_window_index;
+  }
+}
+
+std::map<int, std::map<std::string, int>> JPetScopeLoader::groupScopeFileNamesByTimeWindowIndex(const std::map<std::string, int>& scopeFileNames)
+{
+  std::map<int, std::map<std::string, int>> res;
+  for (auto& el : scopeFileNames) {
+    auto index = JPetScopeLoader::getTimeWindowIndex(el.first);
+    auto it = res.find(index);
+    if (it == res.end() ) {
+      res[index] = {{el.first, el.second}};
+    } else {
+      it->second.insert(el);
+    }
+  }
+  return res;
 }
