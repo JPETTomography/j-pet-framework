@@ -18,6 +18,10 @@
 #include "./JPetDataInterface/JPetDataInterface.h"
 #include <TObject.h>
 
+/**
+ * @brief Wrapper class that contains data send to JPetUserTask.
+ *
+ */
 class JPetData: public JPetDataInterface
 {
 public:
