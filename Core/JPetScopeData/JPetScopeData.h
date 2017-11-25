@@ -10,24 +10,26 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetData.h
+ *  @file JPetScopeData.h
  */
 
-#ifndef JPETDATA_H
-#define JPETDATA_H
+#ifndef JPETSCOPEDATA_H 
+#define JPETSCOPEDATA_H 
 #include "./JPetDataInterface/JPetDataInterface.h"
-#include <TObject.h>
+#include <map>
+#include <string>
 
 /**
- * @brief Wrapper class that contains data send to JPetUserTask.
+ * @brief Wrapper class that contains data send to JPetScopeTask.
  *
  */
-class JPetData: public JPetDataInterface
+class JPetScopeData : public JPetDataInterface
 {
-public:
-  explicit JPetData(TObject& event);
-  TObject& getEvent() const;
-protected:
-  TObject& fEvent;
+ public:
+  explicit JPetScopeData(const std::pair<int, std::map<std::string, int>>& event);
+  std::pair<int, std::map<std::string, int> > getEvent() const;
+ protected:
+  std::pair<int, std::map<std::string, int>> fEvent;
+//
 };
-#endif /*  !JPETDATA_H */
+#endif /*  !JPETSCOPEDATA_H */
