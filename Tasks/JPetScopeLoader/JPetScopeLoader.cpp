@@ -136,7 +136,7 @@ bool JPetScopeLoader::init(const JPetParamsInterface& paramsI)
   return true;
 }
 
-bool JPetScopeLoader::run(const JPetDataInterface& inData)
+bool JPetScopeLoader::run(const JPetDataInterface&)
 {
   assert(!fSubTasks.empty());
   if (fSubTasks.size() != 1) {
