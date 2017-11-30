@@ -46,6 +46,12 @@ public:
   void createCounter(const char* name);
   double& getCounter(const char* name);
 
+  template <typename T>
+  T& getHisto(const char* name)
+  {
+    return dynamic_cast<T&>(*(fStats.FindObject(name)));
+  }
+
   const THashTable* getStatsTable() const;
 
   ClassDef(JPetStatistics, 4);
