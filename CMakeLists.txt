@@ -8,6 +8,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH $ENV{ROOTSYS})
 include(JPetFramework-Utilities) # for generate_root_dictionaries
 
 project(JPetFramework CXX C) # using only C++
@@ -16,30 +17,21 @@ if(NOT MSVC)
   add_definitions(-std=c++11 -Wall -Wunused-parameter)
 endif()
 
-foreach(mode QUIET REQUIRED)
-  find_package(ROOT 5 ${mode} COMPONENTS
-    Hist
-    Physics
-    RIO
-    Thread
-    Tree
-    )
-  if(ROOT_USE_FILE)
-    include(${ROOT_USE_FILE})
-  endif()
-  if(ROOT_FOUND)
-    break()
-  endif()
-  # if we failed with CMake based find_package, use fallback
-  # root-config version from cmake/fallback/
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/fallback)
-endforeach()
+find_package(ROOT REQUIRED)
+
+if(ROOT_USE_FILE)
+  include(${ROOT_USE_FILE})
+endif()
+
 
 message(STATUS "ROOT version: ${ROOT_VERSION}")
 
-if(ROOT_FOUND AND NOT ROOT_VERSION VERSION_LESS "6.0")
-  message(FATAL_ERROR "ROOT 6.0 is not compatible")
+if(ROOT_FOUND AND ROOT_VERSION VERSION_GREATER "6.0")
+  string(ASCII 27 Esc)
+
+  message(WARNING  " ${Esc}[31m You are using ROOT in version 6.0 or higher. IT IS NOT RECOMENDED YET ${Esc}[m")
 endif()
+
 
 find_package(PQXX REQUIRED)
 
@@ -129,6 +121,12 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetEvent
   INCLUDE_DIRS ${FOLDERS} #pass variable with include dirs for generating dictionaries
   )
+
+if(ROOT_VERSION VERSION_GREATER 6.0)
+  file(GLOB pcm_Dict "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm")
+  file(COPY ${pcm_Dict} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+endif()
 
 add_library(JPetFramework SHARED ${SOURCES} ${HEADERS} ${DICTIONARIES})
 
