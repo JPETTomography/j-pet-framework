@@ -122,10 +122,8 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   )
 
 if(ROOT_VERSION VERSION_GREATER 6.0)
-  # forech(pmc ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries)
   file(GLOB pcm_Dict "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm")
   file(COPY ${pcm_Dict} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
 
 endif()
 
