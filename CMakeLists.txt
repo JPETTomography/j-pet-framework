@@ -121,6 +121,14 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   INCLUDE_DIRS ${FOLDERS} #pass variable with include dirs for generating dictionaries
   )
 
+if(ROOT_VERSION VERSION_GREATER 6.0)
+  # forech(pmc ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries)
+  file(GLOB pcm_Dict "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm")
+  file(COPY ${pcm_Dict} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+
+endif()
+
 add_library(JPetFramework SHARED ${SOURCES} ${HEADERS} ${DICTIONARIES})
 
 foreach(dir ${FOLDERS_WITH_SOURCE})
