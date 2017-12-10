@@ -34,7 +34,7 @@ std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const s
     }
     return std::make_shared<JPetParamManager>(new JPetParamGetterAscii(getLocalDB(options)), expectMissing);
   } else {
-    return std::make_shared<JPetParamManager>();
+    return std::make_shared<JPetParamManager>(true);
   }
 }
 

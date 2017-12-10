@@ -1,9 +1,8 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetManagerTest
+
 #include <boost/test/unit_test.hpp>
-
 #include "./JPetManager/JPetManager.h"
-
 #include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
 #include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
@@ -15,7 +14,6 @@ BOOST_AUTO_TEST_CASE( create_unique_manager )
   JPetManager* pManager = &manager;
   JPetManager& manager2 = JPetManager::getManager(); // it should be the same Manager
   JPetManager* pManager2 = &manager2;
-
   BOOST_REQUIRE_EQUAL(pManager, pManager2);
 }
 
