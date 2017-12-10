@@ -18,6 +18,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
 
+JPetParamGetter::JPetParamGetter(){}
+
 int JPetParamGetter::getTOMBChannelFromDescription(std::string p_desc)
 {
   // parsing the string description of a TOMB channel to extract the channel number
