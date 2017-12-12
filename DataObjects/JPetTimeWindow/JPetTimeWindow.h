@@ -33,15 +33,15 @@ public:
 
   JPetTimeWindow() : fEvents()
   {}
-
+  
   JPetTimeWindow(const char * event_type) : fEvents(event_type, 2000)
   {}
-
+  
   template<typename T>
   void add(const T & evt){
     dynamic_cast<T&>(*(fEvents.ConstructedAt(fEventCount++))) = evt;
   }
-
+  
   inline size_t getNumberOfEvents() const {
     return fEventCount;
   }
@@ -55,10 +55,6 @@ public:
     return *(dynamic_cast<T*>(fEvents[i]));
   }
 
-  inline const TClonesArray& getEvents() const {
-    return fEvents;
-  }
-
   virtual ~JPetTimeWindow() {
     fEvents.Clear("C");
     fEventCount = 0;
@@ -68,7 +64,7 @@ public:
     fEvents.Clear("C");
     fEventCount = 0;
   }
-
+  
   ClassDef(JPetTimeWindow, 4);
 
 private:
