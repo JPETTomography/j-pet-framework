@@ -13,17 +13,18 @@
  *  @file JPetUnzipAndUnpackTask.h
  */
 
-#ifndef JPETUNZIPANDUNPACKTASK_H 
-#define JPETUNZIPANDUNPACKTASK_H 
+#ifndef JPETUNZIPANDUNPACKTASK_H
+#define JPETUNZIPANDUNPACKTASK_H
 
 #include <map>
 #include "./JPetTask/JPetTask.h"
 #include <boost/any.hpp>
 
-class JPetUnzipAndUnpackTask: public JPetTask {
+class JPetUnzipAndUnpackTask : public JPetTask
+{
 public:
   using OptsStrAny = std::map<std::string, boost::any>;
-  explicit JPetUnzipAndUnpackTask(const char* name= "");
+  explicit JPetUnzipAndUnpackTask(const char* name = "");
   bool init(const JPetParamsInterface& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParamsInterface& outOptions) override;
@@ -35,6 +36,6 @@ public:
 protected:
   OptsStrAny fOptions;
   bool fUnpackHappened = false;
-  
+
 };
 #endif /*  !JPETUNZIPANDUNPACKTASK_H */

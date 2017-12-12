@@ -54,7 +54,9 @@ bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
     } else {
       INFO( std::string("Unpacking") );
       auto unzippedFilename = JPetCommonTools::stripFileNameSuffix(std::string(inputFile)).c_str();
+
       unpackFile(unzippedFilename, getTotalEvents(fOptions), unpackerConfigFile, unpackerCalibFile);
+      fUnpackHappened = true;
     }
   }
 

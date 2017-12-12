@@ -109,15 +109,15 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
       };
       fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task2);
     }
+    auto paramBankHandlerTask = []() {
+      return new JPetParamBankHandlerTask("ParamBank Filling");
+    };
+    fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), paramBankHandlerTask);
     /// add task to unzip or unpack if needed
     auto task = []() {
       return new JPetUnzipAndUnpackTask("UnpackerAndUnzipper");
     };
     fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task);
-    auto paramBankHandlerTask = []() {
-      return new JPetParamBankHandlerTask("ParamBank Filling");
-    };
-    fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), paramBankHandlerTask);
   };
 
   try {
@@ -149,17 +149,18 @@ JPetManager::~JPetManager()
 }
 
 
-void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType){
+void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
+{
   assert(fTaskGeneratorChain);
-  if( fTasksDictionary.count(name) > 0 ){
+  if ( fTasksDictionary.count(name) > 0 ) {
     TaskGenerator userTaskGen = fTasksDictionary.at(name);
     // wrap the JPetUserTask-based task in a JPetTaskIO
     fTaskGeneratorChain->push_back( [name, inputFileType, outputFileType, userTaskGen]() {
-	JPetTaskIO * task = new JPetTaskIO(name, inputFileType, outputFileType);
-	task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-	return task;
-      });
-  }else{
+      JPetTaskIO* task = new JPetTaskIO(name, inputFileType, outputFileType);
+      task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
+      return task;
+    });
+  } else {
     ERROR(Form("The requested task %s is unknown", name));
     exit(1);
   }
@@ -189,7 +190,7 @@ bool JPetManager::initDBConnection(const char* configFilePath)
     auto opts = fOptions.begin()->second;
     if (getRunNumber(opts) >= 0) { // if run number is not default -1
       if (!isLocalDB(opts)) { // unless local DB file was provided
-	isDBrequired = true;
+        isDBrequired = true;
       }
     }
   }
