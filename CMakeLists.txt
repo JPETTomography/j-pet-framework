@@ -41,8 +41,6 @@ if(ROOT_FOUND AND NOT ROOT_VERSION VERSION_LESS "6.0")
   message(FATAL_ERROR "ROOT 6.0 is not compatible")
 endif()
 
-# kk find_package(PQXX REQUIRED)
-
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
@@ -53,7 +51,6 @@ find_package(Boost 1.50.0 REQUIRED COMPONENTS
 
 add_definitions(${ROOT_DEFINITIONS})
 add_definitions(${Boost_DEFINITIONS})
-# kk add_definitions(${PQXX_DEFINITIONS})
 
 # enable rpath on OS X and point it to ROOT
 if(APPLE)
@@ -177,27 +174,9 @@ add_custom_command(OUTPUT ${TESTS_DIR}/unitTestData
   COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/unitTestData ${TESTS_DIR}/unitTestData
   )
 
-# - DBHandler
-# kk file(GLOB DBHANDLER_HEADERS DBHandler/HeaderFiles/*.h)
-# kk file(GLOB DBHANDLER_SOURCES DBHandler/SourceFiles/*.cpp)
-# kk add_library(dbhandler SHARED ${DBHANDLER_HEADERS} ${DBHANDLER_SOURCES})
-
-# kk target_include_directories(dbhandler SYSTEM PUBLIC
-# kk     $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}>
-# kk )
-
-# kk target_include_directories(dbhandler SYSTEM PUBLIC
-# kk     $<BUILD_INTERFACE:${PQXX_INCLUDE_DIRS}>
-# kk )
-
-# kk target_link_libraries(dbhandler
-# kk   ${PQXX_LIBRARIES}
-# kk )
-
 # add dependencies
 target_link_libraries(JPetFramework
   Unpacker2
-  # kk dbhandler
   ${ROOT_LIBRARIES}
   ${Boost_LIBRARIES}
   )
@@ -254,13 +233,9 @@ endif(DOXYGEN_FOUND)
 
 
 get_target_property(framework_include JPetFramework INCLUDE_DIRECTORIES)
-# kk get_target_property(dbhandler_include dbhandler INCLUDE_DIRECTORIES)
-# kk list(REMOVE_ITEM framework_include ${dbhandler_include})
-# kk list(APPEND framework_include ${dbhandler_include})
-
 get_directory_property(has_parent PARENT_DIRECTORY)
 if(has_parent)
-  # kk export ROOT, Boost includes to depending projects
+  # export ROOT, Boost includes to depending projects
   set(Framework_INCLUDE_DIRS
     ${framework_include}
     PARENT_SCOPE
@@ -268,7 +243,6 @@ if(has_parent)
   set(Framework_DEFINITIONS
     ${ROOT_DEFINITIONS}
     ${Boost_DEFINITIONS}
-    # kk ${PQXX_DEFINITIONS}
     PARENT_SCOPE
     )
   # ensure that projects use C++11 too
