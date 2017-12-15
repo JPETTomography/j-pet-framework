@@ -1,7 +1,6 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetTaskIOTest
 #include <boost/test/unit_test.hpp>
-#include "./DBHandler/HeaderFiles/DBHandler.h"
 #include "./JPetCmdParser/JPetCmdParser.h"
 #include "./JPetTaskIO/JPetTaskIO.h"
 #include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
