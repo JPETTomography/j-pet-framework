@@ -49,7 +49,10 @@ public:
   template <typename T>
   T& getHisto(const char* name)
   {
-    return dynamic_cast<T&>(*(fStats.FindObject(name)));
+    TObject* tmp = fStats.FindObject(name);
+    if (tmp == null)
+      ERROR("getHisto of " + name + " returned nullptr");
+    return dynamic_cast<T&>(*(tmp));
   }
 
   const THashTable* getStatsTable() const;
