@@ -47,11 +47,11 @@ public:
   double& getCounter(const char* name);
 
   template <typename T>
-  T& getHisto(const char* name)
+  T& getObject(const char* name)
   {
     TObject* tmp = fStats.FindObject(name);
     if (tmp == null)
-      ERROR("getHisto of " + name + " returned nullptr");
+      ERROR("getObject of " + name + " returned nullptr");
     return dynamic_cast<T&>(*(tmp));
   }
 
