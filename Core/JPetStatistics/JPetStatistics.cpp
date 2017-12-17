@@ -45,22 +45,22 @@ void JPetStatistics::createCanvas(TObject* object)
 
 TH1F& JPetStatistics::getHisto1D(const char* name)
 {
-  return getHisto<TH1F>(name);
+  return getObject<TH1F>(name);
 }
 
 TH2F& JPetStatistics::getHisto2D(const char* name)
 {
-  return getHisto<TH2F>(name);
+  return getObject<TH2F>(name);
 }
 
 TGraph& JPetStatistics::getGraph(const char* name)
 {
-  return getHisto<TGraph>(name);
+  return getObject<TGraph>(name);
 }
 
 TCanvas& JPetStatistics::getCanvas(const char* name)
 {
-  return getHisto<TCanvas>(name);
+  return getObject<TCanvas>(name);
 }
 
 void JPetStatistics::createCounter(const char* name)
