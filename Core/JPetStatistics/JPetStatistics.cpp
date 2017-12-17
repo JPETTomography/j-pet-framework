@@ -45,22 +45,22 @@ void JPetStatistics::createCanvas(TObject* object)
 
 TH1F& JPetStatistics::getHisto1D(const char* name)
 {
-  return dynamic_cast<TH1F&>(*(fStats.FindObject(name)));
+  return getHisto<TH1F>(name);
 }
 
 TH2F& JPetStatistics::getHisto2D(const char* name)
 {
-  return dynamic_cast<TH2F&>(*(fStats.FindObject(name)));
+  return getHisto<TH2F>(name);
 }
 
 TGraph& JPetStatistics::getGraph(const char* name)
 {
-  return dynamic_cast<TGraph&>(*(fStats.FindObject(name)));
+  return getHisto<TGraph>(name);
 }
 
 TCanvas& JPetStatistics::getCanvas(const char* name)
 {
-  return dynamic_cast<TCanvas&>(*(fStats.FindObject(name)));
+  return getHisto<TCanvas>(name);
 }
 
 void JPetStatistics::createCounter(const char* name)
