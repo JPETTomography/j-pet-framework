@@ -23,6 +23,8 @@
 #include <map>
 #include <TGraph.h>
 #include <TCanvas.h>
+#include <string>
+#include "JPetLoggerInclude.h"
 
 /**
  * @brief An class for storing statistics of the processing (e.g histograms and counters) during execution of a JPetTask
@@ -50,8 +52,8 @@ public:
   T& getObject(const char* name)
   {
     TObject* tmp = fStats.FindObject(name);
-    if (tmp == null)
-      ERROR("getObject of " + name + " returned nullptr");
+    if (!tmp)
+      ERROR("getObject of " + std::string(name) + " returned nullptr");
     return dynamic_cast<T&>(*(tmp));
   }
 
