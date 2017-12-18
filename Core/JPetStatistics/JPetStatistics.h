@@ -41,20 +41,22 @@ public:
   void createHistogram(TObject* object);
   void createGraph(TObject* object);
   void createCanvas(TObject* object);
-  TH1F& getHisto1D(const char* name);
-  TH2F& getHisto2D(const char* name);
-  TGraph& getGraph(const char* name);
-  TCanvas& getCanvas(const char* name);
+  TH1F* getHisto1D(const char* name);
+  TH2F* getHisto2D(const char* name);
+  TGraph* getGraph(const char* name);
+  TCanvas* getCanvas(const char* name);
   void createCounter(const char* name);
   double& getCounter(const char* name);
 
   template <typename T>
-  T& getObject(const char* name)
+  T* getObject(const char* name)
   {
     TObject* tmp = fStats.FindObject(name);
-    if (!tmp)
+    if (!tmp) {
       ERROR("getObject of " + std::string(name) + " returned nullptr");
-    return dynamic_cast<T&>(*(tmp));
+      return nullptr;
+    }
+    return dynamic_cast<T*>(tmp);
   }
 
   const THashTable* getStatsTable() const;
