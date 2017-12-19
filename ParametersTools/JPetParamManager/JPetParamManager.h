@@ -43,11 +43,11 @@ public:
   /// factory method to produce JPetParamManager instance based on provided options
   static std::shared_ptr<JPetParamManager> generateParamManager(const std::map<std::string, boost::any>& options);
 
-  JPetParamManager() : fParamGetter(), fBank(0), fIsNullObject(false) {}
-  JPetParamManager(bool isNull) : fParamGetter(), fBank(0), fIsNullObject(isNull) {}
+  JPetParamManager() : fBank(0), fIsNullObject(false) {}
+  JPetParamManager(bool isNull) : fBank(0), fIsNullObject(isNull) {}
   JPetParamManager(JPetParamGetter* paramGetter) : fParamGetter(paramGetter), fBank(0) , fIsNullObject(false) {}
   JPetParamManager(JPetParamGetter* paramGetter, std::set<ParamObjectType> expectMissing) : fParamGetter(paramGetter), fExpectMissing(expectMissing), fBank(0) , fIsNullObject(false) {}
-  virtual ~JPetParamManager();
+  ~JPetParamManager();
 
   std::map<int, JPetTRB*>& getTRBs(const int runId);
   std::map<int, JPetFEB*>& getFEBs(const int runId);
