@@ -44,17 +44,17 @@ const vector< size_t > LargeBarrelMapping::getLayersSizes() const
 }
 LargeBarrelMapping::LargeBarrelMapping(const JPetParamBank& paramBank)
 {
-  for (auto & layer : paramBank.getLayers() ) {
+  for (auto& layer : paramBank.getLayers() ) {
     double radius = layer.second->getRadius();
     fRadii.push_back(radius);
     fTheta.push_back(vector<double>());
   }
   sort( fRadii.begin(), fRadii.end(), less<double>() );
-  for (const auto & slot : paramBank.getBarrelSlots()) {
+  for (const auto& slot : paramBank.getBarrelSlots()) {
     const int layer_number = getLayerNumber( slot.second->getLayer() );
     fTheta[layer_number - 1].push_back(slot.second->getTheta());
   }
-  for (auto & thetas : fTheta)
+  for (auto& thetas : fTheta)
     sort( thetas.begin(), thetas.end(), less<double>() );
 }
 LargeBarrelMapping::~LargeBarrelMapping() {}
@@ -138,7 +138,7 @@ TOT_Hists::TOT_Hists(const char* name)
 TOT_Hists::~TOT_Hists() {}
 void TOT_Hists::createTOTHistos(const std::string& suffix, const size_t bins, const double min, const double max)
 {
-  for (auto & layer : getParamBank().getLayers()) {
+  for (auto& layer : getParamBank().getLayers()) {
     const auto ln = map()->getLayerNumber(*layer.second);
     for (size_t sl = 1, n = map()->getSlotsCount(ln); sl <= n; sl++)
       for (size_t thr = 1; thr <= 4; thr++) {
@@ -153,8 +153,8 @@ void TOT_Hists::fillTOTHistos(const JPetHit& hit, const std::string& suffix)
   auto TOTA = hit.getSignalA().getRecoSignal().getRawSignal().getTOTsVsThresholdNumber(),
        TOTB = hit.getSignalB().getRecoSignal().getRawSignal().getTOTsVsThresholdNumber();
   for (size_t thr = 1; thr <= 4; thr++) {
-    getStatistics().getHisto1D(("TOT-" + LayerSlotThr(strip1.layer, strip1.slot, thr) + "-A-" + suffix).c_str()).Fill(TOTA[thr]);
-    getStatistics().getHisto1D(("TOT-" + LayerSlotThr(strip1.layer, strip1.slot, thr) + "-B-" + suffix).c_str()).Fill(TOTB[thr]);
+    getStatistics().getHisto1D(("TOT-" + LayerSlotThr(strip1.layer, strip1.slot, thr) + "-A-" + suffix).c_str())->Fill(TOTA[thr]);
+    getStatistics().getHisto1D(("TOT-" + LayerSlotThr(strip1.layer, strip1.slot, thr) + "-B-" + suffix).c_str())->Fill(TOTB[thr]);
   }
 }
 
