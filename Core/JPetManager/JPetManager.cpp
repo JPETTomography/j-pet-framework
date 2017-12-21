@@ -171,6 +171,12 @@ JPetManager::Options JPetManager::getOptions() const
   return fOptions;
 }
 
+void JPetManager::clearRegisteredTasks()
+{
+  delete fTaskGeneratorChain;
+  fTaskGeneratorChain = new TaskGeneratorChain;
+}
+
 /**
  * @brief Initialize connection to database if such connection is necessary
  *
