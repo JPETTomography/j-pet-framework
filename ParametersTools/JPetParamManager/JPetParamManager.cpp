@@ -14,7 +14,6 @@
  */
 
 #include "JPetParamManager.h"
-
 #include <TFile.h>
 #include <boost/property_tree/xml_parser.hpp>
 #include "./JPetOptionsTools/JPetOptionsTools.h"
@@ -34,6 +33,7 @@ std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const s
     }
     return std::make_shared<JPetParamManager>(new JPetParamGetterAscii(getLocalDB(options)), expectMissing);
   } else {
+    ERROR("No local database file found.");
     return std::make_shared<JPetParamManager>();
   }
 }
