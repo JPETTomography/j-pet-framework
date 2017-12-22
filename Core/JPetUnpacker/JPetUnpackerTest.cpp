@@ -19,12 +19,13 @@
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 struct Fixture {
-  Fixture(){
+  Fixture()
+  {
     // turning off cerr to get rid of Unpacker warnings
     std::cerr.setstate(std::ios_base::failbit);
   }
-  ~Fixture() {
-
+  ~Fixture()
+  {
     boost::filesystem::remove("xx14099113231.hld.root");
   }
 };

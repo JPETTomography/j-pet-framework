@@ -56,6 +56,7 @@ public:
   bool initDBConnection(const char* configFilePath = "./DBConfig/configDB.cfg");
   // @todo: replace the need to call this method with task list passed as an option  
   void useTask(const char * name, const char * inputFileType="", const char * outputFileType="");
+  void clearRegisteredTasks();
   
 private:
   JPetManager(const JPetManager&);
