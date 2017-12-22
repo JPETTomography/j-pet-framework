@@ -23,6 +23,8 @@
 #include <map>
 #include <TGraph.h>
 #include <TCanvas.h>
+#include <string>
+#include "JPetLoggerInclude.h"
 
 /**
  * @brief An class for storing statistics of the processing (e.g histograms and counters) during execution of a JPetTask
@@ -39,12 +41,23 @@ public:
   void createHistogram(TObject* object);
   void createGraph(TObject* object);
   void createCanvas(TObject* object);
-  TH1F& getHisto1D(const char* name);
-  TH2F& getHisto2D(const char* name);
-  TGraph& getGraph(const char* name);
-  TCanvas& getCanvas(const char* name);
+  TH1F* getHisto1D(const char* name);
+  TH2F* getHisto2D(const char* name);
+  TGraph* getGraph(const char* name);
+  TCanvas* getCanvas(const char* name);
   void createCounter(const char* name);
   double& getCounter(const char* name);
+
+  template <typename T>
+  T* getObject(const char* name)
+  {
+    TObject* tmp = fStats.FindObject(name);
+    if (!tmp) {
+      ERROR("getObject of " + std::string(name) + " returned nullptr");
+      return nullptr;
+    }
+    return dynamic_cast<T*>(tmp);
+  }
 
   const THashTable* getStatsTable() const;
 
