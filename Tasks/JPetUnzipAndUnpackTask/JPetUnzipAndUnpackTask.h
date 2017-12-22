@@ -13,28 +13,30 @@
  *  @file JPetUnzipAndUnpackTask.h
  */
 
-#ifndef JPETUNZIPANDUNPACKTASK_H 
-#define JPETUNZIPANDUNPACKTASK_H 
+#ifndef JPETUNZIPANDUNPACKTASK_H
+#define JPETUNZIPANDUNPACKTASK_H
 
 #include <map>
 #include "./JPetTask/JPetTask.h"
 #include <boost/any.hpp>
 
-class JPetUnzipAndUnpackTask: public JPetTask {
+class JPetUnzipAndUnpackTask : public JPetTask
+{
 public:
   using OptsStrAny = std::map<std::string, boost::any>;
-  explicit JPetUnzipAndUnpackTask(const char* name= "");
+  explicit JPetUnzipAndUnpackTask(const char* name = "");
   bool init(const JPetParamsInterface& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParamsInterface& outOptions) override;
 
-  static void unpackFile(const char* filename, long long nevents, const char* configfile, const char* calibfile);
+  static void unpackFile(const std::string& filename, long long nevents, const std::string& configfile, const std::string& calibfile);
   /// system(...) is returning integer, 0 when everything went smoothly and error code when not.
   /// Here I just convert return value into boolean type - Sz.N.
-  static bool unzipFile(const char* filename);
+  static bool unzipFile(const std::string& filename);
+
 protected:
   OptsStrAny fOptions;
   bool fUnpackHappened = false;
-  
+
 };
 #endif /*  !JPETUNZIPANDUNPACKTASK_H */

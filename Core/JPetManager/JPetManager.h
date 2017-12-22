@@ -54,6 +54,7 @@ public:
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
   void useTask(const char * name, const char * inputFileType="", const char * outputFileType="");
+  void clearRegisteredTasks();
 
 private:
   JPetManager(const JPetManager&);
