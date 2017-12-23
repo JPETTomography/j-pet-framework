@@ -33,6 +33,7 @@ typedef std::map<int, int> ParamRelationalData;
 class JPetParamGetter
 {
 public:
+
   virtual ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId) = 0;
   virtual ParamRelationalData getAllRelationalData(ParamObjectType type1, ParamObjectType type2, const int runId) = 0;
 
