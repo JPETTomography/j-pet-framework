@@ -21,7 +21,6 @@
 
 #include "./JPetLoggerInclude.h"
 #include "./JPetCommonTools/JPetCommonTools.h"
-#include "./DBHandler/HeaderFiles/DBHandler.h"
 #include "./JPetCmdParser/JPetCmdParser.h"
 #include "./JPetScopeLoader/JPetScopeLoader.h"
 #include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
@@ -141,12 +140,7 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
 }
 
 //
-JPetManager::~JPetManager()
-{
-  /// delete shared caches for paramBanks
-  /// @todo I think that should be changed
-  JPetDBParamGetter::clearParamCache();
-}
+JPetManager::~JPetManager(){}
 
 
 void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
@@ -175,36 +169,4 @@ void JPetManager::clearRegisteredTasks()
 {
   delete fTaskGeneratorChain;
   fTaskGeneratorChain = new TaskGeneratorChain;
-}
-
-/**
- * @brief Initialize connection to database if such connection is necessary
- *
- * @param configFilePath path to the config file with database connection details
- *
- * @return true if database connection was required and initialization was called,
- * false if database connection was not required and its initialization was skipped
- *
- * Database connection is only initialized if the user provided the run number
- * ("-i" option) and did not provide local database ("-l") at the same time.
- */
-bool JPetManager::initDBConnection(const char* configFilePath)
-{
-  bool isDBrequired = false;
-
-  if (fOptions.size() > 0) { // If at least one input file to process.
-    auto opts = fOptions.begin()->second;
-    if (getRunNumber(opts) >= 0) { // if run number is not default -1
-      if (!isLocalDB(opts)) { // unless local DB file was provided
-        isDBrequired = true;
-      }
-    }
-  }
-  if (isDBrequired) {
-    INFO("Attempting to set up connection to the database.");
-    DB::SERVICES::DBHandler::createDBConnection(configFilePath);
-  } else {
-    INFO("Setting connection to database skipped.");
-  }
-  return isDBrequired;
 }
