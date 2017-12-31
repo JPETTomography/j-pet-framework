@@ -37,10 +37,20 @@ public:
   static bool isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option);
   static bool isRangeOfEventsValid(std::pair <std::string, boost::any> option);
   static bool isCorrectFileType(std::pair <std::string, boost::any> option);
+  static bool isFileTypeMatchingExtensions(std::pair <std::string, boost::any> option);
   static bool isRunIdValid(std::pair <std::string, boost::any> option);
   static bool isLocalDBValid(std::pair <std::string, boost::any> option);
   static bool areFilesValid(std::pair <std::string, boost::any> option);
   static bool isOutputDirectoryValid(std::pair <std::string, boost::any> option);
+
+  class ManyOptionsWrapper {
+  public:
+    ManyOptionsWrapper(std::initializer_list<boost::any>);
+    std::vector<boost::any> getOptionsVector();
+  private:
+    std::vector<boost::any> optionsVector;
+  };
+
 private:
   std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > fValidatorMap;
 };
