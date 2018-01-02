@@ -94,7 +94,7 @@ bool JPetOptionValidator::isFileTypeMatchingExtensions(std::pair<std::string, bo
   std::string fileType = any_cast<std::string>(optionsVector[0]);
   std::vector<std::string> fileNames = any_cast<std::vector<std::string>>(optionsVector[1]);
   for (const std::string &fileName : fileNames) {
-    if (fileName.substr(fileName.find_last_of('.') + 1) != fileType) {
+    if (JPetCommonTools::exctractFileNameSuffix(fileName) != ("." + fileType)) {
       ERROR("Wrong extension of file: " + fileName);
       return false;
     }
