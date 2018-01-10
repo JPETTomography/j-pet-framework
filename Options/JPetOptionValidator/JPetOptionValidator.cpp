@@ -16,6 +16,7 @@
 #include "./JPetOptionValidator.h"
 #include "./JPetCommonTools/JPetCommonTools.h"
 #include "./JPetLoggerInclude.h"
+#include "./JPetOptionsTools/JPetOptionsTools.h"
 
 using boost::any_cast;
 
@@ -26,6 +27,8 @@ JPetOptionValidator::JPetOptionValidator()
 
 bool JPetOptionValidator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap, std::vector<std::string>& isOption)
 {
+  /// We are adding validators that need more than one option, and are not compatible with the standard validators
+  auto newOptionsMap  = addNonStandardValidators(optionsMap);
   for (auto& checkGroup : fValidatorMap) {
     if (std::find(isOption.begin(), isOption.end(), checkGroup.first ) != isOption.end()) {
       for (auto& checkFunc : checkGroup.second) {
@@ -37,6 +40,21 @@ bool JPetOptionValidator::areCorrectOptions(const std::map<std::string, boost::a
     }
   }
   return true;
+}
+
+std::map<std::string, boost::any> JPetOptionValidator::addNonStandardValidators(const std::map<std::string, boost::any>& optionsMap)
+{
+  using namespace jpet_options_tools;
+  std::map<std::string, boost::any> newOptionMap(optionsMap);
+  std::string type_key = "type_std::string";
+  std::string filename_key = "file_std::vector<std::string>";
+  if (!isOptionSet(newOptionMap,  type_key) || !isOptionSet(newOptionMap,  filename_key)) {
+    WARNING("file type or file name option not present! No validator added!");
+    return newOptionMap;
+  }
+  newOptionMap["type_std::string, file_std::vector<std::string>"] = JPetOptionValidator::ManyOptionsWrapper({getOptionAsString(newOptionMap, type_key), getOptionAsVectorOfStrings(newOptionMap, filename_key)});
+
+return newOptionMap;
 }
 
 std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > JPetOptionValidator::generateValidationMap()
@@ -93,7 +111,7 @@ bool JPetOptionValidator::isFileTypeMatchingExtensions(std::pair<std::string, bo
   std::vector<boost::any> optionsVector = any_cast<std::vector<boost::any>>(optionsWrapper.getOptionsVector());
   std::string fileType = any_cast<std::string>(optionsVector[0]);
   std::vector<std::string> fileNames = any_cast<std::vector<std::string>>(optionsVector[1]);
-  for (const std::string &fileName : fileNames) {
+  for (const std::string& fileName : fileNames) {
     if (JPetCommonTools::exctractFileNameSuffix(fileName) != ("." + fileType)) {
       ERROR("Wrong extension of file: " + fileName);
       return false;
