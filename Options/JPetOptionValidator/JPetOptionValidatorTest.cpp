@@ -84,8 +84,6 @@ BOOST_AUTO_TEST_CASE(areCorrectAllOptionsWork)
     {"range_std::vector<int>", range },
     {"type_std::string", std::string("hld")},
     {"file_std::vector<std::string>", files},
-    /// @todo TO CHECK which version is correct with format suffix or without
-    //{"type_std::string, file_std::vector<std::string>", JPetOptionValidator::ManyOptionsWrapper({std::string("hld"), files})},
     {"localDB_std::string", std::string("unitTestData/JPetCmdParserTest/data.hld")},
     {"outputPath_std::string", std::string("unitTestData/JPetCmdParserTest")},
     {"runId_int", 3},
@@ -96,6 +94,7 @@ BOOST_AUTO_TEST_CASE(areCorrectAllOptionsWork)
   for ( auto& opt : options) {
     v.push_back(opt.first);
   }
+  v.push_back("type_std::string, file_std::vector<std::string>");
   options["ble"] = range;
   BOOST_REQUIRE(validator.areCorrectOptions(options, v));
 }
