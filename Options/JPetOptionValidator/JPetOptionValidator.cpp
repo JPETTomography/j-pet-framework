@@ -25,15 +25,14 @@ JPetOptionValidator::JPetOptionValidator()
   fValidatorMap = generateValidationMap();
 }
 
-bool JPetOptionValidator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap, std::vector<std::string>& isOption)
+bool JPetOptionValidator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap, std::vector<std::string>& namesOfOptionsToBeValidated)
 {
-  /// We are adding validators that need more than one option, and are not compatible with the standard validators
-  auto newOptionsMap  = addNonStandardValidators(optionsMap);
+  auto newOptionsMap = addNonStandardValidators(optionsMap);
   for (auto& checkGroup : fValidatorMap) {
-    if (std::find(isOption.begin(), isOption.end(), checkGroup.first ) != isOption.end()) {
+    if (std::find(namesOfOptionsToBeValidated.begin(), namesOfOptionsToBeValidated.end(), checkGroup.first ) != namesOfOptionsToBeValidated.end()) {
       for (auto& checkFunc : checkGroup.second) {
-        if (( !checkFunc(std::make_pair(checkGroup.first, optionsMap.at(checkGroup.first))) )) {
-          ERROR("ERROR VALIDATON FOR " + checkGroup.first);
+        if (( !checkFunc(std::make_pair(checkGroup.first, newOptionsMap.at(checkGroup.first))) )) {
+          ERROR("VALIDATION ERROR FOR " + checkGroup.first);
           return false;
         }
       }
@@ -44,17 +43,21 @@ bool JPetOptionValidator::areCorrectOptions(const std::map<std::string, boost::a
 
 std::map<std::string, boost::any> JPetOptionValidator::addNonStandardValidators(const std::map<std::string, boost::any>& optionsMap)
 {
+  std::map<std::string, boost::any> newOptionsMap(optionsMap);
+  addFileTypeAndNameValidator(newOptionsMap);
+  return newOptionsMap;
+}
+
+void JPetOptionValidator::addFileTypeAndNameValidator(std::map<std::string, boost::any>& optionsMap)
+{
   using namespace jpet_options_tools;
-  std::map<std::string, boost::any> newOptionMap(optionsMap);
   std::string type_key = "type_std::string";
   std::string filename_key = "file_std::vector<std::string>";
-  if (!isOptionSet(newOptionMap,  type_key) || !isOptionSet(newOptionMap,  filename_key)) {
+  if (!isOptionSet(optionsMap,  type_key) || !isOptionSet(optionsMap,  filename_key)) {
     WARNING("file type or file name option not present! No validator added!");
-    return newOptionMap;
+    return;
   }
-  newOptionMap["type_std::string, file_std::vector<std::string>"] = JPetOptionValidator::ManyOptionsWrapper({getOptionAsString(newOptionMap, type_key), getOptionAsVectorOfStrings(newOptionMap, filename_key)});
-
-return newOptionMap;
+  optionsMap["type_std::string, file_std::vector<std::string>"] = JPetOptionValidator::ManyOptionsWrapper({getOptionAsString(optionsMap, type_key), getOptionAsVectorOfStrings(optionsMap, filename_key)});
 }
 
 std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > JPetOptionValidator::generateValidationMap()
