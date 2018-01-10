@@ -84,7 +84,8 @@ BOOST_AUTO_TEST_CASE(areCorrectAllOptionsWork)
     {"range_std::vector<int>", range },
     {"type_std::string", std::string("hld")},
     {"file_std::vector<std::string>", files},
-    {"type_std::string, file_std::vector<std::string>", JPetOptionValidator::ManyOptionsWrapper({std::string("hld"), files})},
+    /// @todo TO CHECK which version is correct with format suffix or without
+    //{"type_std::string, file_std::vector<std::string>", JPetOptionValidator::ManyOptionsWrapper({std::string("hld"), files})},
     {"localDB_std::string", std::string("unitTestData/JPetCmdParserTest/data.hld")},
     {"outputPath_std::string", std::string("unitTestData/JPetCmdParserTest")},
     {"runId_int", 3},
