@@ -30,6 +30,7 @@ public:
 
   JPetOptionValidator();
 
+  ///
   bool areCorrectOptions(const std::map<std::string, boost::any>& optionsMap, std::vector<std::string>& isOption);
   static std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > generateValidationMap();
   void addValidatorFunction(const std::string& name, bool(*validatorFunction)(std::pair <std::string, boost::any>) );
@@ -43,7 +44,11 @@ public:
   static bool areFilesValid(std::pair <std::string, boost::any> option);
   static bool isOutputDirectoryValid(std::pair <std::string, boost::any> option);
 
-  class ManyOptionsWrapper {
+  /// comment
+  static std::map<std::string, boost::any> addNonStandardValidators(const std::map<std::string, boost::any>& optionsMap);
+
+  class ManyOptionsWrapper
+  {
   public:
     ManyOptionsWrapper(std::initializer_list<boost::any>);
     std::vector<boost::any> getOptionsVector();
