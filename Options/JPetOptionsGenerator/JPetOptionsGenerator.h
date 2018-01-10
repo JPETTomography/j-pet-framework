@@ -55,8 +55,7 @@ public:
   /// provided defined by nbOfRegisteredTasks arguments.
   OptsForFiles generateOptionsForTasks(const OptsStrAny& opt, int nbOfRegisteredTasks = 1);
 
-  std::vector<std::string> getVectorOfOptionFromUser() const;
-  void createMapOfBoolOptionFromUser(const OptsStrAny& optionsMap);
+  std::vector<std::string> createMapOfBoolOptionFromUser(const OptsStrAny& optionsMap) const;
 
 protected:
   static std::map<std::string, boost::any> kDefaultOptions;

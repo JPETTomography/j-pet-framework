@@ -99,7 +99,7 @@ JPetOptionsGenerator::OptsStrAny JPetOptionsGenerator::generateAndValidateOption
   if (!cfgFileName.empty()) {
     addNewOptionsFromCfgFile(cfgFileName, options);
   }
-  createMapOfBoolOptionFromUser(options);
+  auto optionNames = createMapOfBoolOptionFromUser(options);
 
   options = addMissingDefaultOptions(options);
 
@@ -107,21 +107,17 @@ JPetOptionsGenerator::OptsStrAny JPetOptionsGenerator::generateAndValidateOption
   options = transformOptions(transformationMap, options);
 
   JPetOptionValidator validator;
-  if (!validator.areCorrectOptions(options, fVectorOfOptionFromUser)) {
+  if (!validator.areCorrectOptions(options, optionNames)) {
     throw std::invalid_argument("Wrong user options provided! Check the log!");
   }
   return options;
 }
 
-std::vector<std::string> JPetOptionsGenerator::getVectorOfOptionFromUser() const
+std::vector<std::string> JPetOptionsGenerator::createMapOfBoolOptionFromUser(const std::map<std::string, boost::any>& optionsMap) const
 {
-  return fVectorOfOptionFromUser;
-}
-
-
-void JPetOptionsGenerator::createMapOfBoolOptionFromUser(const std::map<std::string, boost::any>& optionsMap)
-{
+  std::vector<std::string> optionNames;
   for ( auto& opt : optionsMap) {
-    fVectorOfOptionFromUser.push_back(opt.first);
+    optionNames.push_back(opt.first);
   }
+  return optionNames;
 }
