@@ -23,9 +23,7 @@
 #include "./JPetCommonTools/JPetCommonTools.h"
 #include "./JPetLoggerInclude.h"
 #include "./JPetScopeConfigParser/JPetScopeConfigParser.h"
-#include "./JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 #include "./JPetOptionValidator/JPetOptionValidator.h"
-#include "./JPetAdditionalTransformations.h"
 #include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
 using boost::any_cast;
@@ -99,7 +97,7 @@ JPetOptionsGenerator::OptsStrAny JPetOptionsGenerator::generateAndValidateOption
   if (!cfgFileName.empty()) {
     addNewOptionsFromCfgFile(cfgFileName, options);
   }
-  auto optionNames = createMapOfBoolOptionFromUser(options);
+  auto optionNames = getOptionsToBeValidated(options);
 
   options = addMissingDefaultOptions(options);
 
@@ -113,11 +111,14 @@ JPetOptionsGenerator::OptsStrAny JPetOptionsGenerator::generateAndValidateOption
   return options;
 }
 
-std::vector<std::string> JPetOptionsGenerator::createMapOfBoolOptionFromUser(const std::map<std::string, boost::any>& optionsMap) const
+std::vector<std::string> JPetOptionsGenerator::getOptionsToBeValidated(const std::map<std::string, boost::any>& optionsMap) const
 {
   std::vector<std::string> optionNames;
-  for ( auto& opt : optionsMap) {
+  /// add standard validation options
+  for (auto& opt : optionsMap) {
     optionNames.push_back(opt.first);
   }
+  /// add non-standard validation options
+  optionNames.push_back("type_std::string, file_std::vector<std::string>");
   return optionNames;
 }
