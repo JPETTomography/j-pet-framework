@@ -41,7 +41,7 @@ public:
   ~JPetManager();
 
   bool run(int argc, const char** argv);
-  
+
   template<typename T> void registerTask(const char * name){
     fTasksDictionary[name] = [name]() {
       return new T(name);
@@ -53,10 +53,9 @@ public:
   Options getOptions() const;
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
-  bool initDBConnection(const char* configFilePath = "./DBConfig/configDB.cfg");
-  // @todo: replace the need to call this method with task list passed as an option  
   void useTask(const char * name, const char * inputFileType="", const char * outputFileType="");
-  
+  void clearRegisteredTasks();
+
 private:
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&);
@@ -69,10 +68,3 @@ private:
   std::map<const char *, TaskGenerator> fTasksDictionary;
 };
 #endif /*  !JPETMANAGER_H */
-
-
-
-
-
-
-
