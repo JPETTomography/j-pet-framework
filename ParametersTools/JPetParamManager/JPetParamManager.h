@@ -25,11 +25,9 @@
 
 #include "./JPetLoggerInclude.h"
 #include "./JPetParamBank/JPetParamBank.h"
-#include "./JPetDBParamGetter/JPetDBParamGetter.h"
 #include "./JPetReader/JPetReader.h"
 #include "./JPetWriter/JPetWriter.h"
 #include "./JPetScopeConfigParser/JPetScopeConfigPOD.h" /// for generateParametersFromScopeConfig
-
 #include "./JPetTRB/JPetTRBFactory.h"
 #include "./JPetFEB/JPetFEBFactory.h"
 #include "./JPetFrame/JPetFrameFactory.h"
@@ -45,13 +43,13 @@ public:
   /// factory method to produce JPetParamManager instance based on provided options
   static std::shared_ptr<JPetParamManager> generateParamManager(const std::map<std::string, boost::any>& options);
 
-  JPetParamManager() : fParamGetter(new JPetDBParamGetter()), fBank(0), fIsNullObject(false) {}
+  JPetParamManager() : fParamGetter(), fBank(0), fIsNullObject(false) {}
   JPetParamManager(JPetParamGetter* paramGetter) : fParamGetter(paramGetter), fBank(0) , fIsNullObject(false) {}
   JPetParamManager(JPetParamGetter* paramGetter, std::set<ParamObjectType> expectMissing) : fParamGetter(paramGetter), fExpectMissing(expectMissing), fBank(0) , fIsNullObject(false) {}
   /// Special constructor to create NullObject.
   /// This object can be returned if JPetParamManager is not created,
   /// and the const& is expected to be returned.
-  explicit JPetParamManager(bool isNull) : fParamGetter(new JPetDBParamGetter()), fBank(0), fIsNullObject(isNull) {}
+  explicit JPetParamManager(bool isNull) : fParamGetter(), fBank(0), fIsNullObject(isNull) {}
   ~JPetParamManager();
 
   std::map<int, JPetTRB*>& getTRBs(const int runId);
@@ -88,9 +86,9 @@ private:
   JPetParamManager(const JPetParamManager&);
   JPetParamManager& operator=(const JPetParamManager&);
 
-  JPetParamGetter* fParamGetter;
+  JPetParamGetter* fParamGetter = nullptr;
   std::set<ParamObjectType> fExpectMissing;
-  JPetParamBank* fBank;
+  JPetParamBank* fBank = nullptr;
   bool fIsNullObject;
 
   std::map<int, JPetTRBFactory> fTRBFactories;

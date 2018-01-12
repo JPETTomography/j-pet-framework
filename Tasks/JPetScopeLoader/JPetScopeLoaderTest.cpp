@@ -82,8 +82,6 @@ BOOST_AUTO_TEST_CASE (generate_root_file)
 
 BOOST_AUTO_TEST_CASE (position_does_not_exist)
 {
-  JPetDBParamGetter::clearParamCache();
-
   const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/wrong_file_test_30.reco.sig.root";
   boost::filesystem::remove(test_root_filename);
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/wrong_file.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1";
@@ -100,7 +98,6 @@ BOOST_AUTO_TEST_CASE (position_does_not_exist)
 
 BOOST_AUTO_TEST_CASE (folder_does_not_exist)
 {
-  JPetDBParamGetter::clearParamCache();
   const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/wrong_file2_test_0.reco.sig.root";
   boost::filesystem::remove(test_root_filename);
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/wrong_file2.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1";
@@ -116,8 +113,6 @@ BOOST_AUTO_TEST_CASE (folder_does_not_exist)
 
 BOOST_AUTO_TEST_CASE (generate_root_file2)
 {
-  JPetDBParamGetter::clearParamCache();
-
   const char* test_root_filename1 = "unitTestData/JPetScopeLoaderTest/test_file2_test_0.reco.sig.root";
   const char* test_root_filename2 = "unitTestData/JPetScopeLoaderTest/test_file2_test_1.reco.sig.root";
   boost::filesystem::remove(test_root_filename1);
