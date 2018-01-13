@@ -114,13 +114,25 @@ bool JPetOptionValidator::isFileTypeMatchingExtensions(std::pair<std::string, bo
   std::vector<boost::any> optionsVector = any_cast<std::vector<boost::any>>(optionsWrapper.getOptionsVector());
   std::string fileType = any_cast<std::string>(optionsVector[0]);
   std::vector<std::string> fileNames = any_cast<std::vector<std::string>>(optionsVector[1]);
+  std::vector<std::string> correctFileExtensions = getCorrectExtensionsForTheType(fileType);
   for (const std::string& fileName : fileNames) {
-    if (JPetCommonTools::exctractFileNameSuffix(fileName) != ("." + fileType)) {
+    if (std::find(correctFileExtensions.begin(), correctFileExtensions.end(), JPetCommonTools::exctractFileNameSuffix(fileName)) == correctFileExtensions.end()) {
       ERROR("Wrong extension of file: " + fileName);
       return false;
     }
   }
   return true;
+}
+
+std::vector<std::string> JPetOptionValidator::getCorrectExtensionsForTheType(std::string fileType)
+{
+  if (fileType == "scope") {
+    return {".json"};
+  } else if (fileType == "zip") {
+    return {".gz", ".xz"};
+  } else {
+    return {"." + fileType};
+  }
 }
 
 bool JPetOptionValidator::isRunIdValid(std::pair <std::string, boost::any> option)
