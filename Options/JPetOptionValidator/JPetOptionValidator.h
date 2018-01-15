@@ -59,6 +59,7 @@ public:
 private:
   std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > fValidatorMap;
 
+  /// File types "scope" and "zip" considered irregular - possible correct extensions for them differ from .<type>
   static std::vector<std::string> getCorrectExtensionsForTheType(std::string fileType);
 
   static void addFileTypeAndNameValidator(std::map<std::string, boost::any>&);
