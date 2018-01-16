@@ -20,45 +20,28 @@
 #ifndef JPETLOGGER_INCLUDE_H
 #define JPETLOGGER_INCLUDE_H
 
-// current settings
-// 1 - switched on
-#define JPETLOGGER_ON 1
-#define JPET_LOGGER_LEVEL_INFO 1
-#define JPET_LOGGER_LEVEL_WARNING 1
-#define JPET_LOGGER_LEVEL_ERROR 1
-#define JPET_LOGGER_LEVEL_DEBUG 0
-#define JPET_SCREEN_OUTPUT 0
-
-// don't touch this part
-#if JPETLOGGER_ON == 1
 #include "./JPetLogger/JPetLogger.h"
+
+#ifndef __CINT__
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/sinks/sync_frontend.hpp>
+#include <boost/log/sinks/text_ostream_backend.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/utility/manipulators/add_value.hpp>
+#include <boost/filesystem.hpp>
+
+#endif
+
+#define CUSTOM_LOG(logger, sev) BOOST_LOG_SEV(logger, sev)                                       \
+                                    << boost::log::add_value("Line", __LINE__)                   \
+                                    << boost::log::add_value("File", __FILE__)                   \
+                                    << boost::log::add_value("Function", BOOST_CURRENT_FUNCTION)
+
 #define DATE_AND_TIME()   JPetLogger::dateAndTime()
-#if JPET_LOGGER_LEVEL_INFO == 1
-#define INFO(X)   JPetLogger::info(__func__, X)
-#else
-#define INFO(X)
-#endif
-#if JPET_LOGGER_LEVEL_WARNING == 1
-#define WARNING(X) JPetLogger::warning(__func__, X)
-#else
-#define WARNING(X)
-#endif
-#if JPET_LOGGER_LEVEL_ERROR == 1
-#define ERROR(X)   JPetLogger::error(__func__, X)
-#else
-#define ERROR(X)
-#endif
-#if JPET_LOGGER_LEVEL_DEBUG == 1
-#define DEBUG(X)   JPetLogger::debug(__func__, X)
-#else
-#define DEBUG(X)
-#endif
-#else
-#define WARNING(X)
-#define ERROR(X)
-#define INFO(X)
-#define DEBUG(X)
-#define DATE_AND_TIME()
-#endif
+#define INFO(X)   CUSTOM_LOG(JPetLogger::getSeverity(), logging::trivial::info) << X
+#define WARNING(X) CUSTOM_LOG(JPetLogger::getSeverity(), logging::trivial::warning) << X
+#define ERROR(X)   CUSTOM_LOG(JPetLogger::getSeverity(), logging::trivial::error) << X
+#define DEBUG(X)   CUSTOM_LOG(JPetLogger::getSeverity(), logging::trivial::debug) << X
 
 #endif

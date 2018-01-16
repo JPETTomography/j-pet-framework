@@ -43,12 +43,15 @@ endif()
 
 find_package(PQXX REQUIRED)
 
+add_definitions(-DBOOST_LOG_DYN_LINK)
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
   regex
   system
   unit_test_framework
+  log_setup
+  log
   )
 
 add_definitions(${ROOT_DEFINITIONS})

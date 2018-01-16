@@ -19,6 +19,7 @@
 #ifndef JPETLOGGER_H
 #define JPETLOGGER_H
 
+#include <ostream>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -36,25 +37,68 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/log/sources/record_ostream.hpp>
+#include <boost/log/attributes/mutable_constant.hpp>
+#include <boost/log/sinks/text_ostream_backend.hpp>
 
 namespace logging = boost::log;
+namespace attrs = boost::log::attributes;
+namespace expr = boost::log::expressions;
 namespace src = boost::log::sources;
-namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
+namespace sinks = boost::log::sinks;
 #endif
 
 class JPetLogger
 {
 public:
-  void init()
+  static void formatter(logging::record_view const& rec, logging::formatting_ostream& strm)
   {
-    logging::add_file_log(
-      keywords::file_name = generateFilename(),
-      keywords::format = "[%TimeStamp%]: %Message%");
+    logging::value_ref<std::string> fullpath = logging::extract<std::string>("File", rec);
+    logging::value_ref<std::string> fullfunction = logging::extract<std::string>("Function", rec);
 
-    logging::core::get()->set_filter(
-      logging::trivial::severity >= logging::trivial::info);
+    strm << logging::extract<unsigned int>("LineID", rec) << ": [";
+    strm << boost::filesystem::path(fullpath.get()).filename().string() << ":";
+    strm << fullfunction << "@";
+    strm << logging::extract<int>("Line", rec) << "] ";
+
+
+    // The same for the severity level.
+    // The simplified syntax is possible if attribute keywords are used.
+    strm << "<" << rec[logging::trivial::severity] << "> ";
+
+    // Finally, put the record message to the stream
+    strm << rec[expr::smessage];
   }
+
+  static void init()
+  {
+    typedef sinks::synchronous_sink<sinks::text_ostream_backend> text_sink;
+    boost::shared_ptr<text_sink> sink = boost::make_shared<text_sink>();
+
+    sink->locked_backend()->add_stream(
+      boost::make_shared<std::ofstream>(generateFilename()));
+
+    sink->set_formatter(&JPetLogger::formatter);
+
+    logging::core::get()->add_sink(sink);
+    logging::add_common_attributes();
+  }
+
+#ifndef __CINT__
+  static src::severity_logger<logging::trivial::severity_level>& getSeverity()
+  {
+    static bool isInited = false;
+    if (!isInited) {
+      init();
+      isInited = true;
+    }
+    static src::severity_logger<logging::trivial::severity_level> sev;
+    return sev;
+  }
+#else
+  static void* getSeverity();
+#endif
+
   static void dateAndTime();
   inline static void warning(const char* func, const char* msg)
   {
