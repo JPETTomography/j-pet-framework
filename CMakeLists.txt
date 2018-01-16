@@ -41,8 +41,6 @@ if(ROOT_FOUND AND NOT ROOT_VERSION VERSION_LESS "6.0")
   message(FATAL_ERROR "ROOT 6.0 is not compatible")
 endif()
 
-find_package(PQXX REQUIRED)
-
 add_definitions(-DBOOST_LOG_DYN_LINK)
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
