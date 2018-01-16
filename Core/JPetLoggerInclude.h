@@ -39,9 +39,9 @@
                                     << boost::log::add_value("Function", BOOST_CURRENT_FUNCTION)
 
 #define DATE_AND_TIME()   JPetLogger::dateAndTime()
-#define INFO(X)   CUSTOM_LOG(JPetLogger::getSeverity(), logging::trivial::info) << X
-#define WARNING(X) CUSTOM_LOG(JPetLogger::getSeverity(), logging::trivial::warning) << X
-#define ERROR(X)   CUSTOM_LOG(JPetLogger::getSeverity(), logging::trivial::error) << X
-#define DEBUG(X)   CUSTOM_LOG(JPetLogger::getSeverity(), logging::trivial::debug) << X
+#define INFO(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::info) << X
+#define WARNING(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::warning) << X
+#define ERROR(X)   CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::error) << X
+#define DEBUG(X)   CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::debug) << X
 
 #endif

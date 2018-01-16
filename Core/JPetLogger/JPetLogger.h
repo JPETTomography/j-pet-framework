@@ -30,112 +30,25 @@
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
 
 #include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/expressions.hpp>
-#include <boost/log/sinks/text_file_backend.hpp>
-#include <boost/log/utility/setup/file.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/utility/formatting_ostream.hpp>
 #include <boost/log/sources/severity_logger.hpp>
-#include <boost/log/sources/record_ostream.hpp>
-#include <boost/log/attributes/mutable_constant.hpp>
-#include <boost/log/sinks/text_ostream_backend.hpp>
-
-namespace logging = boost::log;
-namespace attrs = boost::log::attributes;
-namespace expr = boost::log::expressions;
-namespace src = boost::log::sources;
-namespace keywords = boost::log::keywords;
-namespace sinks = boost::log::sinks;
+#include <boost/log/trivial.hpp>
 #endif
 
 class JPetLogger
 {
 public:
-  static void formatter(logging::record_view const& rec, logging::formatting_ostream& strm)
-  {
-    logging::value_ref<std::string> fullpath = logging::extract<std::string>("File", rec);
-    logging::value_ref<std::string> fullfunction = logging::extract<std::string>("Function", rec);
-
-    strm << logging::extract<unsigned int>("LineID", rec) << ": [";
-    strm << boost::filesystem::path(fullpath.get()).filename().string() << ":";
-    strm << fullfunction << "@";
-    strm << logging::extract<int>("Line", rec) << "] ";
-
-
-    // The same for the severity level.
-    // The simplified syntax is possible if attribute keywords are used.
-    strm << "<" << rec[logging::trivial::severity] << "> ";
-
-    // Finally, put the record message to the stream
-    strm << rec[expr::smessage];
-  }
-
-  static void init()
-  {
-    typedef sinks::synchronous_sink<sinks::text_ostream_backend> text_sink;
-    boost::shared_ptr<text_sink> sink = boost::make_shared<text_sink>();
-
-    sink->locked_backend()->add_stream(
-      boost::make_shared<std::ofstream>(generateFilename()));
-
-    sink->set_formatter(&JPetLogger::formatter);
-
-    logging::core::get()->add_sink(sink);
-    logging::add_common_attributes();
-  }
-
 #ifndef __CINT__
-  static src::severity_logger<logging::trivial::severity_level>& getSeverity()
+  static boost::log::sources::severity_logger<boost::log::trivial::severity_level>& getSeverity()
   {
-    static bool isInited = false;
-    if (!isInited) {
-      init();
-      isInited = true;
-    }
-    static src::severity_logger<logging::trivial::severity_level> sev;
+    static boost::log::sources::severity_logger<boost::log::trivial::severity_level> sev;
     return sev;
   }
 #else
   static void* getSeverity();
 #endif
-
-  static void dateAndTime();
-  inline static void warning(const char* func, const char* msg)
-  {
-    logMessage(func, msg, kWarning);
-  }
-  inline static void error(const char* func, const char* msg)
-  {
-    logMessage(func, msg, kError);
-  }
-  inline static void info(const char* func, const char* msg)
-  {
-    logMessage(func, msg, kInfo);
-  }
-  inline static void debug(const char* func, const char* msg)
-  {
-    logMessage(func, msg, kDebug);
-  }
-
-  inline static void warning(const char* func, const std::string& msg)
-  {
-    logMessage(func , msg.c_str(), kWarning);
-  }
-  inline static void error(const char* func, const std::string& msg)
-  {
-    logMessage(func, msg.c_str(), kError);
-  }
-  inline static void info(const char* func, const std::string& msg)
-  {
-    logMessage(func, msg.c_str(), kInfo);
-  }
-  inline static void debug(const char* func, const std::string& msg)
-  {
-    logMessage(func, msg.c_str(), kDebug);
-  }
+  //static void dateAndTime(); -- to reimplement
 private:
-  enum MessageType {kInfo, kWarning, kError, kDebug};
-
   JPetLogger();
   JPetLogger(const JPetLogger&);
   JPetLogger& operator=(const JPetLogger&);
@@ -145,12 +58,9 @@ private:
   {
     return std::string("JPet_") + to_string(boost::uuids::random_generator()()) + std::string(".log");
   }
+  static void formatter(boost::log::record_view const& rec, boost::log::formatting_ostream& strm);
+  static void init();
 #endif
-
-  static void logMessage(const char* func, const char* msg, MessageType type);
-
-  static const std::string fFileName;
-  static bool fIsLogFile;
 };
 
 #endif /*  !JPETLOGGER_H */

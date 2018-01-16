@@ -16,21 +16,21 @@
 #include <ctime>
 #include <cassert>
 #include "./JPetLogger.h"
-#include "./JPetLoggerInclude.h"
 
+#include <boost/log/expressions.hpp>
+#include <boost/log/sinks/text_file_backend.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
 
-#if JPET_SCREEN_OUTPUT == 1
-bool JPetLogger::fIsLogFile = false;
-#else
-bool JPetLogger::fIsLogFile = true;
-#endif
+#include <boost/log/sources/record_ostream.hpp>
+#include <boost/log/attributes/mutable_constant.hpp>
+#include <boost/log/sinks/text_ostream_backend.hpp>
 
-const std::string JPetLogger::fFileName = JPetLogger::generateFilename();
-
-void JPetLogger::dateAndTime() {
+/*void JPetLogger::dateAndTime()
+{
   std::ofstream log(fFileName.c_str(), std::ios_base::app);
-  std::streambuf* originalCoutBuffer = 0; 
-  // we redirect std::cout to a file 
+  std::streambuf* originalCoutBuffer = 0;
+  // we redirect std::cout to a file
   if (fIsLogFile) {
     originalCoutBuffer = std::cout.rdbuf();
     std::cout.rdbuf(log.rdbuf());
@@ -41,49 +41,52 @@ void JPetLogger::dateAndTime() {
     return;
   }
   time_t t = time(0);   /// current time
-  struct tm * now = localtime(&t);
+  struct tm* now = localtime(&t);
   std::cout << (now->tm_year + 1900) << '-'
-  << (now->tm_mon + 1) << '-'
-  <<  now->tm_mday << " "
-  <<  now->tm_hour << ":"
-  <<  now->tm_min << ":"
-  <<  now->tm_sec << std::endl;
+            << (now->tm_mon + 1) << '-'
+            <<  now->tm_mday << " "
+            <<  now->tm_hour << ":"
+            <<  now->tm_min << ":"
+            <<  now->tm_sec << std::endl;
   if (fIsLogFile) {
     std::cout.rdbuf(originalCoutBuffer);  // back to original stream
   }
+}*/
+
+JPetLogger::JPetLogger()
+{
+  init();
 }
 
+void JPetLogger::init()
+{
+  typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend> text_sink;
+  boost::shared_ptr<text_sink> sink = boost::make_shared<text_sink>();
 
-void JPetLogger::logMessage(const char* func, const char* msg, MessageType type) {
-  std::ofstream log(fFileName.c_str(), std::ios_base::app);
-  std::streambuf* originalCoutBuffer = 0; 
-  // we redirect std::cout to a file 
-  if (fIsLogFile) {
-    originalCoutBuffer = std::cout.rdbuf();
-    std::cout.rdbuf(log.rdbuf());
-  }
-  if (std::cout.fail()) {
-    std::cerr << "Unable to open log file!" << std::endl;
-    return;
-  }
-  switch (type) {
-    case kInfo:
-      std::cout << "Info ";
-      break;
-    case kWarning:
-      std::cout << "Warning ";
-      break;
-    case kError:
-      std::cout << "Error ";
-      break;
-    case kDebug:
-      std::cout << "Debug ";
-      break;
-  }
-  std::cout << func << "():"
-  << msg
-  << std::endl;
-  if (fIsLogFile) {
-    std::cout.rdbuf(originalCoutBuffer);  // back to original stream
-  }
+  sink->locked_backend()->add_stream(
+    boost::make_shared<std::ofstream>(generateFilename()));
+
+  sink->set_formatter(&JPetLogger::formatter);
+
+  boost::log::core::get()->add_sink(sink);
+  boost::log::add_common_attributes();
+}
+
+void JPetLogger::formatter(boost::log::record_view const& rec, boost::log::formatting_ostream& strm)
+{
+  boost::log::value_ref<std::string> fullpath = boost::log::extract<std::string>("File", rec);
+  boost::log::value_ref<std::string> fullfunction = boost::log::extract<std::string>("Function", rec);
+
+  strm << boost::log::extract<unsigned int>("LineID", rec) << ": [";
+  strm << boost::filesystem::path(fullpath.get()).filename().string() << ":";
+  strm << fullfunction << "@";
+  strm << boost::log::extract<int>("Line", rec) << "] ";
+
+
+  // The same for the severity level.
+  // The simplified syntax is possible if attribute keywords are used.
+  strm << "<" << rec[boost::log::trivial::severity] << "> ";
+
+  // Finally, put the record message to the stream
+  strm << rec[boost::log::expressions::smessage];
 }
