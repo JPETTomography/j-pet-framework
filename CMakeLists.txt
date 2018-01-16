@@ -52,6 +52,10 @@ find_package(Boost 1.50.0 REQUIRED COMPONENTS
   log
   )
 
+message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
+message(STATUS "Boost_LIBRARIES: ${Boost_LIBRARIES}")
+message(STATUS "Boost_VERSION: ${Boost_VERSION}")
+
 add_definitions(${ROOT_DEFINITIONS})
 add_definitions(${Boost_DEFINITIONS})
 
