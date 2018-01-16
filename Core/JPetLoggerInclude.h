@@ -23,25 +23,27 @@
 #include "./JPetLogger/JPetLogger.h"
 
 #ifndef __CINT__
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
 #include <boost/log/sinks/sync_frontend.hpp>
-#include <boost/log/sinks/text_ostream_backend.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/manipulators/add_value.hpp>
 #include <boost/filesystem.hpp>
-
+#include <boost/thread/thread.hpp>
+#include <boost/log/attributes/scoped_attribute.hpp>
 #endif
 
-#define CUSTOM_LOG(logger, sev) BOOST_LOG_SEV(logger, sev)                                       \
-                                    << boost::log::add_value("Line", __LINE__)                   \
-                                    << boost::log::add_value("File", __FILE__)                   \
-                                    << boost::log::add_value("Function", BOOST_CURRENT_FUNCTION)
+#define CUSTOM_LOG(logger, sev, X)                                       \
+{                                                                        \
+  BOOST_LOG_SCOPED_THREAD_TAG("ThreadID", boost::this_thread::get_id()); \
+  BOOST_LOG_SEV(logger, sev)                                             \
+  << boost::log::add_value("Line", __LINE__)                             \
+  << boost::log::add_value("File", __FILE__)                             \
+  << boost::log::add_value("Function", __func__)                         \
+  << X;                                                                  \
+}
 
-#define DATE_AND_TIME()   JPetLogger::dateAndTime()
-#define INFO(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::info) << X
-#define WARNING(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::warning) << X
-#define ERROR(X)   CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::error) << X
-#define DEBUG(X)   CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::debug) << X
+//#define DATE_AND_TIME()   JPetLogger::dateAndTime()
+#define INFO(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::info, X)
+#define WARNING(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::warning, X)
+#define ERROR(X)   CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::error, X)
+#define DEBUG(X)   CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::debug, X)
 
 #endif
