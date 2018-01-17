@@ -76,6 +76,7 @@ set(FOLDERS_WITH_SOURCE
   Tasks
   Core
   ParametersTools
+  MC
   )
 
 foreach(dir ${FOLDERS_WITH_SOURCE})
@@ -124,6 +125,7 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetUser
   JPetUnpacker
   JPetEvent
+  JPetMCHit
   INCLUDE_DIRS ${FOLDERS} #pass variable with include dirs for generating dictionaries
   )
 
