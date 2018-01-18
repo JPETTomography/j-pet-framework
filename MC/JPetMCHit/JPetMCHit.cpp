@@ -23,7 +23,7 @@ JPetMCHit::JPetMCHit()
 {
 }
 
-JPetMCHit::JPetMCHit(Int_t decayTreetId, Int_t vertexId, float e, float t, const TVector3& pos, const TVector3& pol, const TVector3& mom):
+JPetMCHit::JPetMCHit(UInt_t decayTreetId, UInt_t vertexId, float e, float t, const TVector3& pos, const TVector3& pol, const TVector3& mom):
   fMCDecayTreeIndex(decayTreetId), fMCVtxIndex(vertexId), fPolarization(pol), fMomentum(mom)
 {
   setEnergy(e);
@@ -31,15 +31,16 @@ JPetMCHit::JPetMCHit(Int_t decayTreetId, Int_t vertexId, float e, float t, const
   setPos(pos.X(), pos.Y(), pos.Z());
 }
 
-Int_t JPetMCHit::getMCDecayTreeIndex() const
+UInt_t JPetMCHit::getMCDecayTreeIndex() const
 {
   return fMCDecayTreeIndex;
 }
 
-Int_t JPetMCHit::getMCVtxIndex() const
+UInt_t JPetMCHit::getMCVtxIndex() const
 {
   return fMCVtxIndex;
 }
+
 const TVector3& JPetMCHit::getPolarization() const
 {
   return fPolarization;

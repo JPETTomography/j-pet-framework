@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 
 /// MC hit part
 
-  BOOST_REQUIRE_EQUAL(hit.getMCDecayTreeIndex(), 0);
+  BOOST_REQUIRE_EQUAL(hit.getMCDecayTreeIndex(), 0u);
   BOOST_REQUIRE_EQUAL(hit.getMCVtxIndex(), 0);
   BOOST_REQUIRE_CLOSE(hit.getPolarization().X(), 0, epsilon );
   BOOST_REQUIRE_CLOSE(hit.getPolarization().Y(), 0, epsilon );
@@ -43,8 +43,8 @@ BOOST_AUTO_TEST_CASE(non_default_constructor)
   TVector3 position(6.0, 7.0, 8.0);
   TVector3 polarization(2.0, 3.0, 4.0);
   TVector3 momentum(1.0, -13.0, 13.0);
-  auto MCDecayTreeIndex = 7;
-  auto MCVtxIndex = 99;
+  auto MCDecayTreeIndex = 7u;
+  auto MCVtxIndex = 99u;
   auto energy = 5.5;
   auto time  = 3.3;
   double epsilon = 0.0001;
@@ -77,8 +77,8 @@ BOOST_AUTO_TEST_CASE(getters_setters_mc)
   JPetMCHit hit;
   TVector3 pol(2.0, 3.0, 4.0);
   TVector3 mom(1.0, -13.0, 13.0);
-  auto MCDecayTreeIndex = 7;
-  auto MCVtxIndex = 99;
+  auto MCDecayTreeIndex = 7u;
+  auto MCVtxIndex = 99u;
   double epsilon = 0.0001;
   hit.setPolarization(pol.X(), pol.Y(), pol.Z());
   hit.setMomentum(mom.X(), mom.Y(), mom.Z() );
