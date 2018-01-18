@@ -28,10 +28,10 @@ class JPetMCHit : public JPetHit
 public:
 
   JPetMCHit();
-  JPetMCHit(Int_t MCDecayTreeIndex, Int_t MCVtxIndex, float Energy, float Time, const TVector3& Position, const TVector3& Polarization, const TVector3& Momentum);
+  JPetMCHit(UInt_t MCDecayTreeIndex, UInt_t MCVtxIndex, float Energy, float Time, const TVector3& Position, const TVector3& Polarization, const TVector3& Momentum);
 
-  Int_t getMCDecayTreeIndex() const;
-  Int_t getMCVtxIndex() const;
+  UInt_t getMCDecayTreeIndex() const;
+  UInt_t getMCVtxIndex() const;
   const TVector3& getPolarization() const;
   const TVector3& getMomentum() const;
 
@@ -42,8 +42,8 @@ public:
 
 private:
 
-  Int_t fMCDecayTreeIndex = 0;
-  Int_t fMCVtxIndex = 0;
+  UInt_t fMCDecayTreeIndex = 0u;
+  UInt_t fMCVtxIndex = 0u;
   TVector3 fPolarization; 	// initial polarisation of gamma photon
   TVector3 fMomentum;     	// initial momentum of gamma photon
 
