@@ -12,10 +12,8 @@
  *
  *  @file JPetLoggerInclude.h
  *  @brief Configuration file for the Logger class
- *  Three independent level of logging are defined: LEVEL_INFO, LEVEL_WARNING and LEVEL_ERROR
- *  Levels can be switched on/off separately, by assign the value different than 1.
- *  The messages can be redirected to the screen if the SCREEN_OUTPUT is 1.
- *  Also the whole JPetLogger can be switched off/on by setting the JPETLOGGER_ON flag to 1.
+ *  Four independent level of logging are defined: INFO, WARNING, ERROR and DEBUG.
+ *  Also general macro is defined that allows to create user own level of logging.
  */
 #ifndef JPETLOGGER_INCLUDE_H
 #define JPETLOGGER_INCLUDE_H
@@ -24,8 +22,7 @@
 
 #ifndef __CINT__
 #include <boost/log/utility/manipulators/add_value.hpp> //for add_value
-#include <boost/thread/thread.hpp>                      // for boost::this_thread::get_id()
-#include <boost/log/attributes/scoped_attribute.hpp>    // for BOOST_LOG_SCOPED_THREAD_TAG
+#include <boost/log/attributes/scoped_attribute.hpp>    //for BOOST_LOG_SCOPED_THREAD_TAG
 #endif
 
 #define CUSTOM_LOG(logger, sev, X)                                       \
@@ -41,5 +38,7 @@
 #define WARNING(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::warning, X)
 #define ERROR(X)   CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::error, X)
 #define DEBUG(X)   CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::debug, X)
+
+#define LOG(X, sev) CUSTOM_LOG(JPetLogger::getSevarity(), sev, X)
 
 #endif
