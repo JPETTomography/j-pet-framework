@@ -11,9 +11,9 @@
  *  limitations under the License.
  *
  *  @file JPetLogger.h
- *  @brief Simple logger class. Don't use directly. Macros from JPetLoggerInclude.h should be used instead.
+ *  @brief Simple logger class. Don't use directly. Macros from ../JPetLoggerInclude.h should be used instead.
  *  JPetLogger class implements a simple logging functionality.
- *  For every message the logfile stream is opened, the message is written and the stream is closed again. This assures that no messages are lost in case of errrors.
+ *  It is wrapper for Boost.Log that is multithread safe and implements own formatter.
  */
 
 #ifndef JPETLOGGER_H
