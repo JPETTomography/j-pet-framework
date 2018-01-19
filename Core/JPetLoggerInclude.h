@@ -30,7 +30,6 @@
 
 #define CUSTOM_LOG(logger, sev, X)                                       \
 {                                                                        \
-  BOOST_LOG_SCOPED_THREAD_TAG("ThreadID", boost::this_thread::get_id()); \
   BOOST_LOG_SEV(logger, sev)                                             \
   << boost::log::add_value("Line", __LINE__)                             \
   << boost::log::add_value("File", __FILE__)                             \
