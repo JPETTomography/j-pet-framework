@@ -23,11 +23,9 @@
 #include "./JPetLogger/JPetLogger.h"
 
 #ifndef __CINT__
-#include <boost/log/sinks/sync_frontend.hpp>
-#include <boost/log/utility/manipulators/add_value.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/thread/thread.hpp>
-#include <boost/log/attributes/scoped_attribute.hpp>
+#include <boost/log/utility/manipulators/add_value.hpp> //for add_value
+#include <boost/thread/thread.hpp>                      // for boost::this_thread::get_id()
+#include <boost/log/attributes/scoped_attribute.hpp>    // for BOOST_LOG_SCOPED_THREAD_TAG
 #endif
 
 #define CUSTOM_LOG(logger, sev, X)                                       \
@@ -40,7 +38,6 @@
   << X;                                                                  \
 }
 
-//#define DATE_AND_TIME()   JPetLogger::dateAndTime()
 #define INFO(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::info, X)
 #define WARNING(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::warning, X)
 #define ERROR(X)   CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::error, X)
