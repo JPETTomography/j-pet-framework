@@ -29,17 +29,11 @@
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
 
-#include <boost/log/core.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/expressions.hpp>
-#include <boost/log/attributes/mutable_constant.hpp>
-#include <boost/log/sources/record_ostream.hpp>
-#include <boost/log/sources/severity_logger.hpp>
-#include <boost/log/sinks/text_file_backend.hpp>
-#include <boost/log/sinks/text_ostream_backend.hpp>
-#include <boost/log/utility/formatting_ostream.hpp>
-#include <boost/log/utility/setup/file.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/core.hpp>                               //main logger, get(), add_sink()
+#include <boost/log/trivial.hpp>                            // for severity_level
+#include <boost/log/sinks/text_ostream_backend.hpp>         //for text_ostream_backend sink
+#include <boost/log/utility/setup/file.hpp>                 //for value_ref
+#include <boost/log/utility/setup/common_attributes.hpp>    //for add_common_atributes()
 #endif
 
 class JPetLogger
