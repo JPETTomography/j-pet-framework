@@ -81,7 +81,6 @@ public:
   static void getSeverity();
   static void formatter();
 #endif
-  //static void dateAndTime(); -- to reimplement
 private:
   JPetLogger();
   JPetLogger(const JPetLogger&);
