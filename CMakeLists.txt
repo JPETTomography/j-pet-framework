@@ -11,6 +11,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(JPetFramework-Utilities) # for generate_root_dictionaries
 
 project(JPetFramework CXX C) # using only C++
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
 # enable C++11 and warnings
 if(NOT MSVC)
   add_definitions(-std=c++11 -Wall -Wunused-parameter)
