@@ -29,12 +29,10 @@ class JPetOptionValidator
 public:
 
   JPetOptionValidator();
-
-  /// runs each of fValidatorMap's option checks if found in namesOfOptionsToBeValidated (i.e. if given by user)
+  static std::vector<std::string> getCorrectExtensionsForTheType(std::string fileType);
   bool areCorrectOptions(const std::map<std::string, boost::any>& optionsMap, std::vector<std::string>& namesOfOptionsToBeValidated);
   static std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > generateValidationMap();
   void addValidatorFunction(const std::string& name, bool(*validatorFunction)(std::pair <std::string, boost::any>) );
-  /// validation functions
   static bool isNumberBoundsInRangeValid(std::pair <std::string, boost::any> option);
   static bool isRangeOfEventsValid(std::pair <std::string, boost::any> option);
   static bool isCorrectFileType(std::pair <std::string, boost::any> option);
@@ -43,8 +41,6 @@ public:
   static bool isLocalDBValid(std::pair <std::string, boost::any> option);
   static bool areFilesValid(std::pair <std::string, boost::any> option);
   static bool isOutputDirectoryValid(std::pair <std::string, boost::any> option);
-
-  /// adds validators that are not compatible with the standard ones (e.g. many options validators)
   static std::map<std::string, boost::any> addNonStandardValidators(const std::map<std::string, boost::any>& optionsMap);
 
   class ManyOptionsWrapper
@@ -58,10 +54,6 @@ public:
 
 private:
   std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > fValidatorMap;
-
-  /// File types "scope" and "zip" considered irregular - possible correct extensions for them differ from .<type>
-  static std::vector<std::string> getCorrectExtensionsForTheType(std::string fileType);
-
   static void addFileTypeAndNameValidator(std::map<std::string, boost::any>&);
 };
 #endif /*  !JPETOPTIONVALIDATOR_H */

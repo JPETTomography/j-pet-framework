@@ -129,7 +129,7 @@ std::vector<std::string> JPetOptionValidator::getCorrectExtensionsForTheType(std
   if (fileType == "scope") {
     return {".json"};
   } else if (fileType == "zip") {
-    return {".gz", ".xz"};
+    return {".gz", ".xz", ".bz2", ".zip"};
   } else {
     return {"." + fileType};
   }
