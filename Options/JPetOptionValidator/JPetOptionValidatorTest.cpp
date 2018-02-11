@@ -118,4 +118,22 @@ BOOST_AUTO_TEST_CASE(areCorrectSomeOptionsWork)
   options["ble"] = range;
   BOOST_REQUIRE(validator.areCorrectOptions(options, v));
 }
+
+BOOST_AUTO_TEST_CASE(areCorrectExtensions)
+{
+  std::string scopeType = "scope";
+  std::string zipType = "zip";
+  std::string whateverType = "whatever";
+
+  std::vector<std::string> scopeResult = JPetOptionValidator::getCorrectExtensionsForTheType(scopeType);
+  std::vector<std::string> zipResult = JPetOptionValidator::getCorrectExtensionsForTheType(zipType);
+  std::vector<std::string> whateverResult = JPetOptionValidator::getCorrectExtensionsForTheType(whateverType);
+
+  BOOST_REQUIRE(std::find(scopeResult.begin(), scopeResult.end(), ".json") != scopeResult.end());
+  BOOST_REQUIRE(std::find(zipResult.begin(), zipResult.end(), ".gz") != zipResult.end());
+  BOOST_REQUIRE(std::find(zipResult.begin(), zipResult.end(), ".xz") != zipResult.end());
+  BOOST_REQUIRE(std::find(zipResult.begin(), zipResult.end(), ".bz2") != zipResult.end());
+  BOOST_REQUIRE(std::find(zipResult.begin(), zipResult.end(), ".zip") != zipResult.end());
+  BOOST_REQUIRE(std::find(whateverResult.begin(), whateverResult.end(), ".whatever") != whateverResult.end());
+}
 BOOST_AUTO_TEST_SUITE_END()
