@@ -99,6 +99,10 @@ bool JPetUnzipAndUnpackTask::unzipFile(const std::string& filename)
     return !( system( ( std::string("gzip -dk ") + std::string(filename) ).c_str() ) );
   else if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".xz" )
     return !( system( (std::string("xz -dk ") + std::string(filename) ).c_str() ) );
+  else if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".bz2" )
+    return !( system( (std::string("bzip2 -dk ") + std::string(filename) ).c_str() ) );
+  else if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".zip" )
+    return !( system( (std::string("unzip ") + std::string(filename) ).c_str() ) );
   else
     return false;
 }
