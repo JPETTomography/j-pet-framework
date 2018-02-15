@@ -49,6 +49,7 @@ class JPetReader : private boost::noncopyable, public JPetReaderInterface
 {
 public:
   static const std::string kRootTreeName; /// The name of the root tree read from the file.
+  static const std::string kRootMCHITTreeName; /// The name of the root tree read from the file.
 
   JPetReader(void); //maybe remove this one
   JPetReader(const char* p_filename, const char* treeName = "T");

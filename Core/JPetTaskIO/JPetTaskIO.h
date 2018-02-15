@@ -59,6 +59,7 @@ protected:
   /// if isOK is set to false, that means that an error has occured.
   virtual std::tuple<bool, std::string, std::string, bool> setInputAndOutputFile(const jpet_options_tools::OptsStrAny options) const;
   virtual bool createInputObjects(const char* inputFilename);
+  virtual bool createInputObjectsFromMCGeant(const char* inputFilename);
   virtual bool createOutputObjects(const char* outputFilename);
 
   bool setUserLimits(const jpet_options_tools::OptsStrAny& opts, const long long kTotEventsFromReader, long long& first, long long& last) const;

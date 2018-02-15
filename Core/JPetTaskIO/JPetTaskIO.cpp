@@ -17,6 +17,7 @@
 #include <memory>
 #include <cassert>
 #include "./JPetReader/JPetReader.h"
+//#include "./JPetMCGeantReader/JPetMCGeantReader.h"
 #include "./JPetTreeHeader/JPetTreeHeader.h"
 #include "./JPetTask/JPetTask.h"
 #include "./JPetUserTask/JPetUserTask.h"
@@ -61,10 +62,22 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
     ERROR("Some error occured in setInputAndOutputFile");
     return false;
   }
-  if (!createInputObjects(inputFilename.c_str())) {
-    ERROR("createInputObjects");
-    return false;
-  }
+
+  switch (FileTypeChecker::getInputFileType(opts)) {
+      case FileTypeChecker::FileType::kMCGeant:
+        if (!createInputObjectsFromMCGeant(inputFilename.c_str())) {
+          ERROR("createInputObjectsFromMCGeant");
+          return false;
+        }
+        break;
+      default:
+        if (!createInputObjects(inputFilename.c_str())) {
+          ERROR("createInputObjects");
+          return false;
+        }
+  };
+
+
   if (!createOutputObjects(fOutFileFullPath.c_str())) {
     ERROR("createOutputObjects");
     return false;
@@ -231,6 +244,34 @@ JPetParamManager& JPetTaskIO::getParamManager()
      DEBUG("JPetParamManger returning NullManager ");
      return NullManager;
  }
+}
+
+// maybe integrate with standart createInputObjects - to decide later
+bool JPetTaskIO::createInputObjectsFromMCGeant(const char* inputFilename)
+{
+  using namespace jpet_options_tools;
+  auto options = fParams.getOptions();
+
+  fReader = new JPetReader; 
+
+  if ( fReader->openFileAndLoadData(inputFilename, JPetReader::kRootMCHITTreeName.c_str())) {
+      printf("co we claim that right now objects are loaded into memory");
+
+
+  //Remember to add info
+  //// create a header to be stored along with the output tree
+  //fHeader = new JPetTreeHeader(getRunNumber(options));
+  //fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
+  //fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
+
+  //// add general info to the Tree header
+  //fHeader->setBaseFileName(getInputFile(options));
+  } else {
+    ERROR(inputFilename + std::string(": Unable to open the input file or load the tree"));
+    return false;
+  }
+  return true;
+
 }
 
 bool JPetTaskIO::createInputObjects(const char* inputFilename)

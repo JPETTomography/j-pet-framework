@@ -77,6 +77,7 @@ set(FOLDERS_WITH_SOURCE
   Core
   ParametersTools
   MC
+  GeantWrapper
   )
 
 foreach(dir ${FOLDERS_WITH_SOURCE})
