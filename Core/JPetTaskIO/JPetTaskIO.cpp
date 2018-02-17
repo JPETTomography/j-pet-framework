@@ -17,7 +17,6 @@
 #include <memory>
 #include <cassert>
 #include "./JPetReader/JPetReader.h"
-//#include "./JPetMCGeantReader/JPetMCGeantReader.h"
 #include "./JPetTreeHeader/JPetTreeHeader.h"
 #include "./JPetTask/JPetTask.h"
 #include "./JPetUserTask/JPetUserTask.h"
@@ -247,6 +246,7 @@ JPetParamManager& JPetTaskIO::getParamManager()
 }
 
 // maybe integrate with standart createInputObjects - to decide later
+//  single disadvantage - two trees need to be open in MC 
 bool JPetTaskIO::createInputObjectsFromMCGeant(const char* inputFilename)
 {
   using namespace jpet_options_tools;
@@ -255,17 +255,27 @@ bool JPetTaskIO::createInputObjectsFromMCGeant(const char* inputFilename)
   fReader = new JPetReader; 
 
   if ( fReader->openFileAndLoadData(inputFilename, JPetReader::kRootMCHITTreeName.c_str())) {
-      printf("co we claim that right now objects are loaded into memory");
 
+    // create a header to be stored along with the output tree
+    fHeader = new JPetTreeHeader(getRunNumber(options));
+    fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
+    fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
+    
+    // add general info to the Tree header
+    fHeader->setBaseFileName(getInputFile(options));
 
-  //Remember to add info
-  //// create a header to be stored along with the output tree
-  //fHeader = new JPetTreeHeader(getRunNumber(options));
-  //fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
-  //fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
+    std::unique_ptr<JPetStatistics> tmpUnique(new JPetStatistics);
+    fStatistics = std::move(tmpUnique);
+    //fStatistics = std::make_unique<JPetStatistics>();
 
-  //// add general info to the Tree header
-  //fHeader->setBaseFileName(getInputFile(options));
+    // add info about this module to the processing stages' history in Tree header
+    //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
+    for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
+      auto task = dynamic_cast<JPetUserTask*>((*fSubTask).get());
+      fHeader->addStageInfo(task->getName(), "", 0,
+                            JPetCommonTools::getTimeString());
+    }
+
   } else {
     ERROR(inputFilename + std::string(": Unable to open the input file or load the tree"));
     return false;
@@ -280,6 +290,8 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
   auto options = fParams.getOptions();
   assert(!fReader);
   fReader = new JPetReader;
+
+
   if ( fReader->openFileAndLoadData(inputFilename, JPetReader::kRootTreeName.c_str())) {
     if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ) {
       // create a header to be stored along with the output tree

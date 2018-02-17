@@ -19,10 +19,19 @@ class JPetGeantScinHits : public TObject
         JPetGeantScinHits(int evID, int scinID, int trkID, int trkPDG, 
                 int nInter, float ene, float time, TVector3 hit); 
 
-         JPetGeantScinHits(int evID, int scinID, int trkID, int trkPDG, 
+        JPetGeantScinHits(int evID, int scinID, int trkID, int trkPDG, 
                 int nInter, float ene, float time, TVector3 hit, 
-                TVector3 fPolarizationIn, TVector3 fPolarizationOut,
-                TVector3 fMomentumIn, TVector3 fMomentumOut);
+                TVector3 polIn, TVector3 polOut,
+                TVector3 momeIn, TVector3 momeOut);
+
+        void Fill(int evID, int scinID, int trkID, int trkPDG, 
+                int nInter, float ene, float time); 
+
+
+        void Fill(int evID, int scinID, int trkID, int trkPDG, 
+                int nInter, float ene, float time, TVector3 hit, 
+                TVector3 polIn, TVector3 polOut,
+                TVector3 momeIn, TVector3 momeOut);
 
    
         ~JPetGeantScinHits();
@@ -59,8 +68,8 @@ class JPetGeantScinHits : public TObject
         int GetTrackID(){return fTrackID;};
         int GetTrackPDG(){return fTrackPDGencoding;};
         int GetNumOfInteractions(){return fNumOfInteractions;};
-        int GetEneDepos(){return fEneDep;};
-        int GetTime(){return fTime;};
+        float GetEneDepos(){return fEneDep;};
+        float GetTime(){return fTime;};
         TVector3 GetHitPosition(){return fPosition;};
         TVector3 GetPolarizationIn(){return fPolarizationIn;};
         TVector3 GetPolarizationOut(){return fPolarizationOut;};
