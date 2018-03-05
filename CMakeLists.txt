@@ -3,7 +3,7 @@
 # Author: Adam Strzelecki <adam.strzelecki@uj.edu.pl>
 #
 # Description:
-#   Builds all J-PET framework modules using CMake build generator.
+# Builds all J-PET framework modules using CMake build generator.
 
 cmake_minimum_required(VERSION 2.6)
 
@@ -41,8 +41,6 @@ if(ROOT_FOUND AND NOT ROOT_VERSION VERSION_LESS "6.0")
   message(FATAL_ERROR "ROOT 6.0 is not compatible")
 endif()
 
-find_package(PQXX REQUIRED)
-
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
@@ -53,7 +51,6 @@ find_package(Boost 1.50.0 REQUIRED COMPONENTS
 
 add_definitions(${ROOT_DEFINITIONS})
 add_definitions(${Boost_DEFINITIONS})
-add_definitions(${PQXX_DEFINITIONS})
 
 # enable rpath on OS X and point it to ROOT
 if(APPLE)
@@ -79,6 +76,7 @@ set(FOLDERS_WITH_SOURCE
   Tasks
   Core
   ParametersTools
+  MC
   )
 
 foreach(dir ${FOLDERS_WITH_SOURCE})
@@ -127,6 +125,7 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetUser
   JPetUnpacker
   JPetEvent
+  JPetMCHit
   INCLUDE_DIRS ${FOLDERS} #pass variable with include dirs for generating dictionaries
   )
 
@@ -177,27 +176,9 @@ add_custom_command(OUTPUT ${TESTS_DIR}/unitTestData
   COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/unitTestData ${TESTS_DIR}/unitTestData
   )
 
-# - DBHandler
-file(GLOB DBHANDLER_HEADERS DBHandler/HeaderFiles/*.h)
-file(GLOB DBHANDLER_SOURCES DBHandler/SourceFiles/*.cpp)
-add_library(dbhandler SHARED ${DBHANDLER_HEADERS} ${DBHANDLER_SOURCES})
-
-target_include_directories(dbhandler SYSTEM PUBLIC
-    $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}>
-)
-
-target_include_directories(dbhandler SYSTEM PUBLIC
-    $<BUILD_INTERFACE:${PQXX_INCLUDE_DIRS}>
-)
-
-target_link_libraries(dbhandler
-  ${PQXX_LIBRARIES}
-)
-
 # add dependencies
 target_link_libraries(JPetFramework
   Unpacker2
-  dbhandler
   ${ROOT_LIBRARIES}
   ${Boost_LIBRARIES}
   )
@@ -254,13 +235,9 @@ endif(DOXYGEN_FOUND)
 
 
 get_target_property(framework_include JPetFramework INCLUDE_DIRECTORIES)
-get_target_property(dbhandler_include dbhandler INCLUDE_DIRECTORIES)
-list(REMOVE_ITEM framework_include ${dbhandler_include})
-list(APPEND framework_include ${dbhandler_include})
-
 get_directory_property(has_parent PARENT_DIRECTORY)
 if(has_parent)
-  # export ROOT, Boost and pqxx includes to depending projects
+  # export ROOT, Boost includes to depending projects
   set(Framework_INCLUDE_DIRS
     ${framework_include}
     PARENT_SCOPE
@@ -268,7 +245,6 @@ if(has_parent)
   set(Framework_DEFINITIONS
     ${ROOT_DEFINITIONS}
     ${Boost_DEFINITIONS}
-    ${PQXX_DEFINITIONS}
     PARENT_SCOPE
     )
   # ensure that projects use C++11 too
