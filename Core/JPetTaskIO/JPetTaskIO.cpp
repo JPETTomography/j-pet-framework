@@ -23,7 +23,6 @@
 #include "./JPetCommonTools/JPetCommonTools.h"
 #include "./JPetData/JPetData.h"
 #include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
-
 #include "./JPetLoggerInclude.h"
 #include "./version.h"
 
@@ -223,15 +222,15 @@ void JPetTaskIO::setOptions(const JPetParams& opts)
 JPetParamManager& JPetTaskIO::getParamManager()
 {
   DEBUG("JPetTaskIO");
-  auto paramManager = fParams.getParamManager();
-  static JPetParamManager NullManager(true);
-  if (paramManager) {
-    DEBUG("JPetParamManger returning normal parammanager");
-    return *paramManager;
-  } else {
-    DEBUG("JPetParamManger returning NullManager ");
-    return NullManager;
-  }
+   auto paramManager = fParams.getParamManager();
+   static JPetParamManager NullManager(true);
+   if (paramManager) {
+     DEBUG("JPetParamManger returning normal parammanager");
+     return *paramManager;
+   } else {
+     DEBUG("JPetParamManger returning NullManager ");
+     return NullManager;
+ }
 }
 
 bool JPetTaskIO::createInputObjects(const char* inputFilename)

@@ -35,10 +35,10 @@ bool JPetUnzipAndUnpackTask::init(const JPetParamsInterface& inOptions)
 bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
 {
   using namespace jpet_options_tools;
-  auto inputFile = getInputFile(fOptions);
+  auto inputFile = std::string(getInputFile(fOptions));
   auto inputFileType = FileTypeChecker::getInputFileType(fOptions);
-  auto unpackerConfigFile = getUnpackerConfigFile(fOptions);
-  auto unpackerCalibFile = getUnpackerCalibFile(fOptions);
+  auto unpackerConfigFile = std::string(getUnpackerConfigFile(fOptions));
+  auto unpackerCalibFile = std::string(getUnpackerCalibFile(fOptions));
 
   if (inputFileType == FileTypeChecker::kHld) {
     unpackFile(inputFile, getTotalEvents(fOptions), unpackerConfigFile, unpackerCalibFile);
@@ -55,6 +55,7 @@ bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
       INFO( std::string("Unpacking") );
       auto unzippedFilename = JPetCommonTools::stripFileNameSuffix(std::string(inputFile)).c_str();
       unpackFile(unzippedFilename, getTotalEvents(fOptions), unpackerConfigFile, unpackerCalibFile);
+      fUnpackHappened = true;
     }
   }
 
@@ -92,17 +93,21 @@ bool JPetUnzipAndUnpackTask::terminate(JPetParamsInterface& output_params)
   return true;
 }
 
-bool JPetUnzipAndUnpackTask::unzipFile(const char* filename)
+bool JPetUnzipAndUnpackTask::unzipFile(const std::string& filename)
 {
   if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".gz")
     return !( system( ( std::string("gzip -dk ") + std::string(filename) ).c_str() ) );
   else if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".xz" )
     return !( system( (std::string("xz -dk ") + std::string(filename) ).c_str() ) );
+  else if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".bz2" )
+    return !( system( (std::string("bzip2 -dk ") + std::string(filename) ).c_str() ) );
+  else if ( JPetCommonTools::exctractFileNameSuffix(filename) == ".zip" )
+    return !( system( (std::string("unzip ") + std::string(filename) ).c_str() ) );
   else
     return false;
 }
 
-void JPetUnzipAndUnpackTask::unpackFile(const char* filename, long long nevents, const char* configfile = "", const char* calibfile = "")
+void JPetUnzipAndUnpackTask::unpackFile(const std::string& filename, long long nevents, const std::string& configfile = "", const std::string& calibfile = "")
 {
   JPetUnpacker unpacker;
   if (nevents > 0) {
