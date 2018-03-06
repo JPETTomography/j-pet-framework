@@ -11,6 +11,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(JPetFramework-Utilities) # for generate_root_dictionaries
 
 project(JPetFramework CXX C) # using only C++
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
 # enable C++11 and warnings
 if(NOT MSVC)
   add_definitions(-std=c++11 -Wall -Wunused-parameter)
@@ -41,13 +42,20 @@ if(ROOT_FOUND AND NOT ROOT_VERSION VERSION_LESS "6.0")
   message(FATAL_ERROR "ROOT 6.0 is not compatible")
 endif()
 
+add_definitions(-DBOOST_LOG_DYN_LINK)
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
   regex
   system
   unit_test_framework
+  log_setup
+  log
   )
+
+message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
+message(STATUS "Boost_LIBRARIES: ${Boost_LIBRARIES}")
+message(STATUS "Boost_VERSION: ${Boost_VERSION}")
 
 add_definitions(${ROOT_DEFINITIONS})
 add_definitions(${Boost_DEFINITIONS})
