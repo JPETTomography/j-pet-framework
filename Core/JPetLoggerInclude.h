@@ -26,17 +26,17 @@
 #endif
 
 // see http://www.cs.technion.ac.il/users/yechiel/c++-faq/macros-with-multi-stmts.html
-#define CUSTOM_LOG(logger, sev, X)                \
- if(true)                                         \
- {                                                \
-   BOOST_LOG_SEV(logger, sev)                     \
-   << boost::log::add_value("Line", __LINE__)     \
-   << boost::log::add_value("File", __FILE__)     \
-   << boost::log::add_value("Function", __func__) \
-    << X;                                         \
-}                                                 \
-else                                              \
-  (void)0
+#define CUSTOM_LOG(logger, sev, X)                 \
+  if(true)                                         \
+  {                                                \
+    BOOST_LOG_SEV(logger, sev)                     \
+    << boost::log::add_value("Line", __LINE__)     \
+    << boost::log::add_value("File", __FILE__)     \
+    << boost::log::add_value("Function", __func__) \
+    << X;                                          \
+  }                                                \
+  else                                             \
+    (void)0
 
 #define INFO(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::info, X)
 #define WARNING(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::warning, X)
