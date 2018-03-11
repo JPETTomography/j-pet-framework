@@ -25,14 +25,7 @@
 #include <boost/log/attributes/scoped_attribute.hpp>    //for BOOST_LOG_SCOPED_THREAD_TAG
 #endif
 
-#define CUSTOM_LOG(logger, sev, X)                                       \
-{                                                                        \
-  BOOST_LOG_SEV(logger, sev)                                             \
-  << boost::log::add_value("Line", __LINE__)                             \
-  << boost::log::add_value("File", __FILE__)                             \
-  << boost::log::add_value("Function", __func__)                         \
-  << X;                                                                  \
-}
+#define CUSTOM_LOG(logger, sev, X) BOOST_LOG_SEV(logger, sev) << boost::log::add_value("Line", __LINE__) << boost::log::add_value("File", __FILE__) << boost::log::add_value("Function", __func__) << X;
 
 #define INFO(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::info, X)
 #define WARNING(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::warning, X)
