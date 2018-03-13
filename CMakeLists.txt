@@ -42,7 +42,8 @@ if(ROOT_FOUND AND NOT ROOT_VERSION VERSION_LESS "6.0")
   message(FATAL_ERROR "ROOT 6.0 is not compatible")
 endif()
 
-add_definitions(-DBOOST_LOG_DYN_LINK)
+set(BOOST_LOG_DYN_LINK -DBOOST_LOG_DYN_LINK)
+add_definitions(${BOOST_LOG_DYN_LINK})
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
@@ -51,6 +52,9 @@ find_package(Boost 1.50.0 REQUIRED COMPONENTS
   unit_test_framework
   log_setup
   log
+  date_time
+  thread
+  chrono
   )
 
 message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
@@ -250,16 +254,11 @@ if(has_parent)
     ${framework_include}
     PARENT_SCOPE
     )
-  set(Framework_DEFINITIONS
-    ${ROOT_DEFINITIONS}
-    ${Boost_DEFINITIONS}
-    PARENT_SCOPE
-    )
+  list(APPEND Framework_DEFINITIONS "${BOOST_LOG_DYN_LINK} ${ROOT_DEFINITIONS}")
   # ensure that projects use C++11 too
   if(NOT MSVC)
     set(Framework_DEFINITIONS
-      -std=c++11
-      ${Framework_DEFINITIONS}
+      "-std=c++11 ${Framework_DEFINITIONS}"
       PARENT_SCOPE
       )
   endif()
