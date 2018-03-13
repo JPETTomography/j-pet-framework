@@ -52,6 +52,9 @@ find_package(Boost 1.50.0 REQUIRED COMPONENTS
   unit_test_framework
   log_setup
   log
+  date_time
+  thread
+  chrono
   )
 
 message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
