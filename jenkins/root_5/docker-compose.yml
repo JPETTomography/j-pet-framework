@@ -2,4 +2,4 @@ framework_rootv5:
   build: .
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
-    - /home/grey/docker_test/to_mov/jenkins/jenkins_home/workspace/$JOB_NAME:/j-pet-framework/
+    - /home/grey/docker_test/to_mov/jenkins/jenkins_home/workspace/not_exist/$JOB_NAME:/j-pet-framework/
