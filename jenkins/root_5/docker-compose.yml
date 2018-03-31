@@ -3,4 +3,4 @@ framework_rootv5:
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - unit_test_data_framework/j-pet-framework/unitTestData
-    - /var/www/jenkins/workspace/$JOB_NAME:/j-pet-framework/
+    - /var/jenkins_home/workspace/$JOB_NAME:/j-pet-framework/
