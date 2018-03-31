@@ -2,5 +2,5 @@ framework_rootv5:
   build: .
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
-    - $WORKSPACE:/j-pet-framework/
+    - /var/www/jenkins_home/workspace/$JOB_BASE_NAME:/j-pet-framework/
   user: "1008:999"
