@@ -36,6 +36,9 @@ RUN apt-get update \
   man-db \
   && localedef -i en_US -f UTF-8 en_US.UTF-8
 
+RUN apt-get -y install \
+  unzip
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get purge -y gcc-5 g++-5
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install g++-4.9 gcc-4.9
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 10 

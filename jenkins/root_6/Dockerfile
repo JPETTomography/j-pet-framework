@@ -36,6 +36,9 @@ RUN apt-get update \
   man-db \
   && localedef -i en_US -f UTF-8 en_US.UTF-8
 
+RUN apt-get -y install \
+  unzip
+
 RUN rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /framework-dependencies
 RUN mkdir -p /framework-dependencies/lib
