@@ -48,7 +48,7 @@ RUN wget https://root.cern.ch/download/root_v6.08.06.source.tar.gz
 RUN tar xvzf root_v6.08.06.source.tar.gz
 RUN mkdir -p root-system
 RUN mkdir -p root-system/etc
-RUN cd root && ./configure --prefix=/root-system --etcdir=/root-system/etc --enable-builtin-freetype --disable-mathmore --enable-opengl --with-x11-libdir=/usr/lib/x86_64-linux-gnu --with-xpm-libdir=/usr/lib/x86_64-linux-gnu --with-xft-libdir=/usr/lib/x86_64-linux-gnu --with-xext-libdir=/usr/lib/x86_64-linux-gnu
+RUN cd root-6.08.06 && ./configure --prefix=/root-system --etcdir=/root-system/etc --enable-builtin-freetype --disable-mathmore --enable-opengl --with-x11-libdir=/usr/lib/x86_64-linux-gnu --with-xpm-libdir=/usr/lib/x86_64-linux-gnu --with-xft-libdir=/usr/lib/x86_64-linux-gnu --with-xext-libdir=/usr/lib/x86_64-linux-gnu
 RUN cd root && make
 RUN cd root && make install
 RUN ln -s /usr/bin/g++ /usr/bin/c++
