@@ -35,10 +35,10 @@ bool JPetUnzipAndUnpackTask::init(const JPetParamsInterface& inOptions)
 bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
 {
   using namespace jpet_options_tools;
-  auto inputFile = std::string(getInputFile(fOptions));
+  auto inputFile = getInputFile(fOptions);
   auto inputFileType = FileTypeChecker::getInputFileType(fOptions);
-  auto unpackerConfigFile = std::string(getUnpackerConfigFile(fOptions));
-  auto unpackerCalibFile = std::string(getUnpackerCalibFile(fOptions));
+  auto unpackerConfigFile = getUnpackerConfigFile(fOptions);
+  auto unpackerCalibFile = getUnpackerCalibFile(fOptions);
 
   if (inputFileType == FileTypeChecker::kHld) {
     unpackFile(inputFile, getTotalEvents(fOptions), unpackerConfigFile, unpackerCalibFile);
@@ -60,7 +60,7 @@ bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
   }
 
   if (FileTypeChecker::getInputFileType(fOptions) == FileTypeChecker::kUndefinedFileType) {
-    ERROR( Form("Unknown file type provided for file: %s", getInputFile(fOptions)) );
+    ERROR( Form("Unknown file type provided for file: %s", getInputFile(fOptions).c_str()) );
     return false;
   }
   return true;
