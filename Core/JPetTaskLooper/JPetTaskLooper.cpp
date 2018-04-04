@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -45,12 +45,15 @@ bool JPetTaskLooper::run(const JPetDataInterface&)
       return false;
     }
   }
+  /// The last subtask can set inParams in its terminate() method.
+  /// The inParams are passed to fIsCondtion function and can be used
+  /// inside it as a 'flag' to mark the end of iterations. 
   while (fIsCondition(inParams)) {
     for (auto subTask : subTasks) {
       subTask->init(inParams);
       subTask->run(nullDataObject);
       subTask->terminate(outParams);
-      inParams = outParams;
+      inParams = outParams; 
     }
   }
   return true;
