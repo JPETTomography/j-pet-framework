@@ -47,13 +47,13 @@ bool JPetTaskLooper::run(const JPetDataInterface&)
   }
   /// The last subtask can set inParams in its terminate() method.
   /// The inParams are passed to fIsCondtion function and can be used
-  /// inside it as a 'flag' to mark the end of iterations. 
+  /// inside it as a 'flag' to mark the end of iterations.
   while (fIsCondition(inParams)) {
     for (auto subTask : subTasks) {
       subTask->init(inParams);
       subTask->run(nullDataObject);
       subTask->terminate(outParams);
-      inParams = outParams; 
+      inParams = outParams;
     }
   }
   return true;
