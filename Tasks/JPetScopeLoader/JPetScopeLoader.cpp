@@ -65,7 +65,7 @@ bool JPetScopeLoader::createInputObjects(const char*)
     assert(fStatistics);
     fHeader = new JPetTreeHeader(getRunNumber(opts));
     assert(fHeader);
-    fHeader->setBaseFileName(getInputFile(opts));
+    fHeader->setBaseFileName(getInputFile(opts).c_str());
     fHeader->addStageInfo(task->getName(), "", 0, JPetCommonTools::getTimeString());
   }
   return true;

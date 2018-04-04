@@ -11,6 +11,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(JPetFramework-Utilities) # for generate_root_dictionaries
 
 project(JPetFramework CXX C) # using only C++
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
 # enable C++11 and warnings
 if(NOT MSVC)
   add_definitions(-std=c++11 -Wall -Wunused-parameter)
@@ -41,13 +42,24 @@ if(ROOT_FOUND AND NOT ROOT_VERSION VERSION_LESS "6.0")
   message(FATAL_ERROR "ROOT 6.0 is not compatible")
 endif()
 
+set(BOOST_LOG_DYN_LINK -DBOOST_LOG_DYN_LINK)
+add_definitions(${BOOST_LOG_DYN_LINK})
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
   regex
   system
   unit_test_framework
+  log_setup
+  log
+  date_time
+  thread
+  chrono
   )
+
+message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
+message(STATUS "Boost_LIBRARIES: ${Boost_LIBRARIES}")
+message(STATUS "Boost_VERSION: ${Boost_VERSION}")
 
 add_definitions(${ROOT_DEFINITIONS})
 add_definitions(${Boost_DEFINITIONS})
@@ -242,16 +254,11 @@ if(has_parent)
     ${framework_include}
     PARENT_SCOPE
     )
-  set(Framework_DEFINITIONS
-    ${ROOT_DEFINITIONS}
-    ${Boost_DEFINITIONS}
-    PARENT_SCOPE
-    )
+  list(APPEND Framework_DEFINITIONS "${BOOST_LOG_DYN_LINK} ${ROOT_DEFINITIONS}")
   # ensure that projects use C++11 too
   if(NOT MSVC)
     set(Framework_DEFINITIONS
-      -std=c++11
-      ${Framework_DEFINITIONS}
+      "-std=c++11 ${Framework_DEFINITIONS}"
       PARENT_SCOPE
       )
   endif()
