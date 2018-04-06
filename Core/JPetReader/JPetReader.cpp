@@ -18,7 +18,6 @@
 #include "./JPetUserInfoStructure/JPetUserInfoStructure.h"
 
 const std::string JPetReader::kRootTreeName = "T"; /// This tree name is compatible with the tree name produced by the unpacker.
-const std::string JPetReader::kRootMCHITTreeName = "TScin"; 
 
 JPetReader::JPetReader()
 {

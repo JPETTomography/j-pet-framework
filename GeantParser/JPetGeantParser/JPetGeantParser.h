@@ -20,7 +20,11 @@
 #include <vector>
 #include <JPetUserTask/JPetUserTask.h>
 #include <JPetMCHit/JPetMCHit.h>
+#include <JPetHit/JPetHit.h>
+#include <JPetMCDecayTree/JPetMCDecayTree.h>
 #include <JPetGeantScinHits/JPetGeantScinHits.h>
+#include <JPetGeantEventPack/JPetGeantEventPack.h>
+#include <JPetGeomMapping/JPetGeomMapping.h>
 
 class JPetWriter;
 
@@ -46,17 +50,22 @@ public:
 
 
 protected :
+  JPetGeomMapping* fDetectorMap; 
+
   bool kFirstTime = true;
-  uint kTmp = 0;
-//  JPetGeantParserTools::SignalsContainer fAllSignalsInTimeWindow;
-//  JPetGeantParserTools fHitTools;
-//
-//  void fillSignalsMap(const JPetPhysSignal& signal);
+  uint activityIndex = 0;
+  float kSimulatedActivity = 1.; //< in MBq 
+
   std::vector<JPetMCHit> fStoredMCHits; ///< save MC hits into single time window when it contains enought hits
-  void addHit(const JPetMCHit& hit);
+  std::vector<JPetHit> fStoredHits; ///< save RECONSTRUCTED MC hits into single time window when it contains enought hits
+  void addEvent(JPetGeantEventPack*);
   void saveHits();
+
+  JPetHit reconstructHit(JPetMCHit hit);
 //  const std::string fTimeWindowWidthParamKey = "JPetGeantParser_TimeWindowWidth_float";
 
+  float addEnergySmearing(float);
+  float addTimeSmearing(float, float);
 
 };
 

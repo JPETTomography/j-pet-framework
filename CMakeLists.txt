@@ -127,7 +127,10 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetUnpacker
   JPetEvent
   JPetMCHit
+  JPetMCDecayTree
   JPetGeantScinHits
+  JPetGeantDecayTree
+  JPetGeantEventPack
   INCLUDE_DIRS ${FOLDERS} #pass variable with include dirs for generating dictionaries
   )
 

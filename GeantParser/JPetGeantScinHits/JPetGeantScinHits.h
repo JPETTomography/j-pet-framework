@@ -1,9 +1,11 @@
-#ifndef JPetGeantScinHits_h
-#define JPetGeantScinHits_h
+#ifndef JPETGEANTSCINHITS_H
+#define JPETGEANTSCINHITS_H
 
 #include "TObject.h"
 #include <vector> 
 #include "TVector3.h"
+
+
 
 
 /**
