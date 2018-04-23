@@ -47,7 +47,7 @@ public:
   /// Method returns a map of Options
   /// based on the number of registered tasks and provided options.
   /// The elements of the map are pairs filename -> OptionsForAllTasks
-  /// , where OptionsForAllTasks is a container with elements correspondig to the
+  /// , where OptionsForAllTasks is a container with elements corresponding to the
   /// options assigned for given task.
   /// e.g. if there are 4 files and for each file there are 3 tasks, then the map
   /// should have 4 containers with 3 option elements each.
@@ -55,14 +55,8 @@ public:
   /// provided defined by nbOfRegisteredTasks arguments.
   OptsForFiles generateOptionsForTasks(const OptsStrAny& opt, int nbOfRegisteredTasks = 1);
 
-  std::vector<std::string> getVectorOfOptionFromUser() const;
-  void createMapOfBoolOptionFromUser(const OptsStrAny& optionsMap);
-
-protected:
-  static std::map<std::string, boost::any> kDefaultOptions;
-  static std::map<std::string, std::string> kOptCmdLineNameToExtendedName;
-
 private:
-  std::vector<std::string> fVectorOfOptionFromUser;
+  std::vector<std::string> getOptionsToBeValidated(const OptsStrAny& optionsMap) const;
+
 };
 #endif
