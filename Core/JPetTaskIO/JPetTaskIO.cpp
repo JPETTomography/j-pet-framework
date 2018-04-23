@@ -222,15 +222,15 @@ void JPetTaskIO::setOptions(const JPetParams& opts)
 JPetParamManager& JPetTaskIO::getParamManager()
 {
   DEBUG("JPetTaskIO");
-   auto paramManager = fParams.getParamManager();
-   static JPetParamManager NullManager(true);
-   if (paramManager) {
-     DEBUG("JPetParamManger returning normal parammanager");
-     return *paramManager;
-   } else {
-     DEBUG("JPetParamManger returning NullManager ");
-     return NullManager;
- }
+  auto paramManager = fParams.getParamManager();
+  static JPetParamManager NullManager(true);
+  if (paramManager) {
+    DEBUG("JPetParamManger returning normal parammanager");
+    return *paramManager;
+  } else {
+    DEBUG("JPetParamManger returning NullManager ");
+    return NullManager;
+  }
 }
 
 bool JPetTaskIO::createInputObjects(const char* inputFilename)
@@ -247,7 +247,7 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
       fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
 
       // add general info to the Tree header
-      fHeader->setBaseFileName(getInputFile(options));
+      fHeader->setBaseFileName(getInputFile(options).c_str());
 
     } else {
       auto paramManager = fParams.getParamManager();
