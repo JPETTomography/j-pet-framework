@@ -1,22 +1,18 @@
-mkdir -p build
-rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-cd build
-rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-export CMAKE_LIBRARY_PATH=$CMAKE_LIBRARY_PATH:/framework-dependencies/lib
-rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-export CMAKE_INCLUDE_PATH=$CMAKE_INCLUDE_PATH:/framework-dependencies/include
-rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-source /root-system/bin/thisroot.sh
-rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-cmake ..
-rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-make all tests -j4
-rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-cd tests
-rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-./run_tests.pl -f xml
-rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-chmod a+x parseXML.py
-rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-./parseXML.py
-rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
+#!/bin/bash
+function executeCommand {
+    $@
+    rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
+    echo "Exit code[" $@ "]: $rc"
+}
+
+executeCommand "mkdir -p build"
+executeCommand "cd build"
+executeCommand "export CMAKE_LIBRARY_PATH=$CMAKE_LIBRARY_PATH:/framework-dependencies/lib"
+executeCommand "export CMAKE_INCLUDE_PATH=$CMAKE_INCLUDE_PATH:/framework-dependencies/include"
+executeCommand "source /root-system/bin/thisroot.sh"
+executeCommand "cmake .."
+executeCommand "make all tests -j4"
+executeCommand "cd tests"
+executeCommand "./run_tests.pl -f xml"
+executeCommand "chmod a+x parseXML.py"
+executeCommand "./parseXML.py"
