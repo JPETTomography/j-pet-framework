@@ -45,4 +45,7 @@
 
 #define LOG(X, sev) CUSTOM_LOG(JPetLogger::getSevarity(), sev, X)
 
+#define ENABLE_DEBUG setLogLevel(boost::log::trivial::debug)
+#define DISABLE_DEBUG setLogLevel(boost::log::trivial::info)
+
 #endif
