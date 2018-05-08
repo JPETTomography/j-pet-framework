@@ -10,7 +10,6 @@ install:
   - sudo apt-get install -y git
   - sudo apt-get install -y libboost-all-dev 
   - sudo apt-get install -y cmake 
-  - sudo apt-get install -y libtinyxml2-dev
   - sudo apt-get install -y doxygen
   - sudo apt-get install -y root-system
   - sudo apt-get install -y libfftw3-3 libfftw3-dev
