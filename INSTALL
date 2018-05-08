@@ -53,9 +53,7 @@ Requirements
 
   5. cmake [1]
 
-  6. tinyxml
-
-  7. FFTW3 (http://www.fftw.org/)
+  6. FFTW3 (http://www.fftw.org/)
 
 Tested Platforms
 ----------------
@@ -85,9 +83,6 @@ Annotation
 
 Requirements installation
 ----------------
-
-For Ubuntu:
-sudo apt-get install libboost-all-dev cmake libtinyxml2-0.0.0
 
 For Fedora 20:
 sudo yum install boost-devel cmake
