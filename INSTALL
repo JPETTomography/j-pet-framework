@@ -84,5 +84,8 @@ Annotation
 Requirements installation
 ----------------
 
+For Ubuntu:
+sudo apt-get install libboost-all-dev cmake
+
 For Fedora 20:
 sudo yum install boost-devel cmake
