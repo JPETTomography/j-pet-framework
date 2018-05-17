@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,11 +16,9 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetCommonToolsTest
 #include <boost/test/unit_test.hpp>
-#include <map>
 #include "JPetCommonTools.h"
-
 #include <iostream>
-
+#include <map>
 
 BOOST_AUTO_TEST_SUITE(CommonToolsTestSuite)
 
@@ -160,11 +158,11 @@ BOOST_AUTO_TEST_CASE(createArgsTest3)
   auto argc = result.size();
   auto argv = result.data();
   BOOST_REQUIRE_EQUAL(argc, 5);
-  BOOST_REQUIRE_EQUAL(strcmp(argv[0], "./main.x"), 0 );
-  BOOST_REQUIRE_EQUAL(strcmp(argv[1], "-i"), 0 );
-  BOOST_REQUIRE_EQUAL(strcmp(argv[2], "123"), 0 );
-  BOOST_REQUIRE_EQUAL(strcmp(argv[3], "--file"), 0 );
-  BOOST_REQUIRE_EQUAL(strcmp(argv[4], "./blabla.txt"), 0 );
+  BOOST_REQUIRE_EQUAL(strcmp(argv[0], "./main.x"), 0);
+  BOOST_REQUIRE_EQUAL(strcmp(argv[1], "-i"), 0);
+  BOOST_REQUIRE_EQUAL(strcmp(argv[2], "123"), 0);
+  BOOST_REQUIRE_EQUAL(strcmp(argv[3], "--file"), 0);
+  BOOST_REQUIRE_EQUAL(strcmp(argv[4], "./blabla.txt"), 0);
   for (auto i = 0u; i < argc; i++) {
     delete argv[i];
   }
@@ -176,10 +174,10 @@ BOOST_AUTO_TEST_CASE(createArgsTest4)
   auto argc = result.size();
   auto argv = result.data();
   BOOST_REQUIRE_EQUAL(argc, 4);
-  BOOST_REQUIRE_EQUAL(strcmp(argv[0], "-i"), 0 );
-  BOOST_REQUIRE_EQUAL(strcmp(argv[1], "123"), 0 );
-  BOOST_REQUIRE_EQUAL(strcmp(argv[2], "--file"), 0 );
-  BOOST_REQUIRE_EQUAL(strcmp(argv[3], "./blabla.txt"), 0 );
+  BOOST_REQUIRE_EQUAL(strcmp(argv[0], "-i"), 0);
+  BOOST_REQUIRE_EQUAL(strcmp(argv[1], "123"), 0);
+  BOOST_REQUIRE_EQUAL(strcmp(argv[2], "--file"), 0);
+  BOOST_REQUIRE_EQUAL(strcmp(argv[3], "./blabla.txt"), 0);
   for (auto i = 0u; i < argc; i++) {
     delete argv[i];
   }

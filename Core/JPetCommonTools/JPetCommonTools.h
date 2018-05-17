@@ -23,19 +23,30 @@ namespace boost;
 class boost::noncopyable;
 #endif /* __CINT __ */
 #include <boost/filesystem.hpp>
-#include <ctime>
+#include <algorithm>
+#include <stdlib.h>
 #include <fstream>
 #include <sstream>
-#include <string>
 #include <iomanip>
-#include <algorithm>
+#include <string>
 #include <cctype>
-#include <stdlib.h>
+#include <ctime>
 
+/**
+ * @brief Set of tools for general purposes
+ */
 class JPetCommonTools : public boost::noncopyable
 {
 public:
+  static std::string extractDataTypeFromFileName(const std::string& filename);
+  static std::vector<const char*> createArgs(const std::string& commandLine);
   static const std::string currentDateTime();
+  static std::string doubleToString(double x);
+  static int stringToInt(const std::string& str);
+  static std::string replaceDataTypeInFileName(
+    const std::string& filename,
+    const std::string& newType
+  );
 
   static std::string Itoa(int x)
   {
@@ -48,10 +59,6 @@ public:
     out << x;
     return out.str();
   }
-
-  static std::string doubleToString(double x);
-
-  static int stringToInt(const std::string& str);
 
   static bool to_bool(std::string str)
   {
@@ -74,15 +81,14 @@ public:
   }
 
   /**
-    * @brief returns the time std::string in the format dd.mm.yyyy HH:MM
+    * Returns the time std::string in the format dd.mm.yyyy HH:MM
     */
   static std::string getTimeString()
   {
-    time_t _tm = time(NULL );
+    time_t _tm = time(NULL);
     struct tm* curtime = localtime ( &_tm );
     char buf[100];
     strftime( buf, 100, "%d.%m.%Y %R", curtime);
-
     return std::string( buf );
   }
 
@@ -98,11 +104,11 @@ public:
            && std::equal(lhs.begin(), lhs.end(), rhs.begin(), pred);
   }
 
-  ///removes the suffix of the file
   inline static std::string stripFileNameSuffix(const std::string& filename)
   {
     return  boost::filesystem::change_extension(filename, "").string();
   }
+
   inline static std::string exctractFileNameSuffix(const std::string& filename)
   {
     return boost::filesystem::extension(filename);
@@ -123,23 +129,6 @@ public:
     return boost::filesystem::path( fileWithPath ).filename().string();
   }
 
-  /// Function extracts from the file name a substring that corresponds to the data type.
-  /// according to the J-PET convention.
-  /// E.g. for input filename  file.data.type.can.have.several.dots.root
-  /// the returned data type should be "ata.type.can.have.several.dots"
-  /// The ".root" suffix is obligatory.
-  /// In other cases empty string is returned.
-  static std::string extractDataTypeFromFileName(const std::string& filename);
-
-  /// Function generates new file name by replacing the existing data type string
-  /// by the new newType string.
-  /// There are two different cases:
-  /// 1) the original filename contains ".hld" suffix. Then
-  /// the suffix is replaced by newType + ".root"
-  /// 2) the original filename contains ".root" suffix. Then
-  /// the oldType +".root" is replaced by newType+".root"
-  static std::string replaceDataTypeInFileName(const std::string& filename, const std::string& newType);
-
   inline static std::string appendSlashToPathIfAbsent(const std::string& path)
   {
     if (!path.empty() && path.back() != '/') return path + '/';
@@ -151,12 +140,6 @@ public:
     return boost::filesystem::is_directory(dir);
   }
 
-  /// Creates a pair int and const char* arguments to emulate int arc, const char** argv parameters
-  /// in commandLine="./blabla.x -p test" will be transformed to a array of
-  /// const char c-strings "./blabla.x", "-p", "test"
-  /// Watch out the returned array contains the dynamically allocated  c-strings
-  /// of const char* that should be deallocated by delete to avoid the memory leak.
-  static std::vector<const char*> createArgs(const std::string& commandLine);
 };
 
-#endif // COMMON_TOOLS_H
+#endif /* !COMMON_TOOLS_H */
