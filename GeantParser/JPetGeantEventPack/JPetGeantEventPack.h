@@ -7,6 +7,7 @@
 #include <TBits.h>
 #include <JPetGeantScinHits/JPetGeantScinHits.h>
 #include <JPetGeantDecayTree/JPetGeantDecayTree.h>
+#include <JPetGeantEventInformation/JPetGeantEventInformation.h>
 
 
 class JPetGeantEventPack : public TObject
@@ -23,6 +24,8 @@ class JPetGeantEventPack : public TObject
         JPetGeantScinHits* GetHit(int i){return dynamic_cast<JPetGeantScinHits*>(fMCHits[i]);};
         JPetGeantDecayTree* GetDecayTree(int i){return dynamic_cast<JPetGeantDecayTree*>(fMCDecayTrees[i]);};
 
+        JPetGeantEventInformation* GetEventInformation(){return fGenInfo;};;
+
         unsigned int GetNumberOfHits(){ return fHitIndex;};
         unsigned int GetNumberOfDecayTrees(){ return fMCDecayTreesIndex;};
         unsigned int GetEventNumber(){ return fEvtIndex;};
@@ -34,13 +37,13 @@ class JPetGeantEventPack : public TObject
     private:
         TClonesArray fMCHits;
         TClonesArray fMCDecayTrees;
+        JPetGeantEventInformation* fGenInfo;
 
         unsigned int fEvtIndex;
         unsigned int fHitIndex;
         unsigned int fMCDecayTreesIndex;
 
-        TBits    fGenInfo; ///< expand those information later; no getter no setter now
 
-        ClassDef(JPetGeantEventPack,1)
+        ClassDef(JPetGeantEventPack,2)
 };
 #endif

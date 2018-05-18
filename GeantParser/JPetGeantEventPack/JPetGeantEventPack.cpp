@@ -6,7 +6,7 @@ JPetGeantEventPack::JPetGeantEventPack():
     fMCHits("JPetGeantScinHits",10000), fMCDecayTrees("JPetGeantDecayTree",1000),
     fEvtIndex(0), fHitIndex(0), fMCDecayTreesIndex(0)
 {
-    fGenInfo.ResetAllBits();
+    fGenInfo = new JPetGeantEventInformation();
 }
 
 JPetGeantScinHits* JPetGeantEventPack::ConstructNextHit()
@@ -30,7 +30,7 @@ JPetGeantEventPack::~JPetGeantEventPack()
     fHitIndex = 0;
     fMCDecayTreesIndex = 0;
 
-    fGenInfo.ResetAllBits();
+    fGenInfo->Clear();
 }
 
 void JPetGeantEventPack::Clear()
@@ -42,7 +42,7 @@ void JPetGeantEventPack::Clear()
     fHitIndex = 0;
     fMCDecayTreesIndex = 0;
 
-    fGenInfo.ResetAllBits();
+    fGenInfo->Clear();
 }
 
 
