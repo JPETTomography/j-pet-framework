@@ -65,7 +65,19 @@ protected :
 //  const std::string fTimeWindowWidthParamKey = "JPetGeantParser_TimeWindowWidth_float";
 
   float addEnergySmearing(float);
+  float addZHitSmearing(float);
   float addTimeSmearing(float, float);
+
+  void fillHistoGenInfo(JPetGeantEventInformation*, bool, bool, bool);
+  void fillHistoMCGen(JPetMCHit&);
+  void fillHistoMCRec(JPetHit&);
+
+  double experimentalThreshold = 10; // keV
+  bool isHitReconstructed(JPetHit&);
+
+  int effiHisto_ene_nBin = 200;
+  double effiHisto_ene_width = 8;
+  float z_resolution = 0.976; // 80ps   12.2  velocity
 
 };
 

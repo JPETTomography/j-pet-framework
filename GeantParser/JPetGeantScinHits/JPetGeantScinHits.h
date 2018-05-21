@@ -78,12 +78,22 @@ class JPetGeantScinHits : public TObject
         TVector3 GetMomentumIn(){return fMomentumIn;};
         TVector3 GetMomentumOut(){return fMomentumOut;};
 
+        //  generated cheatsheet
+        void SetGenGammaMultiplicity(int i){fGenGammaMultiplicity=i;}
+        void SetGenGammaIndex(int i){fGenGammaIndex=i;}
+    
+        int GetGenGammaMultiplicity(){return fGenGammaMultiplicity;}
+        int GetGenGammaIndex(){return fGenGammaIndex;}
+
+
     private:
         int fEvtID;
         int fScinID;
         int fTrackID;
         int fTrackPDGencoding;
         int fNumOfInteractions; ///< number of interaction taking place in single scintillator whish was classified as single hit; it may be a big number since electron deposits energy in many steps
+        int fGenGammaIndex;
+        int fGenGammaMultiplicity;
         float fEneDep;
         float fTime;
         TVector3 fPosition;
@@ -92,7 +102,7 @@ class JPetGeantScinHits : public TObject
         TVector3 fMomentumIn;
         TVector3 fMomentumOut;
 
-        ClassDef(JPetGeantScinHits,1)     
+        ClassDef(JPetGeantScinHits,2)     
 };
 
 
