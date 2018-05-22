@@ -17,6 +17,7 @@
 #define JPETOPTIONSTYPEHANDLER_H
 
 #include <map>
+#include <vector>
 #include <string>
 #include <boost/any.hpp>
 
