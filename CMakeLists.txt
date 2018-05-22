@@ -17,30 +17,32 @@ if(NOT MSVC)
   add_definitions(-std=c++11 -Wall -Wunused-parameter)
 endif()
 
-foreach(mode QUIET REQUIRED)
-  find_package(ROOT 5 ${mode} COMPONENTS
-    Hist
-    Physics
-    RIO
-    Thread
-    Tree
-    )
-  if(ROOT_USE_FILE)
-    include(${ROOT_USE_FILE})
-  endif()
-  if(ROOT_FOUND)
-    break()
-  endif()
+################################################################################
+# Handling of ROOT 
+################################################################################
+
+# first, try the old-school ROOTSYS variable
+set(root_prefix $ENV{ROOTSYS})
+if(root_prefix)
+  list(APPEND CMAKE_MODULE_PATH ${root_prefix})  
+endif()
+
+find_package(ROOT QUIET)
+
+if(NOT ROOT_FOUND)
   # if we failed with CMake based find_package, use fallback
   # root-config version from cmake/fallback/
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/fallback)
-endforeach()
+  message(WARNING "No CMake modules from a ROOT installation found. Trying fallback mode.")
+endif()
+
+find_package(ROOT ${REQUIRED})
+
+if(ROOT_USE_FILE)
+  include(${ROOT_USE_FILE})
+endif()
 
 message(STATUS "ROOT version: ${ROOT_VERSION}")
-
-if(ROOT_FOUND AND NOT ROOT_VERSION VERSION_LESS "6.0")
-  message(FATAL_ERROR "ROOT 6.0 is not compatible")
-endif()
 
 set(BOOST_LOG_DYN_LINK -DBOOST_LOG_DYN_LINK)
 add_definitions(${BOOST_LOG_DYN_LINK})
@@ -193,6 +195,11 @@ target_link_libraries(JPetFramework
   Unpacker2
   ${ROOT_LIBRARIES}
   ${Boost_LIBRARIES}
+  )
+
+# handle the ROOT's *.pcm files in case they were generated not in the buld dir
+add_custom_command(TARGET JPetFramework POST_BUILD
+  COMMAND cp ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm ${CMAKE_CURRENT_BINARY_DIR}
   )
 
 # read the version from git tag and git revision
