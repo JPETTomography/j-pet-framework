@@ -11,7 +11,9 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(JPetFramework-Utilities) # for generate_root_dictionaries
 
 project(JPetFramework CXX C) # using only C++
+
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
+
 # enable C++11 and warnings
 if(NOT MSVC)
   add_definitions(-std=c++11 -Wall -Wunused-parameter)
@@ -199,7 +201,7 @@ target_link_libraries(JPetFramework
 
 # handle the ROOT's *.pcm files in case they were generated not in the buld dir
 add_custom_command(TARGET JPetFramework POST_BUILD
-  COMMAND cp ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm ${CMAKE_CURRENT_BINARY_DIR}
+  COMMAND if [ -e ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm ]\;then mv ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm ${CMAKE_CURRENT_BINARY_DIR}\;fi
   )
 
 # read the version from git tag and git revision
@@ -275,4 +277,8 @@ if(has_parent)
   set(ROOTCINT_EXECUTABLE ${ROOTCINT_EXECUTABLE} PARENT_SCOPE)
   # export ROOT rpath needed for OS X
   set(ROOT_LIBRARY_DIR    ${ROOT_LIBRARY_DIR}    PARENT_SCOPE)
+
+  set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} PARENT_SCOPE)
 endif()
+
+
