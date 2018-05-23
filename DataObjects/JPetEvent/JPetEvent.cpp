@@ -44,7 +44,7 @@ void JPetEvent::addHit(const JPetHit& hit)
   fHits.push_back(hit);
 }
 
-std::vector<JPetHit> JPetEvent::getHits() const
+const std::vector<JPetHit>& JPetEvent::getHits() const
 {
   return fHits;
 }
