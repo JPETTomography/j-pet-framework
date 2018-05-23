@@ -16,6 +16,7 @@
 #ifndef JPETOPTIONSTOOLS_H
 #define JPETOPTIONSTOOLS_H
 #include <map>
+#include <vector>
 #include <boost/any.hpp>
 #include "./JPetOptionsTools/JPetOptionsTransformators.h"
 
