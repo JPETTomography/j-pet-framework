@@ -26,7 +26,6 @@ RUN apt-get update \
   python \
   python-dev \
   sudo \
-  libtinyxml2-dev \
   doxygen \
   libfftw3-3 \
   libfftw3-dev \
@@ -61,8 +60,8 @@ RUN mkdir -p root-system/etc
 RUN cd root && ./configure --prefix=/root-system --etcdir=/root-system/etc --enable-builtin-freetype --disable-mathmore --enable-opengl --with-x11-libdir=/usr/lib/x86_64-linux-gnu --with-xpm-libdir=/usr/lib/x86_64-linux-gnu --with-xft-libdir=/usr/lib/x86_64-linux-gnu --with-xext-libdir=/usr/lib/x86_64-linux-gnu
 RUN cd root && make
 RUN cd root && make install
-RUN ln -s /usr/bin/g++ /usr/bin/c++
-RUN ln -s /usr/bin/gcc /usr/bin/cc
+RUN ln -sfn /usr/bin/g++ /usr/bin/c++
+RUN ln -sfn /usr/bin/gcc /usr/bin/cc
 WORKDIR j-pet-framework
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod 777 /usr/local/bin/docker-entrypoint.sh \
