@@ -24,7 +24,7 @@ endif()
 ################################################################################
 
 # first, try the old-school ROOTSYS variable
-set(root_prefix $ENV{ROOTSYS})
+set(root_prefix $ENV{ROOTSYS}/etc/cmake/)
 if(root_prefix)
   list(APPEND CMAKE_MODULE_PATH ${root_prefix})  
 endif()
