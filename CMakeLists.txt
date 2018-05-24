@@ -24,9 +24,9 @@ endif()
 ################################################################################
 
 # first, try the old-school ROOTSYS variable
-set(root_prefix $ENV{ROOTSYS}/etc/cmake/)
+set(root_prefix $ENV{ROOTSYS})
 if(root_prefix)
-  list(APPEND CMAKE_MODULE_PATH ${root_prefix})  
+  list(APPEND CMAKE_MODULE_PATH ${root_prefix}/etc/cmake/)  
 endif()
 
 find_package(ROOT QUIET)
