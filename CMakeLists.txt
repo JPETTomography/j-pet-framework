@@ -200,9 +200,20 @@ target_link_libraries(JPetFramework
   )
 
 # handle the ROOT's *.pcm files in case they were generated not in the buld dir
-add_custom_command(TARGET JPetFramework POST_BUILD
-  COMMAND if [ -e ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm ]\;then mv ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm ${CMAKE_CURRENT_BINARY_DIR}\;fi
-  )
+find_program(SHELL bash)
+
+if(SHELL)
+  set(pcm_script ${CMAKE_CURRENT_BINARY_DIR}/move_pcm.sh)
+  
+  FILE(WRITE ${pcm_script}  "#!${SHELL}\n")
+  FILE(APPEND ${pcm_script} "for f in ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm; do\n")
+  FILE(APPEND ${pcm_script} "[ -e \$f ] && mv \$f ${CMAKE_CURRENT_BINARY_DIR}\n")
+  FILE(APPEND ${pcm_script} "done\n")
+  
+  add_custom_command(TARGET JPetFramework POST_BUILD
+    COMMAND ${SHELL}  ${pcm_script}
+    )
+endif(SHELL)
 
 # read the version from git tag and git revision
 exec_program(
