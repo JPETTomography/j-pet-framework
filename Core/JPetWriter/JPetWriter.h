@@ -48,7 +48,6 @@ class boost::noncopyable;
 /**
  * @brief A class responsible for writing any data to ROOT trees.
  *
- * All objects inheriting from JPetAnalysisModule should use this class in order to access and write to ROOT files.
  */
 class JPetWriter : private boost::noncopyable
 {
