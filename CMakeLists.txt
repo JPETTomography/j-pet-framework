@@ -209,7 +209,8 @@ if(SHELL)
   FILE(APPEND ${pcm_script} "for f in ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm; do\n")
   FILE(APPEND ${pcm_script} "[ -e \$f ] && mv \$f ${CMAKE_CURRENT_BINARY_DIR}\n")
   FILE(APPEND ${pcm_script} "done\n")
-  
+  FILE(APPEND ${pcm_script} "return 0\n")
+
   add_custom_command(TARGET JPetFramework POST_BUILD
     COMMAND ${SHELL}  ${pcm_script}
     )
