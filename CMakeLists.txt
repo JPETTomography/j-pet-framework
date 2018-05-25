@@ -109,6 +109,7 @@ foreach(dir ${FOLDERS_WITH_SOURCE})
 endforeach()
 
 list(APPEND FOLDERS ${CMAKE_CURRENT_SOURCE_DIR}) # for include to dictionaries for unpacker2
+list(APPEND FOLDERS ${Boost_INCLUDE_DIRS}) # add boost includes to dictionaries
 
 ##download test files
 # the script shouldn't do anything if the data is present and correct
