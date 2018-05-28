@@ -29,22 +29,27 @@ if(root_prefix)
   list(APPEND CMAKE_MODULE_PATH ${root_prefix}/etc/cmake/)  
 endif()
 
+# try also a search based on root-config
+execute_process(COMMAND root-config --etcdir OUTPUT_VARIABLE ROOT_ETCDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+list(APPEND CMAKE_MODULE_PATH ${ROOT_ETCDIR}/cmake)
+
 find_package(ROOT QUIET)
 
-if(NOT ROOT_FOUND)
+if(ROOT_FOUND)
+  message(STATUS "Found ROOT version: ${ROOT_VERSION} (${ROOT_CONFIG_EXECUTABLE})")
+else()
   # if we failed with CMake based find_package, use fallback
   # root-config version from cmake/fallback/
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/fallback)
   message(WARNING "No CMake modules from a ROOT installation found. Trying fallback mode.")
+  find_package(ROOT 5 REQUIRED)
 endif()
-
-find_package(ROOT ${REQUIRED})
 
 if(ROOT_USE_FILE)
   include(${ROOT_USE_FILE})
 endif()
 
-message(STATUS "ROOT version: ${ROOT_VERSION}")
+message(STATUS "ROOT version: ")
 
 set(BOOST_LOG_DYN_LINK -DBOOST_LOG_DYN_LINK)
 add_definitions(${BOOST_LOG_DYN_LINK})
