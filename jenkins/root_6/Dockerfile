@@ -26,7 +26,6 @@ RUN apt-get update \
   python \
   python-dev \
   sudo \
-  libtinyxml2-dev \
   doxygen \
   libfftw3-3 \
   libfftw3-dev \

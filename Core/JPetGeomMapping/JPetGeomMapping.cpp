@@ -183,7 +183,7 @@ size_t JPetGeomMapping::calcDeltaID(const JPetBarrelSlot &slot1,
 {
   if (slot1.getLayer().getID() == slot2.getLayer().getID())
   {
-    int delta_ID = abs(getSlotNumber(slot1) - getSlotNumber(slot2));
+    int delta_ID = abs( (int)getSlotNumber(slot1) - (int)getSlotNumber(slot2));
     int layer_size = getSlotsCount(slot1.getLayer());
     int half_layer_size = layer_size / 2;
     if (delta_ID > half_layer_size)

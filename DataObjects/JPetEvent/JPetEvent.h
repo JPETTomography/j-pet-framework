@@ -43,7 +43,7 @@ public:
   JPetEvent();
   JPetEvent(const std::vector<JPetHit>& hits, JPetEventType eventType = JPetEventType::kUnknown, bool orderedByTime = true);
 
-  std::vector<JPetHit> getHits() const;
+  const std::vector<JPetHit>& getHits() const;
   void setHits(const std::vector<JPetHit>& hits, bool orderedByTime = true);
   void addHit(const JPetHit& hit);
 
