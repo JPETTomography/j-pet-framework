@@ -40,11 +40,26 @@ bool JPetGeantParser::init()
     fOutputEvents = new JPetTimeWindow("JPetHit","JPetMCHit","JPetMCDecayTree");
     auto opts = getOptions();
 
+    if (isOptionSet(fParams.getOptions(), kMaxTimeWindowParamKey)) { 
+        fMaxTime = getOptionAsDouble(fParams.getOptions(), kMaxTimeWindowParamKey);
+    }
+    if (isOptionSet(fParams.getOptions(), kMinTimeWindowParamKey)) { 
+        fMinTime = getOptionAsDouble(fParams.getOptions(), kMinTimeWindowParamKey);
+    }
+    if (isOptionSet(fParams.getOptions(), kSourceActivityParamKey)) { 
+        kSimulatedActivity = getOptionAsDouble(fParams.getOptions(), kSourceActivityParamKey);
+    }
+
+
+    // HISTOGRAMS FROM STANDARD HITFINDER
+
     getStatistics().createHistogram(   
             new TH1F("hits_per_time_window", 
                 "Number of Hits in Time Window", 
                 101, -0.5, 100.5 
                 ));
+
+
 
     // GENERATED HISTOGRAMS
 
@@ -185,26 +200,26 @@ bool JPetGeantParser::init()
 
 
 
-    for (Int_t i=0; i<17; i++){
+    for (Int_t i=0; i<effiMap_nSlice; i++){
         getStatistics().createHistogram(   
                 new TEfficiency(TString("effi_prompt_vtx_")+TString::Itoa(i,10), 
                     "effi prompt registration as vtx ", 
-                    121, -60.5, 60.5,
-                    121, -60.5, 60.5
+                    121, -60., 60.,
+                    121, -60., 60.
                     ));
 
         getStatistics().createHistogram(   
                 new TEfficiency(TString("effi_2g_vtx_")+TString::Itoa(i,10), 
                     "effi 2g annihilation registration as vtx ", 
-                    121, -60.5, 60.5,
-                    121, -60.5, 60.5
+                    121, -60., 60.,
+                    121, -60., 60.
                     ));
 
         getStatistics().createHistogram(   
                 new TEfficiency(TString("effi_3g_vtx_")+TString::Itoa(i,10), 
                     "effi 3g annihilation registration as vtx ", 
-                    121, -60.5, 60.5,
-                    121, -60.5, 60.5
+                    121, -60., 60.,
+                    121, -60., 60.
                     ));
 
 
@@ -222,9 +237,13 @@ bool JPetGeantParser::exec()
     if(auto& mcEventPack = dynamic_cast<JPetGeantEventPack* const>(fEvent)){
 
         addEvent(mcEventPack);
-        // put here also part of code responsible for activity
-        // now 1 generated event for single window
-        saveHits();
+
+        if (activityIndex > abs(fMinTime*kSimulatedActivity*pow(10,-6))){
+            saveHits();
+            activityIndex = 0;
+        } else {
+            activityIndex++;
+        }
 
     } else {
         return false;
@@ -244,6 +263,8 @@ bool JPetGeantParser::terminate()
 void JPetGeantParser::addEvent(JPetGeantEventPack* evPack) 
 {
 
+
+
     bool isRecPrompt = false;
     bool isSaved2g[2] = {false, false};
     bool isSaved3g[3] =  {false, false, false};
@@ -258,6 +279,12 @@ void JPetGeantParser::addEvent(JPetGeantEventPack* evPack)
     bool isGen2g = evPack->GetEventInformation()->GetTwoGammaGen();
     bool isGen3g = evPack->GetEventInformation()->GetThreeGammaGen();
 
+
+    // first adjust all hits in single event to time window scheme
+    std::unique_ptr<TRandom3> random(new TRandom3(0));
+    timeShift = random->Uniform(fMinTime,fMaxTime);
+
+     //std::cout << timeShift << std::endl;
 
     for ( uint i=0; i <evPack->GetNumberOfHits(); i++){
 
@@ -374,8 +401,8 @@ void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo, bool i
         getStatistics().getHisto2D("gen_prompt_YZ")->Fill(evInfo->GetVtxPromptPositionY(),evInfo->GetVtxPromptPositionZ());
 
 
-        for (Int_t i=0; i<17; i++){
-            if((-42.5+5*i<evInfo->GetVtxPromptPositionZ()) && (evInfo->GetVtxPromptPositionZ()<-42.5+5*(i+1))) 
+        for (Int_t i=0; i<effiMap_nSlice; i++){
+            if((-20+effiMap_width*i<evInfo->GetVtxPromptPositionZ()) && (evInfo->GetVtxPromptPositionZ()<-20+effiMap_width*(i+1))) 
             {
                 getStatistics().getEffiHisto("effi_prompt_vtx_"+TString::Itoa(i,10))->Fill(
                         isRecPrompt, 
@@ -390,8 +417,8 @@ void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo, bool i
     {
         getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(2);
 
-        for (Int_t i=0; i<17; i++){
-            if((-42.5+5*i<evInfo->GetVtxPositionZ()) && (evInfo->GetVtxPositionZ()<-42.5+5*(i+1))) 
+        for (Int_t i=0; i<effiMap_nSlice; i++){
+            if((-20+effiMap_width*i<evInfo->GetVtxPositionZ()) && (evInfo->GetVtxPositionZ()<-20+effiMap_width*(i+1))) 
             {
                 getStatistics().getEffiHisto("effi_2g_vtx_"+TString::Itoa(i,10))->Fill(
                         isRec2g, 
@@ -403,10 +430,10 @@ void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo, bool i
     if(isGen3g)
     {
         getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(3);
-        for (Int_t i=0; i<17; i++){
-            if((-42.5+5*i<evInfo->GetVtxPositionZ()) && (evInfo->GetVtxPositionZ()<-42.5+5*(i+1))) 
+        for (Int_t i=0; i<effiMap_nSlice; i++){
+            if((-20.+effiMap_width*i<evInfo->GetVtxPositionZ()) && (evInfo->GetVtxPositionZ()<-20.+effiMap_width*(i+1))) 
             {
-                getStatistics().getEffiHisto("effi_2g_vtx_"+TString::Itoa(i,10))->Fill(
+                getStatistics().getEffiHisto("effi_3g_vtx_"+TString::Itoa(i,10))->Fill(
                         isRec3g, 
                         evInfo->GetVtxPositionX(),evInfo->GetVtxPositionY());
             }
@@ -465,7 +492,8 @@ JPetHit JPetGeantParser::reconstructHit(JPetMCHit mcHit)
 {
     JPetHit hit = dynamic_cast<JPetHit&>(mcHit);
     hit.setEnergy( addEnergySmearing(mcHit.getEnergy()) );
-    hit.setTime( addTimeSmearing(mcHit.getTime(),mcHit.getEnergy()) );
+    // adjust to time window and smear
+    hit.setTime( addTimeSmearing( -(mcHit.getTime()-timeShift)  ,mcHit.getEnergy()) );
 
 
     auto radius = getParamBank().getScintillator(mcHit.getScintillator().getID()).getBarrelSlot().getLayer().getRadius();
@@ -480,7 +508,7 @@ JPetHit JPetGeantParser::reconstructHit(JPetMCHit mcHit)
 
 float JPetGeantParser::addZHitSmearing(float zIn)
 {
-    std::unique_ptr<TRandom3> random(new TRandom3);
+    std::unique_ptr<TRandom3> random(new TRandom3(0));
 
     return random->Gaus(zIn,z_resolution);
 }
@@ -489,7 +517,7 @@ float JPetGeantParser::addEnergySmearing(float eneIn)
 {
     // eneIn in keV
     float alpha = 0.044/sqrt(eneIn/1000.);
-    std::unique_ptr<TRandom3> random(new TRandom3);
+    std::unique_ptr<TRandom3> random(new TRandom3(0));
 
     return eneIn + alpha*eneIn*random->Gaus(0,1);
 }
@@ -498,7 +526,7 @@ float JPetGeantParser::addTimeSmearing(float timeIn, float eneIn)
 {
     // eneIn in keV, timeIn in ps
     float time;
-    std::unique_ptr<TRandom3> random(new TRandom3);
+    std::unique_ptr<TRandom3> random(new TRandom3(0));
 
     if ( eneIn > 200 ) {
         time = timeIn + 80*random->Gaus(0,1);
