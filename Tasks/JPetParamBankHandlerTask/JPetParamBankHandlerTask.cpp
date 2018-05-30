@@ -102,7 +102,7 @@ bool JPetParamBankHandlerTask::generateParamBankFromRootFile(const JPetParams& p
   }
 
   JPetReader fReader;
-  fReader.openFileAndLoadData(getInputFile(options));
+  fReader.openFileAndLoadData(getInputFile(options).c_str());
   auto paramMgr = params.getParamManager();
 
   return paramMgr->readParametersFromFile(&fReader);

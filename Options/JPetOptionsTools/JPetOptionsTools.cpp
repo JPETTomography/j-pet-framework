@@ -120,29 +120,29 @@ std::vector<std::string> getInputFiles(const std::map<std::string, boost::any>& 
   return any_cast<std::vector<std::string>>(opts.at("file_std::vector<std::string>"));
 }
 
-const char* getInputFile(const std::map<std::string, boost::any>& opts)
+std::string getInputFile(const std::map<std::string, boost::any>& opts)
 {
-  return any_cast<std::string>(opts.at("inputFile_std::string")).c_str();
+  return any_cast<std::string>(opts.at("inputFile_std::string"));
 }
 
-const char* getScopeConfigFile(const std::map<std::string, boost::any>& opts)
+std::string getScopeConfigFile(const std::map<std::string, boost::any>& opts)
 {
-  return any_cast<std::string>(opts.at("scopeConfigFile_std::string")).c_str();
+  return any_cast<std::string>(opts.at("scopeConfigFile_std::string"));
 }
 
-const char* getScopeInputDirectory(const std::map<std::string, boost::any>& opts)
+std::string getScopeInputDirectory(const std::map<std::string, boost::any>& opts)
 {
-  return any_cast<std::string>(opts.at("scopeInputDirectory_std::string")).c_str();
+  return any_cast<std::string>(opts.at("scopeInputDirectory_std::string"));
 }
 
-const char* getOutputFile(const std::map<std::string, boost::any>& opts)
+std::string getOutputFile(const std::map<std::string, boost::any>& opts)
 {
-  return any_cast<std::string>(opts.at("outputFile_std::string")).c_str();
+  return any_cast<std::string>(opts.at("outputFile_std::string"));
 }
 
-const char* getOutputPath(const std::map<std::string, boost::any>& opts)
+std::string getOutputPath(const std::map<std::string, boost::any>& opts)
 {
-  return any_cast<std::string>(opts.at("outputPath_std::string")).c_str();
+  return any_cast<std::string>(opts.at("outputPath_std::string"));
 }
 
 long long getFirstEvent(const std::map<std::string, boost::any>& opts)
@@ -203,14 +203,14 @@ std::string getLocalDBCreate(const std::map<std::string, boost::any>& opts)
   return result;
 }
 
-const char* getUnpackerConfigFile(const std::map<std::string, boost::any>& opts)
+std::string getUnpackerConfigFile(const std::map<std::string, boost::any>& opts)
 {
-  return any_cast<std::string>(opts.at("unpackerConfigFile_std::string")).c_str();
+  return any_cast<std::string>(opts.at("unpackerConfigFile_std::string"));
 }
 
-const char* getUnpackerCalibFile(const std::map<std::string, boost::any>& opts)
+std::string getUnpackerCalibFile(const std::map<std::string, boost::any>& opts)
 {
-  return any_cast<std::string>(opts.at("unpackerCalibFile_std::string")).c_str();
+  return any_cast<std::string>(opts.at("unpackerCalibFile_std::string"));
 }
 
 std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap)

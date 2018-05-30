@@ -16,6 +16,7 @@
 #ifndef JPETOPTIONSTOOLS_H
 #define JPETOPTIONSTOOLS_H
 #include <map>
+#include <vector>
 #include <boost/any.hpp>
 #include "./JPetOptionsTools/JPetOptionsTransformators.h"
 
@@ -51,11 +52,11 @@ std::vector<std::string> getInputFiles(const OptsStrAny& opts);
 
 /// This function returns a valid result only if the inputFile option is given
 /// in the transformed form with _std::string suffix
-const char* getInputFile(const OptsStrAny& opts);
-const char* getScopeConfigFile(const OptsStrAny& opts);
-const char* getScopeInputDirectory(const OptsStrAny& opts);
-const char* getOutputFile(const OptsStrAny& opts);
-const char* getOutputPath(const OptsStrAny& opts);
+std::string getInputFile(const OptsStrAny& opts);
+std::string getScopeConfigFile(const OptsStrAny& opts);
+std::string getScopeInputDirectory(const OptsStrAny& opts);
+std::string getOutputFile(const OptsStrAny& opts);
+std::string getOutputPath(const OptsStrAny& opts);
 long long getFirstEvent(const OptsStrAny& opts);
 long long getLastEvent(const OptsStrAny& opts);
 
@@ -72,8 +73,8 @@ bool isLocalDB(const OptsStrAny& opts);
 std::string getLocalDB(const OptsStrAny& opts);
 bool isLocalDBCreate(const OptsStrAny& opts);
 std::string getLocalDBCreate(const OptsStrAny& opts);
-const char* getUnpackerConfigFile(const OptsStrAny& opts);
-const char* getUnpackerCalibFile(const OptsStrAny& opts);
+std::string getUnpackerConfigFile(const OptsStrAny& opts);
+std::string getUnpackerCalibFile(const OptsStrAny& opts);
 std::string getConfigFileName(const OptsStrAny& optsMap);
 
 void printOptions(const OptsStrAny& opts);
