@@ -1,7 +1,7 @@
 #include <JPetGeantParser/JPetGeantParserTools.h>
 #include<TRandom3.h>
 
-JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank paramBank  )
+JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank  )
 {
 
     JPetMCHit mcHit = JPetMCHit(
@@ -14,19 +14,21 @@ JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, con
             geantHit->GetMomentumIn()
             );
 
-    JPetScin scin =  paramBank.getScintillator(geantHit->GetScinID()); 
+
+    JPetScin& scin =  paramBank.getScintillator(geantHit->GetScinID()); 
     mcHit.setScintillator(scin);
 
     return mcHit;
 }
 
 
-JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit mcHit,const JPetParamBank paramBank, float timeShift, float z_resolution )
+JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit,const JPetParamBank& paramBank, const float timeShift, const float z_resolution )
 {
     JPetHit hit = dynamic_cast<JPetHit&>(mcHit);
     hit.setEnergy( addEnergySmearing(mcHit.getEnergy()) );
     // adjust to time window and smear
     hit.setTime( addTimeSmearing( -(mcHit.getTime()-timeShift)  ,mcHit.getEnergy()) );
+
 
 
     auto radius = paramBank.getScintillator(mcHit.getScintillator().getID()).getBarrelSlot().getLayer().getRadius();
@@ -69,7 +71,7 @@ float JPetGeantParserTools::addTimeSmearing(float timeIn, float eneIn)
     return time;
 }
 
-bool JPetGeantParserTools::isHitReconstructed(JPetHit& hit, float th)
+bool JPetGeantParserTools::isHitReconstructed(JPetHit& hit, const float th)
 {
     bool isOk = true;
     if( hit.getEnergy() < th ) isOk = false;
@@ -77,7 +79,7 @@ bool JPetGeantParserTools::isHitReconstructed(JPetHit& hit, float th)
     return isOk;
 }
 
-void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit,const JPetHit recHit,
+void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit,const JPetHit& recHit,
         bool& isRecPrompt , std::array<bool,2>& isSaved2g, std::array<bool,3>& isSaved3g,
         float& enePrompt, std::array<float,2>& ene2g, std::array<float,3>& ene3g )
 {

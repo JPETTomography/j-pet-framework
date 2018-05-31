@@ -37,6 +37,7 @@ JPetGeantParser::~JPetGeantParser() { }
 
 bool JPetGeantParser::init()
 {
+
     // create detector map
     std::unique_ptr<JPetGeomMapping> fDetectorMap(new JPetGeomMapping(getParamBank()));
 
@@ -57,6 +58,7 @@ bool JPetGeantParser::init()
     if ( fMakeEffiHisto ) bookEfficiencyHistograms();
 
     INFO("MC Hit wrapper started.");
+
 
     return true;
 }
@@ -119,12 +121,12 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
         // translate geantHit -> JPetMCHit
         JPetMCHit mcHit = JPetGeantParserTools::createJPetMCHit(evPack->GetHit(i), getParamBank());
 
+
         fStoredMCHits.push_back(mcHit);
         if (fMakeHisto) fillHistoMCGen(mcHit);
 
         // create reconstructed hit and add all smearings        
         JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit,getParamBank(), timeShift, z_resolution);
-
         // add criteria for possible rejection of reconstructed events (e.g. E>50 keV)
 
         if (JPetGeantParserTools::isHitReconstructed(recHit,experimentalThreshold)) 
