@@ -1,5 +1,5 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE JPetGeantScinHitsTest
+#define BOOST_TEST_MODULE JPetGeantEventPackTest
 #include <boost/test/unit_test.hpp>
 
 #include "./JPetGeantEventPack/JPetGeantEventPack.h"
