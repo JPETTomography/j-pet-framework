@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,16 +13,16 @@
  *  @file JPetReader.cpp
  */
 
-#include <cassert>
-#include "JPetReader.h"
 #include "./JPetUserInfoStructure/JPetUserInfoStructure.h"
+#include "JPetReader.h"
+#include <cassert>
 
-const std::string JPetReader::kRootTreeName = "T"; /// This tree name is compatible with the tree name produced by the unpacker.
+/**
+ * The Tree name is "T" and it is compatible with the Tree name produced by the Unpacker.
+ */
+const std::string JPetReader::kRootTreeName = "T";
 
-JPetReader::JPetReader()
-{
-  /**/
-}
+JPetReader::JPetReader() {}
 
 JPetReader::JPetReader(const char* p_filename, const char* treeName)
 {
@@ -146,7 +146,8 @@ bool JPetReader::loadData(const char* treename)
 /**
  * @brief Returns a copy of the header read from input file.
  *
- * Using a copy rather than direct pointer is essential as the original header belongs to JPetReader::fTree and would be deleted along with it.
+ * Using a copy rather than direct pointer is essential as the original header
+ * belongs to JPetReader::fTree and would be deleted along with it.
  */
 JPetTreeHeader* JPetReader::getHeaderClone() const
 {
@@ -154,15 +155,13 @@ JPetTreeHeader* JPetReader::getHeaderClone() const
     ERROR("No tree available");
     return 0;
   }
-  // get a pointer to a header wchich belongs to fTree
   auto  listOfObjects = fTree->GetUserInfo();
   JPetTreeHeader* header =  static_cast<JPetTreeHeader*>(listOfObjects->At(JPetUserInfoStructure::kHeader));
   if (!header) {
-    WARNING("No JPetTreeHeader found!! in the tree - it is ok if the tree is a hld.root type");
+    WARNING("No JPetTreeHeader found in the tree - it is ok if the tree is a hld.root type");
     return nullptr;
   }
-  // return a COPY of this header
-  return new JPetTreeHeader( *header );
+  return new JPetTreeHeader(*header);
 }
 
 TObject* JPetReader::getObjectFromFile(const char* name)
@@ -186,7 +185,7 @@ bool JPetReader::loadCurrentEntry()
   return false;
 }
 
-inline bool JPetReader::isCorrectTreeEntryCode (int entryCode) const  ///see TTree GetEntry method
+inline bool JPetReader::isCorrectTreeEntryCode (int entryCode) const
 {
   if (entryCode == -1) return false;
   if (entryCode == 0) return false;

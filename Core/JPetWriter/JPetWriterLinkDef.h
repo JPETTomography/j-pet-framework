@@ -1,5 +1,4 @@
 #ifdef __CINT__
-
  #pragma link C++ function JPetWriter::Write(JPetBarrelSlot&);
  #pragma link C++ function JPetWriter::Write(vector<JPetBarrelSlot>&);
  #pragma link C++ function JPetWriter::Write(JPetLOR&);

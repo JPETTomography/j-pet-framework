@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,39 +13,41 @@
  *  @file JPetTaskChainExecutor.h
  */
 
-#ifndef FRAMEWORK_JPETTASKCHAINEXECUTOR_H
-#define FRAMEWORK_JPETTASKCHAINEXECUTOR_H
+#ifndef JPETTASKCHAINEXECUTOR_H
+#define JPETTASKCHAINEXECUTOR_H
 
-#include <list>
-#include <TThread.h>
-#include <functional> // for TaskGenerator declaration
-#include <vector> // for TaskGeneratorChain declaration
-#include "./JPetParams/JPetParams.h"
 #include "./JPetTaskInterface/JPetTaskInterface.h"
+#include "./JPetParams/JPetParams.h"
 #include "./JPetTimer/JPetTimer.h"
+#include <TThread.h>
+#include <functional>
+#include <vector>
+#include <list>
 
-using TaskGenerator = std::function< JPetTaskInterface* () >;
+using TaskGenerator = std::function< JPetTaskInterface* ()>;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
 /**
+ * @brief Class to execute registered tasks.
+ *
  * JPetTaskChainExecutor generates the previously registered chain of tasks.
- * One chain can be run as a thread independently
+ * One chain can be run as a thread independently.
  */
 class JPetTaskChainExecutor
 {
-public :
-  JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFile, const jpet_options_tools::OptsStrAny&);
-  TThread* run();
+public:
+  JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain,
+    int processedFile, const jpet_options_tools::OptsStrAny&
+  );
   virtual ~JPetTaskChainExecutor();
-  bool process(); /// Method to be called directly only in case of non-thread running;
+  TThread* run();
+  bool process();
 private:
   static void* processProxy(void*);
-
-  int fInputSeqId = -1;
+  TaskGeneratorChain* fTaskGeneratorChain = nullptr;
   std::list<JPetTaskInterface*> fTasks;
-  TaskGeneratorChain* ftaskGeneratorChain = nullptr;
   JPetParams fParams;
+  int fInputSeqId = -1;
 };
 
-
-#endif //FRAMEWORK_JPETTASCHAINKEXECUTOR_H
+#endif /* JPETTASKCHAINEXECUTOR_H */

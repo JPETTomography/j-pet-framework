@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -10,27 +10,26 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetReaderInterface.h 
+ *  @file JPetReaderInterface.h
  */
 
-#ifndef JPETREADERINTERFACE_H 
-#define JPETREADERINTERFACE_H 
+#ifndef JPETREADERINTERFACE_H
+#define JPETREADERINTERFACE_H
 
-#include <TObject.h> // for Event typedef
+#include <TObject.h>
 
 class JPetReaderInterface {
  public:
-  typedef TObject MyEvent; 
+  typedef TObject MyEvent;
   virtual ~JPetReaderInterface() {;}
-  virtual MyEvent& getCurrentEntry()=0;   
+  virtual MyEvent& getCurrentEntry()=0;
   virtual bool nextEntry()=0;
   virtual bool firstEntry()=0;
   virtual bool lastEntry()=0;
   virtual bool nthEntry(long long int n)=0;
   virtual long long getCurrentEntryNumber() const =0;
-  virtual long long getNbOfAllEntries() const =0; 
+  virtual long long getNbOfAllEntries() const =0;
   virtual bool openFileAndLoadData(const char* filename, const char* treename)=0;
-  virtual void closeFile()=0; 
+  virtual void closeFile()=0;
 };
-#endif /*  !JPETREADERINTERFACE_H */
-
+#endif /* !JPETREADERINTERFACE_H */

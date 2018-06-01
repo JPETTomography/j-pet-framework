@@ -26,7 +26,7 @@ struct StripPos {
 };
 
 /**
- * @brief TODO
+ * @brief Interface with methods for Big Barrel Mapping. 
  */
 class JPetGeomMappingInterface
 {

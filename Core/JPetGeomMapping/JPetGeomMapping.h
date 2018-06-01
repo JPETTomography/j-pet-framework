@@ -25,7 +25,11 @@
 #include <map>
 
 /**
- * @brief TODO
+ * @brief Implementation of methods for Big Barrel Mapping.
+ *
+ * Created mapping is to be used in the analyses for application of various
+ * parameters i.e. from calibrations. In general, use only for measurements
+ * conducted with the Big Barrel detector.
  */
 class JPetGeomMapping : public JPetGeomMappingInterface
 {

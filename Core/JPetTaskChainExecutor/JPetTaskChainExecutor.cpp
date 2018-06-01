@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,50 +13,80 @@
  *  @file JPetTaskChainExecutor.cpp
  */
 
+#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetParamsFactory/JPetParamsFactory.h"
 #include "JPetTaskChainExecutor.h"
-
+#include "./JPetLoggerInclude.h"
 #include <cassert>
 #include <memory>
 
-#include "./JPetParamsFactory/JPetParamsFactory.h"
-#include "./JPetLoggerInclude.h"
-#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
-
-JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, const jpet_options_tools::OptsStrAny& opts):
-  fInputSeqId(processedFileId),
-  ftaskGeneratorChain(taskGeneratorChain)
+/**
+ * Constructor
+ */
+JPetTaskChainExecutor::JPetTaskChainExecutor(
+  TaskGeneratorChain* taskGeneratorChain,
+  int processedFileId,
+  const jpet_options_tools::OptsStrAny& opts
+): fInputSeqId(processedFileId), fTaskGeneratorChain(taskGeneratorChain)
 {
-  /// ParamManager is generated and added to fParams
   fParams = jpet_params_factory::generateParams(opts);
   assert(fParams.getParamManager());
   if (taskGeneratorChain) {
-    for (auto taskGenerator : *ftaskGeneratorChain) {
+    for (auto taskGenerator : *fTaskGeneratorChain) {
       auto task = taskGenerator();
       fTasks.push_back(task);
     }
   } else {
-    ERROR("taskGeneratorChain is null while constructing JPetTaskChainExecutor");
+    ERROR("TaskGeneratorChain is null while constructing JPetTaskChainExecutor");
   }
 }
 
+/**
+ * Destructor
+ */
+JPetTaskChainExecutor::~JPetTaskChainExecutor()
+{
+  for (auto& task : fTasks) {
+    if (task) {
+      delete task;
+      task = 0;
+    }
+  }
+}
+
+/**
+ * Run with multithreading, using class from CERN ROOT TThread
+ */
+TThread* JPetTaskChainExecutor::run()
+{
+  TThread* thread = new TThread(
+    std::to_string(fInputSeqId).c_str(), processProxy, (void*) this
+  );
+  assert(thread);
+  thread->Run();
+  return thread;
+}
+
+/**
+ * Main processing method for mode without multithreading. It includes iterating
+ * over both tasks and parameters, generating input parameters based on
+ * iterated the parameter sets and control parameters produced by the previous task.
+ * Each iteration can modify the control parameters from previous tasks.
+ * Method includes measurement of execution time, results are then printed out.
+ */
 bool JPetTaskChainExecutor::process()
 {
   JPetTimer timer;
   JPetDataInterface nullDataObject;
-  JPetParams controlParams; /// Parameters used to control the input file type and event range.
-
-  /// We iterate over both tasks and parameters
+  JPetParams controlParams;
   for (auto currentTaskIt = fTasks.begin(); currentTaskIt != fTasks.end(); currentTaskIt++) {
-
     auto currentTask  =  *currentTaskIt;
     auto taskName = currentTask->getName();
-
     auto& currParams = fParams;
-    /// We generate input parameters based on the current parameter set and the controlParams produced by
-    /// the previous task.
     currParams = jpet_params_factory::generateParams(currParams, controlParams);
-    jpet_options_tools::printOptionsToLog(currParams.getOptions(), std::string("Options for ") + taskName);
-
+    jpet_options_tools::printOptionsToLog(
+      currParams.getOptions(), std::string("Options for ") + taskName
+    );
     timer.startMeasurement();
     INFO(Form("Starting task: %s", taskName.c_str()));
     if (!currentTask->init(currParams)) {
@@ -67,11 +97,10 @@ bool JPetTaskChainExecutor::process()
       ERROR("In task run()");
       return false;
     }
-    if (!currentTask->terminate(controlParams)) { /// Here controParams can be modified by the current task.
+    if (!currentTask->terminate(controlParams)) {
       ERROR("In task terminate() ");
       return false;
     }
-
     timer.stopMeasurement("task " + taskName);
   }
   INFO(timer.getAllMeasuredTimes());
@@ -79,27 +108,12 @@ bool JPetTaskChainExecutor::process()
   return true;
 }
 
+/**
+ * Private method that establishes proxy processing in multithreading mode
+ */
 void* JPetTaskChainExecutor::processProxy(void* runner)
 {
   assert(runner);
   static_cast<JPetTaskChainExecutor*>(runner)->process();
   return 0;
-}
-
-TThread* JPetTaskChainExecutor::run()
-{
-  TThread* thread = new TThread(std::to_string(fInputSeqId).c_str(), processProxy, (void*)this);
-  assert(thread);
-  thread->Run();
-  return thread;
-}
-
-JPetTaskChainExecutor::~JPetTaskChainExecutor()
-{
-  for (auto& task : fTasks) {
-    if (task) {
-      delete task;
-      task = 0;
-    }
-  }
 }

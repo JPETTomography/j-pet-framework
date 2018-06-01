@@ -17,7 +17,7 @@
 #define JPETDATAINTERFACE_H
 
 /**
- * @brief TODO
+ * @brief Interface for data cointainer
  */
 class JPetDataInterface
 {

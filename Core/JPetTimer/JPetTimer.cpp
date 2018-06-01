@@ -16,8 +16,14 @@
 
 #include "JPetTimer.h"
 
+/**
+ * Constructor
+ */
 JPetTimer::JPetTimer() { }
 
+/**
+ * Destructor
+ */
 JPetTimer::~JPetTimer() { }
 
 void JPetTimer::startMeasurement()

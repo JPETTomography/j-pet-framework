@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,10 +13,13 @@
  *  @file JPetWriter.cpp
  */
 
+ #include "./JPetUserInfoStructure/JPetUserInfoStructure.h"
 #include "JPetWriter.h"
-#include "./JPetUserInfoStructure/JPetUserInfoStructure.h"
 
-const std::string JPetWriter::kRootTreeName = "T"; /// This tree name is compatible with the tree name produced by the unpacker.
+/**
+ * This tree name is compatible with the tree name produced by the unpacker.
+ */
+const std::string JPetWriter::kRootTreeName = "T";
 const long long JPetWriter::kTreeBufferSize = 10000;
 
 JPetWriter::JPetWriter(const char* p_fileName) :
@@ -65,7 +68,6 @@ void JPetWriter::writeHeader(TObject* header)
   fTree->GetUserInfo()->AddAt(header, JPetUserInfoStructure::kHeader);
 }
 
-
 /**
  * @brief Write all TObjects from a given TCollection into a certain directory structure in the file
  *
@@ -81,19 +83,14 @@ void JPetWriter::writeHeader(TObject* header)
  * If the optional subdirectory name is specified (subdirname parameter, defaults to empty string) then the
  * contents of the collection will be written to "dirname/subdirname". If the "subdirname" directory does not
  * exist inside the "dirname" directory, it will be created.
- *
  */
 void JPetWriter::writeCollection(const TCollection* col, const char* dirname, const char* subdirname)
 {
-
   TDirectory* current =  fFile->GetDirectory(dirname);
-
   if (!current) {
     current = fFile->mkdir(dirname);
   }
-
   assert(current);
-
   // use a subdirectory if requested by user
   if (!std::string(subdirname).empty()) {
 
@@ -103,17 +100,12 @@ void JPetWriter::writeCollection(const TCollection* col, const char* dirname, co
       current = current->mkdir(subdirname);
     }
   }
-
   assert(current);
-
   current->cd();
-
   TIterator* it = col->MakeIterator();
-
   TObject* obj;
   while ((obj = it->Next())) {
     obj->Write();
   }
-
   fFile->cd();
 }

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,20 +13,23 @@
  *  @file JPetUserTask.cpp
  */
 
-#include "./JPetUserTask.h"
 #include "./JPetData/JPetData.h"
+#include "./JPetUserTask.h"
 
-JPetUserTask::JPetUserTask(const char* name):
-  JPetTask(name)
-{
-}
+JPetUserTask::JPetUserTask(const char* name): JPetTask(name) {}
 
+/**
+ * Virtual function must be defined in the descendent class
+ */
 bool JPetUserTask::init(const JPetParamsInterface& inOptions)
 {
   fParams = dynamic_cast<const JPetParams&>(inOptions);
-  return init(); /// virtual function must be defined in the descendent class
+  return init();
 }
 
+/**
+ * Virtual function must be defined in the descendent class
+ */
 bool JPetUserTask::run(const JPetDataInterface& inData)
 {
   auto event = dynamic_cast<const JPetData&>(inData);
@@ -34,11 +37,13 @@ bool JPetUserTask::run(const JPetDataInterface& inData)
   return exec();
 }
 
-
+/**
+ * Virtual function must be defined in the descendent class
+ */
 bool JPetUserTask::terminate(JPetParamsInterface& outOptions)
 {
   outOptions = fParams;
-  return terminate(); /// virtual function must be defined in the descendent class
+  return terminate();
 }
 
 const JPetParamBank& JPetUserTask::getParamBank()
