@@ -45,9 +45,7 @@ function(generate_root_dictionaries OUT_VAR)
       set(dictionary
         ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/${name}Dictionary)
       set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${ARG_INCLUDE_DIRS};/")
-      string(REGEX REPLACE ^/ "" header "${header}")
       if(EXISTS ${linkdef})
-        string(REGEX REPLACE ^/ "" linkdef "${linkdef}")
         root_generate_dictionary(${dictionary} ${header}
           LINKDEF ${linkdef}
           OPTIONS -p
