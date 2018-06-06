@@ -1,5 +1,6 @@
 #include <JPetGeantParser/JPetGeantParserTools.h>
 #include<TRandom3.h>
+#include<TMath.h>
 
 JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank  )
 {
@@ -28,8 +29,6 @@ JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit,const JPetParamBan
     hit.setEnergy( addEnergySmearing(mcHit.getEnergy()) );
     // adjust to time window and smear
     hit.setTime( addTimeSmearing( -(mcHit.getTime()-timeShift)  ,mcHit.getEnergy()) );
-
-
 
     auto radius = paramBank.getScintillator(mcHit.getScintillator().getID()).getBarrelSlot().getLayer().getRadius();
     auto theta = TMath::DegToRad() * paramBank.getScintillator(mcHit.getScintillator().getID()).getBarrelSlot().getTheta();

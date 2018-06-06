@@ -53,7 +53,7 @@ protected :
   JPetGeomMapping* fDetectorMap; 
 
   // variables to modify by user
-  bool fMakeEffiHisto = true;
+  bool fMakeEffiHisto = false;
   bool fMakeHisto = true;
   double fMaxTime = 0.;
   double fMinTime = -50.e6; // electronic time window 50 micro seconds - true for run 3 
