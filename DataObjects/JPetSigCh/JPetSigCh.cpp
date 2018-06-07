@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -11,12 +11,11 @@
  *  limitations under the License.
  *
  *  @file JPetSigCh.cpp
- *  @brief description
  */
 
 #include "JPetSigCh.h"
-#include <limits>
 #include <cstring>
+#include <limits>
 
 ClassImp(JPetSigCh);
 
@@ -28,7 +27,6 @@ void JPetSigCh::init() {
   fThreshold = kUnset;
   fThresholdNumber = 0;
   fDAQch = -1;
-
   fPM = NULL;
   fFEB = NULL;
   fTRB = NULL;
@@ -39,28 +37,29 @@ JPetSigCh::JPetSigCh(EdgeType Edge, float EdgeTime) {
   init();
   /// @todo: perform some sanity checks of the given values
   assert(EdgeTime > 0.);
-
   fType = Edge;
   fValue = EdgeTime;
-
 }
 
-bool JPetSigCh::compareByThresholdValue(const JPetSigCh& A,
-                                        const JPetSigCh& B) {
+bool JPetSigCh::compareByThresholdValue(
+  const JPetSigCh& A, const JPetSigCh& B)
+{
   if (A.getThreshold() < B.getThreshold()) {
     return true;
   }
   return false;
 }
 
-bool JPetSigCh::compareByThresholdNumber(const JPetSigCh& A,
-                                         const JPetSigCh& B) {
+bool JPetSigCh::compareByThresholdNumber(
+  const JPetSigCh& A, const JPetSigCh& B)
+{
   if (A.getThresholdNumber() < B.getThresholdNumber()) {
     return true;
   }
   return false;
 }
 
-void JPetSigCh::Clear(Option_t *){
+void JPetSigCh::Clear(Option_t *)
+{
   init();
 }

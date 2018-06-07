@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -20,80 +20,96 @@
 #include "./JPetRecoSignal/JPetRecoSignal.h"
 
 /**
- * @brief Data class representing a physical, reconstructed signal from a single photomultiplier
+ * @brief Data class representing a physical signal reconstructed
+ * in a single photomultiplier.
  *
- * This class contains the reconstructed physical quantities which characterize the signal
- * and which are needed for further reconstruction of hits.
- *
- * One JPetPhysRignal object should be created based on the information from one JPetRecoSignal object.
+ * This class contains the reconstructed physical quantities that characterize
+ * the signal and are needed for further reconstruction of hits. One JPetPhysRignal
+ * object should be created based on the information from one JPetRecoSignal object.
+ * User can set reconstructed values and qualities of signal time and number of
+ * photoelectrons.
  */
 class JPetPhysSignal: public JPetBaseSignal
 {
 public:
-
   JPetPhysSignal();
   virtual ~JPetPhysSignal();
   bool isNullObject() const;
   explicit JPetPhysSignal(bool isNull);
+
   /**
-   * @brief Returns the time reconstructed for this signal using its leading-edge and trailing-edge points.
-   *
-   * The time is in picoseconds and is the time w.r.t. beginning of a time slot.
+   * Returns the reconstructed time of this signal in [ps].
    */
   inline float getTime() const {
     return fTime;
   }
 
   /**
-   * @brief Sets the reconstructed time of this signal [ps].
-   *
-   * Intended to be used after a procedure which reconstructs the time using leading and trailing edge points of the signal. The time should be in picoseconds.
+   * Get the value, that describes the quality of reconstructed signal time
+   */
+  inline float getQualityOfTime() const {
+    return fQualityOfTime;
+  }
+
+  /**
+   * Sets the reconstructed time of this signal in [ps].
    */
   inline void setTime(float time) {
     fTime = time;
   }
 
+  /**
+   * Set the value, that describes the quality of reconstructed signal time
+   */
   inline void setQualityOfTime(float qualityOfTime){
     fQualityOfTime = qualityOfTime;
   }
 
-  /// Returns a quantitative measure of the time reconstruction quality (scale is yet to be decided)
-  inline float getQualityOfTime() const {
-    return fQualityOfTime;
-  }
-
+  /**
+   * Get the number of photoelectrons
+   */
   double getPhe() const {
     return fPhe;
   }
 
+  /**
+   * Set the number of photoelectrons
+   */
   void setPhe(double phe) {
     fPhe = phe;
   }
 
-  /// Returns a quantitative measure of the Number of photoelectrons reconstruction quality (scale is yet to be decided)
+  /**
+   * Get the value, that describes the quality of reconstruction of number of photoelectrons
+   */
   double getQualityOfPhe() const {
     return fQualityOfPhe;
   }
 
+  /**
+   * Set the value, that describes the quality of reconstruction of number of photoelectrons
+   */
   void setQualityOfPhe(double qualityOfPhe) {
     fQualityOfPhe = qualityOfPhe;
   }
 
+  /**
+   * Get the Reconstructed Signal object, that this Physical Signal is based on
+   */
   const JPetRecoSignal& getRecoSignal() const {
     return fRecoSignal;
   }
 
   void setRecoSignal(const JPetRecoSignal& recoSignal);
-
   void Clear(Option_t * opt = "");
-  
-private:
-  double fTime; ///< one time reconstructed for the whole signal [ps]
-  double fQualityOfTime; ///< quantitative measure of the time reconstruction quality (scale is yet to be decided)
-  double fPhe; ///< Number of Photoelectrons corresponding to the whole signal []
-  double fQualityOfPhe; ///< quantitative measure of the Phe reconstruction quality (scale is yet to be decided)
 
+private:
+  double fTime;
+  double fQualityOfTime;
+  double fPhe;
+  double fQualityOfPhe;
   JPetRecoSignal fRecoSignal;
+
 protected:
   #ifndef __CINT__
   bool fIsNullObject = false;
@@ -101,6 +117,7 @@ protected:
   bool fIsNullObject;
   #endif
 
-ClassDef(JPetPhysSignal, 2);
+  ClassDef(JPetPhysSignal, 2);
+
 };
-#endif /*  !JPETPHYSSIGNAL_H */
+#endif /* !JPETPHYSSIGNAL_H */
