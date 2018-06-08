@@ -41,7 +41,7 @@ bool JPetGeantParser::init()
     // create detector map
     std::unique_ptr<JPetGeomMapping> fDetectorMap(new JPetGeomMapping(getParamBank()));
 
-    fOutputEvents = new JPetTimeWindow("JPetHit","JPetMCHit","JPetMCDecayTree");
+    fOutputEvents = new JPetTimeWindowMC("JPetHit","JPetMCHit","JPetMCDecayTree");
     auto opts = getOptions();
 
     if (isOptionSet(fParams.getOptions(), kMaxTimeWindowParamKey)) { 
@@ -259,7 +259,7 @@ void JPetGeantParser::saveHits()
     }
 
     for (const auto& mcHit : fStoredMCHits) {
-        fOutputEvents->addMCHit<JPetMCHit>(mcHit);
+        dynamic_cast<JPetTimeWindowMC*>(fOutputEvents)->addMCHit<JPetMCHit>(mcHit);
     }
 
     if(fMakeHisto) getStatistics().getHisto1D("hits_per_time_window")->Fill(fStoredHits.size());

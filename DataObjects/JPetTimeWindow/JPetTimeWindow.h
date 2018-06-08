@@ -31,43 +31,21 @@ class JPetTimeWindow: public TObject
 {
 public:
 
-  JPetTimeWindow() : fEvents(), fMCHits(), fDecayTrees()
+  JPetTimeWindow() : fEvents()
   {}
   
-  JPetTimeWindow(const char * event_type) : fEvents(event_type, 2000), fMCHits("TObject",1), fDecayTrees("TObject",1)
+  JPetTimeWindow(const char * event_type) : fEvents(event_type, 2000)
   {}
   
-  JPetTimeWindow(const char * event_type, const char * mcHit_type, const char * decayTree_type) : fEvents(event_type, 2000), fMCHits(mcHit_type,2000), fDecayTrees(decayTree_type,2000)
-  {}
-
   template<typename T>
   void add(const T & evt){
     dynamic_cast<T&>(*(fEvents.ConstructedAt(fEventCount++))) = evt;
   }
   
-  template<typename T>
-  void addMCHit(const T & evt){
-    dynamic_cast<T&>(*(fMCHits.ConstructedAt(fMCHitsCount++))) = evt;
-  }
- 
-  template<typename T>
-  void addDecayTree(const T & evt){
-    dynamic_cast<T&>(*(fDecayTrees.ConstructedAt(fDecayTreesCount++))) = evt;
-  }
- 
 
   inline size_t getNumberOfEvents() const {
     return fEventCount;
   }
-
-  inline size_t getNumberOfMCHits() const {
-    return fMCHitsCount;
-  }
-
-  inline size_t getNumberOfDecayTrees() const {
-    return fDecayTreesCount;
-  }
-
 
 
   inline const TObject & operator[](int i) const {
@@ -79,44 +57,21 @@ public:
     return *(dynamic_cast<T*>(fEvents[i]));
   }
 
-  template<typename T>
-  inline const T& getMCHit(int i) const {
-    return *(dynamic_cast<T*>(fMCHits[i]));
-  }
-
-  template<typename T>
-  inline const T& getDecayTrees(int i) const {
-    return *(dynamic_cast<T*>(fDecayTrees[i]));
-  }
-
-
   virtual ~JPetTimeWindow() {
     fEvents.Clear("C");
-    fMCHits.Clear("C");
-    fDecayTrees.Clear("C");
     fEventCount = 0;
-    fMCHitsCount = 0;
-    fDecayTreesCount = 0;
   }
 
   virtual void Clear() {
     fEvents.Clear("C");
-    fMCHits.Clear("C");
-    fDecayTrees.Clear("C");
     fEventCount = 0;
-    fMCHitsCount = 0;
-    fDecayTreesCount = 0;
   }
   
-  ClassDef(JPetTimeWindow, 5);
+  ClassDef(JPetTimeWindow, 4);
 
 private:
   TClonesArray fEvents;
-  TClonesArray fMCHits;
-  TClonesArray fDecayTrees;
   unsigned int fEventCount = 0;
-  unsigned int fMCHitsCount = 0;
-  unsigned int fDecayTreesCount = 0;
 };
 
 #endif
