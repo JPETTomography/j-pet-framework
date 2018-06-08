@@ -88,7 +88,7 @@ class FileTypeChecker
 {
 public:
   enum FileType {
-    kNoType, kRoot, kScope, kHld, kHldRoot, kZip, kUndefinedFileType
+    kNoType, kRoot, kScope, kHld, kHldRoot, kZip, kMCGeant, kUndefinedFileType
   };
   static FileType getInputFileType(const OptsStrAny& opts);
   static FileType getOutputFileType(const OptsStrAny& opts);

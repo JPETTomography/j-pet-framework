@@ -30,6 +30,7 @@ namespace jpet_options_tools
 std::map<std::string, FileTypeChecker::FileType> FileTypeChecker::fStringToFileType = {
   {"", kNoType},
   {"root", kRoot},
+  {"mcGeant", kMCGeant},
   {"scope", kScope},
   {"hld", kHld},
   {"hldRoot", kHldRoot},

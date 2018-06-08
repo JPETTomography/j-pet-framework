@@ -21,6 +21,7 @@
 #include "JPetStatistics/JPetStatistics.h"
 #include "JPetParamBank/JPetParamBank.h"
 #include "JPetTimeWindow/JPetTimeWindow.h"
+#include "JPetTimeWindowMC/JPetTimeWindowMC.h"
 
 /**
  * @brief abstract class that should be used as a main parent class for user tasks
