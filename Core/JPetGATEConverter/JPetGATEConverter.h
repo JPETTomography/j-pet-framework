@@ -5,14 +5,20 @@
 #include "TVector3.h"
 #include "./JPetMCHit/JPetMCHit.h" 
 #include "./JPetScin/JPetScin.h"
+#include "./JPetParamManager/JPetParamManager.h"    
+#include "./JPetParamGetterAscii/JPetParamGetterAscii.h" 
+#include "./JPetParamBank/JPetParamBank.h" 
+#include <vector> 
+
+using namespace std;
 
 class JPetGATEConverter 
 {
   
 public:
   
- JPetGATEConverter();
- JPetGATEConverter(int numb_strips);  
+ JPetGATEConverter();   
+ JPetGATEConverter(std::string json_file,int run_id);   
  int checkArgument(TString inputFile);
  TString createOutput(TString inputFile);
  void converterTVector3(TString inputFile);
@@ -26,6 +32,8 @@ private:
   
   TString finputFile; 
   int fnumb_strips;  
-  std::vector<JPetScin> fscins;   
+  std::vector<JPetScin> fscins;  
+  JPetParamManager fManager; 
+            
 };
 #endif /*  !JPETGATECONVERTER_H */      

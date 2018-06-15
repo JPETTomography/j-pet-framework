@@ -24,13 +24,16 @@ BOOST_AUTO_TEST_CASE(set_get_scalars_test){
   JPetMCHit MChit;
   
   Float_t time = 0.1;
-  Float_t scin = 0.5;
+  //Float_t scin = 0.5;  //usunac 8.01
+   //Int_t MCDecayTreeIndex = 1;  //added 8.01?
   
   MChit.setTime(time);
-  MChit.setScinPos(scin);
-  
+  //MChit.setScinPos(scin); //usunac 8.01
+ // MChit.setMCDecayTreeIndex(dti); //added 8.01?
+
   BOOST_REQUIRE_EQUAL(MChit.getTime(), time);
-  BOOST_REQUIRE_EQUAL(MChit.getScinPos(), scin);
+  //BOOST_REQUIRE_EQUAL(MChit.getScinPos(), scin);//usunac 8.01
+   //BOOST_REQUIRE_EQUAL(MChit.getMCDecayTreeIndex(),MCDecayTreeIndex); //added 8.01?
   
 }
 

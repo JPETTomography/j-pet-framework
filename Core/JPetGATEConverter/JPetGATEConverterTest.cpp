@@ -11,10 +11,10 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE( default_constructor )
 {
   std::cout << "Converter test" << std::endl;
-  TString we = "unitTestData/JPetGATEConverterTest/test_384strips.root";       
+  TString root_file = "unitTestData/JPetGATEConverterTest/test_384strips.root";       
   int dd;
   JPetGATEConverter conv; 
- // dd = conv.converterJPetHit(we);     
+ // dd = conv.converterJPetHit(root_file);     
     dd =1;                              
   BOOST_REQUIRE(dd==1);  
 }
@@ -22,12 +22,42 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 BOOST_AUTO_TEST_CASE( default_c )            
 {
   std::cout << "ConverterMC test" << std::endl;
-  TString we = "unitTestData/JPetGATEConverterTest/test_384strips.root";       
-  int dd = 1;
-  int numb_strips = 384; 
-  JPetGATEConverter conv(numb_strips);                                  
-  dd = conv.converterJPetMCHit(we);
-                            
-BOOST_REQUIRE(dd==1);  
+  TString root_file = "unitTestData/JPetGATEConverterTest/output_192str_3lay_L050.root"; 
+  int dd = 1; 
+  std::string json_file = "unitTestData/JPetGATEConverterTest/detectorSetupRun2345.json"; 
+  int run_id = 2; 
+  JPetGATEConverter conv(json_file,run_id);                    
+  dd = conv.converterJPetMCHit(root_file);
+				
+  BOOST_REQUIRE(dd==1);  
 }
+
+BOOST_AUTO_TEST_CASE( read_param_bank )            
+{
+
+  JPetMCHit* MChit = NULL;
+  int idStripTab[10];
+  int id_strip;     
+  TFile file1("unitTestData/JPetGATEConverterTest/output_192str_3lay_L050.root","READ");   
+  TTree *tree1 = (TTree*)file1.Get("Hits");   
+  tree1->SetBranchAddress("volumeID",&idStripTab);   
+
+  TFile file2("unitTestData/JPetGATEConverterTest/output_192str_3lay_L050.gate.root", "READ");   
+  TTree* tree2 = (TTree*)file2.Get("treemc"); 
+  tree2->SetBranchAddress("JPetMCHit",&MChit); 
+
+  Long64_t numbentries1 = tree1->GetEntries(); 
+  Long64_t numbentries2 = tree2->GetEntries();
+
+  BOOST_REQUIRE_EQUAL(numbentries1,numbentries2);
+  
+  for (Long64_t i=0; i < numbentries1; i=i+1)   
+    {
+       tree1->GetEntry(i); 
+       id_strip = idStripTab[1]+ 1; 
+       tree2 ->GetEntry(i);
+       BOOST_REQUIRE_EQUAL(id_strip, MChit->getScintillator().getID());
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()

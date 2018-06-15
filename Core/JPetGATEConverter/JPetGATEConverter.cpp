@@ -10,19 +10,15 @@
 
 using namespace std;
 
-JPetGATEConverter::JPetGATEConverter()   
+JPetGATEConverter::JPetGATEConverter() 
 {    
 }
 
-JPetGATEConverter::JPetGATEConverter(int numb_strips)      
-{
- fnumb_strips = numb_strips;    
- for( int i = 0; i < numb_strips; i = i + 1)
-   { 
-     JPetScin objectscin(i);  
-     fscins.push_back(objectscin);  
-   } 
+JPetGATEConverter::JPetGATEConverter(string json_file,int run_id): fManager(new JPetParamGetterAscii(json_file))  
+{  
+  fManager.fillParameterBank(run_id);      
 }
+
 
 int JPetGATEConverter::checkArgument(TString inputFile)                   
 {
@@ -55,7 +51,7 @@ void JPetGATEConverter::converterTVector3(TString inputFile)
   st=checkArgument(inputFile); 
   if(st==-1)               
   {
-    cout<<" argument is not good"<<endl;
+    cout<<" argument is incorrect"<<endl;
     return;                             
   }
   TFile *f = new TFile(inputFile);
@@ -63,7 +59,7 @@ void JPetGATEConverter::converterTVector3(TString inputFile)
   TString b;
   b = createOutput(inputFile);              
   TFile *nf = new TFile(b,"recreate");              
-    cout<< b << endl;                                                                                                                                                              
+  cout<< b << endl;                                                                                                                                                              
   TTree *tree = new TTree("tree","description");   
   g->SetBranchAddress("posX",&m);   
   g->SetBranchAddress("posY",&n);
@@ -71,8 +67,8 @@ void JPetGATEConverter::converterTVector3(TString inputFile)
        
   tree->Branch("TVector3","TVector3", &zmienne, 16000,0);    
   
-  Long64_t nentries = g->GetEntries();
-						      
+  Long64_t nentries = g->GetEntries();					
+  
   for (Long64_t i=0; i < nentries; i=i+1)
   {
      g->GetEntry(i);                            
@@ -98,7 +94,7 @@ int JPetGATEConverter::converterJPetHit(TString inputFile)
   
    if(st==-1)                 
    {
-     cout<<" argument is not good"<<endl;    
+     cout<<" argument is incorrect"<<endl;    
      return -1;                                 
   }
   finputFile = inputFile;   
@@ -115,7 +111,7 @@ int JPetGATEConverter::converterJPetHit(TString inputFile)
   g->SetBranchAddress("posZ",&o); 
   g->SetBranchAddress("time",&p);  	
   g->SetBranchAddress("edep",&r);   
-  g->SetBranchAddress("axialPos",&s); 	//float axialPos w pliku Hits  (= PosAlongStrip w JPetHit)
+  g->SetBranchAddress("axialPos",&s); 	//float axialPos in file Hits  (= PosAlongStrip in object JPetHit)
   tree->Branch("JPetHit","JPetHit", &hit, 16000,0);      
   
   Long64_t nentries = g->GetEntries();
@@ -146,90 +142,70 @@ int JPetGATEConverter::converterJPetHit(TString inputFile)
 
 int JPetGATEConverter::converterJPetMCHit(TString inputFile) 
 {  
-  Int_t pda,tr,pa,ncc,eID;
-  Float_t lx,ly,lz,en,ti,m,n,o; 
+  Int_t dti = -1;  	//MCDecayTreeIndex
+  Int_t vi  = -1;   	//MCVtxIndex
+  Float_t en,ti,m,n,o; 
   Double_t tim; 
-  Char_t prn; 
-  int che;
-  int id_strip; 
-  //Int_t la,nc,npr,ncr,sID,rID;     
- // Float_t sx,sy,sz;
-  
-  che=checkArgument(inputFile); 
+  int ch;
+  int id_strip;
+  int idStripTab[10]; 
+                     
+  const JPetParamBank& bank = fManager.getParamBank();  
+
+  ch=checkArgument(inputFile); 
   
   JPetMCHit MChit;                                           
 
-   if(che==-1)                 
+  if(ch==-1)                 
    {
-     cout<<" argument is not good"<<endl;    
+     cout<<" argument is incorrect"<<endl;    
      return -1;                                 
    }
-  finputFile = inputFile;                     
-  TFile *fm = new TFile(inputFile);
-  TTree *gm = (TTree*)fm->Get("Hits"); 
+  finputFile = inputFile;                     				
+  TFile *fm = new TFile(inputFile);						
+  TTree *gm = (TTree*)fm->Get("Hits"); 					
   TString bmc;
   bmc = createOutput(inputFile);             
   TFile *nfm = new TFile(bmc,"recreate");                 
-  TTree *treemc = new TTree("treemc","description");  
-  char pd=0; 
-  gm->SetBranchAddress("PDGEncoding",&pd); 
-  gm->SetBranchAddress("trackID",&tr);     
-  gm->SetBranchAddress("parentID",&pa);
-  gm->SetBranchAddress("localPosX",&lx);
-  gm->SetBranchAddress("localPosY",&ly);
-  gm->SetBranchAddress("localPosZ",&lz);
-  gm->SetBranchAddress("nCrystalCompton",&ncc);
-  gm->SetBranchAddress("eventID",&eID);
-  gm->SetBranchAddress("edep",&en);         
-  gm->SetBranchAddress("time",&tim);
-  gm->SetBranchAddress("processName",&prn);
+  TTree *treemc = new TTree("treemc","description"); 
+  
+  gm->SetBranchAddress("edep",&en);         	
+  gm->SetBranchAddress("time",&tim);		
   gm->SetBranchAddress("posX",&m);
   gm->SetBranchAddress("posY",&n);
   gm->SetBranchAddress("posZ",&o);
-  //gm->SetBranchAddress("layerID",&la);         //Mean=0 i RMS =0 w pliku Hits w histogramie, wiec odtad zakomentowalam
-  //gm->SetBranchAddress("nPhantomCompton",&nc);
-  //gm->SetBranchAddress("nPhantomRayleigh",&npr);
- // gm->SetBranchAddress("nCrystalRayleigh",&ncr);
- // gm->SetBranchAddress("sourcePosX",&sx);
- // gm->SetBranchAddress("sourcePosY",&sy);
- // gm->SetBranchAddress("sourcePosZ",&sz);
- // gm->SetBranchAddress("sourceID",&sID);
-  //gm->SetBranchAddress("runID",&rID);
-      
+  gm->SetBranchAddress("volumeID",&idStripTab); 
   treemc->Branch("JPetMCHit","JPetMCHit", &MChit, 16000,0);    
   Long64_t numbentries = gm->GetEntries();
       
   for (Long64_t i=0; i < numbentries; i=i+1)   
   {
     gm->GetEntry(i);    
-    
+
     ti= (Float_t)(tim); 
- 
-    MChit.setPDGEncoding(pd); 
-    MChit.setTrackID(tr);           
-    MChit.setParentID(pa);
-    MChit.setEventID(eID);
-    MChit.setNumCrystalCompton(ncc);
-    MChit.setProcessName(prn);  
+    MChit.setMCDecayTreeIndex(dti);           
+    MChit.setMCVtxIndex(vi);       
     MChit.setEnergy(en);  
     MChit.setTime(ti);  
-    MChit.setLocalPosX(lx);
-    MChit.setLocalPosY(ly);
-    MChit.setLocalPosZ(lz);
     MChit.setPos(m,n,o);
-      
-    id_strip = calculate_strip_ID(m,n);  
+
+  //a) volumeID variable is a 10 elements int table. For our purpose, to get index of the strip, we use only second element of the table[1] 
+  //b) the number of strip ID in framework is given as the strip Id defined in gate + 1
+    id_strip = idStripTab[1]+ 1;  
+
+    JPetScin& sc = bank.getScintillator(id_strip);
     
-    JPetScin sc;
-    sc = fscins[id_strip];
     MChit.setScintillator(sc);  
 
-   treemc->Fill();      
+    treemc->Fill();      
+     
   }
-       
-  treemc->Write();   
-  treemc->Print();  
   
+  nfm->WriteObject(&bank, "ParamBank"); 
+  
+  treemc->Write();   
+  treemc->Print(); 
+
   delete fm;
   delete nfm; 
    
@@ -260,7 +236,6 @@ int JPetGATEConverter::calculate_strip_ID(Float_t x,Float_t y)
   
 void JPetGATEConverter::converter(){                                               
   JPetHit hit;
-  TString input = "test_384strips.root";          
+   TString input = "output_192str_3lay_L050.root";        
   TString output = "test_selected.root";                    
-  //Long64_t d = checkArgument(input); 
 }
