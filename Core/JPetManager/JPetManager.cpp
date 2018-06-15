@@ -21,7 +21,6 @@
 
 #include "./JPetLoggerInclude.h"
 #include "./JPetCommonTools/JPetCommonTools.h"
-#include "./DBHandler/HeaderFiles/DBHandler.h"
 #include "./JPetCmdParser/JPetCmdParser.h"
 #include "./JPetScopeLoader/JPetScopeLoader.h"
 #include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
@@ -109,15 +108,15 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
       };
       fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task2);
     }
+    auto paramBankHandlerTask = []() {
+      return new JPetParamBankHandlerTask("ParamBank Filling");
+    };
+    fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), paramBankHandlerTask);
     /// add task to unzip or unpack if needed
     auto task = []() {
       return new JPetUnzipAndUnpackTask("UnpackerAndUnzipper");
     };
     fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task);
-    auto paramBankHandlerTask = []() {
-      return new JPetParamBankHandlerTask("ParamBank Filling");
-    };
-    fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), paramBankHandlerTask);
   };
 
   try {
@@ -141,25 +140,21 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
 }
 
 //
-JPetManager::~JPetManager()
+JPetManager::~JPetManager(){}
+
+
+void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
 {
-  /// delete shared caches for paramBanks
-  /// @todo I think that should be changed
-  JPetDBParamGetter::clearParamCache();
-}
-
-
-void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType){
   assert(fTaskGeneratorChain);
-  if( fTasksDictionary.count(name) > 0 ){
+  if ( fTasksDictionary.count(name) > 0 ) {
     TaskGenerator userTaskGen = fTasksDictionary.at(name);
     // wrap the JPetUserTask-based task in a JPetTaskIO
     fTaskGeneratorChain->push_back( [name, inputFileType, outputFileType, userTaskGen]() {
-	JPetTaskIO * task = new JPetTaskIO(name, inputFileType, outputFileType);
-	task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-	return task;
-      });
-  }else{
+      JPetTaskIO* task = new JPetTaskIO(name, inputFileType, outputFileType);
+      task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
+      return task;
+    });
+  } else {
     ERROR(Form("The requested task %s is unknown", name));
     exit(1);
   }
@@ -170,34 +165,8 @@ JPetManager::Options JPetManager::getOptions() const
   return fOptions;
 }
 
-/**
- * @brief Initialize connection to database if such connection is necessary
- *
- * @param configFilePath path to the config file with database connection details
- *
- * @return true if database connection was required and initialization was called,
- * false if database connection was not required and its initialization was skipped
- *
- * Database connection is only initialized if the user provided the run number
- * ("-i" option) and did not provide local database ("-l") at the same time.
- */
-bool JPetManager::initDBConnection(const char* configFilePath)
+void JPetManager::clearRegisteredTasks()
 {
-  bool isDBrequired = false;
-
-  if (fOptions.size() > 0) { // If at least one input file to process.
-    auto opts = fOptions.begin()->second;
-    if (getRunNumber(opts) >= 0) { // if run number is not default -1
-      if (!isLocalDB(opts)) { // unless local DB file was provided
-	isDBrequired = true;
-      }
-    }
-  }
-  if (isDBrequired) {
-    INFO("Attempting to set up connection to the database.");
-    DB::SERVICES::DBHandler::createDBConnection(configFilePath);
-  } else {
-    INFO("Setting connection to database skipped.");
-  }
-  return isDBrequired;
+  delete fTaskGeneratorChain;
+  fTaskGeneratorChain = new TaskGeneratorChain;
 }

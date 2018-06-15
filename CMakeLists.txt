@@ -3,7 +3,7 @@
 # Author: Adam Strzelecki <adam.strzelecki@uj.edu.pl>
 #
 # Description:
-#   Builds all J-PET framework modules using CMake build generator.
+# Builds all J-PET framework modules using CMake build generator.
 
 cmake_minimum_required(VERSION 2.6)
 
@@ -11,49 +11,67 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(JPetFramework-Utilities) # for generate_root_dictionaries
 
 project(JPetFramework CXX C) # using only C++
+
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
+
 # enable C++11 and warnings
 if(NOT MSVC)
   add_definitions(-std=c++11 -Wall -Wunused-parameter)
 endif()
 
-foreach(mode QUIET REQUIRED)
-  find_package(ROOT 5 ${mode} COMPONENTS
-    Hist
-    Physics
-    RIO
-    Thread
-    Tree
-    )
-  if(ROOT_USE_FILE)
-    include(${ROOT_USE_FILE})
-  endif()
-  if(ROOT_FOUND)
-    break()
-  endif()
+################################################################################
+# Handling of ROOT 
+################################################################################
+
+# first, try the old-school ROOTSYS variable
+set(root_prefix $ENV{ROOTSYS})
+if(root_prefix)
+  list(APPEND CMAKE_MODULE_PATH ${root_prefix}/etc/cmake/)  
+endif()
+
+# try also a search based on root-config
+execute_process(COMMAND root-config --etcdir OUTPUT_VARIABLE ROOT_ETCDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+list(APPEND CMAKE_MODULE_PATH ${ROOT_ETCDIR}/cmake)
+
+find_package(ROOT QUIET)
+
+if(ROOT_FOUND)
+  message(STATUS "Found ROOT version: ${ROOT_VERSION} (${ROOT_CONFIG_EXECUTABLE})")
+else()
   # if we failed with CMake based find_package, use fallback
   # root-config version from cmake/fallback/
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/fallback)
-endforeach()
-
-message(STATUS "ROOT version: ${ROOT_VERSION}")
-
-if(ROOT_FOUND AND NOT ROOT_VERSION VERSION_LESS "6.0")
-  message(FATAL_ERROR "ROOT 6.0 is not compatible")
+  message(WARNING "No CMake modules from a ROOT installation found. Trying fallback mode.")
+  find_package(ROOT 5 REQUIRED)
 endif()
 
-find_package(PQXX REQUIRED)
+if(ROOT_USE_FILE)
+  include(${ROOT_USE_FILE})
+endif()
 
+message(STATUS "ROOT version: ")
+
+set(BOOST_LOG_DYN_LINK -DBOOST_LOG_DYN_LINK)
+add_definitions(${BOOST_LOG_DYN_LINK})
 find_package(Boost 1.50.0 REQUIRED COMPONENTS
   filesystem
   program_options
   regex
   system
   unit_test_framework
+  log_setup
+  log
+  date_time
+  thread
+  chrono
   )
+
+message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
+message(STATUS "Boost_LIBRARIES: ${Boost_LIBRARIES}")
+message(STATUS "Boost_VERSION: ${Boost_VERSION}")
 
 add_definitions(${ROOT_DEFINITIONS})
 add_definitions(${Boost_DEFINITIONS})
-add_definitions(${PQXX_DEFINITIONS})
 
 # enable rpath on OS X and point it to ROOT
 if(APPLE)
@@ -79,6 +97,7 @@ set(FOLDERS_WITH_SOURCE
   Tasks
   Core
   ParametersTools
+  MC
   )
 
 foreach(dir ${FOLDERS_WITH_SOURCE})
@@ -95,6 +114,7 @@ foreach(dir ${FOLDERS_WITH_SOURCE})
 endforeach()
 
 list(APPEND FOLDERS ${CMAKE_CURRENT_SOURCE_DIR}) # for include to dictionaries for unpacker2
+list(APPEND FOLDERS ${Boost_INCLUDE_DIRS}) # add boost includes to dictionaries
 
 ##download test files
 # the script shouldn't do anything if the data is present and correct
@@ -178,30 +198,29 @@ add_custom_command(OUTPUT ${TESTS_DIR}/unitTestData
   COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/unitTestData ${TESTS_DIR}/unitTestData
   )
 
-# - DBHandler
-file(GLOB DBHANDLER_HEADERS DBHandler/HeaderFiles/*.h)
-file(GLOB DBHANDLER_SOURCES DBHandler/SourceFiles/*.cpp)
-add_library(dbhandler SHARED ${DBHANDLER_HEADERS} ${DBHANDLER_SOURCES})
-
-target_include_directories(dbhandler SYSTEM PUBLIC
-    $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}>
-)
-
-target_include_directories(dbhandler SYSTEM PUBLIC
-    $<BUILD_INTERFACE:${PQXX_INCLUDE_DIRS}>
-)
-
-target_link_libraries(dbhandler
-  ${PQXX_LIBRARIES}
-)
-
 # add dependencies
 target_link_libraries(JPetFramework
   Unpacker2
-  dbhandler
   ${ROOT_LIBRARIES}
   ${Boost_LIBRARIES}
   )
+
+# handle the ROOT's *.pcm files in case they were generated not in the buld dir
+find_program(SHELL bash)
+
+if(SHELL)
+  set(pcm_script ${CMAKE_CURRENT_BINARY_DIR}/move_pcm.sh)
+  
+  FILE(WRITE ${pcm_script}  "#!${SHELL}\n")
+  FILE(APPEND ${pcm_script} "for f in ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm; do\n")
+  FILE(APPEND ${pcm_script} "[ -e \$f ] && mv \$f ${CMAKE_CURRENT_BINARY_DIR}\n")
+  FILE(APPEND ${pcm_script} "done\n")
+  FILE(APPEND ${pcm_script} "exit 0\n")
+
+  add_custom_command(TARGET JPetFramework POST_BUILD
+    COMMAND ${SHELL}  ${pcm_script}
+    )
+endif(SHELL)
 
 # read the version from git tag and git revision
 exec_program(
@@ -255,28 +274,18 @@ endif(DOXYGEN_FOUND)
 
 
 get_target_property(framework_include JPetFramework INCLUDE_DIRECTORIES)
-get_target_property(dbhandler_include dbhandler INCLUDE_DIRECTORIES)
-list(REMOVE_ITEM framework_include ${dbhandler_include})
-list(APPEND framework_include ${dbhandler_include})
-
 get_directory_property(has_parent PARENT_DIRECTORY)
 if(has_parent)
-  # export ROOT, Boost and pqxx includes to depending projects
+  # export ROOT, Boost includes to depending projects
   set(Framework_INCLUDE_DIRS
     ${framework_include}
     PARENT_SCOPE
     )
-  set(Framework_DEFINITIONS
-    ${ROOT_DEFINITIONS}
-    ${Boost_DEFINITIONS}
-    ${PQXX_DEFINITIONS}
-    PARENT_SCOPE
-    )
+  list(APPEND Framework_DEFINITIONS "${BOOST_LOG_DYN_LINK} ${ROOT_DEFINITIONS}")
   # ensure that projects use C++11 too
   if(NOT MSVC)
     set(Framework_DEFINITIONS
-      -std=c++11
-      ${Framework_DEFINITIONS}
+      "-std=c++11 ${Framework_DEFINITIONS}"
       PARENT_SCOPE
       )
   endif()
@@ -286,4 +295,8 @@ if(has_parent)
   set(ROOTCINT_EXECUTABLE ${ROOTCINT_EXECUTABLE} PARENT_SCOPE)
   # export ROOT rpath needed for OS X
   set(ROOT_LIBRARY_DIR    ${ROOT_LIBRARY_DIR}    PARENT_SCOPE)
+
+  set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} PARENT_SCOPE)
 endif()
+
+

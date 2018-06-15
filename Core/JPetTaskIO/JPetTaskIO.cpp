@@ -23,7 +23,6 @@
 #include "./JPetCommonTools/JPetCommonTools.h"
 #include "./JPetData/JPetData.h"
 #include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
-
 #include "./JPetLoggerInclude.h"
 #include "./version.h"
 
@@ -248,7 +247,7 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
       fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
 
       // add general info to the Tree header
-      fHeader->setBaseFileName(getInputFile(options));
+      fHeader->setBaseFileName(getInputFile(options).c_str());
 
     } else {
       auto paramManager = fParams.getParamManager();
