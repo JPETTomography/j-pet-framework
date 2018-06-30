@@ -17,9 +17,10 @@
 
 ClassImp (JPetParamBank);
 
-JPetParamBank::JPetParamBank():fDummy(false){}
-JPetParamBank::JPetParamBank(const bool d):fDummy(d){}
-bool JPetParamBank::isDummy()const{return fDummy;}
+JPetParamBank::JPetParamBank(): fDummy(false) {}
+
+JPetParamBank::JPetParamBank(const bool d): fDummy(d) {}
+
 JPetParamBank::JPetParamBank(const JPetParamBank& paramBank):fDummy(false){
   copyMapValues(fScintillators, paramBank.fScintillators);
   copyMapValues(fPMs, paramBank.fPMs);
@@ -31,9 +32,9 @@ JPetParamBank::JPetParamBank(const JPetParamBank& paramBank):fDummy(false){
   copyMapValues(fTOMBChannels, paramBank.fTOMBChannels);
 }
 
-JPetParamBank::~JPetParamBank()
-{
-}
+JPetParamBank::~JPetParamBank() {}
+
+bool JPetParamBank::isDummy() const { return fDummy; }
 
 void JPetParamBank::clear()
 {
@@ -46,7 +47,6 @@ void JPetParamBank::clear()
   fFrames.clear();
   fTOMBChannels.clear();
 }
-
 
 int JPetParamBank::getSize(ParamObjectType type) const
 {
