@@ -28,12 +28,12 @@
  */
 class JPetHitUtils
 {
- public:
+public:
   static double getTimeDiffAtThr(const JPetHit& hit, int threshold);
   static double getTimeAtThr(const JPetHit& hit, int threshold);
   const static double Unset;
 
- private:
+private:
   JPetHitUtils(const JPetHitUtils&){}
   void operator=(const JPetHitUtils&){}
 };
