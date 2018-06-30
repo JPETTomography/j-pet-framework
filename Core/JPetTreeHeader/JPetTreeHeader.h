@@ -38,17 +38,16 @@
  * e.g. a variable named "source position" with a value of "Xcm;Ycm;Zcm"
  * can be added to the dictionary.
  */
-class JPetTreeHeader: public TObject{
- public:
-  struct ProcessingStageInfo
-  {
+class JPetTreeHeader: public TObject
+{
+public:
+  struct ProcessingStageInfo {
     std::string fModuleName;
     std::string fModuleDescription;
     int fModuleVersion;
     std::string fCreationTime;
-   };
+  };
 
- public:
   JPetTreeHeader();
   JPetTreeHeader(int run);
   void Print() const { std::cout << this->stringify(); }
@@ -59,11 +58,11 @@ class JPetTreeHeader: public TObject{
   std::string getVariable(std::string name) const;
   inline int getRunNumber() const { return fRunNo; }
   inline void setRunNumber(int p_run_no) { fRunNo = p_run_no; }
-  inline std::string getFrameworkVersion() const {return fFrameworkVersion;}
-  inline std::string getFrameworkRevision() const {return fFrameworkRevision;}
-  inline void setFrameworkVersion(const char * p_version) {fFrameworkVersion = p_version;}
-  inline void setFrameworkRevision(const char * p_revision) {fFrameworkRevision = p_revision;}
-  inline std::string getBaseFileName() const {return fBaseFilename;}
+  inline std::string getFrameworkVersion() const { return fFrameworkVersion; }
+  inline std::string getFrameworkRevision() const { return fFrameworkRevision; }
+  inline void setFrameworkVersion(const char * p_version) { fFrameworkVersion = p_version; }
+  inline void setFrameworkRevision(const char * p_revision) { fFrameworkRevision = p_revision; }
+  inline std::string getBaseFileName() const { return fBaseFilename; }
   inline void setBaseFileName(const char * p_name){ fBaseFilename = p_name; }
   const ProcessingStageInfo &emptyProcessingStageInfo() const {
     return emptyStage;
@@ -98,4 +97,4 @@ protected:
   ClassDef(JPetTreeHeader, 4);
 };
 
-#endif
+#endif /* !_JPET_TREE_HEADER_H_ */

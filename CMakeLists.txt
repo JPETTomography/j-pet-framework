@@ -20,13 +20,13 @@ if(NOT MSVC)
 endif()
 
 ################################################################################
-# Handling of ROOT 
+# Handling of ROOT
 ################################################################################
 
 # first, try the old-school ROOTSYS variable
 set(root_prefix $ENV{ROOTSYS})
 if(root_prefix)
-  list(APPEND CMAKE_MODULE_PATH ${root_prefix}/etc/cmake/)  
+  list(APPEND CMAKE_MODULE_PATH ${root_prefix}/etc/cmake/)
 endif()
 
 # try also a search based on root-config
@@ -210,7 +210,7 @@ find_program(SHELL bash)
 
 if(SHELL)
   set(pcm_script ${CMAKE_CURRENT_BINARY_DIR}/move_pcm.sh)
-  
+
   FILE(WRITE ${pcm_script}  "#!${SHELL}\n")
   FILE(APPEND ${pcm_script} "for f in ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/*.pcm; do\n")
   FILE(APPEND ${pcm_script} "[ -e \$f ] && mv \$f ${CMAKE_CURRENT_BINARY_DIR}\n")
@@ -298,5 +298,3 @@ if(has_parent)
 
   set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} PARENT_SCOPE)
 endif()
-
-

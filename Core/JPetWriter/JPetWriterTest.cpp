@@ -57,7 +57,6 @@ BOOST_AUTO_TEST_CASE(my_test2)
   BOOST_REQUIRE(std::string(objOut.GetTitle()) == "Title of this testObj");
 }
 
-// A tree must have a name if not SetAutoSave makes it crash when when call Branch
 BOOST_AUTO_TEST_CASE(my_helperTest_for_test3)
 {
   std::string fileName = "test3_bis.root";
@@ -142,7 +141,6 @@ BOOST_AUTO_TEST_CASE(saving_different_objects2)
 
 BOOST_AUTO_TEST_CASE(saving_different_objects3)
 {
-
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
   const auto kHugeNumberOfObjects = 10000;

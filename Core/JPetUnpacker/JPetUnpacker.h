@@ -15,9 +15,9 @@
 
 #ifndef _JPETUNPACKER_H_
 #define _JPETUNPACKER_H_
-#include <string>
-#include <TObject.h>
 #include "./Unpacker2/Unpacker2/Unpacker2.h"
+#include <TObject.h>
+#include <string>
 
 class Unpacker2;
 
@@ -49,4 +49,4 @@ private:
   std::string fCalibFile;
 };
 
-#endif
+#endif /* !_JPETUNPACKER_H_ */

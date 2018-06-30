@@ -58,7 +58,7 @@ public:
   static const std::string kRootTreeName;
 
   /**
-   * It corresponds to the number of events buffered before saving the tree.
+   * Variable corresponds to the number of events buffered before saving the tree.
    */
   static const long long kTreeBufferSize;
 

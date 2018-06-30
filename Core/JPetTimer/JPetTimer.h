@@ -13,7 +13,6 @@
  *  @file JPetTimer.h
  */
 
-
 #ifndef _JPET_TIMER_H_
 #define _JPET_TIMER_H_
 
@@ -49,4 +48,4 @@ private:
   startTimeType fStartTime;
 };
 
-#endif /*  !_JPET_TIMER_H_ */
+#endif /* !_JPET_TIMER_H_ */

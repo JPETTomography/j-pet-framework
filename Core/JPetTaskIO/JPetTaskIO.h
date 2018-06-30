@@ -74,4 +74,5 @@ protected:
   JPetParams fParams;
   int fEventNb = -1;
 };
+
 #endif /* !JPETTASKIO_H */

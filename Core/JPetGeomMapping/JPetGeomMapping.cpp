@@ -17,6 +17,9 @@
 
 using namespace std;
 
+const size_t JPetGeomMapping::kBadLayerNumber = 99999999;
+const size_t JPetGeomMapping::kBadSlotNumber = 99999999;
+
 /**
  * Constructor of mapping with a param bank as an argument
  */

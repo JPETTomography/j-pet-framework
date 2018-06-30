@@ -51,8 +51,8 @@ public:
   size_t calcDeltaID(const JPetBarrelSlot &slot1, const JPetBarrelSlot &slot2) const;
   size_t calcGlobalPMTNumber(const JPetPM &pmt) const;
   size_t getGlobalSlotNumber(const JPetBarrelSlot &slot) const;
-  static const size_t kBadLayerNumber = 99999999;
-  static const size_t kBadSlotNumber = 99999999;
+  static const size_t kBadLayerNumber;
+  static const size_t kBadSlotNumber;
 
 private:
   std::map<std::tuple<int, int, JPetPM::Side, int>, int> getTOMBMap(

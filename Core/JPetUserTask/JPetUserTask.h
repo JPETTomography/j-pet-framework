@@ -15,6 +15,7 @@
 
 #ifndef JPETUSERTASK_H
 #define JPETUSERTASK_H
+
 #include "JPetParamsInterface/JPetParamsInterface.h"
 #include "JPetStatistics/JPetStatistics.h"
 #include "JPetTimeWindow/JPetTimeWindow.h"

@@ -92,11 +92,7 @@ std::string JPetTreeHeader::getVariable(std::string name) const {
 	else return "";
 }
 
-
-
-
 std::string JPetTreeHeader::stringifyDictionary() const {
-
   std::ostringstream tmp;
   tmp<<"----------------------------------------------------------------\n";
   tmp<<"-------------------- User-defined variables --------------------\n";
@@ -120,7 +116,7 @@ std::string JPetTreeHeader::stringifyHistory() const {
     const ProcessingStageInfo & info = getProcessingStageInfo(i);
     tmp<< "Module Name         : " << info.fModuleName<<"\n";
     tmp<< "Module desc.        : " << info.fModuleDescription<<"\n";
-    tmp<< "Module version      : " << JPetCommonTools::Itoa( info.fModuleVersion ) <<"\n";
+    tmp<< "Module version      : " << JPetCommonTools::Itoa(info.fModuleVersion) <<"\n";
     tmp<< "Started processing  : " << info.fCreationTime <<"\n";
     tmp<<"----------------------------------------------------------------\n";
   }
