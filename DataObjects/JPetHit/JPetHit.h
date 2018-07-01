@@ -40,36 +40,39 @@ class JPetHit : public TObject
 {
 
 public:
-
-  enum Signal {SideA, SideB};
+  enum Signal
+  {
+    SideA,
+    SideB
+  };
 
   JPetHit();
-  JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime, TVector3& Position,
-          JPetPhysSignal& SignalA, JPetPhysSignal& SignalB, JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator);
+  JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime, TVector3 &Position,
+          JPetPhysSignal &SignalA, JPetPhysSignal &SignalB, JPetBarrelSlot &BarrelSlot, JPetScin &Scintillator);
   virtual ~JPetHit();
   float getEnergy() const;
   float getQualityOfEnergy() const;
-  float getTime() const ;
-  float getTimeDiff() const ;
+  float getTime() const;
+  float getTimeDiff() const;
   float getQualityOfTime() const;
-  float getQualityOfTimeDiff() const ;
+  float getQualityOfTimeDiff() const;
   /**
    * @brief Returns the 1-dim position of the hit along the scintillator
    *
    * @return position along the strip in cm, measured from the "Side A" end of the strip.
    */
   float getPosX() const;
-  float getPosY() const ;
+  float getPosY() const;
   float getPosZ() const;
   float getPos(int index) const;
-  const TVector3& getPos() const;
-  const JPetPhysSignal& getSignal(Signal pos) const;
-  const JPetPhysSignal& getSignalA() const;
-  const JPetPhysSignal& getSignalB() const;
-  const JPetScin& getScintillator() const;
-  const JPetBarrelSlot& getBarrelSlot() const;
-  bool isSignalASet()const;
-  bool isSignalBSet()const;
+  const TVector3 &getPos() const;
+  const JPetPhysSignal &getSignal(Signal pos) const;
+  const JPetPhysSignal &getSignalA() const;
+  const JPetPhysSignal &getSignalB() const;
+  const JPetScin &getScintillator() const;
+  const JPetBarrelSlot &getBarrelSlot() const;
+  bool isSignalASet() const;
+  bool isSignalBSet() const;
 
   void setEnergy(float energy);
   void setQualityOfEnergy(float qualityOfEnergy);
@@ -81,17 +84,17 @@ public:
    * @brief Sets the 1-dim position of the hit along the scintillator
    *
    */
-  void setPosX(float x) ;
+  void setPosX(float x);
   void setPosY(float y);
-  void setPosZ(float z) ;
-  void setPos (float x, float y, float z) ;
-  void setBarrelSlot( JPetBarrelSlot& bs) ;
-  void setScintillator(JPetScin& sc) ;
+  void setPosZ(float z);
+  void setPos(float x, float y, float z);
+  void setBarrelSlot(JPetBarrelSlot &bs);
+  void setScintillator(JPetScin &sc);
 
-  void setSignals(const JPetPhysSignal& p_sigA, const JPetPhysSignal& p_sigB);
-  void setSignalA(const JPetPhysSignal& p_sig);
-  void setSignalB(const JPetPhysSignal& p_sig);
-  
+  void setSignals(const JPetPhysSignal &p_sigA, const JPetPhysSignal &p_sigB);
+  void setSignalA(const JPetPhysSignal &p_sig);
+  void setSignalB(const JPetPhysSignal &p_sig);
+
   /** @brief Checks whether information contained in both Signal objects
    *  set in this Hit object is consistent and logs an error message if
    *  it is not.
@@ -114,9 +117,12 @@ public:
    */
   bool checkConsistency() const;
 
-  void Clear(Option_t * opt  = "");
-  
-  
+  void Clear(Option_t *opt = "");
+
+  float getSumOfToT() const;
+  float getSumOfToTSignalA() const;
+  float getSumOfToTSignalB() const;
+
 private:
   float fEnergy = 0.0f; ///< reconstructed energy of the hit [keV]
   float fQualityOfEnergy = 0.0f;
@@ -131,7 +137,7 @@ private:
   bool fIsSignalBset = false;
 
   // references to parametric objects
-  TRef fBarrelSlot = NULL; ///< BarrelSlot in which the hit was recorded
+  TRef fBarrelSlot = NULL;   ///< BarrelSlot in which the hit was recorded
   TRef fScintillator = NULL; ///< Scintillator strip which was hit
 
   ClassDef(JPetHit, 5);
