@@ -1,8 +1,24 @@
+/**
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetTOMBChannelTest.cpp
+ */
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetTOMBChannelTest
+
 #include <boost/test/unit_test.hpp>
-#include "JPetTOMBChannel.h"
 #include "JPetTOMBChannelFactory.h"
+#include "JPetTOMBChannel.h"
 
 const float epsilon = 0.0001;
 
@@ -16,66 +32,66 @@ class TestParamGetter : public JPetParamGetter
     switch (type) {
     case ParamObjectType::kTOMBChannel:
       switch (runId) {
-      case 0: //No TOMBChannels
-        break;
-      case 1: //Simple single object
-      case 5: //Wrong FEB relation
-      case 6: //Wrong TRB relation
-      case 7: //Wrong PM relation
-        result = {
-          {
-            1, {
-              {"channel", "1"},
-              {"local_number", "2"},
+        case 0:
+          break;
+        case 1:
+        case 2:
+          result = {
+            {
+              1, {
+                {"channel", "1"},
+                {"local_number", "2"},
               {"FEB", "3"},
-              {"threshold", "4"}
+                {"threshold", "4"}
+              }
+            },
+            {
+              5, {
+                {"channel", "5"},
+                {"local_number", "3"},
+                {"FEB", "4"},
+                {"threshold", "5"}
+              }
             }
-          }
-        };
-        break;
-      case 2: //Simple two objects
-        result = {
-          {
-            1, {
-              {"channel", "1"},
-              {"local_number", "2"},
-              {"FEB", "3"},
-              {"threshold", "4"}
+          };
+          break;
+        case 3:
+          result = {
+            {
+              1, {
+                {"channel", "1"},
+                {"FEB", "3"},
+                {"threshold", "4"}
+              }
             }
-          },
-          {
-            5, {
-              {"channel", "5"},
-              {"local_number", "3"},
-              {"FEB", "4"},
-              {"threshold", "5"}
+          };
+          break;
+        case 4:
+          result = {
+            {
+              1, {
+                {"channel", "1"},
+                {"local_number", "TVP"},
+                {"FEB", "3"},
+                {"threshold", "4"}
+              }
             }
-          }
-        };
-        break;
-      case 3: //Object with missing field
-        result = {
-          {
-            1, {
-              {"channel", "1"},
-              {"FEB", "3"},
-              {"threshold", "4"}
+          };
+          break;
+        case 5:
+        case 6:
+        case 7:
+          result = {
+            {
+              1, {
+                {"channel", "1"},
+                {"local_number", "2"},
+                {"FEB", "3"},
+                {"threshold", "4"}
+              }
             }
-          }
-        };
-        break;
-      case 4: //Object with wrong field
-        result = {
-          {
-            1, {
-              {"channel", "1"},
-              {"local_number", "TVP"},
-              {"FEB", "3"},
-              {"threshold", "4"}
-            }
-          }
-        };
-        break;
+          };
+          break;
       }
       break;
     case ParamObjectType::kPM:
@@ -168,7 +184,7 @@ class TestParamGetter : public JPetParamGetter
         }
       };
       break;
-    default: //Other cases not needed.
+    default:
       break;
     }
     return result;
@@ -179,20 +195,20 @@ class TestParamGetter : public JPetParamGetter
     switch (type1) {
     case ParamObjectType::kTOMBChannel:
       switch (runId) {
-      case 0: //No relations
+      case 0:
         break;
-      case 1: //Simple single object
+      case 1:
         result = {
           {1, 1}
         };
         break;
-      case 2: //Simple two objects
+      case 2:
         result = {
           {1, 1},
           {5, 1}
         };
         break;
-      case 5: //Wrong FEB relation
+      case 5:
         switch (type2) {
         case ParamObjectType::kFEB:
           result = {
@@ -205,7 +221,7 @@ class TestParamGetter : public JPetParamGetter
           };
           break;
         }
-      case 6: //Wrong TRB relation
+      case 6:
         switch (type2) {
         case ParamObjectType::kTRB:
           result = {
@@ -218,7 +234,7 @@ class TestParamGetter : public JPetParamGetter
           };
           break;
         }
-      case 7: //Wrong PM relation
+      case 7:
         switch (type2) {
         case ParamObjectType::kPM:
           result = {
@@ -245,7 +261,7 @@ class TestParamGetter : public JPetParamGetter
 
 TestParamGetter paramGetter;
 
-BOOST_AUTO_TEST_CASE( no_tombChannels )
+BOOST_AUTO_TEST_CASE(no_tombChannels)
 {
   JPetTRBFactory trbFactory(paramGetter, 0);
   JPetFEBFactory febFactory(paramGetter, 0, trbFactory);
@@ -259,7 +275,7 @@ BOOST_AUTO_TEST_CASE( no_tombChannels )
   BOOST_REQUIRE_EQUAL(tombChannels.size(), 0u);
 }
 
-BOOST_AUTO_TEST_CASE( single_object )
+BOOST_AUTO_TEST_CASE(single_object)
 {
   JPetTRBFactory trbFactory(paramGetter, 1);
   JPetFEBFactory febFactory(paramGetter, 1, trbFactory);
@@ -276,13 +292,12 @@ BOOST_AUTO_TEST_CASE( single_object )
   BOOST_REQUIRE_EQUAL(tombChannel->getLocalChannelNumber(), 2u);
   BOOST_REQUIRE_EQUAL(tombChannel->getFEBInputNumber(), 3u);
   BOOST_REQUIRE_CLOSE(tombChannel->getThreshold(), 4, epsilon);
-
   BOOST_REQUIRE_EQUAL(tombChannel->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
   BOOST_REQUIRE_EQUAL(tombChannel->getTRB().getID(), trbFactory.getTRBs().at(1)->getID());
   BOOST_REQUIRE_EQUAL(tombChannel->getPM().getID(), pmFactory.getPMs().at(1)->getID());
 }
 
-BOOST_AUTO_TEST_CASE( two_objects )
+BOOST_AUTO_TEST_CASE(two_objects)
 {
   JPetTRBFactory trbFactory(paramGetter, 2);
   JPetFEBFactory febFactory(paramGetter, 2, trbFactory);
@@ -299,23 +314,20 @@ BOOST_AUTO_TEST_CASE( two_objects )
   BOOST_REQUIRE_EQUAL(tombChannel->getLocalChannelNumber(), 2u);
   BOOST_REQUIRE_EQUAL(tombChannel->getFEBInputNumber(), 3u);
   BOOST_REQUIRE_CLOSE(tombChannel->getThreshold(), 4, epsilon);
-
   BOOST_REQUIRE_EQUAL(tombChannel->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
   BOOST_REQUIRE_EQUAL(tombChannel->getTRB().getID(), trbFactory.getTRBs().at(1)->getID());
   BOOST_REQUIRE_EQUAL(tombChannel->getPM().getID(), pmFactory.getPMs().at(1)->getID());
-
   tombChannel = tombChannels[5];
   BOOST_REQUIRE_EQUAL(tombChannel->getChannel(), 5);
   BOOST_REQUIRE_EQUAL(tombChannel->getLocalChannelNumber(), 3u);
   BOOST_REQUIRE_EQUAL(tombChannel->getFEBInputNumber(), 4u);
   BOOST_REQUIRE_CLOSE(tombChannel->getThreshold(), 5, epsilon);
-
   BOOST_REQUIRE_EQUAL(tombChannel->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
   BOOST_REQUIRE_EQUAL(tombChannel->getTRB().getID(), trbFactory.getTRBs().at(1)->getID());
   BOOST_REQUIRE_EQUAL(tombChannel->getPM().getID(), pmFactory.getPMs().at(1)->getID());
 }
 
-BOOST_AUTO_TEST_CASE( missing_field )
+BOOST_AUTO_TEST_CASE(missing_field)
 {
   JPetTRBFactory trbFactory(paramGetter, 3);
   JPetFEBFactory febFactory(paramGetter, 3, trbFactory);
@@ -328,7 +340,7 @@ BOOST_AUTO_TEST_CASE( missing_field )
   BOOST_REQUIRE_THROW(factory.getTOMBChannels(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE( wrong_field )
+BOOST_AUTO_TEST_CASE(wrong_field)
 {
   JPetTRBFactory trbFactory(paramGetter, 4);
   JPetFEBFactory febFactory(paramGetter, 4, trbFactory);
@@ -341,7 +353,7 @@ BOOST_AUTO_TEST_CASE( wrong_field )
   BOOST_REQUIRE_THROW(factory.getTOMBChannels(), std::bad_cast);
 }
 
-BOOST_AUTO_TEST_CASE( wrong_feb_relation )
+BOOST_AUTO_TEST_CASE(wrong_feb_relation)
 {
   JPetTRBFactory trbFactory(paramGetter, 5);
   JPetFEBFactory febFactory(paramGetter, 5, trbFactory);
@@ -354,7 +366,7 @@ BOOST_AUTO_TEST_CASE( wrong_feb_relation )
   BOOST_REQUIRE_THROW(factory.getTOMBChannels(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE( wrong_trb_relation )
+BOOST_AUTO_TEST_CASE(wrong_trb_relation)
 {
   JPetTRBFactory trbFactory(paramGetter, 6);
   JPetFEBFactory febFactory(paramGetter, 6, trbFactory);
@@ -367,7 +379,7 @@ BOOST_AUTO_TEST_CASE( wrong_trb_relation )
   BOOST_REQUIRE_THROW(factory.getTOMBChannels(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE( wrong_pm_relation )
+BOOST_AUTO_TEST_CASE(wrong_pm_relation)
 {
   JPetTRBFactory trbFactory(paramGetter, 7);
   JPetFEBFactory febFactory(paramGetter, 7, trbFactory);

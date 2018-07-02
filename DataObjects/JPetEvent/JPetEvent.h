@@ -39,7 +39,7 @@
  * from several separate physical events.
  */
 
-class JPetEvent : public TObject
+class JPetEvent: public TObject
 {
 
 public:

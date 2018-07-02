@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -17,36 +17,30 @@
 #define JPET_BARREL_SLOT_FACTORY_H
 
 #include "./JPetParamGetter/JPetParamGetter.h"
-#include "JPetBarrelSlot.h"
 #include "./JPetLayer/JPetLayerFactory.h"
-
+#include "JPetBarrelSlot.h"
 #include <map>
 
 /**
  * @brief A factory of JPetBarrelSlot objects.
  *
- * This class is able to create those objects using data from the database.
+ * This class is able to create JPetBarrelSlot objects using data from the database.
  */
 class JPetBarrelSlotFactory
 {
-  public:
-    JPetBarrelSlotFactory(JPetParamGetter & paramGetter, int runId, JPetLayerFactory & layerFactory) :
-      paramGetter(paramGetter),
-      runId(runId),
-      layerFactory(layerFactory),
-      fInitialized(false) {}
+public:
+  JPetBarrelSlotFactory(JPetParamGetter & paramGetter, int runId, JPetLayerFactory & layerFactory):
+    paramGetter(paramGetter), runId(runId), layerFactory(layerFactory), fInitialized(false) {}
+  std::map<int, JPetBarrelSlot*>& getBarrelSlots();
 
-    std::map<int, JPetBarrelSlot *> & getBarrelSlots();
-  private:
-    JPetParamGetter & paramGetter;
-    const int runId;
-    JPetLayerFactory & layerFactory;
-
-    bool fInitialized;
-    std::map<int, JPetBarrelSlot *> fBarrelSlots;
-
-    void initialize();
-    JPetBarrelSlot * build(ParamObjectDescription data);
+private:
+  JPetBarrelSlot* build(ParamObjectDescription data);
+  JPetParamGetter& paramGetter;
+  JPetLayerFactory& layerFactory;
+  std::map<int, JPetBarrelSlot *> fBarrelSlots;
+  bool fInitialized;
+  void initialize();
+  const int runId;
 };
 
-#endif // JPET_BARREL_SLOT_FACTORY_H
+#endif /* JPET_BARREL_SLOT_FACTORY_H */

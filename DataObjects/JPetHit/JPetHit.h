@@ -39,7 +39,7 @@ class JPetScin;
  * User can describe quality of energy, hit time and time difference
  * between the two signals in the hit.
  */
-class JPetHit : public TObject
+class JPetHit: public TObject
 {
 public:
   enum Signal {SideA, SideB};

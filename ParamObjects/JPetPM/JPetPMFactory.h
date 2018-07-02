@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,12 +16,11 @@
 #ifndef JPET_PM_FACTORY_H
 #define JPET_PM_FACTORY_H
 
-#include "./JPetParamGetter/JPetParamGetter.h"
-#include "JPetPM.h"
-#include "./JPetFEB/JPetFEBFactory.h"
-#include "./JPetScin/JPetScinFactory.h"
 #include "./JPetBarrelSlot/JPetBarrelSlotFactory.h"
-
+#include "./JPetParamGetter/JPetParamGetter.h"
+#include "./JPetScin/JPetScinFactory.h"
+#include "./JPetFEB/JPetFEBFactory.h"
+#include "JPetPM.h"
 #include <map>
 
 /**
@@ -31,28 +30,25 @@
  */
 class JPetPMFactory
 {
-  public:
-    JPetPMFactory(JPetParamGetter & paramGetter, int runId, JPetFEBFactory & febFactory, JPetScinFactory & scinFactory, JPetBarrelSlotFactory & barrelSlotFactory) :
-      paramGetter(paramGetter),
-      runId(runId),
-      febFactory(febFactory),
-      scinFactory(scinFactory),
-      barrelSlotFactory(barrelSlotFactory),
+public:
+  JPetPMFactory(JPetParamGetter& paramGetter, int runId,
+    JPetFEBFactory& febFactory, JPetScinFactory& scinFactory,
+    JPetBarrelSlotFactory& barrelSlotFactory):
+      paramGetter(paramGetter), runId(runId), febFactory(febFactory),
+      scinFactory(scinFactory), barrelSlotFactory(barrelSlotFactory),
       fInitialized(false) {}
+  std::map<int, JPetPM *> & getPMs();
 
-    std::map<int, JPetPM *> & getPMs();
-  private:
-    JPetParamGetter & paramGetter;
-    const int runId;
-    JPetFEBFactory & febFactory;
-    JPetScinFactory & scinFactory;
-    JPetBarrelSlotFactory & barrelSlotFactory;
-
-    bool fInitialized;
-    std::map<int, JPetPM *> fPMs;
-
-    void initialize();
-    JPetPM * build(ParamObjectDescription data);
+private:
+  JPetPM* build(ParamObjectDescription data);
+  JPetBarrelSlotFactory & barrelSlotFactory;
+  std::map<int, JPetPM *> fPMs;
+  JPetScinFactory & scinFactory;
+  JPetParamGetter & paramGetter;
+  JPetFEBFactory & febFactory;
+  bool fInitialized;
+  void initialize();
+  const int runId;
 };
 
 #endif // JPET_PM_FACTORY_H

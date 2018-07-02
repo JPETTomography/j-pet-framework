@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,64 +16,39 @@
 #include "JPetPM.h"
 #include <cassert>
 
-JPetPM::JPetPM() :
-  fHVgain(std::make_pair(0.0, 0.0)) // it is possible to initialize pair in header by
-  // std::pair<float, float> fHVgain {0.0 , 0.0};
-  // but then there is some error generating dictionary for file
+JPetPM::JPetPM(): fHVgain(std::make_pair(0.0, 0.0))
 {
   SetName("JPetPM");
 }
 
-JPetPM::JPetPM(int id, std::string description) :
-  fID(id),
-  fHVgain(std::make_pair(0.0, 0.0)),
-  fDescription(description)
+JPetPM::JPetPM(int id, std::string description):
+  fID(id), fHVgain(std::make_pair(0.0, 0.0)), fDescription(description)
 {
   SetName("JPetPM");
 }
 
-JPetPM::JPetPM(Side side,
-               int id,
-               int HVset,
-               int HVopt,
-               std::pair<float, float> HVgainNumber,
-               std::string description):
-  fSide(side),
-  fID(id),
-  fHVset(HVset),
-  fHVopt(HVopt),
-  fHVgain(HVgainNumber),
-  fDescription(description)
+JPetPM::JPetPM(Side side, int id, int HVset, int HVopt,
+  std::pair<float, float> HVgainNumber, std::string description):
+  fSide(side), fID(id), fHVset(HVset), fHVopt(HVopt),
+  fHVgain(HVgainNumber), fDescription(description)
 {
   SetName("JPetPM");
 }
 
-JPetPM::JPetPM(bool isNull) :
-  fHVgain(std::make_pair(0.0, 0.0)),
-  fIsNullObject(isNull)
+JPetPM::JPetPM(bool isNull): fHVgain(std::make_pair(0.0, 0.0)), fIsNullObject(isNull)
 {
   SetName("JPetPM");
 }
 
-JPetPM::JPetPM(const JPetPM& pm):
-  fSide(pm.fSide),
-  fID(pm.fID),
-  fHVset(pm.fHVset),
-  fHVopt(pm.fHVopt),
-  fHVgain(pm.fHVgain),
-  fDescription(pm.fDescription),
-  fTRefScin(pm.fTRefScin),
-  fTRefBarrelSlot(pm.fTRefBarrelSlot)
+JPetPM::JPetPM(const JPetPM& pm): fSide(pm.fSide), fID(pm.fID), fHVset(pm.fHVset),
+  fHVopt(pm.fHVopt), fHVgain(pm.fHVgain), fDescription(pm.fDescription),
+  fTRefScin(pm.fTRefScin), fTRefBarrelSlot(pm.fTRefBarrelSlot)
 {
   SetName("JPetPM");
-  if (pm.hasFEB()) {
-    fTRefFEB = pm.fTRefFEB;
-  }
+  if (pm.hasFEB()) { fTRefFEB = pm.fTRefFEB; }
 }
 
-JPetPM::~JPetPM()
-{
-}
+JPetPM::~JPetPM(){}
 
 bool JPetPM::operator==(const JPetPM& pm) const
 {
@@ -83,7 +58,6 @@ bool JPetPM::operator==(const JPetPM& pm) const
     assert(getHVset() == pm.getHVset());
     return true;
   }
-
   return false;
 }
 
@@ -96,10 +70,12 @@ void JPetPM::clearTRefFEBs()
 {
   fTRefFEB = NULL;
 }
+
 void JPetPM::clearTRefScin()
 {
   fTRefScin = NULL;
 }
+
 void JPetPM::clearTRefBarrelSlot()
 {
   fTRefBarrelSlot = NULL;
@@ -109,47 +85,58 @@ JPetPM::Side JPetPM::getSide() const
 {
   return fSide;
 }
+
 int JPetPM::getID() const
 {
   return fID;
 }
+
 int JPetPM::getHVset() const
 {
   return fHVset;
 }
+
 int JPetPM::getHVopt() const
 {
   return fHVopt;
 }
+
 float JPetPM::getHVgain(GainNumber nr)
 {
   return (nr == kFirst) ? fHVgain.first : fHVgain.second;
 }
+
 std::pair<float, float> JPetPM::getHVgain()
 {
   return fHVgain;
 }
+
 std::string JPetPM::getDescription() const
 {
   return fDescription;
 }
+
 void JPetPM::setSide(JPetPM::Side side)
 {
   fSide = side;
 }
+
 void JPetPM::setHVset(int set)
 {
   fHVset = set;
 }
+
 void JPetPM::setHVopt(int opt)
 {
   fHVopt = opt;
 }
+
 void JPetPM::setHVgain(float g1, float g2)
 {
   fHVgain.first = g1;
   fHVgain.second = g2;
 }
+
 void JPetPM::setHVgain(const std::pair<float, float>& gain)
 {
   fHVgain = gain;
@@ -178,6 +165,7 @@ void JPetPM::setScin(JPetScin& p_scin)
 {
   fTRefScin = &p_scin;
 }
+
 JPetScin& JPetPM::getScin() const
 {
   if (fTRefScin.GetObject()) return (JPetScin&) * (fTRefScin.GetObject());
@@ -191,6 +179,7 @@ void JPetPM::setBarrelSlot(JPetBarrelSlot& p_barrelSlot)
 {
   fTRefBarrelSlot = &p_barrelSlot;
 }
+
 JPetBarrelSlot& JPetPM::getBarrelSlot() const
 {
   if (fTRefBarrelSlot.GetObject()) return (JPetBarrelSlot&) * (fTRefBarrelSlot.GetObject());

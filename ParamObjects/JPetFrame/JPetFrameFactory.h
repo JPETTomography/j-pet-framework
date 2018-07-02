@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -18,7 +18,6 @@
 
 #include "./JPetParamGetter/JPetParamGetter.h"
 #include "JPetFrame.h"
-
 #include <map>
 
 /**
@@ -28,22 +27,18 @@
  */
 class JPetFrameFactory
 {
-  public:
-    JPetFrameFactory(JPetParamGetter & paramGetter, int runId) :
-      paramGetter(paramGetter),
-      runId(runId),
-      fInitialized(false) {}
+public:
+  JPetFrameFactory(JPetParamGetter & paramGetter, int runId):
+    paramGetter(paramGetter), runId(runId), fInitialized(false) {}
+std::map<int, JPetFrame *> & getFrames();
 
-    std::map<int, JPetFrame *> & getFrames();
-  private:
-    JPetParamGetter & paramGetter;
-    const int runId;
-
-    bool fInitialized;
-    std::map<int, JPetFrame *> fFrames;
-
-    void initialize();
-    JPetFrame * build(ParamObjectDescription data);
+private:
+  JPetParamGetter& paramGetter;
+  const int runId;
+  bool fInitialized;
+  std::map<int, JPetFrame *> fFrames;
+  void initialize();
+  JPetFrame* build(ParamObjectDescription data);
 };
 
-#endif // JPET_FRAME_FACTORY_H
+#endif /* JPET_FRAME_FACTORY_H */

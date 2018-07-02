@@ -1,25 +1,28 @@
+/**
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetTRBTest.cpp
+ */
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetTRBTest
+
 #include <boost/test/unit_test.hpp>
-#include "JPetTRB.h"
 #include "JPetTRBFactory.h"
-
-
-
-//  public:
-//  JPetTRB();
-//  JPetTRB(int id, int type, int channel,);
-//  inline int getID() const { return fID; }
-//  inline int getChannel() const { return fChannel; }
-//  inline int getType() const { return fType; }
-//  inline void setID(int id) { fID = id; }
-//  inline void setType(int type) { fType = type; }
-//  inline void setChannel(int ch) { fChannel = ch; }
-
+#include "JPetTRB.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-BOOST_AUTO_TEST_CASE( default_constructor )
+BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetTRB trb;
   BOOST_REQUIRE_EQUAL(trb.getID(), 0);
@@ -27,7 +30,7 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   BOOST_REQUIRE_EQUAL(trb.getChannel(), 0);
 }
 
-BOOST_AUTO_TEST_CASE( constructor )
+BOOST_AUTO_TEST_CASE(constructor)
 {
   JPetTRB trb(1, 1, 224);
   BOOST_REQUIRE_EQUAL(trb.getID(), 1);
@@ -45,9 +48,9 @@ class TestParamGetter : public JPetParamGetter
   {
     ParamObjectsDescriptions result;
     switch (runId) {
-      case 0: //No TRBs
+      case 0:
         break;
-      case 1: //Simple single object
+      case 1:
         result = {
           {1, {
                 {"id", "1"},
@@ -57,7 +60,7 @@ class TestParamGetter : public JPetParamGetter
           }
         };
         break;
-      case 2: //Simple two objects
+      case 2:
         result = {
           {1, {
                 {"id", "1"},
@@ -73,7 +76,7 @@ class TestParamGetter : public JPetParamGetter
           }
         };
         break;
-      case 3: //Object with missing field
+      case 3:
         result = {
           {1, {
                 {"id", "1"},
@@ -82,7 +85,7 @@ class TestParamGetter : public JPetParamGetter
           }
         };
         break;
-      case 4: //Object with wrong field
+      case 4:
         result = {
           {1, {
                 {"id", "1"},
@@ -95,19 +98,20 @@ class TestParamGetter : public JPetParamGetter
     }
     return result;
   }
-  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int) {return ParamRelationalData();} //Irrelevant for this test.
+  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int)
+    { return ParamRelationalData(); }
 };
 
 TestParamGetter paramGetter;
 
-BOOST_AUTO_TEST_CASE( no_trbs )
+BOOST_AUTO_TEST_CASE(no_trbs)
 {
   JPetTRBFactory factory(paramGetter, 0);
   auto & trbs = factory.getTRBs();
   BOOST_REQUIRE_EQUAL(trbs.size(), 0u);
 }
 
-BOOST_AUTO_TEST_CASE( single_object )
+BOOST_AUTO_TEST_CASE(single_object)
 {
   JPetTRBFactory factory(paramGetter, 1);
   auto & trbs = factory.getTRBs();
@@ -118,7 +122,7 @@ BOOST_AUTO_TEST_CASE( single_object )
   BOOST_REQUIRE_EQUAL(trb->getChannel(), 224);
 }
 
-BOOST_AUTO_TEST_CASE( two_objects )
+BOOST_AUTO_TEST_CASE(two_objects)
 {
   JPetTRBFactory factory(paramGetter, 2);
   auto & trbs = factory.getTRBs();
@@ -133,13 +137,13 @@ BOOST_AUTO_TEST_CASE( two_objects )
   BOOST_REQUIRE_EQUAL(trb->getChannel(), 225);
 }
 
-BOOST_AUTO_TEST_CASE( missing_field )
+BOOST_AUTO_TEST_CASE(missing_field)
 {
   JPetTRBFactory factory(paramGetter, 3);
   BOOST_REQUIRE_THROW(factory.getTRBs(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE( wrong_field )
+BOOST_AUTO_TEST_CASE(wrong_field)
 {
   JPetTRBFactory factory(paramGetter, 4);
   BOOST_REQUIRE_THROW(factory.getTRBs(), std::bad_cast);

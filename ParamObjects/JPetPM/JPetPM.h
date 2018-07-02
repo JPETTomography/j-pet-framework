@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,64 +16,60 @@
 #ifndef _JPET_PM_
 #define _JPET_PM_
 
+#include "./JPetBarrelSlot/JPetBarrelSlot.h"
+#include "./JPetScin/JPetScin.h"
+#include "./JPetLoggerInclude.h"
+#include "./JPetFEB/JPetFEB.h"
 #include "TNamed.h"
 #include <utility>
 #include <TRef.h>
-#include "./JPetFEB/JPetFEB.h"
-#include "./JPetScin/JPetScin.h"
-#include "./JPetBarrelSlot/JPetBarrelSlot.h"
-#include "./JPetLoggerInclude.h"
 
 class JPetScin;
 
 /**
- * @brief Parametric class representing database information on parameters of a photomultiplier.
+ * @brief Representation of a photomultiplier.
  *
+ * Parametric class representing database information of a single photomultiplier.
  */
 class JPetPM: public TNamed
 {
 public:
   enum Side {SideA, SideB};
   enum GainNumber {kFirst, kSecond};
-
-  static  JPetPM& getDummyResult();
-
   JPetPM();
-  explicit JPetPM(int id, std::string description);
   explicit JPetPM(bool isNull);
-  JPetPM(Side side,
-         int id,
-         int HVset,
-         int HVopt,
-         std::pair<float, float> HVgainNumber,
-         std::string description);
+  explicit JPetPM(int id, std::string description);
+  JPetPM(Side side, int id, int HVset, int HVopt,
+    std::pair<float, float> HVgainNumber, std::string description);
   JPetPM(JPetPM const&);
   ~JPetPM();
+
+  static JPetPM& getDummyResult();
 
   bool operator==(const JPetPM& pm) const;
   bool operator!=(const JPetPM& pm) const;
 
-  Side getSide() const;
-  int getID() const;
-  int getHVset() const;
-  int getHVopt() const;
-  float getHVgain(GainNumber nr);
-  std::pair<float, float> getHVgain();
-  std::string getDescription() const;
   void setSide(Side side);
   void setHVset(int set);
   void setHVopt(int opt);
   void setHVgain(float g1, float g2);
   void setHVgain(const std::pair<float, float>& gain);
   void setFEB(JPetFEB& p_FEB);
-  bool hasFEB() const;
-  const JPetFEB& getFEB() const;
   void setScin(JPetScin& p_scin);
-  JPetScin& getScin() const;
   void setBarrelSlot(JPetBarrelSlot& p_barrelSlot);
-  JPetBarrelSlot& getBarrelSlot() const;
-  bool isNullObject() const;
 
+  int getID() const;
+  Side getSide() const;
+  int getHVset() const;
+  int getHVopt() const;
+  float getHVgain(GainNumber nr);
+  std::pair<float, float> getHVgain();
+  const JPetFEB& getFEB() const;
+  bool hasFEB() const;
+  JPetScin& getScin() const;
+  JPetBarrelSlot& getBarrelSlot() const;
+  std::string getDescription() const;
+  bool isNullObject() const;
 
 protected:
   void clearTRefFEBs();
