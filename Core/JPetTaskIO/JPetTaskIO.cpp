@@ -14,6 +14,7 @@
  */
 
 #include "JPetTaskIO.h"
+#include "JPetTaskIOTools.h"
 #include <memory>
 #include <cassert>
 #include "./JPetReader/JPetReader.h"
@@ -41,8 +42,9 @@ JPetTaskIO::JPetTaskIO(const char* name,
 
 void JPetTaskIO::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
 {
-  if (dynamic_cast<JPetUserTask*>(subTask.get()) == nullptr)
+  if (dynamic_cast<JPetUserTask*>(subTask.get()) == nullptr) {
     ERROR("JPetTaskIO currently only allows JPetUserTask as subtask");
+  }
   fSubTasks.push_back(std::move(subTask));
 }
 
@@ -74,26 +76,8 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
 
 std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFile(const OptsStrAny opts) const
 {
-  bool resetOutputPath = fResetOutputPath;
-  // handle input file path
-  std::string inputFilename = getInputFile(opts);
-  if ( JPetCommonTools::extractDataTypeFromFileName(inputFilename) != fInFileType ) {
-    WARNING(Form("Input file type %s does not match the one provided by the previous module (%s).",
-                 fInFileType.c_str(), JPetCommonTools::extractDataTypeFromFileName(inputFilename).c_str()));
-  }
-  inputFilename = JPetCommonTools::replaceDataTypeInFileName(inputFilename, fInFileType);
-
-  // handle output file path
-  auto outFileFullPath = inputFilename;
-  if (isOptionSet(opts, "outputPath_std::string")) {
-    std::string outputPath(getOutputPath(opts));
-    if (!outputPath.empty()) {
-      outFileFullPath = outputPath + JPetCommonTools::extractFileNameFromFullPath(getInputFile(opts));
-      resetOutputPath = true;
-    }
-  }
-  outFileFullPath = JPetCommonTools::replaceDataTypeInFileName(outFileFullPath, fOutFileType);
-  return std::make_tuple(true, inputFilename, outFileFullPath, resetOutputPath);
+  /// We cannot remove this method completely and leave the one from JPetTaskIOTools, because it  is overloaded in JPetScopeLoader class.
+  return JPetTaskIOTools::setInputAndOutputFile(opts, fResetOutputPath, fInFileType, fOutFileType);
 }
 
 bool JPetTaskIO::run(const JPetDataInterface&)
@@ -118,7 +102,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     }
     auto firstEvent = 0ll;
     auto lastEvent = 0ll;
-    if (!setUserLimits(fParams.getOptions(), totalEntrys,  firstEvent, lastEvent)) {
+    if (!JPetTaskIOTools::setUserLimits(fParams.getOptions(), totalEntrys,  firstEvent, lastEvent)) {
       ERROR("in setUserLimits");
       return false;
     }
@@ -156,23 +140,8 @@ bool JPetTaskIO::run(const JPetDataInterface&)
 bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
 {
   auto& params = dynamic_cast<JPetParams&>(output_params);
-  OptsStrAny new_opts;
-  if (FileTypeChecker::getInputFileType(fParams.getOptions()) == FileTypeChecker::kHldRoot) {
-    jpet_options_generator_tools::setOutputFileType(new_opts, "root");
-  }
-
-  if ( jpet_options_tools::getOptionAsInt(fParams.getOptions(), "firstEvent_int") != -1 &&
-       jpet_options_tools::getOptionAsInt(fParams.getOptions(), "lastEvent_int") != -1 ) {
-    jpet_options_generator_tools::setResetEventRangeOption(new_opts, true);
-  }
-
-  if (fResetOutputPath) {
-    jpet_options_generator_tools::setOutputPath(new_opts, "");
-  }
-
-  jpet_options_generator_tools::setOutputFile(new_opts, fOutFileFullPath);
-
-  params = JPetParams(new_opts, params.getParamManagerAsShared());
+  auto newOpts = JPetTaskIOTools::setOutputOptions(fParams, fResetOutputPath, fOutFileFullPath);
+  params = JPetParams(newOpts, params.getParamManagerAsShared());
 
   if (!fReader) {
     ERROR("fReader set to null");
@@ -202,7 +171,6 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
     if (it->second)
       fWriter->writeCollection(it->second->getStatsTable(), it->first.c_str());
   }
-
 
   //store the parametric objects in the ouptut ROOT file
   getParamManager().saveParametersToFile(
@@ -328,43 +296,4 @@ JPetTaskIO::~JPetTaskIO()
     delete fReader;
     fReader = 0;
   }
-}
-
-/// Sets values of firstEvent and lastEvent based on user options opts and total number of events from JPetReader
-// if the totEventsFromReader is less than 0, than first and last are set to -1.
-bool JPetTaskIO::setUserLimits(const OptsStrAny& opts, const long long kTotEventsFromReader, long long& first, long long& last) const
-{
-  const auto kLastEvent = getLastEvent(opts);
-  const auto kFirstEvent = getFirstEvent(opts);
-  if ( kTotEventsFromReader < 1) {
-    WARNING("kTotEvetnsFromReader < 1, first and last set to -1");
-    first = last = -1;
-  } else {
-    if ( kFirstEvent < 0) {
-      first = 0;
-    } else {
-      first = kFirstEvent < kTotEventsFromReader ? kFirstEvent : kTotEventsFromReader - 1;
-    }
-    if (kLastEvent < 0)  {
-      last = kTotEventsFromReader - 1;
-    } else {
-      last = kLastEvent < kTotEventsFromReader ? kLastEvent : kTotEventsFromReader - 1;
-    }
-  }
-  if (first < 0) {
-    ERROR("first <0");
-    return false;
-  }
-  if (last < 0) {
-    ERROR("last < 0");
-    return false;
-  }
-  if (first > last) {
-    ERROR("first > last");
-    return false;
-  }
-  assert(first >= 0);
-  assert(last >= 0);
-  assert(first <= last);
-  return true;
 }
