@@ -61,8 +61,6 @@ protected:
   virtual bool createInputObjects(const char* inputFilename);
   virtual bool createOutputObjects(const char* outputFilename);
 
-  bool setUserLimits(const jpet_options_tools::OptsStrAny& opts, const long long kTotEventsFromReader, long long& first, long long& last) const;
-
   const JPetParamBank& getParamBank();
   JPetParamManager& getParamManager();
 
