@@ -84,5 +84,9 @@ protected:
   std::unique_ptr<JPetStatistics> fStatistics = 0;
   std::map<std::string, std::unique_ptr<JPetStatistics>> fSubTasksStatistics;
   JPetProgressBarManager fProgressBar;
+
+ private:
+  JPetTaskIO(const JPetTaskIO&);
+  void operator=(const JPetTaskIO&);
 };
 #endif /*  !JPETTASKIO_H */
