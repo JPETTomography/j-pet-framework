@@ -192,17 +192,10 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
   auto options = fParams.getOptions();
   assert(!fReader);
   fReader = new JPetReader;
-  if ( fReader->openFileAndLoadData(inputFilename, JPetReader::kRootTreeName.c_str())) {
-    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ) {
-      // create a header to be stored along with the output tree
-      fHeader = new JPetTreeHeader(getRunNumber(options));
-      fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
-      fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
-
-      // add general info to the Tree header
-      fHeader->setBaseFileName(getInputFile(options).c_str());
-
-    } else {
+  if (fReader->openFileAndLoadData(inputFilename, JPetReader::kRootTreeName.c_str())) {
+    /// For all types of files which has not hld format we assume
+    /// that we can read paramBank from the file.
+    if (FileTypeChecker::getInputFileType(options) != FileTypeChecker::kHldRoot ) {
       auto paramManager = fParams.getParamManager();
       assert(paramManager);
       if (!paramManager->readParametersFromFile(dynamic_cast<JPetReader*> (fReader))) {
@@ -210,17 +203,7 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
         return false;
       }
       assert(paramManager->getParamBank().getPMsSize() > 0);
-      // read the header from the previous analysis stage
-      fHeader = dynamic_cast<JPetReader*>(fReader)->getHeaderClone();
     }
-    // add info about this module to the processing stages' history in Tree header
-    //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
-    for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
-      auto task = dynamic_cast<JPetUserTask*>((*fSubTask).get());
-      fHeader->addStageInfo(task->getName(), "", 0,
-                            JPetCommonTools::getTimeString());
-    }
-
   } else {
     ERROR(inputFilename + std::string(": Unable to open the input file or load the tree"));
     return false;
@@ -232,11 +215,35 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
 {
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
+  using namespace jpet_options_tools;
+  auto options = fParams.getOptions();
+  if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ) {
+    // create a header to be stored along with the output tree
+    fHeader = new JPetTreeHeader(getRunNumber(options));
+    fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
+    fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
+
+    // add general info to the Tree header
+    fHeader->setBaseFileName(getInputFile(options).c_str());
+  } else {
+    // read the header from the previous analysis stage
+    fHeader = dynamic_cast<JPetReader*>(fReader)->getHeaderClone();
+  }
+
   // create an object for storing histograms and counters during processing
   // make_unique is not available in c++11 :(
   std::unique_ptr<JPetStatistics> tmpUnique(new JPetStatistics);
   fStatistics = std::move(tmpUnique);
   //fStatistics = std::make_unique<JPetStatistics>();
+
+  // add info about this module to the processing stages' history in Tree header
+  //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
+  for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
+    auto task = dynamic_cast<JPetUserTask*>((*fSubTask).get());
+    fHeader->addStageInfo(task->getName(), "", 0,
+                          JPetCommonTools::getTimeString());
+  }
+
   if (!fSubTasks.empty()) {
     int i = 0;
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
