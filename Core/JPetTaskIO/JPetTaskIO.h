@@ -65,6 +65,7 @@ protected:
   JPetParamManager& getParamManager();
 
   void saveOutput(JPetWriter* writer); /// Save all to the output file
+  bool writeEventToFile(JPetWriter* writer,JPetTaskInterface* task); 
 
   std::string fInFileType;
   std::string fOutFileType;

@@ -147,14 +147,17 @@ bool JPetTaskIO::run(const JPetDataInterface&)
 
       fSubTask->get()->run(event);
 
-      auto pUserTask= (dynamic_cast<JPetUserTask*>(fSubTask->get()));
-      auto pOutputEntry = pUserTask->getOutputEvents();
-      if (pOutputEntry != nullptr) {
-        fWriter->write(*pOutputEntry);
-      } else {
-        ERROR("No proper timeWindow object returned to save to file, returning from subtask " + fSubTask->get()->getName());
+      if (!writeEventToFile(fWriter, fSubTask->get())) {
         return false;
       }
+      //auto pUserTask= (dynamic_cast<JPetUserTask*>(fSubTask->get()));
+      //auto pOutputEntry = pUserTask->getOutputEvents();
+      //if (pOutputEntry != nullptr) {
+        //fWriter->write(*pOutputEntry);
+      //} else {
+        //ERROR("No proper timeWindow object returned to save to file, returning from subtask " + fSubTask->get()->getName());
+        //return false;
+      //}
 
       fReader->nextEntry();
     }
@@ -334,4 +337,17 @@ void JPetTaskIO::saveOutput(JPetWriter* writer)
   getParamManager().saveParametersToFile(
     writer);
   getParamManager().clearParameters();
+}
+
+bool JPetTaskIO::writeEventToFile(JPetWriter* writer, JPetTaskInterface* task) 
+{
+  auto pUserTask= (dynamic_cast<JPetUserTask*>(task));
+  auto pOutputEntry = pUserTask->getOutputEvents();
+  if (pOutputEntry != nullptr) {
+    fWriter->write(*pOutputEntry);
+  } else {
+    ERROR("No proper timeWindow object returned to save to file, returning from subtask " + task->getName());
+    return false;
+  }
+  return true;
 }
