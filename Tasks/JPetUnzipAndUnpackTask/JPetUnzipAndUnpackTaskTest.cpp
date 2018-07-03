@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -15,11 +15,10 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetUnzipAndUnpackTaskTest
-#include <boost/test/unit_test.hpp>
-#include <boost/filesystem.hpp>
 
 #include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
-
+#include <boost/test/unit_test.hpp>
+#include <boost/filesystem.hpp>
 
 BOOST_AUTO_TEST_SUITE(JPetUnzipAndUnpackTaskTestSuite)
 
