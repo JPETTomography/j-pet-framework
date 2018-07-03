@@ -160,22 +160,7 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
     return false;
   }
 
-  assert(fReader);
-  assert(fWriter);
-  assert(fHeader);
-  assert(fStatistics.get());
-
-  fWriter->writeHeader(fHeader);
-  fWriter->writeCollection(fStatistics->getStatsTable(), "Main Task Stats");
-  for (auto it = fSubTasksStatistics.begin(); it != fSubTasksStatistics.end(); it++) {
-    if (it->second)
-      fWriter->writeCollection(it->second->getStatsTable(), it->first.c_str());
-  }
-
-  //store the parametric objects in the ouptut ROOT file
-  getParamManager().saveParametersToFile(
-    fWriter);
-  getParamManager().clearParameters();
+  saveOutput(fWriter);
 
   fWriter->closeFile();
   fReader->closeFile();
@@ -228,12 +213,6 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
       // read the header from the previous analysis stage
       fHeader = dynamic_cast<JPetReader*>(fReader)->getHeaderClone();
     }
-    // create an object for storing histograms and counters during processing
-    // make_unique is not available in c++11 :(
-    std::unique_ptr<JPetStatistics> tmpUnique(new JPetStatistics);
-    fStatistics = std::move(tmpUnique);
-    //fStatistics = std::make_unique<JPetStatistics>();
-
     // add info about this module to the processing stages' history in Tree header
     //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
@@ -253,6 +232,11 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
 {
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
+  // create an object for storing histograms and counters during processing
+  // make_unique is not available in c++11 :(
+  std::unique_ptr<JPetStatistics> tmpUnique(new JPetStatistics);
+  fStatistics = std::move(tmpUnique);
+  //fStatistics = std::make_unique<JPetStatistics>();
   if (!fSubTasks.empty()) {
     int i = 0;
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
@@ -277,7 +261,6 @@ void JPetTaskIO::displayProgressBar(int currentEventNumber, int numberOfEvents) 
   return fProgressBar.display(currentEventNumber, numberOfEvents);
 }
 
-
 const JPetParamBank& JPetTaskIO::getParamBank()
 {
   DEBUG("from JPetTaskIO");
@@ -296,4 +279,23 @@ JPetTaskIO::~JPetTaskIO()
     delete fReader;
     fReader = 0;
   }
+}
+
+void JPetTaskIO::saveOutput(JPetWriter* writer)
+{
+  assert(writer);
+  assert(fHeader);
+  assert(fStatistics.get());
+
+  writer->writeHeader(fHeader);
+  writer->writeCollection(fStatistics->getStatsTable(), "Main Task Stats");
+  for (auto it = fSubTasksStatistics.begin(); it != fSubTasksStatistics.end(); it++) {
+    if (it->second)
+      writer->writeCollection(it->second->getStatsTable(), it->first.c_str());
+  }
+
+  //store the parametric objects in the ouptut ROOT file
+  getParamManager().saveParametersToFile(
+    writer);
+  getParamManager().clearParameters();
 }
