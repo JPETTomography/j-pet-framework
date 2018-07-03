@@ -38,6 +38,9 @@ JPetTaskIO::JPetTaskIO(const char* name,
   fOutFileFullPath(""),
   fResetOutputPath(false)
 {
+  if (std::string(out_file_type).empty()) {
+    fIsOutput = false;
+  }
 }
 
 void JPetTaskIO::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
@@ -67,9 +70,11 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
     ERROR("createInputObjects");
     return false;
   }
-  if (!createOutputObjects(fOutFileFullPath.c_str())) {
-    ERROR("createOutputObjects");
-    return false;
+  if (isOutput()) {
+    if (!createOutputObjects(fOutFileFullPath.c_str())) {
+      ERROR("createOutputObjects");
+      return false;
+    }
   }
   return true;
 }
@@ -91,49 +96,20 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     return false;
   }
   for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
-    (*fSubTask)->init(fParams); //prepare current task for file
+    auto pTask = fSubTask->get();
+    pTask->init(fParams); //prepare current task for file
 
     /// setting range of events to loop
     auto totalEntrys = 0ll;
-    if (fReader) {
-      totalEntrys = fReader->getNbOfAllEntries();
-    } else {
-      WARNING("no JPETReader set totalEntrys set to -1");
-      totalEntrys = -1;
-    }
     auto firstEvent = 0ll;
     auto lastEvent = 0ll;
-    if (!JPetTaskIOTools::setUserLimits(fParams.getOptions(), totalEntrys,  firstEvent, lastEvent)) {
-      ERROR("in setUserLimits");
+    bool isOK = false;
+    std::tie(isOK, totalEntrys, firstEvent, lastEvent) = getEventRange(fParams.getOptions(), fReader);
+    if (!isOK) {
+      ERROR("Some error occured in getEventRange");
       return false;
     }
     assert(lastEvent >= 0);
-
-    //for (auto i = firstEvent; i <= lastEvent; i++) {
-
-      /////just distraction
-      //if (isProgressBar(fParams.getOptions())) {
-        //displayProgressBar(i, lastEvent);
-      //}
-      //auto pUserTask= (dynamic_cast<JPetUserTask*>(fSubTask->get()));
-
-      //auto pOutputEntry = pUserTask->getOutputEvents();
-      //if (pOutputEntry != nullptr) {
-        //pOutputEntry->Clear();
-      //} else {
-        //WARNING("No proper timeWindow object returned to clear events");
-      //}
-
-      //JPetData event(fReader->getCurrentEntry());
-
-      //fSubTask->get()->run(event);
-      //TASK::Event->Clean();
-      //TASK::RUN(event)
-      //WRITE(EVENT)
-      //}
-
-      //fReader->nextEntry();
-    //}
 
     /// loop over events
     for (auto i = firstEvent; i <= lastEvent; i++) {
@@ -144,26 +120,17 @@ bool JPetTaskIO::run(const JPetDataInterface&)
       }
 
       JPetData event(fReader->getCurrentEntry());
-
-      fSubTask->get()->run(event);
-
-      if (!writeEventToFile(fWriter, fSubTask->get())) {
-        return false;
+      pTask->run(event);
+      if (isOutput()) {
+        if (!writeEventToFile(fWriter, pTask)) {
+          return false;
+        }
       }
-      //auto pUserTask= (dynamic_cast<JPetUserTask*>(fSubTask->get()));
-      //auto pOutputEntry = pUserTask->getOutputEvents();
-      //if (pOutputEntry != nullptr) {
-        //fWriter->write(*pOutputEntry);
-      //} else {
-        //ERROR("No proper timeWindow object returned to save to file, returning from subtask " + fSubTask->get()->getName());
-        //return false;
-      //}
-
       fReader->nextEntry();
     }
-    
+
     JPetParamsInterface fake_params;
-    (*fSubTask)->terminate(fake_params);
+    pTask->terminate(fake_params);
   }
   return true;
 }
@@ -179,22 +146,24 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
     ERROR("fReader set to null");
     return false;
   }
-  if (!fWriter) {
-    ERROR("fWriter set to null");
-    return false;
-  }
-  if (!fHeader) {
-    ERROR("fHeader set to null");
-    return false;
-  }
-  if (!fStatistics.get()) {
-    ERROR("fStatistics set to null");
-    return false;
-  }
+  if (isOutput()) {
+    if (!fWriter) {
+      ERROR("fWriter set to null");
+      return false;
+    }
+    if (!fHeader) {
+      ERROR("fHeader set to null");
+      return false;
+    }
+    if (!fStatistics.get()) {
+      ERROR("fStatistics set to null");
+      return false;
+    }
 
-  saveOutput(fWriter);
+    saveOutput(fWriter);
 
-  fWriter->closeFile();
+    fWriter->closeFile();
+  }
   fReader->closeFile();
   return true;
 }
@@ -245,6 +214,10 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
 
 bool JPetTaskIO::createOutputObjects(const char* outputFilename)
 {
+  if (!isOutput()) {
+    ERROR("isOutput set to false and you are trying to createOutputObjects");
+    return false;
+  }
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
   using namespace jpet_options_tools;
@@ -339,9 +312,9 @@ void JPetTaskIO::saveOutput(JPetWriter* writer)
   getParamManager().clearParameters();
 }
 
-bool JPetTaskIO::writeEventToFile(JPetWriter* writer, JPetTaskInterface* task) 
+bool JPetTaskIO::writeEventToFile(JPetWriter* writer, JPetTaskInterface* task)
 {
-  auto pUserTask= (dynamic_cast<JPetUserTask*>(task));
+  auto pUserTask = (dynamic_cast<JPetUserTask*>(task));
   auto pOutputEntry = pUserTask->getOutputEvents();
   if (pOutputEntry != nullptr) {
     fWriter->write(*pOutputEntry);
@@ -350,4 +323,28 @@ bool JPetTaskIO::writeEventToFile(JPetWriter* writer, JPetTaskInterface* task)
     return false;
   }
   return true;
+}
+
+std::tuple<bool, long long, long long, long long> JPetTaskIO::getEventRange(const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader)
+{
+  auto totalEntrys = 0ll;
+  auto firstEvent = 0ll;
+  auto lastEvent = 0ll;
+  if (fReader) {
+    totalEntrys = fReader->getNbOfAllEntries();
+  } else {
+    WARNING("no JPETReader set totalEntrys set to -1");
+    totalEntrys = -1;
+  }
+  if (!JPetTaskIOTools::setUserLimits(options, totalEntrys,  firstEvent, lastEvent)) {
+    ERROR("in setUserLimits");
+    return std::make_tuple(false, -1, -1, -1);
+  }
+  return std::make_tuple(true, totalEntrys, firstEvent, lastEvent);
+}
+
+
+bool JPetTaskIO::isOutput() const
+{
+  return fIsOutput;
 }
