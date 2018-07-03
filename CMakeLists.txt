@@ -256,7 +256,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
 ## Extra files, so they are visible in your editor
 file(GLOB EXTRAS extras/**)
 add_custom_target(extra SOURCES ${EXTRAS}
-  README
+  README.md
   Doxyfile
   unitTestUtils/run_tests.pl
 )
