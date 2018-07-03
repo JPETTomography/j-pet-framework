@@ -75,7 +75,7 @@ protected:
   std::string fOutFileFullPath;
   bool fResetOutputPath;
 
-  bool fIsOutput = false; /// Temporary and very nasty way to mark that the output will be saved.
+  bool fIsOutput = true; /// Temporary and very nasty way to mark that the output will be saved.
   int fEventNb = -1;
   JPetParams fParams;
   JPetWriter* fWriter = 0;
