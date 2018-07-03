@@ -151,15 +151,9 @@ bool JPetScopeLoader::run(const JPetDataInterface&)
   auto inputScopeFiles = createInputScopeFileNames(getScopeInputDirectory(opts), prefix2PM);
   auto events = JPetScopeLoader::groupScopeFileNamesByTimeWindowIndex(inputScopeFiles);
   for (auto& ev : events) {
-    auto pOutputEvent = (dynamic_cast<JPetUserTask*>(subTask))->getOutputEvents();
-    if (pOutputEvent != nullptr) {
-      pOutputEvent->Clear();
-    } else {
-      WARNING("No proper timeWindow object returned to clear events");
-    }
     JPetScopeData data(ev);
     subTask->run(data);
-    pOutputEvent = (dynamic_cast<JPetUserTask*>(subTask))->getOutputEvents();
+    auto pOutputEvent = (dynamic_cast<JPetUserTask*>(subTask))->getOutputEvents();
     if (pOutputEvent != nullptr) {
       fWriter->write(*pOutputEvent);
     } else {
