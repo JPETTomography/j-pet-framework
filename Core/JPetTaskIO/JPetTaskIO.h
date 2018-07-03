@@ -64,6 +64,8 @@ protected:
   const JPetParamBank& getParamBank();
   JPetParamManager& getParamManager();
 
+  void saveOutput(JPetWriter* writer); /// Save all to the output file
+
   std::string fInFileType;
   std::string fOutFileType;
   std::string fOutFileFullPath;
