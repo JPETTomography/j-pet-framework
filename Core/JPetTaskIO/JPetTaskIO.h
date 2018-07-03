@@ -54,6 +54,8 @@ public:
 
   void displayProgressBar(int currentEventNumber, int numberOfEvents) const;
 
+  bool isOutput() const;
+
 protected:
   /// Method returns (isOK, inputFile, outputFileFullPath, isResetOutputPath) based on provided options.
   /// if isOK is set to false, that means that an error has occured.
@@ -61,16 +63,19 @@ protected:
   virtual bool createInputObjects(const char* inputFilename);
   virtual bool createOutputObjects(const char* outputFilename);
 
-  bool setUserLimits(const jpet_options_tools::OptsStrAny& opts, const long long kTotEventsFromReader, long long& first, long long& last) const;
-
   const JPetParamBank& getParamBank();
   JPetParamManager& getParamManager();
+
+  std::tuple<bool, long long, long long, long long> getEventRange(const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader);
+  void saveOutput(JPetWriter* writer); /// Save all to the output file
+  bool writeEventToFile(JPetWriter* writer, JPetTaskInterface* task);
 
   std::string fInFileType;
   std::string fOutFileType;
   std::string fOutFileFullPath;
   bool fResetOutputPath;
 
+  bool fIsOutput = false; /// Temporary and very nasty way to mark that the output will be saved.
   int fEventNb = -1;
   JPetParams fParams;
   JPetWriter* fWriter = 0;

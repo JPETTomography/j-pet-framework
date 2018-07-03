@@ -21,8 +21,6 @@
 #include <string>
 #include <vector>
 
-class JPetWriter;
-
 /**
  * @brief abstract class being an implementation of a computing task unit.
  * The user should implement init, exec and terminate methods in the inherited class.

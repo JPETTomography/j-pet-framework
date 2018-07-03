@@ -14,6 +14,7 @@
  */
 
 #include "JPetTaskIO.h"
+#include "JPetTaskIOTools.h"
 #include <memory>
 #include <cassert>
 #include "./JPetReader/JPetReader.h"
@@ -37,12 +38,16 @@ JPetTaskIO::JPetTaskIO(const char* name,
   fOutFileFullPath(""),
   fResetOutputPath(false)
 {
+  if (std::string(out_file_type).empty()) {
+    fIsOutput = false;
+  }
 }
 
 void JPetTaskIO::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
 {
-  if (dynamic_cast<JPetUserTask*>(subTask.get()) == nullptr)
+  if (dynamic_cast<JPetUserTask*>(subTask.get()) == nullptr) {
     ERROR("JPetTaskIO currently only allows JPetUserTask as subtask");
+  }
   fSubTasks.push_back(std::move(subTask));
 }
 
@@ -65,35 +70,19 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
     ERROR("createInputObjects");
     return false;
   }
-  if (!createOutputObjects(fOutFileFullPath.c_str())) {
-    ERROR("createOutputObjects");
-    return false;
+  if (isOutput()) {
+    if (!createOutputObjects(fOutFileFullPath.c_str())) {
+      ERROR("createOutputObjects");
+      return false;
+    }
   }
   return true;
 }
 
 std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFile(const OptsStrAny opts) const
 {
-  bool resetOutputPath = fResetOutputPath;
-  // handle input file path
-  std::string inputFilename = getInputFile(opts);
-  if ( JPetCommonTools::extractDataTypeFromFileName(inputFilename) != fInFileType ) {
-    WARNING(Form("Input file type %s does not match the one provided by the previous module (%s).",
-                 fInFileType.c_str(), JPetCommonTools::extractDataTypeFromFileName(inputFilename).c_str()));
-  }
-  inputFilename = JPetCommonTools::replaceDataTypeInFileName(inputFilename, fInFileType);
-
-  // handle output file path
-  auto outFileFullPath = inputFilename;
-  if (isOptionSet(opts, "outputPath_std::string")) {
-    std::string outputPath(getOutputPath(opts));
-    if (!outputPath.empty()) {
-      outFileFullPath = outputPath + JPetCommonTools::extractFileNameFromFullPath(getInputFile(opts));
-      resetOutputPath = true;
-    }
-  }
-  outFileFullPath = JPetCommonTools::replaceDataTypeInFileName(outFileFullPath, fOutFileType);
-  return std::make_tuple(true, inputFilename, outFileFullPath, resetOutputPath);
+  /// We cannot remove this method completely and leave the one from JPetTaskIOTools, because it  is overloaded in JPetScopeLoader class.
+  return JPetTaskIOTools::setInputAndOutputFile(opts, fResetOutputPath, fInFileType, fOutFileType);
 }
 
 bool JPetTaskIO::run(const JPetDataInterface&)
@@ -107,47 +96,41 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     return false;
   }
   for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
-    (*fSubTask)->init(fParams); //prepare current task for file
+    auto pTask = fSubTask->get();
+    pTask->init(fParams); //prepare current task for file
 
+    /// setting range of events to loop
     auto totalEntrys = 0ll;
-    if (fReader) {
-      totalEntrys = fReader->getNbOfAllEntries();
-    } else {
-      WARNING("no JPETReader set totalEntrys set to -1");
-      totalEntrys = -1;
-    }
     auto firstEvent = 0ll;
     auto lastEvent = 0ll;
-    if (!setUserLimits(fParams.getOptions(), totalEntrys,  firstEvent, lastEvent)) {
-      ERROR("in setUserLimits");
+    bool isOK = false;
+    std::tie(isOK, totalEntrys, firstEvent, lastEvent) = getEventRange(fParams.getOptions(), fReader);
+    if (!isOK) {
+      ERROR("Some error occured in getEventRange");
       return false;
     }
     assert(lastEvent >= 0);
+
+    /// loop over events
     for (auto i = firstEvent; i <= lastEvent; i++) {
 
+      ///just distraction
       if (isProgressBar(fParams.getOptions())) {
         displayProgressBar(i, lastEvent);
       }
-      auto pOutputEntry = (dynamic_cast<JPetUserTask*>(fSubTask->get()))->getOutputEvents();
-      if (pOutputEntry != nullptr) {
-        pOutputEntry->Clear();
-      } else {
-        WARNING("No proper timeWindow object returned to clear events");
-        //return false;
-      }
+
       JPetData event(fReader->getCurrentEntry());
-      fSubTask->get()->run(event);
-      pOutputEntry = (dynamic_cast<JPetUserTask*>(fSubTask->get()))->getOutputEvents();
-      if (pOutputEntry != nullptr) {
-        fWriter->write(*pOutputEntry);
-      } else {
-        ERROR("No proper timeWindow object returned to save to file, returning from subtask " + fSubTask->get()->getName());
-        return false;
+      pTask->run(event);
+      if (isOutput()) {
+        if (!writeEventToFile(fWriter, pTask)) {
+          return false;
+        }
       }
       fReader->nextEntry();
     }
+
     JPetParamsInterface fake_params;
-    (*fSubTask)->terminate(fake_params);
+    pTask->terminate(fake_params);
   }
   return true;
 }
@@ -156,60 +139,31 @@ bool JPetTaskIO::run(const JPetDataInterface&)
 bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
 {
   auto& params = dynamic_cast<JPetParams&>(output_params);
-  OptsStrAny new_opts;
-  if (FileTypeChecker::getInputFileType(fParams.getOptions()) == FileTypeChecker::kHldRoot) {
-    jpet_options_generator_tools::setOutputFileType(new_opts, "root");
-  }
-
-  if ( jpet_options_tools::getOptionAsInt(fParams.getOptions(), "firstEvent_int") != -1 &&
-       jpet_options_tools::getOptionAsInt(fParams.getOptions(), "lastEvent_int") != -1 ) {
-    jpet_options_generator_tools::setResetEventRangeOption(new_opts, true);
-  }
-
-  if (fResetOutputPath) {
-    jpet_options_generator_tools::setOutputPath(new_opts, "");
-  }
-
-  jpet_options_generator_tools::setOutputFile(new_opts, fOutFileFullPath);
-
-  params = JPetParams(new_opts, params.getParamManagerAsShared());
+  auto newOpts = JPetTaskIOTools::setOutputOptions(fParams, fResetOutputPath, fOutFileFullPath);
+  params = JPetParams(newOpts, params.getParamManagerAsShared());
 
   if (!fReader) {
     ERROR("fReader set to null");
     return false;
   }
-  if (!fWriter) {
-    ERROR("fWriter set to null");
-    return false;
+  if (isOutput()) {
+    if (!fWriter) {
+      ERROR("fWriter set to null");
+      return false;
+    }
+    if (!fHeader) {
+      ERROR("fHeader set to null");
+      return false;
+    }
+    if (!fStatistics.get()) {
+      ERROR("fStatistics set to null");
+      return false;
+    }
+
+    saveOutput(fWriter);
+
+    fWriter->closeFile();
   }
-  if (!fHeader) {
-    ERROR("fHeader set to null");
-    return false;
-  }
-  if (!fStatistics.get()) {
-    ERROR("fStatistics set to null");
-    return false;
-  }
-
-  assert(fReader);
-  assert(fWriter);
-  assert(fHeader);
-  assert(fStatistics.get());
-
-  fWriter->writeHeader(fHeader);
-  fWriter->writeCollection(fStatistics->getStatsTable(), "Main Task Stats");
-  for (auto it = fSubTasksStatistics.begin(); it != fSubTasksStatistics.end(); it++) {
-    if (it->second)
-      fWriter->writeCollection(it->second->getStatsTable(), it->first.c_str());
-  }
-
-
-  //store the parametric objects in the ouptut ROOT file
-  getParamManager().saveParametersToFile(
-    fWriter);
-  getParamManager().clearParameters();
-
-  fWriter->closeFile();
   fReader->closeFile();
   return true;
 }
@@ -239,17 +193,10 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
   auto options = fParams.getOptions();
   assert(!fReader);
   fReader = new JPetReader;
-  if ( fReader->openFileAndLoadData(inputFilename, JPetReader::kRootTreeName.c_str())) {
-    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ) {
-      // create a header to be stored along with the output tree
-      fHeader = new JPetTreeHeader(getRunNumber(options));
-      fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
-      fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
-
-      // add general info to the Tree header
-      fHeader->setBaseFileName(getInputFile(options).c_str());
-
-    } else {
+  if (fReader->openFileAndLoadData(inputFilename, JPetReader::kRootTreeName.c_str())) {
+    /// For all types of files which has not hld format we assume
+    /// that we can read paramBank from the file.
+    if (FileTypeChecker::getInputFileType(options) != FileTypeChecker::kHldRoot ) {
       auto paramManager = fParams.getParamManager();
       assert(paramManager);
       if (!paramManager->readParametersFromFile(dynamic_cast<JPetReader*> (fReader))) {
@@ -257,23 +204,7 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
         return false;
       }
       assert(paramManager->getParamBank().getPMsSize() > 0);
-      // read the header from the previous analysis stage
-      fHeader = dynamic_cast<JPetReader*>(fReader)->getHeaderClone();
     }
-    // create an object for storing histograms and counters during processing
-    // make_unique is not available in c++11 :(
-    std::unique_ptr<JPetStatistics> tmpUnique(new JPetStatistics);
-    fStatistics = std::move(tmpUnique);
-    //fStatistics = std::make_unique<JPetStatistics>();
-
-    // add info about this module to the processing stages' history in Tree header
-    //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
-    for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
-      auto task = dynamic_cast<JPetUserTask*>((*fSubTask).get());
-      fHeader->addStageInfo(task->getName(), "", 0,
-                            JPetCommonTools::getTimeString());
-    }
-
   } else {
     ERROR(inputFilename + std::string(": Unable to open the input file or load the tree"));
     return false;
@@ -283,8 +214,41 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
 
 bool JPetTaskIO::createOutputObjects(const char* outputFilename)
 {
+  if (!isOutput()) {
+    ERROR("isOutput set to false and you are trying to createOutputObjects");
+    return false;
+  }
   fWriter = new JPetWriter( outputFilename );
   assert(fWriter);
+  using namespace jpet_options_tools;
+  auto options = fParams.getOptions();
+  if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ) {
+    // create a header to be stored along with the output tree
+    fHeader = new JPetTreeHeader(getRunNumber(options));
+    fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
+    fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
+
+    // add general info to the Tree header
+    fHeader->setBaseFileName(getInputFile(options).c_str());
+  } else {
+    // read the header from the previous analysis stage
+    fHeader = dynamic_cast<JPetReader*>(fReader)->getHeaderClone();
+  }
+
+  // create an object for storing histograms and counters during processing
+  // make_unique is not available in c++11 :(
+  std::unique_ptr<JPetStatistics> tmpUnique(new JPetStatistics);
+  fStatistics = std::move(tmpUnique);
+  //fStatistics = std::make_unique<JPetStatistics>();
+
+  // add info about this module to the processing stages' history in Tree header
+  //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
+  for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
+    auto task = dynamic_cast<JPetUserTask*>((*fSubTask).get());
+    fHeader->addStageInfo(task->getName(), "", 0,
+                          JPetCommonTools::getTimeString());
+  }
+
   if (!fSubTasks.empty()) {
     int i = 0;
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
@@ -309,7 +273,6 @@ void JPetTaskIO::displayProgressBar(int currentEventNumber, int numberOfEvents) 
   return fProgressBar.display(currentEventNumber, numberOfEvents);
 }
 
-
 const JPetParamBank& JPetTaskIO::getParamBank()
 {
   DEBUG("from JPetTaskIO");
@@ -330,41 +293,58 @@ JPetTaskIO::~JPetTaskIO()
   }
 }
 
-/// Sets values of firstEvent and lastEvent based on user options opts and total number of events from JPetReader
-// if the totEventsFromReader is less than 0, than first and last are set to -1.
-bool JPetTaskIO::setUserLimits(const OptsStrAny& opts, const long long kTotEventsFromReader, long long& first, long long& last) const
+void JPetTaskIO::saveOutput(JPetWriter* writer)
 {
-  const auto kLastEvent = getLastEvent(opts);
-  const auto kFirstEvent = getFirstEvent(opts);
-  if ( kTotEventsFromReader < 1) {
-    WARNING("kTotEvetnsFromReader < 1, first and last set to -1");
-    first = last = -1;
+  assert(writer);
+  assert(fHeader);
+  assert(fStatistics.get());
+
+  writer->writeHeader(fHeader);
+  writer->writeCollection(fStatistics->getStatsTable(), "Main Task Stats");
+  for (auto it = fSubTasksStatistics.begin(); it != fSubTasksStatistics.end(); it++) {
+    if (it->second)
+      writer->writeCollection(it->second->getStatsTable(), it->first.c_str());
+  }
+
+  //store the parametric objects in the ouptut ROOT file
+  getParamManager().saveParametersToFile(
+    writer);
+  getParamManager().clearParameters();
+}
+
+bool JPetTaskIO::writeEventToFile(JPetWriter* writer, JPetTaskInterface* task)
+{
+  auto pUserTask = (dynamic_cast<JPetUserTask*>(task));
+  auto pOutputEntry = pUserTask->getOutputEvents();
+  if (pOutputEntry != nullptr) {
+    fWriter->write(*pOutputEntry);
   } else {
-    if ( kFirstEvent < 0) {
-      first = 0;
-    } else {
-      first = kFirstEvent < kTotEventsFromReader ? kFirstEvent : kTotEventsFromReader - 1;
-    }
-    if (kLastEvent < 0)  {
-      last = kTotEventsFromReader - 1;
-    } else {
-      last = kLastEvent < kTotEventsFromReader ? kLastEvent : kTotEventsFromReader - 1;
-    }
-  }
-  if (first < 0) {
-    ERROR("first <0");
+    ERROR("No proper timeWindow object returned to save to file, returning from subtask " + task->getName());
     return false;
   }
-  if (last < 0) {
-    ERROR("last < 0");
-    return false;
-  }
-  if (first > last) {
-    ERROR("first > last");
-    return false;
-  }
-  assert(first >= 0);
-  assert(last >= 0);
-  assert(first <= last);
   return true;
+}
+
+std::tuple<bool, long long, long long, long long> JPetTaskIO::getEventRange(const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader)
+{
+  auto totalEntrys = 0ll;
+  auto firstEvent = 0ll;
+  auto lastEvent = 0ll;
+  if (fReader) {
+    totalEntrys = fReader->getNbOfAllEntries();
+  } else {
+    WARNING("no JPETReader set totalEntrys set to -1");
+    totalEntrys = -1;
+  }
+  if (!JPetTaskIOTools::setUserLimits(options, totalEntrys,  firstEvent, lastEvent)) {
+    ERROR("in setUserLimits");
+    return std::make_tuple(false, -1, -1, -1);
+  }
+  return std::make_tuple(true, totalEntrys, firstEvent, lastEvent);
+}
+
+
+bool JPetTaskIO::isOutput() const
+{
+  return fIsOutput;
 }
