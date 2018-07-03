@@ -93,6 +93,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
   for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
     (*fSubTask)->init(fParams); //prepare current task for file
 
+    /// setting range of events to loop
     auto totalEntrys = 0ll;
     if (fReader) {
       totalEntrys = fReader->getNbOfAllEntries();
@@ -107,29 +108,57 @@ bool JPetTaskIO::run(const JPetDataInterface&)
       return false;
     }
     assert(lastEvent >= 0);
+
+    //for (auto i = firstEvent; i <= lastEvent; i++) {
+
+      /////just distraction
+      //if (isProgressBar(fParams.getOptions())) {
+        //displayProgressBar(i, lastEvent);
+      //}
+      //auto pUserTask= (dynamic_cast<JPetUserTask*>(fSubTask->get()));
+
+      //auto pOutputEntry = pUserTask->getOutputEvents();
+      //if (pOutputEntry != nullptr) {
+        //pOutputEntry->Clear();
+      //} else {
+        //WARNING("No proper timeWindow object returned to clear events");
+      //}
+
+      //JPetData event(fReader->getCurrentEntry());
+
+      //fSubTask->get()->run(event);
+      //TASK::Event->Clean();
+      //TASK::RUN(event)
+      //WRITE(EVENT)
+      //}
+
+      //fReader->nextEntry();
+    //}
+
+    /// loop over events
     for (auto i = firstEvent; i <= lastEvent; i++) {
 
+      ///just distraction
       if (isProgressBar(fParams.getOptions())) {
         displayProgressBar(i, lastEvent);
       }
-      auto pOutputEntry = (dynamic_cast<JPetUserTask*>(fSubTask->get()))->getOutputEvents();
-      if (pOutputEntry != nullptr) {
-        pOutputEntry->Clear();
-      } else {
-        WARNING("No proper timeWindow object returned to clear events");
-        //return false;
-      }
+
       JPetData event(fReader->getCurrentEntry());
+
       fSubTask->get()->run(event);
-      pOutputEntry = (dynamic_cast<JPetUserTask*>(fSubTask->get()))->getOutputEvents();
+
+      auto pUserTask= (dynamic_cast<JPetUserTask*>(fSubTask->get()));
+      auto pOutputEntry = pUserTask->getOutputEvents();
       if (pOutputEntry != nullptr) {
         fWriter->write(*pOutputEntry);
       } else {
         ERROR("No proper timeWindow object returned to save to file, returning from subtask " + fSubTask->get()->getName());
         return false;
       }
+
       fReader->nextEntry();
     }
+    
     JPetParamsInterface fake_params;
     (*fSubTask)->terminate(fake_params);
   }
