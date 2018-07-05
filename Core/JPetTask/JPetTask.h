@@ -29,7 +29,7 @@ class JPetWriter;
  * Basic class for creating a task for computation or analyses. It is a parent
  * class for User Tasks and oters. The implementation should include
  * init, exec and terminate methods in the inherited class.
- * TODO: there are no tests for this class
+ * @todo Add tests for this class. Any.
  */
 class JPetTask: public JPetTaskInterface
 {

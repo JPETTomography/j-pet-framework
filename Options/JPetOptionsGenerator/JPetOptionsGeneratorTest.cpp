@@ -53,7 +53,6 @@ BOOST_AUTO_TEST_CASE(generateOptions_emptyOptions)
   BOOST_REQUIRE(result.empty());
 }
 
-/// @todo add infile.root and infile2.root files to sphinx
 BOOST_AUTO_TEST_CASE(generateOptions_oneFileOneTask)
 {
   JPetOptionsGenerator gener;

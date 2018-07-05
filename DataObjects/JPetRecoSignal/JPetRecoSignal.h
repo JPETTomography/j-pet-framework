@@ -136,7 +136,7 @@ public:
 
   /**
    * @brief Get the JPetRawSignal object from which this RecoSignal was created
-   * TODO return null object if raw signal was not set (e.g. for scope signals)
+   * @todo return null object if raw signal was not set (e.g. for scope signals)
    */
   const JPetRawSignal& getRawSignal() const
   {

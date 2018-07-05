@@ -37,7 +37,8 @@ class boost::noncopyable;
  *
  * All objects inheriting from JPetAnalysisModule should use this class
  * in order to access and read data from ROOT files.
- * TODO: see TTree GetEntry method, add test of file with no JPetTreeHeader
+ * @todo Add the correct file to 'file_with_no_jpettreeheader' test and
+ * see TTree GetEntry method, add test of file with no JPetTreeHeader
  */
 class JPetReader : private boost::noncopyable, public JPetReaderInterface
 {

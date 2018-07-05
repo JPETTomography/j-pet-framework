@@ -24,7 +24,7 @@
 
 /**
  * @brief Helper class to calculate several things based on parameter objects.
- * TODO add test to this class
+ * @todo Add tests for this class. Any.
  */
 class JPetParamUtils
 {

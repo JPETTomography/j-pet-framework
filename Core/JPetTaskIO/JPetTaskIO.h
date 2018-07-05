@@ -36,7 +36,7 @@ class JPetReader;
  * Class representing computing task with input/output operations.
  * In the current implementation the single entry that is read by the reader
  * corresponds to a JPetTimeWindow object.
- * TODO Add tests for this class
+ * @todo Add tests for this class. Any.
  */
 class JPetTaskIO: public JPetTask
 {

@@ -27,7 +27,8 @@ typedef std::map<int, int> ParamRelationalData;
 
 /**
  * @brief An interface classes can implement to return JPetParamBank objects.
- * TODO typedefs are ugly, if you are reading this and we upgraded to ROOT 6 please change to using
+ * @todo Typedefs are ugly, if you are reading this and we upgraded
+ * to ROOT 6 please change to using...
  */
 class JPetParamGetter
 {

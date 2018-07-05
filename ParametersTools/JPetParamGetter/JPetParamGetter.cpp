@@ -20,6 +20,7 @@
 /**
  * Parsing the string description of a TOMB channel to extract the channel number
  * convention: tast 4 characters of the description represent the number
+ * @todo Handle parsing error somehow
  */
 int JPetParamGetter::getTOMBChannelFromDescription(std::string p_desc)
 {
@@ -31,7 +32,6 @@ int JPetParamGetter::getTOMBChannelFromDescription(std::string p_desc)
   if (boost::regex_match(p_desc, l_matches, l_regex)) {
     l_TOMB_no = boost::lexical_cast<int>(l_matches[1]);
   } else {
-    // @todo: handle parsing error somehow
     ERROR("Unable to parse TOMBInput description to get channel number.");
   }
   return l_TOMB_no;

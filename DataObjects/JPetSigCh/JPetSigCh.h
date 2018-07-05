@@ -31,7 +31,7 @@
  *
  * Represents time of signal from one PMT crossing a certain voltage threshold
  * at either leading or trailing edge of the signal.
- * TODO tests are outdated
+ * @todo Tests are outdated
  */
 class JPetSigCh: public TObject
 {

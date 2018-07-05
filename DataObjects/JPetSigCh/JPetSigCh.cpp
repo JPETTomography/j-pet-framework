@@ -33,9 +33,12 @@ void JPetSigCh::init() {
   fTOMBChannel = NULL;
 }
 
+/**
+ * Constructor
+ * @todo Perform some sanity checks of the given values
+ */
 JPetSigCh::JPetSigCh(EdgeType Edge, float EdgeTime) {
   init();
-  /// @todo: perform some sanity checks of the given values
   assert(EdgeTime > 0.);
   fType = Edge;
   fValue = EdgeTime;

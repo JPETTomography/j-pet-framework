@@ -16,12 +16,6 @@
 #ifndef JPETWRITER_H
 #define JPETWRITER_H
 
-#include <TFile.h>
-#include <TList.h>
-#include <TTree.h>
-#include <vector>
-#include <string>
-
 #ifndef __CINT__
 #include <boost/noncopyable.hpp>
 #else
@@ -41,13 +35,18 @@ class boost::noncopyable;
 #include "./JPetFEB/JPetFEB.h"
 #include "./JPetTRB/JPetTRB.h"
 #include "./JPetPM/JPetPM.h"
+#include <TFile.h>
+#include <TList.h>
+#include <TTree.h>
+#include <vector>
+#include <string>
 
 /**
  * @brief A class responsible for writing any data to ROOT trees.
  *
  * All objects inheriting from JPetAnalysisModule should use this class
  * in order to access and write to ROOT files.
- * TODO Extract consts because it should be common both for Writer and Reader.
+ * @todo Extract consts because it should be common both for Writer and Reader.
  */
 class JPetWriter : private boost::noncopyable
 {

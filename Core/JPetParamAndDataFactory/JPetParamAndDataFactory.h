@@ -37,9 +37,9 @@
  *
  * A namespace contains set of factory methods to create
  * fully operational parameter and data objects.
- * TODO: in the test class there is no test for Time Window
+ *
+ * @todo There is no test for Time Window
  */
-
 namespace param_and_data_factory
 {
 JPetScin makeScin(int id, float attenLen, float length,
