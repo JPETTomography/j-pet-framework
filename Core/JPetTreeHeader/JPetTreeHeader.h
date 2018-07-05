@@ -87,11 +87,11 @@ protected:
   std::vector<ProcessingStageInfo> fStages;
   std::string stringifyDictionary() const;
   std::string stringifyHistory() const;
-  std::string fFrameworkRevision;
   std::string fFrameworkVersion;
+  std::string fFrameworkRevision;
+  int fRunNo;
   std::string fBaseFilename;
   double fSourcePosition;
-  int fRunNo;
   ProcessingStageInfo emptyStage;
 
   ClassDef(JPetTreeHeader, 4);

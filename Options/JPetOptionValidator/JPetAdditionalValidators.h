@@ -19,4 +19,4 @@
 
 bool additionalCheckIfRunIdIsOk(std::pair <std::string, boost::any> option);
 
-#endif /* J_PET_ADDITIONAL_VALIDATORS_H *?
+#endif /* J_PET_ADDITIONAL_VALIDATORS_H */

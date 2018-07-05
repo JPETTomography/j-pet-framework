@@ -212,10 +212,10 @@ private:
   std::map<float, float> fRecoTimesAtThreshold;
   std::vector<shapePoint> fShape;
   JPetRawSignal fRawSignal;
-  double fCharge;
   double fDelay;
   double fAmplitude;
   double fOffset;
+  double fCharge;
 
  ClassDef(JPetRecoSignal, 2);
 
