@@ -35,10 +35,8 @@ public:
   JPetLayer();
   JPetLayer(int id, bool isActive, std::string name, float radius);
   explicit JPetLayer(bool isNull);
-
   bool operator==(const JPetLayer& layer) const;
   bool operator!=(const JPetLayer& layer) const;
-
   int getID() const;
   bool getIsActive() const;
   std::string getName() const;

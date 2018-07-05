@@ -50,133 +50,272 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FactorySuite)
 
-class TestParamGetter: public JPetParamGetter
-{
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId) {
+class TestParamGetter: public JPetParamGetter {
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type,
+    const int runId) {
     ParamObjectsDescriptions result;
     switch (type) {
-      case ParamObjectType::kBarrelSlot:
-        switch (runId) {
-          case 0:
-            break;
-          case 1:
-            break;
-          case 2:
-            result = {
-              {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"name", "pepe"},
-                {"theta1", "5.5"},
-                {"frame_id", "6"}
-                }
+    case ParamObjectType::kBarrelSlot:
+      switch (runId) {
+      case 0:
+        break;
+      case 1:
+        break;
+      case 5:
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
               },
-              {5, {
-                {"id", "5"},
-                {"active", "0"},
-                {"name", "smoothface"},
-                {"theta1", "6.5"},
-                {"frame_id", "7"}
-                }
+              {
+                "active",
+                "1"
+              },
+              {
+                "name",
+                "pepe"
+              },
+              {
+                "theta1",
+                "5.5"
+              },
+              {
+                "frame_id",
+                "6"
               }
-            };
-            break;
-          case 3:
-            result = {
-              {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"theta1", "5.5"},
-                {"frame_id", "6"}
-                }
+            }
+          }
+        };
+        break;
+      case 2:
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "active",
+                "1"
+              },
+              {
+                "name",
+                "pepe"
+              },
+              {
+                "theta1",
+                "5.5"
+              },
+              {
+                "frame_id",
+                "6"
               }
-            };
-            break;
-          case 4:
-            result = {
-              {1, {
-                {"id", "1"},
-                {"active", "probably"},
-                {"name", "pepe"},
-                {"theta1", "5.5"},
-                {"frame_id", "6"}
-                }
+            }
+          },
+          {
+            5,
+            {
+              {
+                "id",
+                "5"
+              },
+              {
+                "active",
+                "0"
+              },
+              {
+                "name",
+                "smoothface"
+              },
+              {
+                "theta1",
+                "6.5"
+              },
+              {
+                "frame_id",
+                "7"
               }
-            };
-            break;
-          case 5:
-            result = {
-              {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"name", "pepe"},
-                {"theta1", "5.5"},
-                {"frame_id", "6"}
-                }
+            }
+          }
+        };
+        break;
+      case 3:
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "active",
+                "1"
+              },
+              {
+                "theta1",
+                "5.5"
+              },
+              {
+                "frame_id",
+                "6"
               }
-            };
-            break;
+            }
+          }
+        };
+        break;
+      case 4:
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "active",
+                "probably"
+              },
+              {
+                "name",
+                "pepe"
+              },
+              {
+                "theta1",
+                "5.5"
+              },
+              {
+                "frame_id",
+                "6"
+              }
+            }
+          }
+        };
+        break;
+      }
+      break;
+    case ParamObjectType::kLayer:
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "name",
+              "ala"
+            },
+            {
+              "radius",
+              "10.5"
+            }
+          }
         }
-        break;
-      case ParamObjectType::kLayer:
-        result = {
-          {1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"name", "ala"},
-            {"radius", "10.5"}
+      };
+      break;
+    case ParamObjectType::kFrame:
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "status",
+              "ok"
+            },
+            {
+              "description",
+              "descr1"
+            },
+            {
+              "version",
+              "2"
+            },
+            {
+              "creator_id",
+              "1"
             }
           }
-        };
-        break;
-      case ParamObjectType::kFrame:
-        result = {
-          {1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"status", "ok"},
-            {"description", "descr1"},
-            {"version", "2"},
-            {"creator_id", "1"}
-            }
-          }
-        };
-        break;
-      default: //Other cases not needed.
-        break;
+        }
+      };
+      break;
+    default:
+      break;
     }
     return result;
   }
 
-ParamRelationalData getAllRelationalData(
-  ParamObjectType type1, ParamObjectType, const int runId)
-{
-  ParamRelationalData result;
-  switch (type1) {
+  ParamRelationalData getAllRelationalData(
+    ParamObjectType type1, ParamObjectType,
+    const int runId) {
+    ParamRelationalData result;
+    switch (type1) {
     case ParamObjectType::kBarrelSlot:
       switch (runId) {
-        case 0:
-          break;
-        case 1:
-          result = {{1, 1}};
-          break;
-        case 2:
-          result = {{1, 1}, {5, 1}};
-          break;
-        case 5:
-          result = {{1, 43}};
-          break;
+      case 0:
+        break;
+      case 1:
+        result = {
+          {
+            1,
+            1
+          }
+        };
+        break;
+      case 2:
+        result = {
+          {
+            1,
+            1
+          },
+          {
+            5,
+            1
+          }
+        };
+        break;
+      case 5:
+        result = {
+          {
+            1,
+            43
+          }
+        };
+        break;
       }
       break;
     case ParamObjectType::kLayer:
-      result = {{1, 1}};
+      result = {
+        {
+          1,
+          1
+        }
+      };
       break;
     default:
       break;
+    }
+    return result;
   }
-  return result;
-}
-
 };
 
 TestParamGetter paramGetter;

@@ -41,119 +41,302 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FactorySuite)
 
-class TestParamGetter : public JPetParamGetter
-{
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId)
-  {
+class TestParamGetter: public JPetParamGetter {
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type,
+    const int runId) {
     ParamObjectsDescriptions result;
     switch (type) {
     case ParamObjectType::kPM:
       switch (runId) {
-        case 0:
-          break;
-        case 1:
-        case 2:
-          result = {{1, {
-            {"id", "1"},
-            {"is_right_side", "1"},
-            {"description", "no writing"}
-          }},
-          {5, {
-            {"id", "5"},
-            {"is_right_side", "0"},
-            {"description", "some writing"}
-          }}
-          };
-          break;
-        case 3:
-          result = {{1, {
-            {"id", "1"},
-            {"description", "some writing"}
-          }}};
-          break;
-        case 4:
-          result = {{1, {
-            {"id", "1"},
-            {"is_right_side", "probably"},
-            {"description", "some writing"}
-            }}
-          };
-          break;
-        case 5:
-        case 6:
-        case 7:
-          result = {{1, {
-            {"id", "1"},
-            {"is_right_side", "1"},
-            {"description", "no writing"}
-            }}
-          };
-          break;
-        }
+      case 0: //No PMs
         break;
-      case ParamObjectType::kFEB:
-        result = {{1, {
-          {"id", "1"},
-          {"active", "1"},
-          {"status", "healthy"},
-          {"description", "tall"},
-          {"version", "27"},
-          {"creator_id", "44"},
-          {"time_outputs_per_input", "2"},
-          {"no_time_outputs_per_input", "3"}
-          }}
+      case 1: //Simple single object
+      case 5: //Wrong FEB relation
+      case 6: //Wrong scin relation
+      case 7: //Wrong barrel slot relation
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "is_right_side",
+                "1"
+              },
+              {
+                "description",
+                "no writing"
+              }
+            }
+          }
         };
         break;
-      case ParamObjectType::kTRB:
-        result = {{1, {
-          {"id", "1"},
-          {"type", "1"},
-          {"channel", "224"}
-        }}};
+      case 2: //Simple two objects
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "is_right_side",
+                "1"
+              },
+              {
+                "description",
+                "no writing"
+              }
+            }
+          },
+          {
+            5,
+            {
+              {
+                "id",
+                "5"
+              },
+              {
+                "is_right_side",
+                "0"
+              },
+              {
+                "description",
+                "some writing"
+              }
+            }
+          }
+        };
         break;
-      case ParamObjectType::kScintillator:
-        result = {{1, {
-          {"id", "1"},
-          {"attenuation_length", "10.34"},
-          {"length", "100"},
-          {"width", "4.5"},
-          {"height", "2.5"}
-        }}};
+      case 3: //Object with missing field
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "description",
+                "some writing"
+              }
+            }
+          }
+        };
         break;
-      case ParamObjectType::kBarrelSlot:
-        result = {{1, {
-          {"id", "1"},
-          {"active", "1"},
-          {"name", "pepe"},
-          {"theta1", "5.5"},
-          {"frame_id", "6"}
-        }}};
+      case 4: //Object with wrong field
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "is_right_side",
+                "probably"
+              },
+              {
+                "description",
+                "some writing"
+              }
+            }
+          }
+        };
         break;
-      case ParamObjectType::kLayer:
-        result = {{1, {
-          {"id", "1"},
-          {"active", "1"},
-          {"name", "ala"},
-          {"radius", "10.5"}
-        }}};
-        break;
-      case ParamObjectType::kFrame:
-        result = {{1, {
-          {"id", "1"},
-          {"active", "1"},
-          {"status", "ok"},
-          {"description", "descr1"},
-          {"version", "2"},
-          {"creator_id", "1"}
-        }}};
-        break;
-      default:
-        break;
+      }
+      break;
+    case ParamObjectType::kFEB:
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "status",
+              "healthy"
+            },
+            {
+              "description",
+              "tall"
+            },
+            {
+              "version",
+              "27"
+            },
+            {
+              "creator_id",
+              "44"
+            },
+            {
+              "time_outputs_per_input",
+              "2"
+            },
+            {
+              "no_time_outputs_per_input",
+              "3"
+            }
+          }
+        }
+      };
+      break;
+    case ParamObjectType::kTRB:
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "type",
+              "1"
+            },
+            {
+              "channel",
+              "224"
+            }
+          }
+        }
+      };
+      break;
+    case ParamObjectType::kScintillator:
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "attenuation_length",
+              "10.34"
+            },
+            {
+              "length",
+              "100"
+            },
+            {
+              "width",
+              "4.5"
+            },
+            {
+              "height",
+              "2.5"
+            }
+          }
+        }
+      };
+      break;
+    case ParamObjectType::kBarrelSlot:
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "name",
+              "pepe"
+            },
+            {
+              "theta1",
+              "5.5"
+            },
+            {
+              "frame_id",
+              "6"
+            }
+          }
+        }
+      };
+      break;
+    case ParamObjectType::kLayer:
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "name",
+              "ala"
+            },
+            {
+              "radius",
+              "10.5"
+            }
+          }
+        }
+      };
+      break;
+    case ParamObjectType::kFrame:
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "status",
+              "ok"
+            },
+            {
+              "description",
+              "descr1"
+            },
+            {
+              "version",
+              "2"
+            },
+            {
+              "creator_id",
+              "1"
+            }
+          }
+        }
+      };
+      break;
+    default: //Other cases not needed.
+      break;
     }
     return result;
   }
-  ParamRelationalData getAllRelationalData(ParamObjectType type1, ParamObjectType type2, const int runId)
-  {
+  ParamRelationalData getAllRelationalData(ParamObjectType type1, ParamObjectType type2,
+    const int runId) {
     ParamRelationalData result;
     switch (type1) {
     case ParamObjectType::kPM:
@@ -162,25 +345,40 @@ class TestParamGetter : public JPetParamGetter
         break;
       case 1: //Simple single object
         result = {
-          {1, 1}
+          {
+            1,
+            1
+          }
         };
         break;
       case 2: //Simple two objects
         result = {
-          {1, 1},
-          {5, 1}
+          {
+            1,
+            1
+          },
+          {
+            5,
+            1
+          }
         };
         break;
       case 5: //Wrong FEB relation
         switch (type2) {
         case ParamObjectType::kFEB:
           result = {
-            {1, 43}
+            {
+              1,
+              43
+            }
           };
           break;
         default:
           result = {
-            {1, 1}
+            {
+              1,
+              1
+            }
           };
           break;
         }
@@ -188,12 +386,18 @@ class TestParamGetter : public JPetParamGetter
         switch (type2) {
         case ParamObjectType::kScintillator:
           result = {
-            {1, 43}
+            {
+              1,
+              43
+            }
           };
           break;
         default:
           result = {
-            {1, 1}
+            {
+              1,
+              1
+            }
           };
           break;
         }
@@ -201,12 +405,18 @@ class TestParamGetter : public JPetParamGetter
         switch (type2) {
         case ParamObjectType::kBarrelSlot:
           result = {
-            {1, 43}
+            {
+              1,
+              43
+            }
           };
           break;
         default:
           result = {
-            {1, 1}
+            {
+              1,
+              1
+            }
           };
           break;
         }
@@ -214,7 +424,10 @@ class TestParamGetter : public JPetParamGetter
       break;
     default:
       result = {
-        {1, 1}
+        {
+          1,
+          1
+        }
       };
       break;
     }

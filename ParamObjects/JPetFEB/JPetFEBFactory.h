@@ -29,18 +29,18 @@
 class JPetFEBFactory
 {
 public:
-  JPetFEBFactory(JPetParamGetter & paramGetter, int runId, JPetTRBFactory & trbFactory):
+  JPetFEBFactory(JPetParamGetter &paramGetter, int runId, JPetTRBFactory &trbFactory):
     paramGetter(paramGetter), runId(runId), trbFactory(trbFactory), fInitialized(false) {}
-  std::map<int, JPetFEB *> & getFEBs();
+  std::map<int, JPetFEB*> &getFEBs();
 
 private:
-  JPetFEB* build(ParamObjectDescription data);
-  JPetParamGetter& paramGetter;
-  JPetTRBFactory& trbFactory;
-  std::map<int, JPetFEB*> fFEBs;
-  bool fInitialized;
-  void initialize();
+  JPetParamGetter &paramGetter;
   const int runId;
+  JPetTRBFactory &trbFactory;
+  bool fInitialized;
+  std::map<int, JPetFEB*> fFEBs;
+  void initialize();
+  JPetFEB* build(ParamObjectDescription data);
 };
 
 #endif /* !JPET_FEB_FACTORY_H */

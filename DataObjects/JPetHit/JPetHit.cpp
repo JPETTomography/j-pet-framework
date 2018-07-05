@@ -31,7 +31,7 @@ JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos,
 {
   fIsSignalAset = true;
   fIsSignalBset = true;
-  if (!checkConsistency()) ERROR("Problem with creating Hit - consistency check failed.");
+  if (!checkConsistency()) { ERROR("Problem with creating Hit - consistency check failed."); }
 }
 
 /**

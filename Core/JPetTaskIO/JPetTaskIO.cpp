@@ -194,8 +194,9 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
  */
 void JPetTaskIO::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
 {
-  if (dynamic_cast<JPetUserTask*>(subTask.get()) == nullptr)
+  if (dynamic_cast<JPetUserTask*>(subTask.get()) == nullptr) {
     ERROR("JPetTaskIO currently only allows JPetUserTask as a subtask");
+  }
   fSubTasks.push_back(std::move(subTask));
 }
 
@@ -243,7 +244,7 @@ std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFi
 }
 
 /**
- * 
+ *
  */
 bool JPetTaskIO::createInputObjects(const char* inputFilename)
 {

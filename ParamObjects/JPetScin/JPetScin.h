@@ -44,10 +44,8 @@ public:
   explicit JPetScin(bool isNull);
   JPetScin(int id, float attenLen, float length, float height, float width);
   ~JPetScin();
-
   bool operator==(const JPetScin& scin) const;
   bool operator!=(const JPetScin& scin) const;
-
   int getID() const;
   void setScinSize(ScinDimensions size);
   void setScinSize(Dimension dim, float value);

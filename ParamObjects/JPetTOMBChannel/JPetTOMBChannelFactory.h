@@ -35,18 +35,18 @@ public:
     JPetFEBFactory &febFactory, JPetTRBFactory &TRBFactory, JPetPMFactory &PMFactory):
     paramGetter(paramGetter), runId(runId), febFactory(febFactory),
     TRBFactory(TRBFactory), PMFactory(PMFactory), fInitialized(false) {}
-  std::map<int, JPetTOMBChannel *> & getTOMBChannels();
+  std::map<int, JPetTOMBChannel*> & getTOMBChannels();
 
 private:
-  JPetTOMBChannel * build(ParamObjectDescription data);
-  std::map<int, JPetTOMBChannel *> fTOMBChannels;
-  JPetParamGetter & paramGetter;
-  JPetFEBFactory & febFactory;
-  JPetTRBFactory & TRBFactory;
-  JPetPMFactory & PMFactory;
-  bool fInitialized;
-  void initialize();
+  JPetParamGetter &paramGetter;
   const int runId;
+  JPetFEBFactory &febFactory;
+  JPetTRBFactory &TRBFactory;
+  JPetPMFactory &PMFactory;
+  bool fInitialized;
+  std::map<int, JPetTOMBChannel*> fTOMBChannels;
+  void initialize();
+  JPetTOMBChannel* build(ParamObjectDescription data);
 };
 
 #endif /* JPET_TOMB_CHANNEL_FACTORY_H */

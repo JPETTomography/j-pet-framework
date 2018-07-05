@@ -30,15 +30,15 @@ class JPetTRBFactory
 public:
   JPetTRBFactory(JPetParamGetter & paramGetter, int runId):
     paramGetter(paramGetter), runId(runId), fInitialized(false) {}
-  std::map<int, JPetTRB *> & getTRBs();
+  std::map<int, JPetTRB*> &getTRBs();
 
 private:
-  JPetTRB * build(ParamObjectDescription data);
-  std::map<int, JPetTRB *> fTRBs;
-  JPetParamGetter & paramGetter;
-  bool fInitialized;
-  void initialize();
+  JPetParamGetter &paramGetter;
   const int runId;
+  bool fInitialized;
+  std::map<int, JPetTRB*> fTRBs;
+  void initialize();
+  JPetTRB* build(ParamObjectDescription data);
 };
 
 #endif /* !JPET_TRB_FACTORY_H */

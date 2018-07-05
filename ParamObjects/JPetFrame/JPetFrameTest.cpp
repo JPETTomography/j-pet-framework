@@ -48,79 +48,177 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FactorySuite)
 
-class TestParamGetter : public JPetParamGetter
-{
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType, const int runId) {
+class TestParamGetter: public JPetParamGetter {
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType,
+    const int runId) {
     ParamObjectsDescriptions result;
     switch (runId) {
-      case 0:
-        break;
-      case 1:
-        result = {
-          {1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"status", "ok"},
-            {"description", "descr1"},
-            {"version", "2"},
-            {"creator_id", "1"}
+    case 0: //No frames
+      break;
+    case 1: //Simple single object
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "status",
+              "ok"
+            },
+            {
+              "description",
+              "descr1"
+            },
+            {
+              "version",
+              "2"
+            },
+            {
+              "creator_id",
+              "1"
             }
           }
-        };
-        break;
-      case 2:
-        result = {
-          {1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"status", "ok"},
-            {"description", "descr1"},
-            {"version", "2"},
-            {"creator_id", "1"}
-            }
-          },
-          {5, {
-            {"id", "5"},
-            {"active", "0"},
-            {"status", "fainted"},
-            {"description", "looks like a fish"},
-            {"version", "1"},
-            {"creator_id", "99"}
-            }
-          }
-        };
-        break;
-      case 3:
-        result = {
-          {1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"status", "ok"},
-            {"version", "2"},
-            {"creator_id", "1"}
-            }
-          }
-        };
-        break;
-      case 4:
-        result = {
-          {1, {
-            {"id", "1"},
-            {"active", "probably"},
-            {"status", "ok"},
-            {"description", "descr1"},
-            {"version", "2"},
-            {"creator_id", "1"}
+        }
+      };
+      break;
+    case 2: //Simple two objects
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "status",
+              "ok"
+            },
+            {
+              "description",
+              "descr1"
+            },
+            {
+              "version",
+              "2"
+            },
+            {
+              "creator_id",
+              "1"
             }
           }
-        };
-        break;
+        },
+        {
+          5,
+          {
+            {
+              "id",
+              "5"
+            },
+            {
+              "active",
+              "0"
+            },
+            {
+              "status",
+              "fainted"
+            },
+            {
+              "description",
+              "looks like a fish"
+            },
+            {
+              "version",
+              "1"
+            },
+            {
+              "creator_id",
+              "99"
+            }
+          }
+        }
+      };
+      break;
+    case 3: //Object with missing field
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "status",
+              "ok"
+            },
+            {
+              "version",
+              "2"
+            },
+            {
+              "creator_id",
+              "1"
+            }
+          }
+        }
+      };
+      break;
+    case 4: //Object with wrong field
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "probably"
+            },
+            {
+              "status",
+              "ok"
+            },
+            {
+              "description",
+              "descr1"
+            },
+            {
+              "version",
+              "2"
+            },
+            {
+              "creator_id",
+              "1"
+            }
+          }
+        }
+      };
+      break;
     }
     return result;
   }
-  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int) {
-    return ParamRelationalData();
-  }
+  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType,
+      const int) {
+      return ParamRelationalData();
+    } //Irrelevant for this test.
 };
 
 TestParamGetter paramGetter;

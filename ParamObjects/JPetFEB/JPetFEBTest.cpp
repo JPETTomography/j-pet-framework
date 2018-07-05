@@ -39,118 +39,273 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FactorySuite)
 
-class TestParamGetter: public JPetParamGetter
-{
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId) {
+class TestParamGetter: public JPetParamGetter {
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type,
+    const int runId) {
     ParamObjectsDescriptions result;
     switch (type) {
-      case ParamObjectType::kFEB:
-        switch (runId) {
-          case 0:
-            break;
-          case 1:
-          case 2:
-            result = {
-              {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"status", "healthy"},
-                {"description", "tall"},
-                {"version", "27"},
-                {"creator_id", "44"},
-                {"time_outputs_per_input", "2"},
-                {"no_time_outputs_per_input", "3"}
-                }
-              },
-              {5, {
-                {"id", "5"},
-                {"active", "0"},
-                {"status", "fainted"},
-                {"description", "scrawny"},
-                {"version", "271"},
-                {"creator_id", "616"},
-                {"time_outputs_per_input", "3"},
-                {"no_time_outputs_per_input", "4"}
-                }
-              }
-            };
-            break;
-          case 3:
-            result = {
-              {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"status", "healthy"},
-                {"version", "27"},
-                {"creator_id", "44"},
-                {"time_outputs_per_input", "2"},
-                {"no_time_outputs_per_input", "3"}
-                }
-              }
-            };
-            break;
-          case 4:
-            result = {
-              {1, {
-                {"id", "1"},
-                {"active", "probably"},
-                {"status", "healthy"},
-                {"version", "27"},
-                {"creator_id", "44"},
-                {"time_outputs_per_input", "2"},
-                {"no_time_outputs_per_input", "3"}
-                }
-              }
-            };
-            break;
-          case 5:
-            result = {
-              {1, {
-                {"id", "1"},
-                {"active", "1"},
-                {"status", "healthy"},
-                {"description", "tall"},
-                {"version", "27"},
-                {"creator_id", "44"},
-                {"time_outputs_per_input", "2"},
-                {"no_time_outputs_per_input", "3"}
-                }
-              }
-            };
-            break;
-        }
+    case ParamObjectType::kFEB:
+      switch (runId) {
+      case 0: //No febs
         break;
-      case ParamObjectType::kTRB:
+      case 1: //Simple single object
+      case 5: //Wrong relation
         result = {
-          {1, {
-            {"id", "1"},
-            {"type", "1"},
-            {"channel", "224"}
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "active",
+                "1"
+              },
+              {
+                "status",
+                "healthy"
+              },
+              {
+                "description",
+                "tall"
+              },
+              {
+                "version",
+                "27"
+              },
+              {
+                "creator_id",
+                "44"
+              },
+              {
+                "time_outputs_per_input",
+                "2"
+              },
+              {
+                "no_time_outputs_per_input",
+                "3"
+              }
             }
           }
         };
         break;
-      default:
+      case 2: //Simple two objects
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "active",
+                "1"
+              },
+              {
+                "status",
+                "healthy"
+              },
+              {
+                "description",
+                "tall"
+              },
+              {
+                "version",
+                "27"
+              },
+              {
+                "creator_id",
+                "44"
+              },
+              {
+                "time_outputs_per_input",
+                "2"
+              },
+              {
+                "no_time_outputs_per_input",
+                "3"
+              }
+            }
+          },
+          {
+            5,
+            {
+              {
+                "id",
+                "5"
+              },
+              {
+                "active",
+                "0"
+              },
+              {
+                "status",
+                "fainted"
+              },
+              {
+                "description",
+                "scrawny"
+              },
+              {
+                "version",
+                "271"
+              },
+              {
+                "creator_id",
+                "616"
+              },
+              {
+                "time_outputs_per_input",
+                "3"
+              },
+              {
+                "no_time_outputs_per_input",
+                "4"
+              }
+            }
+          }
+        };
         break;
+      case 3: //Object with missing field
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "active",
+                "1"
+              },
+              {
+                "status",
+                "healthy"
+              },
+              {
+                "version",
+                "27"
+              },
+              {
+                "creator_id",
+                "44"
+              },
+              {
+                "time_outputs_per_input",
+                "2"
+              },
+              {
+                "no_time_outputs_per_input",
+                "3"
+              }
+            }
+          }
+        };
+        break;
+      case 4: //Object with wrong field
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "active",
+                "probably"
+              },
+              {
+                "status",
+                "healthy"
+              },
+              {
+                "version",
+                "27"
+              },
+              {
+                "creator_id",
+                "44"
+              },
+              {
+                "time_outputs_per_input",
+                "2"
+              },
+              {
+                "no_time_outputs_per_input",
+                "3"
+              }
+            }
+          }
+        };
+        break;
+      }
+      break;
+    case ParamObjectType::kTRB:
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "type",
+              "1"
+            },
+            {
+              "channel",
+              "224"
+            }
+          }
+        }
+      };
+      break;
+    default: //Other cases not needed.
+      break;
     }
     return result;
   }
-ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int runId) {
-  ParamRelationalData result;
-  switch (runId) {
-    case 0:
+  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType,
+    const int runId) {
+    ParamRelationalData result;
+    switch (runId) {
+    case 0: //No relations
       break;
-    case 1:
-      result = {{1, 1}};
+    case 1: //Simple single object
+      result = {
+        {
+          1,
+          1
+        }
+      };
       break;
-    case 2:
-      result = {{1, 1}, {5, 1}};
+    case 2: //Simple two objects
+      result = {
+        {
+          1,
+          1
+        },
+        {
+          5,
+          1
+        }
+      };
       break;
-    case 5:
-      result = {{1, 43}};
+    case 5: //Wrong relation
+      result = {
+        {
+          1,
+          43
+        }
+      };
       break;
-  }
-  return result;
+    }
+    return result;
   }
 };
 

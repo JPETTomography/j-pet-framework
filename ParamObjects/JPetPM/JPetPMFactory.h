@@ -40,15 +40,15 @@ public:
   std::map<int, JPetPM *> & getPMs();
 
 private:
-  JPetPM* build(ParamObjectDescription data);
-  JPetBarrelSlotFactory & barrelSlotFactory;
-  std::map<int, JPetPM *> fPMs;
-  JPetScinFactory & scinFactory;
-  JPetParamGetter & paramGetter;
-  JPetFEBFactory & febFactory;
-  bool fInitialized;
-  void initialize();
+  JPetParamGetter &paramGetter;
   const int runId;
+  JPetFEBFactory &febFactory;
+  JPetScinFactory &scinFactory;
+  JPetBarrelSlotFactory &barrelSlotFactory;
+  bool fInitialized;
+  std::map<int, JPetPM*> fPMs;
+  void initialize();
+  JPetPM* build(ParamObjectDescription data);
 };
 
 #endif // JPET_PM_FACTORY_H

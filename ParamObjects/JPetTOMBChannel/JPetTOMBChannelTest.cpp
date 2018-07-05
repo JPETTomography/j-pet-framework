@@ -24,83 +24,154 @@ const float epsilon = 0.0001;
 
 BOOST_AUTO_TEST_SUITE(FactorySuite)
 
-class TestParamGetter : public JPetParamGetter
-{
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId)
-  {
+class TestParamGetter: public JPetParamGetter {
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type,
+    const int runId) {
     ParamObjectsDescriptions result;
     switch (type) {
     case ParamObjectType::kTOMBChannel:
       switch (runId) {
-        case 0:
-          break;
-        case 1:
-        case 2:
-          result = {
+      case 0: //No TOMBChannels
+        break;
+      case 1: //Simple single object
+      case 5: //Wrong FEB relation
+      case 6: //Wrong TRB relation
+      case 7: //Wrong PM relation
+        result = {
+          {
+            1,
             {
-              1, {
-                {"channel", "1"},
-                {"local_number", "2"},
-              {"FEB", "3"},
-                {"threshold", "4"}
-              }
-            },
-            {
-              5, {
-                {"channel", "5"},
-                {"local_number", "3"},
-                {"FEB", "4"},
-                {"threshold", "5"}
-              }
-            }
-          };
-          break;
-        case 3:
-          result = {
-            {
-              1, {
-                {"channel", "1"},
-                {"FEB", "3"},
-                {"threshold", "4"}
+              {
+                "channel",
+                "1"
+              },
+              {
+                "local_number",
+                "2"
+              },
+              {
+                "FEB",
+                "3"
+              },
+              {
+                "threshold",
+                "4"
               }
             }
-          };
-          break;
-        case 4:
-          result = {
+          }
+        };
+        break;
+      case 2: //Simple two objects
+        result = {
+          {
+            1,
             {
-              1, {
-                {"channel", "1"},
-                {"local_number", "TVP"},
-                {"FEB", "3"},
-                {"threshold", "4"}
+              {
+                "channel",
+                "1"
+              },
+              {
+                "local_number",
+                "2"
+              },
+              {
+                "FEB",
+                "3"
+              },
+              {
+                "threshold",
+                "4"
               }
             }
-          };
-          break;
-        case 5:
-        case 6:
-        case 7:
-          result = {
+          },
+          {
+            5,
             {
-              1, {
-                {"channel", "1"},
-                {"local_number", "2"},
-                {"FEB", "3"},
-                {"threshold", "4"}
+              {
+                "channel",
+                "5"
+              },
+              {
+                "local_number",
+                "3"
+              },
+              {
+                "FEB",
+                "4"
+              },
+              {
+                "threshold",
+                "5"
               }
             }
-          };
-          break;
+          }
+        };
+        break;
+      case 3: //Object with missing field
+        result = {
+          {
+            1,
+            {
+              {
+                "channel",
+                "1"
+              },
+              {
+                "FEB",
+                "3"
+              },
+              {
+                "threshold",
+                "4"
+              }
+            }
+          }
+        };
+        break;
+      case 4: //Object with wrong field
+        result = {
+          {
+            1,
+            {
+              {
+                "channel",
+                "1"
+              },
+              {
+                "local_number",
+                "TVP"
+              },
+              {
+                "FEB",
+                "3"
+              },
+              {
+                "threshold",
+                "4"
+              }
+            }
+          }
+        };
+        break;
       }
       break;
     case ParamObjectType::kPM:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"is_right_side", "1"},
-            {"description", "no writing"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "is_right_side",
+              "1"
+            },
+            {
+              "description",
+              "no writing"
+            }
           }
         }
       };
@@ -108,15 +179,40 @@ class TestParamGetter : public JPetParamGetter
     case ParamObjectType::kFEB:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"status", "healthy"},
-            {"description", "tall"},
-            {"version", "27"},
-            {"creator_id", "44"},
-            {"time_outputs_per_input", "2"},
-            {"no_time_outputs_per_input", "3"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "status",
+              "healthy"
+            },
+            {
+              "description",
+              "tall"
+            },
+            {
+              "version",
+              "27"
+            },
+            {
+              "creator_id",
+              "44"
+            },
+            {
+              "time_outputs_per_input",
+              "2"
+            },
+            {
+              "no_time_outputs_per_input",
+              "3"
+            }
           }
         }
       };
@@ -124,10 +220,20 @@ class TestParamGetter : public JPetParamGetter
     case ParamObjectType::kTRB:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"type", "1"},
-            {"channel", "224"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "type",
+              "1"
+            },
+            {
+              "channel",
+              "224"
+            }
           }
         }
       };
@@ -135,12 +241,28 @@ class TestParamGetter : public JPetParamGetter
     case ParamObjectType::kScintillator:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"attenuation_length", "10.34"},
-            {"length", "100"},
-            {"width", "4.5"},
-            {"height", "2.5"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "attenuation_length",
+              "10.34"
+            },
+            {
+              "length",
+              "100"
+            },
+            {
+              "width",
+              "4.5"
+            },
+            {
+              "height",
+              "2.5"
+            }
           }
         }
       };
@@ -148,12 +270,28 @@ class TestParamGetter : public JPetParamGetter
     case ParamObjectType::kBarrelSlot:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"name", "pepe"},
-            {"theta1", "5.5"},
-            {"frame_id", "6"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "name",
+              "pepe"
+            },
+            {
+              "theta1",
+              "5.5"
+            },
+            {
+              "frame_id",
+              "6"
+            }
           }
         }
       };
@@ -161,11 +299,24 @@ class TestParamGetter : public JPetParamGetter
     case ParamObjectType::kLayer:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"name", "ala"},
-            {"radius", "10.5"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "name",
+              "ala"
+            },
+            {
+              "radius",
+              "10.5"
+            }
           }
         }
       };
@@ -173,77 +324,123 @@ class TestParamGetter : public JPetParamGetter
     case ParamObjectType::kFrame:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"status", "ok"},
-            {"description", "descr1"},
-            {"version", "2"},
-            {"creator_id", "1"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "status",
+              "ok"
+            },
+            {
+              "description",
+              "descr1"
+            },
+            {
+              "version",
+              "2"
+            },
+            {
+              "creator_id",
+              "1"
+            }
           }
         }
       };
       break;
-    default:
+    default: //Other cases not needed.
       break;
     }
     return result;
   }
-  ParamRelationalData getAllRelationalData(ParamObjectType type1, ParamObjectType type2, const int runId)
-  {
+  ParamRelationalData getAllRelationalData(ParamObjectType type1, ParamObjectType type2,
+    const int runId) {
     ParamRelationalData result;
     switch (type1) {
     case ParamObjectType::kTOMBChannel:
       switch (runId) {
-      case 0:
+      case 0: //No relations
         break;
-      case 1:
+      case 1: //Simple single object
         result = {
-          {1, 1}
+          {
+            1,
+            1
+          }
         };
         break;
-      case 2:
+      case 2: //Simple two objects
         result = {
-          {1, 1},
-          {5, 1}
+          {
+            1,
+            1
+          },
+          {
+            5,
+            1
+          }
         };
         break;
-      case 5:
+      case 5: //Wrong FEB relation
         switch (type2) {
         case ParamObjectType::kFEB:
           result = {
-            {1, 43}
+            {
+              1,
+              43
+            }
           };
           break;
         default:
           result = {
-            {1, 1}
+            {
+              1,
+              1
+            }
           };
           break;
         }
-      case 6:
+      case 6: //Wrong TRB relation
         switch (type2) {
         case ParamObjectType::kTRB:
           result = {
-            {1, 43}
+            {
+              1,
+              43
+            }
           };
           break;
         default:
           result = {
-            {1, 1}
+            {
+              1,
+              1
+            }
           };
           break;
         }
-      case 7:
+      case 7: //Wrong PM relation
         switch (type2) {
         case ParamObjectType::kPM:
           result = {
-            {1, 43}
+            {
+              1,
+              43
+            }
           };
           break;
         default:
           result = {
-            {1, 1}
+            {
+              1,
+              1
+            }
           };
           break;
         }
@@ -251,7 +448,10 @@ class TestParamGetter : public JPetParamGetter
       break;
     default:
       result = {
-        {1, 1}
+        {
+          1,
+          1
+        }
       };
       break;
     }

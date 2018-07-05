@@ -30,13 +30,13 @@ class JPetFrameFactory
 public:
   JPetFrameFactory(JPetParamGetter & paramGetter, int runId):
     paramGetter(paramGetter), runId(runId), fInitialized(false) {}
-std::map<int, JPetFrame *> & getFrames();
+std::map<int, JPetFrame*> & getFrames();
 
 private:
   JPetParamGetter& paramGetter;
   const int runId;
   bool fInitialized;
-  std::map<int, JPetFrame *> fFrames;
+  std::map<int, JPetFrame*> fFrames;
   void initialize();
   JPetFrame* build(ParamObjectDescription data);
 };

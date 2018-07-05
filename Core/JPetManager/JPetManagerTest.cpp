@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(threadsEnabled)
 
 BOOST_AUTO_TEST_CASE(manager_getOptions)
 {
-  JPetManager& manager = JPetManager::getManager();
+  JPetManager &manager = JPetManager::getManager();
   auto options = manager.getOptions();
   BOOST_REQUIRE_EQUAL(options.size(), 0u);
 }
@@ -93,7 +93,8 @@ BOOST_AUTO_TEST_CASE(goodZipRun)
     "-l",
     "unitTestData/JPetManagerTest/large_barrel.json",
     "-i",
-    "44"};
+    "44"
+  };
   BOOST_REQUIRE(manager.run(14, args));
 }
 

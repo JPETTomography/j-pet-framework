@@ -80,9 +80,9 @@ public:
   }
 
 protected:
-  bool fIsBranchCreated;
   std::string fFileName;
   TFile* fFile;
+  bool fIsBranchCreated;
   TTree* fTree;
   TList fTList;
 };

@@ -18,7 +18,6 @@
 
 #include "./JPetBaseSignal/JPetBaseSignal.h"
 #include "./JPetRawSignal/JPetRawSignal.h"
-
 #include <vector>
 
 struct shapePoint
@@ -213,10 +212,10 @@ private:
   std::map<float, float> fRecoTimesAtThreshold;
   std::vector<shapePoint> fShape;
   JPetRawSignal fRawSignal;
-  double fAmplitude;
-  double fOffset;
   double fCharge;
   double fDelay;
+  double fAmplitude;
+  double fOffset;
 
  ClassDef(JPetRecoSignal, 2);
 

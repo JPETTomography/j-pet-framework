@@ -136,7 +136,6 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
     };
     fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task);
   };
-
   try {
     JPetOptionsGenerator optionsGenerator;
     JPetCmdParser parser;
@@ -149,7 +148,8 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
     }
     fOptions = optionsGenerator.generateOptionsForTasks(
       allValidatedOptions,
-      numberOfRegisteredTasks);
+      numberOfRegisteredTasks
+    );
   } catch (std::exception& e) {
     ERROR(e.what());
     return false;

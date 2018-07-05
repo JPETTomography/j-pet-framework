@@ -34,13 +34,13 @@ public:
   std::map<int, JPetBarrelSlot*>& getBarrelSlots();
 
 private:
-  JPetBarrelSlot* build(ParamObjectDescription data);
-  JPetParamGetter& paramGetter;
-  JPetLayerFactory& layerFactory;
-  std::map<int, JPetBarrelSlot *> fBarrelSlots;
-  bool fInitialized;
-  void initialize();
+  JPetParamGetter & paramGetter;
   const int runId;
+  JPetLayerFactory & layerFactory;
+  bool fInitialized;
+  std::map<int, JPetBarrelSlot *> fBarrelSlots;
+  void initialize();
+  JPetBarrelSlot * build(ParamObjectDescription data);
 };
 
 #endif /* JPET_BARREL_SLOT_FACTORY_H */

@@ -43,12 +43,9 @@ public:
     std::pair<float, float> HVgainNumber, std::string description);
   JPetPM(JPetPM const&);
   ~JPetPM();
-
   static JPetPM& getDummyResult();
-
   bool operator==(const JPetPM& pm) const;
   bool operator!=(const JPetPM& pm) const;
-
   void setSide(Side side);
   void setHVset(int set);
   void setHVopt(int opt);
@@ -57,7 +54,6 @@ public:
   void setFEB(JPetFEB& p_FEB);
   void setScin(JPetScin& p_scin);
   void setBarrelSlot(JPetBarrelSlot& p_barrelSlot);
-
   int getID() const;
   Side getSide() const;
   int getHVset() const;

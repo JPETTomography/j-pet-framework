@@ -37,8 +37,8 @@ public:
 private:
   JPetPhysSignal createPhysSignal(JPetRecoSignal& signals);
   void savePhysSignal( JPetPhysSignal signal);
-  float fThresholdSel;
   int fAlpha;
+  float fThresholdSel;
 };
 
 #endif /* !_JPETSIMPLEPHYSSIGNALRECO_H_ */

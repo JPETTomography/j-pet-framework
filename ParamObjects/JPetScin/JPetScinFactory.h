@@ -35,13 +35,13 @@ public:
   std::map<int, JPetScin *> & getScins();
 
 private:
-  JPetScin* build(ParamObjectDescription data);
-  JPetBarrelSlotFactory &barrelSlotFactory;
-  std::map<int, JPetScin*> fScins;
-  JPetParamGetter &paramGetter;
-  bool fInitialized;
-  void initialize();
+  JPetParamGetter & paramGetter;
   const int runId;
+  JPetBarrelSlotFactory & barrelSlotFactory;
+  bool fInitialized;
+  std::map < int, JPetScin * > fScins;
+  void initialize();
+  JPetScin * build(ParamObjectDescription data);
 };
 
 #endif /* !JPET_SCIN_FACTORY_H */

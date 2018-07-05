@@ -46,92 +46,205 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FactorySuite)
 
-class TestParamGetter: public JPetParamGetter
-{
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId) {
+class TestParamGetter: public JPetParamGetter {
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type,
+    const int runId) {
     ParamObjectsDescriptions result;
     switch (type) {
-      case ParamObjectType::kLayer:
-        switch (runId) {
-          case 0:
-            break;
-          case 1:
-          case 2:
-            result = {{1, {
-              {"id", "1"},
-              {"active", "1"},
-              {"name", "ala"},
-              {"radius", "10.5"}
-              }},
-              {5, {
-                {"id", "5"},
-                {"active", "0"},
-                {"name", "alfred"},
-                {"radius", "11.5"}
-              }}
-            };
-            break;
-          case 3:
-            result = {{1, {
-              {"id", "1"},
-              {"active", "1"},
-              {"radius", "10.5"}
-              }}};
-            break;
-          case 4:
-            result = {{1, {
-              {"id", "1"},
-              {"active", "probably"},
-              {"name", "ala"},
-              {"radius", "10.5"}
-              }}
-            };
-            break;
-          case 5:
-            result = {{1, {
-              {"id", "1"},
-              {"active", "1"},
-              {"name", "ala"},
-              {"radius", "10.5"}
-            }}};
-            break;
-        }
+    case ParamObjectType::kLayer:
+      switch (runId) {
+      case 0: //No layers
         break;
-      case ParamObjectType::kFrame:
-        result = {{1, {
-          {"id", "1"},
-          {"active", "1"},
-          {"status", "ok"},
-          {"description", "descr1"},
-          {"version", "2"},
-          {"creator_id", "1"}
-          }}
+      case 1: //Simple single object
+      case 5: //Wrong relation
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "active",
+                "1"
+              },
+              {
+                "name",
+                "ala"
+              },
+              {
+                "radius",
+                "10.5"
+              }
+            }
+          }
         };
         break;
-      default:
+      case 2: //Simple two objects
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "active",
+                "1"
+              },
+              {
+                "name",
+                "ala"
+              },
+              {
+                "radius",
+                "10.5"
+              }
+            }
+          },
+          {
+            5,
+            {
+              {
+                "id",
+                "5"
+              },
+              {
+                "active",
+                "0"
+              },
+              {
+                "name",
+                "alfred"
+              },
+              {
+                "radius",
+                "11.5"
+              }
+            }
+          }
+        };
         break;
+      case 3: //Object with missing field
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "active",
+                "1"
+              },
+              {
+                "radius",
+                "10.5"
+              }
+            }
+          }
+        };
+        break;
+      case 4: //Object with wrong field
+        result = {
+          {
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "active",
+                "probably"
+              },
+              {
+                "name",
+                "ala"
+              },
+              {
+                "radius",
+                "10.5"
+              }
+            }
+          }
+        };
+        break;
+      }
+      break;
+    case ParamObjectType::kFrame:
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "status",
+              "ok"
+            },
+            {
+              "description",
+              "descr1"
+            },
+            {
+              "version",
+              "2"
+            },
+            {
+              "creator_id",
+              "1"
+            }
+          }
+        }
+      };
+      break;
+    default: //Other cases not needed.
+      break;
     }
     return result;
   }
-  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int runId) {
+  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType,
+    const int runId) {
     ParamRelationalData result;
     switch (runId) {
     case 0: //No relations
       break;
     case 1: //Simple single object
       result = {
-        {1, 1}
+        {
+          1,
+          1
+        }
       };
       break;
     case 2: //Simple two objects
       result = {
-        {1, 1},
-        {5, 1}
+        {
+          1,
+          1
+        },
+        {
+          5,
+          1
+        }
       };
       break;
     case 5: //Wrong relation
       result = {
-        {1, 43}
+        {
+          1,
+          43
+        }
       };
       break;
     }

@@ -44,10 +44,10 @@ public:
   bool process();
 private:
   static void* processProxy(void*);
+  int fInputSeqId = -1;
   TaskGeneratorChain* fTaskGeneratorChain = nullptr;
   std::list<JPetTaskInterface*> fTasks;
   JPetParams fParams;
-  int fInputSeqId = -1;
 };
 
 #endif /* JPETTASKCHAINEXECUTOR_H */

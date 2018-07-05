@@ -69,8 +69,8 @@ public:
   void Clear(Option_t * opt = "");
 
 private:
-  TRef fBarrelSlot;
   TRef fPM;
+  TRef fBarrelSlot;
 
 protected:
   #ifndef __CINT__

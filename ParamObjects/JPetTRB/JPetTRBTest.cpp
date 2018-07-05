@@ -42,64 +42,117 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FactorySuite)
 
-class TestParamGetter : public JPetParamGetter
-{
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType, const int runId)
-  {
+class TestParamGetter: public JPetParamGetter {
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType,
+    const int runId) {
     ParamObjectsDescriptions result;
     switch (runId) {
-      case 0:
-        break;
-      case 1:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"type", "1"},
-                {"channel", "224"}
-              }
+    case 0: //No TRBs
+      break;
+    case 1: //Simple single object
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "type",
+              "1"
+            },
+            {
+              "channel",
+              "224"
+            }
           }
-        };
-        break;
-      case 2:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"type", "1"},
-                {"channel", "224"}
-              }
-          },
-          {5, {
-                {"id", "5"},
-                {"type", "2"},
-                {"channel", "225"}
-              }
+        }
+      };
+      break;
+    case 2: //Simple two objects
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "type",
+              "1"
+            },
+            {
+              "channel",
+              "224"
+            }
           }
-        };
-        break;
-      case 3:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"channel", "224"}
-              }
+        },
+        {
+          5,
+          {
+            {
+              "id",
+              "5"
+            },
+            {
+              "type",
+              "2"
+            },
+            {
+              "channel",
+              "225"
+            }
           }
-        };
-        break;
-      case 4:
-        result = {
-          {1, {
-                {"id", "1"},
-                {"type", "torus"},
-                {"channel", "224"}
-              }
+        }
+      };
+      break;
+    case 3: //Object with missing field
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "channel",
+              "224"
+            }
           }
-        };
-        break;
+        }
+      };
+      break;
+    case 4: //Object with wrong field
+      result = {
+        {
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "type",
+              "torus"
+            },
+            {
+              "channel",
+              "224"
+            }
+          }
+        }
+      };
+      break;
     }
     return result;
   }
-  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int)
-    { return ParamRelationalData(); }
+  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType,
+      const int) {
+      return ParamRelationalData();
+    } //Irrelevant for this test.
 };
 
 TestParamGetter paramGetter;

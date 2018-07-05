@@ -30,26 +30,28 @@
 class JPetFEB: public TNamed
 {
 public:
+  static JPetFEB& getDummyResult();
+
   JPetFEB();
   explicit JPetFEB(int id);
   explicit JPetFEB(bool isNull);
-  JPetFEB(int p_id, bool p_isActive, std::string p_status, std::string p_description,
-    int p_version, int p_userId, int p_n_time_outputs_per_input, int p_n_notime_outputs_per_input);
+  JPetFEB(int p_id, bool p_isActive, std::string p_status,
+    std::string p_description, int p_version, int p_userId,
+    int p_n_time_outputs_per_input, int p_n_notime_outputs_per_input);
   virtual ~JPetFEB(void);
+  bool operator==(const JPetFEB& feb);
+  bool operator!=(const JPetFEB& feb);
   virtual int getID(void) const;
   virtual bool isActive(void) const;
   virtual std::string status(void) const;
   virtual std::string description(void) const;
   virtual int version(void) const;
+  int getCreator() const;
   virtual int getNtimeOutsPerInput(void) const;
   virtual int getNnotimeOutsPerInput(void) const;
-  static JPetFEB& getDummyResult();
   const JPetTRB& getTRB() const;
   void setTRB(JPetTRB& p_TRB);
   bool isNullObject() const;
-  int getCreator() const;
-  bool operator==(const JPetFEB& feb);
-  bool operator!=(const JPetFEB& feb);
 
 protected:
   struct JPetFEBChannel {

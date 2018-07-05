@@ -65,10 +65,10 @@ protected:
   std::unique_ptr<JPetStatistics> fStatistics = 0;
   JPetProgressBarManager fProgressBar;
   JPetReaderInterface* fReader = 0;
-  std::string fOutFileFullPath;
   JPetTreeHeader* fHeader = 0;
-  std::string fOutFileType;
   std::string fInFileType;
+  std::string fOutFileType;
+  std::string fOutFileFullPath;
   JPetWriter* fWriter = 0;
   bool fResetOutputPath;
   JPetParams fParams;

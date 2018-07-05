@@ -34,13 +34,13 @@ public:
   std::map<int, JPetLayer*>& getLayers();
 
 private:
-  JPetLayer* build(ParamObjectDescription data);
-  std::map<int, JPetLayer*> fLayers;
-  JPetFrameFactory& frameFactory;
-  JPetParamGetter& paramGetter;
-  bool fInitialized;
+  JPetParamGetter &paramGetter;
   const int runId;
+  JPetFrameFactory &frameFactory;
+  bool fInitialized;
+  std::map<int, JPetLayer*> fLayers;
   void initialize();
+  JPetLayer* build(ParamObjectDescription data);
 };
 
 #endif /* !JPET_LAYER_FACTORY_H */
