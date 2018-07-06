@@ -21,4 +21,9 @@
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
+BOOST_AUTO_TEST_CASE(empty)
+{
+  /* TODO - add tests */
+}
+
 BOOST_AUTO_TEST_SUITE_END()

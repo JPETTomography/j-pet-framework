@@ -15,11 +15,20 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetTaskIOTest
+
 #include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
 #include "./JPetCmdParser/JPetCmdParser.h"
 #include "./JPetTaskIO/JPetTaskIO.h"
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
+
+BOOST_AUTO_TEST_CASE(progressBarTest)
+{
+  JPetTaskIO taskIO;
+  taskIO.displayProgressBar(5, 100);
+}
+
+/* TODO - add more tests! */
 
 BOOST_AUTO_TEST_SUITE_END()
