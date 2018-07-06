@@ -31,7 +31,6 @@ namespace boost;
 class boost::noncopyable;
 #endif /* __CINT __ */
 
-
 /**
  * @brief A class responsible for reading any data from ROOT trees.
  *
@@ -40,7 +39,7 @@ class boost::noncopyable;
  * @todo Add the correct file to 'file_with_no_jpettreeheader' test and
  * see TTree GetEntry method, add test of file with no JPetTreeHeader
  */
-class JPetReader : private boost::noncopyable, public JPetReaderInterface
+class JPetReader: private boost::noncopyable, public JPetReaderInterface
 {
 public:
   static const std::string kRootTreeName;

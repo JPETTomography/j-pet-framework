@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(emptyRun)
 
 BOOST_AUTO_TEST_CASE(goodRootRun)
 {
-  JPetManager& manager = JPetManager::getManager();
+  JPetManager &manager = JPetManager::getManager();
   manager.clearRegisteredTasks();
   const char* args[7] = {
     "test/Path",

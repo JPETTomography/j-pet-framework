@@ -29,18 +29,18 @@
 class JPetBarrelSlotFactory
 {
 public:
-  JPetBarrelSlotFactory(JPetParamGetter & paramGetter, int runId, JPetLayerFactory & layerFactory):
+  JPetBarrelSlotFactory(JPetParamGetter &paramGetter, int runId, JPetLayerFactory &layerFactory):
     paramGetter(paramGetter), runId(runId), layerFactory(layerFactory), fInitialized(false) {}
-  std::map<int, JPetBarrelSlot*>& getBarrelSlots();
+  std::map<int, JPetBarrelSlot*>&getBarrelSlots();
 
 private:
-  JPetParamGetter & paramGetter;
+  JPetParamGetter &paramGetter;
   const int runId;
-  JPetLayerFactory & layerFactory;
+  JPetLayerFactory &layerFactory;
   bool fInitialized;
-  std::map<int, JPetBarrelSlot *> fBarrelSlots;
+  std::map<int, JPetBarrelSlot*> fBarrelSlots;
   void initialize();
-  JPetBarrelSlot * build(ParamObjectDescription data);
+  JPetBarrelSlot* build(ParamObjectDescription data);
 };
 
 #endif /* JPET_BARREL_SLOT_FACTORY_H */

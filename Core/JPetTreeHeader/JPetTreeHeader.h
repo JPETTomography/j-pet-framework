@@ -52,21 +52,23 @@ public:
   JPetTreeHeader(int run);
   void Print() const { std::cout << this->stringify(); }
   std::string stringify() const;
+  inline int getRunNumber() const { return fRunNo; }
+  inline void setRunNumber(int p_run_no) { fRunNo = p_run_no; }
+  inline std::string getFrameworkRevision() const { return fFrameworkRevision; }
+  inline std::string getFrameworkVersion() const { return fFrameworkVersion; }
+  inline void setFrameworkVersion(const char * p_version) { fFrameworkVersion = p_version; }
+  inline void setFrameworkRevision(const char * p_revision) { fFrameworkRevision = p_revision; }
+  inline std::string getBaseFileName() const { return fBaseFilename; }
   void addStageInfo(std::string name, std::string title, int version, std::string time_stamp);
   int getStagesNb()const{ return fStages.size(); }
   void setVariable(std::string name, std::string value);
   std::string getVariable(std::string name) const;
-  inline int getRunNumber() const { return fRunNo; }
-  inline void setRunNumber(int p_run_no) { fRunNo = p_run_no; }
-  inline std::string getFrameworkVersion() const { return fFrameworkVersion; }
-  inline std::string getFrameworkRevision() const { return fFrameworkRevision; }
-  inline void setFrameworkVersion(const char * p_version) { fFrameworkVersion = p_version; }
-  inline void setFrameworkRevision(const char * p_revision) { fFrameworkRevision = p_revision; }
-  inline std::string getBaseFileName() const { return fBaseFilename; }
   inline void setBaseFileName(const char * p_name){ fBaseFilename = p_name; }
+
   const ProcessingStageInfo &emptyProcessingStageInfo() const {
     return emptyStage;
   }
+
   const ProcessingStageInfo &getProcessingStageInfo(unsigned int i) const {
 	  if (i < fStages.size()) return fStages.at(i);
 	  else return emptyProcessingStageInfo();
@@ -83,8 +85,6 @@ public:
   inline void setSourcePosition(double p_pos) { fSourcePosition = p_pos; }
 
 protected:
-  std::map<std::string, std::string> fDictionary;
-  std::vector<ProcessingStageInfo> fStages;
   std::string stringifyDictionary() const;
   std::string stringifyHistory() const;
   std::string fFrameworkVersion;
@@ -93,6 +93,8 @@ protected:
   std::string fBaseFilename;
   double fSourcePosition;
   ProcessingStageInfo emptyStage;
+  std::vector<ProcessingStageInfo> fStages;
+  std::map<std::string, std::string> fDictionary;
 
   ClassDef(JPetTreeHeader, 4);
 };

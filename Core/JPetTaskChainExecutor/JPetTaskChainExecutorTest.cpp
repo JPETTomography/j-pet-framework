@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(test1)
   auto taskGenerator1 = []() {
     return new JPetTaskIO("test1", "unk.evt", "test.file");
   };
-  TaskGeneratorChain* chain =  new TaskGeneratorChain;
+  TaskGeneratorChain* chain = new TaskGeneratorChain();
   chain->push_back(taskGenerator1);
   JPetTaskChainExecutor taskExecutor(chain, 1, opt);
   BOOST_REQUIRE(!taskExecutor.process());

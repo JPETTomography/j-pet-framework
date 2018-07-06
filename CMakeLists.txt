@@ -1,8 +1,7 @@
 ################################################################################
 ## J-PET Framework Library
-## Author: Adam Strzelecki <adam.strzelecki@uj.edu.pl>
-## Description:
-## Builds J-PET Framework using CMake build generator.
+##  Description:
+##  Builds J-PET Framework using CMake build generator.
 ################################################################################
 
 cmake_minimum_required(VERSION 2.6)

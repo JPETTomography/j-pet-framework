@@ -70,7 +70,7 @@ bool JPetManager::run(int argc, const char** argv)
     ERROR("While parsing command line arguments");
     return false;
   }
-  INFO( "======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
+  INFO("======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n");
   std::vector<JPetTaskChainExecutor*> executors;
   std::vector<TThread*> threads;
   auto inputDataSeq = 0;

@@ -105,13 +105,12 @@ void JPetReader::closeFile ()
   fCurrentEntryNumber = -1;
 }
 
-
 bool JPetReader::openFile (const char* filename)
 {
   closeFile();
   fFile = new TFile(filename);
   if ((!isOpen()) || fFile->IsZombie()) {
-    ERROR(std::string("Cannot open file:") + std::string(filename));
+    ERROR(std::string("Cannot open file: ") + std::string(filename));
     return false;
   }
   return true;
@@ -119,7 +118,7 @@ bool JPetReader::openFile (const char* filename)
 
 bool JPetReader::loadData(const char* treename)
 {
-  if (!isOpen() ) {
+  if (!isOpen()) {
     ERROR("File not open");
     return false;
   }

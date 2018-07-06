@@ -63,7 +63,7 @@ private:
   JPetManager();
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&);
-  std::map<const char *, TaskGenerator> fTasksDictionary;
+  std::map<const char*, TaskGenerator> fTasksDictionary;
   TaskGeneratorChain* fTaskGeneratorChain = nullptr;
   bool fThreadsEnabled = false;
   Options fOptions;

@@ -15,6 +15,7 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetTreeHeaderTest
+
 #include "./JPetTreeHeader/JPetTreeHeader.h"
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>

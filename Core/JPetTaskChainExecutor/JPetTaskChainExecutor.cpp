@@ -80,7 +80,7 @@ bool JPetTaskChainExecutor::process()
   JPetDataInterface nullDataObject;
   JPetParams controlParams;
   for (auto currentTaskIt = fTasks.begin(); currentTaskIt != fTasks.end(); currentTaskIt++) {
-    auto currentTask  =  *currentTaskIt;
+    auto currentTask = *currentTaskIt;
     auto taskName = currentTask->getName();
     auto& currParams = fParams;
     currParams = jpet_params_factory::generateParams(currParams, controlParams);

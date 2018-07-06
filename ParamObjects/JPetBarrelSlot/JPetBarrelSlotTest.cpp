@@ -60,7 +60,6 @@ class TestParamGetter: public JPetParamGetter {
       case 0:
         break;
       case 1:
-        break;
       case 5:
         result = {
           {
@@ -334,7 +333,7 @@ BOOST_AUTO_TEST_CASE(single_object)
   JPetFrameFactory frameFactory(paramGetter, 1);
   JPetLayerFactory layerFactory(paramGetter, 1, frameFactory);
   JPetBarrelSlotFactory factory(paramGetter, 1, layerFactory);
-  auto& barrelSlots = factory.getBarrelSlots();
+  auto &barrelSlots = factory.getBarrelSlots();
   BOOST_REQUIRE_EQUAL(barrelSlots.size(), 1u);
   auto barrelSlot = barrelSlots[1];
   BOOST_REQUIRE_EQUAL(barrelSlot->getID(), 1);

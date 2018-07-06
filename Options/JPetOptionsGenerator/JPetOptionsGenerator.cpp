@@ -78,10 +78,10 @@ JPetOptionsGenerator::OptsStrAny JPetOptionsGenerator::generateAndValidateOption
  * of the configuration file.
  */
 JPetOptionsGenerator::OptsForFiles JPetOptionsGenerator::generateOptionsForTasks(
-  const OptsStrAny& inOptions,  int nbOfRegisteredTasks)
+  const OptsStrAny& inOptions, int nbOfRegisteredTasks)
 {
   using namespace jpet_options_tools;
-  OptsForFiles  optsForAllFiles;
+  OptsForFiles optsForAllFiles;
   if (nbOfRegisteredTasks <= 0) {
     ERROR("nbOfRegisteredTasks <= 0");
     return optsForAllFiles;

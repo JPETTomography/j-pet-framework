@@ -29,8 +29,8 @@
  */
 namespace jpet_options_tools
 {
-using OptsStrAny = std::map<std::string, boost::any> ;
-using OptsStrStr = std::map<std::string, std::string> ;
+using OptsStrAny = std::map<std::string, boost::any>;
+using OptsStrStr = std::map<std::string, std::string>;
 bool isOptionSet(const OptsStrAny& opts, const std::string& optionName);
 boost::any getOptionValue(const OptsStrAny& opts, std::string optionName);
 std::string getOptionAsString(const OptsStrAny& opts, std::string optionName);
