@@ -11,23 +11,27 @@
  *  limitations under the License.
  *
  *  @file JPetScopeLoader.cpp
+ *  @brief Module for oscilloscope data
+ *  Reads oscilloscope ASCII data and procudes JPetRecoSignal structures.
  */
 
-#include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
-#include "JPetScopeConfigParser/JPetScopeConfigParser.h"
-#include "JPetCommonTools/JPetCommonTools.h"
-#include "JPetScopeData/JPetScopeData.h"
 #include "./JPetScopeLoader.h"
-#include <boost/filesystem.hpp>
+
 #include <boost/regex.hpp>
+#include <boost/filesystem.hpp>
+
 #include <TSystem.h>
+
+#include "JPetCommonTools/JPetCommonTools.h"
+#include "JPetScopeConfigParser/JPetScopeConfigParser.h"
+#include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "JPetScopeData/JPetScopeData.h"
 
 using namespace std;
 using namespace boost::filesystem;
 using boost::property_tree::ptree;
 
-JPetScopeLoader::JPetScopeLoader(std::unique_ptr<JPetScopeTask> task):
-  JPetTaskIO("ScopeTask", "", "reco.sig")
+JPetScopeLoader::JPetScopeLoader(std::unique_ptr<JPetScopeTask> task): JPetTaskIO("ScopeTask", "", "reco.sig")
 {
   addSubTask(std::move(task));
   gSystem->Load("libTree");
@@ -35,10 +39,6 @@ JPetScopeLoader::JPetScopeLoader(std::unique_ptr<JPetScopeTask> task):
 
 JPetScopeLoader::~JPetScopeLoader()
 {
-  if (fWriter != nullptr) {
-    delete fWriter;
-    fWriter = nullptr;
-  }
 }
 
 void JPetScopeLoader::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
@@ -143,6 +143,7 @@ bool JPetScopeLoader::run(const JPetDataInterface&)
   }
   auto subTask = fSubTasks.begin()->get();
   subTask->init(fParams);
+
   using namespace jpet_options_tools;
   JPetScopeConfigParser confParser;
   auto opts = fParams.getOptions();
@@ -150,16 +151,14 @@ bool JPetScopeLoader::run(const JPetDataInterface&)
   auto prefix2PM =  getPMPrefixToPMIdMap();
   auto inputScopeFiles = createInputScopeFileNames(getScopeInputDirectory(opts), prefix2PM);
   auto events = JPetScopeLoader::groupScopeFileNamesByTimeWindowIndex(inputScopeFiles);
+
   for (auto& ev : events) {
     JPetScopeData data(ev);
     subTask->run(data);
-    auto pOutputEvent = (dynamic_cast<JPetUserTask*>(subTask))->getOutputEvents();
-    if (pOutputEvent != nullptr) {
-      fWriter->write(*pOutputEvent);
-    } else {
-      ERROR("No proper timeWindow object returned to save to file, returning from subtask "
-        + subTask->getName());
-      return false;
+    if (isOutput()) {
+      if (!fOutputHandler->writeEventToFile(subTask)) {
+	return false;
+      }
     }
   }
   subTask->terminate(fParams);
@@ -172,21 +171,16 @@ bool JPetScopeLoader::terminate(JPetParamsInterface& output_params)
   OptsStrAny new_opts;
   jpet_options_generator_tools::setOutputFile(new_opts, fOutFileFullPath);
   params = JPetParams(new_opts, params.getParamManagerAsShared());
-  assert(fWriter);
+
   assert(fHeader);
   assert(fStatistics);
-  fWriter->writeHeader(fHeader);
-  fWriter->writeCollection(fStatistics->getStatsTable(), "Stats");
-  getParamManager().saveParametersToFile(fWriter);
-  getParamManager().clearParameters();
-  fWriter->closeFile();
+  fOutputHandler->saveAndCloseOutput(getParamManager(), fHeader, fStatistics.get(), fSubTasksStatistics);
   return true;
 }
 
 bool JPetScopeLoader::createOutputObjects(const char* outputFilename)
 {
-  fWriter = new JPetWriter( outputFilename );
-  assert(fWriter);
+  fOutputHandler = jpet_common_tools::make_unique<JPetOutputHandler>(outputFilename);
   if (!fSubTasks.empty()) {
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
       auto task = dynamic_cast<JPetScopeTask*>((*fSubTask).get());
@@ -212,6 +206,9 @@ std::tuple<bool, std::string, std::string, bool> JPetScopeLoader::setInputAndOut
   using namespace jpet_options_tools;
   bool resetOutputPath = fResetOutputPath;
   std::string inputFilename = getInputFile(opts);
+
+  /// this argument is not really used by the ScopeLoader  since inputFiles are generated
+  /// based on json content
   inputFilename =  inputFilename + "." + fOutFileType + ".root";
   auto outFileFullPath = inputFilename;
   if (isOptionSet(opts, "outputPath_std::string")) {
@@ -239,8 +236,7 @@ int JPetScopeLoader::getTimeWindowIndex(const std::string&  pathAndFileName)
   }
 }
 
-std::map<int, std::map<std::string, int>> JPetScopeLoader::groupScopeFileNamesByTimeWindowIndex(
-  const std::map<std::string, int>& scopeFileNames)
+std::map<int, std::map<std::string, int>> JPetScopeLoader::groupScopeFileNamesByTimeWindowIndex(const std::map<std::string, int>& scopeFileNames)
 {
   std::map<int, std::map<std::string, int>> res;
   for (auto& el : scopeFileNames) {
