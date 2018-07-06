@@ -20,32 +20,38 @@
 #include "./version.h"
 #include <cassert>
 
-
-void JPetOutputHandler::saveOutput(JPetWriter* writer, JPetParamManager& manager)
+JPetOutputHandler::JPetOutputHandler():fWriter("defaultOutput.root")
 {
-  assert(writer);
-  assert(fHeader);
-  assert(fStatistics.get());
+} 
 
-  writer->writeHeader(fHeader);
-  writer->writeCollection(fStatistics->getStatsTable(), "Main Task Stats");
+JPetOutputHandler::JPetOutputHandler(const char* outputFilename): fWriter(outputFilename)
+{
+}
+
+void JPetOutputHandler::saveOutput(JPetParamManager& manager, JPetTreeHeader* fHeader, JPetStatistics* fStatistics, std::map<std::string, std::unique_ptr<JPetStatistics>>& fSubTasksStatistics)
+{
+  assert(fHeader);
+  assert(fStatistics);
+
+  fWriter.writeHeader(fHeader);
+  fWriter.writeCollection(fStatistics->getStatsTable(), "Main Task Stats");
   for (auto it = fSubTasksStatistics.begin(); it != fSubTasksStatistics.end(); it++) {
     if (it->second)
-      writer->writeCollection(it->second->getStatsTable(), it->first.c_str());
+      fWriter.writeCollection(it->second->getStatsTable(), it->first.c_str());
   }
-
   //store the parametric objects in the ouptut ROOT file
   manager.saveParametersToFile(
-    writer);
+    &fWriter);
   manager.clearParameters();
 }
 
-bool JPetOutputHandler::writeEventToFile(JPetWriter* writer, JPetTaskInterface* task)
+bool JPetOutputHandler::writeEventToFile(JPetTaskInterface* task)
 {
+  assert(task);
   auto pUserTask = (dynamic_cast<JPetUserTask*>(task));
   auto pOutputEntry = pUserTask->getOutputEvents();
   if (pOutputEntry != nullptr) {
-    fWriter->write(*pOutputEntry);
+    fWriter.write(*pOutputEntry);
   } else {
     ERROR("No proper timeWindow object returned to save to file, returning from subtask " + task->getName());
     return false;
@@ -53,53 +59,10 @@ bool JPetOutputHandler::writeEventToFile(JPetWriter* writer, JPetTaskInterface* 
   return true;
 }
 
-bool JPetOutputHandler::createOutputObjects(const char* outputFilename, const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader)
+
+/// @todo change it!!!
+void JPetOutputHandler::saveAndCloseOutput(JPetParamManager& manager, JPetTreeHeader* fHeader, JPetStatistics* fStatistics, std::map<std::string, std::unique_ptr<JPetStatistics>>& fSubTasksStatistics)
 {
-  fWriter = new JPetWriter( outputFilename );
-  assert(fWriter);
-  using namespace jpet_options_tools;
-  if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ) {
-    // create a header to be stored along with the output tree
-    fHeader = new JPetTreeHeader(getRunNumber(options));
-    fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
-    fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
-
-    // add general info to the Tree header
-    fHeader->setBaseFileName(getInputFile(options).c_str());
-  } else {
-    // read the header from the previous analysis stage
-    fHeader = dynamic_cast<JPetReader*>(reader)->getHeaderClone();
-  }
-
-  // create an object for storing histograms and counters during processing
-  // make_unique is not available in c++11 :(
-  std::unique_ptr<JPetStatistics> tmpUnique(new JPetStatistics);
-  fStatistics = std::move(tmpUnique);
-  //fStatistics = std::make_unique<JPetStatistics>();
-
-  //// add info about this module to the processing stages' history in Tree header
-  ////auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
-  //for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
-    //auto task = dynamic_cast<JPetUserTask*>((*fSubTask).get());
-    //fHeader->addStageInfo(task->getName(), "", 0,
-                          //JPetCommonTools::getTimeString());
-  //}
-
-  //if (!fSubTasks.empty()) {
-    //int i = 0;
-    //for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
-      //auto task = dynamic_cast<JPetUserTask*>(fSubTask->get());
-      //std::string subtaskStatisticsName = task->getName()
-                                          //+ std::string(" subtask ")
-                                          //+ std::to_string(i)
-                                          //+ std::string(" stats");
-      //fSubTasksStatistics[subtaskStatisticsName] = std::move(std::unique_ptr<JPetStatistics>(new JPetStatistics(*fStatistics)));
-      //task->setStatistics(fSubTasksStatistics[subtaskStatisticsName].get());
-      //i++;
-    //}
-  //} else {
-    //WARNING("the subTask does not exist, so JPetStatistics not passed to it");
-    ////return false;
-  //}
-  return true;
+    saveOutput(manager, fHeader, fStatistics, fSubTasksStatistics);
+    fWriter.closeFile();
 }
