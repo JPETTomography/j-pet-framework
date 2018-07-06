@@ -24,7 +24,6 @@
 #include <memory>
 
 
-class JPetWriter;
 class JPetTreeHeader;
 class JPetTaskInterface;
 
@@ -35,16 +34,15 @@ class JPetTaskInterface;
 class JPetOutputHandler
 {
 public:
+  JPetOutputHandler(); 
+  explicit JPetOutputHandler(const char* outputFilename);
 
-bool createOutputObjects(const char* outputFilename, const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader);
+  void saveOutput(JPetParamManager& manager, JPetTreeHeader* header, JPetStatistics* statistics, std::map<std::string, std::unique_ptr<JPetStatistics>>& fSubTasksStatistics);
+  void saveAndCloseOutput(JPetParamManager& manager, JPetTreeHeader* header, JPetStatistics* statistics, std::map<std::string, std::unique_ptr<JPetStatistics>>& fSubTasksStatistics);
+  bool writeEventToFile(JPetTaskInterface* task);
+
 protected:
-  void saveOutput(JPetWriter* writer, JPetParamManager& manager); /// Save all to the output file
-  bool writeEventToFile(JPetWriter* writer, JPetTaskInterface* task);
-
-  JPetWriter* fWriter{nullptr};
-  JPetTreeHeader* fHeader{nullptr};
-  std::unique_ptr<JPetStatistics> fStatistics{nullptr};
-  std::map<std::string, std::unique_ptr<JPetStatistics>> fSubTasksStatistics;
+  JPetWriter fWriter;
 
 private:
   JPetOutputHandler(const JPetOutputHandler&);
