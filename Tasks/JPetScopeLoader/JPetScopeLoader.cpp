@@ -39,18 +39,16 @@ JPetScopeLoader::JPetScopeLoader(std::unique_ptr<JPetScopeTask> task): JPetTaskI
 
 JPetScopeLoader::~JPetScopeLoader()
 {
-  if (fWriter != nullptr) {
-    delete fWriter;
-    fWriter = nullptr;
-  }
 }
 
 void JPetScopeLoader::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
 {
-  if (dynamic_cast<JPetScopeTask*>(subTask.get()) == nullptr)
+  if (dynamic_cast<JPetScopeTask*>(subTask.get()) == nullptr) {
     ERROR("JPetScopeLoader currently allows only JPetScopeTask as subtask");
-  if (fSubTasks.size() > 0)
+  }
+  if (fSubTasks.size() > 0) {
     ERROR("JPetScopeLoader currently allows only one subtask");
+  }
   fSubTasks.push_back(std::move(subTask));
 }
 
@@ -157,12 +155,10 @@ bool JPetScopeLoader::run(const JPetDataInterface&)
   for (auto& ev : events) {
     JPetScopeData data(ev);
     subTask->run(data);
-    auto pOutputEvent = (dynamic_cast<JPetUserTask*>(subTask))->getOutputEvents();
-    if (pOutputEvent != nullptr) {
-      fWriter->write(*pOutputEvent);
-    } else {
-      ERROR("No proper timeWindow object returned to save to file, returning from subtask " + subTask->getName());
-      return false;
+    if (isOutput()) {
+      if (!fOutputHandler->writeEventToFile(subTask)) {
+	return false;
+      }
     }
   }
   subTask->terminate(fParams);
@@ -177,23 +173,15 @@ bool JPetScopeLoader::terminate(JPetParamsInterface& output_params)
   jpet_options_generator_tools::setOutputFile(new_opts, fOutFileFullPath);
   params = JPetParams(new_opts, params.getParamManagerAsShared());
 
-  assert(fWriter);
   assert(fHeader);
   assert(fStatistics);
-  fWriter->writeHeader(fHeader);
-  fWriter->writeCollection(fStatistics->getStatsTable(), "Stats");
-  //store the parametric objects in the ouptut ROOT file
-  getParamManager().saveParametersToFile(fWriter);
-  getParamManager().clearParameters();
-  fWriter->closeFile();
+  fOutputHandler->saveAndCloseOutput(getParamManager(), fHeader, fStatistics.get(), fSubTasksStatistics);
   return true;
 }
 
 bool JPetScopeLoader::createOutputObjects(const char* outputFilename)
 {
-
-  fWriter = new JPetWriter( outputFilename );
-  assert(fWriter);
+  fOutputHandler = jpet_common_tools::make_unique<JPetOutputHandler>(outputFilename);
   if (!fSubTasks.empty()) {
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
       auto task = dynamic_cast<JPetScopeTask*>((*fSubTask).get());
