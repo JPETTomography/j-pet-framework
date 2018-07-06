@@ -122,13 +122,12 @@ bool JPetTaskIO::run(const JPetDataInterface&)
       JPetData event(fReader->getCurrentEntry());
       pTask->run(event);
       if (isOutput()) {
-        if (!writeEventToFile(fWriter, pTask)) {
+        if (!fOutputHandler->writeEventToFile(pTask)) {
           return false;
         }
       }
       fReader->nextEntry();
     }
-
     JPetParamsInterface fake_params;
     pTask->terminate(fake_params);
   }
@@ -147,10 +146,6 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
     return false;
   }
   if (isOutput()) {
-    if (!fWriter) {
-      ERROR("fWriter set to null");
-      return false;
-    }
     if (!fHeader) {
       ERROR("fHeader set to null");
       return false;
@@ -159,10 +154,7 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
       ERROR("fStatistics set to null");
       return false;
     }
-
-    saveOutput(fWriter);
-
-    fWriter->closeFile();
+    fOutputHandler->saveAndCloseOutput(getParamManager(), fHeader, fStatistics.get(), fSubTasksStatistics);
   }
   fReader->closeFile();
   return true;
@@ -218,8 +210,7 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
     ERROR("isOutput set to false and you are trying to createOutputObjects");
     return false;
   }
-  fWriter = new JPetWriter( outputFilename );
-  assert(fWriter);
+  fOutputHandler = jpet_common_tools::make_unique<JPetOutputHandler>(outputFilename);
   using namespace jpet_options_tools;
   auto options = fParams.getOptions();
   if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ) {
@@ -235,11 +226,7 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
     fHeader = dynamic_cast<JPetReader*>(fReader)->getHeaderClone();
   }
 
-  // create an object for storing histograms and counters during processing
-  // make_unique is not available in c++11 :(
-  std::unique_ptr<JPetStatistics> tmpUnique(new JPetStatistics);
-  fStatistics = std::move(tmpUnique);
-  //fStatistics = std::make_unique<JPetStatistics>();
+  fStatistics = jpet_common_tools::make_unique<JPetStatistics>();
 
   // add info about this module to the processing stages' history in Tree header
   //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
@@ -283,46 +270,10 @@ const JPetParamBank& JPetTaskIO::getParamBank()
 
 JPetTaskIO::~JPetTaskIO()
 {
-  if (fWriter) {
-    delete fWriter;
-    fWriter = 0;
-  }
   if (fReader) {
     delete fReader;
     fReader = 0;
   }
-}
-
-void JPetTaskIO::saveOutput(JPetWriter* writer)
-{
-  assert(writer);
-  assert(fHeader);
-  assert(fStatistics.get());
-
-  writer->writeHeader(fHeader);
-  writer->writeCollection(fStatistics->getStatsTable(), "Main Task Stats");
-  for (auto it = fSubTasksStatistics.begin(); it != fSubTasksStatistics.end(); it++) {
-    if (it->second)
-      writer->writeCollection(it->second->getStatsTable(), it->first.c_str());
-  }
-
-  //store the parametric objects in the ouptut ROOT file
-  getParamManager().saveParametersToFile(
-    writer);
-  getParamManager().clearParameters();
-}
-
-bool JPetTaskIO::writeEventToFile(JPetWriter* writer, JPetTaskInterface* task)
-{
-  auto pUserTask = (dynamic_cast<JPetUserTask*>(task));
-  auto pOutputEntry = pUserTask->getOutputEvents();
-  if (pOutputEntry != nullptr) {
-    fWriter->write(*pOutputEntry);
-  } else {
-    ERROR("No proper timeWindow object returned to save to file, returning from subtask " + task->getName());
-    return false;
-  }
-  return true;
 }
 
 std::tuple<bool, long long, long long, long long> JPetTaskIO::getEventRange(const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader)
@@ -342,7 +293,6 @@ std::tuple<bool, long long, long long, long long> JPetTaskIO::getEventRange(cons
   }
   return std::make_tuple(true, totalEntrys, firstEvent, lastEvent);
 }
-
 
 bool JPetTaskIO::isOutput() const
 {

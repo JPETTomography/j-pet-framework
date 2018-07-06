@@ -22,10 +22,10 @@
 #include "./JPetTask/JPetTask.h"
 #include "./JPetProgressBarManager/JPetProgressBarManager.h"
 #include "./JPetParams/JPetParams.h"
+#include "./JPetTaskIO/JPetOutputHandler.h"
 #include <memory>
 #include <string>
 
-class JPetWriter;
 class JPetReader;
 class JPetTreeHeader;
 class JPetStatistics;
@@ -67,8 +67,6 @@ protected:
   JPetParamManager& getParamManager();
 
   std::tuple<bool, long long, long long, long long> getEventRange(const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader);
-  void saveOutput(JPetWriter* writer); /// Save all to the output file
-  bool writeEventToFile(JPetWriter* writer, JPetTaskInterface* task);
 
   std::string fInFileType;
   std::string fOutFileType;
@@ -76,14 +74,16 @@ protected:
   bool fResetOutputPath;
 
   bool fIsOutput = true; /// Temporary and very nasty way to mark that the output will be saved.
-  int fEventNb = -1;
+  int fEventNb = -1; /// @todo is this used anywhere?
   JPetParams fParams;
-  JPetWriter* fWriter = 0;
-  JPetReaderInterface* fReader = 0;
-  JPetTreeHeader* fHeader = 0;
-  std::unique_ptr<JPetStatistics> fStatistics = 0;
+
+  JPetReaderInterface* fReader{nullptr};
+  JPetTreeHeader* fHeader{nullptr};
+  std::unique_ptr<JPetStatistics> fStatistics{nullptr};
   std::map<std::string, std::unique_ptr<JPetStatistics>> fSubTasksStatistics;
   JPetProgressBarManager fProgressBar;
+
+  std::unique_ptr<JPetOutputHandler> fOutputHandler{nullptr};
 
  private:
   JPetTaskIO(const JPetTaskIO&);
