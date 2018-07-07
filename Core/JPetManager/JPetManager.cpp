@@ -106,8 +106,8 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
     fTaskFactory.addDefaultTasksFromOptions(allValidatedOptions);
 
     int numberOfRegisteredTasks = 1;
-    if (fTaskFactory.getTaskGeneratorChain()) {
-      numberOfRegisteredTasks = fTaskFactory.getTaskGeneratorChain()->size();
+    if (fTaskFactory.getTaskGeneratorChain().size() > 0) {
+      numberOfRegisteredTasks = fTaskFactory.getTaskGeneratorChain().size();
     }
     fOptions = optionsGenerator.generateOptionsForTasks(allValidatedOptions, numberOfRegisteredTasks);
   } catch (std::exception& e) {
@@ -117,7 +117,7 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
   return true;
 }
 
-JPetManager::~JPetManager(){}
+JPetManager::~JPetManager() {}
 
 void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
 {

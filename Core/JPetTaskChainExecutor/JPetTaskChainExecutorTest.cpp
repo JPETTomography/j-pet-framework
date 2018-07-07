@@ -57,12 +57,11 @@ BOOST_AUTO_TEST_CASE(test1)
   auto taskGenerator1 = []() {
     return new JPetTaskIO("test1", "unk.evt", "test.file");
   };
-  TaskGeneratorChain* chain =  new TaskGeneratorChain;
-  chain->push_back(taskGenerator1);
+  TaskGeneratorChain chain;
+  chain.push_back(taskGenerator1);
 
   JPetTaskChainExecutor taskExecutor(chain, 1, opt);
   BOOST_REQUIRE(!taskExecutor.process()); //TaskIO with no subtask is no allowed
-  delete chain;
 }
 
 BOOST_AUTO_TEST_CASE(test2)
@@ -86,14 +85,13 @@ auto taskIO =  new JPetTaskIO("TaskB", "test.file", "test2.file");
 taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask("test2 TestTask3")));
 return taskIO;
 };
-TaskGeneratorChain* chain =  new TaskGeneratorChain;
-chain->push_back(taskGenerator1);
-chain->push_back(taskGenerator2);
+TaskGeneratorChain chain;
+chain.push_back(taskGenerator1);
+chain.push_back(taskGenerator2);
 
-BOOST_REQUIRE_EQUAL(chain->size(), 2u);
+BOOST_REQUIRE_EQUAL(chain.size(), 2u);
 JPetTaskChainExecutor taskExecutor(chain, 1, opt);
 BOOST_REQUIRE(taskExecutor.process());
-delete chain;
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -34,7 +34,7 @@ using TaskGeneratorChain = std::vector<TaskGenerator>;
 class JPetTaskChainExecutor
 {
 public :
-  JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFile, const jpet_options_tools::OptsStrAny&);
+  JPetTaskChainExecutor(const TaskGeneratorChain& taskGeneratorChain, int processedFile, const jpet_options_tools::OptsStrAny&);
   TThread* run();
   virtual ~JPetTaskChainExecutor();
   bool process(); /// Method to be called directly only in case of non-thread running;
@@ -43,7 +43,7 @@ private:
 
   int fInputSeqId = -1;
   std::list<JPetTaskInterface*> fTasks;
-  TaskGeneratorChain* ftaskGeneratorChain = nullptr;
+  TaskGeneratorChain ftaskGeneratorChain;
   JPetParams fParams;
 };
 
