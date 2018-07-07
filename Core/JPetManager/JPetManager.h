@@ -18,7 +18,7 @@
 
 #include "./JPetTaskChainExecutor/JPetTaskChainExecutor.h"
 #include "./JPetOptionsTools/JPetOptionsTools.h"
-#include "./JPetTaskFactory.h"
+#include "./JPetTaskFactory/JPetTaskFactory.h"
 #include <memory>
 #include <map>
 
