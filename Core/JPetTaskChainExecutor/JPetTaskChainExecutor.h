@@ -16,15 +16,15 @@
 #ifndef JPETTASKCHAINEXECUTOR_H
 #define JPETTASKCHAINEXECUTOR_H
 
-#include "./JPetTaskInterface/JPetTaskInterface.h"
-#include "./JPetParams/JPetParams.h"
-#include "./JPetTimer/JPetTimer.h"
-#include <TThread.h>
-#include <functional>
-#include <vector>
 #include <list>
+#include <TThread.h>
+#include <functional> // for TaskGenerator declaration
+#include <vector> // for TaskGeneratorChain declaration
+#include "./JPetParams/JPetParams.h"
+#include "./JPetTaskInterface/JPetTaskInterface.h"
+#include "./JPetTimer/JPetTimer.h"
 
-using TaskGenerator = std::function< JPetTaskInterface* ()>;
+using TaskGenerator = std::function< JPetTaskInterface* () >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
 /**
@@ -35,18 +35,17 @@ using TaskGeneratorChain = std::vector<TaskGenerator>;
  */
 class JPetTaskChainExecutor
 {
-public:
-  JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain,
-    int processedFile, const jpet_options_tools::OptsStrAny&
-  );
-  virtual ~JPetTaskChainExecutor();
+public :
+  JPetTaskChainExecutor(const TaskGeneratorChain& taskGeneratorChain, int processedFile, const jpet_options_tools::OptsStrAny&);
   TThread* run();
-  bool process();
+  virtual ~JPetTaskChainExecutor();
+  bool process(); /// Method to be called directly only in case of non-thread running;
 private:
   static void* processProxy(void*);
+
   int fInputSeqId = -1;
-  TaskGeneratorChain* fTaskGeneratorChain = nullptr;
   std::list<JPetTaskInterface*> fTasks;
+  TaskGeneratorChain ftaskGeneratorChain;
   JPetParams fParams;
 };
 

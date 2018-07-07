@@ -38,6 +38,16 @@ JPetManager& JPetManager::getManager()
   return instance;
 }
 
+bool JPetManager::areThreadsEnabled() const
+{
+  return fThreadsEnabled;
+}
+
+void JPetManager::setThreadsEnabled(bool enable)
+{
+  fThreadsEnabled = enable;
+}
+
 bool JPetManager::run(int argc, const char** argv)
 {
   if (!parseCmdLine(argc, argv)) {
@@ -100,8 +110,8 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
     fTaskFactory.addDefaultTasksFromOptions(allValidatedOptions);
 
     int numberOfRegisteredTasks = 1;
-    if (fTaskFactory.getTaskGeneratorChain()) {
-      numberOfRegisteredTasks = fTaskFactory.getTaskGeneratorChain()->size();
+    if (fTaskFactory.getTaskGeneratorChain().size() > 0) {
+      numberOfRegisteredTasks = fTaskFactory.getTaskGeneratorChain().size();
     }
     fOptions = optionsGenerator.generateOptionsForTasks(allValidatedOptions, numberOfRegisteredTasks);
   } catch (std::exception& e) {
@@ -110,23 +120,6 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
   }
   return true;
 }
-
-/**
- * Check if multithreding is enabled
- */
-bool JPetManager::areThreadsEnabled() const
-{
-  return fThreadsEnabled;
-}
-
-/**
- * User can set the multithreding option.
- */
-void JPetManager::setThreadsEnabled(bool enable)
-{
-  fThreadsEnabled = enable;
-}
-
 
 JPetManager::~JPetManager(){}
 

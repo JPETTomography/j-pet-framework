@@ -15,44 +15,91 @@
 
 #ifndef JPETTASKFACTORY_H
 #define JPETTASKFACTORY_H
-#include <type_traits>
+#include <vector>
 #include <memory>
 #include <map>
 #include <string>
+#include <type_traits>
 #include <boost/any.hpp>
 #include "./JPetTaskInterface/JPetTaskInterface.h"
 
+/**
+ * @brief Factory to produce objects of classes with inherit from JPetTaskInterface.
+ *
+ * The factory provides the possiblility to register a task and based on registered task
+ * to create chains of generators which are special functions that can be used
+ * to produce the corresponding objects later. One chain of generators corresponds to the chain
+ * of task objects that together form a stream of processing units: TaskA ->TaskB->TaskC.
+ * The factor provides also the method to add predifined tass generators at the beginning
+ * of the formed chain. They correspond to e.g. unzipping operations.
+ * The registered JPetUserTask  are not actually added directly to the stream, but are first
+ * encapsulated (as subTasks) into the JPetTaskIO objects which provide the input/output
+ * operations e.g. handle the reading/writing events.
+ *
+ */
+
+struct TaskInfo {
+  TaskInfo(const std::string& n, const std::string& inType, const std::string& outType, int numIter):
+    name(n),
+    inputFileType(inType),
+    outputFileType(outType),
+    numOfIterations(numIter) {}
+
+  std::string name;
+  std::string inputFileType;
+  std::string outputFileType;
+  int numOfIterations{1};
+};
+
+
 class JPetTaskFactory
 {
-public:
 
+public:
   JPetTaskFactory();
+
   //using TaskGenerator = std::function< std::unique_ptr<JPetTaskInterface>() >;
   using TaskGenerator = std::function< JPetTaskInterface*() >;
   using TaskGeneratorChain = std::vector<TaskGenerator>;
 
-  TaskGeneratorChain* getTaskGeneratorChain()
-  {
-    return fTaskGeneratorChain;
-  }
+  void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, const TaskInfo& info, TaskGeneratorChain& outChain);
+  
+  //TaskGeneratorChain* generateTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options);
 
-  void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options);
-
+  /// \brief Method to register the task generator. TDerived corresponds to the task type.
+  ///  The name string is also passed as parameter to the class constructor.
+  /// \param name string that plays a role of the unique identifier of the task. If the previously used name is given the task generator will overwrite the previous one.
   template<typename TDerived>
-  void registerTask(const char* name)
+  void registerTask(const std::string& name)
   {
-    static_assert(std::is_base_of<JPetTaskInterface, TDerived>::value, "registerType doesn't accept this type because doesn't derive from base class");
+    static_assert(std::is_base_of<JPetTaskInterface, TDerived>::value, "the class does not inherit from JPetTaskInterface");
     fTasksDictionary[name] = [name]() {
       return std::unique_ptr<TDerived>(new TDerived{name});
     };
   }
+
+  TaskGeneratorChain getTaskGeneratorChain() const
+  {
+    return fTaskGeneratorChain;
+  }
+
+  void clearTaskGeneratorChain()
+  {
+    fTaskGeneratorChain.clear();
+  }
+
+  void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, TaskGeneratorChain& outChain);
+
+  void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options);
+
+
   void useTask(const char* name, const char* inputFileType, const char* outputFileType);
 private:
   JPetTaskFactory(const JPetTaskFactory&);
   void operator=(const JPetTaskFactory&);
 
   std::map<std::string, TaskGenerator> fTasksDictionary;
-  TaskGeneratorChain* fTaskGeneratorChain{nullptr}; /// fTaskGeneratorChain is a sequences of registered computing tasks.
+  TaskGeneratorChain fTaskGeneratorChain; /// fTaskGeneratorChain is a sequences of registered computing tasks.
 
 };
 #endif /*  !JPETTASKFACTORY_H */
