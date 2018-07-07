@@ -18,6 +18,7 @@
 
 #include "./JPetTaskChainExecutor/JPetTaskChainExecutor.h"
 #include "./JPetOptionsTools/JPetOptionsTools.h"
+#include "./JPetTaskFactory.h"
 #include <memory>
 #include <map>
 
@@ -35,37 +36,36 @@ class JPetManager
 {
 public:
   using Options = std::map<std::string, jpet_options_tools::OptsStrAny>;
-  using TaskGenerator = std::function<JPetTaskInterface* ()>;
+  using TaskGenerator = std::function< JPetTaskInterface* () >;
   using TaskGeneratorChain = std::vector<TaskGenerator>;
+
   static JPetManager& getManager();
   ~JPetManager();
-  Options getOptions() const;
-  bool run(int argc, const char** argv);
-  bool parseCmdLine(int argc, const char** argv);
-  bool areThreadsEnabled() const;
-  void setThreadsEnabled(bool enable);
-  void useTask(const char * name,
-    const char * inputFileType="",
-    const char * outputFileType="");
-  void clearRegisteredTasks();
 
-  /**
-   * Template type method for registering tasks. After registering the task,
-   * the user should also invoke Managers method 'useTask'.
-   */
-  template<typename T> void registerTask(const char * name){
-    fTasksDictionary[name] = [name]() {
-      return new T(name);
-    };
+  bool run(int argc, const char** argv);
+
+  template<typename T> 
+  void registerTask(const char* name)
+  {
+    fTaskFactory.registerTask<T>(name);
   }
 
+  /// Function parses command line arguments and generates options for tasks.
+  /// The fOptions is filled with the generated options.
+  bool parseCmdLine(int argc, const char** argv);
+  Options getOptions() const;
+  bool areThreadsEnabled() const;
+  void setThreadsEnabled(bool enable);
+  void useTask(const char* name, const char* inputFileType = "", const char* outputFileType = "");
+
 private:
-  JPetManager();
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&);
-  std::map<const char*, TaskGenerator> fTasksDictionary;
-  TaskGeneratorChain* fTaskGeneratorChain = nullptr;
-  bool fThreadsEnabled = false;
+
+  JPetManager();
+  /// Number of elements in the fOptions container corresponds to the number of independent input files.
   Options fOptions;
+  bool fThreadsEnabled = false;
+  JPetTaskFactory fTaskFactory;
 };
 #endif /* !JPETMANAGER_H */
