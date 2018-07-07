@@ -48,6 +48,9 @@ public:
   }
   void useTask(const char* name, const char* inputFileType, const char* outputFileType);
 private:
+  JPetTaskFactory(const JPetTaskFactory&);
+  void operator=(const JPetTaskFactory&);
+
   std::map<std::string, TaskGenerator> fTasksDictionary;
   TaskGeneratorChain* fTaskGeneratorChain{nullptr}; /// fTaskGeneratorChain is a sequences of registered computing tasks.
 
