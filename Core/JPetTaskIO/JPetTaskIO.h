@@ -77,15 +77,16 @@ protected:
   int fEventNb = -1; /// @todo is this used anywhere?
   JPetParams fParams;
 
-  JPetReaderInterface* fReader{nullptr};
+  std::unique_ptr<JPetReaderInterface> fReader{nullptr};
+
   JPetTreeHeader* fHeader{nullptr};
   std::unique_ptr<JPetStatistics> fStatistics{nullptr};
   std::map<std::string, std::unique_ptr<JPetStatistics>> fSubTasksStatistics;
-  JPetProgressBarManager fProgressBar;
 
   std::unique_ptr<JPetOutputHandler> fOutputHandler{nullptr};
 
- private:
+  JPetProgressBarManager fProgressBar;
+private:
   JPetTaskIO(const JPetTaskIO&);
   void operator=(const JPetTaskIO&);
 };

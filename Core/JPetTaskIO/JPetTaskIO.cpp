@@ -215,6 +215,7 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
   auto options = fParams.getOptions();
   if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ) {
     // create a header to be stored along with the output tree
+    //fHeader = jpet_common_tools::make_unique<JPetTreeHeader>(getRunNumber(options));
     fHeader = new JPetTreeHeader(getRunNumber(options));
     fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
     fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
@@ -224,6 +225,7 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
   } else {
     // read the header from the previous analysis stage
     fHeader = dynamic_cast<JPetReader*>(fReader.get())->getHeaderClone();
+    //fHeader = std::unique_ptr<JPetTreeHeader>(dynamic_cast<JPetReader*>(fReader.get())->getHeaderClone());
   }
 
   fStatistics = jpet_common_tools::make_unique<JPetStatistics>();
@@ -270,6 +272,9 @@ const JPetParamBank& JPetTaskIO::getParamBank()
 
 JPetTaskIO::~JPetTaskIO()
 {
+  //if(fHeader)
+    //delete fHeader;
+
 }
 
 std::tuple<bool, long long, long long, long long> JPetTaskIO::getEventRange(const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader)
