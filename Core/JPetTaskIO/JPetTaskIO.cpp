@@ -104,7 +104,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     auto firstEvent = 0ll;
     auto lastEvent = 0ll;
     bool isOK = false;
-    std::tie(isOK, totalEntrys, firstEvent, lastEvent) = getEventRange(fParams.getOptions(), fReader);
+    std::tie(isOK, totalEntrys, firstEvent, lastEvent) = getEventRange(fParams.getOptions(), fReader.get());
     if (!isOK) {
       ERROR("Some error occured in getEventRange");
       return false;
@@ -184,14 +184,14 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
   using namespace jpet_options_tools;
   auto options = fParams.getOptions();
   assert(!fReader);
-  fReader = new JPetReader;
+  fReader = jpet_common_tools::make_unique<JPetReader>() ;
   if (fReader->openFileAndLoadData(inputFilename, JPetReader::kRootTreeName.c_str())) {
     /// For all types of files which has not hld format we assume
     /// that we can read paramBank from the file.
     if (FileTypeChecker::getInputFileType(options) != FileTypeChecker::kHldRoot ) {
       auto paramManager = fParams.getParamManager();
       assert(paramManager);
-      if (!paramManager->readParametersFromFile(dynamic_cast<JPetReader*> (fReader))) {
+      if (!paramManager->readParametersFromFile(dynamic_cast<JPetReader*> (fReader.get()))) {
         ERROR("Failed to read paramBank from input file.");
         return false;
       }
@@ -223,7 +223,7 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
     fHeader->setBaseFileName(getInputFile(options).c_str());
   } else {
     // read the header from the previous analysis stage
-    fHeader = dynamic_cast<JPetReader*>(fReader)->getHeaderClone();
+    fHeader = dynamic_cast<JPetReader*>(fReader.get())->getHeaderClone();
   }
 
   fStatistics = jpet_common_tools::make_unique<JPetStatistics>();
@@ -270,10 +270,6 @@ const JPetParamBank& JPetTaskIO::getParamBank()
 
 JPetTaskIO::~JPetTaskIO()
 {
-  if (fReader) {
-    delete fReader;
-    fReader = 0;
-  }
 }
 
 std::tuple<bool, long long, long long, long long> JPetTaskIO::getEventRange(const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader)
