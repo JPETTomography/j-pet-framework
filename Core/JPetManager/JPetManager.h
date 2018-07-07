@@ -19,6 +19,7 @@
 
 #include "./JPetTaskChainExecutor/JPetTaskChainExecutor.h"
 #include "./JPetOptionsTools/JPetOptionsTools.h"
+#include "./JPetTaskFactory.h"
 #include <memory>
 #include <map>
 
@@ -42,19 +43,19 @@ public:
 
   bool run(int argc, const char** argv);
 
-  template<typename T> void registerTask(const char * name){
-    fTasksDictionary[name] = [name]() {
-      return new T(name);
-    };
+  template<typename T> 
+  void registerTask(const char* name)
+  {
+    fTaskFactory.registerTask<T>(name);
   }
+
   /// Function parses command line arguments and generates options for tasks.
   /// The fOptions is filled with the generated options.
   bool parseCmdLine(int argc, const char** argv);
   Options getOptions() const;
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
-  void useTask(const char * name, const char * inputFileType="", const char * outputFileType="");
-  void clearRegisteredTasks();
+  void useTask(const char* name, const char* inputFileType = "", const char* outputFileType = "");
 
 private:
   JPetManager(const JPetManager&);
@@ -63,8 +64,7 @@ private:
   JPetManager();
   /// Number of elements in the fOptions container corresponds to the number of independent input files.
   Options fOptions;
-  TaskGeneratorChain* fTaskGeneratorChain = nullptr; /// fTaskGeneratorChain is a sequences of registered computing tasks.
   bool fThreadsEnabled = false;
-  std::map<const char *, TaskGenerator> fTasksDictionary;
+  JPetTaskFactory fTaskFactory;
 };
 #endif /*  !JPETMANAGER_H */
