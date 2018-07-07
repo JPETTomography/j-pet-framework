@@ -57,6 +57,7 @@ public:
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
   void useTask(const char* name, const char* inputFileType = "", const char* outputFileType = "");
+  void generateOptionsForTasks(const std::map<std::string, boost::any>& allValidatedOptions);
 
 private:
   JPetManager(const JPetManager&);

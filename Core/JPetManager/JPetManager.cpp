@@ -54,6 +54,12 @@ bool JPetManager::run(int argc, const char** argv)
     ERROR("While parsing command line arguments");
     return false;
   }
+
+  ///Here we should do:
+  ///1.Add missing default tasks based on options
+  ///2.Generate generatorChain based on  
+  ///3.create options
+
   INFO( "======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
   std::vector<JPetTaskChainExecutor*> executors;
   std::vector<TThread*> threads;
@@ -62,7 +68,6 @@ bool JPetManager::run(int argc, const char** argv)
   /// registered tasks. The inputDataSeq is the identifier of given chain.
   for (auto opt : fOptions) {
     JPetTaskChainExecutor* executor = new JPetTaskChainExecutor(fTaskFactory.getTaskGeneratorChain(), inputDataSeq, opt.second);
-    std::cout << "how many options?" << std::endl;
     executors.push_back(executor);
     if (areThreadsEnabled()) {
       auto thr = executor->run();
@@ -107,13 +112,8 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
     JPetCmdParser parser;
     auto optionsFromCmdLine = parser.parseCmdLineArgs(argc, argv);
     auto allValidatedOptions = optionsGenerator.generateAndValidateOptions(optionsFromCmdLine);
-    fTaskFactory.addDefaultTasksFromOptions(allValidatedOptions);
-
-    int numberOfRegisteredTasks = 1;
-    if (fTaskFactory.getTaskGeneratorChain().size() > 0) {
-      numberOfRegisteredTasks = fTaskFactory.getTaskGeneratorChain().size();
-    }
-    fOptions = optionsGenerator.generateOptionsForTasks(allValidatedOptions, numberOfRegisteredTasks);
+    ///@todo change it to return allValidatedOptions + bool and later call fTaskFactory;
+    generateOptionsForTasks(allValidatedOptions);
   } catch (std::exception& e) {
     ERROR(e.what());
     return false;
@@ -121,7 +121,19 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
   return true;
 }
 
-JPetManager::~JPetManager(){}
+void JPetManager::generateOptionsForTasks(const std::map<std::string, boost::any>& allValidatedOptions) 
+{
+  JPetOptionsGenerator optionsGenerator;
+  fTaskFactory.addDefaultTasksFromOptions(allValidatedOptions);
+
+  int numberOfRegisteredTasks = 1;
+  if (fTaskFactory.getTaskGeneratorChain().size() > 0) {
+    numberOfRegisteredTasks = fTaskFactory.getTaskGeneratorChain().size();
+  }
+  fOptions = optionsGenerator.generateOptionsForTasks(allValidatedOptions, numberOfRegisteredTasks);
+}
+
+JPetManager::~JPetManager() {}
 
 void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
 {
