@@ -101,7 +101,10 @@ std::pair<bool, std::map<std::string, boost::any> >  JPetManager::parseCmdLine(i
 
 void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
 {
-  fTaskFactory.addTaskInfo(name, inputFileType, outputFileType);
+  if (!fTaskFactory.addTaskInfo(name, inputFileType, outputFileType)) {
+    std::cerr <<"Stopping program, unrecoverable error has occurred while calling useTask! Check the log!" <<std::endl;
+    exit(1);
+  }
 }
 
 bool JPetManager::areThreadsEnabled() const
