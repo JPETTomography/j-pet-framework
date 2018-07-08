@@ -84,6 +84,19 @@ BOOST_AUTO_TEST_CASE( factory_addAndRegisterTask )
   BOOST_REQUIRE_EQUAL(task4->getName(), std::string("task2"));
 }
 
+BOOST_AUTO_TEST_CASE( factory_clear )
+{
+  JPetTaskFactory factory;
+  factory.registerTask<TestClass>("task1");
+  factory.registerTask<TestClass>("task2");
+  factory.addTaskInfo("task1","raw","calib");
+  factory.addTaskInfo("task2","calib","sig");
+
+  factory.clear();
+  BOOST_REQUIRE(factory.getTasksDictionary().empty());
+  BOOST_REQUIRE(factory.getTasksToUse().empty());
+}
+
 BOOST_AUTO_TEST_CASE(factory_functions)
 {
 }
