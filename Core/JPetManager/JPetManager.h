@@ -66,6 +66,6 @@ private:
   /// Number of elements in the fOptions container corresponds to the number of independent input files.
   Options fOptions;
   bool fThreadsEnabled = false;
-  JPetTaskFactory fTaskFactory;
+  jpet_task_factory::JPetTaskFactory fTaskFactory;
 };
 #endif /* !JPETMANAGER_H */
