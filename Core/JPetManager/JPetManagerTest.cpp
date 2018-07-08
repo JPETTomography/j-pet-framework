@@ -3,8 +3,6 @@
 
 #include <boost/test/unit_test.hpp>
 #include "./JPetManager/JPetManager.h"
-#include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
-#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include <cstdio> //for std::remove
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
