@@ -59,7 +59,7 @@ bool JPetManager::run(int argc, const char** argv)
   }
   auto chainOfTasks = fTaskFactory.createTaskGeneratorChain(allValidatedOptions);
   JPetOptionsGenerator optionsGenerator;
-  fOptions = optionsGenerator.generateOptionsForTasks(allValidatedOptions, chainOfTasks.size());
+  auto options = optionsGenerator.generateOptionsForTasks(allValidatedOptions, chainOfTasks.size());
 
   INFO( "======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
   std::vector<JPetTaskChainExecutor*> executors;
@@ -67,7 +67,7 @@ bool JPetManager::run(int argc, const char** argv)
   auto inputDataSeq = 0;
   /// For every input option, new TaskChainExecutor is created, which creates the chain of previously
   /// registered tasks. The inputDataSeq is the identifier of given chain.
-  for (auto opt : fOptions) {
+  for (auto opt : options) {
     JPetTaskChainExecutor* executor = new JPetTaskChainExecutor(chainOfTasks, inputDataSeq, opt.second);
     executors.push_back(executor);
     if (areThreadsEnabled()) {
@@ -121,9 +121,4 @@ JPetManager::~JPetManager() {}
 void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
 {
   fTaskFactory.addTaskInfo(name, inputFileType, outputFileType);
-}
-
-JPetManager::Options JPetManager::getOptions() const
-{
-  return fOptions;
 }
