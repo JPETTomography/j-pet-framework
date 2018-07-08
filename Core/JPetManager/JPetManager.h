@@ -34,7 +34,6 @@
 class JPetManager
 {
 public:
-  using Options = std::map<std::string, jpet_options_tools::OptsStrAny>;
   using TaskGenerator = std::function< JPetTaskInterface* () >;
   using TaskGeneratorChain = std::vector<TaskGenerator>;
 
@@ -51,9 +50,8 @@ public:
   void useTask(const char* name, const char* inputFileType = "", const char* outputFileType = "");
 
   /// Function parses command line arguments and generates options for tasks.
-  /// The fOptions is filled with the generated options.
+  /// @todo documentation
   std::pair<bool,std::map<std::string, boost::any> > parseCmdLine(int argc, const char** argv);
-  Options getOptions() const;
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
 
@@ -63,7 +61,6 @@ private:
 
   JPetManager();
   /// Number of elements in the fOptions container corresponds to the number of independent input files.
-  Options fOptions;
   bool fThreadsEnabled = false;
   jpet_task_factory::JPetTaskFactory fTaskFactory;
 };

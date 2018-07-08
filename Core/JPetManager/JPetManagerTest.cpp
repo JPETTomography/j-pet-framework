@@ -28,19 +28,10 @@ BOOST_AUTO_TEST_CASE( threadsEnabled )
   BOOST_REQUIRE(!manager.areThreadsEnabled());
 }
 
-BOOST_AUTO_TEST_CASE( manager_getOptions )
-{
-  JPetManager& manager = JPetManager::getManager();
-  auto options = manager.getOptions();
-  BOOST_REQUIRE_EQUAL(options.size(), 0u);
-}
-
 BOOST_AUTO_TEST_CASE( emptyRun )
 {
   JPetManager& manager = JPetManager::getManager();
   BOOST_REQUIRE(!manager.run(0, nullptr));
-  auto options = manager.getOptions();
-  BOOST_REQUIRE_EQUAL(options.size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE( goodRootRun )
