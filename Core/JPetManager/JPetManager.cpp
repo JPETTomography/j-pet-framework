@@ -18,22 +18,19 @@
 #include <cassert>
 #include <string>
 #include <exception>
+#include <TThread.h>
 
-#include "./JPetLoggerInclude.h"
+#include "./JPetTaskChainExecutor/JPetTaskChainExecutor.h"
 #include "./JPetCommonTools/JPetCommonTools.h"
 #include "./JPetCmdParser/JPetCmdParser.h"
-#include "./JPetScopeLoader/JPetScopeLoader.h"
-#include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
-#include "./JPetParamBankHandlerTask/JPetParamBankHandlerTask.h"
 #include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "./JPetLoggerInclude.h"
 
-#include <TThread.h>
 
 using namespace jpet_options_tools;
 
 JPetManager::JPetManager()
 {
-  fTaskGeneratorChain = new TaskGeneratorChain;
 }
 
 JPetManager& JPetManager::getManager()
@@ -42,31 +39,28 @@ JPetManager& JPetManager::getManager()
   return instance;
 }
 
-bool JPetManager::areThreadsEnabled() const
-{
-  return fThreadsEnabled;
-}
-
-void JPetManager::setThreadsEnabled(bool enable)
-{
-  fThreadsEnabled = enable;
-}
-
 bool JPetManager::run(int argc, const char** argv)
 {
-  if (!parseCmdLine(argc, argv)) {
+  bool isOk = true;
+  std::map<std::string, boost::any> allValidatedOptions;
+  std::tie(isOk, allValidatedOptions) = parseCmdLine(argc, argv);
+  if (!isOk) {
     ERROR("While parsing command line arguments");
+    std::cerr <<"Stopping program, unrecoverable error has occurred while calling run! Check the log!" <<std::endl;
+    exit(1);  /// temporary change to check if the examples are working
     return false;
   }
+  auto chainOfTasks = fTaskFactory.createTaskGeneratorChain(allValidatedOptions);
+  JPetOptionsGenerator optionsGenerator;
+  auto options = optionsGenerator.generateOptionsForTasks(allValidatedOptions, chainOfTasks.size());
+
   INFO( "======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
-  std::vector<JPetTaskChainExecutor*> executors;
   std::vector<TThread*> threads;
   auto inputDataSeq = 0;
   /// For every input option, new TaskChainExecutor is created, which creates the chain of previously
   /// registered tasks. The inputDataSeq is the identifier of given chain.
-  for (auto opt : fOptions) {
-    JPetTaskChainExecutor* executor = new JPetTaskChainExecutor(fTaskGeneratorChain, inputDataSeq, opt.second);
-    executors.push_back(executor);
+  for (auto opt : options) {
+    auto executor = jpet_common_tools::make_unique<JPetTaskChainExecutor>(chainOfTasks, inputDataSeq, opt.second);
     if (areThreadsEnabled()) {
       auto thr = executor->run();
       if (thr) {
@@ -77,6 +71,8 @@ bool JPetManager::run(int argc, const char** argv)
     } else {
       if (!executor->process()) {
         ERROR("While running process");
+        std::cerr <<"Stopping program, unrecoverable error has occurred while calling run! Check the log!" <<std::endl;
+        exit(1);  /// temporary change to check if the examples are working
         return false;
       }
     }
@@ -88,85 +84,40 @@ bool JPetManager::run(int argc, const char** argv)
       thread->Join();
     }
   }
-  for (auto& executor : executors) {
-    if (executor) {
-      delete executor;
-      executor = 0;
-    }
-  }
   INFO( "======== Finished processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
   return true;
 }
 
-bool JPetManager::parseCmdLine(int argc, const char** argv)
+std::pair<bool, std::map<std::string, boost::any> >  JPetManager::parseCmdLine(int argc, const char** argv)
 {
-  auto addDefaultTasksFromOptions = [&](const std::map<std::string, boost::any>& options) {
-    auto fileType = FileTypeChecker::getInputFileType(options);
-    if (fileType == FileTypeChecker::kScope) {
-      auto task2 = []() {
-        return new JPetScopeLoader(std::unique_ptr<JPetScopeTask>(new JPetScopeTask("JPetScopeReader")));
-      };
-      fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task2);
-    }
-    auto paramBankHandlerTask = []() {
-      return new JPetParamBankHandlerTask("ParamBank Filling");
-    };
-    fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), paramBankHandlerTask);
-    /// add task to unzip or unpack if needed
-    auto task = []() {
-      return new JPetUnzipAndUnpackTask("UnpackerAndUnzipper");
-    };
-    fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task);
-  };
-
+  std::map<std::string, boost::any> allValidatedOptions;
   try {
     JPetOptionsGenerator optionsGenerator;
     JPetCmdParser parser;
     auto optionsFromCmdLine = parser.parseCmdLineArgs(argc, argv);
     /// One  common map of all options
-    auto allValidatedOptions = optionsGenerator.generateAndValidateOptions(optionsFromCmdLine);
-    addDefaultTasksFromOptions(allValidatedOptions);
-
-    int numberOfRegisteredTasks = 1;
-    if (fTaskGeneratorChain) {
-      numberOfRegisteredTasks = fTaskGeneratorChain->size();
-    }
-    fOptions = optionsGenerator.generateOptionsForTasks(allValidatedOptions, numberOfRegisteredTasks);
+    allValidatedOptions = optionsGenerator.generateAndValidateOptions(optionsFromCmdLine);
   } catch (std::exception& e) {
     ERROR(e.what());
-    return false;
+    return std::make_pair(false, std::map<std::string, boost::any> {});
   }
-  return true;
+  return std::make_pair(true, allValidatedOptions);
 }
-
-//
-JPetManager::~JPetManager(){}
-
 
 void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
 {
-  assert(fTaskGeneratorChain);
-  if ( fTasksDictionary.count(name) > 0 ) {
-    TaskGenerator userTaskGen = fTasksDictionary.at(name);
-    // wrap the JPetUserTask-based task in a JPetTaskIO
-    fTaskGeneratorChain->push_back( [name, inputFileType, outputFileType, userTaskGen]() {
-      JPetTaskIO* task = new JPetTaskIO(name, inputFileType, outputFileType);
-      task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-      return task;
-    });
-  } else {
-    ERROR(Form("The requested task %s is unknown", name));
+  if (!fTaskFactory.addTaskInfo(name, inputFileType, outputFileType)) {
+    std::cerr <<"Stopping program, unrecoverable error has occurred while calling useTask! Check the log!" <<std::endl;
     exit(1);
   }
 }
 
-JPetManager::Options JPetManager::getOptions() const
+bool JPetManager::areThreadsEnabled() const
 {
-  return fOptions;
+  return fThreadsEnabled;
 }
 
-void JPetManager::clearRegisteredTasks()
+void JPetManager::setThreadsEnabled(bool enable)
 {
-  delete fTaskGeneratorChain;
-  fTaskGeneratorChain = new TaskGeneratorChain;
+  fThreadsEnabled = enable;
 }

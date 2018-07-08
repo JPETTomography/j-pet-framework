@@ -22,20 +22,17 @@
 #include "./JPetLoggerInclude.h"
 #include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
-JPetTaskChainExecutor::JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFileId, const jpet_options_tools::OptsStrAny& opts):
+JPetTaskChainExecutor::JPetTaskChainExecutor(const TaskGeneratorChain& taskGeneratorChain, int processedFileId, const jpet_options_tools::OptsStrAny& opts):
   fInputSeqId(processedFileId),
   ftaskGeneratorChain(taskGeneratorChain)
 {
   /// ParamManager is generated and added to fParams
   fParams = jpet_params_factory::generateParams(opts);
   assert(fParams.getParamManager());
-  if (taskGeneratorChain) {
-    for (auto taskGenerator : *ftaskGeneratorChain) {
-      auto task = taskGenerator();
-      fTasks.push_back(task);
-    }
-  } else {
-    ERROR("taskGeneratorChain is null while constructing JPetTaskChainExecutor");
+  for (auto taskGenerator : ftaskGeneratorChain) {
+    auto task = taskGenerator();
+    //fTasks.push_back(task);
+    fTasks.push_back(std::move(task));
   }
 }
 
@@ -46,9 +43,7 @@ bool JPetTaskChainExecutor::process()
   JPetParams controlParams; /// Parameters used to control the input file type and event range.
 
   /// We iterate over both tasks and parameters
-  for (auto currentTaskIt = fTasks.begin(); currentTaskIt != fTasks.end(); currentTaskIt++) {
-
-    auto currentTask  =  *currentTaskIt;
+  for (const auto& currentTask : fTasks) {
     auto taskName = currentTask->getName();
 
     auto& currParams = fParams;
@@ -96,10 +91,4 @@ TThread* JPetTaskChainExecutor::run()
 
 JPetTaskChainExecutor::~JPetTaskChainExecutor()
 {
-  for (auto& task : fTasks) {
-    if (task) {
-      delete task;
-      task = 0;
-    }
-  }
 }

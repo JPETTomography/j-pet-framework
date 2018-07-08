@@ -22,10 +22,10 @@
 #include "./JPetTask/JPetTask.h"
 #include "./JPetProgressBarManager/JPetProgressBarManager.h"
 #include "./JPetParams/JPetParams.h"
+#include "./JPetTaskIO/JPetOutputHandler.h"
 #include <memory>
 #include <string>
 
-class JPetWriter;
 class JPetReader;
 class JPetTreeHeader;
 class JPetStatistics;
@@ -54,6 +54,8 @@ public:
 
   void displayProgressBar(int currentEventNumber, int numberOfEvents) const;
 
+  bool isOutput() const;
+
 protected:
   /// Method returns (isOK, inputFile, outputFileFullPath, isResetOutputPath) based on provided options.
   /// if isOK is set to false, that means that an error has occured.
@@ -61,23 +63,31 @@ protected:
   virtual bool createInputObjects(const char* inputFilename);
   virtual bool createOutputObjects(const char* outputFilename);
 
-  bool setUserLimits(const jpet_options_tools::OptsStrAny& opts, const long long kTotEventsFromReader, long long& first, long long& last) const;
-
   const JPetParamBank& getParamBank();
   JPetParamManager& getParamManager();
+
+  std::tuple<bool, long long, long long, long long> getEventRange(const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader);
 
   std::string fInFileType;
   std::string fOutFileType;
   std::string fOutFileFullPath;
   bool fResetOutputPath;
 
-  int fEventNb = -1;
+  bool fIsOutput = true; /// Temporary and very nasty way to mark that the output will be saved.
+  int fEventNb = -1; /// @todo is this used anywhere?
   JPetParams fParams;
-  JPetWriter* fWriter = 0;
-  JPetReaderInterface* fReader = 0;
-  JPetTreeHeader* fHeader = 0;
-  std::unique_ptr<JPetStatistics> fStatistics = 0;
+
+  std::unique_ptr<JPetReaderInterface> fReader{nullptr};
+
+  JPetTreeHeader* fHeader{nullptr};
+  std::unique_ptr<JPetStatistics> fStatistics{nullptr};
   std::map<std::string, std::unique_ptr<JPetStatistics>> fSubTasksStatistics;
+
+  std::unique_ptr<JPetOutputHandler> fOutputHandler{nullptr};
+
   JPetProgressBarManager fProgressBar;
+private:
+  JPetTaskIO(const JPetTaskIO&);
+  void operator=(const JPetTaskIO&);
 };
 #endif /*  !JPETTASKIO_H */

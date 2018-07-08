@@ -24,7 +24,7 @@
 #include "./JPetTaskInterface/JPetTaskInterface.h"
 #include "./JPetTimer/JPetTimer.h"
 
-using TaskGenerator = std::function< JPetTaskInterface* () >;
+using TaskGenerator = std::function< std::unique_ptr<JPetTaskInterface>() >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
 /**
@@ -34,7 +34,7 @@ using TaskGeneratorChain = std::vector<TaskGenerator>;
 class JPetTaskChainExecutor
 {
 public :
-  JPetTaskChainExecutor(TaskGeneratorChain* taskGeneratorChain, int processedFile, const jpet_options_tools::OptsStrAny&);
+  JPetTaskChainExecutor(const TaskGeneratorChain& taskGeneratorChain, int processedFile, const jpet_options_tools::OptsStrAny&);
   TThread* run();
   virtual ~JPetTaskChainExecutor();
   bool process(); /// Method to be called directly only in case of non-thread running;
@@ -42,8 +42,8 @@ private:
   static void* processProxy(void*);
 
   int fInputSeqId = -1;
-  std::list<JPetTaskInterface*> fTasks;
-  TaskGeneratorChain* ftaskGeneratorChain = nullptr;
+  std::list<std::unique_ptr<JPetTaskInterface> > fTasks;
+  TaskGeneratorChain ftaskGeneratorChain;
   JPetParams fParams;
 };
 

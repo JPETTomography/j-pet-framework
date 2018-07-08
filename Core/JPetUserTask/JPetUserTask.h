@@ -43,7 +43,7 @@ public:
   virtual ~JPetUserTask() {};
 
   bool init(const JPetParamsInterface& inOptions) override;
-  bool run(const JPetDataInterface& inData) override;
+  bool run(const JPetDataInterface& inData) override; /// This function cleans the fOutputEvents array before starting the execution.
   bool terminate(JPetParamsInterface& outOptions) override;
 
   virtual void setStatistics(JPetStatistics* statistics);
@@ -58,6 +58,8 @@ protected:
   virtual bool init() = 0; /// should be implemented in descendent class
   virtual bool exec() = 0; /// should be implemented in descendent class
   virtual bool terminate() = 0; /// should be implemented in descendent class
+
+  void clearOutputEvents();  /// It clears the JPetTimeWindow array assigned  to fOutputEvents.
 
   TObject* fEvent = 0;
   JPetStatistics* fStatistics = 0;
