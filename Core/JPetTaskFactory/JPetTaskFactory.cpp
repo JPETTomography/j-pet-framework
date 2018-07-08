@@ -53,6 +53,13 @@ std::map<std::string, TaskGenerator> JPetTaskFactory::getTasksDictionary() const
   return  fTasksDictionary;
 }
 
+
+void JPetTaskFactory::clear()
+{
+  fTasksDictionary.clear();
+  fTasksToUse.clear();
+}
+
 TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options)
 {
   TaskGeneratorChain chain;

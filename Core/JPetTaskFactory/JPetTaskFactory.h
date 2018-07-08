@@ -97,6 +97,8 @@ public:
 
   std::vector<TaskInfo> getTasksToUse() const;
   std::map<std::string, TaskGenerator> getTasksDictionary() const;
+  /// @brief Method clear all the registered tasks and added task information
+  void clear();
 
 private:
   JPetTaskFactory(const JPetTaskFactory&);
