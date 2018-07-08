@@ -46,6 +46,8 @@ bool JPetManager::run(int argc, const char** argv)
   std::tie(isOk, allValidatedOptions) = parseCmdLine(argc, argv);
   if (!isOk) {
     ERROR("While parsing command line arguments");
+    std::cerr <<"Stopping program, unrecoverable error has occurred while calling run! Check the log!" <<std::endl;
+    exit(1);  /// temporary change to check if the examples are working
     return false;
   }
   auto chainOfTasks = fTaskFactory.createTaskGeneratorChain(allValidatedOptions);
@@ -69,6 +71,8 @@ bool JPetManager::run(int argc, const char** argv)
     } else {
       if (!executor->process()) {
         ERROR("While running process");
+        std::cerr <<"Stopping program, unrecoverable error has occurred while calling run! Check the log!" <<std::endl;
+        exit(1);  /// temporary change to check if the examples are working
         return false;
       }
     }
