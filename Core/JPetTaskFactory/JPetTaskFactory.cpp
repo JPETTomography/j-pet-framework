@@ -25,6 +25,8 @@ using TaskGeneratorChain = std::vector<TaskGenerator>;
 namespace jpet_task_factory
 {
 
+JPetTaskFactory::JPetTaskFactory() { };
+
 std::vector<TaskGenerator> JPetTaskFactory::createTaskGeneratorChain(const std::map<std::string, boost::any>& options) const
 {
   return generateTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
@@ -39,13 +41,13 @@ TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskI
 {
   TaskGeneratorChain chain;
   addDefaultTasksFromOptions(options, chain);
-  for(const auto& taskInfo: taskInfoVect) {
-    addTaskToChain(generatorsMap, taskInfo, chain);          
+  for (const auto& taskInfo : taskInfoVect) {
+    addTaskToChain(generatorsMap, taskInfo, chain);
   }
   return chain;
 }
 
-void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, TaskGeneratorChain& outChain) 
+void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, TaskGeneratorChain& outChain)
 {
   using namespace jpet_options_tools;
   auto addDefaultTasksFromOptions = [&](const std::map<std::string, boost::any>& options) {
@@ -70,7 +72,7 @@ void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options
   addDefaultTasksFromOptions(options);
 }
 
-void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, const TaskInfo& info, TaskGeneratorChain& outChain) 
+void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, const TaskInfo& info, TaskGeneratorChain& outChain)
 {
   auto name = info.name.c_str();
   auto inT = info.inputFileType.c_str();
@@ -78,11 +80,9 @@ void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, c
 
   if (generatorsMap.count(name) > 0 ) {
     TaskGenerator userTaskGen = generatorsMap.at(name);
-    // wrap the JPetUserTask-based task in a JPetTaskIO
-    outChain.push_back( 
-        [name, inT, outT, userTaskGen](){
-        //std::unique_ptr<JPetTaskIO> task(new JPetTaskIO{name, inputFileType, outputFileType});
-        JPetTaskIO* task = new JPetTaskIO(name, inT, outT);
+    outChain.push_back(
+    [name, inT, outT, userTaskGen]() {
+      JPetTaskIO* task = new JPetTaskIO(name, inT, outT);
       task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
       return task;
     });
@@ -90,7 +90,6 @@ void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, c
     ERROR(Form("The requested task %s is unknown", name));
     exit(1);
   }
-} 
-
+}
 
 }
