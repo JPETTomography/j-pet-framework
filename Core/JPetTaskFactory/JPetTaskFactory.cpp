@@ -14,7 +14,6 @@
  */
 
 #include "./JPetTaskFactory.h"
-#include <cassert>
 #include "./JPetTaskIO/JPetTaskIO.h"
 #include "./JPetScopeLoader/JPetScopeLoader.h"
 #include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
