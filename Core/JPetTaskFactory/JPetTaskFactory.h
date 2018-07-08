@@ -56,14 +56,17 @@ class JPetTaskFactory
 {
 
 public:
-  JPetTaskFactory();
+  JPetTaskFactory() {};
 
   //using TaskGenerator = std::function< std::unique_ptr<JPetTaskInterface>() >;
   using TaskGenerator = std::function< JPetTaskInterface*() >;
   using TaskGeneratorChain = std::vector<TaskGenerator>;
 
-  void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, const TaskInfo& info, TaskGeneratorChain& outChain);
+  std::vector<TaskGenerator> createTaskGeneratorChain(const std::map<std::string, boost::any>& options) const;
+
+  void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, const TaskInfo& info, TaskGeneratorChain& outChain) const;
   
+  TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options) const;
   //TaskGeneratorChain* generateTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options);
 
   /// \brief Method to register the task generator. TDerived corresponds to the task type.
@@ -78,28 +81,21 @@ public:
     };
   }
 
-  TaskGeneratorChain getTaskGeneratorChain() const
-  {
-    return fTaskGeneratorChain;
-  }
+  void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, TaskGeneratorChain& outChain) const;
 
-  void clearTaskGeneratorChain()
-  {
-    fTaskGeneratorChain.clear();
-  }
-
-  void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, TaskGeneratorChain& outChain);
-
-  void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options);
+  //void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options);
 
 
-  void useTask(const char* name, const char* inputFileType, const char* outputFileType);
+  //void useTask(const char* name, const char* inputFileType, const char* outputFileType);
+
+  /// Method adds task information to the collection of tasks to be used while creating the task chain.
+  void addTaskInfo(const char* name, const char* inputFileType, const char* outputFileType);
+
 private:
   JPetTaskFactory(const JPetTaskFactory&);
   void operator=(const JPetTaskFactory&);
 
   std::map<std::string, TaskGenerator> fTasksDictionary;
-  TaskGeneratorChain fTaskGeneratorChain; /// fTaskGeneratorChain is a sequences of registered computing tasks.
-
+  std::vector<TaskInfo> fTasksToUse; /// The collection of task information (name, input and output file type) corresponding to task chain to be created.
 };
 #endif /*  !JPETTASKFACTORY_H */

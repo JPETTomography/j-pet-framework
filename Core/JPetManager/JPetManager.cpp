@@ -50,15 +50,16 @@ void JPetManager::setThreadsEnabled(bool enable)
 
 bool JPetManager::run(int argc, const char** argv)
 {
-  if (!parseCmdLine(argc, argv)) {
+  bool isOk = true;
+  std::map<std::string, boost::any> allValidatedOptions; 
+  std::tie(isOk,allValidatedOptions) = parseCmdLine(argc, argv);
+  if (!isOk) {
     ERROR("While parsing command line arguments");
     return false;
   }
-
-  ///Here we should do:
-  ///1.Add missing default tasks based on options
-  ///2.Generate generatorChain based on  
-  ///3.create options
+  auto chainOfTasks = fTaskFactory.createTaskGeneratorChain(allValidatedOptions);
+  JPetOptionsGenerator optionsGenerator;
+  fOptions = optionsGenerator.generateOptionsForTasks(allValidatedOptions, chainOfTasks.size());
 
   INFO( "======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
   std::vector<JPetTaskChainExecutor*> executors;
@@ -67,7 +68,7 @@ bool JPetManager::run(int argc, const char** argv)
   /// For every input option, new TaskChainExecutor is created, which creates the chain of previously
   /// registered tasks. The inputDataSeq is the identifier of given chain.
   for (auto opt : fOptions) {
-    JPetTaskChainExecutor* executor = new JPetTaskChainExecutor(fTaskFactory.getTaskGeneratorChain(), inputDataSeq, opt.second);
+    JPetTaskChainExecutor* executor = new JPetTaskChainExecutor(chainOfTasks, inputDataSeq, opt.second);
     executors.push_back(executor);
     if (areThreadsEnabled()) {
       auto thr = executor->run();
@@ -100,40 +101,27 @@ bool JPetManager::run(int argc, const char** argv)
   return true;
 }
 
-bool JPetManager::parseCmdLine(int argc, const char** argv)
+std::pair<bool,std::map<std::string, boost::any> >  JPetManager::parseCmdLine(int argc, const char** argv)
 {
+  std::map<std::string, boost::any> allValidatedOptions; 
   try {
     JPetOptionsGenerator optionsGenerator;
     JPetCmdParser parser;
     auto optionsFromCmdLine = parser.parseCmdLineArgs(argc, argv);
     /// One  common map of all options
-    auto allValidatedOptions = optionsGenerator.generateAndValidateOptions(optionsFromCmdLine);
-    ///@todo change it to return allValidatedOptions + bool and later call fTaskFactory;
-    generateOptionsForTasks(allValidatedOptions);
+    allValidatedOptions = optionsGenerator.generateAndValidateOptions(optionsFromCmdLine);
   } catch (std::exception& e) {
     ERROR(e.what());
-    return false;
+    return std::make_pair(false, std::map<std::string, boost::any>{});
   }
-  return true;
-}
-
-void JPetManager::generateOptionsForTasks(const std::map<std::string, boost::any>& allValidatedOptions) 
-{
-  JPetOptionsGenerator optionsGenerator;
-  fTaskFactory.addDefaultTasksFromOptions(allValidatedOptions);
-
-  int numberOfRegisteredTasks = 1;
-  if (fTaskFactory.getTaskGeneratorChain().size() > 0) {
-    numberOfRegisteredTasks = fTaskFactory.getTaskGeneratorChain().size();
-  }
-  fOptions = optionsGenerator.generateOptionsForTasks(allValidatedOptions, numberOfRegisteredTasks);
+  return std::make_pair(true, allValidatedOptions);
 }
 
 JPetManager::~JPetManager() {}
 
 void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
 {
-  fTaskFactory.useTask(name, inputFileType, outputFileType);
+  fTaskFactory.addTaskInfo(name, inputFileType, outputFileType);
 }
 
 JPetManager::Options JPetManager::getOptions() const
