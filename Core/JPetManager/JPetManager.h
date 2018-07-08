@@ -59,7 +59,7 @@ public:
   /// the input file name is expected to be "bla.raw.root". There are some labels that are treated separately e.g.
   /// "zip" or "hld". If the outputFileType is the empty string then the task is assumed to have no output tree.
   /// @param name c-string that identifies registered task. Also, this string is passed to the construct as argument.
-  /// @param inputFileType c-string corresponding to the input file extension. It must be non-empty string.
+  /// @param inputFileType c-string corresponding to the input file extension.
   /// @param outputFileType c-string corresponding to the output file extension. If empty, the task with no typical output is assumed.
   /// @return in case of error exit(1) is called.
   void useTask(const char* name, const char* inputFileType = "", const char* outputFileType = "");
