@@ -16,11 +16,10 @@
 #ifndef JPETMANAGER_H
 #define JPETMANAGER_H
 
-#include "./JPetTaskChainExecutor/JPetTaskChainExecutor.h"
-#include "./JPetOptionsTools/JPetOptionsTools.h"
 #include "./JPetTaskFactory/JPetTaskFactory.h"
-#include <memory>
 #include <map>
+#include <string>
+#include <boost/any.hpp>
 
 /**
  * @brief Main Manager of the analyses performed with the J-PET Framework.
@@ -35,24 +34,36 @@
 class JPetManager
 {
 public:
-  using TaskGenerator = std::function< JPetTaskInterface* () >;
-  using TaskGeneratorChain = std::vector<TaskGenerator>;
-
   static JPetManager& getManager();
-  ~JPetManager();
 
   bool run(int argc, const char** argv);
 
-  template<typename T> 
+  /// @brief Method parses command line arguments and returns the set of validated option generated based on it.
+  /// @return pair of boolean status and the map of validated options. In case of errors the status is set to false.
+  std::pair<bool, std::map<std::string, boost::any> > parseCmdLine(int argc, const char** argv);
+
+  /// @brief Method to register tasks that can form the a chain of tasks to be executed.
+  /// The registration of the task gives the opportunity to use it later by calling useTask method.
+  /// The task must inherit from JPeTaskInterface.
+  /// @param name c-string that identifies given registered task. Also, this string is passed to the construct as argument.
+  template<typename T>
   void registerTask(const char* name)
   {
     fTaskFactory.registerTask<T>(name);
   }
+
+  /// @brief Method to add the task to the chain of tasks that will be executed later by JPetTaskExecutor.
+  /// The task must be registered before (e.g. using registerTask) using the same name label.
+  /// The input and output file type arguments correspond to labels that form a part of the input/output file extension.
+  /// The following format is used: fileNameRoot.fileType.root  e.g. if inputFileType is "raw" and file name is "bla", then
+  /// the input file name is expected to be "bla.raw.root". There are some labels that are treated separately e.g.
+  /// "zip" or "hld". If the outputFileType is the empty string then the task is assumed to have no output tree.
+  /// @param name c-string that identifies registered task. Also, this string is passed to the construct as argument.
+  /// @param inputFileType c-string corresponding to the input file extension. It must be non-empty string.
+  /// @param outputFileType c-string corresponding to the output file extension. If empty, the task with no typical output is assumed.
+  /// @return in case of error exit(1) is called.
   void useTask(const char* name, const char* inputFileType = "", const char* outputFileType = "");
 
-  /// Function parses command line arguments and generates options for tasks.
-  /// @todo documentation
-  std::pair<bool,std::map<std::string, boost::any> > parseCmdLine(int argc, const char** argv);
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
 
@@ -61,7 +72,6 @@ private:
   void operator=(const JPetManager&);
 
   JPetManager();
-  /// Number of elements in the fOptions container corresponds to the number of independent input files.
   bool fThreadsEnabled = false;
   jpet_task_factory::JPetTaskFactory fTaskFactory;
 };

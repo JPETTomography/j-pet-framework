@@ -18,13 +18,14 @@
 #include <cassert>
 #include <string>
 #include <exception>
+#include <TThread.h>
 
-#include "./JPetLoggerInclude.h"
+#include "./JPetTaskChainExecutor/JPetTaskChainExecutor.h"
 #include "./JPetCommonTools/JPetCommonTools.h"
 #include "./JPetCmdParser/JPetCmdParser.h"
 #include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "./JPetLoggerInclude.h"
 
-#include <TThread.h>
 
 using namespace jpet_options_tools;
 
@@ -38,21 +39,11 @@ JPetManager& JPetManager::getManager()
   return instance;
 }
 
-bool JPetManager::areThreadsEnabled() const
-{
-  return fThreadsEnabled;
-}
-
-void JPetManager::setThreadsEnabled(bool enable)
-{
-  fThreadsEnabled = enable;
-}
-
 bool JPetManager::run(int argc, const char** argv)
 {
   bool isOk = true;
-  std::map<std::string, boost::any> allValidatedOptions; 
-  std::tie(isOk,allValidatedOptions) = parseCmdLine(argc, argv);
+  std::map<std::string, boost::any> allValidatedOptions;
+  std::tie(isOk, allValidatedOptions) = parseCmdLine(argc, argv);
   if (!isOk) {
     ERROR("While parsing command line arguments");
     return false;
@@ -62,14 +53,12 @@ bool JPetManager::run(int argc, const char** argv)
   auto options = optionsGenerator.generateOptionsForTasks(allValidatedOptions, chainOfTasks.size());
 
   INFO( "======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
-  std::vector<JPetTaskChainExecutor*> executors;
   std::vector<TThread*> threads;
   auto inputDataSeq = 0;
   /// For every input option, new TaskChainExecutor is created, which creates the chain of previously
   /// registered tasks. The inputDataSeq is the identifier of given chain.
   for (auto opt : options) {
-    JPetTaskChainExecutor* executor = new JPetTaskChainExecutor(chainOfTasks, inputDataSeq, opt.second);
-    executors.push_back(executor);
+    auto executor = jpet_common_tools::make_unique<JPetTaskChainExecutor>(chainOfTasks, inputDataSeq, opt.second);
     if (areThreadsEnabled()) {
       auto thr = executor->run();
       if (thr) {
@@ -91,19 +80,13 @@ bool JPetManager::run(int argc, const char** argv)
       thread->Join();
     }
   }
-  for (auto& executor : executors) {
-    if (executor) {
-      delete executor;
-      executor = 0;
-    }
-  }
   INFO( "======== Finished processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
   return true;
 }
 
-std::pair<bool,std::map<std::string, boost::any> >  JPetManager::parseCmdLine(int argc, const char** argv)
+std::pair<bool, std::map<std::string, boost::any> >  JPetManager::parseCmdLine(int argc, const char** argv)
 {
-  std::map<std::string, boost::any> allValidatedOptions; 
+  std::map<std::string, boost::any> allValidatedOptions;
   try {
     JPetOptionsGenerator optionsGenerator;
     JPetCmdParser parser;
@@ -111,14 +94,22 @@ std::pair<bool,std::map<std::string, boost::any> >  JPetManager::parseCmdLine(in
     allValidatedOptions = optionsGenerator.generateAndValidateOptions(optionsFromCmdLine);
   } catch (std::exception& e) {
     ERROR(e.what());
-    return std::make_pair(false, std::map<std::string, boost::any>{});
+    return std::make_pair(false, std::map<std::string, boost::any> {});
   }
   return std::make_pair(true, allValidatedOptions);
 }
 
-JPetManager::~JPetManager() {}
-
 void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
 {
   fTaskFactory.addTaskInfo(name, inputFileType, outputFileType);
+}
+
+bool JPetManager::areThreadsEnabled() const
+{
+  return fThreadsEnabled;
+}
+
+void JPetManager::setThreadsEnabled(bool enable)
+{
+  fThreadsEnabled = enable;
 }
