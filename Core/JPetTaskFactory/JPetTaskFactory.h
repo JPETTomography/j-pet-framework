@@ -38,6 +38,13 @@
  *
  */
 
+namespace jpet_task_factory
+{
+
+//using TaskGenerator = std::function< std::unique_ptr<JPetTaskInterface>() >;
+using TaskGenerator = std::function< JPetTaskInterface*() >;
+using TaskGeneratorChain = std::vector<TaskGenerator>;
+
 struct TaskInfo {
   TaskInfo(const std::string& n, const std::string& inType, const std::string& outType, int numIter):
     name(n),
@@ -57,17 +64,7 @@ class JPetTaskFactory
 
 public:
   JPetTaskFactory() {};
-
-  //using TaskGenerator = std::function< std::unique_ptr<JPetTaskInterface>() >;
-  using TaskGenerator = std::function< JPetTaskInterface*() >;
-  using TaskGeneratorChain = std::vector<TaskGenerator>;
-
   std::vector<TaskGenerator> createTaskGeneratorChain(const std::map<std::string, boost::any>& options) const;
-
-  void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, const TaskInfo& info, TaskGeneratorChain& outChain) const;
-  
-  TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options) const;
-  //TaskGeneratorChain* generateTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options);
 
   /// \brief Method to register the task generator. TDerived corresponds to the task type.
   ///  The name string is also passed as parameter to the class constructor.
@@ -81,13 +78,6 @@ public:
     };
   }
 
-  void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, TaskGeneratorChain& outChain) const;
-
-  //void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options);
-
-
-  //void useTask(const char* name, const char* inputFileType, const char* outputFileType);
-
   /// Method adds task information to the collection of tasks to be used while creating the task chain.
   void addTaskInfo(const char* name, const char* inputFileType, const char* outputFileType);
 
@@ -98,4 +88,10 @@ private:
   std::map<std::string, TaskGenerator> fTasksDictionary;
   std::vector<TaskInfo> fTasksToUse; /// The collection of task information (name, input and output file type) corresponding to task chain to be created.
 };
+
+TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options);
+void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, TaskGeneratorChain& outChain);
+void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, const TaskInfo& info, TaskGeneratorChain& outChain);
+
+}
 #endif /*  !JPETTASKFACTORY_H */
