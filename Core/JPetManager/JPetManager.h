@@ -49,15 +49,14 @@ public:
   {
     fTaskFactory.registerTask<T>(name);
   }
+  void useTask(const char* name, const char* inputFileType = "", const char* outputFileType = "");
 
   /// Function parses command line arguments and generates options for tasks.
   /// The fOptions is filled with the generated options.
-  bool parseCmdLine(int argc, const char** argv);
+  std::pair<bool,std::map<std::string, boost::any> > parseCmdLine(int argc, const char** argv);
   Options getOptions() const;
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
-  void useTask(const char* name, const char* inputFileType = "", const char* outputFileType = "");
-  void generateOptionsForTasks(const std::map<std::string, boost::any>& allValidatedOptions);
 
 private:
   JPetManager(const JPetManager&);
