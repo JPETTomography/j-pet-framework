@@ -24,7 +24,7 @@
 #include "./JPetTaskInterface/JPetTaskInterface.h"
 #include "./JPetTimer/JPetTimer.h"
 
-using TaskGenerator = std::function< JPetTaskInterface* () >;
+using TaskGenerator = std::function< std::unique_ptr<JPetTaskInterface>() >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
 /**
@@ -42,7 +42,7 @@ private:
   static void* processProxy(void*);
 
   int fInputSeqId = -1;
-  std::list<JPetTaskInterface*> fTasks;
+  std::list<std::unique_ptr<JPetTaskInterface> > fTasks;
   TaskGeneratorChain ftaskGeneratorChain;
   JPetParams fParams;
 };

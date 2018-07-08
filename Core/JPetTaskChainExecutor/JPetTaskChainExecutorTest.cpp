@@ -21,6 +21,7 @@
 #include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include "./JPetTaskIO/JPetTaskIO.h"
 #include "./JPetUserTask/JPetUserTask.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
 #include "./JPetLoggerInclude.h"
 
 
@@ -55,7 +56,7 @@ BOOST_AUTO_TEST_CASE(test1)
   opt["inputFileType_std::string"] = std::string("root");
   opt["outputFile_std::string"] = std::string("JPetTaskChainExecutorTest1.root");
   auto taskGenerator1 = []() {
-    return new JPetTaskIO("test1", "unk.evt", "test.file");
+    return jpet_common_tools::make_unique<JPetTaskIO>("test1", "unk.evt", "test.file");
   };
   TaskGeneratorChain chain;
   chain.push_back(taskGenerator1);
@@ -66,32 +67,32 @@ BOOST_AUTO_TEST_CASE(test1)
 
 BOOST_AUTO_TEST_CASE(test2)
 {
-auto opt = jpet_options_generator_tools::getDefaultOptions();
-opt["firstEvent_int"] = 0;
-opt["lastEvent_int"] = 10;
-opt["inputFile_std::string"] = std::string("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root");
-opt["inputFileType_std::string"] = std::string("root");
-opt["outputFile_std::string"] = std::string("JPetTaskChainExecutorTest2Chain1.root");
-opt["outputFile_std::string"] = std::string("JPetTaskChainExecutorTest2Chain2.root");
+  auto opt = jpet_options_generator_tools::getDefaultOptions();
+  opt["firstEvent_int"] = 0;
+  opt["lastEvent_int"] = 10;
+  opt["inputFile_std::string"] = std::string("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root");
+  opt["inputFileType_std::string"] = std::string("root");
+  opt["outputFile_std::string"] = std::string("JPetTaskChainExecutorTest2Chain1.root");
+  opt["outputFile_std::string"] = std::string("JPetTaskChainExecutorTest2Chain2.root");
 
-auto taskGenerator1 = []() {
-auto taskIO =  new JPetTaskIO("TaskA", "unk.evt", "test.file");
- taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask("test2 TestTask1")));
-taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask("test2 TestTask2")));
-return taskIO;
-};
-auto taskGenerator2 = []() {
-auto taskIO =  new JPetTaskIO("TaskB", "test.file", "test2.file");
-taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask("test2 TestTask3")));
-return taskIO;
-};
-TaskGeneratorChain chain;
-chain.push_back(taskGenerator1);
-chain.push_back(taskGenerator2);
+  auto taskGenerator1 = []() {
+    auto taskIO = jpet_common_tools::make_unique<JPetTaskIO>("TaskA", "unk.evt", "test.file");
+    taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask("test2 TestTask1")));
+    taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask("test2 TestTask2")));
+    return taskIO;
+  };
+  auto taskGenerator2 = []() {
+    auto taskIO =  jpet_common_tools::make_unique<JPetTaskIO>("TaskB", "test.file", "test2.file");
+    taskIO->addSubTask(std::unique_ptr<TestTask>(new TestTask("test2 TestTask3")));
+    return taskIO;
+  };
+  TaskGeneratorChain chain;
+  chain.push_back(taskGenerator1);
+  chain.push_back(taskGenerator2);
 
-BOOST_REQUIRE_EQUAL(chain.size(), 2u);
-JPetTaskChainExecutor taskExecutor(chain, 1, opt);
-BOOST_REQUIRE(taskExecutor.process());
+  BOOST_REQUIRE_EQUAL(chain.size(), 2u);
+  JPetTaskChainExecutor taskExecutor(chain, 1, opt);
+  BOOST_REQUIRE(taskExecutor.process());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -19,7 +19,7 @@
 #include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
 #include "./JPetParamBankHandlerTask/JPetParamBankHandlerTask.h"
 
-using TaskGenerator = std::function< JPetTaskInterface*() >;
+using TaskGenerator = std::function< std::unique_ptr<JPetTaskInterface>() >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
 namespace jpet_task_factory
@@ -32,9 +32,25 @@ std::vector<TaskGenerator> JPetTaskFactory::createTaskGeneratorChain(const std::
   return generateTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
 }
 
-void JPetTaskFactory::addTaskInfo(const char* name, const char* inputFileType, const char* outputFileType)
+bool JPetTaskFactory::addTaskInfo(const char* name, const char* inputFileType, const char* outputFileType)
 {
-  fTasksToUse.push_back(TaskInfo(name, inputFileType, outputFileType, 1));
+  if (fTasksDictionary.find(name)!=fTasksDictionary.end()){ 
+    fTasksToUse.push_back(TaskInfo(name, inputFileType, outputFileType, 1));
+  } else {
+    ERROR("Task with the name " +std::string(name) + " is not registered!");
+    return false;
+  }
+  return true;
+}
+
+std::vector<TaskInfo> JPetTaskFactory::getTasksToUse() const
+{
+  return fTasksToUse;
+}
+
+std::map<std::string, TaskGenerator> JPetTaskFactory::getTasksDictionary() const
+{
+  return  fTasksDictionary;
 }
 
 TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options)
@@ -54,17 +70,17 @@ void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options
     auto fileType = FileTypeChecker::getInputFileType(options);
     if (fileType == FileTypeChecker::kScope) {
       auto task2 = []() {
-        return new JPetScopeLoader(std::unique_ptr<JPetScopeTask>(new JPetScopeTask("JPetScopeReader")));
+        return jpet_common_tools::make_unique<JPetScopeLoader>(std::unique_ptr<JPetScopeTask>(new JPetScopeTask("JPetScopeReader")));
       };
       outChain.insert(outChain.begin(), task2);
     }
     auto paramBankHandlerTask = []() {
-      return new JPetParamBankHandlerTask("ParamBank Filling");
+      return jpet_common_tools::make_unique<JPetParamBankHandlerTask>("ParamBank Filling");
     };
     outChain.insert(outChain.begin(), paramBankHandlerTask);
     /// add task to unzip or unpack if needed
     auto task = []() {
-      return new JPetUnzipAndUnpackTask("UnpackerAndUnzipper");
+      return jpet_common_tools::make_unique<JPetUnzipAndUnpackTask>("UnpackerAndUnzipper");
     };
     outChain.insert(outChain.begin(), task);
   };
@@ -78,17 +94,17 @@ void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, c
   auto inT = info.inputFileType.c_str();
   auto outT = info.outputFileType.c_str();
 
-  if (generatorsMap.count(name) > 0 ) {
+  if (generatorsMap.find(name) != generatorsMap.end()) {
     TaskGenerator userTaskGen = generatorsMap.at(name);
     outChain.push_back(
     [name, inT, outT, userTaskGen]() {
-      JPetTaskIO* task = new JPetTaskIO(name, inT, outT);
+      auto task = jpet_common_tools::make_unique<JPetTaskIO>(name, inT, outT);
       task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
       return task;
     });
   } else {
-    ERROR(Form("The requested task %s is unknown", name));
-    exit(1);
+    ERROR(Form("The requested task %s is not registered! The output chain might be broken!", name));
+    return;
   }
 }
 
