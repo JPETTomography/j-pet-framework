@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -11,7 +11,6 @@
  *  limitations under the License.
  *
  *  @file JPetManager.h
- *  @brief Main manager of the analysis performed with the J-PET Framework.
  */
 
 #ifndef JPETMANAGER_H
@@ -23,48 +22,50 @@
 #include <map>
 
 /**
- * @brief Main manager of the analysis performed with the J-PET Framework.
+ * @brief Main Manager of the analyses performed with the J-PET Framework.
  *
- * Each analysis program needs an instance of the JPetManager which is responsible for parsing the command line arguments
- * registering processing tasks, and
- * sending it to JPetExecutor which executes the chain of registered tasks in threads.
+ * Each analysis program needs an instance of the JPetManager,
+ * which is responsible for parsing the command line arguments,
+ * registering processing tasks, and sending it to JPetExecutor,
+ * which executes the chain of registered tasks in threads.
+ * Private fields include Options container, in which the number of elements
+ * corresponds to the number of independent input files
  */
-
 class JPetManager
 {
 public:
   using Options = std::map<std::string, jpet_options_tools::OptsStrAny>;
-  using TaskGenerator = std::function< JPetTaskInterface* () >;
+  using TaskGenerator = std::function<JPetTaskInterface* ()>;
   using TaskGeneratorChain = std::vector<TaskGenerator>;
-
   static JPetManager& getManager();
   ~JPetManager();
-
+  Options getOptions() const;
   bool run(int argc, const char** argv);
+  bool parseCmdLine(int argc, const char** argv);
+  bool areThreadsEnabled() const;
+  void setThreadsEnabled(bool enable);
+  void useTask(const char * name,
+    const char * inputFileType="",
+    const char * outputFileType="");
+  void clearRegisteredTasks();
 
+  /**
+   * Template type method for registering tasks. After registering the task,
+   * the user should also invoke Managers method 'useTask'.
+   */
   template<typename T> void registerTask(const char * name){
     fTasksDictionary[name] = [name]() {
       return new T(name);
     };
   }
-  /// Function parses command line arguments and generates options for tasks.
-  /// The fOptions is filled with the generated options.
-  bool parseCmdLine(int argc, const char** argv);
-  Options getOptions() const;
-  bool areThreadsEnabled() const;
-  void setThreadsEnabled(bool enable);
-  void useTask(const char * name, const char * inputFileType="", const char * outputFileType="");
-  void clearRegisteredTasks();
 
 private:
+  JPetManager();
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&);
-
-  JPetManager();
-  /// Number of elements in the fOptions container corresponds to the number of independent input files.
-  Options fOptions;
-  TaskGeneratorChain* fTaskGeneratorChain = nullptr; /// fTaskGeneratorChain is a sequences of registered computing tasks.
+  std::map<const char*, TaskGenerator> fTasksDictionary;
+  TaskGeneratorChain* fTaskGeneratorChain = nullptr;
   bool fThreadsEnabled = false;
-  std::map<const char *, TaskGenerator> fTasksDictionary;
+  Options fOptions;
 };
-#endif /*  !JPETMANAGER_H */
+#endif /* !JPETMANAGER_H */

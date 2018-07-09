@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,11 +16,11 @@
 #ifndef JPETUNZIPANDUNPACKTASK_H
 #define JPETUNZIPANDUNPACKTASK_H
 
-#include <map>
 #include "./JPetTask/JPetTask.h"
 #include <boost/any.hpp>
+#include <map>
 
-class JPetUnzipAndUnpackTask : public JPetTask
+class JPetUnzipAndUnpackTask: public JPetTask
 {
 public:
   using OptsStrAny = std::map<std::string, boost::any>;
@@ -28,15 +28,13 @@ public:
   bool init(const JPetParamsInterface& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParamsInterface& outOptions) override;
-
-  static void unpackFile(const std::string& filename, long long nevents, const std::string& configfile, const std::string& calibfile);
-  /// system(...) is returning integer, 0 when everything went smoothly and error code when not.
-  /// Here I just convert return value into boolean type - Sz.N.
+  static void unpackFile(const std::string& filename, long long nevents,
+    const std::string& configfile, const std::string& calibfile);
   static bool unzipFile(const std::string& filename);
 
 protected:
   OptsStrAny fOptions;
   bool fUnpackHappened = false;
-
 };
-#endif /*  !JPETUNZIPANDUNPACKTASK_H */
+
+#endif /* !JPETUNZIPANDUNPACKTASK_H */

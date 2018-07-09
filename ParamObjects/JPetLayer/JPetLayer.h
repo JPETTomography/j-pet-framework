@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,16 +16,18 @@
 #ifndef JPET_LAYER_H
 #define JPET_LAYER_H
 
-#include <TRef.h>
 #include "./JPetFrame/JPetFrame.h"
 #include "./JPetLoggerInclude.h"
 #include "TNamed.h"
 #include <cassert>
+#include <TRef.h>
 
 /**
- * @brief Parametric class representing database information on a single cyllindrical layer of a JPetFrame.
+ * @brief Representation of a layer in the JPetFrame.
  *
- * The layer consists of slots represented by JPetBarrelSlot objects.
+ * Parametric class representing database information on a single cyllindrical
+ * layer of a JPetFrame. The layer consists of slots represented by JPetBarrelSlot
+ * objects.
  */
 class JPetLayer: public TNamed
 {
@@ -33,10 +35,8 @@ public:
   JPetLayer();
   JPetLayer(int id, bool isActive, std::string name, float radius);
   explicit JPetLayer(bool isNull);
-
   bool operator==(const JPetLayer& layer) const;
   bool operator!=(const JPetLayer& layer) const;
-
   int getID() const;
   bool getIsActive() const;
   std::string getName() const;
@@ -44,7 +44,7 @@ public:
   const JPetFrame& getFrame() const;
   void setFrame(JPetFrame& frame);
   bool isNullObject() const;
-  static  JPetLayer& getDummyResult();
+  static JPetLayer& getDummyResult();
 
 protected:
   void clearTRefFrame();
@@ -67,4 +67,4 @@ protected:
 
   ClassDef(JPetLayer, 4);
 };
-#endif // JPET_LAYER_H
+#endif /* !JPET_LAYER_H */

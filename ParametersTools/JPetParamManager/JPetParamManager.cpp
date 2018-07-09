@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,13 +13,14 @@
  *  @file JPetParamManager.cpp
  */
 
+#include "./JPetParamGetterAscii/JPetParamGetterAscii.h"
+#include "./JPetOptionsTools/JPetOptionsTools.h"
+#include <boost/property_tree/xml_parser.hpp>
 #include "JPetParamManager.h"
 #include <TFile.h>
-#include <boost/property_tree/xml_parser.hpp>
-#include "./JPetOptionsTools/JPetOptionsTools.h"
-#include "./JPetParamGetterAscii/JPetParamGetterAscii.h"
 
-std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const std::map<std::string, boost::any>& options)
+std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(
+  const std::map<std::string, boost::any>& options)
 {
   using namespace jpet_options_tools;
   if (isLocalDB(options)) {
@@ -97,7 +98,11 @@ std::map<int, JPetLayer*>& JPetParamManager::getLayers(const int runId)
 JPetLayerFactory& JPetParamManager::getLayerFactory(const int runId)
 {
   if (fLayerFactories.count(runId) == 0) {
-    fLayerFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getFrameFactory(runId)));
+    fLayerFactories.emplace(
+      std::piecewise_construct,
+      std::forward_as_tuple(runId),
+      std::forward_as_tuple(*fParamGetter, runId, getFrameFactory(runId))
+    );
   }
   return fLayerFactories.at(runId);
 }
@@ -110,7 +115,11 @@ std::map<int, JPetBarrelSlot*>& JPetParamManager::getBarrelSlots(const int runId
 JPetBarrelSlotFactory& JPetParamManager::getBarrelSlotFactory(const int runId)
 {
   if (fBarrelSlotFactories.count(runId) == 0) {
-    fBarrelSlotFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getLayerFactory(runId)));
+    fBarrelSlotFactories.emplace(
+      std::piecewise_construct,
+      std::forward_as_tuple(runId),
+      std::forward_as_tuple(*fParamGetter, runId, getLayerFactory(runId))
+    );
   }
   fBarrelSlotFactories.at(runId);
   return fBarrelSlotFactories.at(runId);
@@ -124,7 +133,11 @@ std::map<int, JPetScin*>& JPetParamManager::getScins(const int runId)
 JPetScinFactory& JPetParamManager::getScinFactory(const int runId)
 {
   if (fScinFactories.count(runId) == 0) {
-    fScinFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getBarrelSlotFactory(runId)));
+    fScinFactories.emplace(
+      std::piecewise_construct,
+      std::forward_as_tuple(runId),
+      std::forward_as_tuple(*fParamGetter, runId, getBarrelSlotFactory(runId))
+    );
   }
   return fScinFactories.at(runId);
 }
@@ -137,7 +150,17 @@ std::map<int, JPetPM*>& JPetParamManager::getPMs(const int runId)
 JPetPMFactory& JPetParamManager::getPMFactory(const int runId)
 {
   if (fPMFactories.count(runId) == 0) {
-    fPMFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getFEBFactory(runId), getScinFactory(runId), getBarrelSlotFactory(runId)));
+    fPMFactories.emplace(
+      std::piecewise_construct,
+      std::forward_as_tuple(runId),
+      std::forward_as_tuple(
+        *fParamGetter,
+        runId,
+        getFEBFactory(runId),
+        getScinFactory(runId),
+        getBarrelSlotFactory(runId)
+      )
+    );
   }
   return fPMFactories.at(runId);
 }
@@ -150,7 +173,17 @@ std::map<int, JPetTOMBChannel*>& JPetParamManager::getTOMBChannels(const int run
 JPetTOMBChannelFactory& JPetParamManager::getTOMBChannelFactory(const int runId)
 {
   if (fTOMBChannelFactories.count(runId) == 0) {
-    fTOMBChannelFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getFEBFactory(runId), getTRBFactory(runId), getPMFactory(runId)));
+    fTOMBChannelFactories.emplace(
+      std::piecewise_construct,
+      std::forward_as_tuple(runId),
+      std::forward_as_tuple(
+        *fParamGetter,
+        runId,
+        getFEBFactory(runId),
+        getTRBFactory(runId),
+        getPMFactory(runId)
+      )
+    );
   }
   return fTOMBChannelFactories.at(runId);
 }
@@ -201,7 +234,9 @@ void JPetParamManager::fillParameterBank(const int run)
     for (auto& scinp : getScins(run)) {
       auto& scin = *scinp.second;
       fBank->addScintillator(scin);
-      fBank->getScintillator(scin.getID()).setBarrelSlot(fBank->getBarrelSlot(scin.getBarrelSlot().getID()));
+      fBank->getScintillator(scin.getID()).setBarrelSlot(
+        fBank->getBarrelSlot(scin.getBarrelSlot().getID())
+      );
     }
   }
   if (!fExpectMissing.count(ParamObjectType::kPM)) {
@@ -212,16 +247,24 @@ void JPetParamManager::fillParameterBank(const int run)
         fBank->getPM(pm.getID()).setFEB(fBank->getFEB(pm.getFEB().getID()));
       }
       fBank->getPM(pm.getID()).setScin(fBank->getScintillator(pm.getScin().getID()));
-      fBank->getPM(pm.getID()).setBarrelSlot(fBank->getBarrelSlot(pm.getBarrelSlot().getID()));
+      fBank->getPM(pm.getID()).setBarrelSlot(
+        fBank->getBarrelSlot(pm.getBarrelSlot().getID())
+      );
     }
   }
   if (!fExpectMissing.count(ParamObjectType::kTOMBChannel)) {
     for (auto& tombChannelp : getTOMBChannels(run)) {
       auto& tombChannel = *tombChannelp.second;
       fBank->addTOMBChannel(tombChannel);
-      fBank->getTOMBChannel(tombChannel.getChannel()).setFEB(fBank->getFEB(tombChannel.getFEB().getID()));
-      fBank->getTOMBChannel(tombChannel.getChannel()).setTRB(fBank->getTRB(tombChannel.getTRB().getID()));
-      fBank->getTOMBChannel(tombChannel.getChannel()).setPM(fBank->getPM(tombChannel.getPM().getID()));
+      fBank->getTOMBChannel(tombChannel.getChannel()).setFEB(
+        fBank->getFEB(tombChannel.getFEB().getID())
+      );
+      fBank->getTOMBChannel(tombChannel.getChannel()).setTRB(
+        fBank->getTRB(tombChannel.getTRB().getID())
+      );
+      fBank->getTOMBChannel(tombChannel.getChannel()).setPM(
+        fBank->getPM(tombChannel.getPM().getID())
+      );
     }
   }
 }
@@ -234,7 +277,6 @@ bool JPetParamManager::readParametersFromFile(JPetReader* reader)
     return false;
   }
   fBank = static_cast<JPetParamBank*>(reader->getObjectFromFile("ParamBank"));
-
   if (!fBank) return false;
   return true;
 }
@@ -258,7 +300,6 @@ bool JPetParamManager::readParametersFromFile(std::string filename)
     return false;
   }
   fBank = static_cast<JPetParamBank*>(file.Get("ParamBank"));
-
   if (!fBank) return false;
   return true;
 }
@@ -290,27 +331,24 @@ void JPetParamManager::clearParameters()
   fBank->clear();
 }
 
-void JPetParamManager::createXMLFile(const std::string& channelDataFileName, int channelOffset, int numberOfChannels)
+void JPetParamManager::createXMLFile(const std::string& channelDataFileName,
+  int channelOffset, int numberOfChannels)
 {
   using boost::property_tree::ptree;
   ptree pt;
-
   std::string debug = "OFF";
   std::string dataSourceType = "TRB3_S";
   std::string dataSourceTrbNetAddress = "8000";
   std::string dataSourceHubAddress = "8000";
   std::string dataSourceReferenceChannel = "0";
   std::string dataSourceCorrectionFile = "raw";
-
   pt.put("READOUT.DEBUG", debug);
   pt.put("READOUT.DATA_SOURCE.TYPE", dataSourceType);
   pt.put("READOUT.DATA_SOURCE.TRBNET_ADDRESS", dataSourceTrbNetAddress);
   pt.put("READOUT.DATA_SOURCE.HUB_ADDRESS", dataSourceHubAddress);
   pt.put("READOUT.DATA_SOURCE.REFERENCE_CHANNEL", dataSourceReferenceChannel);
   pt.put("READOUT.DATA_SOURCE.CORRECTION_FILE", dataSourceCorrectionFile);
-
   ptree& externalNode = pt.add("READOUT.DATA_SOURCE.MODULES", "");
-
   ptree& internalNode = externalNode.add("MODULE", "");
   internalNode.put("TYPE", "LATTICE_TDC");
   internalNode.put("TRBNET_ADDRESS", "e000");
@@ -318,7 +356,6 @@ void JPetParamManager::createXMLFile(const std::string& channelDataFileName, int
   internalNode.put("CHANNEL_OFFSET", channelOffset);
   internalNode.put("RESOLUTION", "100");
   internalNode.put("MEASUREMENT_TYPE", "TDC");
-
   write_xml(channelDataFileName, pt);
 }
 
@@ -328,7 +365,6 @@ void JPetParamManager::getTOMBDataAndCreateXMLFile(const int p_run_id)
   int TOMBChannelsSize = fBank->getTOMBChannelsSize();
   int channelOffset = 0;
   int numberOfChannels = 0;
-
   if (TOMBChannelsSize) {
     for (int i = 0; i < TOMBChannelsSize; ++i) {
       if (i == 0) {

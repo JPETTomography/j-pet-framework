@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -15,12 +15,12 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetCmdParserTest
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetCmdParser/JPetCmdParser.h"
 #include "./JPetCmdParser/JPetCmdParser.h"
 #include <boost/test/unit_test.hpp>
 #include <boost/any.hpp>
 #include <cstdlib>
-#include "./JPetCommonTools/JPetCommonTools.h"
-#include "./JPetCmdParser/JPetCmdParser.h"
 
 using boost::any_cast;
 using namespace std;

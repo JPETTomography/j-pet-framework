@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -11,30 +11,31 @@
  *  limitations under the License.
  *
  *  @file JPetHitUtils.h
- *  @brief Helper class to calculate properties of JPetHit objects.
  */
 
 #ifndef JPETHITUTILS_H
 #define JPETHITUTILS_H
 
 #include "./JPetBarrelSlot/JPetBarrelSlot.h"
-#include "./JPetPM/JPetPM.h"
 #include "./JPetLayer/JPetLayer.h"
-#include "./JPetHit/JPetHit.h"
 #include "./JPetLoggerInclude.h"
+#include "./JPetHit/JPetHit.h"
+#include "./JPetPM/JPetPM.h"
 #include <map>
 
+/**
+ * @brief Helper class to calculate properties of JPetHit objects.
+ */
 class JPetHitUtils
 {
- public:
+public:
   static double getTimeDiffAtThr(const JPetHit& hit, int threshold);
   static double getTimeAtThr(const JPetHit& hit, int threshold);
-  
   const static double Unset;
-  
- private:
+
+private:
   JPetHitUtils(const JPetHitUtils&){}
   void operator=(const JPetHitUtils&){}
 };
 
-#endif /*  !JPETHITUTILS_H */
+#endif /* !JPETHITUTILS_H */

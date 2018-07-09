@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,23 +16,19 @@
 #ifndef JPETPARAMS_H
 #define JPETPARAMS_H
 
-#include <map>
+#include "./JPetParamsInterface/JPetParamsInterface.h"
+#include "./JPetParamManager/JPetParamManager.h"
+#include "./JPetOptionsTools/JPetOptionsTools.h"
+#include <boost/any.hpp>
 #include <string>
 #include <memory>
-#include <boost/any.hpp>
-
-#include "./JPetParamManager/JPetParamManager.h"
-#include "./JPetParamsInterface/JPetParamsInterface.h"
-#include "./JPetOptionsTools/JPetOptionsTools.h"
+#include <map>
 
 class JPetParams: public JPetParamsInterface
 {
 public:
-
   JPetParams();
-  /// JPetParams shares ownership of the JPetParamManager instance.
   JPetParams(const jpet_options_tools::OptsStrAny& opts, std::shared_ptr<JPetParamManager> mgr);
-
   jpet_options_tools::OptsStrAny getOptions() const;
   JPetParamManager* getParamManager() const;
   std::shared_ptr<JPetParamManager> getParamManagerAsShared() const;
@@ -41,5 +37,6 @@ public:
 protected:
   jpet_options_tools::OptsStrAny fOptions;
   std::shared_ptr<JPetParamManager> fParamManager;
+
 };
-#endif /*  !JPETPARAMS_H */
+#endif /* !JPETPARAMS_H */

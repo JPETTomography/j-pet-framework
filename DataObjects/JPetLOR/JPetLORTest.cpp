@@ -1,17 +1,30 @@
+/**
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetLORTest.cpp
+ */
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetLORTest
-#include <boost/test/unit_test.hpp>
 
+#include <boost/test/unit_test.hpp>
 #include "./JPetLOR/JPetLOR.h"
 
-
 BOOST_AUTO_TEST_SUITE(FirstSuite)
-BOOST_AUTO_TEST_CASE( default_constructor )
+BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetLOR event;
   BOOST_REQUIRE_EQUAL(event.getTime(), 0.0f);
   BOOST_REQUIRE_EQUAL(event.getQualityOfTime(), 0.0f);
-
   BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), true);
 }
 
@@ -24,9 +37,7 @@ BOOST_AUTO_TEST_CASE(constructor)
   firstHit.setBarrelSlot(slot1);
   secondHit.setBarrelSlot(slot2);
   JPetLOR event(8.5f, 4.5f, firstHit, secondHit);
-
   BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), true);
-  
   float epsilon = 0.0001f;
   BOOST_REQUIRE_CLOSE(event.getTime(), 8.5f, epsilon);
   BOOST_REQUIRE_CLOSE(event.getQualityOfTime(), 4.5f, epsilon);
@@ -41,10 +52,8 @@ BOOST_AUTO_TEST_CASE(hitTest)
   JPetHit firstHit;
   JPetHit secondHit;
   JPetLOR event(8.5f, 4.5f, firstHit, secondHit);
-  
   BOOST_REQUIRE(event.getFirstHit().getEnergy() == firstHit.getEnergy());
   BOOST_REQUIRE(event.getSecondHit().getEnergy() == firstHit.getEnergy());
-  
   JPetHit fh;
   JPetHit sh;
   JPetScin scin1(8);
@@ -56,7 +65,6 @@ BOOST_AUTO_TEST_CASE(hitTest)
   				== fh.getScintillator().getID());
   BOOST_REQUIRE(event.getSecondHit().getScintillator().getID()
   				== sh.getScintillator().getID());
-  
   JPetScin scin3(32);
   JPetScin scin4(64);
   fh.setScintillator(scin3);
@@ -102,23 +110,19 @@ BOOST_AUTO_TEST_CASE(consistency_check_test)
   firstHit.setBarrelSlot(slot1);
   secondHit.setBarrelSlot(slot2);
   JPetLOR event(8.5f, 4.5f, firstHit, secondHit);
-
   BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), true);
-
   secondHit.setBarrelSlot(slot1);
   event.setSecondHit(secondHit);
   BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), false);
-
   secondHit.setBarrelSlot(slot2);
   event.setSecondHit(secondHit);
   BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), true);
-
   firstHit.setTime(10.001);
   secondHit.setTime(10.002);
   event.setHits(firstHit, secondHit);
   BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), true);
-
   event.setHits(secondHit, firstHit);
   BOOST_REQUIRE_EQUAL(event.isFromSameBarrelSlot(), false);
 }
+
 BOOST_AUTO_TEST_SUITE_END()

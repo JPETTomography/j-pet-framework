@@ -1,29 +1,28 @@
+/**
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetPMTest.cpp
+ */
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetPMTest
+
 #include <boost/test/unit_test.hpp>
-#include "JPetPM.h"
 #include "JPetPMFactory.h"
-
-
-
-//  public:
-//  JPetPM();
-//  inline Side getSide() const { return fSide; }
-//  inline int getID() const { return fID; }
-//  inline int getHVset() const { return fHVset; }
-//  inline int getHVopt() const { return fHVopt; }
-//  inline float getHVgain(GainNumber nr) { return (nr == kFirst) ? fHVgain.first : fHVgain.second; }
-//  inline std::pair<float, float> getHVgain() { return fHVgain; }
-//  inline void setSide(Side side) { fSide = side; }
-//  inline void setID(int id) { fID = id; }
-//  inline void setHVset(int set) { fHVset = set; }
-//  inline void setHVopt(int opt) { fHVopt= opt; }
-//  inline void setHVgain(float g1, float g2) { fHVgain.first = g1; fHVgain.second = g2; }
-//  inline void setHVgain(const std::pair<float,float>& gain) { fHVgain = gain; }
+#include "JPetPM.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-BOOST_AUTO_TEST_CASE( default_constructor )
+BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetPM pm;
   float epsilon = 0.0001;
@@ -42,10 +41,9 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FactorySuite)
 
-class TestParamGetter : public JPetParamGetter
-{
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId)
-  {
+class TestParamGetter: public JPetParamGetter {
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type,
+    const int runId) {
     ParamObjectsDescriptions result;
     switch (type) {
     case ParamObjectType::kPM:
@@ -58,10 +56,20 @@ class TestParamGetter : public JPetParamGetter
       case 7: //Wrong barrel slot relation
         result = {
           {
-            1, {
-              {"id", "1"},
-              {"is_right_side", "1"},
-              {"description", "no writing"}
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "is_right_side",
+                "1"
+              },
+              {
+                "description",
+                "no writing"
+              }
             }
           }
         };
@@ -69,17 +77,37 @@ class TestParamGetter : public JPetParamGetter
       case 2: //Simple two objects
         result = {
           {
-            1, {
-              {"id", "1"},
-              {"is_right_side", "1"},
-              {"description", "no writing"}
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "is_right_side",
+                "1"
+              },
+              {
+                "description",
+                "no writing"
+              }
             }
           },
           {
-            5, {
-              {"id", "5"},
-              {"is_right_side", "0"},
-              {"description", "some writing"}
+            5,
+            {
+              {
+                "id",
+                "5"
+              },
+              {
+                "is_right_side",
+                "0"
+              },
+              {
+                "description",
+                "some writing"
+              }
             }
           }
         };
@@ -87,9 +115,16 @@ class TestParamGetter : public JPetParamGetter
       case 3: //Object with missing field
         result = {
           {
-            1, {
-              {"id", "1"},
-              {"description", "some writing"}
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "description",
+                "some writing"
+              }
             }
           }
         };
@@ -97,10 +132,20 @@ class TestParamGetter : public JPetParamGetter
       case 4: //Object with wrong field
         result = {
           {
-            1, {
-              {"id", "1"},
-              {"is_right_side", "probably"},
-              {"description", "some writing"}
+            1,
+            {
+              {
+                "id",
+                "1"
+              },
+              {
+                "is_right_side",
+                "probably"
+              },
+              {
+                "description",
+                "some writing"
+              }
             }
           }
         };
@@ -110,15 +155,40 @@ class TestParamGetter : public JPetParamGetter
     case ParamObjectType::kFEB:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"status", "healthy"},
-            {"description", "tall"},
-            {"version", "27"},
-            {"creator_id", "44"},
-            {"time_outputs_per_input", "2"},
-            {"no_time_outputs_per_input", "3"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "status",
+              "healthy"
+            },
+            {
+              "description",
+              "tall"
+            },
+            {
+              "version",
+              "27"
+            },
+            {
+              "creator_id",
+              "44"
+            },
+            {
+              "time_outputs_per_input",
+              "2"
+            },
+            {
+              "no_time_outputs_per_input",
+              "3"
+            }
           }
         }
       };
@@ -126,10 +196,20 @@ class TestParamGetter : public JPetParamGetter
     case ParamObjectType::kTRB:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"type", "1"},
-            {"channel", "224"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "type",
+              "1"
+            },
+            {
+              "channel",
+              "224"
+            }
           }
         }
       };
@@ -137,12 +217,28 @@ class TestParamGetter : public JPetParamGetter
     case ParamObjectType::kScintillator:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"attenuation_length", "10.34"},
-            {"length", "100"},
-            {"width", "4.5"},
-            {"height", "2.5"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "attenuation_length",
+              "10.34"
+            },
+            {
+              "length",
+              "100"
+            },
+            {
+              "width",
+              "4.5"
+            },
+            {
+              "height",
+              "2.5"
+            }
           }
         }
       };
@@ -150,12 +246,28 @@ class TestParamGetter : public JPetParamGetter
     case ParamObjectType::kBarrelSlot:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"name", "pepe"},
-            {"theta1", "5.5"},
-            {"frame_id", "6"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "name",
+              "pepe"
+            },
+            {
+              "theta1",
+              "5.5"
+            },
+            {
+              "frame_id",
+              "6"
+            }
           }
         }
       };
@@ -163,11 +275,24 @@ class TestParamGetter : public JPetParamGetter
     case ParamObjectType::kLayer:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"name", "ala"},
-            {"radius", "10.5"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "name",
+              "ala"
+            },
+            {
+              "radius",
+              "10.5"
+            }
           }
         }
       };
@@ -175,13 +300,32 @@ class TestParamGetter : public JPetParamGetter
     case ParamObjectType::kFrame:
       result = {
         {
-          1, {
-            {"id", "1"},
-            {"active", "1"},
-            {"status", "ok"},
-            {"description", "descr1"},
-            {"version", "2"},
-            {"creator_id", "1"}
+          1,
+          {
+            {
+              "id",
+              "1"
+            },
+            {
+              "active",
+              "1"
+            },
+            {
+              "status",
+              "ok"
+            },
+            {
+              "description",
+              "descr1"
+            },
+            {
+              "version",
+              "2"
+            },
+            {
+              "creator_id",
+              "1"
+            }
           }
         }
       };
@@ -191,8 +335,8 @@ class TestParamGetter : public JPetParamGetter
     }
     return result;
   }
-  ParamRelationalData getAllRelationalData(ParamObjectType type1, ParamObjectType type2, const int runId)
-  {
+  ParamRelationalData getAllRelationalData(ParamObjectType type1, ParamObjectType type2,
+    const int runId) {
     ParamRelationalData result;
     switch (type1) {
     case ParamObjectType::kPM:
@@ -201,25 +345,40 @@ class TestParamGetter : public JPetParamGetter
         break;
       case 1: //Simple single object
         result = {
-          {1, 1}
+          {
+            1,
+            1
+          }
         };
         break;
       case 2: //Simple two objects
         result = {
-          {1, 1},
-          {5, 1}
+          {
+            1,
+            1
+          },
+          {
+            5,
+            1
+          }
         };
         break;
       case 5: //Wrong FEB relation
         switch (type2) {
         case ParamObjectType::kFEB:
           result = {
-            {1, 43}
+            {
+              1,
+              43
+            }
           };
           break;
         default:
           result = {
-            {1, 1}
+            {
+              1,
+              1
+            }
           };
           break;
         }
@@ -227,12 +386,18 @@ class TestParamGetter : public JPetParamGetter
         switch (type2) {
         case ParamObjectType::kScintillator:
           result = {
-            {1, 43}
+            {
+              1,
+              43
+            }
           };
           break;
         default:
           result = {
-            {1, 1}
+            {
+              1,
+              1
+            }
           };
           break;
         }
@@ -240,12 +405,18 @@ class TestParamGetter : public JPetParamGetter
         switch (type2) {
         case ParamObjectType::kBarrelSlot:
           result = {
-            {1, 43}
+            {
+              1,
+              43
+            }
           };
           break;
         default:
           result = {
-            {1, 1}
+            {
+              1,
+              1
+            }
           };
           break;
         }
@@ -253,7 +424,10 @@ class TestParamGetter : public JPetParamGetter
       break;
     default:
       result = {
-        {1, 1}
+        {
+          1,
+          1
+        }
       };
       break;
     }
@@ -263,7 +437,7 @@ class TestParamGetter : public JPetParamGetter
 
 TestParamGetter paramGetter;
 
-BOOST_AUTO_TEST_CASE( no_pms )
+BOOST_AUTO_TEST_CASE(no_pms)
 {
   JPetTRBFactory trbFactory(paramGetter, 0);
   JPetFEBFactory febFactory(paramGetter, 0, trbFactory);
@@ -276,7 +450,7 @@ BOOST_AUTO_TEST_CASE( no_pms )
   BOOST_REQUIRE_EQUAL(pms.size(), 0u);
 }
 
-BOOST_AUTO_TEST_CASE( single_object )
+BOOST_AUTO_TEST_CASE(single_object)
 {
   JPetTRBFactory trbFactory(paramGetter, 1);
   JPetFEBFactory febFactory(paramGetter, 1, trbFactory);
@@ -290,14 +464,13 @@ BOOST_AUTO_TEST_CASE( single_object )
   auto pm = pms[1];
   BOOST_REQUIRE_EQUAL(pm->getID(), 1);
   BOOST_REQUIRE_EQUAL(pm->getSide(), JPetPM::SideB);
-
   BOOST_REQUIRE(pm->hasFEB());
   BOOST_REQUIRE_EQUAL(pm->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
   BOOST_REQUIRE_EQUAL(pm->getScin().getID(), scinFactory.getScins().at(1)->getID());
   BOOST_REQUIRE_EQUAL(pm->getBarrelSlot().getID(), barrelSlotFactory.getBarrelSlots().at(1)->getID());
 }
 
-BOOST_AUTO_TEST_CASE( two_objects )
+BOOST_AUTO_TEST_CASE(two_objects)
 {
   JPetTRBFactory trbFactory(paramGetter, 2);
   JPetFEBFactory febFactory(paramGetter, 2, trbFactory);
@@ -311,23 +484,20 @@ BOOST_AUTO_TEST_CASE( two_objects )
   auto pm = pms[1];
   BOOST_REQUIRE_EQUAL(pm->getID(), 1);
   BOOST_REQUIRE_EQUAL(pm->getSide(), JPetPM::SideB);
-
   BOOST_REQUIRE(pm->hasFEB());
   BOOST_REQUIRE_EQUAL(pm->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
   BOOST_REQUIRE_EQUAL(pm->getScin().getID(), scinFactory.getScins().at(1)->getID());
   BOOST_REQUIRE_EQUAL(pm->getBarrelSlot().getID(), barrelSlotFactory.getBarrelSlots().at(1)->getID());
-
   pm = pms[5];
   BOOST_REQUIRE_EQUAL(pm->getID(), 5);
   BOOST_REQUIRE_EQUAL(pm->getSide(), JPetPM::SideA);
-
   BOOST_REQUIRE(pm->hasFEB());
   BOOST_REQUIRE_EQUAL(pm->getFEB().getID(), febFactory.getFEBs().at(1)->getID());
   BOOST_REQUIRE_EQUAL(pm->getScin().getID(), scinFactory.getScins().at(1)->getID());
   BOOST_REQUIRE_EQUAL(pm->getBarrelSlot().getID(), barrelSlotFactory.getBarrelSlots().at(1)->getID());
 }
 
-BOOST_AUTO_TEST_CASE( missing_field )
+BOOST_AUTO_TEST_CASE(missing_field)
 {
   JPetTRBFactory trbFactory(paramGetter, 3);
   JPetFEBFactory febFactory(paramGetter, 3, trbFactory);
@@ -339,7 +509,7 @@ BOOST_AUTO_TEST_CASE( missing_field )
   BOOST_REQUIRE_THROW(factory.getPMs(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE( wrong_field )
+BOOST_AUTO_TEST_CASE(wrong_field)
 {
   JPetTRBFactory trbFactory(paramGetter, 4);
   JPetFEBFactory febFactory(paramGetter, 4, trbFactory);
@@ -351,7 +521,7 @@ BOOST_AUTO_TEST_CASE( wrong_field )
   BOOST_REQUIRE_THROW(factory.getPMs(), std::bad_cast);
 }
 
-BOOST_AUTO_TEST_CASE( wrong_feb_relation )
+BOOST_AUTO_TEST_CASE(wrong_feb_relation)
 {
   JPetTRBFactory trbFactory(paramGetter, 5);
   JPetFEBFactory febFactory(paramGetter, 5, trbFactory);
@@ -363,7 +533,7 @@ BOOST_AUTO_TEST_CASE( wrong_feb_relation )
   BOOST_REQUIRE_THROW(factory.getPMs(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE( wrong_scin_relation )
+BOOST_AUTO_TEST_CASE(wrong_scin_relation)
 {
   JPetTRBFactory trbFactory(paramGetter, 6);
   JPetFEBFactory febFactory(paramGetter, 6, trbFactory);
@@ -375,7 +545,7 @@ BOOST_AUTO_TEST_CASE( wrong_scin_relation )
   BOOST_REQUIRE_THROW(factory.getPMs(), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE( wrong_barrelSlot_relation )
+BOOST_AUTO_TEST_CASE(wrong_barrelSlot_relation)
 {
   JPetTRBFactory trbFactory(paramGetter, 7);
   JPetFEBFactory febFactory(paramGetter, 7, trbFactory);

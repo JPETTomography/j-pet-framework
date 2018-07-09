@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -14,32 +14,39 @@
  */
 
 #ifndef _________DELTAS_H_______
-#       define _________DELTAS_H_______
-#include <iostream>
-#include <memory>
-#include <functional>
-#include <list>
+#define _________DELTAS_H_______
 #include "./JPetHit/JPetHit.h"
 #include "BarrelExtensions.h"
+#include <functional>
 #include "PetDict.h"
+#include <iostream>
+#include <memory>
+#include <list>
+
 struct SynchroStrip {
   double A, B, dA, dB;
 };
+
 inline std::istream& operator>>(std::istream& str, SynchroStrip& item)
 {
   return str >> item.A >> item.dA >> item.B >> item.dB;
 }
+
 inline std::ostream& operator<<(std::ostream& str, const SynchroStrip& item)
 {
   return str << item.A << " " << item.dA << "\t" << item.B << " " << item.dB;
 }
 
-//This class provides adding deltas obtained after time synchronization
-//can work with different algorithms of signal time calculation
-//it's considered that deltas are stored in text file but constructor
-//accepts any std::istream instance and reads data from it
-//stream must be opened correctly before calling the constructor and
-//should be closed after constructor call by user if it's a file
+/**
+ * @brief Adding deltas obtained from time synchronization
+ *
+ * This class provides adding deltas obtained after time synchronization
+ * and can work with different algorithms of signal time calculation.
+ * It is considered that deltas are stored in text file, but the constructor
+ * accepts any std::istream instance and reads data from it. The stream must be
+ * opened correctly before calling the constructor and it should be closed after
+ * the constructor call by user in case if it is a text file.
+ */
 class Synchronization
 {
 public:
@@ -52,9 +59,7 @@ private:
   std::shared_ptr<JPetMap<SynchroStrip>> f_offsets;
   TimeCalculation f_time_calc;
 };
-//returns function needed for measured signal time estimation
-//if list contains one number it means that one threshold will
-//be used. Otherwise the average of given thresholds will be taken
-//ATTENTION: threshold numbers begin FROM ZERO
+
 const Synchronization::TimeCalculation Thr(const std::list<size_t>& lst);
+
 #endif

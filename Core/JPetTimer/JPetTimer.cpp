@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,8 +16,14 @@
 
 #include "JPetTimer.h"
 
+/**
+ * Constructor
+ */
 JPetTimer::JPetTimer() { }
 
+/**
+ * Destructor
+ */
 JPetTimer::~JPetTimer() { }
 
 void JPetTimer::startMeasurement()
@@ -27,7 +33,8 @@ void JPetTimer::startMeasurement()
 
 void JPetTimer::stopMeasurement(std::string measurementName)
 {
-  fElapsedTimes.push_back(make_pair(measurementName, std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - fStartTime)));
+  fElapsedTimes.push_back(make_pair(measurementName,
+    std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - fStartTime)));
 }
 
 std::string JPetTimer::getAllMeasuredTimes()
@@ -41,22 +48,22 @@ std::string JPetTimer::getAllMeasuredTimes()
 
 std::string JPetTimer::getTotalMeasuredTime()
 {
-  return std::string("Total elapsed time:") + std::to_string(getTotalMeasuredTimeInSeconds()) + " [s]\n";
+  return std::string("Total elapsed time:")
+    + std::to_string(getTotalMeasuredTimeInSeconds()) + " [s]\n";
 }
 
 long int JPetTimer::getTotalMeasuredTimeInSeconds()
 {
-  auto total = std::accumulate(fElapsedTimes.begin(),
-                               fElapsedTimes.end(),
-                               std::chrono::seconds(0),
-  [](const std::chrono::seconds prev, const std::pair<std::string, std::chrono::seconds>& el) {
-    return prev + el.second;
-  });
+  auto total = std::accumulate(
+    fElapsedTimes.begin(), fElapsedTimes.end(), std::chrono::seconds(0),
+    [](const std::chrono::seconds prev, const std::pair<std::string, std::chrono::seconds>& el) {
+      return prev + el.second;
+    }
+  );
   return total.count();
 }
 
-JPetTimer::vectorElapsedTimes
-JPetTimer::getVectorOfMeasuredTimes()
+JPetTimer::vectorElapsedTimes JPetTimer::getVectorOfMeasuredTimes()
 {
   return fElapsedTimes;
 }

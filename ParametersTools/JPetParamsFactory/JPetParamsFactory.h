@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -20,11 +20,12 @@
 #include "./JPetParams/JPetParams.h"
 
 /**
- * JPetParamsFactory to generate parameters based on provided options.
+ * @brief Factory generates parameters based on provided options.
  */
 namespace jpet_params_factory
 {
-JPetParams generateParams(const jpet_options_tools::OptsStrAny& opts);
-JPetParams generateParams(const JPetParams& inParams, const JPetParams& controlParams);
+  JPetParams generateParams(const jpet_options_tools::OptsStrAny& opts);
+  JPetParams generateParams(const JPetParams& inParams, const JPetParams& controlParams);
 };
-#endif /*  !JPETPARAMSFACTORY_H */
+
+#endif /* !JPETPARAMSFACTORY_H */

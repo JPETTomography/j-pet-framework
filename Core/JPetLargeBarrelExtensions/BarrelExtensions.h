@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,20 +16,22 @@
 #ifndef _LARGE_BARREL_EXTENSIONS_
 #define _LARGE_BARREL_EXTENSIONS_
 
-#include <map>
+#include "./JPetGeomMappingInterface/JPetGeomMappingInterface.h"
+#include "./JPetUserTask/JPetUserTask.h"
+#include "./JPetHit/JPetHit.h"
+#include "PetDict.h"
 #include <vector>
 #include <string>
-#include "./JPetGeomMappingInterface/JPetGeomMappingInterface.h"
-#include "./JPetHit/JPetHit.h"
-#include "./JPetUserTask/JPetUserTask.h"
-#include "PetDict.h"
+#include <map>
+
 const std::string Layer(const size_t layer);
 const std::string LayerSlot(const size_t layer, const size_t slot);
+const std::string LayerSlotThr(const size_t layer, const size_t slot, const size_t thr);
+
 inline const std::string LayerSlot(const StripPos& pos)
 {
   return LayerSlot(pos.layer, pos.slot);
 }
-const std::string LayerSlotThr(const size_t layer, const size_t slot, const size_t thr);
 
 class LargeBarrelMapping: public JPetGeomMappingInterface
 {
@@ -46,51 +48,51 @@ public:
   const StripPos getStripPos(const JPetBarrelSlot& slot) const;
   const std::vector<size_t> getLayersSizes()const;
 private:
-  std::vector<double> fRadii;
   std::vector<std::vector<double>> fTheta;
+  std::vector<double> fRadii;
 };
 
 class LargeBarrelTask: public JPetUserTask
 {
-protected:
-  LargeBarrelTask(const char* name);
 public:
   virtual ~LargeBarrelTask();
-  virtual bool init()override;
+  virtual bool init() override;
 protected:
-  const std::shared_ptr<LargeBarrelMapping>map()const;
+  LargeBarrelTask(const char* name);
+  const std::shared_ptr<LargeBarrelMapping>map() const;
 private:
-  std::shared_ptr<LargeBarrelMapping>fBarrelMap;
+  std::shared_ptr<LargeBarrelMapping> fBarrelMap;
 };
 
-struct TOTs {
+struct TOTs
+{
   double A[4], B[4];
 };
 
 inline std::istream& operator>>(std::istream& str, TOTs& item)
 {
   return str >> item.A[0] >> item.A[1] >> item.A[2] >> item.A[3]
-         >> item.B[0] >> item.B[1] >> item.B[2] >> item.B[3];
+    >> item.B[0] >> item.B[1] >> item.B[2] >> item.B[3];
 }
 
 inline std::ostream& operator<<(std::ostream& str, const TOTs& item)
 {
-  return str << item.A[0] << " " << item.A[1] << " " << item.A[2] << " " << item.A[3] << " "
-         << item.B[0] << " " << item.B[1] << " " << item.B[2] << " " << item.B[3] << " ";
+  return str << item.A[0] << " " << item.A[1] << " " << item.A[2] << " "
+    << item.A[3] << " " << item.B[0] << " " << item.B[1] << " "
+    << item.B[2] << " " << item.B[3] << " ";
 }
 
 class TOT_Hists: public LargeBarrelTask
 {
-protected:
-  TOT_Hists(const char* name);
 public:
   virtual ~TOT_Hists();
-  virtual bool init()override;
-  //virtual void init(const JPetTaskInterface::Options& opts)override;
+  virtual bool init() override;
 protected:
-  void createTOTHistos(const std::string& suffix, const size_t bins, const double min, const double max);
+  TOT_Hists(const char* name);
+  void createTOTHistos(const std::string& suffix, const size_t bins,
+    const double min, const double max);
   void fillTOTHistos(const JPetHit& hit, const std::string& suffix);
   const TOTs getTOTs(const JPetHit& hit)const;
 };
 
-#endif
+#endif /* !_LARGE_BARREL_EXTENSIONS_ */

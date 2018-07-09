@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,27 +16,25 @@
 #ifndef JPETPARAMGETTERASCII_H
 #define JPETPARAMGETTERASCII_H
 
-#include <map>
-#include <string>
-#include <boost/property_tree/ptree.hpp>
 #include "./JPetParamGetter/JPetParamGetter.h"
+#include <boost/property_tree/ptree.hpp>
+#include <string>
+#include <map>
 
 class JPetParamGetterAscii : public JPetParamGetter
 {
-  public:
-    JPetParamGetterAscii(std::string filename) : filename(filename) {}
-    ~JPetParamGetterAscii() {}
-    ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId);
-    ParamRelationalData getAllRelationalData(ParamObjectType type1, ParamObjectType type2, const int runId);
+public:
+  JPetParamGetterAscii(std::string filename) : filename(filename) {}
+  ~JPetParamGetterAscii() {}
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId);
+  ParamRelationalData getAllRelationalData(ParamObjectType type1,
+    ParamObjectType type2, const int runId);
 
-  private:
-    JPetParamGetterAscii(const JPetParamGetterAscii &paramGetterAscii);
-    JPetParamGetterAscii& operator=(const JPetParamGetterAscii &paramGetterAscii);
-
-    ParamObjectDescription toDescription(boost::property_tree::ptree & info);
-
-    std::string filename;
-
+private:
+  JPetParamGetterAscii(const JPetParamGetterAscii &paramGetterAscii);
+  JPetParamGetterAscii& operator=(const JPetParamGetterAscii &paramGetterAscii);
+  ParamObjectDescription toDescription(boost::property_tree::ptree & info);
+  std::string filename;
 };
 
-#endif /*  !JPETPARAMGETTERASCII_H */
+#endif /* !JPETPARAMGETTERASCII_H */

@@ -13,17 +13,15 @@
  *  @file JPetMCHit.cpp
  */
 
-#include "./JPetMCHit.h"
 #include "./JPetLoggerInclude.h"
-
+#include "./JPetMCHit.h"
 
 ClassImp(JPetMCHit);
 
-JPetMCHit::JPetMCHit()
-{
-}
+JPetMCHit::JPetMCHit() {}
 
-JPetMCHit::JPetMCHit(UInt_t decayTreetId, UInt_t vertexId, float e, float t, const TVector3& pos, const TVector3& pol, const TVector3& mom):
+JPetMCHit::JPetMCHit(UInt_t decayTreetId, UInt_t vertexId, float e, float t,
+  const TVector3& pos, const TVector3& pol, const TVector3& mom):
   fMCDecayTreeIndex(decayTreetId), fMCVtxIndex(vertexId), fPolarization(pol), fMomentum(mom)
 {
   setEnergy(e);
@@ -50,7 +48,6 @@ const TVector3& JPetMCHit::getMomentum() const
 {
   return fMomentum;
 }
-
 
 void JPetMCHit::setMCDecayTreeIndex(Int_t dti)
 {

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,11 +16,7 @@
 #include "./JPetParamManager/JPetParamManager.h"
 #include "./JPetTask.h"
 
-
-JPetTask::JPetTask(const char* name):
-  fName(name)
-{
-}
+JPetTask::JPetTask(const char* name): fName(name){}
 
 void JPetTask::setName(const std::string& name)
 {

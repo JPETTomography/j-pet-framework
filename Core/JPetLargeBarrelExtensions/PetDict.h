@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -14,10 +14,10 @@
  */
 
 #ifndef ______PET__DICT___H_________
-#       define ______PET__DICT___H_________
-#include <vector>
+#define ______PET__DICT___H_________
+#include "./JPetGeomMappingInterface/JPetGeomMappingInterface.h"
 #include <functional>
-#include "./JPetGeomMappingInterface/JPetGeomMappingInterface.h" // definition of StripPos structure
+#include <vector>
 
 template<typename SOURCE, int code = 0>
 class Exception: public std::exception

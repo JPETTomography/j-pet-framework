@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -22,11 +22,8 @@
 #include <memory>
 #include <vector>
 
-
-
 /**
  * @brief Interface class representing a computing task unit.
- *
  */
 class JPetTaskInterface
 {
@@ -39,4 +36,4 @@ public:
   virtual const std::vector<JPetTaskInterface*> getSubTasks() const = 0;
   virtual std::string getName() const = 0;
 };
-#endif /*  !JPETTASKINTERFACE_H */
+#endif /* !JPETTASKINTERFACE_H */

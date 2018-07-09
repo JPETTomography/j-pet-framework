@@ -11,103 +11,99 @@
  *  limitations under the License.
  *
  *  @file JPetLogger.h
- *  @brief Simple logger class. Don't use directly. Macros from ../JPetLoggerInclude.h should be used instead.
- *  JPetLogger class implements a simple logging functionality.
- *  It is wrapper for Boost.Log that is multithread safe and implements own formatter.
  */
 
 #ifndef JPETLOGGER_H
 #define JPETLOGGER_H
 
+#include <iostream>
 #include <ostream>
 #include <fstream>
-#include <iostream>
 #include <string>
 
 #ifndef __CINT__
-#include <boost/uuid/uuid.hpp>            // uuid class
-#include <boost/uuid/uuid_generators.hpp> // generators
-#include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
-
-#include <boost/log/core.hpp>                               //main logger, get(), add_sink()
-#include <boost/log/trivial.hpp>                            //for severity_level
-#include <boost/log/sinks/text_ostream_backend.hpp>         //for text_ostream_backend sink
-#include <boost/log/utility/setup/file.hpp>                 //for value_ref
-#include <boost/log/utility/setup/common_attributes.hpp>    //for add_common_atributes()
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/sinks/text_ostream_backend.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/log/core.hpp>
 #endif
+
+/**
+ * @brief Simple logger class.
+ *
+ * Logger class for printing out varius statusses in the resulting .log file
+ * Don't use directly, rather by including JPetLoggerInclude.h
+ * and using macros from there. It is wrapper for Boost.Log
+ * that is multithread safe and implements own formatter.
+*/
 
 class JPetLogger
 {
 public:
-
-#ifndef __CINT__
-  inline static boost::log::sources::severity_logger<boost::log::trivial::severity_level>& getSeverity()
-  {
-    static bool isInitialized = false;
-    if (!isInitialized) {
-      init();
-      setLogLevel(boost::log::trivial::info);
-      isInitialized = true;
+  #ifndef __CINT__
+    inline static boost::log::sources::severity_logger<boost::log::trivial::severity_level>& getSeverity()
+    {
+      static bool isInitialized = false;
+      if (!isInitialized) {
+        init();
+        setLogLevel(boost::log::trivial::info);
+        isInitialized = true;
+      }
+      static boost::log::sources::severity_logger<boost::log::trivial::severity_level> sev;
+      return sev;
     }
-    static boost::log::sources::severity_logger<boost::log::trivial::severity_level> sev;
-    return sev;
-  }
 
-  inline static void formatter(boost::log::record_view const& rec, boost::log::formatting_ostream& out_stream)
-  {
-    boost::log::value_ref<std::string> fullpath = boost::log::extract<std::string>("File", rec);
-    boost::log::value_ref<std::string> fullfunction = boost::log::extract<std::string>("Function", rec);
+    inline static void formatter(boost::log::record_view const& rec, boost::log::formatting_ostream& out_stream)
+    {
+      boost::log::value_ref<std::string> fullpath = boost::log::extract<std::string>("File", rec);
+      boost::log::value_ref<std::string> fullfunction = boost::log::extract<std::string>("Function", rec);
+      out_stream << boost::log::extract<unsigned int>("LineID", rec) << ": [";
+      out_stream << boost::filesystem::path(fullpath.get()).filename().string() << ":";
+      out_stream << fullfunction << "@";
+      out_stream << boost::log::extract<int>("Line", rec) << "] ";
+      out_stream << "ThreadID: " << boost::log::extract<boost::log::attributes::current_thread_id::value_type>("ThreadID", rec) << " ";
+      out_stream << "<" << rec[boost::log::trivial::severity] << "> ";
+      out_stream << rec[boost::log::expressions::smessage];
+    }
 
-    out_stream << boost::log::extract<unsigned int>("LineID", rec) << ": [";
-    out_stream << boost::filesystem::path(fullpath.get()).filename().string() << ":";
-    out_stream << fullfunction << "@";
-    out_stream << boost::log::extract<int>("Line", rec) << "] ";
-
-    out_stream << "ThreadID: " << boost::log::extract<boost::log::attributes::current_thread_id::value_type>("ThreadID", rec) << " ";
-
-    out_stream << "<" << rec[boost::log::trivial::severity] << "> ";
-
-    out_stream << rec[boost::log::expressions::smessage];
-  }
-
-  inline static void setLogLevel(boost::log::trivial::severity_level level)
-  {
-    boost::log::core::get()->set_filter (
-      boost::log::trivial::severity >= level
-    );
-  }
-#else
-  static void getSeverity();
-  static void formatter();
-  static void setLogLevel();
-#endif
+    inline static void setLogLevel(boost::log::trivial::severity_level level)
+    {
+      boost::log::core::get()->set_filter (
+        boost::log::trivial::severity >= level
+      );
+    }
+  #else
+    static void getSeverity();
+    static void formatter();
+    static void setLogLevel();
+  #endif
 
 private:
   JPetLogger();
   JPetLogger(const JPetLogger&);
   JPetLogger& operator=(const JPetLogger&);
 
-#ifndef __CINT__
-  inline static const std::string generateFilename()
-  {
-    return std::string("JPet_") + to_string(boost::uuids::random_generator()()) + std::string(".log");
-  }
+  #ifndef __CINT__
+    inline static const std::string generateFilename()
+    {
+      return std::string("JPet_") + to_string(boost::uuids::random_generator()()) + std::string(".log");
+    }
 
-  inline static void init()
-  {
-    typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend> text_sink;
-    boost::shared_ptr<text_sink> sink = boost::make_shared<text_sink>();
-
-    sink->locked_backend()->add_stream(
-      boost::make_shared<std::ofstream>(generateFilename()));
-
-    sink->set_formatter(&JPetLogger::formatter);
-
-    boost::log::core::get()->add_sink(sink);
-    boost::log::add_common_attributes();
-  }
-#endif
+    inline static void init()
+    {
+      typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend> text_sink;
+      boost::shared_ptr<text_sink> sink = boost::make_shared<text_sink>();
+      sink->locked_backend()->add_stream(
+        boost::make_shared<std::ofstream>(generateFilename()));
+      sink->set_formatter(&JPetLogger::formatter);
+      boost::log::core::get()->add_sink(sink);
+      boost::log::add_common_attributes();
+    }
+  #endif
 };
 
-#endif /*  !JPETLOGGER_H */
-
+#endif /* !JPETLOGGER_H */

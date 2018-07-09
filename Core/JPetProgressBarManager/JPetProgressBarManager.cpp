@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -23,6 +23,5 @@ void JPetProgressBarManager::display(long long done, long long end) const
 
 float JPetProgressBarManager::getCurrentValue(int currentEventNumber, int numberOfEvents) const
 {
-  return ( ((float)currentEventNumber) / numberOfEvents ) * 100;
+  return (((float)currentEventNumber) / numberOfEvents) * 100;
 }
-
