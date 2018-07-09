@@ -57,8 +57,7 @@ public:
   bool isOutput() const;
 
 protected:
-  /// Method returns (isOK, inputFile, outputFileFullPath, isResetOutputPath) based on provided options.
-  /// if isOK is set to false, that means that an error has occured.
+  /// @return (isOK, inputFile, outputFileFullPath, isResetOutputPath) based on provided options. If isOK is set to false, that means that an error has occured.
   virtual std::tuple<bool, std::string, std::string, bool> setInputAndOutputFile(const jpet_options_tools::OptsStrAny options) const;
   virtual bool createInputObjects(const char* inputFilename);
   virtual bool createOutputObjects(const char* outputFilename);
