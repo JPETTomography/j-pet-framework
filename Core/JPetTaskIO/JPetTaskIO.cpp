@@ -67,10 +67,14 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
     ERROR("Some error occured in setInputAndOutputFile");
     return false;
   }
+
+
   if (!createInputObjects(inputFilename.c_str())) {
     ERROR("createInputObjects");
     return false;
   }
+
+
   if (!createOutputObjects(fOutFileFullPath.c_str())) {
     ERROR("createOutputObjects");
     return false;
@@ -146,6 +150,11 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
   if (FileTypeChecker::getInputFileType(fParams.getOptions()) == FileTypeChecker::kHldRoot) {
     jpet_options_generator_tools::setOutputFileType(new_opts, "root");
   }
+
+  if (FileTypeChecker::getInputFileType(fParams.getOptions()) == FileTypeChecker::kMCGeant) {
+    jpet_options_generator_tools::setOutputFileType(new_opts, "root");
+  }
+
   if ( jpet_options_tools::getOptionAsInt(fParams.getOptions(), "firstEvent_int") != -1
     && jpet_options_tools::getOptionAsInt(fParams.getOptions(), "lastEvent_int") != -1 ) {
     jpet_options_generator_tools::setResetEventRangeOption(new_opts, true);
@@ -243,17 +252,17 @@ std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFi
   return std::make_tuple(true, inputFilename, outFileFullPath, resetOutputPath);
 }
 
-/**
- *
- */
 bool JPetTaskIO::createInputObjects(const char* inputFilename)
 {
   using namespace jpet_options_tools;
   auto options = fParams.getOptions();
   assert(!fReader);
   fReader = new JPetReader;
+
   if (fReader->openFileAndLoadData(inputFilename, JPetReader::kRootTreeName.c_str())) {
-    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot) {
+    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot || 
+    FileTypeChecker::getInputFileType(options) == FileTypeChecker::kMCGeant ) {
+
       fHeader = new JPetTreeHeader(getRunNumber(options));
       fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
       fHeader->setFrameworkRevision(FRAMEWORK_REVISION);

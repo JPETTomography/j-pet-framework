@@ -19,6 +19,7 @@
 #include "JPetParamsInterface/JPetParamsInterface.h"
 #include "JPetStatistics/JPetStatistics.h"
 #include "JPetTimeWindow/JPetTimeWindow.h"
+#include "JPetTimeWindowMC/JPetTimeWindowMC.h"
 #include "JPetParamBank/JPetParamBank.h"
 #include "JPetParams/JPetParams.h"
 #include "JPetTask/JPetTask.h"

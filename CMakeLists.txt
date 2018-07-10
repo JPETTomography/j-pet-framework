@@ -106,7 +106,8 @@ set(FOLDERS_WITH_SOURCE
   Core
   ParametersTools
   MC
-)
+  GeantParser
+  )
 
 ## Point sources and headers
 foreach(dir ${FOLDERS_WITH_SOURCE})
@@ -160,6 +161,12 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetUnpacker
   JPetEvent
   JPetMCHit
+  JPetTimeWindowMC
+  JPetMCDecayTree
+  JPetGeantScinHits
+  JPetGeantDecayTree
+  JPetGeantEventPack
+  JPetGeantEventInformation
   INCLUDE_DIRS ${FOLDERS}
 )
 
