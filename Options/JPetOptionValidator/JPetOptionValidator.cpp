@@ -104,7 +104,7 @@ bool JPetOptionValidator::isRangeOfEventsValid(std::pair <std::string, boost::an
 bool JPetOptionValidator::isCorrectFileType(std::pair <std::string, boost::any> option)
 {
   std::string type = any_cast<std::string>(option.second);
-  if (type == "hld" || type == "root" || type == "scope" || type == "zip") {
+  if (type == "hld" || type == "root" || type == "scope" || type == "zip" || type == "mcGeant") {
     return true;
   } else {
     ERROR("Wrong type of file:" + type);
@@ -134,6 +134,8 @@ std::vector<std::string> JPetOptionValidator::getCorrectExtensionsForTheType(std
     return {".json"};
   } else if (fileType == "zip") {
     return {".gz", ".xz", ".bz2", ".zip"};
+  } else if (fileType == "mcGeant") {
+    return {".root"};
   } else {
     return {"." + fileType};
   }
