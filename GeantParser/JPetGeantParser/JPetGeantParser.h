@@ -13,8 +13,8 @@
  *  @file JPetGeantParser.h
  */
 
-#ifndef JPetGeantParser_H
-#define JPetGeantParser_H
+#ifndef JPETGEANTPARSER_H
+#define JPETGEANTPARSER_H
 
 #include <map>
 #include <vector>
