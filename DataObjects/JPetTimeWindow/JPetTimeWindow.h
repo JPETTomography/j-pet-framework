@@ -42,11 +42,9 @@ public:
     dynamic_cast<T&>(*(fEvents.ConstructedAt(fEventCount++))) = evt;
   }
   
-
   inline size_t getNumberOfEvents() const {
     return fEventCount;
   }
-
 
   inline const TObject & operator[](int i) const {
     return *fEvents[i];
