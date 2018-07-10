@@ -19,7 +19,6 @@
 #include <THashTable.h>
 #include <TH1F.h>
 #include <TH2F.h>
-#include <TEfficiency.h>
 #include <TString.h>
 #include <map>
 #include <TGraph.h>
@@ -42,7 +41,6 @@ public:
   void createHistogram(TObject* object);
   void createGraph(TObject* object);
   void createCanvas(TObject* object);
-  TEfficiency* getEffiHisto(const char* name);
   TH1F* getHisto1D(const char* name);
   TH2F* getHisto2D(const char* name);
   TGraph* getGraph(const char* name);

@@ -43,11 +43,6 @@ void JPetStatistics::createCanvas(TObject* object)
   fStats.Add(object);
 }
 
-TEfficiency* JPetStatistics::getEffiHisto(const char* name)
-{
-  return getObject<TEfficiency>(name);
-}
-
 TH1F* JPetStatistics::getHisto1D(const char* name)
 {
   return getObject<TH1F>(name);
