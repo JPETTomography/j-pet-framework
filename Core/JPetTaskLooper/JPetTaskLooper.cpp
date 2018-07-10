@@ -39,14 +39,14 @@ bool JPetTaskLooper::run(const JPetDataInterface&)
   if (subTasks.empty()) {
     WARNING("No subtask defined in JPetTaskLooper");
   }
-  for (auto subTask : subTasks) {
+  for (const auto& subTask : subTasks) {
     if (!subTask) {
       ERROR("some subTasks are nullptr");
       return false;
     }
   }
   while (fIsCondition(inParams)) {
-    for (auto subTask : subTasks) {
+    for (const auto& subTask : subTasks) {
       subTask->init(inParams);
       subTask->run(nullDataObject);
       subTask->terminate(outParams);
@@ -59,4 +59,9 @@ bool JPetTaskLooper::run(const JPetDataInterface&)
 bool JPetTaskLooper::terminate(JPetParamsInterface&)
 {
   return true;
+}
+
+void JPetTaskLooper::setConditionFunction(Predicate isCondition)
+{
+  fIsCondition = isCondition;
 }

@@ -13,20 +13,23 @@
  *  @file JPetTaskLooper.h
  */
 
-#ifndef JPETTASKLOOPER_H 
-#define JPETTASKLOOPER_H 
+#ifndef JPETTASKLOOPER_H
+#define JPETTASKLOOPER_H
 #include "./JPetTask/JPetTask.h"
-#include <memory> 
+#include <memory>
 
 using Predicate=std::function<bool(const JPetParamsInterface& params)>;
-class JPetTaskLooper: public JPetTask {
+
+class JPetTaskLooper: public JPetTask 
+{
 public:
   JPetTaskLooper(const char* name, std::unique_ptr<JPetTask> subtask, Predicate isCondition = [](const JPetParamsInterface&){return false;});
   virtual ~JPetTaskLooper(){}
   bool init(const JPetParamsInterface& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParamsInterface& outOptions) override;
-protected:  
+  void setConditionFunction(Predicate isCondition);
+protected:
   Predicate fIsCondition;
 };
 #endif /*  !JPETTASKLOOPER_H */
