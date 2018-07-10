@@ -32,6 +32,7 @@ bool JPetUserTask::init(const JPetParamsInterface& inOptions)
  */
 bool JPetUserTask::run(const JPetDataInterface& inData)
 {
+  clearOutputEvents();
   auto event = dynamic_cast<const JPetData&>(inData);
   setEvent(&(event.getEvent()));
   return exec();
@@ -78,4 +79,11 @@ jpet_options_tools::OptsStrAny JPetUserTask::getOptions() const
 JPetTimeWindow* JPetUserTask::getOutputEvents()
 {
   return fOutputEvents;
+}
+
+void JPetUserTask::clearOutputEvents()
+{
+  if (fOutputEvents) {
+    fOutputEvents->Clear();
+  }
 }
