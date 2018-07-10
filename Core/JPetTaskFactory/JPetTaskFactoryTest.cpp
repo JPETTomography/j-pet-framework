@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE( factory_addTaskInfo_wrong )
 {
   JPetTaskFactory factory;
   std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("root")}};
-  BOOST_REQUIRE(!factory.addTaskInfo("fakeName","raw","calib")); ///Because fakeName task is not registered!
+  BOOST_REQUIRE(!factory.addTaskInfo("fakeName","raw","calib", 1)); ///Because fakeName task is not registered!
   BOOST_REQUIRE_EQUAL(factory.getTasksToUse().size(), 0);
   BOOST_REQUIRE(factory.getTasksDictionary().empty());  /// Task was not registered.
   auto chain = factory.createTaskGeneratorChain(opts); /// Because task was not registered, so it will return chain with just default task generators.
@@ -71,8 +71,8 @@ BOOST_AUTO_TEST_CASE( factory_addAndRegisterTask )
   factory.registerTask<TestClass>("task1");
   factory.registerTask<TestClass>("task2");
   BOOST_REQUIRE_EQUAL(factory.getTasksDictionary().size(), 2);
-  BOOST_REQUIRE(factory.addTaskInfo("task1","raw","calib"));
-  BOOST_REQUIRE(factory.addTaskInfo("task2","calib","sig"));
+  BOOST_REQUIRE(factory.addTaskInfo("task1","raw","calib", 1));
+  BOOST_REQUIRE(factory.addTaskInfo("task2","calib","sig", 1));
   BOOST_REQUIRE_EQUAL(factory.getTasksToUse().size(), 2);
 
   std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("root")}};
@@ -89,8 +89,8 @@ BOOST_AUTO_TEST_CASE( factory_clear )
   JPetTaskFactory factory;
   factory.registerTask<TestClass>("task1");
   factory.registerTask<TestClass>("task2");
-  factory.addTaskInfo("task1","raw","calib");
-  factory.addTaskInfo("task2","calib","sig");
+  factory.addTaskInfo("task1","raw","calib", 1);
+  factory.addTaskInfo("task2","calib","sig", 1);
 
   factory.clear();
   BOOST_REQUIRE(factory.getTasksDictionary().empty());

@@ -18,6 +18,7 @@
 #include "./JPetScopeLoader/JPetScopeLoader.h"
 #include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
 #include "./JPetParamBankHandlerTask/JPetParamBankHandlerTask.h"
+#include "./JPetTaskLooper/JPetTaskLooper.h"
 
 using TaskGenerator = std::function< std::unique_ptr<JPetTaskInterface>() >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
@@ -100,15 +101,26 @@ void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, c
   auto name = info.name.c_str();
   auto inT = info.inputFileType.c_str();
   auto outT = info.outputFileType.c_str();
+  auto numOfIterations = info.numOfIterations; 
 
   if (generatorsMap.find(name) != generatorsMap.end()) {
     TaskGenerator userTaskGen = generatorsMap.at(name);
-    outChain.push_back(
-    [name, inT, outT, userTaskGen]() {
-      auto task = jpet_common_tools::make_unique<JPetTaskIO>(name, inT, outT);
-      task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-      return task;
-    });
+    if (numOfIterations == 1) {
+      outChain.push_back(
+      [name, inT, outT, userTaskGen]() {
+        auto task = jpet_common_tools::make_unique<JPetTaskIO>(name, inT, outT);
+        task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
+        return task;
+      });
+    } else {
+      outChain.push_back(
+      [name, inT, outT, userTaskGen]() {
+        auto task = jpet_common_tools::make_unique<JPetTaskIO>(name, inT, outT);
+        task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
+        auto looperTask = jpet_common_tools::make_unique<JPetTaskLooper>(name, std::move(task));
+        return looperTask;
+      });
+    }
   } else {
     ERROR(Form("The requested task %s is not registered! The output chain might be broken!", name));
     return;
