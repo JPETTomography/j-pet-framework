@@ -91,7 +91,6 @@ template <class T>
 bool JPetWriter::write(const T& obj)
 {
   DEBUG("JPetWriter");
-
   if ( !fFile->IsOpen() ) {
     ERROR("Could not write to file. Have you closed it already?");
     return false;
@@ -102,7 +101,6 @@ bool JPetWriter::write(const T& obj)
 
   DEBUG("filler");
   T* filler = const_cast<T*>(&obj);
-
   assert(filler);
   if (!fIsBranchCreated) {
     DEBUG("Branch name:" + std::string(filler->GetName()));
