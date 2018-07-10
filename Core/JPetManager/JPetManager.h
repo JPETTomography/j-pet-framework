@@ -62,8 +62,9 @@ public:
   /// @param name c-string that identifies registered task. Also, this string is passed to the construct as argument.
   /// @param inputFileType c-string corresponding to the input file extension.
   /// @param outputFileType c-string corresponding to the output file extension. If empty, the task with no typical output is assumed.
+  /// @param numTimes Number of times given task will be executed in a row. If value is less then zero, the task will be executed in infinite loop and some condition must be given to stop it.
   /// @throws exception in case of errors.
-  void useTask(const char* name, const char* inputFileType = "", const char* outputFileType = "");
+  void useTask(const char* name, const char* inputFileType = "", const char* outputFileType = "", int numTimes = 1);
 
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);

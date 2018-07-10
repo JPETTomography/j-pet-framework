@@ -93,7 +93,7 @@ public:
 
   /// @brief Method adds task information to the collection of tasks to be used while creating the task chain.
   /// @return false if the task with the name has not been registered. true otherwise.
-  bool addTaskInfo(const char* name, const char* inputFileType, const char* outputFileType);
+  bool addTaskInfo(const char* name, const char* inputFileType, const char* outputFileType, int numIter);
 
   std::vector<TaskInfo> getTasksToUse() const;
   std::map<std::string, TaskGenerator> getTasksDictionary() const;

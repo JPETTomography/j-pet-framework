@@ -32,10 +32,10 @@ std::vector<TaskGenerator> JPetTaskFactory::createTaskGeneratorChain(const std::
   return generateTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
 }
 
-bool JPetTaskFactory::addTaskInfo(const char* name, const char* inputFileType, const char* outputFileType)
+bool JPetTaskFactory::addTaskInfo(const char* name, const char* inputFileType, const char* outputFileType, int numIter)
 {
   if (fTasksDictionary.find(name)!=fTasksDictionary.end()){ 
-    fTasksToUse.push_back(TaskInfo(name, inputFileType, outputFileType, 1));
+    fTasksToUse.push_back(TaskInfo(name, inputFileType, outputFileType, numIter));
   } else {
     ERROR("Task with the name " +std::string(name) + " is not registered!");
     return false;

@@ -100,9 +100,9 @@ std::pair<bool, std::map<std::string, boost::any> >  JPetManager::parseCmdLine(i
   return std::make_pair(true, allValidatedOptions);
 }
 
-void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
+void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType, int numTimes)
 {
-  if (!fTaskFactory.addTaskInfo(name, inputFileType, outputFileType)) {
+  if (!fTaskFactory.addTaskInfo(name, inputFileType, outputFileType, numTimes)) {
     std::cerr <<"Error has occurred while calling useTask! Check the log!" <<std::endl;
     throw std::runtime_error("error in addTaskInfo");
   }
