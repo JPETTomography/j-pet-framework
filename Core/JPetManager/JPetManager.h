@@ -29,14 +29,15 @@
  * registering processing tasks, and sending it to JPetExecutor,
  * which executes the chain of registered tasks in threads.
  * Private fields include Options container, in which the number of elements
- * corresponds to the number of independent input files
+ * corresponds to the number of independent input files.
  */
 class JPetManager
 {
 public:
   static JPetManager& getManager();
-
-  bool run(int argc, const char** argv);
+  
+  /// @throws exceptions in case of errors.
+  void run(int argc, const char** argv); 
 
   /// @brief Method parses command line arguments and returns the set of validated option generated based on it.
   /// @return pair of boolean status and the map of validated options. In case of errors the status is set to false.
@@ -61,7 +62,7 @@ public:
   /// @param name c-string that identifies registered task. Also, this string is passed to the construct as argument.
   /// @param inputFileType c-string corresponding to the input file extension.
   /// @param outputFileType c-string corresponding to the output file extension. If empty, the task with no typical output is assumed.
-  /// @return in case of error exit(1) is called.
+  /// @throws exception in case of errors.
   void useTask(const char* name, const char* inputFileType = "", const char* outputFileType = "");
 
   bool areThreadsEnabled() const;

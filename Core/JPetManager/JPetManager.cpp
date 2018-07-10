@@ -39,16 +39,15 @@ JPetManager& JPetManager::getManager()
   return instance;
 }
 
-bool JPetManager::run(int argc, const char** argv)
+void JPetManager::run(int argc, const char** argv)
 {
   bool isOk = true;
   std::map<std::string, boost::any> allValidatedOptions;
   std::tie(isOk, allValidatedOptions) = parseCmdLine(argc, argv);
   if (!isOk) {
     ERROR("While parsing command line arguments");
-    std::cerr <<"Stopping program, unrecoverable error has occurred while calling run! Check the log!" <<std::endl;
-    exit(1);  /// temporary change to check if the examples are working
-    return false;
+    std::cerr <<"Error has occurred while parsing command line! Check the log!" <<std::endl;
+    throw std::invalid_argument("Error in parsing command line arguments");  /// temporary change to check if the examples are working
   }
   auto chainOfTasks = fTaskFactory.createTaskGeneratorChain(allValidatedOptions);
   JPetOptionsGenerator optionsGenerator;
@@ -71,9 +70,8 @@ bool JPetManager::run(int argc, const char** argv)
     } else {
       if (!executor->process()) {
         ERROR("While running process");
-        std::cerr <<"Stopping program, unrecoverable error has occurred while calling run! Check the log!" <<std::endl;
-        exit(1);  /// temporary change to check if the examples are working
-        return false;
+        std::cerr <<"Stopping program, error has occurred while calling executor->process! Check the log!" <<std::endl;
+        throw std::runtime_error("Error in executor->process"); 
       }
     }
     inputDataSeq++;
@@ -85,7 +83,6 @@ bool JPetManager::run(int argc, const char** argv)
     }
   }
   INFO( "======== Finished processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
-  return true;
 }
 
 std::pair<bool, std::map<std::string, boost::any> >  JPetManager::parseCmdLine(int argc, const char** argv)
@@ -106,8 +103,8 @@ std::pair<bool, std::map<std::string, boost::any> >  JPetManager::parseCmdLine(i
 void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
 {
   if (!fTaskFactory.addTaskInfo(name, inputFileType, outputFileType)) {
-    std::cerr <<"Stopping program, unrecoverable error has occurred while calling useTask! Check the log!" <<std::endl;
-    exit(1);
+    std::cerr <<"Error has occurred while calling useTask! Check the log!" <<std::endl;
+    throw std::runtime_error("error in addTaskInfo");
   }
 }
 
