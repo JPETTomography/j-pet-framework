@@ -128,8 +128,9 @@ bool JPetTaskIO::run(const JPetDataInterface&)
       }
       fReader->nextEntry();
     }
-    JPetParamsInterface fake_params;
-    pTask->terminate(fake_params);
+    JPetParamsInterface subTaskParams;
+    pTask->terminate(subTaskParams);
+    ///@todo here we add merge function that joins the subTaskParams with the current JPetTaskIO params 
   }
   return true;
 }

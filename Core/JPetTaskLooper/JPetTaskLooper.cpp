@@ -65,3 +65,30 @@ void JPetTaskLooper::setConditionFunction(Predicate isCondition)
 {
   fIsCondition = isCondition;
 }
+
+
+Predicate JPetTaskLooper::getMaxIterationPredicate(int maxIteration)
+{
+  assert(maxIteration >=0);
+  int counter = 0;
+  auto iterationFunction = [maxIteration, counter](const JPetParamsInterface&) mutable ->bool {
+    if (counter < maxIteration) {
+      counter++;
+      return true;
+    } else {
+      return false;
+    }
+  };
+  return iterationFunction; 
+}
+
+Predicate JPetTaskLooper::getStopOnOptionPredicate(const std::string stopIterationOptName)
+{
+  auto stopFunction = [stopIterationOptName](const JPetParamsInterface& params)->bool {
+    using namespace jpet_options_tools;
+    auto options = (static_cast<const JPetParams&>(params)).getOptions();
+    bool condition = isOptionSet(options, stopIterationOptName) && (getOptionAsBool(options, stopIterationOptName));
+    return condition;
+  };
+  return stopFunction; 
+}

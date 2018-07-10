@@ -29,6 +29,8 @@ public:
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParamsInterface& outOptions) override;
   void setConditionFunction(Predicate isCondition);
+  static Predicate getMaxIterationPredicate(int maxIteration);
+  static Predicate getStopOnOptionPredicate(const std::string optionName);
 protected:
   Predicate fIsCondition;
 };
