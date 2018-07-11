@@ -128,13 +128,12 @@ bool JPetTaskIO::run(const JPetDataInterface&)
       }
       fReader->nextEntry();
     }
-    JPetParamsInterface subTaskParams;
+    JPetParams subTaskParams;
     pTask->terminate(subTaskParams);
-    ///@todo here we add merge function that joins the subTaskParams with the current JPetTaskIO params 
+    fParams = mergeWithExtraParams(fParams, subTaskParams);
   }
   return true;
 }
-
 
 bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
 {
@@ -159,6 +158,11 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
   }
   fReader->closeFile();
   return true;
+}
+
+JPetParams JPetTaskIO::getOptions() const
+{
+  return fParams;
 }
 
 void JPetTaskIO::setOptions(const JPetParams& opts)
@@ -300,3 +304,9 @@ bool JPetTaskIO::isOutput() const
 {
   return fIsOutput;
 }
+
+JPetParams JPetTaskIO::mergeWithExtraParams(const JPetParams& originalParams, const JPetParams& extraParams) const 
+{
+  return fParams;
+}
+

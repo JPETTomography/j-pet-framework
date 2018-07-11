@@ -39,19 +39,17 @@ class JPetStatistics;
 class JPetTaskIO: public JPetTask
 {
 public:
+
   JPetTaskIO(const char* name = "", const char* in_file_type = "", const char* out_file_type = "");
   virtual bool init(const JPetParamsInterface& inOptions) override;
   virtual bool run(const JPetDataInterface& inData) override;
   virtual bool terminate(JPetParamsInterface& outOptions) override;
   virtual ~JPetTaskIO();
   virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
+  virtual JPetParams mergeWithExtraParams(const JPetParams& originalParams, const JPetParams& extraParams) const ;
+
   void setOptions(const JPetParams& opts);
-
-  inline JPetParams getOptions() const
-  {
-    return fParams;
-  }
-
+  JPetParams getOptions() const;
   void displayProgressBar(int currentEventNumber, int numberOfEvents) const;
 
   bool isOutput() const;
