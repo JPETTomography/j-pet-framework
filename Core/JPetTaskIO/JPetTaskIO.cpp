@@ -140,7 +140,7 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
 {
   auto& params = dynamic_cast<JPetParams&>(output_params);
   auto newOpts = JPetTaskIOTools::setOutputOptions(fParams, fResetOutputPath, fOutFileFullPath);
-  params = JPetParams(newOpts, params.getParamManagerAsShared());
+  params = JPetParams(newOpts, params.getParamManagerAsShared()); ///@todo add comment or make it more explicit how it work. 
 
   if (!fReader) {
     ERROR("fReader set to null");

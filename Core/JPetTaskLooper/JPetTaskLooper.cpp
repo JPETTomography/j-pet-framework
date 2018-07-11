@@ -87,8 +87,8 @@ Predicate JPetTaskLooper::getStopOnOptionPredicate(const std::string stopIterati
   auto stopFunction = [stopIterationOptName](const JPetParamsInterface& params)->bool {
     using namespace jpet_options_tools;
     auto options = (static_cast<const JPetParams&>(params)).getOptions();
-    bool condition = isOptionSet(options, stopIterationOptName) && (getOptionAsBool(options, stopIterationOptName));
-    return condition;
+    bool continueIteration = !(isOptionSet(options, stopIterationOptName) && (getOptionAsBool(options, stopIterationOptName)));
+    return continueIteration;
   };
   return stopFunction; 
 }
