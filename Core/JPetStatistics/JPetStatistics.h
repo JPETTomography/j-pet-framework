@@ -23,6 +23,7 @@
 #include <TString.h>
 #include <TCanvas.h>
 #include <TGraph.h>
+#include <TEfficiency.h>
 #include <string>
 #include <map>
 
