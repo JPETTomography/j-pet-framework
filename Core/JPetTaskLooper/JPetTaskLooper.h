@@ -23,14 +23,15 @@ using Predicate=std::function<bool(const JPetParamsInterface& params)>;
 class JPetTaskLooper: public JPetTask 
 {
 public:
+  static Predicate getMaxIterationPredicate(int maxIteration);
+  static Predicate getStopOnOptionPredicate(const std::string optionName);
+
   JPetTaskLooper(const char* name, std::unique_ptr<JPetTask> subtask, Predicate isCondition = [](const JPetParamsInterface&){return false;});
   virtual ~JPetTaskLooper(){}
   bool init(const JPetParamsInterface& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParamsInterface& outOptions) override;
   void setConditionFunction(Predicate isCondition);
-  static Predicate getMaxIterationPredicate(int maxIteration);
-  static Predicate getStopOnOptionPredicate(const std::string optionName);
 protected:
   Predicate fIsCondition;
 };

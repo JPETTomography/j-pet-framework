@@ -41,6 +41,9 @@ JPetTaskIO::JPetTaskIO(const char* name,
   if (std::string(out_file_type).empty()) {
     fIsOutput = false;
   }
+  if (std::string(in_file_type).empty()) {
+    fIsInput = false;
+  }
 }
 
 void JPetTaskIO::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
@@ -66,9 +69,11 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
     ERROR("Some error occured in setInputAndOutputFile");
     return false;
   }
-  if (!createInputObjects(inputFilename.c_str())) {
-    ERROR("createInputObjects");
-    return false;
+  if (isInput()) {
+    if (!createInputObjects(inputFilename.c_str())) {
+      ERROR("createInputObjects");
+      return false;
+    }
   }
   if (isOutput()) {
     if (!createOutputObjects(fOutFileFullPath.c_str())) {
@@ -91,42 +96,49 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     ERROR("No subTask set");
     return false;
   }
-  if (!fReader) {
-    ERROR("No reader set");
-    return false;
+  if(isInput()) {
+    if (!fReader) {
+      ERROR("No reader set");
+      return false;
+    }
   }
   for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
     auto pTask = fSubTask->get();
     pTask->init(fParams); //prepare current task for file
 
-    /// setting range of events to loop
-    auto totalEntrys = 0ll;
-    auto firstEvent = 0ll;
-    auto lastEvent = 0ll;
-    bool isOK = false;
-    std::tie(isOK, totalEntrys, firstEvent, lastEvent) = getEventRange(fParams.getOptions(), fReader.get());
-    if (!isOK) {
-      ERROR("Some error occured in getEventRange");
-      return false;
-    }
-    assert(lastEvent >= 0);
-
-    /// loop over events
-    for (auto i = firstEvent; i <= lastEvent; i++) {
-
-      ///just distraction
-      if (isProgressBar(fParams.getOptions())) {
-        displayProgressBar(i, lastEvent);
+    if(isInput()) { 
+      /// setting range of events to loop
+      auto totalEntrys = 0ll;
+      auto firstEvent = 0ll;
+      auto lastEvent = 0ll;
+      bool isOK = false;
+      std::tie(isOK, totalEntrys, firstEvent, lastEvent) = getEventRange(fParams.getOptions(), fReader.get());
+      if (!isOK) {
+        ERROR("Some error occured in getEventRange");
+        return false;
       }
+      assert(lastEvent >= 0);
 
-      JPetData event(fReader->getCurrentEntry());
-      pTask->run(event);
-      if (isOutput()) {
-        if (!fOutputHandler->writeEventToFile(pTask)) {
-          return false;
+      /// loop over events
+      for (auto i = firstEvent; i <= lastEvent; i++) {
+
+        ///just distraction
+        if (isProgressBar(fParams.getOptions())) {
+          displayProgressBar(i, lastEvent);
         }
+
+        JPetData event(fReader->getCurrentEntry());
+        pTask->run(event);
+        if (isOutput()) {
+          if (!fOutputHandler->writeEventToFile(pTask)) {
+            return false;
+          }
+        }
+        fReader->nextEntry();
       }
-      fReader->nextEntry();
+    } else {
+      JPetDataInterface dummyEvent;
+      pTask->run(dummyEvent);
     }
     JPetParams subTaskParams;
     pTask->terminate(subTaskParams);
@@ -141,10 +153,6 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
   auto newOpts = JPetTaskIOTools::setOutputOptions(fParams, fResetOutputPath, fOutFileFullPath);
   params = JPetParams(newOpts, params.getParamManagerAsShared()); ///@todo add comment or make it more explicit how it work. 
 
-  if (!fReader) {
-    ERROR("fReader set to null");
-    return false;
-  }
   if (isOutput()) {
     if (!fHeader) {
       ERROR("fHeader set to null");
@@ -156,7 +164,13 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
     }
     fOutputHandler->saveAndCloseOutput(getParamManager(), fHeader, fStatistics.get(), fSubTasksStatistics);
   }
-  fReader->closeFile();
+  if (isInput()) {
+    if (!fReader) {
+      ERROR("fReader set to null");
+      return false;
+    }
+    fReader->closeFile();
+  }
   return true;
 }
 
@@ -305,8 +319,21 @@ bool JPetTaskIO::isOutput() const
   return fIsOutput;
 }
 
-JPetParams JPetTaskIO::mergeWithExtraParams(const JPetParams& originalParams, const JPetParams& extraParams) const 
+bool JPetTaskIO::isInput() const
 {
-  return fParams;
+  return fIsInput;
+}
+
+JPetParams JPetTaskIO::mergeWithExtraParams(const JPetParams& oldParams, const JPetParams& extraParams) const 
+{
+  using namespace jpet_options_generator_tools;
+  auto oldOpts = oldParams.getOptions();
+  auto extraOpts = extraParams.getOptions();
+  const std::string stopIterationOptName ="stopIteration_bool"; /// @todo this is hardcoded and should be moved somewhere.
+  if (isOptionSet(extraOpts, stopIterationOptName)) {
+    oldOpts[stopIterationOptName] = getOptionValue(extraOpts, stopIterationOptName);
+  }
+
+  return JPetParams(oldOpts, oldParams.getParamManagerAsShared());
 }
 

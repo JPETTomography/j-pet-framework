@@ -46,6 +46,7 @@ public:
   virtual bool terminate(JPetParamsInterface& outOptions) override;
   virtual ~JPetTaskIO();
   virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
+  /// @brief Currently this method passes "stopIteration_bool" option from subTask to fParams if present. 
   virtual JPetParams mergeWithExtraParams(const JPetParams& originalParams, const JPetParams& extraParams) const ;
 
   void setOptions(const JPetParams& opts);
@@ -53,6 +54,7 @@ public:
   void displayProgressBar(int currentEventNumber, int numberOfEvents) const;
 
   bool isOutput() const;
+  bool isInput() const;
 
 protected:
   /// @return (isOK, inputFile, outputFileFullPath, isResetOutputPath) based on provided options. If isOK is set to false, that means that an error has occured.
@@ -71,6 +73,7 @@ protected:
   bool fResetOutputPath;
 
   bool fIsOutput = true; /// Temporary and very nasty way to mark that the output will be saved.
+  bool fIsInput = true; /// Temporary and very nasty way to mark that the input will be read.
   int fEventNb = -1; /// @todo is this used anywhere?
   JPetParams fParams;
 
