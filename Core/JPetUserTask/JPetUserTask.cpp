@@ -18,18 +18,12 @@
 
 JPetUserTask::JPetUserTask(const char* name): JPetTask(name) {}
 
-/**
- * Virtual function must be defined in the descendent class
- */
 bool JPetUserTask::init(const JPetParamsInterface& inOptions)
 {
   fParams = dynamic_cast<const JPetParams&>(inOptions);
   return init();
 }
 
-/**
- * Virtual function must be defined in the descendent class
- */
 bool JPetUserTask::run(const JPetDataInterface& inData)
 {
   clearOutputEvents();
@@ -38,13 +32,11 @@ bool JPetUserTask::run(const JPetDataInterface& inData)
   return exec();
 }
 
-/**
- * Virtual function must be defined in the descendent class
- */
 bool JPetUserTask::terminate(JPetParamsInterface& outOptions)
 {
+  bool result = terminate();
   outOptions = fParams;
-  return terminate();
+  return result;
 }
 
 const JPetParamBank& JPetUserTask::getParamBank()
