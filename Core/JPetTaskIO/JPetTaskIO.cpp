@@ -33,10 +33,7 @@ JPetTaskIO::JPetTaskIO(const char* name,
                        const char* in_file_type,
                        const char* out_file_type):
   JPetTask(name),
-  fInFileType(in_file_type),
-  fOutFileType(out_file_type),
-  fOutFileFullPath(""),
-  fResetOutputPath(false)
+  fTaskInfo(in_file_type,out_file_type,"", false)
 {
   if (std::string(out_file_type).empty()) {
     fIsOutput = false;
@@ -62,13 +59,19 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
   setOptions(params);
   auto opts = fParams.getOptions();
 
+  ///@todo refactor this piece of code
   bool isOK = false;
   std::string inputFilename;
-  std::tie(isOK, inputFilename, fOutFileFullPath, fResetOutputPath) = setInputAndOutputFile(opts);
+  std::string outFileFullPath;
+  bool resetOutputPath = false;
+  std::tie(isOK, inputFilename, outFileFullPath, resetOutputPath) = setInputAndOutputFile(opts);
+  fTaskInfo.fOutFileFullPath = outFileFullPath;
+  fTaskInfo.fResetOutputPath = resetOutputPath;
   if (!isOK) {
     ERROR("Some error occured in setInputAndOutputFile");
     return false;
   }
+
   if (isInput()) {
     if (!createInputObjects(inputFilename.c_str())) {
       ERROR("createInputObjects");
@@ -76,7 +79,7 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
     }
   }
   if (isOutput()) {
-    if (!createOutputObjects(fOutFileFullPath.c_str())) {
+    if (!createOutputObjects(outFileFullPath.c_str())) {
       ERROR("createOutputObjects");
       return false;
     }
@@ -87,7 +90,7 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
 std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFile(const OptsStrAny opts) const
 {
   /// We cannot remove this method completely and leave the one from JPetTaskIOTools, because it  is overloaded in JPetScopeLoader class.
-  return JPetTaskIOTools::setInputAndOutputFile(opts, fResetOutputPath, fInFileType, fOutFileType);
+  return JPetTaskIOTools::setInputAndOutputFile(opts, fTaskInfo.fResetOutputPath, fTaskInfo.fInFileType, fTaskInfo.fOutFileType);
 }
 
 bool JPetTaskIO::run(const JPetDataInterface&)
@@ -151,7 +154,7 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
 {
   auto& params = dynamic_cast<JPetParams&>(output_params);
   if(isOutput()) {
-    auto newOpts = JPetTaskIOTools::setOutputOptions(fParams, fResetOutputPath, fOutFileFullPath);
+    auto newOpts = JPetTaskIOTools::setOutputOptions(fParams, fTaskInfo.fResetOutputPath, fTaskInfo.fOutFileFullPath);
     params = JPetParams(newOpts, params.getParamManagerAsShared()); ///@todo add comment or make it more explicit how it work. 
   } else {
     params = fParams;

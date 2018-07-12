@@ -158,7 +158,7 @@ bool JPetScopeLoader::terminate(JPetParamsInterface& output_params)
 {
   auto& params = dynamic_cast<JPetParams&>(output_params);
   OptsStrAny new_opts;
-  jpet_options_generator_tools::setOutputFile(new_opts, fOutFileFullPath);
+  jpet_options_generator_tools::setOutputFile(new_opts, fTaskInfo.fOutFileFullPath);
   params = JPetParams(new_opts, params.getParamManagerAsShared());
 
   assert(fHeader);
@@ -209,12 +209,12 @@ std::tuple<bool, std::string, std::string, bool> JPetScopeLoader::setInputAndOut
   const jpet_options_tools::OptsStrAny opts) const
 {
   using namespace jpet_options_tools;
-  bool resetOutputPath = fResetOutputPath;
+  bool resetOutputPath = fTaskInfo.fResetOutputPath;
   std::string inputFilename = getInputFile(opts);
 
   /// this argument is not really used by the ScopeLoader  since inputFiles are generated
   /// based on json content
-  inputFilename =  inputFilename + "." + fOutFileType + ".root";
+  inputFilename =  inputFilename + "." + fTaskInfo.fOutFileType + ".root";
   auto outFileFullPath = inputFilename;
   if (isOptionSet(opts, "outputPath_std::string")) {
     std::string outputPath(getOutputPath(opts));

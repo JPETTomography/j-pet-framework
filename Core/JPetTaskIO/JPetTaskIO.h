@@ -30,6 +30,15 @@ class JPetReader;
 class JPetTreeHeader;
 class JPetStatistics;
 
+/// @brief helper struct to encapsulate some fields
+struct TaskIOFileInfo {
+  TaskIOFileInfo(const std::string& inType, const std::string& outType, const std::string& outFullPath, bool resetOutPath):
+    fInFileType(inType), fOutFileType(outType), fOutFileFullPath(outFullPath), fResetOutputPath(resetOutPath) {};
+  std::string fInFileType;
+  std::string fOutFileType;
+  std::string fOutFileFullPath;
+  bool fResetOutputPath{false};
+};
 
 /**
  * @brief Class representing computing task with input/output operations.
@@ -46,7 +55,7 @@ public:
   virtual bool terminate(JPetParamsInterface& outOptions) override;
   virtual ~JPetTaskIO();
   virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
-  /// @brief Currently this method passes "stopIteration_bool" option from subTask to fParams if present. 
+  /// @brief Currently this method passes "stopIteration_bool" option from subTask to fParams if present.
   virtual JPetParams mergeWithExtraParams(const JPetParams& originalParams, const JPetParams& extraParams) const ;
 
   void setOptions(const JPetParams& opts);
@@ -67,10 +76,7 @@ protected:
 
   std::tuple<bool, long long, long long, long long> getEventRange(const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader);
 
-  std::string fInFileType;
-  std::string fOutFileType;
-  std::string fOutFileFullPath;
-  bool fResetOutputPath;
+  TaskIOFileInfo fTaskInfo;
 
   bool fIsOutput = true; /// Temporary and very nasty way to mark that the output will be saved.
   bool fIsInput = true; /// Temporary and very nasty way to mark that the input will be read.
