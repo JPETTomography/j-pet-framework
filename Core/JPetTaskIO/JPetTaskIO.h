@@ -74,7 +74,6 @@ protected:
 
   bool fIsOutput = true; /// Temporary and very nasty way to mark that the output will be saved.
   bool fIsInput = true; /// Temporary and very nasty way to mark that the input will be read.
-  int fEventNb = -1; /// @todo is this used anywhere?
   JPetParams fParams;
 
   std::unique_ptr<JPetReaderInterface> fReader{nullptr};
