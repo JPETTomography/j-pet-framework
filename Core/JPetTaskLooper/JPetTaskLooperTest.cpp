@@ -125,27 +125,27 @@ BOOST_AUTO_TEST_CASE( my_test_10_iterations_with_predefined_function)
   BOOST_REQUIRE_EQUAL(subTask ->fRunCounter, maxIter);
 }
 
-/*BOOST_AUTO_TEST_CASE( my_test_withSettingOptions)*/
-//{
-  //std::string optName = "stopIteration_bool";
-  //auto condFunc =  JPetTaskLooper::getStopOnOptionPredicate(optName);
+BOOST_AUTO_TEST_CASE( my_test_withSettingOptions)
+{
+  std::string optName = "stopIteration_bool";
+  auto condFunc =  JPetTaskLooper::getStopOnOptionPredicate(optName);
 
-  //using namespace jpet_options_generator_tools;
-  //std::vector<jpet_options_tools::OptsStrAny> opts;
-  //auto opt = getDefaultOptions();
-  //JPetTaskLooper looper("testTaskLooper", std::unique_ptr<JPetTask>(new TestTaskRun20Times), condFunc);
-  //JPetDataInterface nullDataObject;
-  //JPetParams inputParams;
-  //JPetParams outputParams;
-  //auto result = looper.init(inputParams);
-  //BOOST_REQUIRE(result);
-  //result = looper.run(nullDataObject);
-  //BOOST_REQUIRE(result);
-  //result = looper.terminate(outputParams);
-  //BOOST_REQUIRE(result);
-  //auto subTask = dynamic_cast<TestTaskRun20Times*>(looper.getSubTasks()[0]);
-  //BOOST_REQUIRE_EQUAL(subTask->fRunCounter, 20);
-/*}*/
+  using namespace jpet_options_generator_tools;
+  std::vector<jpet_options_tools::OptsStrAny> opts;
+  auto opt = getDefaultOptions();
+  JPetTaskLooper looper("testTaskLooper", std::unique_ptr<JPetTask>(new TestTaskRun20Times), condFunc);
+  JPetDataInterface nullDataObject;
+  JPetParams inputParams;
+  JPetParams outputParams;
+  auto result = looper.init(inputParams);
+  BOOST_REQUIRE(result);
+  result = looper.run(nullDataObject);
+  BOOST_REQUIRE(result);
+  result = looper.terminate(outputParams);
+  BOOST_REQUIRE(result);
+  auto subTask = dynamic_cast<TestTaskRun20Times*>(looper.getSubTasks()[0]);
+  BOOST_REQUIRE_EQUAL(subTask->fRunCounter, 20);
+}
 
 BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO)
 {
