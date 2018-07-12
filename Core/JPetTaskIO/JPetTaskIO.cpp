@@ -112,10 +112,16 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     if(isInput()) { 
       /// setting range of events to loop
       auto totalEntrys = 0ll;
+      if (fReader) {
+        totalEntrys = fReader->getNbOfAllEntries();
+      } else {
+        WARNING("no JPETReader set totalEntrys set to -1");
+        totalEntrys = -1;
+      }
       auto firstEvent = 0ll;
       auto lastEvent = 0ll;
       bool isOK = false;
-      std::tie(isOK, totalEntrys, firstEvent, lastEvent) = getEventRange(fParams.getOptions(), fReader.get());
+      std::tie(isOK, totalEntrys, firstEvent, lastEvent) = getEventRange(fParams.getOptions(), totalEntrys);
       if (!isOK) {
         ERROR("Some error occured in getEventRange");
         return false;
@@ -303,17 +309,11 @@ JPetTaskIO::~JPetTaskIO()
 
 }
 
-std::tuple<bool, long long, long long, long long> JPetTaskIO::getEventRange(const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader)
+std::tuple<bool, long long, long long, long long> JPetTaskIO::getEventRange(const jpet_options_tools::OptsStrAny& options, long long loadedTotalEntries)
 {
-  auto totalEntrys = 0ll;
+  auto totalEntrys = loadedTotalEntries;
   auto firstEvent = 0ll;
   auto lastEvent = 0ll;
-  if (fReader) {
-    totalEntrys = fReader->getNbOfAllEntries();
-  } else {
-    WARNING("no JPETReader set totalEntrys set to -1");
-    totalEntrys = -1;
-  }
   if (!JPetTaskIOTools::setUserLimits(options, totalEntrys,  firstEvent, lastEvent)) {
     ERROR("in setUserLimits");
     return std::make_tuple(false, -1, -1, -1);

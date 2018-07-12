@@ -74,7 +74,7 @@ protected:
   const JPetParamBank& getParamBank();
   JPetParamManager& getParamManager();
 
-  std::tuple<bool, long long, long long, long long> getEventRange(const jpet_options_tools::OptsStrAny& options, JPetReaderInterface* reader);
+  std::tuple<bool, long long, long long, long long> getEventRange(const jpet_options_tools::OptsStrAny& options, long long loadedTotalEntries);
 
   TaskIOFileInfo fTaskInfo;
 
