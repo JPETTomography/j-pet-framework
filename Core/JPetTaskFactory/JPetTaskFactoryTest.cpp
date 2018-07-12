@@ -5,6 +5,7 @@
 #include <boost/any.hpp>
 #include "./JPetTaskFactory/JPetTaskFactory.h"
 #include "./JPetTask/JPetTask.h"
+#include "./JPetTaskIO/JPetTaskIO.h"
 #include <cstdio> //for std::remove
 
 using namespace jpet_task_factory;
@@ -84,6 +85,48 @@ BOOST_AUTO_TEST_CASE( factory_addAndRegisterTask )
   BOOST_REQUIRE_EQUAL(task4->getName(), std::string("task2"));
 }
 
+BOOST_AUTO_TEST_CASE( factory_addAndRegisterTaskWithIteration )
+{
+  JPetTaskFactory factory;
+  factory.registerTask<TestClass>("task1");
+  factory.registerTask<TestClass>("task2");
+  BOOST_REQUIRE_EQUAL(factory.getTasksDictionary().size(), 2);
+  BOOST_REQUIRE(factory.addTaskInfo("task1","raw","calib", 1));
+  BOOST_REQUIRE(factory.addTaskInfo("task2","calib","sig", 2));  /// iterative, the task will be packed in the Looper Class 
+  BOOST_REQUIRE_EQUAL(factory.getTasksToUse().size(), 2);
+
+  std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("root")}};
+  auto chain = factory.createTaskGeneratorChain(opts);
+  BOOST_REQUIRE_EQUAL(chain.size(), 4); /// UnpackerAndUnzipper ->ParamBankHandler -> TestClass->task2 
+  auto task3 = chain[2]();
+  BOOST_REQUIRE_EQUAL(task3->getName(), std::string("task1"));
+  auto task4 = chain[3]();
+  BOOST_REQUIRE_EQUAL(task4->getName(), std::string("task2"));
+  auto subTask = dynamic_cast<JPetTaskIO*>(task4->getSubTasks()[0]);
+  BOOST_REQUIRE(subTask);
+}
+
+BOOST_AUTO_TEST_CASE( factory_addAndRegisterTaskWithStop )
+{
+  JPetTaskFactory factory;
+  factory.registerTask<TestClass>("task1");
+  factory.registerTask<TestClass>("task2");
+  BOOST_REQUIRE_EQUAL(factory.getTasksDictionary().size(), 2);
+  BOOST_REQUIRE(factory.addTaskInfo("task1","raw","calib", 1));
+  BOOST_REQUIRE(factory.addTaskInfo("task2","calib","sig", -1));  /// iterative with stop condition the task will be packed in the Looper Class 
+  BOOST_REQUIRE_EQUAL(factory.getTasksToUse().size(), 2);
+
+  std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("root")}};
+  auto chain = factory.createTaskGeneratorChain(opts);
+  BOOST_REQUIRE_EQUAL(chain.size(), 4); /// UnpackerAndUnzipper ->ParamBankHandler -> TestClass->task2 
+  auto task3 = chain[2]();
+  BOOST_REQUIRE_EQUAL(task3->getName(), std::string("task1"));
+  auto task4 = chain[3]();
+  BOOST_REQUIRE_EQUAL(task4->getName(), std::string("task2"));
+  auto subTask = dynamic_cast<JPetTaskIO*>(task4->getSubTasks()[0]);
+  BOOST_REQUIRE(subTask);
+}
+
 BOOST_AUTO_TEST_CASE( factory_clear )
 {
   JPetTaskFactory factory;
@@ -97,9 +140,7 @@ BOOST_AUTO_TEST_CASE( factory_clear )
   BOOST_REQUIRE(factory.getTasksToUse().empty());
 }
 
-BOOST_AUTO_TEST_CASE(factory_functions)
-{
-}
+
 
 
 BOOST_AUTO_TEST_SUITE_END()

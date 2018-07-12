@@ -113,13 +113,23 @@ void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, c
         return task;
       });
     } else {
-      outChain.push_back(
-      [name, inT, outT, userTaskGen]() {
-        auto task = jpet_common_tools::make_unique<JPetTaskIO>(name, inT, outT);
-        task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-        auto looperTask = jpet_common_tools::make_unique<JPetTaskLooper>(name, std::move(task), JPetTaskLooper::getStopOnOptionPredicate("stopIteration_bool"));
-        return looperTask;
-      });
+      if (numOfIterations < 0) {
+        outChain.push_back(
+        [name, inT, outT, userTaskGen]() {
+          auto task = jpet_common_tools::make_unique<JPetTaskIO>(name, inT, outT);
+          task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
+          auto looperTask = jpet_common_tools::make_unique<JPetTaskLooper>(name, std::move(task), JPetTaskLooper::getStopOnOptionPredicate("stopIteration_bool"));
+          return looperTask;
+        });
+      } else {
+        outChain.push_back(
+        [name, inT, outT, numOfIterations, userTaskGen]() {
+          auto task = jpet_common_tools::make_unique<JPetTaskIO>(name, inT, outT);
+          task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
+          auto looperTask = jpet_common_tools::make_unique<JPetTaskLooper>(name, std::move(task), JPetTaskLooper::getMaxIterationPredicate(numOfIterations));
+          return looperTask;
+        });
+      }
     }
   } else {
     ERROR(Form("The requested task %s is not registered! The output chain might be broken!", name));
