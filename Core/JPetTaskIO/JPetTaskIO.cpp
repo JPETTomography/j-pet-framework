@@ -150,8 +150,12 @@ bool JPetTaskIO::run(const JPetDataInterface&)
 bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
 {
   auto& params = dynamic_cast<JPetParams&>(output_params);
-  auto newOpts = JPetTaskIOTools::setOutputOptions(fParams, fResetOutputPath, fOutFileFullPath);
-  params = JPetParams(newOpts, params.getParamManagerAsShared()); ///@todo add comment or make it more explicit how it work. 
+  if(isOutput()) {
+    auto newOpts = JPetTaskIOTools::setOutputOptions(fParams, fResetOutputPath, fOutFileFullPath);
+    params = JPetParams(newOpts, params.getParamManagerAsShared()); ///@todo add comment or make it more explicit how it work. 
+  } else {
+    params = fParams;
+  }
 
   if (isOutput()) {
     if (!fHeader) {
