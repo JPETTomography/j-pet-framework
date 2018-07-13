@@ -98,4 +98,24 @@ BOOST_AUTO_TEST_CASE(goodZipRun)
   BOOST_REQUIRE(manager.run(14, args));
 }
 
+BOOST_AUTO_TEST_CASE(goodMCRun)
+{
+  JPetManager &manager = JPetManager::getManager();
+  manager.clearRegisteredTasks();
+  const char* args[11] = {
+    "test/Path",
+    "--file",
+    "unitTestData/JPetManagerTest/goodMCFile.mcGeant.root",
+    "--type",
+    "mcGeant",
+    "-p",
+    "conf_trb3.xml",
+    "-l",
+    "unitTestData/JPetManagerTest/large_barrel.json",
+    "-i",
+    "44"
+  };
+  BOOST_REQUIRE(manager.run(11, args));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
