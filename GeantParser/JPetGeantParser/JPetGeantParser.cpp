@@ -206,10 +206,12 @@ void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo, bool i
         for (Int_t i=0; i<effiMap_nSlice; i++){
             if((-20+effiMap_width*i<evInfo->GetVtxPromptPositionZ()) && (evInfo->GetVtxPromptPositionZ()<-20+effiMap_width*(i+1))) 
             {
-                getStatistics().getEffiHisto("effi_prompt_vtx_"+TString::Itoa(i,10))->Fill(
-                        isRecPrompt, 
-                        evInfo->GetVtxPromptPositionX(),evInfo->GetVtxPromptPositionY());
-            }
+	      if(fMakeEffiHisto){
+		getStatistics().getEffiHisto("effi_prompt_vtx_"+TString::Itoa(i,10))->Fill(
+											   isRecPrompt, 
+											   evInfo->GetVtxPromptPositionX(),evInfo->GetVtxPromptPositionY());
+	      }
+	    }
         }
 
     }
@@ -222,10 +224,12 @@ void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo, bool i
         for (Int_t i=0; i<effiMap_nSlice; i++){
             if((-20+effiMap_width*i<evInfo->GetVtxPositionZ()) && (evInfo->GetVtxPositionZ()<-20+effiMap_width*(i+1))) 
             {
-                getStatistics().getEffiHisto("effi_2g_vtx_"+TString::Itoa(i,10))->Fill(
-                        isRec2g, 
-                        evInfo->GetVtxPositionX(),evInfo->GetVtxPositionY());
-            }
+	      if(fMakeEffiHisto){
+		getStatistics().getEffiHisto("effi_2g_vtx_"+TString::Itoa(i,10))->Fill(
+										       isRec2g, 
+										       evInfo->GetVtxPositionX(),evInfo->GetVtxPositionY());
+	      }
+	    }
         }
     }
 
@@ -235,9 +239,11 @@ void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo, bool i
         for (Int_t i=0; i<effiMap_nSlice; i++){
             if((-20.+effiMap_width*i<evInfo->GetVtxPositionZ()) && (evInfo->GetVtxPositionZ()<-20.+effiMap_width*(i+1))) 
             {
-                getStatistics().getEffiHisto("effi_3g_vtx_"+TString::Itoa(i,10))->Fill(
-                        isRec3g, 
-                        evInfo->GetVtxPositionX(),evInfo->GetVtxPositionY());
+	      if(fMakeEffiHisto){
+		getStatistics().getEffiHisto("effi_3g_vtx_"+TString::Itoa(i,10))->Fill(
+										       isRec3g, 
+										       evInfo->GetVtxPositionX(),evInfo->GetVtxPositionY());
+	      }
             }
         }
     }
