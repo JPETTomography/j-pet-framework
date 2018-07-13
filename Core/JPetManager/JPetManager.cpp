@@ -16,6 +16,7 @@
 #include "./JPetParamBankHandlerTask/JPetParamBankHandlerTask.h"
 #include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
 #include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "./JPetGeantParser/JPetGeantParser.h"
 #include "./JPetCommonTools/JPetCommonTools.h"
 #include "./JPetScopeLoader/JPetScopeLoader.h"
 #include "./JPetCmdParser/JPetCmdParser.h"
@@ -135,6 +136,10 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
       return new JPetUnzipAndUnpackTask("UnpackerAndUnzipper");
     };
     fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task);
+    if (fileType == FileTypeChecker::kMCGeant) {
+      registerTask<JPetGeantParser>("JPetGeantParser");
+      useTask("JPetGeantParser", "mcGeant", "mc.hits");
+    }
   };
   try {
     JPetOptionsGenerator optionsGenerator;
