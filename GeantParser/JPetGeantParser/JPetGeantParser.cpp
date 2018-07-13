@@ -53,7 +53,13 @@ bool JPetGeantParser::init()
     if (isOptionSet(fParams.getOptions(), kSourceActivityParamKey)) { 
         kSimulatedActivity = getOptionAsDouble(fParams.getOptions(), kSourceActivityParamKey);
     }
-
+    if(isOptionSet(fParams.getOptions(), kMakeHistograms)) {
+      fMakeHisto = getOptionsAsBool(fParams.getOptions(), kMakeHistograms);
+    }
+    if(isOptionSet(fParams.getOptions(), kMakeEfficiencies)) {
+      fMakeEffiHisto = getOptionsAsBool(fParams.getOptions(), kMakeEfficiencies);
+    }
+        
     if ( fMakeHisto) bookBasicHistograms();
     if ( fMakeEffiHisto ) bookEfficiencyHistograms();
 

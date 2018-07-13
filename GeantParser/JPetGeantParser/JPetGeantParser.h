@@ -52,8 +52,7 @@ public:
 protected :
   JPetGeomMapping* fDetectorMap; 
 
-  // variables to modify by user
-  bool fMakeEffiHisto = false;
+  bool fMakeEffiHisto = true;
   bool fMakeHisto = true;
   double fMaxTime = 0.;
   double fMinTime = -50.e6; // electronic time window 50 micro seconds - true for run 3 
@@ -70,12 +69,13 @@ protected :
   int effiMap_nSlice = 81;
   float effiMap_width = 0.5; // cm  -20:20 
 
-
   // internal variables 
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";
   const std::string kMinTimeWindowParamKey = "GeantParser_MinTimeWindow_double";
   const std::string kSourceActivityParamKey = "GeantParser_SourceActivity_double";
-
+  const std::string kMakeHistograms = "GeantParser_MakeHistograms_bool";
+  const std::string kMakeEfficiencies = "GeantParser_MakeEfficiencies_bool";
+  
   bool kFirstTime = true;
   long activityIndex = 0;
 
@@ -84,7 +84,6 @@ protected :
 
   void processMCEvent(JPetGeantEventPack*);
   void saveHits();
-
 
   void bookEfficiencyHistograms();
   void bookBasicHistograms();
