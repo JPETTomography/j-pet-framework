@@ -17,6 +17,7 @@
 #define JPETTASKLOOPER_H
 #include "./JPetTask/JPetTask.h"
 #include <memory>
+#include "./JPetParams/JPetParams.h"
 
 using Predicate=std::function<bool(const JPetParamsInterface& params)>;
 
@@ -34,5 +35,6 @@ public:
   void setConditionFunction(Predicate isCondition);
 protected:
   Predicate fIsCondition;
+  JPetParams fParams;
 };
 #endif /*  !JPETTASKLOOPER_H */

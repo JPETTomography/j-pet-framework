@@ -140,7 +140,4 @@ BOOST_AUTO_TEST_CASE( factory_clear )
   BOOST_REQUIRE(factory.getTasksToUse().empty());
 }
 
-
-
-
 BOOST_AUTO_TEST_SUITE_END()

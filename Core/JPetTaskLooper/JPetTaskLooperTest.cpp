@@ -33,8 +33,9 @@ class TestTaskRun20Times: public JPetTask
 {
 public:
   TestTaskRun20Times(const char* name = ""): JPetTask(name) {}
-  bool init(const JPetParamsInterface&) override
+  bool init(const JPetParamsInterface& paramsI) override
   {
+    fParams = static_cast<const JPetParams&>(paramsI);
     return true;
   }
   bool run(const JPetDataInterface&) override
@@ -42,18 +43,20 @@ public:
     fRunCounter++;
     return true;
   }
-  bool terminate(JPetParamsInterface& paramO) override
+  bool terminate(JPetParamsInterface& paramsO) override
   {
+    auto& params = static_cast<JPetParams&>(paramsO);
+    params = fParams;
     /// Here I set the condition that it should stop after 20th iteration, but it can be some other condition.
     if (fRunCounter == 20) {
-      JPetParams& params = static_cast<JPetParams&>(paramO);
       auto newOpts = params.getOptions();
-      newOpts["stopIteration_bool"] = boost::any_cast<bool>(true);
+      newOpts["stopIteration_bool"] = true;
       params = JPetParams(newOpts, params.getParamManagerAsShared());
     }
     return true;
   }
   int fRunCounter = 0;
+  JPetParams fParams;
 };
 BOOST_AUTO_TEST_SUITE(JPetTaskTestSuite)
 
@@ -131,16 +134,17 @@ BOOST_AUTO_TEST_CASE( my_test_withSettingOptions)
   auto condFunc =  JPetTaskLooper::getStopOnOptionPredicate(optName);
 
   using namespace jpet_options_generator_tools;
-  std::vector<jpet_options_tools::OptsStrAny> opts;
   auto opt = getDefaultOptions();
+  opt[optName] = false;
+  JPetParams inputParams = JPetParams(opt, inputParams.getParamManagerAsShared());
+
   JPetTaskLooper looper("testTaskLooper", std::unique_ptr<JPetTask>(new TestTaskRun20Times), condFunc);
   JPetDataInterface nullDataObject;
-  JPetParams inputParams;
-  JPetParams outputParams;
   auto result = looper.init(inputParams);
   BOOST_REQUIRE(result);
   result = looper.run(nullDataObject);
   BOOST_REQUIRE(result);
+  JPetParams outputParams;
   result = looper.terminate(outputParams);
   BOOST_REQUIRE(result);
   auto subTask = dynamic_cast<TestTaskRun20Times*>(looper.getSubTasks()[0]);
@@ -159,7 +163,7 @@ BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO)
   JPetTaskLooper looper("bla", std::move(task), condFunc);
 
   auto opt = getDefaultOptions();
-  opt[optName] = boost::any_cast<bool>(true);
+  opt[optName] = false;
   JPetParams inputParams;
   inputParams = JPetParams(opt, inputParams.getParamManagerAsShared());
 

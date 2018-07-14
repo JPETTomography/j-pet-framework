@@ -25,15 +25,14 @@ JPetTaskLooper::JPetTaskLooper(const char* name, std::unique_ptr<JPetTask> subta
   addSubTask(std::move(subtask));
 }
 
-bool JPetTaskLooper::init(const JPetParamsInterface&)
+bool JPetTaskLooper::init(const JPetParamsInterface& paramsI)
 {
+  fParams = dynamic_cast<const JPetParams&>(paramsI);
   return true;
 }
 
 bool JPetTaskLooper::run(const JPetDataInterface&)
 {
-  JPetParams inParams;
-  JPetParams outParams;
   JPetDataInterface nullDataObject;
   auto subTasks = getSubTasks();
   if (subTasks.empty()) {
@@ -45,6 +44,8 @@ bool JPetTaskLooper::run(const JPetDataInterface&)
       return false;
     }
   }
+  JPetParams inParams = fParams;
+  JPetParams outParams;
   while (fIsCondition(inParams)) {
     for (const auto& subTask : subTasks) {
       subTask->init(inParams);
@@ -56,8 +57,10 @@ bool JPetTaskLooper::run(const JPetDataInterface&)
   return true;
 }
 
-bool JPetTaskLooper::terminate(JPetParamsInterface&)
+bool JPetTaskLooper::terminate(JPetParamsInterface& paramsO)
 {
+  auto& params = dynamic_cast<JPetParams&>(paramsO);
+  params = fParams;
   return true;
 }
 
@@ -87,7 +90,7 @@ Predicate JPetTaskLooper::getStopOnOptionPredicate(const std::string stopIterati
   auto stopFunction = [stopIterationOptName](const JPetParamsInterface& params)->bool {
     using namespace jpet_options_tools;
     auto options = (static_cast<const JPetParams&>(params)).getOptions();
-    bool continueIteration = !(isOptionSet(options, stopIterationOptName) && (getOptionAsBool(options, stopIterationOptName)));
+    bool continueIteration = isOptionSet(options, stopIterationOptName) && (!getOptionAsBool(options, stopIterationOptName));
     return continueIteration;
   };
   return stopFunction; 

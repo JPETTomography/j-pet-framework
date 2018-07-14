@@ -118,7 +118,7 @@ void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, c
         [name, inT, outT, userTaskGen]() {
           auto task = jpet_common_tools::make_unique<JPetTaskIO>(name, inT, outT);
           task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-          auto looperTask = jpet_common_tools::make_unique<JPetTaskLooper>(name, std::move(task), JPetTaskLooper::getStopOnOptionPredicate("stopIteration_bool"));
+          auto looperTask = jpet_common_tools::make_unique<JPetTaskLooper>(name, std::move(task), JPetTaskLooper::getStopOnOptionPredicate(kStopIterationOptionName));
           return looperTask;
         });
       } else {

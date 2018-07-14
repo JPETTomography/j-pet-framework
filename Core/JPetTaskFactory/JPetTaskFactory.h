@@ -27,22 +27,21 @@
 /**
  * @brief Factory functions and factory class to produce chain of tasks.
  *
- * The factory provides the possiblility to register a task and based on registered task
+ * The factory provides the possibility to register a task and based on registered task
  * to create chains of generators which are special functions that can be used
  * to produce the corresponding objects later. One chain of generators corresponds to the chain
  * of task objects that together form a stream of processing units: TaskA ->TaskB->TaskC.
- * The factor provides also the method to add predifined tass generators at the beginning
+ * The factory provides also the method to add predefined task generators at the beginning
  * of the formed chain. They correspond to e.g. unzipping operations.
  * The registered JPetUserTask  are not actually added directly to the stream, but are first
  * encapsulated (as subTasks) into the JPetTaskIO objects which provide the input/output
- * operations e.g. handle the reading/writing events.
+ * operations e.g. handle the reading/writing of events.
  *
  */
 
 namespace jpet_task_factory
 {
 
-//using TaskGenerator = std::function< std::unique_ptr<JPetTaskInterface>() >;
 using TaskGenerator = std::function< std::unique_ptr<JPetTaskInterface>() >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
 
@@ -66,8 +65,8 @@ struct TaskInfo {
 /// Generator is the special function which called will return a task object.  
 class JPetTaskFactory
 {
-
 public:
+
   JPetTaskFactory();
   /// @brief Method creates the generator chain based on the added tasks and set of default tasks.
   /// The tasks previously via addTaskInfo are used to form a chain of generators.
@@ -104,9 +103,12 @@ private:
   JPetTaskFactory(const JPetTaskFactory&);
   void operator=(const JPetTaskFactory&);
 
-  std::map<std::string, TaskGenerator> fTasksDictionary; /// Map containint the registered task types.
+  std::map<std::string, TaskGenerator> fTasksDictionary; /// Map containing the registered task types.
   std::vector<TaskInfo> fTasksToUse; /// The collection of task information (name, input and output file type) corresponding to task chain to be created.
 };
+
+/// Option name used to stop the task iteration loop.
+const std::string kStopIterationOptionName = "stopIteration_bool";
 
 /// Set of helper factory functions used by the JPetTaskFactory methods
 
