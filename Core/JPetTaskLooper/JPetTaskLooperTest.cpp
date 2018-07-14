@@ -46,12 +46,13 @@ public:
   bool terminate(JPetParamsInterface& paramsO) override
   {
     auto& params = static_cast<JPetParams&>(paramsO);
-    params = fParams;
     /// Here I set the condition that it should stop after 20th iteration, but it can be some other condition.
     if (fRunCounter == 20) {
       auto newOpts = params.getOptions();
       newOpts["stopIteration_bool"] = true;
-      params = JPetParams(newOpts, params.getParamManagerAsShared());
+      params = JPetParams(newOpts, nullptr);
+    } else {
+        params = fParams;
     }
     return true;
   }
@@ -136,7 +137,7 @@ BOOST_AUTO_TEST_CASE( my_test_withSettingOptions)
   using namespace jpet_options_generator_tools;
   auto opt = getDefaultOptions();
   opt[optName] = false;
-  JPetParams inputParams = JPetParams(opt, inputParams.getParamManagerAsShared());
+  JPetParams inputParams = JPetParams(opt, nullptr);
 
   JPetTaskLooper looper("testTaskLooper", std::unique_ptr<JPetTask>(new TestTaskRun20Times), condFunc);
   JPetDataInterface nullDataObject;
@@ -165,7 +166,7 @@ BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO)
   auto opt = getDefaultOptions();
   opt[optName] = false;
   JPetParams inputParams;
-  inputParams = JPetParams(opt, inputParams.getParamManagerAsShared());
+  inputParams = JPetParams(opt, nullptr);
 
   auto result = looper.init(inputParams);
   BOOST_REQUIRE(result);
