@@ -22,12 +22,13 @@ using namespace jpet_options_tools;
 
 namespace JPetTaskIOTools
 {
-/// Sets values of firstEvent and lastEvent based on user options opts and total number of events from JPetReader
-// if the totEventsFromReader is less than 0, than first and last are set to -1.
-bool setUserLimits(const OptsStrAny& opts, const long long kTotEventsFromReader, long long& first, long long& last)
+
+std::tuple<bool, long long, long long> setUserLimits(const OptsStrAny& opts, const long long kTotEventsFromReader)
 {
   const auto kLastEvent = getLastEvent(opts);
   const auto kFirstEvent = getFirstEvent(opts);
+  auto first = 0ll;
+  auto last = 0ll;
   if ( kTotEventsFromReader < 1) {
     WARNING("kTotEvetnsFromReader < 1, first and last set to -1");
     first = last = -1;
@@ -45,20 +46,20 @@ bool setUserLimits(const OptsStrAny& opts, const long long kTotEventsFromReader,
   }
   if (first < 0) {
     ERROR("first <0");
-    return false;
+    return std::make_tuple(false, -1, -1);
   }
   if (last < 0) {
     ERROR("last < 0");
-    return false;
+    return std::make_tuple(false, -1, -1);
   }
   if (first > last) {
     ERROR("first > last");
-    return false;
+    return std::make_tuple(false, -1, -1);
   }
   assert(first >= 0);
   assert(last >= 0);
   assert(first <= last);
-  return true;
+  return std::make_tuple(true, first, last);
 }
 
 std::tuple<bool, std::string, std::string, bool> setInputAndOutputFile(const OptsStrAny& opts,  bool prevResetOutputPath,

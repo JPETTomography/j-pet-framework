@@ -215,7 +215,6 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
   auto options = fParams.getOptions();
   if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ) {
     // create a header to be stored along with the output tree
-    //fHeader = jpet_common_tools::make_unique<JPetTreeHeader>(getRunNumber(options));
     fHeader = new JPetTreeHeader(getRunNumber(options));
     fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
     fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
@@ -230,7 +229,6 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
   fStatistics = jpet_common_tools::make_unique<JPetStatistics>();
 
   // add info about this module to the processing stages' history in Tree header
-  //auto task = std::dynamic_pointer_cast<JPetTask>(fTask);
   for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
     auto task = dynamic_cast<JPetUserTask*>((*fSubTask).get());
     fHeader->addStageInfo(task->getName(), "", 0,
@@ -251,7 +249,6 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
     }
   } else {
     WARNING("the subTask does not exist, so JPetStatistics not passed to it");
-    //return false;
   }
   return true;
 }
@@ -271,9 +268,6 @@ const JPetParamBank& JPetTaskIO::getParamBank()
 
 JPetTaskIO::~JPetTaskIO()
 {
-  //if(fHeader)
-  //delete fHeader;
-
 }
 
 bool JPetTaskIO::isOutput() const

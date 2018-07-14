@@ -21,8 +21,10 @@
 
 namespace JPetTaskIOTools
 {
-bool setUserLimits(const jpet_options_tools::OptsStrAny& opts, const long long kTotEventsFromReader, long long& first, long long& last);
-/// Method returns (isOK, inputFile, outputFileFullPath, isResetOutputPath) based on provided options.
+/// @brief Function returns (isOK, firstEvent, lastEvent) based on provided options.
+/// if isOK is set to false, that means that an error has occured.
+std::tuple<bool, long long, long long> setUserLimits(const jpet_options_tools::OptsStrAny& opts, const long long totalNumEvents);
+/// @brief Function returns (isOK, inputFile, outputFileFullPath, isResetOutputPath) based on provided options.
 /// if isOK is set to false, that means that an error has occured.
 std::tuple<bool, std::string, std::string, bool> setInputAndOutputFile(const OptsStrAny& opts, bool prevResetOutputPath, const std::string& inFileType, const std::string& outFileType);
 

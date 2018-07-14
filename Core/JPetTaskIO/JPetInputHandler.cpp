@@ -32,14 +32,7 @@ std::tuple<bool, long long, long long> JPetInputHandler::getEventRange(const jpe
     WARNING("no JPETReader,  totalEntries set to -1");
     totalEntries = -1;
   }
-
-  auto firstEvent = 0ll;
-  auto lastEvent = 0ll;
-  if (!JPetTaskIOTools::setUserLimits(options, totalEntries,  firstEvent, lastEvent)) {
-    ERROR("in setUserLimits");
-    return std::make_tuple(false, -1, -1);
-  }
-  return std::make_tuple(true, firstEvent, lastEvent);
+  return JPetTaskIOTools::setUserLimits(options, totalEntries);
 }
 
 bool JPetInputHandler::openInput(const char* inputFilename, const JPetParams& params)
