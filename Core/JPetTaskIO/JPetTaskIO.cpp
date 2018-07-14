@@ -298,18 +298,6 @@ JPetTaskIO::~JPetTaskIO()
 
 }
 
-std::tuple<bool, long long, long long, long long> JPetTaskIO::getEventRange(const jpet_options_tools::OptsStrAny& options, long long loadedTotalEntries)
-{
-  auto totalEntrys = loadedTotalEntries;
-  auto firstEvent = 0ll;
-  auto lastEvent = 0ll;
-  if (!JPetTaskIOTools::setUserLimits(options, totalEntrys,  firstEvent, lastEvent)) {
-    ERROR("in setUserLimits");
-    return std::make_tuple(false, -1, -1, -1);
-  }
-  return std::make_tuple(true, totalEntrys, firstEvent, lastEvent);
-}
-
 bool JPetTaskIO::isOutput() const
 {
   return fIsOutput;

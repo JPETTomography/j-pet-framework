@@ -75,14 +75,11 @@ protected:
   const JPetParamBank& getParamBank();
   JPetParamManager& getParamManager();
 
-  std::tuple<bool, long long, long long, long long> getEventRange(const jpet_options_tools::OptsStrAny& options, long long loadedTotalEntries);
-
   TaskIOFileInfo fTaskInfo;
 
   bool fIsOutput = true; /// Temporary and very nasty way to mark that the output will be saved.
   bool fIsInput = true; /// Temporary and very nasty way to mark that the input will be read.
   JPetParams fParams;
-
 
   JPetTreeHeader* fHeader{nullptr};
   std::unique_ptr<JPetStatistics> fStatistics{nullptr};
