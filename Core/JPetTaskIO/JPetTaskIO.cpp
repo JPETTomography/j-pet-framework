@@ -26,7 +26,6 @@
 #include "./JPetLoggerInclude.h"
 #include "./version.h"
 
-using namespace jpet_options_tools;
 
 JPetTaskIO::JPetTaskIO(const char* name,
                        const char* in_file_type,
@@ -55,7 +54,7 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
 {
   using namespace jpet_options_tools;
   auto params = dynamic_cast<const JPetParams&>(paramsI);
-  setOptions(params);
+  setParams(params);
   auto opts = fParams.getOptions();
 
   ///@todo refactor this piece of code
@@ -94,6 +93,7 @@ std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFi
 
 bool JPetTaskIO::run(const JPetDataInterface&)
 {
+  using namespace jpet_options_tools;
   if (fSubTasks.empty()) {
     ERROR("No subTask set");
     return false;
@@ -174,12 +174,12 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
   return true;
 }
 
-JPetParams JPetTaskIO::getOptions() const
+JPetParams JPetTaskIO::getParams() const
 {
   return fParams;
 }
 
-void JPetTaskIO::setOptions(const JPetParams& opts)
+void JPetTaskIO::setParams(const JPetParams& opts)
 {
   fParams = opts;
 }
@@ -288,6 +288,7 @@ bool JPetTaskIO::isInput() const
 
 JPetParams JPetTaskIO::mergeWithExtraParams(const JPetParams& oldParams, const JPetParams& extraParams) const
 {
+  using namespace jpet_options_tools;
   using namespace jpet_options_generator_tools;
   auto oldOpts = oldParams.getOptions();
   auto extraOpts = extraParams.getOptions();

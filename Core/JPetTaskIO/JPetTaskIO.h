@@ -59,8 +59,8 @@ public:
   /// @brief Currently this method passes "stopIteration_bool" option from subTask to fParams if present.
   virtual JPetParams mergeWithExtraParams(const JPetParams& originalParams, const JPetParams& extraParams) const ;
 
-  void setOptions(const JPetParams& opts);
-  JPetParams getOptions() const;
+  void setParams(const JPetParams& opts);
+  JPetParams getParams() const;
   void displayProgressBar(int currentEventNumber, int numberOfEvents) const;
 
   bool isOutput() const;
