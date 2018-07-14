@@ -23,6 +23,7 @@
 #include "./JPetProgressBarManager/JPetProgressBarManager.h"
 #include "./JPetParams/JPetParams.h"
 #include "./JPetTaskIO/JPetOutputHandler.h"
+#include "./JPetTaskIO/JPetInputHandler.h"
 #include <memory>
 #include <string>
 
@@ -82,13 +83,13 @@ protected:
   bool fIsInput = true; /// Temporary and very nasty way to mark that the input will be read.
   JPetParams fParams;
 
-  std::unique_ptr<JPetReaderInterface> fReader{nullptr};
 
   JPetTreeHeader* fHeader{nullptr};
   std::unique_ptr<JPetStatistics> fStatistics{nullptr};
   std::map<std::string, std::unique_ptr<JPetStatistics>> fSubTasksStatistics;
 
   std::unique_ptr<JPetOutputHandler> fOutputHandler{nullptr};
+  std::unique_ptr<JPetInputHandler> fInputHandler{nullptr};
 
   JPetProgressBarManager fProgressBar;
 private:
