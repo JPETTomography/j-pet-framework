@@ -14,5 +14,3 @@
  */
 
 #include "./JPetLogger.h"
-#include <cassert>
-#include <ctime>
