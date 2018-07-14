@@ -92,26 +92,6 @@ std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFi
   return JPetTaskIOTools::setInputAndOutputFile(opts, fTaskInfo.fResetOutputPath, fTaskInfo.fInFileType, fTaskInfo.fOutFileType);
 }
 
-
-///run setup
-///No subtask -> false
-///If Is input and no reader -> false
-/// for all subtasks:
-/// s->init(fParams)
-///If is input -> get range of events to loop
-/// for all events:
-/// progress bar
-/// reader->getEntry
-/// s->run(entry)
-/// if is input outputHandler->writeToFile(entry)
-/// reader->nextEntry
-///
-/// s->terminate(subParams)
-/// fParams = merge subParams with fParams
-
-///for all events:
-///
-
 bool JPetTaskIO::run(const JPetDataInterface&)
 {
   if (fSubTasks.empty()) {
@@ -125,24 +105,21 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     }
   }
   for (const auto& pTask : fSubTasks) {
-    pTask->init(fParams); //prepare current task for file
+    pTask->init(fParams);
 
     if (isInput()) {
-      auto totalEntrys = 0ll;
       auto firstEvent = 0ll;
       auto lastEvent = 0ll;
       bool isOK = false;
-      std::tie(isOK, totalEntrys, firstEvent, lastEvent) = fInputHandler->getEventRange(fParams.getOptions());
+      std::tie(isOK, firstEvent, lastEvent) = fInputHandler->getEventRange(fParams.getOptions());
       if (!isOK) {
         ERROR("Some error occured in getEventRange");
         return false;
       }
       assert(lastEvent >= 0);
 
-      /// loop over events
       for (auto i = firstEvent; i <= lastEvent; i++) {
 
-        ///just distraction
         if (isProgressBar(fParams.getOptions())) {
           displayProgressBar(i, lastEvent);
         }
@@ -158,6 +135,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
       JPetDataInterface dummyEvent;
       pTask->run(dummyEvent);
     }
+
     JPetParams subTaskParams;
     pTask->terminate(subTaskParams);
     fParams = mergeWithExtraParams(fParams, subTaskParams);

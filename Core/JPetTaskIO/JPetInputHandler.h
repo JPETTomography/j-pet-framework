@@ -29,15 +29,13 @@ class JPetInputHandler
 public:
   JPetInputHandler();
 
-  std::tuple<bool, long long, long long, long long> getEventRange(const jpet_options_tools::OptsStrAny& options) const;
+  std::tuple<bool, long long, long long> getEventRange(const jpet_options_tools::OptsStrAny& options) const;
   bool openInput(const char* inputFileName, const JPetParams& params);
   void closeInput();
   TObject& getNextEntry();
 
   JPetTreeHeader* getHeaderClone(); /// @todo what to do with this function?
 protected:
-  std::tuple<bool, long long, long long, long long> getEventRange(const jpet_options_tools::OptsStrAny& options, long long loadedTotalEntries) const;
-
   std::unique_ptr<JPetReaderInterface> fReader{nullptr};
 
 private:

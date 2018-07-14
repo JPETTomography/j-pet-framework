@@ -23,7 +23,7 @@ JPetInputHandler::JPetInputHandler()
   fReader = jpet_common_tools::make_unique<JPetReader>() ;
 }
 
-std::tuple<bool, long long, long long, long long> JPetInputHandler::getEventRange(const jpet_options_tools::OptsStrAny& options) const
+std::tuple<bool, long long, long long> JPetInputHandler::getEventRange(const jpet_options_tools::OptsStrAny& options) const
 {
   auto totalEntries = 0ll;
   if (fReader) {
@@ -32,19 +32,14 @@ std::tuple<bool, long long, long long, long long> JPetInputHandler::getEventRang
     WARNING("no JPETReader,  totalEntries set to -1");
     totalEntries = -1;
   }
-  return getEventRange(options, totalEntries);
-}
 
-std::tuple<bool, long long, long long, long long> JPetInputHandler::getEventRange(const jpet_options_tools::OptsStrAny& options, long long loadedTotalEntries) const
-{
-  auto totalEntrys = loadedTotalEntries;
   auto firstEvent = 0ll;
   auto lastEvent = 0ll;
-  if (!JPetTaskIOTools::setUserLimits(options, totalEntrys,  firstEvent, lastEvent)) {
+  if (!JPetTaskIOTools::setUserLimits(options, totalEntries,  firstEvent, lastEvent)) {
     ERROR("in setUserLimits");
-    return std::make_tuple(false, -1, -1, -1);
+    return std::make_tuple(false, -1, -1);
   }
-  return std::make_tuple(true, totalEntrys, firstEvent, lastEvent);
+  return std::make_tuple(true, firstEvent, lastEvent);
 }
 
 bool JPetInputHandler::openInput(const char* inputFilename, const JPetParams& params)
