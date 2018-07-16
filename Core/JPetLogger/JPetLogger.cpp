@@ -14,13 +14,11 @@
  */
 
 #include "./JPetLogger.h"
-#include <boost/log/utility/record_ordering.hpp>
 
 JPetLogger::JPetLogger() { init(); }
 
 void JPetLogger::init() {
-  sink = boost::make_shared<sink_t>();
-  sink->locked_backend()->add_stream(boost::make_shared<std::ofstream>(generateFilename()));
+  sink = boost::make_shared<sink_t>(boost::log::keywords::file_name = "JPet_%Y-%m-%d_%H-%M-%S.%N.log", boost::log::keywords::auto_flush = true);
   sink->set_formatter(&JPetLogger::formatter);
   boost::log::core::get()->add_sink(sink);
   boost::log::add_common_attributes();
@@ -44,8 +42,4 @@ void JPetLogger::formatter(boost::log::record_view const& rec, boost::log::forma
 boost::log::sources::severity_logger<boost::log::trivial::severity_level>& JPetLogger::getSeverity() {
   static boost::log::sources::severity_logger<boost::log::trivial::severity_level> sev;
   return sev;
-}
-
-const std::string JPetLogger::generateFilename() {
-  return std::string("JPet_") + to_string(boost::uuids::random_generator()()) + std::string(".log");
 }

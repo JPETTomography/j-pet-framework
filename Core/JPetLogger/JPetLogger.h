@@ -27,9 +27,6 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/file.hpp>
-#include <boost/uuid/uuid.hpp>
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
 #endif
 
 /**
@@ -68,11 +65,8 @@ private:
 
 #ifndef __CINT__
 
-  typedef boost::log::sinks::text_ostream_backend backend_t;
-  typedef boost::log::sinks::synchronous_sink<backend_t> sink_t;
+  typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_file_backend> sink_t;
   boost::shared_ptr<sink_t> sink;
-
-  const std::string generateFilename();
 
   void init();
 #endif
