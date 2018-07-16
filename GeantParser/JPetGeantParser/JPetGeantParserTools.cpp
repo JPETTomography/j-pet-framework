@@ -33,7 +33,7 @@ JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, con
 
   JPetScin& scin =  paramBank.getScintillator(geantHit->GetScinID());
   mcHit.setScintillator(scin);
-
+  mcHit.setBarrelSlot(scin.getBarrelSlot());
   return mcHit;
 }
 
