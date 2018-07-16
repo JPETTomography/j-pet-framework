@@ -37,20 +37,20 @@
 
 class JPetGeantParserTools
 {
-    public:
-        static JPetMCHit createJPetMCHit(JPetGeantScinHits* geantHit,const JPetParamBank& paramBank );
+public:
+  static JPetMCHit createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank );
 
-        static JPetHit reconstructHit(JPetMCHit& hit, const JPetParamBank& paramBank, const float timeShift, const float z_resolution );
+  static JPetHit reconstructHit(JPetMCHit& hit, const JPetParamBank& paramBank, const float timeShift, const float z_resolution );
 
-        static float addEnergySmearing(float);
-        static float addZHitSmearing(float, float);
-        static float addTimeSmearing(float, float);
+  static float addEnergySmearing(float);
+  static float addZHitSmearing(float, float);
+  static float addTimeSmearing(float, float);
 
-        static bool isHitReconstructed(JPetHit& hit, const float th);
+  static bool isHitReconstructed(JPetHit& hit, const float th);
 
-        static void identifyRecoHits(JPetGeantScinHits* geantHit,const JPetHit& hit,  
-                bool& isRecPrompt , std::array<bool,2>& isSaved2g, std::array<bool,3>& isSaved3g,
-                float& enePrompt, std::array<float,2>& ene2g, std::array<float,3>& ene3g );
+  static void identifyRecoHits(JPetGeantScinHits* geantHit, const JPetHit& hit,
+                               bool& isRecPrompt, std::array<bool, 2>& isSaved2g, std::array<bool, 3>& isSaved3g,
+                               float& enePrompt, std::array<float, 2>& ene2g, std::array<float, 3>& ene3g );
 
 };
 

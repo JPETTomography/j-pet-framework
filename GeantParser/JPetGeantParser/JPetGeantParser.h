@@ -50,14 +50,14 @@ public:
 
 
 protected :
-  JPetGeomMapping* fDetectorMap; 
+  JPetGeomMapping* fDetectorMap;
 
   bool fMakeEffiHisto = true;
   bool fMakeHisto = true;
   double fMaxTime = 0.;
-  double fMinTime = -50.e6; // electronic time window 50 micro seconds - true for run 3 
-  double kSimulatedActivity = 4.7; //< in MBq; value for run3  
-  //double kSimulatedActivity = 9.38; //< in MBq; value for run3  
+  double fMinTime = -50.e6; // electronic time window 50 micro seconds - true for run 3
+  double kSimulatedActivity = 4.7; //< in MBq; value for run3
+  //double kSimulatedActivity = 9.38; //< in MBq; value for run3
 
   float fZresolution = 0.976; // 80ps   12.2  velocity
   double fExperimentalThreshold = 10; //< in keV
@@ -67,9 +67,9 @@ protected :
   double effiHisto_ene_width = 8;
 
   int effiMap_nSlice = 81;
-  float effiMap_width = 0.5; // cm  -20:20 
+  float effiMap_width = 0.5; // cm  -20:20
 
-  // internal variables 
+  // internal variables
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";
   const std::string kMinTimeWindowParamKey = "GeantParser_MinTimeWindow_double";
   const std::string kSourceActivityParamKey = "GeantParser_SourceActivity_double";
@@ -77,7 +77,7 @@ protected :
   const std::string kMakeEfficienciesParamKey = "GeantParser_MakeEfficiencies_bool";
   const std::string kZresolutionParamKey = "GeantParser_Zresolution_double";
   const std::string kEnergyThresholdParamKey = "GeantParser_EnergyThreshold_double";
-  
+
   bool kFirstTime = true;
   long activityIndex = 0;
 
@@ -96,4 +96,4 @@ protected :
 
 };
 
-#endif 
+#endif
