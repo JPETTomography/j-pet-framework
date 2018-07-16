@@ -66,7 +66,7 @@ public:
     out_stream << rec[boost::log::expressions::smessage];
   }
 
-  inline static void setLogLevel(boost::log::trivial::severity_level level) { sink->set_filter(boost::log::trivial::severity >= level); }
+  inline static void setLogLevel(boost::log::trivial::severity_level level) { JPetLogger::sink->set_filter(boost::log::trivial::severity >= level); }
 #else
   static void getSeverity();
   static void formatter();
