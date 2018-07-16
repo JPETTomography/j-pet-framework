@@ -45,8 +45,8 @@ public:
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
   void useTask(const char * name,
-    const char * inputFileType="",
-    const char * outputFileType="");
+	       const char * inputFileType="",
+	       const char * outputFileType="");
   void clearRegisteredTasks();
 
   /**
@@ -63,6 +63,10 @@ private:
   JPetManager();
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&);
+  void insertTaskIntoChain(const char * name,
+	       const char * inputFileType="",
+	       const char * outputFileType="",
+	       bool firstTask=false);
   std::map<const char*, TaskGenerator> fTasksDictionary;
   TaskGeneratorChain* fTaskGeneratorChain = nullptr;
   bool fThreadsEnabled = false;

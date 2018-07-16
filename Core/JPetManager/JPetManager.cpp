@@ -128,6 +128,10 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
       };
       fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task2);
     }
+    if (fileType == FileTypeChecker::kMCGeant) {
+      registerTask<JPetGeantParser>("JPetGeantParser");
+      insertTaskIntoChain("JPetGeantParser", "mcGeant", "mc.hits", true);
+    }
     auto paramBankHandlerTask = []() {
       return new JPetParamBankHandlerTask("ParamBank Filling");
     };
@@ -136,10 +140,6 @@ bool JPetManager::parseCmdLine(int argc, const char** argv)
       return new JPetUnzipAndUnpackTask("UnpackerAndUnzipper");
     };
     fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task);
-    if (fileType == FileTypeChecker::kMCGeant) {
-      registerTask<JPetGeantParser>("JPetGeantParser");
-      useTask("JPetGeantParser", "mcGeant", "mc.hits");
-    }
   };
   try {
     JPetOptionsGenerator optionsGenerator;
@@ -182,18 +182,23 @@ void JPetManager::setThreadsEnabled(bool enable)
  * Method that adds a Task to the Chain, managed by the Manager.
  * The JPetUserTask-based tasks are wrapped with a JPetTaskIO class.
  */
-void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
+void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType){
+  insertTaskIntoChain(name, inputFileType, outputFileType, false);
+}
+
+void JPetManager::insertTaskIntoChain(const char* name, const char* inputFileType, const char* outputFileType, bool firstTask)
 {
   assert(fTaskGeneratorChain);
   if (fTasksDictionary.count(name) > 0) {
     TaskGenerator userTaskGen = fTasksDictionary.at(name);
-    fTaskGeneratorChain->push_back(
-      [name, inputFileType, outputFileType, userTaskGen]() {
-        JPetTaskIO* task = new JPetTaskIO(name, inputFileType, outputFileType);
-        task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-        return task;
-      }
-    );
+    fTaskGeneratorChain->insert(
+                                firstTask ? fTaskGeneratorChain->begin() : fTaskGeneratorChain->end(),
+                                [name, inputFileType, outputFileType, userTaskGen]() {
+                                  JPetTaskIO* task = new JPetTaskIO(name, inputFileType, outputFileType);
+                                  task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
+                                  return task;
+                                }
+                                );
   } else {
     ERROR(Form("The requested task %s is unknown", name));
     exit(1);
