@@ -16,7 +16,7 @@
  *  Also general macro is defined that allows to create user own level of logging.
  */
 
- /**
+/**
   * @brief Configuration file for the Logger class
   * Four independent level of logging are defined: INFO, WARNING, ERROR and DEBUG.
   * Also general macro is defined that allows to create user own level of logging.
@@ -30,28 +30,32 @@
 #include "./JPetLogger/JPetLogger.h"
 
 #ifndef __CINT__
-#include <boost/log/utility/manipulators/add_value.hpp>
 #include <boost/log/attributes/scoped_attribute.hpp>
+#include <boost/log/utility/manipulators/add_value.hpp>
 #endif
 
-#define CUSTOM_LOG(logger, sev, X)                 \
-  if(true)                                         \
-  {                                                \
-    BOOST_LOG_SEV(logger, sev)                     \
-    << boost::log::add_value("Line", __LINE__)     \
-    << boost::log::add_value("File", __FILE__)     \
-    << boost::log::add_value("Function", __func__) \
-    << X;                                          \
-  }                                                \
-  else                                             \
-    (void)0
+#define CUSTOM_LOG(logger, sev, X)                                                                                                                   \
+  if (true) {                                                                                                                                        \
+    BOOST_LOG_SEV(logger, sev) << boost::log::add_value("Line", __LINE__) << boost::log::add_value("File", __FILE__)                                 \
+                               << boost::log::add_value("Function", __func__) << X;                                                                  \
+  } else                                                                                                                                             \
+  (void)0
 
-#define INFO(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::info, X)
-#define WARNING(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::warning, X)
-#define ERROR(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::error, X)
-#define DEBUG(X) CUSTOM_LOG(JPetLogger::getSeverity(), boost::log::trivial::debug, X)
-#define LOG(X, sev) CUSTOM_LOG(JPetLogger::getSevarity(), sev, X)
-#define ENABLE_DEBUG setLogLevel(boost::log::trivial::debug)
-#define DISABLE_DEBUG setLogLevel(boost::log::trivial::info)
+#define INFO(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::info, X)
+#define WARNING(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::warning, X)
+#define ERROR(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::error, X)
+#define DEBUG(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::debug, X)
+#define LOG(X, sev) CUSTOM_LOG(JPetLogger::getInstance().getSevarity(), sev, X)
+
+#define SET_MINIMAL_LOG_ERROR() JPetLogger::getInstance().setLogLevel(boost::log::trivial::error)     // prints only error messages
+#define SET_MINIMAL_LOG_WARNING() JPetLogger::getInstance().setLogLevel(boost::log::trivial::warning) // prints error + warning messages
+#define SET_MINIMAL_LOG_INFO() JPetLogger::getInstance().setLogLevel(boost::log::trivial::info)       // prints error + warning + info messages
+#define SET_MINIMAL_LOG_DEBUG() JPetLogger::getInstance().setLogLevel(boost::log::trivial::debug) // prints error + warning + info + debug messages
+
+#define SET_MINIMAL_LOG_LEVEL(X) JPetLogger::getInstance().setLogLevel(X)
+
+// for backward compability
+#define ENABLE_DEBUG JPetLogger::getInstance().setLogLevel(boost::log::trivial::debug)
+#define DISABLE_DEBUG JPetLogger::getInstance().setLogLevel(boost::log::trivial::info)
 
 #endif /* !JPETLOGGER_INCLUDE_H */
