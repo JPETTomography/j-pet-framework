@@ -47,10 +47,10 @@
 #define DEBUG(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::debug, X)
 #define LOG(X, sev) CUSTOM_LOG(JPetLogger::getInstance().getSevarity(), sev, X)
 
-#define SET_MINIMAL_LOG_ERROR JPetLogger::getInstance().setLogLevel(boost::log::trivial::error)     // prints only error messages
-#define SET_MINIMAL_LOG_WARNING JPetLogger::getInstance().setLogLevel(boost::log::trivial::warning) // prints error + warning messages
-#define SET_MINIMAL_LOG_INFO JPetLogger::getInstance().setLogLevel(boost::log::trivial::info)       // prints error + warning + info messages
-#define SET_MINIMAL_LOG_DEBUG JPetLogger::getInstance().setLogLevel(boost::log::trivial::debug)     // prints error + warning + info + debug messages
+#define SET_MINIMAL_LOG_ERROR() JPetLogger::getInstance().setLogLevel(boost::log::trivial::error)     // prints only error messages
+#define SET_MINIMAL_LOG_WARNING() JPetLogger::getInstance().setLogLevel(boost::log::trivial::warning) // prints error + warning messages
+#define SET_MINIMAL_LOG_INFO() JPetLogger::getInstance().setLogLevel(boost::log::trivial::info)       // prints error + warning + info messages
+#define SET_MINIMAL_LOG_DEBUG() JPetLogger::getInstance().setLogLevel(boost::log::trivial::debug) // prints error + warning + info + debug messages
 
 #define SET_MINIMAL_LOG_LEVEL(X) JPetLogger::getInstance().setLogLevel(X)
 
