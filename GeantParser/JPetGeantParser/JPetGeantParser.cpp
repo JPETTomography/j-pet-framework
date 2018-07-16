@@ -53,13 +53,19 @@ bool JPetGeantParser::init()
     if (isOptionSet(fParams.getOptions(), kSourceActivityParamKey)) { 
         kSimulatedActivity = getOptionAsDouble(fParams.getOptions(), kSourceActivityParamKey);
     }
-    if(isOptionSet(fParams.getOptions(), kMakeHistograms)) {
-      fMakeHisto = getOptionAsBool(fParams.getOptions(), kMakeHistograms);
+    if(isOptionSet(fParams.getOptions(), kMakeHistogramsParamKey)) {
+      fMakeHisto = getOptionAsBool(fParams.getOptions(), kMakeHistogramsParamKey);
     }
-    if(isOptionSet(fParams.getOptions(), kMakeEfficiencies)) {
-      fMakeEffiHisto = getOptionAsBool(fParams.getOptions(), kMakeEfficiencies);
+    if(isOptionSet(fParams.getOptions(), kMakeEfficienciesParamKey)) {
+      fMakeEffiHisto = getOptionAsBool(fParams.getOptions(), kMakeEfficienciesParamKey);
     }
-        
+    if (isOptionSet(fParams.getOptions(), kZresolutionParamKey)) { 
+        fZresolution = getOptionAsDouble(fParams.getOptions(), kZresolutionParamKey);
+    }
+    if (isOptionSet(fParams.getOptions(), kEnergyThresholdParamKey)) { 
+        fExperimentalThreshold = getOptionAsDouble(fParams.getOptions(), kEnergyThresholdParamKey);
+    }
+    
     if ( fMakeHisto) bookBasicHistograms();
     if ( fMakeEffiHisto ) bookEfficiencyHistograms();
 
@@ -132,10 +138,10 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
         if (fMakeHisto) fillHistoMCGen(mcHit);
 
         // create reconstructed hit and add all smearings        
-        JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit,getParamBank(), timeShift, z_resolution);
+        JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit,getParamBank(), timeShift, fZresolution);
         // add criteria for possible rejection of reconstructed events (e.g. E>50 keV)
 
-        if (JPetGeantParserTools::isHitReconstructed(recHit,experimentalThreshold)) 
+        if (JPetGeantParserTools::isHitReconstructed(recHit,fExperimentalThreshold)) 
         {
             fStoredHits.push_back(recHit);
             JPetGeantParserTools::identifyRecoHits(evPack->GetHit(i), recHit,

@@ -59,8 +59,8 @@ protected :
   double kSimulatedActivity = 4.7; //< in MBq; value for run3  
   //double kSimulatedActivity = 9.38; //< in MBq; value for run3  
 
-  float z_resolution = 0.976; // 80ps   12.2  velocity
-  double experimentalThreshold = 10; //< in keV
+  float fZresolution = 0.976; // 80ps   12.2  velocity
+  double fExperimentalThreshold = 10; //< in keV
 
   // constant for histograms
   int effiHisto_ene_nBin = 200;
@@ -73,8 +73,10 @@ protected :
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";
   const std::string kMinTimeWindowParamKey = "GeantParser_MinTimeWindow_double";
   const std::string kSourceActivityParamKey = "GeantParser_SourceActivity_double";
-  const std::string kMakeHistograms = "GeantParser_MakeHistograms_bool";
-  const std::string kMakeEfficiencies = "GeantParser_MakeEfficiencies_bool";
+  const std::string kMakeHistogramsParamKey = "GeantParser_MakeHistograms_bool";
+  const std::string kMakeEfficienciesParamKey = "GeantParser_MakeEfficiencies_bool";
+  const std::string kZresolutionParamKey = "GeantParser_Zresolution_double";
+  const std::string kEnergyThresholdParamKey = "GeantParser_EnergyThreshold_double";
   
   bool kFirstTime = true;
   long activityIndex = 0;
