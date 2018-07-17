@@ -44,7 +44,7 @@ public:
 
   /// @brief Method to register tasks that can form a chain of tasks to be executed.
   /// The registered tasks can be used later by calling useTask method.
-  /// The task must inherit from JPeTaskInterface.
+  /// The task must inherit from JPetTaskInterface.
   /// @param name c-string that identifies given registered task. Also, this string is passed to the constructor as argument.
   template<typename T>
   void registerTask(const std::string& name)
