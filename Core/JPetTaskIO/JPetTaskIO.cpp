@@ -155,18 +155,18 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
 
   if (isOutput()) {
     if (!fHeader) {
-      ERROR("fHeader set to null");
+      ERROR("Tree header is not set,");
       return false;
     }
     if (!fStatistics.get()) {
-      ERROR("fStatistics set to null");
+      ERROR("Statistics container with histograms is not set.");
       return false;
     }
     fOutputHandler->saveAndCloseOutput(getParamManager(), fHeader, fStatistics.get(), fSubTasksStatistics);
   }
   if (isInput()) {
     if (!fInputHandler) {
-      ERROR("fInputHandler set to null");
+      ERROR("fInputHandler set to null.");
       return false;
     }
     fInputHandler->closeInput();
