@@ -47,7 +47,7 @@ public:
   /// The task must inherit from JPeTaskInterface.
   /// @param name c-string that identifies given registered task. Also, this string is passed to the constructor as argument.
   template<typename T>
-  void registerTask(const char* name)
+  void registerTask(const std::string& name)
   {
     fTaskFactory.registerTask<T>(name);
   }
@@ -63,7 +63,7 @@ public:
   /// @param outputFileType c-string corresponding to the output file extension. If empty, the task with no typical output is assumed.
   /// @param numTimes Number of times given task will be executed in a row. If value is less then zero, the task will be executed in infinite loop and some condition must be given to stop it.
   /// @throws exception in case of errors.
-  void useTask(const char* name, const char* inputFileType = "", const char* outputFileType = "", int numTimes = 1);
+  void useTask(const std::string& name, const std::string& inputFileType = "", const std::string& outputFileType = "", int numTimes = 1);
 
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
