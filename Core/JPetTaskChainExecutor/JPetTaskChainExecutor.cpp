@@ -53,15 +53,15 @@ bool JPetTaskChainExecutor::process()
     timer.startMeasurement();
     INFO(Form("Starting task: %s", taskName.c_str()));
     if (!currentTask->init(currParams)) {
-      ERROR("In task initialization");
+      ERROR("In task " + taskName + " init()");
       return false;
     }
     if (!currentTask->run(nullDataObject)) {
-      ERROR("In task run()");
+      ERROR("In task " + taskName + " run()");
       return false;
     }
     if (!currentTask->terminate(controlParams)) { /// Here controParams can be modified by the current task.
-      ERROR("In task terminate() ");
+      ERROR("In task " + taskName + " terminate()");
       return false;
     }
     timer.stopMeasurement("task " + taskName);
