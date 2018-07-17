@@ -78,7 +78,7 @@ public:
     */
   static std::string getTimeString()
   {
-    time_t _tm = time(NULL );
+    time_t _tm = time(NULL);
     struct tm* curtime = localtime ( &_tm );
     char buf[100];
     strftime( buf, 100, "%d.%m.%Y %R", curtime);
