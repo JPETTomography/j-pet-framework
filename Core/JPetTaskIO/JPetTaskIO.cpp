@@ -72,13 +72,13 @@ bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
 
   if (isInput()) {
     if (!createInputObjects(inputFilename.c_str())) {
-      ERROR("createInputObjects");
+      ERROR("createInputObjects with the input file:" + inputFilename);
       return false;
     }
   }
   if (isOutput()) {
     if (!createOutputObjects(outFileFullPath.c_str())) {
-      ERROR("createOutputObjects");
+      ERROR("createOutputObjects with the output file:" + outFileFullPath);
       return false;
     }
   }
@@ -127,6 +127,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
         pTask->run(event);
         if (isOutput()) {
           if (!fOutputHandler->writeEventToFile(pTask.get())) {
+            WARNING("Some problems occured, while writing the event to file.");
             return false;
           }
         }
