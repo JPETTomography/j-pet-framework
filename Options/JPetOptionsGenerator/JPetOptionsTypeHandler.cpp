@@ -25,8 +25,9 @@ const std::vector<std::string> JPetOptionsTypeHandler::kAllowedTypes = {
   "std::vector<std::string>",
   "std::vector<int>", "float"};
 
-std::map<std::string, std::string> JPetOptionsTypeHandler::anyMapToStringMap(
-  const std::map<std::string, boost::any>& optionsMap)
+const std::vector<std::string> JPetOptionsTypeHandler::kAllowedTypes = {"int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>", "float", "double"};
+
+std::map<std::string, std::string> JPetOptionsTypeHandler::anyMapToStringMap(const std::map<std::string, boost::any>& optionsMap)
 {
   using boost::any_cast;
   std::map<std::string, std::string> newOptionsMap;
