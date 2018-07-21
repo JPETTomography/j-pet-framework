@@ -45,7 +45,7 @@ public:
   /// @brief Method to register tasks that can form a chain of tasks to be executed.
   /// The registered tasks can be used later by calling useTask method.
   /// The task must inherit from JPetTaskInterface.
-  /// @param name c-string that identifies given registered task. Also, this string is passed to the constructor as argument.
+  /// @param name string that identifies given registered task. Also, this string is passed to the constructor as argument.
   template<typename T>
   void registerTask(const std::string& name)
   {
@@ -58,9 +58,9 @@ public:
   /// The following format is used: fileNameRoot.fileType.root  e.g. if inputFileType is "raw" and file name is "bla", then
   /// the input file name is expected to be "bla.raw.root". There are some labels that are treated separately e.g.
   /// "zip" or "hld". If the outputFileType is the empty string then the task is assumed to have no output tree.
-  /// @param name c-string that identifies registered task. Also, this string is passed to the constructor as argument.
-  /// @param inputFileType c-string corresponding to the input file extension. If empty, the task with no typical input is assumed.
-  /// @param outputFileType c-string corresponding to the output file extension. If empty, the task with no typical output is assumed.
+  /// @param name string that identifies registered task. Also, this string is passed to the constructor as argument.
+  /// @param inputFileType string corresponding to the input file extension. If empty, the task with no typical input is assumed.
+  /// @param outputFileType string corresponding to the output file extension. If empty, the task with no typical output is assumed.
   /// @param numTimes Number of times given task will be executed in a row. If value is less then zero, the task will be executed in infinite loop and some condition must be given to stop it.
   /// @throws exception in case of errors.
   void useTask(const std::string& name, const std::string& inputFileType = "", const std::string& outputFileType = "", int numTimes = 1);

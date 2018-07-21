@@ -79,7 +79,7 @@ public:
   TaskGeneratorChain createTaskGeneratorChain(const std::map<std::string, boost::any>& options) const;
 
   /// @brief Method to register the task generator. TDerived corresponds to the task type.
-  ///  The name string is also passed as c-string parameter to the class constructor.
+  ///  The name string is also passed as string parameter to the class constructor.
   /// @param name string that plays a role of the unique identifier of the task. If the previously used name is given the task generator will overwrite the previous one.
   template<typename TDerived>
   void registerTask(const std::string& name)
