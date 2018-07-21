@@ -14,9 +14,9 @@ class TestClass: public JPetTask
 {
   public:
   explicit TestClass(const char* name):JPetTask(name) {;}
-  virtual bool init(const JPetParamsInterface&) override {return true;}
+  virtual bool init(const JPetParams&) override {return true;}
   virtual bool run(const JPetDataInterface&)  override {return true;}
-  virtual bool terminate(JPetParamsInterface&)  override {return true;}
+  virtual bool terminate(JPetParams&)  override {return true;}
 };
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)

@@ -24,10 +24,9 @@
 JPetUnzipAndUnpackTask::JPetUnzipAndUnpackTask(const char* name):
   JPetTask(name), fUnpackHappened(false){}
 
-bool JPetUnzipAndUnpackTask::init(const JPetParamsInterface& inOptions)
+bool JPetUnzipAndUnpackTask::init(const JPetParams& inParams)
 {
-  auto params = dynamic_cast<const JPetParams&>(inOptions);
-  fOptions = params.getOptions();
+  fOptions = inParams.getOptions();
   return true;
 }
 
@@ -62,11 +61,10 @@ bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
   return true;
 }
 
-bool JPetUnzipAndUnpackTask::terminate(JPetParamsInterface& output_params)
+bool JPetUnzipAndUnpackTask::terminate(JPetParams& outParams)
 {
   using namespace jpet_options_tools;
   if (fUnpackHappened) {
-    auto& params = dynamic_cast<JPetParams&>(output_params);
     OptsStrAny new_opts;
     jpet_options_generator_tools::setOutputFileType(new_opts, "hldRoot");
     if (jpet_options_tools::isOptionSet(fOptions, "firstEvent_int") &&
@@ -79,7 +77,7 @@ bool JPetUnzipAndUnpackTask::terminate(JPetParamsInterface& output_params)
     jpet_options_generator_tools::setOutputFile(new_opts,
       JPetCommonTools::replaceDataTypeInFileName(getInputFile(fOptions), "hld")
     );
-    params = JPetParams(new_opts, params.getParamManagerAsShared());
+    outParams = JPetParams(new_opts, outParams.getParamManagerAsShared());
   }
   return true;
 }

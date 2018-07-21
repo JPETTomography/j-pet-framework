@@ -25,9 +25,9 @@ class JPetUnzipAndUnpackTask: public JPetTask
 public:
   using OptsStrAny = std::map<std::string, boost::any>;
   explicit JPetUnzipAndUnpackTask(const char* name = "");
-  bool init(const JPetParamsInterface& inOptions) override;
+  bool init(const JPetParams& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
-  bool terminate(JPetParamsInterface& outOptions) override;
+  bool terminate(JPetParams& outOptions) override;
   static void unpackFile(const std::string& filename, long long nevents,
     const std::string& configfile, const std::string& calibfile);
   static bool unzipFile(const std::string& filename);

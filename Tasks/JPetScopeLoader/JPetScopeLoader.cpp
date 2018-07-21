@@ -113,12 +113,12 @@ bool JPetScopeLoader::isCorrectScopeFileName(const std::string& filename) const
   return regex_match(filename, pattern);
 }
 
-bool JPetScopeLoader::init(const JPetParamsInterface& paramsI)
+bool JPetScopeLoader::init(const JPetParams& in_params)
 {
   using namespace jpet_options_tools;
 
   INFO( "Initialize Scope Loader Module." );
-  JPetTaskIO::init(paramsI);
+  JPetTaskIO::init(in_params);
   DEBUG( "After initialization  of the JPetTaskIO in Scope Loader init." );
   return true;
 }
@@ -154,16 +154,14 @@ bool JPetScopeLoader::run(const JPetDataInterface&)
   return true;
 }
 
-bool JPetScopeLoader::terminate(JPetParamsInterface& output_params)
+bool JPetScopeLoader::terminate(JPetParams& output_params)
 {
-  auto& params = dynamic_cast<JPetParams&>(output_params);
   OptsStrAny new_opts;
   jpet_options_generator_tools::setOutputFile(new_opts, fTaskInfo.fOutFileFullPath);
-  params = JPetParams(new_opts, params.getParamManagerAsShared());
+  output_params = JPetParams(new_opts, output_params.getParamManagerAsShared());
 
   assert(fHeader);
   assert(fStatistics);
-  //fOutputHandler->saveAndCloseOutput(getParamManager(), fHeader.get(), fStatistics.get(), fSubTasksStatistics);
   fOutputHandler->saveAndCloseOutput(getParamManager(), fHeader, fStatistics.get(), fSubTasksStatistics);
   return true;
 }
@@ -181,7 +179,7 @@ bool JPetScopeLoader::createOutputObjects(const char* outputFilename)
 
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
       auto task = dynamic_cast<JPetScopeTask*>((*fSubTask).get());
-      
+
       assert(!fHeader);
       //fHeader = jpet_common_tools::make_unique<JPetTreeHeader>(getRunNumber(opts));
       fHeader = new JPetTreeHeader(getRunNumber(opts));

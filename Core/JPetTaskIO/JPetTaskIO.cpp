@@ -49,10 +49,9 @@ void JPetTaskIO::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
   fSubTasks.push_back(std::move(subTask));
 }
 
-bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
+bool JPetTaskIO::init(const JPetParams& params)
 {
   using namespace jpet_options_tools;
-  auto params = dynamic_cast<const JPetParams&>(paramsI);
   setParams(params);
   auto opts = fParams.getOptions();
 
@@ -144,14 +143,13 @@ bool JPetTaskIO::run(const JPetDataInterface&)
   return true;
 }
 
-bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
+bool JPetTaskIO::terminate(JPetParams& output_params)
 {
-  auto& params = dynamic_cast<JPetParams&>(output_params);
   if (isOutput()) {
     auto newOpts = JPetTaskIOTools::setOutputOptions(fParams, fTaskInfo.fResetOutputPath, fTaskInfo.fOutFileFullPath);
-    params = JPetParams(newOpts, fParams.getParamManagerAsShared());
+    output_params = JPetParams(newOpts, fParams.getParamManagerAsShared());
   } else {
-    params = fParams;
+    output_params = fParams;
   }
 
   if (isOutput()) {

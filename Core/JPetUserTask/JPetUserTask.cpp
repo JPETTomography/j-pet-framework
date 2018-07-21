@@ -18,9 +18,9 @@
 
 JPetUserTask::JPetUserTask(const char* name): JPetTask(name) {}
 
-bool JPetUserTask::init(const JPetParamsInterface& inOptions)
+bool JPetUserTask::init(const JPetParams& inOptions)
 {
-  fParams = dynamic_cast<const JPetParams&>(inOptions);
+  fParams = inOptions;
   return init();
 }
 
@@ -36,10 +36,10 @@ bool JPetUserTask::run(const JPetDataInterface& inData)
   return exec();
 }
 
-bool JPetUserTask::terminate(JPetParamsInterface& outOptions)
+bool JPetUserTask::terminate(JPetParams& outOptions)
 {
   bool result = terminate();
-  dynamic_cast<JPetParams&>(outOptions) = fParams;
+  outOptions = fParams;
   return result;
 }
 

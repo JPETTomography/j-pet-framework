@@ -51,9 +51,9 @@ class JPetTaskIO: public JPetTask
 public:
 
   JPetTaskIO(const char* name = "", const char* in_file_type = "", const char* out_file_type = "");
-  virtual bool init(const JPetParamsInterface& inOptions) override;
+  virtual bool init(const JPetParams& inOptions) override;
   virtual bool run(const JPetDataInterface& inData) override;
-  virtual bool terminate(JPetParamsInterface& outOptions) override;
+  virtual bool terminate(JPetParams& outOptions) override;
   virtual ~JPetTaskIO();
   virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
   /// @brief Currently this method passes "stopIteration_bool" option from subTask to fParams if present.

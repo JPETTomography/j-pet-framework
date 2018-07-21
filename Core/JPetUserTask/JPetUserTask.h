@@ -16,7 +16,6 @@
 #ifndef JPETUSERTASK_H
 #define JPETUSERTASK_H
 #include "JPetTask/JPetTask.h"
-#include "JPetParamsInterface/JPetParamsInterface.h"
 #include "JPetParams/JPetParams.h"
 #include "JPetStatistics/JPetStatistics.h"
 #include "JPetParamBank/JPetParamBank.h"
@@ -25,14 +24,14 @@
 /**
  * @brief abstract class that should be used as a main parent class for user tasks
  * The class realizes the  method template pattern:
- * The bool init(const JPetParamsInterface& inOptions),  bool terminate(JPetParamsInterface& outOptions)
+ * The bool init(const JPetParams& inOptions),  bool terminate(JPetParams& outOptions)
  * and bool run()
  * are implemented as non-virtual and inside its body the virtual bool init(), bool terminate() methods
  * and bool exec methods(respectively) are being called.
  * bool init() and bool terminate() methods are ment to be implemented by user in the inherited class.
  *
- * The fParams field is set to inOptions by calling bool init(const JPetParamsInterface& inOptions) method  and its is
- * passed as outOptions while calling bool terminate(JPetParamsInterface& outOptions)
+ * The fParams field is set to inOptions by calling bool init(const JPetParams& inOptions) method  and its is
+ * passed as outOptions while calling bool terminate(JPetParams& outOptions)
  *
  * The user should implement bool init(), bool exec() and bool terminate() methods in the inherited class.
  */
@@ -42,9 +41,9 @@ public:
   explicit JPetUserTask(const char* name = "");
   virtual ~JPetUserTask() {};
 
-  bool init(const JPetParamsInterface& inOptions) override;
+  bool init(const JPetParams& inOptions) override;
   bool run(const JPetDataInterface& inData) override; /// This function cleans the fOutputEvents array before starting the execution.
-  bool terminate(JPetParamsInterface& outOptions) override;
+  bool terminate(JPetParams& outOptions) override;
 
   virtual void setStatistics(JPetStatistics* statistics);
   JPetStatistics& getStatistics();

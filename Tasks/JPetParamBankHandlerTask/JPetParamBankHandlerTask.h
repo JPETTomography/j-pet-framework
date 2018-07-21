@@ -32,9 +32,9 @@ class JPetParamBankHandlerTask : public JPetTask
 {
 public:
   explicit JPetParamBankHandlerTask(const char* name = "");
-  bool init(const JPetParamsInterface& inOptions) override;
+  bool init(const JPetParams& inOptions) override;
   bool run(const JPetDataInterface&) override;
-  bool terminate(JPetParamsInterface&) override;
+  bool terminate(JPetParams&) override;
 
 private:
   bool generateParamBankFromConfig(const JPetParams& params);

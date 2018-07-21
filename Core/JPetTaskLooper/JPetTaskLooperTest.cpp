@@ -4,7 +4,6 @@
 #include "JPetTaskLooper/JPetTaskLooper.h"
 #include "JPetUserTask/JPetUserTask.h"
 #include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
-#include "JPetParamsInterface/JPetParamsInterface.h"
 #include "JPetTaskIO/JPetTaskIO.h"
 #include "JPetCommonTools/JPetCommonTools.h"
 
@@ -12,7 +11,7 @@ class TestTask: public JPetTask
 {
 public:
   TestTask(const char* name = ""): JPetTask(name) {}
-  bool init(const JPetParamsInterface&) override
+  bool init(const JPetParams&) override
   {
     return true;
   }
@@ -21,7 +20,7 @@ public:
     fRunCounter++;
     return true;
   }
-  bool terminate(JPetParamsInterface&) override
+  bool terminate(JPetParams&) override
   {
     return true;
   }
@@ -33,7 +32,7 @@ class TestTaskRun20Times: public JPetTask
 {
 public:
   TestTaskRun20Times(const char* name = ""): JPetTask(name) {}
-  bool init(const JPetParamsInterface& paramsI) override
+  bool init(const JPetParams& paramsI) override
   {
     fParams = static_cast<const JPetParams&>(paramsI);
     return true;
@@ -43,7 +42,7 @@ public:
     fRunCounter++;
     return true;
   }
-  bool terminate(JPetParamsInterface& paramsO) override
+  bool terminate(JPetParams& paramsO) override
   {
     auto& params = static_cast<JPetParams&>(paramsO);
     /// Here I set the condition that it should stop after 20th iteration, but it can be some other condition.
@@ -116,7 +115,7 @@ BOOST_AUTO_TEST_CASE( my_test_10_iterations)
   using namespace jpet_options_generator_tools;
   const int maxIter = 10;
   int counter = 0;
-  auto condFunc = [maxIter, &counter](const JPetParamsInterface&)->bool {
+  auto condFunc = [maxIter, &counter](const JPetParams&)->bool {
     if (counter < maxIter)
     {
       counter++;

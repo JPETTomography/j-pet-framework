@@ -20,7 +20,7 @@ using namespace jpet_options_tools;
 JPetParams::JPetParams(): fParamManager(0) {}
 
 JPetParams::JPetParams(const OptsStrAny& opts,
-  std::shared_ptr<JPetParamManager> mgr): fOptions(opts), fParamManager(mgr) {}
+                       std::shared_ptr<JPetParamManager> mgr): fOptions(opts), fParamManager(mgr) {}
 
 OptsStrAny JPetParams::getOptions() const
 {

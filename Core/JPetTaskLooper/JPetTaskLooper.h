@@ -19,19 +19,19 @@
 #include <memory>
 #include "./JPetParams/JPetParams.h"
 
-using Predicate=std::function<bool(const JPetParamsInterface& params)>;
+using Predicate=std::function<bool(const JPetParams& params)>;
 
-class JPetTaskLooper: public JPetTask 
+class JPetTaskLooper: public JPetTask
 {
 public:
   static Predicate getMaxIterationPredicate(int maxIteration);
   static Predicate getStopOnOptionPredicate(const std::string optionName);
 
-  JPetTaskLooper(const char* name, std::unique_ptr<JPetTask> subtask, Predicate isCondition = [](const JPetParamsInterface&){return false;});
+  JPetTaskLooper(const char* name, std::unique_ptr<JPetTask> subtask, Predicate isCondition = [](const JPetParams&){return false;});
   virtual ~JPetTaskLooper(){}
-  bool init(const JPetParamsInterface& inOptions) override;
+  bool init(const JPetParams& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
-  bool terminate(JPetParamsInterface& outOptions) override;
+  bool terminate(JPetParams& outOptions) override;
   void setConditionFunction(Predicate isCondition);
 protected:
   Predicate fIsCondition;
