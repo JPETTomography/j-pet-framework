@@ -36,8 +36,8 @@
 class JPetStatistics: public TObject
 {
 public:
-  JPetStatistics() {}
-  JPetStatistics(const JPetStatistics& copy);
+  JPetStatistics();
+  JPetStatistics(const JPetStatistics& old);
   ~JPetStatistics();
   void createHistogram(TObject* object);
   void createGraph(TObject* object);

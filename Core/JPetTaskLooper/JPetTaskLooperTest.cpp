@@ -52,13 +52,46 @@ public:
       newOpts["stopIteration_bool"] = true;
       params = JPetParams(newOpts, nullptr);
     } else {
-        params = fParams;
+      params = fParams;
     }
     return true;
   }
   int fRunCounter = 0;
   JPetParams fParams;
 };
+
+class TestLooperUserTask: public JPetUserTask
+{
+public:
+  TestLooperUserTask(const char* name = ""): JPetUserTask(name) {}
+  virtual ~TestLooperUserTask()
+  {
+    ;
+  }
+  int fRunCounter = 0;
+
+protected:
+  bool init()
+  {
+    return true;
+  }
+  bool exec()
+  {
+    fRunCounter++;
+    return true;
+  }
+  bool terminate()
+  {
+    /// Here I set the condition that it should stop after 100th iteration, but it can be some other condition.
+    if (fRunCounter == 100) {
+      auto newOpts = getOptions();
+      newOpts["stopIteration_bool"] = true;
+      fParams = JPetParams(newOpts, fParams.getParamManagerAsShared());
+    }
+    return true;
+  }
+};
+
 BOOST_AUTO_TEST_SUITE(JPetTaskTestSuite)
 
 BOOST_AUTO_TEST_CASE( my_test_false_predicate)
@@ -159,7 +192,7 @@ BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO)
 
   using namespace jpet_options_generator_tools;
 
-  auto task = jpet_common_tools::make_unique<JPetTaskIO>("bla","" ,"" );
+  auto task = jpet_common_tools::make_unique<JPetTaskIO>("bla", "" , "" );
   task->addSubTask(std::unique_ptr<JPetTask>(new TestTaskRun20Times));
   JPetTaskLooper looper("bla", std::move(task), condFunc);
 
@@ -181,5 +214,65 @@ BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO)
   auto subTaskIO = dynamic_cast<JPetTaskIO*>(looper.getSubTasks()[0]);
   auto subSubTask = dynamic_cast<TestTaskRun20Times*>(subTaskIO->getSubTasks()[0]);
   BOOST_REQUIRE_EQUAL(subSubTask->fRunCounter, 20);
+}
+
+BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO_2)
+{
+  const int maxIter = 10;
+  auto condFunc =  JPetTaskLooper::getMaxIterationPredicate(maxIter);
+  using namespace jpet_options_generator_tools;
+
+  auto task = jpet_common_tools::make_unique<JPetTaskIO>("IOBla", "" , "" );
+  task->addSubTask(jpet_common_tools::make_unique<TestLooperUserTask>("userBla"));
+  JPetTaskLooper looper("looperBla", std::move(task), condFunc);
+
+  auto opt = getDefaultOptions();
+  JPetParams inputParams;
+  inputParams = JPetParams(opt, nullptr);
+
+  auto result = looper.init(inputParams);
+  BOOST_REQUIRE(result);
+  JPetDataInterface nullDataObject;
+  result = looper.run(nullDataObject);
+  BOOST_REQUIRE(result);
+
+  JPetParams outputParams;
+  result = looper.terminate(outputParams);
+  BOOST_REQUIRE(result);
+
+  auto subTaskIO = dynamic_cast<JPetTaskIO*>(looper.getSubTasks()[0]);
+  auto subSubTask = dynamic_cast<TestLooperUserTask*>(subTaskIO->getSubTasks()[0]);
+  BOOST_REQUIRE_EQUAL(subSubTask->fRunCounter, 10);
+}
+
+BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO_3)
+{
+  std::string optName = "stopIteration_bool";
+  auto condFunc =  JPetTaskLooper::getStopOnOptionPredicate(optName);
+
+  using namespace jpet_options_generator_tools;
+
+  auto task = jpet_common_tools::make_unique<JPetTaskIO>("IOBla", "" , "" );
+  task->addSubTask(jpet_common_tools::make_unique<TestLooperUserTask>("userBla"));
+  JPetTaskLooper looper("looperBla", std::move(task), condFunc);
+
+  auto opt = getDefaultOptions();
+  opt[optName] = false;
+  JPetParams inputParams;
+  inputParams = JPetParams(opt, nullptr);
+
+  auto result = looper.init(inputParams);
+  BOOST_REQUIRE(result);
+  JPetDataInterface nullDataObject;
+  result = looper.run(nullDataObject);
+  BOOST_REQUIRE(result);
+
+  JPetParams outputParams;
+  result = looper.terminate(outputParams);
+  BOOST_REQUIRE(result);
+
+  auto subTaskIO = dynamic_cast<JPetTaskIO*>(looper.getSubTasks()[0]);
+  auto subSubTask = dynamic_cast<TestLooperUserTask*>(subTaskIO->getSubTasks()[0]);
+  BOOST_REQUIRE_EQUAL(subSubTask->fRunCounter, 100);
 }
 BOOST_AUTO_TEST_SUITE_END()
