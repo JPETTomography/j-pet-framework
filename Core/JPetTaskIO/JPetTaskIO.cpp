@@ -49,7 +49,6 @@ void JPetTaskIO::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
   fSubTasks.push_back(std::move(subTask));
 }
 
-
 bool JPetTaskIO::init(const JPetParamsInterface& paramsI)
 {
   using namespace jpet_options_tools;
@@ -111,6 +110,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
       auto firstEvent = 0ll;
       auto lastEvent = 0ll;
       bool isOK = false;
+      assert(fInputHandler);
       std::tie(isOK, firstEvent, lastEvent) = fInputHandler->getEventRange(fParams.getOptions());
       if (!isOK) {
         ERROR("Some error occured in getEventRange");
@@ -149,7 +149,7 @@ bool JPetTaskIO::terminate(JPetParamsInterface& output_params)
   auto& params = dynamic_cast<JPetParams&>(output_params);
   if (isOutput()) {
     auto newOpts = JPetTaskIOTools::setOutputOptions(fParams, fTaskInfo.fResetOutputPath, fTaskInfo.fOutFileFullPath);
-    params = JPetParams(newOpts, params.getParamManagerAsShared()); ///@todo add comment or make it more explicit how it work.
+    params = JPetParams(newOpts, fParams.getParamManagerAsShared());
   } else {
     params = fParams;
   }
@@ -212,6 +212,10 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
     return false;
   }
   fOutputHandler = jpet_common_tools::make_unique<JPetOutputHandler>(outputFilename);
+  if (!fOutputHandler) {
+    ERROR("OutputHandler is not set, cannot creat output file.");
+    return false;
+  }
   using namespace jpet_options_tools;
   auto options = fParams.getOptions();
   if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ) {
@@ -223,8 +227,13 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
     // add general info to the Tree header
     fHeader->setBaseFileName(getInputFile(options).c_str());
   } else {
-    // read the header from the previous analysis stage
-    fHeader = fInputHandler->getHeaderClone();
+    if (isInput()) {
+      // read the header from the previous analysis stage
+      fHeader = fInputHandler->getHeaderClone();
+    } else {
+      ERROR("We are trying to load Tree Header from the input file, and no input is set.");
+      return false;
+    }
   }
 
   fStatistics = jpet_common_tools::make_unique<JPetStatistics>();
@@ -244,7 +253,7 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
                                           + std::string(" subtask ")
                                           + std::to_string(i)
                                           + std::string(" stats");
-      fSubTasksStatistics[subtaskStatisticsName] = std::move(std::unique_ptr<JPetStatistics>(new JPetStatistics(*fStatistics)));
+      fSubTasksStatistics[subtaskStatisticsName] = std::move(jpet_common_tools::make_unique<JPetStatistics>(*fStatistics));
       task->setStatistics(fSubTasksStatistics[subtaskStatisticsName].get());
       i++;
     }
