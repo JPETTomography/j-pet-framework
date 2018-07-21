@@ -63,20 +63,24 @@ bool JPetTaskIO::init(const JPetParams& params)
   std::tie(isOK, inputFilename, outFileFullPath, resetOutputPath) = setInputAndOutputFile(opts);
   fTaskInfo.fOutFileFullPath = outFileFullPath;
   fTaskInfo.fResetOutputPath = resetOutputPath;
+
+  auto subTaskName = getFirstSubTaskName();
   if (!isOK) {
-    ERROR("Some error occured in setInputAndOutputFile");
+    ERROR("Some error occured in setInputAndOutputFile, subtask name:" + subTaskName);
     return false;
   }
 
   if (isInput()) {
     if (!createInputObjects(inputFilename.c_str())) {
       ERROR("createInputObjects with the input file:" + inputFilename);
+      ERROR("Subtask name:" + subTaskName);
       return false;
     }
   }
   if (isOutput()) {
     if (!createOutputObjects(outFileFullPath.c_str())) {
       ERROR("createOutputObjects with the output file:" + outFileFullPath);
+      ERROR("Subtask name:" + subTaskName);
       return false;
     }
   }
@@ -145,6 +149,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
 
 bool JPetTaskIO::terminate(JPetParams& output_params)
 {
+  auto subTaskName = getFirstSubTaskName();
   if (isOutput()) {
     auto newOpts = JPetTaskIOTools::setOutputOptions(fParams, fTaskInfo.fResetOutputPath, fTaskInfo.fOutFileFullPath);
     output_params = JPetParams(newOpts, fParams.getParamManagerAsShared());
@@ -155,10 +160,12 @@ bool JPetTaskIO::terminate(JPetParams& output_params)
   if (isOutput()) {
     if (!fHeader) {
       ERROR("Tree header is not set,");
+      ERROR("Subtask name:" + subTaskName);
       return false;
     }
     if (!fStatistics.get()) {
       ERROR("Statistics container with histograms is not set.");
+      ERROR("Subtask name:" + subTaskName);
       return false;
     }
     fOutputHandler->saveAndCloseOutput(getParamManager(), fHeader, fStatistics.get(), fSubTasksStatistics);
@@ -166,6 +173,7 @@ bool JPetTaskIO::terminate(JPetParams& output_params)
   if (isInput()) {
     if (!fInputHandler) {
       ERROR("fInputHandler set to null.");
+      ERROR("Subtask name:" + subTaskName);
       return false;
     }
     fInputHandler->closeInput();
@@ -301,3 +309,15 @@ JPetParams JPetTaskIO::mergeWithExtraParams(const JPetParams& oldParams, const J
   return JPetParams(oldOpts, oldParams.getParamManagerAsShared());
 }
 
+std::string JPetTaskIO::getFirstSubTaskName() const
+{
+  std::string subTaskName;
+  auto subtasks = getSubTasks();
+  if (subtasks.size()>0) {
+    auto subTask = subtasks[0];
+    if (subTask) {
+      subTaskName = subTask->getName();
+    }
+  }
+  return subTaskName;
+}

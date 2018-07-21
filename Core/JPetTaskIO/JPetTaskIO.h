@@ -74,11 +74,12 @@ protected:
 
   const JPetParamBank& getParamBank();
   JPetParamManager& getParamManager();
+  std::string getFirstSubTaskName() const;
 
   TaskIOFileInfo fTaskInfo;
 
-  bool fIsOutput = true; /// Temporary and very nasty way to mark that the output will be saved.
-  bool fIsInput = true; /// Temporary and very nasty way to mark that the input will be read.
+  bool fIsOutput = true;
+  bool fIsInput = true;
   JPetParams fParams;
 
   JPetTreeHeader* fHeader{nullptr};
