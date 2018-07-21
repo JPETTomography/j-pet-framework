@@ -27,8 +27,13 @@ bool JPetUserTask::init(const JPetParamsInterface& inOptions)
 bool JPetUserTask::run(const JPetDataInterface& inData)
 {
   clearOutputEvents();
-  auto event = dynamic_cast<const JPetData&>(inData);
-  setEvent(&(event.getEvent()));
+  try {
+    auto event = dynamic_cast<const JPetData&>(inData);
+    setEvent(&(event.getEvent()));
+  } catch (const std::bad_cast& ex) {
+    ERROR("Input data type is not the expected one in User Task");
+    return false;
+  }
   return exec();
 }
 
