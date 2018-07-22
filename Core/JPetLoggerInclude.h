@@ -20,8 +20,6 @@
   * @brief Configuration file for the Logger class
   * Four independent level of logging are defined: INFO, WARNING, ERROR and DEBUG.
   * Also general macro is defined that allows to create user own level of logging.
-  * See
-  * http://www.cs.technion.ac.il/users/yechiel/c++-faq/macros-with-multi-stmts.html
   */
 
 #ifndef JPETLOGGER_INCLUDE_H
@@ -34,6 +32,9 @@
 #include <boost/log/utility/manipulators/add_value.hpp>
 #endif
 
+/* Macro with multi-line statement
+ * See: http://www.cs.technion.ac.il/users/yechiel/c++-faq/macros-with-multi-stmts.html
+ */
 #define CUSTOM_LOG(logger, sev, X)                                                                                                                   \
   if (true) {                                                                                                                                        \
     BOOST_LOG_SEV(logger, sev) << boost::log::add_value("Line", __LINE__) << boost::log::add_value("File", __FILE__)                                 \
@@ -41,10 +42,21 @@
   } else                                                                                                                                             \
   (void)0
 
+/* To log information you should use macros INFO(X), WARNING(X), ERROR(X), DEBUG(X) or
+ * if you want to provie your own level of sevarity of message use macro LOG(X, sev).
+ *
+ * DO not use macro CUSTOM_LOG.
+ *
+ * Example usage: INFO("Log message");
+ *
+ * This message will be logged to file "JPet_%Y-%m-%d_%H-%M-%S.%N.log" if minimal log level is above or equal info.
+ *
+*/
 #define INFO(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::info, X)
 #define WARNING(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::warning, X)
 #define ERROR(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::error, X)
 #define DEBUG(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::debug, X)
+
 #define LOG(X, sev) CUSTOM_LOG(JPetLogger::getInstance().getSevarity(), sev, X)
 
 #define SET_MINIMAL_LOG_ERROR() JPetLogger::getInstance().setLogLevel(boost::log::trivial::error)     // prints only error messages
