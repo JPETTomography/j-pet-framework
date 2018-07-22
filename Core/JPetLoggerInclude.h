@@ -33,6 +33,7 @@
 #endif
 
 /* Macro with multi-line statement
+ * DO not use directly, instead use INFO, WARNING, ERROR, DEBUG or LOG macros
  * See: http://www.cs.technion.ac.il/users/yechiel/c++-faq/macros-with-multi-stmts.html
  */
 #define CUSTOM_LOG(logger, sev, X)                                                                                                                   \
@@ -50,6 +51,19 @@
  * Example usage: INFO("Log message");
  *
  * This message will be logged to file "JPet_%Y-%m-%d_%H-%M-%S.%N.log" if minimal log level is above or equal info.
+ *
+ * To use LOG macro you need to define your own enum with severity levels e.g.:
+ *
+ * enum severity_level
+ * {
+ *   normal,
+ *   notification,
+ *   warning,
+ *   error,
+ *   critical
+ * };
+ *
+ * And then use it as LOG("Log message", critical);
  *
 */
 #define INFO(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::info, X)
