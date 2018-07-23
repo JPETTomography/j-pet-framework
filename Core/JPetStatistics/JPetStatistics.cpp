@@ -17,10 +17,14 @@
 
 ClassImp(JPetStatistics);
 
-JPetStatistics::JPetStatistics(const JPetStatistics& copy)
+JPetStatistics::JPetStatistics()
 {
-  fStats.AddAll(copy.getStatsTable());
-  fCounters = copy.fCounters;
+  ;
+}
+JPetStatistics::JPetStatistics(const JPetStatistics& old)
+{
+  fStats.AddAll(old.getStatsTable());
+  fCounters = old.fCounters;
 }
 
 JPetStatistics::~JPetStatistics()

@@ -18,32 +18,29 @@
 
 JPetUserTask::JPetUserTask(const char* name): JPetTask(name) {}
 
-/**
- * Virtual function must be defined in the descendent class
- */
-bool JPetUserTask::init(const JPetParamsInterface& inOptions)
+bool JPetUserTask::init(const JPetParams& inOptions)
 {
-  fParams = dynamic_cast<const JPetParams&>(inOptions);
+  fParams = inOptions;
   return init();
 }
 
-/**
- * Virtual function must be defined in the descendent class
- */
 bool JPetUserTask::run(const JPetDataInterface& inData)
 {
-  auto event = dynamic_cast<const JPetData&>(inData);
-  setEvent(&(event.getEvent()));
+  clearOutputEvents();
+  try {
+    auto event = dynamic_cast<const JPetData&>(inData);
+    setEvent(&(event.getEvent()));
+  } catch (const std::bad_cast& ex) {
+    WARNING("Input data type is not the expected one in User Task,  No event is set.");
+  }
   return exec();
 }
 
-/**
- * Virtual function must be defined in the descendent class
- */
-bool JPetUserTask::terminate(JPetParamsInterface& outOptions)
+bool JPetUserTask::terminate(JPetParams& outOptions)
 {
+  bool result = terminate();
   outOptions = fParams;
-  return terminate();
+  return result;
 }
 
 const JPetParamBank& JPetUserTask::getParamBank()
@@ -78,4 +75,11 @@ jpet_options_tools::OptsStrAny JPetUserTask::getOptions() const
 JPetTimeWindow* JPetUserTask::getOutputEvents()
 {
   return fOutputEvents;
+}
+
+void JPetUserTask::clearOutputEvents()
+{
+  if (fOutputEvents) {
+    fOutputEvents->Clear();
+  }
 }

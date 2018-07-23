@@ -57,9 +57,9 @@ class JPetScopeLoader: public JPetTaskIO
 public:
   JPetScopeLoader(std::unique_ptr<JPetScopeTask> task);
   virtual ~JPetScopeLoader();
-  virtual bool init(const JPetParamsInterface& opts) override;
+  virtual bool init(const JPetParams& opts) override;
   virtual bool run(const JPetDataInterface& inData) override;
-  virtual bool terminate(JPetParamsInterface& opts) override;
+  virtual bool terminate(JPetParams& opts) override;
   virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
   static std::map<int, std::map<std::string, int>> groupScopeFileNamesByTimeWindowIndex(
     const std::map<std::string, int>& scopeFileNames);

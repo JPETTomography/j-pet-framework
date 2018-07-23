@@ -13,74 +13,53 @@
  *  @file JPetManager.cpp
  */
 
-#include "./JPetParamBankHandlerTask/JPetParamBankHandlerTask.h"
-#include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
-#include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
-#include "./JPetCommonTools/JPetCommonTools.h"
-#include "./JPetScopeLoader/JPetScopeLoader.h"
-#include "./JPetCmdParser/JPetCmdParser.h"
-#include "./JPetLoggerInclude.h"
 #include "./JPetManager.h"
-#include <TThread.h>
-#include <exception>
+
 #include <cassert>
 #include <string>
+#include <exception>
+#include <TThread.h>
+
+#include "./JPetTaskChainExecutor/JPetTaskChainExecutor.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetCmdParser/JPetCmdParser.h"
+#include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "./JPetLoggerInclude.h"
+
 
 using namespace jpet_options_tools;
 
-/**
- * Private constructor
- */
 JPetManager::JPetManager()
 {
-  fTaskGeneratorChain = new TaskGeneratorChain;
 }
 
-/**
- * User should obtain the Manager by using this method
- */
 JPetManager& JPetManager::getManager()
 {
   static JPetManager instance;
   return instance;
 }
 
-/**
- * Destructor
- */
-JPetManager::~JPetManager(){}
-
-/**
- * Options getter
- */
-JPetManager::Options JPetManager::getOptions() const
+void JPetManager::run(int argc, const char** argv)
 {
-  return fOptions;
-}
-
-/**
- * Main execution method with start and stop info printed to the log file.
- * Here all the options from the user, that are to be used in the analisis modules,
- * are used to create new TaskChainExecutors, with the chain of previously
- * registered tasks. The inputDataSeq is the identifier of given chain.
- */
-bool JPetManager::run(int argc, const char** argv)
-{
-  if (!parseCmdLine(argc, argv)) {
+  bool isOk = true;
+  std::map<std::string, boost::any> allValidatedOptions;
+  std::tie(isOk, allValidatedOptions) = parseCmdLine(argc, argv);
+  if (!isOk) {
     ERROR("While parsing command line arguments");
-    return false;
+    std::cerr <<"Error has occurred while parsing command line! Check the log!" <<std::endl;
+    throw std::invalid_argument("Error in parsing command line arguments");  /// temporary change to check if the examples are working
   }
-  INFO("======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n");
-  std::vector<JPetTaskChainExecutor*> executors;
+  auto chainOfTasks = fTaskFactory.createTaskGeneratorChain(allValidatedOptions);
+  JPetOptionsGenerator optionsGenerator;
+  auto options = optionsGenerator.generateOptionsForTasks(allValidatedOptions, chainOfTasks.size());
+
+  INFO( "======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
   std::vector<TThread*> threads;
   auto inputDataSeq = 0;
-  for (auto opt : fOptions) {
-    JPetTaskChainExecutor* executor = new JPetTaskChainExecutor(
-      fTaskGeneratorChain,
-      inputDataSeq,
-      opt.second
-    );
-    executors.push_back(executor);
+  /// For every input option, new TaskChainExecutor is created, which creates the chain of previously
+  /// registered tasks. The inputDataSeq is the identifier of given chain.
+  for (auto opt : options) {
+    auto executor = jpet_common_tools::make_unique<JPetTaskChainExecutor>(chainOfTasks, inputDataSeq, opt.second);
     if (areThreadsEnabled()) {
       auto thr = executor->run();
       if (thr) {
@@ -91,7 +70,8 @@ bool JPetManager::run(int argc, const char** argv)
     } else {
       if (!executor->process()) {
         ERROR("While running process");
-        return false;
+        std::cerr <<"Stopping program, error has occurred while calling executor->process! Check the log!" <<std::endl;
+        throw std::runtime_error("Error in executor->process"); 
       }
     }
     inputDataSeq++;
@@ -102,104 +82,38 @@ bool JPetManager::run(int argc, const char** argv)
       thread->Join();
     }
   }
-  for (auto& executor : executors) {
-    if (executor) {
-      delete executor;
-      executor = 0;
-    }
-  }
   INFO( "======== Finished processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
-  return true;
 }
 
-/**
- * Boolean method, that parses the command line arguments
- * and generates options for tasks. In case of an exception, returns false.
- * The Options cointainer is filled with the generated options.
- */
-bool JPetManager::parseCmdLine(int argc, const char** argv)
+std::pair<bool, std::map<std::string, boost::any> >  JPetManager::parseCmdLine(int argc, const char** argv)
 {
-  auto addDefaultTasksFromOptions = [&](const std::map<std::string, boost::any>& options) {
-    auto fileType = FileTypeChecker::getInputFileType(options);
-    if (fileType == FileTypeChecker::kScope) {
-      auto task2 = []() {
-        return new JPetScopeLoader(std::unique_ptr<JPetScopeTask>(new JPetScopeTask("JPetScopeReader")));
-      };
-      fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task2);
-    }
-    auto paramBankHandlerTask = []() {
-      return new JPetParamBankHandlerTask("ParamBank Filling");
-    };
-    fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), paramBankHandlerTask);
-    auto task = []() {
-      return new JPetUnzipAndUnpackTask("UnpackerAndUnzipper");
-    };
-    fTaskGeneratorChain->insert(fTaskGeneratorChain->begin(), task);
-  };
+  std::map<std::string, boost::any> allValidatedOptions;
   try {
     JPetOptionsGenerator optionsGenerator;
     JPetCmdParser parser;
     auto optionsFromCmdLine = parser.parseCmdLineArgs(argc, argv);
-    auto allValidatedOptions = optionsGenerator.generateAndValidateOptions(optionsFromCmdLine);
-    addDefaultTasksFromOptions(allValidatedOptions);
-    int numberOfRegisteredTasks = 1;
-    if (fTaskGeneratorChain) {
-      numberOfRegisteredTasks = fTaskGeneratorChain->size();
-    }
-    fOptions = optionsGenerator.generateOptionsForTasks(
-      allValidatedOptions,
-      numberOfRegisteredTasks
-    );
+    allValidatedOptions = optionsGenerator.generateAndValidateOptions(optionsFromCmdLine);
   } catch (std::exception& e) {
     ERROR(e.what());
-    return false;
+    return std::make_pair(false, std::map<std::string, boost::any> {});
   }
-  return true;
+  return std::make_pair(true, allValidatedOptions);
 }
 
-/**
- * Check if multithreding is enabled
- */
+void JPetManager::useTask(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numTimes)
+{
+  if (!fTaskFactory.addTaskInfo(name, inputFileType, outputFileType, numTimes)) {
+    std::cerr <<"Error has occurred while calling useTask! Check the log!" <<std::endl;
+    throw std::runtime_error("error in addTaskInfo");
+  }
+}
+
 bool JPetManager::areThreadsEnabled() const
 {
   return fThreadsEnabled;
 }
 
-/**
- * User can set the multithreding option.
- */
 void JPetManager::setThreadsEnabled(bool enable)
 {
   fThreadsEnabled = enable;
-}
-
-/**
- * Method that adds a Task to the Chain, managed by the Manager.
- * The JPetUserTask-based tasks are wrapped with a JPetTaskIO class.
- */
-void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
-{
-  assert(fTaskGeneratorChain);
-  if (fTasksDictionary.count(name) > 0) {
-    TaskGenerator userTaskGen = fTasksDictionary.at(name);
-    fTaskGeneratorChain->push_back(
-      [name, inputFileType, outputFileType, userTaskGen]() {
-        JPetTaskIO* task = new JPetTaskIO(name, inputFileType, outputFileType);
-        task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-        return task;
-      }
-    );
-  } else {
-    ERROR(Form("The requested task %s is unknown", name));
-    exit(1);
-  }
-}
-
-/**
- * Method clears the Chain (TaskGeneratorChain class) of previously registered tasks
- */
-void JPetManager::clearRegisteredTasks()
-{
-  delete fTaskGeneratorChain;
-  fTaskGeneratorChain = new TaskGeneratorChain;
 }

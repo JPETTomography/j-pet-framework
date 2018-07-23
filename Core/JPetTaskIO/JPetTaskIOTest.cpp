@@ -19,9 +19,36 @@
 #include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
 #include "./JPetCmdParser/JPetCmdParser.h"
 #include "./JPetTaskIO/JPetTaskIO.h"
+#include "./JPetUserTask/JPetUserTask.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetDataInterface/JPetDataInterface.h"
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_SUITE(FirstSuite)
+class JPetTaskTest: public JPetUserTask
+{
+public:
+  explicit JPetTaskTest(const char* name): JPetUserTask(name) {}
+  virtual ~JPetTaskTest()
+  {
+    ;
+  }
+
+protected:
+  bool init()
+  {
+    return true;
+  }
+  bool exec()
+  {
+    return true;
+  }
+  bool terminate()
+  {
+    return true;
+  }
+};
+
+BOOST_AUTO_TEST_SUITE( FirstSuite )
 
 BOOST_AUTO_TEST_CASE(progressBarTest)
 {
@@ -29,6 +56,58 @@ BOOST_AUTO_TEST_CASE(progressBarTest)
   taskIO.displayProgressBar(5, 100);
 }
 
-/* TODO - add more tests! */
+BOOST_AUTO_TEST_CASE(No_output_no_input )
+{
+  auto opts = jpet_options_generator_tools::getDefaultOptions();
+  JPetParams params(opts, nullptr);
+  JPetTaskIO taskIO("myTestIO", "", "");
+  taskIO.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask"));
+  BOOST_REQUIRE(taskIO.init(params));
+  JPetDataInterface pseudoData;
+  BOOST_REQUIRE(taskIO.run(pseudoData));
+  BOOST_REQUIRE(taskIO.terminate(params));
+}
+
+BOOST_AUTO_TEST_CASE(No_output_bad_input)
+{
+  gErrorIgnoreLevel = kFatal; /// To turn off ROOT error reporting.
+  auto opts = jpet_options_generator_tools::getDefaultOptions();
+  JPetParams params(opts, nullptr);
+  JPetTaskIO taskIO("myTestIO", "bla", "");
+  taskIO.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask"));
+  BOOST_REQUIRE(!taskIO.init(params));
+  JPetDataInterface pseudoData;
+  BOOST_REQUIRE(!taskIO.run(pseudoData));
+  BOOST_REQUIRE(taskIO.terminate(params)); /// terminate returns true!
+  gErrorIgnoreLevel = kPrint; /// Turning back the ROOT error reporting.
+}
+
+BOOST_AUTO_TEST_CASE(No_input_bad_output)
+{
+  gErrorIgnoreLevel = kFatal; /// To turn off ROOT error reporting.
+  auto opts = jpet_options_generator_tools::getDefaultOptions();
+  JPetParams params(opts, nullptr);
+  JPetTaskIO taskIO("myTestIO", "", "bla");
+  taskIO.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask"));
+  BOOST_REQUIRE(!taskIO.init(params));
+  JPetDataInterface pseudoData;
+  BOOST_REQUIRE(taskIO.run(pseudoData));  /// run returns true!
+  BOOST_REQUIRE(!taskIO.terminate(params));
+  gErrorIgnoreLevel = kPrint; /// Turning back the ROOT error reporting.
+}
+
+BOOST_AUTO_TEST_CASE(bad_input_bad_output)
+{
+  gErrorIgnoreLevel = kFatal; /// To turn off ROOT error reporting.
+  auto opts = jpet_options_generator_tools::getDefaultOptions();
+  JPetParams params(opts, nullptr);
+  JPetTaskIO taskIO("myTestIO", "", "bla");
+  taskIO.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask"));
+  BOOST_REQUIRE(!taskIO.init(params));
+  JPetDataInterface pseudoData;
+  BOOST_REQUIRE(taskIO.run(pseudoData));  /// run returns true!
+  BOOST_REQUIRE(!taskIO.terminate(params));
+  gErrorIgnoreLevel = kPrint; /// Turning back the ROOT error reporting.
+}
 
 BOOST_AUTO_TEST_SUITE_END()

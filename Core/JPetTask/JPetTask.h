@@ -15,7 +15,7 @@
 
 #ifndef JPETTASK_H
 #define JPETTASK_H
-#include "./JPetParamsInterface/JPetParamsInterface.h"
+#include "./JPetParams/JPetParams.h"
 #include "./JPetTaskInterface/JPetTaskInterface.h"
 #include "./JPetDataInterface/JPetDataInterface.h"
 #include <string>
@@ -36,9 +36,9 @@ class JPetTask: public JPetTaskInterface
 public:
   JPetTask(const char* name = "");
   virtual ~JPetTask() {}
-  virtual bool init(const JPetParamsInterface& inOptions) = 0;
+  virtual bool init(const JPetParams& inOptions) = 0;
   virtual bool run(const JPetDataInterface& inData) = 0;
-  virtual bool terminate(JPetParamsInterface& outOptions) = 0;
+  virtual bool terminate(JPetParams& outOptions) = 0;
   virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
   virtual const std::vector<JPetTaskInterface*> getSubTasks() const override;
   void setName(const std::string& name);

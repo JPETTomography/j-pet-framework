@@ -29,9 +29,8 @@ JPetParamBankHandlerTask::JPetParamBankHandlerTask(const char* name): JPetTask(n
  * from file, if failed and run number and localDB is provided, trying
  * to generate ParamBank from config.
  */
-bool JPetParamBankHandlerTask::init(const JPetParamsInterface& inOptions)
+bool JPetParamBankHandlerTask::init(const JPetParams& params)
 {
-  auto params = dynamic_cast<const JPetParams&>(inOptions);
   using namespace jpet_options_tools;
   auto options = params.getOptions();
   switch (FileTypeChecker::getInputFileType(options)) {
@@ -76,7 +75,7 @@ bool JPetParamBankHandlerTask::run(const JPetDataInterface&)
   return true;
 }
 
-bool JPetParamBankHandlerTask::terminate(JPetParamsInterface&)
+bool JPetParamBankHandlerTask::terminate(JPetParams&)
 {
   return true;
 }

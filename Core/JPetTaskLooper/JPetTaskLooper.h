@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -10,31 +10,31 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetUnzipAndUnpackTask.h
+ *  @file JPetTaskLooper.h
  */
 
-#ifndef JPETUNZIPANDUNPACKTASK_H
-#define JPETUNZIPANDUNPACKTASK_H
-
+#ifndef JPETTASKLOOPER_H
+#define JPETTASKLOOPER_H
 #include "./JPetTask/JPetTask.h"
-#include <boost/any.hpp>
-#include <map>
+#include <memory>
+#include "./JPetParams/JPetParams.h"
 
-class JPetUnzipAndUnpackTask: public JPetTask
+using Predicate=std::function<bool(const JPetParams& params)>;
+
+class JPetTaskLooper: public JPetTask
 {
 public:
-  using OptsStrAny = std::map<std::string, boost::any>;
-  explicit JPetUnzipAndUnpackTask(const char* name = "");
+  static Predicate getMaxIterationPredicate(int maxIteration);
+  static Predicate getStopOnOptionPredicate(const std::string optionName);
+
+  JPetTaskLooper(const char* name, std::unique_ptr<JPetTask> subtask, Predicate isCondition = [](const JPetParams&){return false;});
+  virtual ~JPetTaskLooper(){}
   bool init(const JPetParams& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParams& outOptions) override;
-  static void unpackFile(const std::string& filename, long long nevents,
-    const std::string& configfile, const std::string& calibfile);
-  static bool unzipFile(const std::string& filename);
-
+  void setConditionFunction(Predicate isCondition);
 protected:
-  OptsStrAny fOptions;
-  bool fUnpackHappened = false;
+  Predicate fIsCondition;
+  JPetParams fParams;
 };
-
-#endif /* !JPETUNZIPANDUNPACKTASK_H */
+#endif /*  !JPETTASKLOOPER_H */

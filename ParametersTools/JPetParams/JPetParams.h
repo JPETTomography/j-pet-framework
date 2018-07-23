@@ -16,7 +16,6 @@
 #ifndef JPETPARAMS_H
 #define JPETPARAMS_H
 
-#include "./JPetParamsInterface/JPetParamsInterface.h"
 #include "./JPetParamManager/JPetParamManager.h"
 #include "./JPetOptionsTools/JPetOptionsTools.h"
 #include <boost/any.hpp>
@@ -24,7 +23,7 @@
 #include <memory>
 #include <map>
 
-class JPetParams: public JPetParamsInterface
+class JPetParams
 {
 public:
   JPetParams();
@@ -37,6 +36,5 @@ public:
 protected:
   jpet_options_tools::OptsStrAny fOptions;
   std::shared_ptr<JPetParamManager> fParamManager;
-
 };
 #endif /* !JPETPARAMS_H */

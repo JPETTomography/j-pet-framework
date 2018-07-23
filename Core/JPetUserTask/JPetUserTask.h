@@ -15,30 +15,25 @@
 
 #ifndef JPETUSERTASK_H
 #define JPETUSERTASK_H
-
-#include "JPetParamsInterface/JPetParamsInterface.h"
-#include "JPetStatistics/JPetStatistics.h"
-#include "JPetTimeWindow/JPetTimeWindow.h"
-#include "JPetParamBank/JPetParamBank.h"
-#include "JPetParams/JPetParams.h"
 #include "JPetTask/JPetTask.h"
+#include "JPetParams/JPetParams.h"
+#include "JPetStatistics/JPetStatistics.h"
+#include "JPetParamBank/JPetParamBank.h"
+#include "JPetTimeWindow/JPetTimeWindow.h"
 
 /**
- * @brief Abstract class that should be used as a main parent class for user tasks
- *
+ * @brief abstract class that should be used as a main parent class for user tasks
  * The class realizes the  method template pattern:
- * - bool init(const JPetParamsInterface& inOptions)
- * - bool terminate(JPetParamsInterface& outOptions)
- * - bool run()
- * are implemented as non-virtual and inside its body the virtual
- * - bool init()
- * - bool terminate()
- * - bool exec
- * methods (respectively) are being called.
- * bool init() and bool terminate() methods are ment to be implemented
- * by user in the inherited class. The fParams field is set to inOptions
- * by calling bool init(const JPetParamsInterface& inOptions) method and its is
- * passed as outOptions while calling bool terminate(JPetParamsInterface& outOptions)
+ * The bool init(const JPetParams& inOptions),  bool terminate(JPetParams& outOptions)
+ * and bool run()
+ * are implemented as non-virtual and inside its body the virtual bool init(), bool terminate() methods
+ * and bool exec methods(respectively) are being called.
+ * bool init() and bool terminate() methods are ment to be implemented by user in the inherited class.
+ *
+ * The fParams field is set to inOptions by calling bool init(const JPetParams& inOptions) method  and its is
+ * passed as outOptions while calling bool terminate(JPetParams& outOptions)
+ *
+ * The user should implement bool init(), bool exec() and bool terminate() methods in the inherited class.
  */
 class JPetUserTask: public JPetTask
 {
@@ -46,24 +41,28 @@ public:
   explicit JPetUserTask(const char* name = "");
   virtual ~JPetUserTask() {};
 
-  bool init(const JPetParamsInterface& inOptions) override;
-  bool run(const JPetDataInterface& inData) override;
-  bool terminate(JPetParamsInterface& outOptions) override;
-  JPetStatistics& getStatistics();
+  bool init(const JPetParams& inOptions) override;
+  bool run(const JPetDataInterface& inData) override; /// This function cleans the fOutputEvents array before starting the execution.
+  bool terminate(JPetParams& outOptions) override;
+
   virtual void setStatistics(JPetStatistics* statistics);
+  JPetStatistics& getStatistics();
+
   virtual void setEvent(TObject* ev);
   const JPetParamBank& getParamBank();
   jpet_options_tools::OptsStrAny getOptions() const;
   virtual JPetTimeWindow* getOutputEvents();
 
 protected:
-  virtual bool init() = 0;
-  virtual bool exec() = 0;
-  virtual bool terminate() = 0;
+  virtual bool init() = 0; /// should be implemented in descendent class
+  virtual bool exec() = 0; /// should be implemented in descendent class
+  virtual bool terminate() = 0; /// should be implemented in descendent class
 
-  JPetTimeWindow* fOutputEvents = 0;
-  JPetStatistics* fStatistics = 0;
+  void clearOutputEvents();  /// It clears the JPetTimeWindow array assigned  to fOutputEvents.
+
   TObject* fEvent = 0;
+  JPetStatistics* fStatistics = 0;
   JPetParams fParams;
+  JPetTimeWindow* fOutputEvents = 0;
 };
 #endif /* !JPETUSERTASK_H */

@@ -13,8 +13,8 @@
  *  @file JPetWriter.cpp
  */
 
- #include "./JPetUserInfoStructure/JPetUserInfoStructure.h"
 #include "JPetWriter.h"
+#include "./JPetUserInfoStructure/JPetUserInfoStructure.h"
 
 /**
  * This tree name is compatible with the tree name produced by the Unpacker.
@@ -64,6 +64,7 @@ void JPetWriter::closeFile()
 
 void JPetWriter::writeHeader(TObject* header)
 {
+  assert(fTree);
   /// @todo as the second argument should be passed some enum to indicate position of header
   fTree->GetUserInfo()->AddAt(header, JPetUserInfoStructure::kHeader);
 }
@@ -94,6 +95,8 @@ void JPetWriter::writeCollection(
     current = fFile->mkdir(dirname);
   }
   assert(current);
+
+  // use a subdirectory if requested by user
   if (!std::string(subdirname).empty()) {
     if (current->GetDirectory(subdirname)) {
       current = current->GetDirectory(subdirname);
