@@ -107,7 +107,12 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     }
   }
   for (const auto& pTask : fSubTasks) {
-    pTask->init(fParams);
+    auto subTaskName = pTask->getName();
+    auto ok = pTask->init(fParams);
+    if (!ok) {
+      ERROR("In init() of" + subTaskName + ". run()  and terminate() of this task will be skipped.");
+      continue;
+    }
 
     if (isInput()) {
       auto firstEvent = 0ll;
@@ -127,7 +132,10 @@ bool JPetTaskIO::run(const JPetDataInterface&)
           displayProgressBar(i, lastEvent);
         }
         JPetData event(fInputHandler->getNextEntry());
-        pTask->run(event);
+        ok = pTask->run(event);
+        if (!ok) {
+          ERROR("In run() of" + subTaskName + ". ");
+        }
         if (isOutput()) {
           if (!fOutputHandler->writeEventToFile(pTask.get())) {
             WARNING("Some problems occured, while writing the event to file.");
@@ -141,7 +149,11 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     }
 
     JPetParams subTaskParams;
-    pTask->terminate(subTaskParams);
+
+    ok = pTask->terminate(subTaskParams);
+    if (!ok) {
+      ERROR("In terminate() of" + subTaskName + ". ");
+    }
     fParams = mergeWithExtraParams(fParams, subTaskParams);
   }
   return true;
@@ -313,7 +325,7 @@ std::string JPetTaskIO::getFirstSubTaskName() const
 {
   std::string subTaskName;
   auto subtasks = getSubTasks();
-  if (subtasks.size()>0) {
+  if (subtasks.size() > 0) {
     auto subTask = subtasks[0];
     if (subTask) {
       subTaskName = subTask->getName();
