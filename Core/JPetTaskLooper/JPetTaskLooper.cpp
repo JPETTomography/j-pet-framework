@@ -48,9 +48,16 @@ bool JPetTaskLooper::run(const JPetDataInterface&)
   JPetParams outParams;
   while (fIsCondition(inParams)) {
     for (const auto& subTask : subTasks) {
-      subTask->init(inParams);
+      auto isOk = subTask->init(inParams);
+      if (!isOk) {
+        ERROR("Errors in subtask init(). run() and terminate() calls will be skipped. ");
+        continue;
+      }
       subTask->run(nullDataObject);
-      subTask->terminate(outParams);
+      isOk = subTask->terminate(outParams);
+      if (!isOk) {
+        ERROR("Errors in subtask terminate(). ");
+      }
       inParams = outParams;
     }
   }
@@ -71,10 +78,11 @@ void JPetTaskLooper::setConditionFunction(Predicate isCondition)
 
 Predicate JPetTaskLooper::getMaxIterationPredicate(int maxIteration)
 {
-  assert(maxIteration >=0);
+  assert(maxIteration >= 0);
   int counter = 0;
   auto iterationFunction = [maxIteration, counter](const JPetParams&) mutable ->bool {
-    if (counter < maxIteration) {
+    if (counter < maxIteration)
+    {
       counter++;
       return true;
     } else {
@@ -86,7 +94,7 @@ Predicate JPetTaskLooper::getMaxIterationPredicate(int maxIteration)
 
 Predicate JPetTaskLooper::getStopOnOptionPredicate(const std::string stopIterationOptName)
 {
-  auto stopFunction = [stopIterationOptName](const JPetParams& params)->bool {
+  auto stopFunction = [stopIterationOptName](const JPetParams & params)->bool {
     using namespace jpet_options_tools;
     auto options = params.getOptions();
     bool continueIteration = isOptionSet(options, stopIterationOptName) && (!getOptionAsBool(options, stopIterationOptName));
