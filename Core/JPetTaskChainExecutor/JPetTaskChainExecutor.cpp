@@ -31,7 +31,6 @@ JPetTaskChainExecutor::JPetTaskChainExecutor(const TaskGeneratorChain& taskGener
   assert(fParams.getParamManager());
   for (auto taskGenerator : ftaskGeneratorChain) {
     auto task = taskGenerator();
-    //fTasks.push_back(task);
     fTasks.push_back(std::move(task));
   }
 }
