@@ -55,7 +55,6 @@ bool JPetTaskIO::init(const JPetParams& params)
   setParams(params);
   auto opts = fParams.getOptions();
 
-  ///@todo refactor this piece of code
   bool isOK = false;
   std::string inputFilename;
   std::string outFileFullPath;
