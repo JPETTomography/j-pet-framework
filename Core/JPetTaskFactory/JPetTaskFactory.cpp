@@ -33,7 +33,7 @@ std::vector<TaskGenerator> JPetTaskFactory::createTaskGeneratorChain(const std::
   return generateTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
 }
 
-  bool JPetTaskFactory::addTaskInfo(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numIter, bool asFirstTask=true)
+  bool JPetTaskFactory::addTaskInfo(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numIter, bool asFirstTask=false)
 {
   if (fTasksDictionary.find(name)!=fTasksDictionary.end()){ 
     fTasksToUse.insert(

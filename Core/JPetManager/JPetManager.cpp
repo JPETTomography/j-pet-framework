@@ -107,22 +107,14 @@ std::pair<bool, std::map<std::string, boost::any> >  JPetManager::parseCmdLine(i
 
 void JPetManager::useTask(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numTimes)
 {
-  if (!fTaskFactory.addTaskInfo(name, inputFileType, outputFileType, numTimes)) {
+  if (!fTaskFactory.addTaskInfo(name, inputFileType, outputFileType, numTimes, false)) {
     std::cerr <<"Error has occurred while calling useTask! Check the log!" <<std::endl;
     throw std::runtime_error("error in addTaskInfo");
   }
 }
 
 bool JPetManager::areThreadsEnabled() const
-void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
-  insertTaskIntoChain(name, inputFileType, outputFileType, false);
-}
 
-void JPetManager::insertTaskIntoChain(const char* name, const char* inputFileType, const char* outputFileType, bool firstTask)
-{
-  return fThreadsEnabled;
-                                firstTask ? fTaskGeneratorChain->begin() : fTaskGeneratorChain->end(),
-}
 
 void JPetManager::setThreadsEnabled(bool enable)
 {
