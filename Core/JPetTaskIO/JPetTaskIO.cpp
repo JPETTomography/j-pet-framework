@@ -24,7 +24,7 @@
 #include "./JPetData/JPetData.h"
 #include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include "./JPetLoggerInclude.h"
-#include "../version.h"
+#include "./version.h"
 
 
 JPetTaskIO::JPetTaskIO(const char* name,
