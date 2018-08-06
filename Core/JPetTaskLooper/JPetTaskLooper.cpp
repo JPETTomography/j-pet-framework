@@ -94,7 +94,7 @@ Predicate JPetTaskLooper::getMaxIterationPredicate(int maxIteration)
 
 Predicate JPetTaskLooper::getStopOnOptionPredicate(const std::string stopIterationOptName)
 {
-  auto stopFunction = [stopIterationOptName](const JPetParams & params)->bool {
+  auto stopFunction = [stopIterationOptName](const JPetParams& params)->bool {
     using namespace jpet_options_tools;
     auto options = params.getOptions();
     bool continueIteration = isOptionSet(options, stopIterationOptName) && (!getOptionAsBool(options, stopIterationOptName));

@@ -24,7 +24,7 @@
 #include "./JPetData/JPetData.h"
 #include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include "./JPetLoggerInclude.h"
-#include "./version.h"
+#include "../version.h"
 
 
 JPetTaskIO::JPetTaskIO(const char* name,
@@ -109,7 +109,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     auto subTaskName = pTask->getName();
     auto ok = pTask->init(fParams);
     if (!ok) {
-      ERROR("In init() of" + subTaskName + ". run()  and terminate() of this task will be skipped.");
+      ERROR("In init() of:" + subTaskName + ". run()  and terminate() of this task will be skipped.");
       continue;
     }
 
@@ -133,7 +133,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
         JPetData event(fInputHandler->getNextEntry());
         ok = pTask->run(event);
         if (!ok) {
-          ERROR("In run() of" + subTaskName + ". ");
+          ERROR("In run() of:" + subTaskName + ". ");
         }
         if (isOutput()) {
           if (!fOutputHandler->writeEventToFile(pTask.get())) {
@@ -151,7 +151,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
 
     ok = pTask->terminate(subTaskParams);
     if (!ok) {
-      ERROR("In terminate() of" + subTaskName + ". ");
+      ERROR("In terminate() of:" + subTaskName + ". ");
     }
     fParams = mergeWithExtraParams(fParams, subTaskParams);
   }
