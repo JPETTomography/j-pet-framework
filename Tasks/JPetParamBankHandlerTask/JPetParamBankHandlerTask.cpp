@@ -44,6 +44,9 @@ bool JPetParamBankHandlerTask::init(const JPetParams& params)
     case FileTypeChecker::FileType::kScope:
       return generateParamBankFromConfig(params);
       break;
+    case FileTypeChecker::FileType::kMCGeant:
+      return generateParamBankFromConfig(params);
+      break;
     default:
       std::map<FileTypeChecker::FileType, std::string> fileTypeToString = {
         {FileTypeChecker::kNoType, ""},

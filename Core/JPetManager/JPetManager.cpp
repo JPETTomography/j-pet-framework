@@ -13,6 +13,7 @@
  *  @file JPetManager.cpp
  */
 
+#include "./JPetGeantParser/JPetGeantParser.h"
 #include "./JPetManager.h"
 
 #include <cassert>
@@ -88,6 +89,10 @@ void JPetManager::run(int argc, const char** argv)
 std::pair<bool, std::map<std::string, boost::any> >  JPetManager::parseCmdLine(int argc, const char** argv)
 {
   std::map<std::string, boost::any> allValidatedOptions;
+    if (fileType == FileTypeChecker::kMCGeant) {
+      registerTask<JPetGeantParser>("JPetGeantParser");
+      insertTaskIntoChain("JPetGeantParser", "mcGeant", "mc.hits", true);
+    }
   try {
     JPetOptionsGenerator optionsGenerator;
     JPetCmdParser parser;
@@ -109,8 +114,14 @@ void JPetManager::useTask(const std::string& name, const std::string& inputFileT
 }
 
 bool JPetManager::areThreadsEnabled() const
+void JPetManager::useTask(const char* name, const char* inputFileType, const char* outputFileType)
+  insertTaskIntoChain(name, inputFileType, outputFileType, false);
+}
+
+void JPetManager::insertTaskIntoChain(const char* name, const char* inputFileType, const char* outputFileType, bool firstTask)
 {
   return fThreadsEnabled;
+                                firstTask ? fTaskGeneratorChain->begin() : fTaskGeneratorChain->end(),
 }
 
 void JPetManager::setThreadsEnabled(bool enable)

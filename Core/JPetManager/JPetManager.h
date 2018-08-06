@@ -73,6 +73,8 @@ private:
   void operator=(const JPetManager&);
 
   JPetManager();
+	       const char * outputFileType="",
+	       bool firstTask=false);
   bool fThreadsEnabled = false;
   jpet_task_factory::JPetTaskFactory fTaskFactory;
 };
