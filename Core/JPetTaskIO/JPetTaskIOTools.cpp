@@ -93,7 +93,7 @@ std::tuple<bool, std::string, std::string, bool> setInputAndOutputFile(const Opt
 
 OptsStrAny setOutputOptions(const JPetParams& oldParams, bool resetOutputPath, const std::string& fullOutPath)
 {
-  OptsStrAny new_opts;
+  OptsStrAny new_opts = oldParams.getOptions();
   if (FileTypeChecker::getInputFileType(oldParams.getOptions()) == FileTypeChecker::kHldRoot) {
     jpet_options_generator_tools::setOutputFileType(new_opts, "root");
   }
