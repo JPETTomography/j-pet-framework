@@ -34,9 +34,9 @@ class JPetManager
 {
 public:
   static JPetManager& getManager();
-  
+
   /// @throws exceptions in case of errors.
-  void run(int argc, const char** argv); 
+  void run(int argc, const char** argv);
 
   /// @brief Method parses command line arguments and returns the set of validated option generated based on it.
   /// @return pair of boolean status and the map of validated options. In case of errors the status is set to false.
@@ -71,6 +71,8 @@ public:
 private:
   JPetManager(const JPetManager&);
   void operator=(const JPetManager&);
+
+  void registerDefaultTasks();
 
   JPetManager();
   bool fThreadsEnabled = false;

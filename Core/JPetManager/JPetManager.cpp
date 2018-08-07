@@ -13,6 +13,7 @@
  *  @file JPetManager.cpp
  */
 
+#include "./JPetGeantParser/JPetGeantParser.h"
 #include "./JPetManager.h"
 
 #include <cassert>
@@ -24,6 +25,7 @@
 #include "./JPetCommonTools/JPetCommonTools.h"
 #include "./JPetCmdParser/JPetCmdParser.h"
 #include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "./GeantParser/JPetGeantParser/JPetGeantParser.h"
 #include "./JPetLoggerInclude.h"
 
 
@@ -46,9 +48,10 @@ void JPetManager::run(int argc, const char** argv)
   std::tie(isOk, allValidatedOptions) = parseCmdLine(argc, argv);
   if (!isOk) {
     ERROR("While parsing command line arguments");
-    std::cerr <<"Error has occurred while parsing command line! Check the log!" <<std::endl;
+    std::cerr << "Error has occurred while parsing command line! Check the log!" << std::endl;
     throw std::invalid_argument("Error in parsing command line arguments");  /// temporary change to check if the examples are working
   }
+  registerDefaultTasks();
   auto chainOfTasks = fTaskFactory.createTaskGeneratorChain(allValidatedOptions);
   JPetOptionsGenerator optionsGenerator;
   auto options = optionsGenerator.generateOptionsForTasks(allValidatedOptions, chainOfTasks.size());
@@ -70,8 +73,8 @@ void JPetManager::run(int argc, const char** argv)
     } else {
       if (!executor->process()) {
         ERROR("While running process");
-        std::cerr <<"Stopping program, error has occurred while calling executor->process! Check the log!" <<std::endl;
-        throw std::runtime_error("Error in executor->process"); 
+        std::cerr << "Stopping program, error has occurred while calling executor->process! Check the log!" << std::endl;
+        throw std::runtime_error("Error in executor->process");
       }
     }
     inputDataSeq++;
@@ -103,7 +106,7 @@ std::pair<bool, std::map<std::string, boost::any> >  JPetManager::parseCmdLine(i
 void JPetManager::useTask(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numTimes)
 {
   if (!fTaskFactory.addTaskInfo(name, inputFileType, outputFileType, numTimes)) {
-    std::cerr <<"Error has occurred while calling useTask! Check the log!" <<std::endl;
+    std::cerr << "Error has occurred while calling useTask! Check the log!" << std::endl;
     throw std::runtime_error("error in addTaskInfo");
   }
 }
@@ -116,4 +119,12 @@ bool JPetManager::areThreadsEnabled() const
 void JPetManager::setThreadsEnabled(bool enable)
 {
   fThreadsEnabled = enable;
+}
+
+/// @brief Adds any built-in tasks based on JPetTaskIO to the map of taska generators to facilitate their later generation on demand
+///
+/// Any built-in tasks which are handled by JPetTaskIO the same way as user-defined tasks (rather than using a dedicated task wrapper as is the case for JPetUnzipAndUpackTask or JPetParamBankHandlerTask) can be easily added to the chain of tasks using the same mehanics as exposed to the user for adding users' tasks prvided that the built-in tasks are registered in the map of tasks generators in advance. This provate method is intended to register all such tasks in advance of creation of the task generator chain.
+void JPetManager::registerDefaultTasks()
+{
+  registerTask<JPetGeantParser>("JPetGeantParser");
 }

@@ -35,10 +35,10 @@ std::vector<TaskGenerator> JPetTaskFactory::createTaskGeneratorChain(const std::
 
 bool JPetTaskFactory::addTaskInfo(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numIter)
 {
-  if (fTasksDictionary.find(name)!=fTasksDictionary.end()){ 
+  if (fTasksDictionary.find(name) != fTasksDictionary.end()) {
     fTasksToUse.push_back(TaskInfo(name, inputFileType, outputFileType, numIter));
   } else {
-    ERROR("Task with the name " +std::string(name) + " is not registered!");
+    ERROR("Task with the name " + std::string(name) + " is not registered!");
     return false;
   }
   return true;
@@ -64,14 +64,15 @@ void JPetTaskFactory::clear()
 TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options)
 {
   TaskGeneratorChain chain;
-  addDefaultTasksFromOptions(options, chain);
+  addDefaultTasksFromOptions(options, generatorsMap, chain);
+
   for (const auto& taskInfo : taskInfoVect) {
     addTaskToChain(generatorsMap, taskInfo, chain);
   }
   return chain;
 }
 
-void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, TaskGeneratorChain& outChain)
+void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, const std::map<std::string, TaskGenerator>& generatorsMap, TaskGeneratorChain& outChain)
 {
   using namespace jpet_options_tools;
   auto addDefaultTasksFromOptions = [&](const std::map<std::string, boost::any>& options) {
@@ -81,6 +82,10 @@ void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options
         return jpet_common_tools::make_unique<JPetScopeLoader>(std::unique_ptr<JPetScopeTask>(new JPetScopeTask("JPetScopeReader")));
       };
       outChain.insert(outChain.begin(), task2);
+    }
+    if (fileType == FileTypeChecker::kMCGeant) {
+      auto taskInfo = TaskInfo("JPetGeantParser", "mcGeant", "mc.hits", 1);
+      addTaskToChain(generatorsMap, taskInfo, outChain);
     }
     auto paramBankHandlerTask = []() {
       return jpet_common_tools::make_unique<JPetParamBankHandlerTask>("ParamBank Filling");
@@ -98,17 +103,17 @@ void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options
 
 void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, const TaskInfo& info, TaskGeneratorChain& outChain)
 {
-  auto name = info.name.c_str();
-  auto inT = info.inputFileType.c_str();
-  auto outT = info.outputFileType.c_str();
-  auto numOfIterations = info.numOfIterations; 
+  auto name = info.name;
+  auto inT = info.inputFileType;
+  auto outT = info.outputFileType;
+  auto numOfIterations = info.numOfIterations;
 
   if (generatorsMap.find(name) != generatorsMap.end()) {
     TaskGenerator userTaskGen = generatorsMap.at(name);
     if (numOfIterations == 1) {
       outChain.push_back(
       [name, inT, outT, userTaskGen]() {
-        auto task = jpet_common_tools::make_unique<JPetTaskIO>(name, inT, outT);
+        auto task = jpet_common_tools::make_unique<JPetTaskIO>(name.c_str(), inT.c_str(), outT.c_str());
         task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
         return task;
       });
@@ -116,23 +121,23 @@ void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, c
       if (numOfIterations < 0) {
         outChain.push_back(
         [name, inT, outT, userTaskGen]() {
-          auto task = jpet_common_tools::make_unique<JPetTaskIO>(name, inT, outT);
+          auto task = jpet_common_tools::make_unique<JPetTaskIO>(name.c_str(), inT.c_str(), outT.c_str());
           task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-          auto looperTask = jpet_common_tools::make_unique<JPetTaskLooper>(name, std::move(task), JPetTaskLooper::getStopOnOptionPredicate(kStopIterationOptionName));
+          auto looperTask = jpet_common_tools::make_unique<JPetTaskLooper>(name.c_str(), std::move(task), JPetTaskLooper::getStopOnOptionPredicate(kStopIterationOptionName));
           return looperTask;
         });
       } else {
         outChain.push_back(
         [name, inT, outT, numOfIterations, userTaskGen]() {
-          auto task = jpet_common_tools::make_unique<JPetTaskIO>(name, inT, outT);
+          auto task = jpet_common_tools::make_unique<JPetTaskIO>(name.c_str(), inT.c_str(), outT.c_str());
           task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-          auto looperTask = jpet_common_tools::make_unique<JPetTaskLooper>(name, std::move(task), JPetTaskLooper::getMaxIterationPredicate(numOfIterations));
+          auto looperTask = jpet_common_tools::make_unique<JPetTaskLooper>(name.c_str(), std::move(task), JPetTaskLooper::getMaxIterationPredicate(numOfIterations));
           return looperTask;
         });
       }
     }
   } else {
-    ERROR(Form("The requested task %s is not registered! The output chain might be broken!", name));
+    ERROR(Form("The requested task %s is not registered! The output chain might be broken!", name.c_str()));
     return;
   }
 }

@@ -235,8 +235,10 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
   }
   using namespace jpet_options_tools;
   auto options = fParams.getOptions();
-  if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ) {
-    // create a header to be stored along with the output tree
+
+  if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ||
+      FileTypeChecker::getInputFileType(options) == FileTypeChecker::kMCGeant ) {
+
     fHeader = new JPetTreeHeader(getRunNumber(options));
     fHeader->setFrameworkVersion(FRAMEWORK_VERSION);
     fHeader->setFrameworkRevision(FRAMEWORK_REVISION);
