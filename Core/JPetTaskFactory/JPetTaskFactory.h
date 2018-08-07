@@ -54,15 +54,15 @@ struct TaskInfo {
     numOfIterations(numIter) {}
 
   std::string name; /// task identifier
-  std::string inputFileType; 
+  std::string inputFileType;
   std::string outputFileType;
   int numOfIterations{1};
 };
 
 
-/// @brief Factory class provides the interface to create a chain of tasks generators 
-/// A Chain correspond to a set of task generators that can be executated.  
-/// Generator is the special function which called will return a task object.  
+/// @brief Factory class provides the interface to create a chain of tasks generators
+/// A Chain correspond to a set of task generators that can be executated.
+/// Generator is the special function which called will return a task object.
 class JPetTaskFactory
 {
 public:
@@ -72,9 +72,9 @@ public:
   /// The tasks previously via addTaskInfo are used to form a chain of generators.
   /// In addition some default tasks are added based on the information from options argument.
   /// Warning(!): the added tasks are wrapped in the special tasks that handle the I/O operations, so effectively
-  /// they become subtasks of the I/O tasks. 
+  /// they become subtasks of the I/O tasks.
   /// @param options set of options that are passed to decide which default tasks will be added at the beginning of the chain.
-  /// of the  chain e.g. unzipping task or unpacking task. 
+  /// of the  chain e.g. unzipping task or unpacking task.
   /// @return chain of task generators
   TaskGeneratorChain createTaskGeneratorChain(const std::map<std::string, boost::any>& options) const;
 
@@ -92,7 +92,7 @@ public:
 
   /// @brief Method adds task information to the collection of tasks to be used while creating the task chain.
   /// @return false if the task with the name has not been registered. true otherwise.
-  bool addTaskInfo(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numIter, bool asFirstTask);
+  bool addTaskInfo(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numIter);
 
   std::vector<TaskInfo> getTasksToUse() const;
   std::map<std::string, TaskGenerator> getTasksDictionary() const;
@@ -122,12 +122,12 @@ TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskI
 /// @brief Function adds the set of predefined task generators to the beginning of outChain  based on the provided options.
 /// @param options set of options that are passed to decide which default tasks will be added at the beginning of the chain.
 /// @param outChain chain of task  generators that will be modified.
-void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, TaskGeneratorChain& outChain);
+void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, const std::map<std::string, TaskGenerator>& generatorsMap, TaskGeneratorChain& outChain);
 
 /// @brief generates the chain of task generators.
 /// @param generatorMap map of registered tasks. Only those task can be used to produce the task generators.
 /// @param info about the task to be added. The task type and name must be present in the generatorsMap.
-/// @param outChain chain of task  generators that will be modified. 
+/// @param outChain chain of task  generators that will be modified.
 void addTaskToChain(const std::map<std::string, TaskGenerator>& generatorsMap, const TaskInfo& info, TaskGeneratorChain& outChain);
 
 }

@@ -33,15 +33,12 @@ std::vector<TaskGenerator> JPetTaskFactory::createTaskGeneratorChain(const std::
   return generateTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
 }
 
-  bool JPetTaskFactory::addTaskInfo(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numIter, bool asFirstTask=false)
+bool JPetTaskFactory::addTaskInfo(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numIter)
 {
-  if (fTasksDictionary.find(name)!=fTasksDictionary.end()){ 
-    fTasksToUse.insert(
-		       asFirstTask ? fTasksToUse->begin() : fTasksToUse->end(),
-		       TaskInfo(name, inputFileType, outputFileType, numIter)
-		       );
+  if (fTasksDictionary.find(name) != fTasksDictionary.end()) {
+    fTasksToUse.push_back(TaskInfo(name, inputFileType, outputFileType, numIter));
   } else {
-    ERROR("Task with the name " +std::string(name) + " is not registered!");
+    ERROR("Task with the name " + std::string(name) + " is not registered!");
     return false;
   }
   return true;
@@ -67,14 +64,15 @@ void JPetTaskFactory::clear()
 TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options)
 {
   TaskGeneratorChain chain;
-  addDefaultTasksFromOptions(options, chain);
+  addDefaultTasksFromOptions(options, generatorsMap, chain);
+
   for (const auto& taskInfo : taskInfoVect) {
     addTaskToChain(generatorsMap, taskInfo, chain);
   }
   return chain;
 }
 
-void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, TaskGeneratorChain& outChain)
+void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options, const std::map<std::string, TaskGenerator>& generatorsMap, TaskGeneratorChain& outChain)
 {
   using namespace jpet_options_tools;
   auto addDefaultTasksFromOptions = [&](const std::map<std::string, boost::any>& options) {
@@ -84,6 +82,10 @@ void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options
         return jpet_common_tools::make_unique<JPetScopeLoader>(std::unique_ptr<JPetScopeTask>(new JPetScopeTask("JPetScopeReader")));
       };
       outChain.insert(outChain.begin(), task2);
+    }
+    if (fileType == FileTypeChecker::kMCGeant) {
+      auto taskInfo = TaskInfo("JPetGeantParser", "mcGeant", "mc.hits", 1);
+      addTaskToChain(generatorsMap, taskInfo, outChain);
     }
     auto paramBankHandlerTask = []() {
       return jpet_common_tools::make_unique<JPetParamBankHandlerTask>("ParamBank Filling");
