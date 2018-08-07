@@ -246,49 +246,6 @@ size_t JPetGeomMapping::calcDeltaID(const JPetBarrelSlot &slot1,
 }
 
 /**
- * Return the numer of a PhotoMupliplier in a context of all the Layers
- */
-size_t JPetGeomMapping::calcGlobalPMTNumber(const JPetPM &pmt) const
-{
-  return -1;
-  const size_t number_of_sides = 2;
-  const auto layer_number = getLayerNumber(pmt.getBarrelSlot().getLayer());
-  size_t pmt_no = 0;
-  for (size_t l = 1; l <layer_number; l++)
-    pmt_no += number_of_sides * fThetaToSlot[l - 1].size();
-  const auto slot_number = getSlotNumber(pmt.getBarrelSlot());
-  if (pmt.getSide() == JPetPM::SideB)
-    pmt_no += fThetaToSlot[layer_number - 1].size();
-  pmt_no += slot_number - 1;
-  return pmt_no;
-}
-
-/**
- * Return the numer of a Barrel Slot in a context of all the Layers
- */
-size_t JPetGeomMapping::getGlobalSlotNumber(const JPetBarrelSlot &slot) const
-{
-  auto layerNr = getLayerNumber(slot.getLayer());
-  auto index = layerNr - 1;
-  auto previousSlots = 0;
-  for (auto i = 0u; i <fNumberOfSlotsInLayer.size(); i++)
-  {
-    if (index <= i)
-      break;
-    previousSlots = previousSlots + fNumberOfSlotsInLayer[i];
-  }
-  auto slotNrInLayer = getSlotNumber(slot);
-  if (slotNrInLayer == kBadSlotNumber)
-  {
-    return kBadSlotNumber;
-  }
-  else
-  {
-    return previousSlots + getSlotNumber(slot);
-  }
-}
-
-/**
  * Private method, that returns a map which reflects the relation:
  * Layer id, Slot id, PM side, threshold --> TOMB channel number
  * TOMB channel is a unique identifier that corresponds a single front-end
