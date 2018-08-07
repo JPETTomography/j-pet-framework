@@ -73,7 +73,6 @@ BOOST_AUTO_TEST_CASE(goodZipRun)
 BOOST_AUTO_TEST_CASE(goodMCRun)
 {
   JPetManager &manager = JPetManager::getManager();
-  manager.clearRegisteredTasks();
   const char* args[11] = {
     "test/Path",
     "--file",
@@ -87,7 +86,7 @@ BOOST_AUTO_TEST_CASE(goodMCRun)
     "-i",
     "44"
   };
-  BOOST_REQUIRE(manager.run(11, args));
+  BOOST_REQUIRE_NO_THROW(manager.run(11, args));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
