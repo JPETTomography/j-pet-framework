@@ -42,7 +42,8 @@ bool JPetInputHandler::openInput(const char* inputFilename, const JPetParams& pa
   if (fReader->openFileAndLoadData(inputFilename, JPetReader::kRootTreeName.c_str())) {
     /// For all types of files which has not hld format we assume
     /// that we can read paramBank from the file.
-    if (FileTypeChecker::getInputFileType(options) != FileTypeChecker::kHldRoot ) {
+    if (FileTypeChecker::getInputFileType(options) != FileTypeChecker::kHldRoot &&
+        FileTypeChecker::getInputFileType(options) != FileTypeChecker::kMCGeant ) {
       auto paramManager = params.getParamManager();
       assert(paramManager);
       if (!paramManager->readParametersFromFile(dynamic_cast<JPetReader*> (fReader.get()))) {
