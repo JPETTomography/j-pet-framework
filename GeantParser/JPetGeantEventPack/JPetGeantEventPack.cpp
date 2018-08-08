@@ -18,10 +18,10 @@
 ClassImp(JPetGeantEventPack)
 
 JPetGeantEventPack::JPetGeantEventPack():
-    fMCHits("JPetGeantScinHits",10000), fMCDecayTrees("JPetGeantDecayTree",1000),
-    fEvtIndex(0), fHitIndex(0), fMCDecayTreesIndex(0)
+  fMCHits("JPetGeantScinHits", 10000), fMCDecayTrees("JPetGeantDecayTree", 1000),
+  fEvtIndex(0), fHitIndex(0), fMCDecayTreesIndex(0)
 {
-    fGenInfo = new JPetGeantEventInformation();
+  fGenInfo = new JPetGeantEventInformation();
 }
 
 JPetGeantScinHits* JPetGeantEventPack::ConstructNextHit()
@@ -32,32 +32,32 @@ JPetGeantScinHits* JPetGeantEventPack::ConstructNextHit()
 
 JPetGeantDecayTree* JPetGeantEventPack::ConstructNextDecayTree()
 {
-  return (JPetGeantDecayTree*) fMCDecayTrees.ConstructedAt(fMCDecayTreesIndex++); 
+  return (JPetGeantDecayTree*) fMCDecayTrees.ConstructedAt(fMCDecayTreesIndex++);
 }
 
 
 JPetGeantEventPack::~JPetGeantEventPack()
 {
-    fMCHits.Clear("C");
-    fMCDecayTrees.Clear("C");
+  fMCHits.Clear("C");
+  fMCDecayTrees.Clear("C");
 
-    fEvtIndex = 0;  
-    fHitIndex = 0;
-    fMCDecayTreesIndex = 0;
+  fEvtIndex = 0;
+  fHitIndex = 0;
+  fMCDecayTreesIndex = 0;
 
-    fGenInfo->Clear();
+  fGenInfo->Clear();
 }
 
 void JPetGeantEventPack::Clear()
 {
-    fMCHits.Clear("C");
-    fMCDecayTrees.Clear("C");
+  fMCHits.Clear("C");
+  fMCDecayTrees.Clear("C");
 
-    fEvtIndex = 0;  
-    fHitIndex = 0;
-    fMCDecayTreesIndex = 0;
+  fEvtIndex = 0;
+  fHitIndex = 0;
+  fMCDecayTreesIndex = 0;
 
-    fGenInfo->Clear();
+  fGenInfo->Clear();
 }
 
 
