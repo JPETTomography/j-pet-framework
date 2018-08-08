@@ -51,7 +51,7 @@ bool JPetGeantParser::init()
     fMinTime = getOptionAsDouble(fParams.getOptions(), kMinTimeWindowParamKey);
   }
   if (isOptionSet(fParams.getOptions(), kSourceActivityParamKey)) {
-    kSimulatedActivity = getOptionAsDouble(fParams.getOptions(), kSourceActivityParamKey);
+    fSimulatedActivity = getOptionAsDouble(fParams.getOptions(), kSourceActivityParamKey);
   }
   if (isOptionSet(fParams.getOptions(), kMakeHistogramsParamKey)) {
     fMakeHisto = getOptionAsBool(fParams.getOptions(), kMakeHistogramsParamKey);
@@ -83,11 +83,11 @@ bool JPetGeantParser::exec()
 
     processMCEvent(mcEventPack);
 
-    if (activityIndex > abs(fMinTime * kSimulatedActivity * pow(10, -6))) {
+    if (fActivityIndex > abs(fMinTime * fSimulatedActivity * pow(10, -6))) {
       saveHits();
-      activityIndex = 0;
+      fActivityIndex = 0;
     } else {
-      activityIndex++;
+      fActivityIndex++;
     }
 
   } else {
@@ -163,27 +163,27 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
   // fill efficiency histograms
 
   if ( isGenPrompt && fMakeEffiHisto ) {
-    for ( int i = 0; i < effiHisto_ene_nBin; i++) {
+    for ( int i = 0; i < kEffiHisto_ene_nBin; i++) {
       getStatistics().getEffiHisto("effi_prompt_eneDepos")->Fill(isRecPrompt &&
-          ( enePrompt > i * effiHisto_ene_width )
-          , i * effiHisto_ene_width);
+          ( enePrompt > i * kEffiHisto_ene_width )
+          , i * kEffiHisto_ene_width);
     }
   }
 
   if (isGen2g && fMakeEffiHisto ) {
-    for ( int i = 0; i < effiHisto_ene_nBin; i++) {
+    for ( int i = 0; i < kEffiHisto_ene_nBin; i++) {
       getStatistics().getEffiHisto("effi_2g_hit_eneDepos")->Fill(isRec2g &&
-          ( ene2g[0] > i * effiHisto_ene_width ) && ( ene2g[1] > i * effiHisto_ene_width)
-          , i * effiHisto_ene_width);
+          ( ene2g[0] > i * kEffiHisto_ene_width ) && ( ene2g[1] > i * kEffiHisto_ene_width)
+          , i * kEffiHisto_ene_width);
     }
 
   }
 
   if (isGen3g && fMakeEffiHisto ) {
-    for ( int i = 0; i < effiHisto_ene_nBin; i++) {
+    for ( int i = 0; i < kEffiHisto_ene_nBin; i++) {
       getStatistics().getEffiHisto("effi_3g_hit_eneDepos")->Fill(isRec3g &&
-          ( ene3g[0] > i * effiHisto_ene_width ) && ( ene3g[1] > i * effiHisto_ene_width) && (ene3g[2] > i * effiHisto_ene_width)
-          , i * effiHisto_ene_width);
+          ( ene3g[0] > i * kEffiHisto_ene_width ) && ( ene3g[1] > i * kEffiHisto_ene_width) && (ene3g[2] > i * kEffiHisto_ene_width)
+          , i * kEffiHisto_ene_width);
     }
 
   }
@@ -210,8 +210,8 @@ void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo, bool i
     getStatistics().getHisto2D("gen_prompt_YZ")->Fill(evInfo->GetVtxPromptPositionY(), evInfo->GetVtxPromptPositionZ());
 
 
-    for (Int_t i = 0; i < effiMap_nSlice; i++) {
-      if ((-20 + effiMap_width * i < evInfo->GetVtxPromptPositionZ()) && (evInfo->GetVtxPromptPositionZ() < -20 + effiMap_width * (i + 1))) {
+    for (Int_t i = 0; i < kEffiMap_nSlice; i++) {
+      if ((-20 + kEffiMap_width * i < evInfo->GetVtxPromptPositionZ()) && (evInfo->GetVtxPromptPositionZ() < -20 + kEffiMap_width * (i + 1))) {
         if (fMakeEffiHisto) {
           getStatistics().getEffiHisto("effi_prompt_vtx_" + TString::Itoa(i, 10))->Fill(
             isRecPrompt,
@@ -226,8 +226,8 @@ void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo, bool i
   if (isGen2g) {
     getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(2);
 
-    for (Int_t i = 0; i < effiMap_nSlice; i++) {
-      if ((-20 + effiMap_width * i < evInfo->GetVtxPositionZ()) && (evInfo->GetVtxPositionZ() < -20 + effiMap_width * (i + 1))) {
+    for (Int_t i = 0; i < kEffiMap_nSlice; i++) {
+      if ((-20 + kEffiMap_width * i < evInfo->GetVtxPositionZ()) && (evInfo->GetVtxPositionZ() < -20 + kEffiMap_width * (i + 1))) {
         if (fMakeEffiHisto) {
           getStatistics().getEffiHisto("effi_2g_vtx_" + TString::Itoa(i, 10))->Fill(
             isRec2g,
@@ -239,8 +239,8 @@ void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo, bool i
 
   if (isGen3g) {
     getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(3);
-    for (Int_t i = 0; i < effiMap_nSlice; i++) {
-      if ((-20. + effiMap_width * i < evInfo->GetVtxPositionZ()) && (evInfo->GetVtxPositionZ() < -20. + effiMap_width * (i + 1))) {
+    for (Int_t i = 0; i < kEffiMap_nSlice; i++) {
+      if ((-20. + kEffiMap_width * i < evInfo->GetVtxPositionZ()) && (evInfo->GetVtxPositionZ() < -20. + kEffiMap_width * (i + 1))) {
         if (fMakeEffiHisto) {
           getStatistics().getEffiHisto("effi_3g_vtx_" + TString::Itoa(i, 10))->Fill(
             isRec3g,
@@ -433,26 +433,26 @@ void JPetGeantParser::bookEfficiencyHistograms()
   getStatistics().createHistogram(
     new TEfficiency("effi_3g_hit_eneDepos",
                     "effi 3g ene deposition",
-                    effiHisto_ene_nBin, 0.0, effiHisto_ene_nBin * effiHisto_ene_width )
+                    kEffiHisto_ene_nBin, 0.0, kEffiHisto_ene_nBin * kEffiHisto_ene_width )
   );
 
   getStatistics().createHistogram(
     new TEfficiency("effi_2g_hit_eneDepos",
                     "effi 2g ene deposition",
-                    effiHisto_ene_nBin, 0.0, effiHisto_ene_nBin * effiHisto_ene_width )
+                    kEffiHisto_ene_nBin, 0.0, kEffiHisto_ene_nBin * kEffiHisto_ene_width )
   );
 
 
   getStatistics().createHistogram(
     new TEfficiency("effi_prompt_eneDepos",
                     "effi prompt ene deposition",
-                    effiHisto_ene_nBin, 0.0, effiHisto_ene_nBin * effiHisto_ene_width )
+                    kEffiHisto_ene_nBin, 0.0, kEffiHisto_ene_nBin * kEffiHisto_ene_width )
   );
 
 
 
 
-  for (Int_t i = 0; i < effiMap_nSlice; i++) {
+  for (Int_t i = 0; i < kEffiMap_nSlice; i++) {
     getStatistics().createHistogram(
       new TEfficiency(TString("effi_prompt_vtx_") + TString::Itoa(i, 10),
                       "effi prompt registration as vtx ",
