@@ -14,12 +14,24 @@
  */
 
 #include <JPetGeantParser/JPetGeantParserTools.h>
-#include<TRandom3.h>
-#include<TMath.h>
+#include <TMath.h>
+
+/**
+ * @brief Set the seed of a single pseudorandom number generator used for smearing of generated values in JPetGeantParserTools methods
+ *
+ * This method can be optionally used to have the pseudorandom number generator
+ * start with a particular seed. If this method is not used, the generator will
+ * be initialized with seed=4357, see:
+ * https://root.cern.ch/doc/master/classTRandom3.html
+ *
+ */
+void JPetGeantParserTools::setGeneratorSeed(unsigned long seed)
+{
+  fRandomGenarator.SetSeed(seed);
+}
 
 JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank  )
 {
-
   JPetMCHit mcHit = JPetMCHit(
                       0,//UInt_t MCDecayTreeIndex,
                       0,//UInt_t MCVtxIndex,
@@ -30,13 +42,11 @@ JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, con
                       geantHit->GetMomentumIn()
                     );
 
-
   JPetScin& scin =  paramBank.getScintillator(geantHit->GetScinID());
   mcHit.setScintillator(scin);
   mcHit.setBarrelSlot(scin.getBarrelSlot());
   return mcHit;
 }
-
 
 JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBank& paramBank, const float timeShift, const float z_resolution )
 {
@@ -56,30 +66,25 @@ JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBa
 
 float JPetGeantParserTools::addZHitSmearing(float zIn, float z_res)
 {
-  std::unique_ptr<TRandom3> random(new TRandom3(0));
-
-  return random->Gaus(zIn, z_res);
+  return fRandomGenarator.Gaus(zIn, z_res);
 }
 
 float JPetGeantParserTools::addEnergySmearing(float eneIn)
 {
   // eneIn in keV
   float alpha = 0.044 / sqrt(eneIn / 1000.);
-  std::unique_ptr<TRandom3> random(new TRandom3(0));
-
-  return eneIn + alpha * eneIn * random->Gaus(0, 1);
+  return eneIn + alpha * eneIn * fRandomGenarator.Gaus(0, 1);
 }
 
 float JPetGeantParserTools::addTimeSmearing(float timeIn, float eneIn)
 {
   // eneIn in keV, timeIn in ps
   float time;
-  std::unique_ptr<TRandom3> random(new TRandom3(0));
 
   if ( eneIn > 200 ) {
-    time = timeIn + 80 * random->Gaus(0, 1);
+    time = timeIn + 80 * fRandomGenarator.Gaus(0, 1);
   } else {
-    time = timeIn +  80 * random->Gaus(0, 1) / sqrt(eneIn / 270);
+    time = timeIn +  80 * fRandomGenarator.Gaus(0, 1) / sqrt(eneIn / 270);
   }
 
   return time;
@@ -97,7 +102,6 @@ void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit, const J
     bool& isRecPrompt, std::array<bool, 2>& isSaved2g, std::array<bool, 3>& isSaved3g,
     float& enePrompt, std::array<float, 2>& ene2g, std::array<float, 3>& ene3g )
 {
-
 
   // identify generated hits
   if ( geantHit->GetGenGammaMultiplicity() == 1) {

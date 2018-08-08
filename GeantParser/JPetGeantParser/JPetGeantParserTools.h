@@ -18,6 +18,8 @@
 
 #include <map>
 #include <vector>
+#include <array>
+#include <TRandom3.h>
 #include <JPetMCHit/JPetMCHit.h>
 #include <JPetHit/JPetHit.h>
 #include <JPetMCDecayTree/JPetMCDecayTree.h>
@@ -25,15 +27,12 @@
 #include <JPetGeantEventPack/JPetGeantEventPack.h>
 #include <JPetGeomMapping/JPetGeomMapping.h>
 #include "JPetParamBank/JPetParamBank.h"
-#include <array>
 
 #ifdef __CINT__
 //when cint is used instead of compiler, override word is not recognized
 //nevertheless it's needed for checking if the structure of project is correct
 #   define override
 #endif
-
-
 
 class JPetGeantParserTools
 {
@@ -49,8 +48,15 @@ public:
   static bool isHitReconstructed(JPetHit& hit, const float th);
 
   static void identifyRecoHits(JPetGeantScinHits* geantHit, const JPetHit& hit,
-                               bool& isRecPrompt, std::array<bool, 2>& isSaved2g, std::array<bool, 3>& isSaved3g,
-                               float& enePrompt, std::array<float, 2>& ene2g, std::array<float, 3>& ene3g );
+                               bool& isRecPrompt, std::array<bool, 2>& isSaved2g,
+                               std::array<bool, 3>& isSaved3g,
+                               float& enePrompt, std::array<float, 2>& ene2g,
+                               std::array<float, 3>& ene3g );
+
+  static void setGeneratorSeed(unsigned long seed);
+
+private:
+  static TRandom3 fRandomGenarator;
 
 };
 
