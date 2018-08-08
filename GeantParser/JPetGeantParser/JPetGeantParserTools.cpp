@@ -16,6 +16,10 @@
 #include <JPetGeantParser/JPetGeantParserTools.h>
 #include <TMath.h>
 
+const float JPetGeantParserTools::kEnergyThreshold = 200.;
+const float JPetGeantParserTools::kReferenceEnergy = 270.;
+const float JPetGeantParserTools::kTimeResolutionConstant = 80.;
+
 TRandom3 JPetGeantParserTools::fRandomGenerator = TRandom3();
 
 /**

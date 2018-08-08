@@ -57,9 +57,9 @@ public:
 
 private:
   static TRandom3 fRandomGenerator;
-  static const float kEnergyThreshold = 200.;
-  static const float kReferenceEnergy = 270.;
-  static const float kTimeResolutionConstant = 80.;
+  static const float kEnergyThreshold;
+  static const float kReferenceEnergy;
+  static const float kTimeResolutionConstant;
   
 };
 
