@@ -94,10 +94,7 @@ float JPetGeantParserTools::addTimeSmearing(float timeIn, float eneIn)
 
 bool JPetGeantParserTools::isHitReconstructed(JPetHit& hit, const float th)
 {
-  bool isOk = true;
-  if ( hit.getEnergy() < th ) isOk = false;
-
-  return isOk;
+  return hit.getEnergy() >= th;
 }
 
 void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit, const JPetHit& recHit,
