@@ -16,6 +16,8 @@
 #include <JPetGeantParser/JPetGeantParserTools.h>
 #include <TMath.h>
 
+TRandom3 JPetGeantParserTools::fRandomGenerator = TRandom3();
+
 /**
  * @brief Set the seed of a single pseudorandom number generator used for smearing of generated values in JPetGeantParserTools methods
  *
@@ -27,7 +29,7 @@
  */
 void JPetGeantParserTools::setGeneratorSeed(unsigned long seed)
 {
-  fRandomGenarator.SetSeed(seed);
+  fRandomGenerator.SetSeed(seed);
 }
 
 JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank  )
@@ -66,14 +68,14 @@ JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBa
 
 float JPetGeantParserTools::addZHitSmearing(float zIn, float z_res)
 {
-  return fRandomGenarator.Gaus(zIn, z_res);
+  return fRandomGenerator.Gaus(zIn, z_res);
 }
 
 float JPetGeantParserTools::addEnergySmearing(float eneIn)
 {
   // eneIn in keV
   float alpha = 0.044 / sqrt(eneIn / 1000.);
-  return eneIn + alpha * eneIn * fRandomGenarator.Gaus(0, 1);
+  return eneIn + alpha * eneIn * fRandomGenerator.Gaus(0, 1);
 }
 
 float JPetGeantParserTools::addTimeSmearing(float timeIn, float eneIn)
@@ -82,9 +84,9 @@ float JPetGeantParserTools::addTimeSmearing(float timeIn, float eneIn)
   float time;
 
   if ( eneIn > 200 ) {
-    time = timeIn + 80 * fRandomGenarator.Gaus(0, 1);
+    time = timeIn + 80 * fRandomGenerator.Gaus(0, 1);
   } else {
-    time = timeIn +  80 * fRandomGenarator.Gaus(0, 1) / sqrt(eneIn / 270);
+    time = timeIn +  80 * fRandomGenerator.Gaus(0, 1) / sqrt(eneIn / 270);
   }
 
   return time;

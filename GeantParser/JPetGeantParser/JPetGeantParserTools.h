@@ -56,7 +56,7 @@ public:
   static void setGeneratorSeed(unsigned long seed);
 
 private:
-  static TRandom3 fRandomGenarator;
+  static TRandom3 fRandomGenerator;
 
 };
 
