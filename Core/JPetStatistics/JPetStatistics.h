@@ -18,12 +18,13 @@
 
 #include "JPetLoggerInclude.h"
 #include <THashTable.h>
+#include <TH1F.h>
+#include <TH2F.h>
 #include <TString.h>
 #include <TCanvas.h>
 #include <TGraph.h>
+#include <TEfficiency.h>
 #include <string>
-#include <TH1F.h>
-#include <TH2F.h>
 #include <map>
 
 /**
@@ -42,6 +43,7 @@ public:
   void createHistogram(TObject* object);
   void createGraph(TObject* object);
   void createCanvas(TObject* object);
+  TEfficiency* getEffiHisto(const char* name);
   TH1F* getHisto1D(const char* name);
   TH2F* getHisto2D(const char* name);
   TGraph* getGraph(const char* name);
