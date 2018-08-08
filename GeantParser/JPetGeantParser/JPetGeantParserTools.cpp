@@ -83,10 +83,10 @@ float JPetGeantParserTools::addTimeSmearing(float timeIn, float eneIn)
   // eneIn in keV, timeIn in ps
   float time;
 
-  if ( eneIn > 200 ) {
-    time = timeIn + 80. * fRandomGenerator.Gaus(0., 1.);
+  if ( eneIn > ENERGY_THRESHOLD ) {
+    time = timeIn + TIME_RESOLUTION_CONSTANT * fRandomGenerator.Gaus(0., 1.);
   } else {
-    time = timeIn +  80. * fRandomGenerator.Gaus(0., 1.) / sqrt(eneIn / 270);
+    time = timeIn + TIME_RESOLUTION_CONSTANT * fRandomGenerator.Gaus(0., 1.) / sqrt(eneIn / REFERENCE_ENERGY);
   }
 
   return time;

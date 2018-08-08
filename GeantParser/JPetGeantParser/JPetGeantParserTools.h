@@ -16,6 +16,10 @@
 #ifndef JPETGEANTPARSERTOOLS_H
 #define JPETGEANTPARSERTOOLS_H
 
+#define ENERGY_THRESHOLD 200.
+#define REFERENCE_ENERGY 270.
+#define TIME_RESOLUTION_CONSTANT 80.
+
 #include <map>
 #include <vector>
 #include <array>
