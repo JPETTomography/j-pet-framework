@@ -16,10 +16,6 @@
 #ifndef JPETGEANTPARSERTOOLS_H
 #define JPETGEANTPARSERTOOLS_H
 
-#define ENERGY_THRESHOLD 200.
-#define REFERENCE_ENERGY 270.
-#define TIME_RESOLUTION_CONSTANT 80.
-
 #include <map>
 #include <vector>
 #include <array>
@@ -61,7 +57,10 @@ public:
 
 private:
   static TRandom3 fRandomGenerator;
-
+  static const float kEnergyThreshold = 200.;
+  static const float kReferenceEnergy = 270.;
+  static const float kTimeResolutionConstant = 80.;
+  
 };
 
 #endif
