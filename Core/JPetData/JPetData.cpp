@@ -21,3 +21,9 @@ TObject& JPetData::getEvent() const
 {
   return fEvent;
 }
+
+JPetData& JPetData::operator=(const JPetData& other)
+{
+  fEvent = other.getEvent();
+  return *this;
+}

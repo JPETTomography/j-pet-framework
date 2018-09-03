@@ -30,7 +30,8 @@ JPetTaskFactory::JPetTaskFactory() { };
 
 std::vector<TaskGenerator> JPetTaskFactory::createTaskGeneratorChain(const std::map<std::string, boost::any>& options) const
 {
-  return generateTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
+  //  return generateTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
+  return generateDirectTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
 }
 
 bool JPetTaskFactory::addTaskInfo(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numIter)
@@ -69,6 +70,39 @@ TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskI
   for (const auto& taskInfo : taskInfoVect) {
     addTaskToChain(generatorsMap, taskInfo, chain);
   }
+  return chain;
+}
+
+TaskGeneratorChain generateDirectTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options)
+{
+  TaskGeneratorChain chain;
+  addDefaultTasksFromOptions(options, generatorsMap, chain);
+
+  auto inT = taskInfoVect.front().inputFileType;
+  auto outT = taskInfoVect.back().outputFileType;
+  std::string name = "Direct Task Chain";
+
+  chain.push_back(
+  		  [name, inT, outT, generatorsMap, taskInfoVect]() {
+  		       auto task = jpet_common_tools::make_unique<JPetTaskIO>(name.c_str(), inT.c_str(), outT.c_str());
+		       
+  		       for (const auto& taskInfo : taskInfoVect) {
+			 
+  		       	 auto task_name = taskInfo.name;
+			 
+  		       	 if (generatorsMap.find(task_name) != generatorsMap.end()) {
+  		       	   TaskGenerator userTaskGen = generatorsMap.at(task_name);
+			   
+  		       	   task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
+			   
+  		       	 } else {
+  		       	   ERROR(Form("The requested task %s is not registered! The output chain might be broken!", name.c_str()));
+  		       	   return task;
+  		       	 }
+  		       }	 
+  		       return task;
+  		     });
+   
   return chain;
 }
 

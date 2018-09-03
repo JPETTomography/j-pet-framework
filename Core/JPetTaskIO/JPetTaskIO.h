@@ -58,6 +58,7 @@ public:
   virtual ~JPetTaskIO();
   virtual bool init(const JPetParams& inOptions) override;
   virtual bool run(const JPetDataInterface& inData) override;
+  virtual bool runDirect(const JPetDataInterface& inData);
   virtual bool terminate(JPetParams& outOptions) override;
   virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) override;
   void displayProgressBar(std::string taskName, int currentEventNumber, int numberOfEvents) const;

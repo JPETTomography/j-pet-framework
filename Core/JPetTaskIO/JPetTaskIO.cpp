@@ -76,8 +76,16 @@ bool JPetTaskIO::init(const JPetParams& params)
   return true;
 }
 
-bool JPetTaskIO::run(const JPetDataInterface&)
+std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFile(const OptsStrAny opts) const
 {
+  /// We cannot remove this method completely and leave the one from JPetTaskIOTools, because it  is overloaded in JPetScopeLoader class.
+  return JPetTaskIOTools::setInputAndOutputFile(opts, fTaskInfo.fResetOutputPath, fTaskInfo.fInFileType, fTaskInfo.fOutFileType);
+}
+
+bool JPetTaskIO::run(const JPetDataInterface& data)
+{
+  return runDirect(data);
+  
   using namespace jpet_options_tools;
   if (fSubTasks.empty()) {
     ERROR("No subTask set");
@@ -139,6 +147,102 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     }
     fParams = mergeWithExtraParams(fParams, subTaskParams);
   }
+  return true;
+}
+
+
+bool JPetTaskIO::runDirect(const JPetDataInterface&)
+{
+  using namespace jpet_options_tools;
+  if (fSubTasks.empty()) {
+    ERROR("No subTask set");
+    return false;
+  }
+  if (isInput()) {
+    if (!fInputHandler) {
+      ERROR("No inputHandler set");
+      return false;
+    }
+  }
+
+  // init all subtasks before any processing
+  for (const auto& pTask : fSubTasks) {
+    auto subTaskName = pTask->getName();
+    auto ok = pTask->init(fParams);
+    if (!ok) {
+      /// @todo: skipping makes no sense in this case, terminate everything
+      ERROR("In init() of:" + subTaskName + ". run()  and terminate() of this task will be skipped.");
+      continue;
+    }
+  }
+
+  auto& firstTask = fSubTasks.front();
+
+  auto firstEvent = 0ll;
+  auto lastEvent = 0ll;
+  bool isOK = false;
+  assert(fInputHandler);
+  std::tie(isOK, firstEvent, lastEvent) = fInputHandler->getEventRange(fParams.getOptions());
+  if (!isOK) {
+    ERROR("Some error occured in getEventRange");
+        return false;
+  }
+  assert(lastEvent >= 0);
+
+  for (auto i = firstEvent; i <= lastEvent; i++) {
+
+    // @todo: make progressbar work with the direct chain
+    // if (isProgressBar(fParams.getOptions())) {
+    //   displayProgressBar(i, lastEvent);
+    // }
+
+    // subsequently run all subtasks on the same event
+
+    TObject * output_event = &(fInputHandler->getNextEntry());
+
+    // iterator
+    auto subtask_it = fSubTasks.begin();
+
+    bool ok;
+    while(subtask_it != fSubTasks.end()){
+
+      auto& current_task = *subtask_it;
+
+      std::cout << static_cast<JPetTimeWindow* const>(output_event)->getNumberOfEvents() <<std::endl;
+      
+      ok = current_task->run(JPetData(*output_event));
+
+      if (!ok) {
+	ERROR("In run() of:" + current_task->getName() + ". ");
+      }
+
+      output_event = dynamic_cast<JPetUserTask*>(current_task.get())->getOutputEvents();
+
+      subtask_it++;
+    }
+
+    auto& lastTask = fSubTasks.back();
+    
+    if (isOutput()) {
+      if (!fOutputHandler->writeEventToFile(lastTask.get())) {
+	WARNING("Some problems occured, while writing the event to file.");
+	return false;
+      }
+    }
+    
+  }
+
+  // terminate all subtasks after all processing
+  for (const auto& pTask : fSubTasks) {
+    JPetParams subTaskParams;
+
+    bool ok = pTask->terminate(subTaskParams);
+    if (!ok) {
+      ERROR("In terminate() of:" + pTask->getName() + ". ");
+    }
+    fParams = mergeWithExtraParams(fParams, subTaskParams);
+  }
+  
   return true;
 }
 

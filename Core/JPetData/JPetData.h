@@ -25,6 +25,7 @@ class JPetData: public JPetDataInterface
 {
 public:
   explicit JPetData(TObject& event);
+  JPetData& operator=(const JPetData&);
   TObject& getEvent() const;
 protected:
   TObject& fEvent;
