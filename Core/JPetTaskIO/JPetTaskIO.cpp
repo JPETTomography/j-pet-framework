@@ -208,8 +208,6 @@ bool JPetTaskIO::runDirect(const JPetDataInterface&)
 
       auto& current_task = *subtask_it;
 
-      std::cout << static_cast<JPetTimeWindow* const>(output_event)->getNumberOfEvents() <<std::endl;
-      
       ok = current_task->run(JPetData(*output_event));
 
       if (!ok) {
