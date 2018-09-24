@@ -20,13 +20,11 @@ public:
  JPetGATEConverter();   
  JPetGATEConverter(std::string json_file,int run_id);   
  int checkArgument(TString inputFile);
- TString createOutput(TString inputFile);
- void converterTVector3(TString inputFile);
+ TString createOutputFileName(TString inputFile);  //it creates output root file name
  int converterJPetHit(TString inputFile); 
  int converterJPetMCHit(TString inputFile); 
  int calculate_strip_ID(Float_t x,Float_t y); 
 
- void converter();
 
 private:
   
