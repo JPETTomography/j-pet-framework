@@ -31,6 +31,7 @@ std::map<std::string, boost::any> kDefaultOptions = {
   {"firstEvent_int", -1},
   {"lastEvent_int", -1},
   {"progressBar_bool", false},
+  {"direct_bool", false},
   {"runId_int", -1},
   {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
   {"unpackerCalibFile_std::string", std::string("")}
@@ -45,6 +46,7 @@ std::map<std::string, std::string> kOptCmdLineNameToExtendedName = {
   {"unpackerCalibFile", "unpackerCalibFile_std::string"},
   {"runId", "runId_int"},
   {"progressBar", "progressBar_bool"},
+  {"direct", "direct_bool"},
   {"localDB", "localDB_std::string"},
   {"localDBCreate", "localDBCreate_std::string"},
   {"userCfg", "userCfg_std::string"}

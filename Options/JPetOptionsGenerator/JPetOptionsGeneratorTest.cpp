@@ -242,6 +242,27 @@ BOOST_AUTO_TEST_CASE(generateAndValidateOptions_TestWithUserOptions)
   BOOST_REQUIRE(isOptionSet(result, "boolOption_bool"));
 }
 
+BOOST_AUTO_TEST_CASE(generateAndValidateOptions_TestBooleanOptions_Unset)
+{
+  JPetOptionsGenerator generator;
+  auto commandLine = "main.x -i 231 -f unitTestData/JPetOptionsGeneratorTest/infile.root -t root" ;
+  auto inArgs =  getCmdLineArgs(commandLine);
+  auto result = generator.generateAndValidateOptions(inArgs); BOOST_REQUIRE(!result.empty());
+  BOOST_REQUIRE_EQUAL(isProgressBar(result), false);
+  BOOST_REQUIRE_EQUAL(isDirectProcessing(result), false);
+}
+
+BOOST_AUTO_TEST_CASE(generateAndValidateOptions_TestBooleanOptions_Set)
+{
+  JPetOptionsGenerator generator;
+  auto commandLine = "main.x -i 231 -f unitTestData/JPetOptionsGeneratorTest/infile.root -t root -b -d" ;
+  auto inArgs =  getCmdLineArgs(commandLine);
+  auto result = generator.generateAndValidateOptions(inArgs);
+  BOOST_REQUIRE(!result.empty());
+  BOOST_REQUIRE_EQUAL(isProgressBar(result), true);
+  BOOST_REQUIRE_EQUAL(isDirectProcessing(result), true);
+}
+
 struct MyFixture {
   MyFixture()
   {
@@ -272,5 +293,6 @@ BOOST_FIXTURE_TEST_CASE(generateAndValidateOptions_roothld, MyFixture)
   BOOST_REQUIRE(!isLocalDB(result));
   BOOST_REQUIRE(!isLocalDBCreate(result));
 }
+
 
 BOOST_AUTO_TEST_SUITE_END()
