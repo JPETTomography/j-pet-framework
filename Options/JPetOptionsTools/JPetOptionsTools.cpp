@@ -190,6 +190,11 @@ bool isProgressBar(const std::map<std::string, boost::any>& opts)
   return any_cast<bool>(opts.at("progressBar_bool"));
 }
 
+bool isDirectProcessing(const std::map<std::string, boost::any>& opts)
+{
+  return any_cast<bool>(opts.at("direct_bool"));
+}
+
 bool isLocalDB(const std::map<std::string, boost::any>& opts)
 {
   return (bool)opts.count("localDB_std::string");

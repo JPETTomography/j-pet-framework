@@ -186,6 +186,36 @@ BOOST_AUTO_TEST_CASE(getTotalEventsTest)
   BOOST_REQUIRE_EQUAL(getTotalEvents(options), -1);
 }
 
+BOOST_AUTO_TEST_CASE(testBooleanOptions)
+{
+  OptsStrAny options = {
+    {"inputFile_std::string", std::string("input")},
+    {"scopeConfigFile_std::string", std::string("test.json")},
+    {"scopeInputDirectory_std::string", std::string("scopeData")},
+    {"outputFile_std::string", std::string("output")},
+    {"firstEvent_int", -1},
+    {"lastEvent_int", -1},
+    {"runId_int", 2001},
+    {"inputFileType_std::string", std::string("root")},
+    {"outputFileType_std::string", std::string("scope")},
+    {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
+    {"unpackerCalibFile_std::string", std::string("")},
+    {"progressBar_bool", false},
+    {"direct_bool", false}
+  };
+
+  BOOST_REQUIRE_EQUAL(isProgressBar(options), false);
+  BOOST_REQUIRE_EQUAL(isDirectProcessing(options), false);
+
+  OptsStrAny options2 = {
+    {"progressBar_bool", true},
+    {"direct_bool", true}
+  };
+
+  BOOST_REQUIRE_EQUAL(isProgressBar(options2), true);
+  BOOST_REQUIRE_EQUAL(isDirectProcessing(options2), true);
+}
+
 BOOST_AUTO_TEST_CASE(getOptionBy)
 {
   std::vector<std::string> tmp = {"aa", "bb"};

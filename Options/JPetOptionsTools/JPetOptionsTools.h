@@ -50,6 +50,7 @@ long long getLastEvent(const OptsStrAny& opts);
 long long getTotalEvents(const OptsStrAny& opts);
 int getRunNumber(const OptsStrAny& opts);
 bool isProgressBar(const OptsStrAny& opts);
+bool isDirectProcessing(const OptsStrAny& opts);
 bool isLocalDB(const OptsStrAny& opts);
 std::string getLocalDB(const OptsStrAny& opts);
 bool isLocalDBCreate(const OptsStrAny& opts);
