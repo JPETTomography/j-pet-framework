@@ -19,6 +19,7 @@
 #include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
 #include "./JPetParamBankHandlerTask/JPetParamBankHandlerTask.h"
 #include "./JPetTaskLooper/JPetTaskLooper.h"
+#include "./JPetOptionsTools/JPetOptionsTools.h"
 
 using TaskGenerator = std::function< std::unique_ptr<JPetTaskInterface>() >;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
@@ -30,8 +31,10 @@ JPetTaskFactory::JPetTaskFactory() { };
 
 std::vector<TaskGenerator> JPetTaskFactory::createTaskGeneratorChain(const std::map<std::string, boost::any>& options) const
 {
-  //  return generateTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
-  return generateDirectTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
+  if(jpet_options_tools::isDirectProcessing(options)){
+    return generateDirectTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);  
+  }
+  return generateTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
 }
 
 bool JPetTaskFactory::addTaskInfo(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numIter)
@@ -84,25 +87,23 @@ TaskGeneratorChain generateDirectTaskGeneratorChain(const std::vector<TaskInfo>&
 
   chain.push_back(
   		  [name, inT, outT, generatorsMap, taskInfoVect]() {
-  		       auto task = jpet_common_tools::make_unique<JPetTaskIO>(name.c_str(), inT.c_str(), outT.c_str());
+		    auto task = jpet_common_tools::make_unique<JPetTaskIO>(name.c_str(), inT.c_str(), outT.c_str());
 		       
-  		       for (const auto& taskInfo : taskInfoVect) {
-			 
-  		       	 auto task_name = taskInfo.name;
-			 
-  		       	 if (generatorsMap.find(task_name) != generatorsMap.end()) {
-  		       	   TaskGenerator userTaskGen = generatorsMap.at(task_name);
-			   
-  		       	   task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-			   
-  		       	 } else {
-  		       	   ERROR(Form("The requested task %s is not registered! The output chain might be broken!", name.c_str()));
-  		       	   return task;
-  		       	 }
-  		       }	 
-  		       return task;
-  		     });
-   
+		    for (const auto& taskInfo : taskInfoVect) {
+		      auto task_name = taskInfo.name;
+
+		      if (generatorsMap.find(task_name) != generatorsMap.end()) {
+			TaskGenerator userTaskGen = generatorsMap.at(task_name);
+
+			task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
+		      } else {
+			ERROR(Form("The requested task %s is not registered! The output chain might be broken!", name.c_str()));
+			return task;
+		      }
+		    }
+		    return task;
+		  });
+
   return chain;
 }
 
