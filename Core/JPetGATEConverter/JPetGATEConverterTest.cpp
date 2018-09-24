@@ -14,9 +14,8 @@ BOOST_AUTO_TEST_CASE( default_constructor )
   TString root_file = "unitTestData/JPetGATEConverterTest/test_384strips.root";       
   int dd;
   JPetGATEConverter conv; 
-  //dd = conv.converterJPetHit(root_file);  
-   dd = 1;                            
-  BOOST_REQUIRE(dd==1); 
+  dd = conv.converterJPetHit(root_file);                              
+  BOOST_REQUIRE_EQUAL(dd, -1); 
 }
 
 BOOST_AUTO_TEST_CASE( default_c )            
@@ -64,7 +63,7 @@ BOOST_AUTO_TEST_CASE( create_output_file_name)
   BOOST_REQUIRE_EQUAL(conv.createOutputFileName("blabla.root"),"blabla.gate.root"); 
   BOOST_REQUIRE_EQUAL(conv.createOutputFileName("abcd.root"),"abcd.gate.root"); 
   BOOST_REQUIRE_EQUAL(conv.createOutputFileName("jkl.root"),"jkl.gate.root"); 
-  //BOOST_REQUIRE_EQUAL(conv.createOutputFileName("blabla.root"),"blabla.ga.root"); // ok  bo test nie przechodzi -error
+
 }
 
 BOOST_AUTO_TEST_CASE(check_argument)
@@ -72,7 +71,6 @@ BOOST_AUTO_TEST_CASE(check_argument)
   JPetGATEConverter conv;	
   BOOST_REQUIRE_EQUAL(conv.checkArgument("blabla.root"),1); 
   BOOST_REQUIRE_EQUAL(conv.checkArgument("abc.root"),1);
-  //BOOST_REQUIRE_EQUAL(conv.checkArgument("abc.roo"),1); //ok error zla nazwa wejsciowa pliku
 
 } 
 

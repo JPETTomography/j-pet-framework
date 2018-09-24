@@ -52,7 +52,14 @@ int JPetGATEConverter::converterJPetHit(TString inputFile)
    int idStripTab[10]; 
                      
   const JPetParamBank& bank = fManager.getParamBank();   
-               
+
+  if (bank.isDummy()) {
+	ERROR("Param bank is not correct, we cannot convert JPetHit.");
+	return -1;
+	}             
+
+
+
   if (checkArgument(inputFile)==-1) { 
    ERROR("argument is incorrect");
    return -1;
@@ -60,8 +67,9 @@ int JPetGATEConverter::converterJPetHit(TString inputFile)
 
   finputFile = inputFile;   
   TFile *f = new TFile(inputFile);
-  TTree *g = (TTree*)f->Get("Hits"); 
+  TTree *g = (TTree*)f->Get(fTreeName[0].c_str()); 
   TString b;
+
   b = createOutputFileName(inputFile);              
   TFile *nf = new TFile(b,"recreate");                  
   TTree *tree = new TTree("tree","description");
@@ -123,7 +131,7 @@ int JPetGATEConverter::converterJPetMCHit(TString inputFile)
 
   finputFile = inputFile;                     				
   TFile *fm = new TFile(inputFile);						
-  TTree *gm = (TTree*)fm->Get("Hits"); 					
+  TTree *gm = (TTree*)fm->Get(fTreeName[0].c_str()); 					
   TString bmc;
   bmc = createOutputFileName(inputFile);             
   TFile *nfm = new TFile(bmc,"recreate");                 
@@ -172,25 +180,4 @@ int JPetGATEConverter::converterJPetMCHit(TString inputFile)
   return 1;  
 }
 
-int JPetGATEConverter::calculate_strip_ID(Float_t x,Float_t y)    
-{  
-  int ID;  
-  Float_t b; 
-  Float_t result;
-  Float_t alfa;
-  alfa = (2*3.14)/fnumb_strips;        
-  
-  result = atan2(y,x);  
-  result = result+3.14;	
-																																																																																																										
-  b = result/alfa;
-  ID = (int)(b);  
-  
-  if(ID < 0)
-   {
-      cout<< "ERROR id strip"<<endl;
-      return ID;
-   }
-   return ID;
-}                   
 					

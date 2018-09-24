@@ -23,7 +23,6 @@ public:
  TString createOutputFileName(TString inputFile);  //it creates output root file name
  int converterJPetHit(TString inputFile); 
  int converterJPetMCHit(TString inputFile); 
- int calculate_strip_ID(Float_t x,Float_t y); 
 
 
 private:
@@ -32,6 +31,8 @@ private:
   int fnumb_strips;  
   std::vector<JPetScin> fscins;  
   JPetParamManager fManager; 
+  std::vector<std::string> fTreeName = {"Hits", "gosia"};
             
 };
+
 #endif /*  !JPETGATECONVERTER_H */      
