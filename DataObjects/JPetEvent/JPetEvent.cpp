@@ -18,12 +18,22 @@
 
 ClassImp(JPetEvent);
 
-JPetEvent::JPetEvent(): TObject() {}
+JPetEvent::JPetEvent(): TObject(), fFlag(JPetEvent::Unknown) {}
 
 JPetEvent::JPetEvent(const std::vector<JPetHit>& hits,
   JPetEventType eventType, bool orderedByTime): TObject(), fType(eventType)
 {
   setHits(hits, orderedByTime);
+}
+
+void JPetEvent::setRecoFlag(JPetEvent::RecoFlag flag)
+{
+  fFlag = flag;
+}
+
+JPetEvent::RecoFlag JPetEvent::getRecoFlag() const
+{
+  return fFlag;
 }
 
 /**

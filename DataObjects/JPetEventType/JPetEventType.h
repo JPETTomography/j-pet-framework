@@ -21,6 +21,7 @@ enum JPetEventType {
   k2Gamma = 2,
   k3Gamma = 4,
   kPrompt = 8,
-  kScattered = 16
+  kScattered = 16,
+  kCosmic = 32
 };
 #endif /* !JPETEVENTTYPE_H */

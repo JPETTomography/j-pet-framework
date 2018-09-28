@@ -43,11 +43,15 @@ class JPetEvent: public TObject
 {
 
 public:
+  enum RecoFlag { Good, Bad, Unknown };
+
   JPetEvent();
   JPetEvent(const std::vector<JPetHit>& hits,
     JPetEventType eventType = JPetEventType::kUnknown,
     bool orderedByTime = true);
+  JPetEvent::RecoFlag getRecoFlag() const;
   const std::vector<JPetHit>& getHits() const;
+  void setRecoFlag(JPetEvent::RecoFlag flag);
   void setHits(const std::vector<JPetHit>& hits, bool orderedByTime = true);
   void addHit(const JPetHit& hit);
   JPetEventType getEventType() const;
@@ -65,6 +69,9 @@ protected:
   JPetEventType fType;
 #endif
 
-  ClassDef(JPetEvent, 4);
+private:
+  RecoFlag fFlag;
+
+  ClassDef(JPetEvent, 5);
 };
 #endif /* !JPETEVENT_H */

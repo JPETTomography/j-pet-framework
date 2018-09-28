@@ -32,13 +32,9 @@
 class JPetRawSignal: public JPetBaseSignal
 {
 public:
-  enum PointsSortOrder
-  {
-    ByThrValue,
-    ByThrNum
-  };
+  enum PointsSortOrder { ByThrValue, ByThrNum };
 
-  JPetRawSignal(const int points = 4);
+  JPetRawSignal();
   virtual ~JPetRawSignal();
   int getNumberOfPoints(JPetSigCh::EdgeType edge) const;
   void addPoint(const JPetSigCh& sigch);
@@ -55,7 +51,7 @@ private:
   std::vector<JPetSigCh> fLeadingPoints;
   std::vector<JPetSigCh> fTrailingPoints;
 
-  ClassDef(JPetRawSignal, 5);
+  ClassDef(JPetRawSignal, 6);
 };
 
 #endif /* !JPETRAWSIGNAL_H */

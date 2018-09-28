@@ -119,7 +119,7 @@ JPetPhysSignal makePhysSignal(float time, float qualityOfTime, double phe,
 
 JPetRawSignal makeRawSignal(const std::vector<JPetSigCh>& vec)
 {
-  JPetRawSignal rawSignalObject(vec.size());
+  JPetRawSignal rawSignalObject;
   for (const auto& sigch : vec) {
     rawSignalObject.addPoint(sigch);
   }

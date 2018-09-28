@@ -14,55 +14,247 @@
  */
 
 #include "JPetSigCh.h"
-#include <cstring>
 #include <limits>
 
 ClassImp(JPetSigCh);
 
 const float JPetSigCh::kUnset = std::numeric_limits<float>::infinity();
 
-void JPetSigCh::init() {
-  fValue = kUnset;
-  fType = Leading;
-  fThreshold = kUnset;
+/**
+ * Default constructor
+ */
+JPetSigCh::JPetSigCh(): TObject(), fFlag(JPetSigCh::Unknown), fType(JPetSigCh::Leading),
+fValue(kUnset), fThreshold(kUnset), fThresholdNumber(0), fDAQch(0) {}
+
+/**
+ * Constructor
+ */
+JPetSigCh::JPetSigCh(EdgeType edge, float time): TObject(), fFlag(JPetSigCh::Unknown),
+fType(edge), fValue(time), fThreshold(kUnset), fThresholdNumber(0), fDAQch(0) {}
+
+/**
+ * Destructor
+ */
+JPetSigCh::~JPetSigCh(){}
+
+/**
+ * Get the reconstruction flag
+ */
+JPetSigCh::RecoFlag JPetSigCh::getRecoFlag() const
+{
+  return fFlag;
+}
+
+/**
+ * Get the edge type
+ */
+JPetSigCh::EdgeType JPetSigCh::getType() const
+{
+  return fType;
+}
+
+/**
+ * Get the value of time in [ps]
+ */
+float JPetSigCh::getValue() const
+{
+  return fValue;
+}
+
+/**
+ * Get the value of threshold setting in [mV]
+ */
+float JPetSigCh::getThreshold() const
+{
+  return fThreshold;
+}
+
+/**
+ * Get the number of threshold of this Signal Channel.
+ * The thresholds are numbered starting from 1 according to ascending order
+ * of their corresponding DAQ channels.
+ */
+uint JPetSigCh::getThresholdNumber() const
+{
+  return fThresholdNumber;
+}
+
+/**
+ * Get the data acquisition channel
+ */
+int JPetSigCh::getDAQch() const
+{
+  return fDAQch;
+}
+
+/**
+ * Get the PM associated with this Signal Channel
+ */
+const JPetPM & JPetSigCh::getPM() const {
+  if(fPM.GetObject()) {
+    return (JPetPM&) *fPM.GetObject();
+  } else {
+    ERROR("No JPetPM slot set, Null object will be returned");
+    return JPetPM::getDummyResult();
+  }
+}
+
+/**
+ * Get the FEB associated with this Signal Channel
+ */
+const JPetFEB & JPetSigCh::getFEB() const {
+  if(fFEB.GetObject()) {
+    return (JPetFEB&) *fFEB.GetObject();
+  } else {
+    ERROR("No JPetFEB slot set, Null object will be returned");
+    return JPetFEB::getDummyResult();
+  }
+}
+
+/**
+ * Get the TRB associated with this Signal Channel
+ */
+const JPetTRB & JPetSigCh::getTRB() const {
+  if(fTRB.GetObject()) {
+    return (JPetTRB&) *fTRB.GetObject();
+  } else {
+    ERROR("No JPetTRB slot set, Null object will be returned");
+    return JPetTRB::getDummyResult();
+  }
+}
+
+/**
+ * Get the TOMBCHannel associated with this Signal Channel
+ */
+const JPetTOMBChannel & JPetSigCh::getTOMBChannel() const {
+  if(fTOMBChannel.GetObject()) {
+    return (JPetTOMBChannel&) *fTOMBChannel.GetObject();
+  } else {
+    ERROR("No JPetTOMBChannel slot set, Null object will be returned");
+    return JPetTOMBChannel::getDummyResult();
+  }
+}
+
+/**
+ * A proxy method for quick access to DAQ channel number ignorantly of what a TOMBCHannel is
+ */
+int JPetSigCh::getChannel() const {
+  return getTOMBChannel().getChannel();
+}
+
+/**
+ * Set the reconstruction flag with enum
+ */
+void JPetSigCh::setRecoFlag(JPetSigCh::RecoFlag flag)
+{
+  fFlag = flag;
+}
+
+/**
+ * Set the edge type for this Signal Channel
+ */
+void JPetSigCh::setType(JPetSigCh::EdgeType type)
+{
+  fType = type;
+}
+
+/**
+ * Set the time value for this Signal Channel
+ */
+void JPetSigCh::setValue(float value)
+{
+  fValue = value;
+}
+
+/**
+ * Set the threshold setting value [mV] for this Signal Channel
+ */
+void JPetSigCh::setThreshold(float thrValue)
+{
+  fThreshold = thrValue;
+}
+
+/**
+ * Set the threshold number (starting form 1) for this Signal Channel
+ */
+void JPetSigCh::setThresholdNumber(uint thrNumber)
+{
+  fThresholdNumber = thrNumber;
+}
+
+/**
+ * Set the data acquisition channel number
+ */
+void JPetSigCh::setDAQch(int daq)
+{
+  fDAQch = daq;
+}
+
+/**
+ * Set the PM associated with this Signal Channel
+ */
+void JPetSigCh::setPM(const JPetPM & pm)
+{
+  fPM = const_cast<JPetPM*>(&pm);
+}
+
+/**
+ * Set the FEB associated with this Signal Channel
+ */
+void JPetSigCh::setFEB(const JPetFEB & feb)
+{
+  fFEB = const_cast<JPetFEB*>(&feb);
+}
+
+/**
+ * Set the TRB associated with this Signal Channel
+ */
+void JPetSigCh::setTRB(const JPetTRB & trb)
+{
+  fTRB = const_cast<JPetTRB*>(&trb);
+}
+
+/**
+ * Set the TOMBChannel associated with this Signal Channel
+ */
+void JPetSigCh::setTOMBChannel(const JPetTOMBChannel & channel)
+{
+  fTOMBChannel = const_cast<JPetTOMBChannel*>(&channel);
+}
+
+/**
+ * Compares two SigChs by their threshold value
+ */
+bool JPetSigCh::compareByThresholdValue(const JPetSigCh& sigA, const JPetSigCh& sigB)
+{
+  if (sigA.getThreshold() < sigB.getThreshold()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * Compares two SigChs by their threshold numbers
+ */
+bool JPetSigCh::compareByThresholdNumber(const JPetSigCh& sigA, const JPetSigCh& sigB)
+{
+  if (sigA.getThresholdNumber() < sigB.getThresholdNumber()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+void JPetSigCh::Clear(Option_t *){
+  fType = JPetSigCh::Leading;
+  fFlag = JPetSigCh::Unknown;
+  fValue = 0.0f;
+  fThreshold = 0.0f;
   fThresholdNumber = 0;
-  fDAQch = -1;
+  fDAQch = 0;
   fPM = NULL;
   fFEB = NULL;
   fTRB = NULL;
   fTOMBChannel = NULL;
-}
-
-/**
- * Constructor
- * @todo Perform some sanity checks of the given values
- */
-JPetSigCh::JPetSigCh(EdgeType Edge, float EdgeTime) {
-  init();
-  assert(EdgeTime > 0.);
-  fType = Edge;
-  fValue = EdgeTime;
-}
-
-bool JPetSigCh::compareByThresholdValue(
-  const JPetSigCh& A, const JPetSigCh& B)
-{
-  if (A.getThreshold() < B.getThreshold()) {
-    return true;
-  }
-  return false;
-}
-
-bool JPetSigCh::compareByThresholdNumber(
-  const JPetSigCh& A, const JPetSigCh& B)
-{
-  if (A.getThresholdNumber() < B.getThresholdNumber()) {
-    return true;
-  }
-  return false;
-}
-
-void JPetSigCh::Clear(Option_t *)
-{
-  init();
 }

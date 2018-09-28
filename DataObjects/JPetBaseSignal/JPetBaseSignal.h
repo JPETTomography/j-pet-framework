@@ -32,9 +32,13 @@
 class JPetBaseSignal: public TObject
 {
 public:
+  enum RecoFlag { Good, Bad, Unknown };
+
   JPetBaseSignal();
-  virtual ~JPetBaseSignal();
   explicit JPetBaseSignal(bool isNull);
+  virtual ~JPetBaseSignal();
+  void setRecoFlag(JPetBaseSignal::RecoFlag flag);
+  JPetBaseSignal::RecoFlag getRecoFlag() const;
   bool isNullObject() const;
   static JPetBaseSignal& getDummyResult();
 
@@ -46,7 +50,7 @@ public:
   }
 
   /**
-   * @brief Set the reference to the PhotoMultiplier parametric object
+   * @brief Set the reference to the BarrelSlot parametric object
    */
   inline void setBarrelSlot(const JPetBarrelSlot & bs) {
     fBarrelSlot = const_cast<JPetBarrelSlot*>(&bs);
@@ -71,6 +75,7 @@ public:
 private:
   TRef fPM;
   TRef fBarrelSlot;
+  RecoFlag fFlag;
 
 protected:
   #ifndef __CINT__
@@ -79,7 +84,7 @@ protected:
   bool fIsNullObject;
   #endif
 
-  ClassDef(JPetBaseSignal, 3);
+  ClassDef(JPetBaseSignal, 4);
 
 };
 #endif /* !JPETBASESIGNAL_H */
