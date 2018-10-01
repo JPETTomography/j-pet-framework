@@ -84,8 +84,6 @@ std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFi
 
 bool JPetTaskIO::run(const JPetDataInterface& data)
 {
-  return runDirect(data);
-  
   using namespace jpet_options_tools;
   if (fSubTasks.empty()) {
     ERROR("No subTask set");
@@ -147,100 +145,6 @@ bool JPetTaskIO::run(const JPetDataInterface& data)
     }
     fParams = mergeWithExtraParams(fParams, subTaskParams);
   }
-  return true;
-}
-
-
-bool JPetTaskIO::runDirect(const JPetDataInterface&)
-{
-  using namespace jpet_options_tools;
-  if (fSubTasks.empty()) {
-    ERROR("No subTask set");
-    return false;
-  }
-  if (isInput()) {
-    if (!fInputHandler) {
-      ERROR("No inputHandler set");
-      return false;
-    }
-  }
-
-  // init all subtasks before any processing
-  for (const auto& pTask : fSubTasks) {
-    auto subTaskName = pTask->getName();
-    auto ok = pTask->init(fParams);
-    if (!ok) {
-      /// @todo: skipping makes no sense in this case, terminate everything
-      ERROR("In init() of:" + subTaskName + ". run()  and terminate() of this task will be skipped.");
-      continue;
-    }
-  }
-
-  auto& firstTask = fSubTasks.front();
-
-  auto firstEvent = 0ll;
-  auto lastEvent = 0ll;
-  bool isOK = false;
-  assert(fInputHandler);
-  std::tie(isOK, firstEvent, lastEvent) = fInputHandler->getEventRange(fParams.getOptions());
-  if (!isOK) {
-    ERROR("Some error occured in getEventRange");
-        return false;
-  }
-  assert(lastEvent >= 0);
-
-  for (auto i = firstEvent; i <= lastEvent; i++) {
-
-    // @todo: make progressbar work with the direct chain
-    // if (isProgressBar(fParams.getOptions())) {
-    //   displayProgressBar(i, lastEvent);
-    // }
-
-    // subsequently run all subtasks on the same event
-
-    TObject * output_event = &(fInputHandler->getNextEntry());
-
-    // iterator
-    auto subtask_it = fSubTasks.begin();
-
-    bool ok;
-    while(subtask_it != fSubTasks.end()){
-
-      auto& current_task = *subtask_it;
-
-      ok = current_task->run(JPetData(*output_event));
-
-      if (!ok) {
-	ERROR("In run() of:" + current_task->getName() + ". ");
-      }
-
-      output_event = dynamic_cast<JPetUserTask*>(current_task.get())->getOutputEvents();
-
-      subtask_it++;
-    }
-
-    auto& lastTask = fSubTasks.back();
-    
-    if (isOutput()) {
-      if (!fOutputHandler->writeEventToFile(lastTask.get())) {
-	WARNING("Some problems occured, while writing the event to file.");
-	return false;
-      }
-    }
-    
-  }
-
-  // terminate all subtasks after all processing
-  for (const auto& pTask : fSubTasks) {
-    JPetParams subTaskParams;
-
-    bool ok = pTask->terminate(subTaskParams);
-    if (!ok) {
-      ERROR("In terminate() of:" + pTask->getName() + ". ");
-    }
-    fParams = mergeWithExtraParams(fParams, subTaskParams);
-  }
-  
   return true;
 }
 
