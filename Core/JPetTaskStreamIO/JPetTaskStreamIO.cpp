@@ -54,7 +54,7 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
     auto ok = pTask->init(fParams);
     if (!ok) {
       // if init of any task fails, execution of the task stream makes no sense
-      ERROR("Init() of:" + subTaskName + "failed. Aborting execution of the whole task stream. ");
+      ERROR("Init() of:" + subTaskName + " failed. Aborting execution of the whole task stream. ");
       return false;
     }
   }
