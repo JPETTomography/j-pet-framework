@@ -15,6 +15,7 @@
 
 #include "./JPetTaskFactory.h"
 #include "./JPetTaskIO/JPetTaskIO.h"
+#include "./JPetTaskStreamIO/JPetTaskStreamIO.h"
 #include "./JPetScopeLoader/JPetScopeLoader.h"
 #include "./JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.h"
 #include "./JPetParamBankHandlerTask/JPetParamBankHandlerTask.h"
@@ -87,7 +88,7 @@ TaskGeneratorChain generateDirectTaskGeneratorChain(const std::vector<TaskInfo>&
 
   chain.push_back(
   		  [name, inT, outT, generatorsMap, taskInfoVect]() {
-		    auto task = jpet_common_tools::make_unique<JPetTaskIO>(name.c_str(), inT.c_str(), outT.c_str());
+		    auto task = jpet_common_tools::make_unique<JPetTaskStreamIO>(name.c_str(), inT.c_str(), outT.c_str());
 		       
 		    for (const auto& taskInfo : taskInfoVect) {
 		      auto task_name = taskInfo.name;
