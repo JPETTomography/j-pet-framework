@@ -187,12 +187,18 @@ int getRunNumber(const std::map<std::string, boost::any>& opts)
 
 bool isProgressBar(const std::map<std::string, boost::any>& opts)
 {
-  return any_cast<bool>(opts.at("progressBar_bool"));
+  if(opts.find("progressBar_bool")!=opts.end()){
+    return any_cast<bool>(opts.at("progressBar_bool"));
+  }
+  return false;
 }
 
 bool isDirectProcessing(const std::map<std::string, boost::any>& opts)
 {
-  return any_cast<bool>(opts.at("direct_bool"));
+  if(opts.find("direct_bool")!=opts.end()){
+    return any_cast<bool>(opts.at("direct_bool"));
+  }
+  return false;
 }
 
 bool isLocalDB(const std::map<std::string, boost::any>& opts)
