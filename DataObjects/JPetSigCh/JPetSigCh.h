@@ -47,7 +47,7 @@ public:
   JPetSigCh::EdgeType getType() const;
   float getValue() const;
   float getThreshold() const;
-  uint getThresholdNumber() const;
+  unsigned int getThresholdNumber() const;
   int getDAQch() const;
   const JPetPM & getPM() const;
   const JPetFEB & getFEB() const;
@@ -58,7 +58,7 @@ public:
   void setType(JPetSigCh::EdgeType type);
   void setValue(float value);
   void setThreshold(float thrValue);
-  void setThresholdNumber(uint thrNumber);
+  void setThresholdNumber(unsigned int thrNumber);
   void setDAQch(int daqCh);
   void setPM(const JPetPM & pm);
   void setFEB(const JPetFEB & feb);
@@ -73,7 +73,7 @@ private:
   EdgeType fType;
   float fValue = 0.0f;
   float fThreshold = 0.0f;
-  uint fThresholdNumber = 0;
+  unsigned int fThresholdNumber = 0;
   int fDAQch = 0;
   TRef fPM = NULL;
   TRef fFEB = NULL;

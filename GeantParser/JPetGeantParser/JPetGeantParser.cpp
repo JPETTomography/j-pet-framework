@@ -128,7 +128,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
   std::unique_ptr<TRandom3> random(new TRandom3(0));
   float timeShift = random->Uniform(fMinTime, fMaxTime);
 
-  for ( uint i = 0; i < evPack->GetNumberOfHits(); i++) {
+  for ( unsigned int i = 0; i < evPack->GetNumberOfHits(); i++) {
 
     // translate geantHit -> JPetMCHit
     JPetMCHit mcHit = JPetGeantParserTools::createJPetMCHit(evPack->GetHit(i), getParamBank());

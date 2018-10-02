@@ -74,7 +74,7 @@ float JPetSigCh::getThreshold() const
  * The thresholds are numbered starting from 1 according to ascending order
  * of their corresponding DAQ channels.
  */
-uint JPetSigCh::getThresholdNumber() const
+unsigned int JPetSigCh::getThresholdNumber() const
 {
   return fThresholdNumber;
 }
@@ -177,7 +177,7 @@ void JPetSigCh::setThreshold(float thrValue)
 /**
  * Set the threshold number (starting form 1) for this Signal Channel
  */
-void JPetSigCh::setThresholdNumber(uint thrNumber)
+void JPetSigCh::setThresholdNumber(unsigned int thrNumber)
 {
   fThresholdNumber = thrNumber;
 }
