@@ -119,7 +119,7 @@ const std::string kStopIterationOptionName = "stopIteration_bool";
 /// @return chain of task generators. Generator is the special function which called will return a task object.
 TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options);
 
-  TaskGeneratorChain generateDirectTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options);
+TaskGeneratorChain generateDirectTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options);
 
 /// @brief Function adds the set of predefined task generators to the beginning of outChain  based on the provided options.
 /// @param options set of options that are passed to decide which default tasks will be added at the beginning of the chain.

@@ -20,8 +20,8 @@
 #include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 
 JPetTaskStreamIO::JPetTaskStreamIO(const char* name,
-			     const char* in_file_type,
-			     const char* out_file_type):
+                                   const char* in_file_type,
+                                   const char* out_file_type):
   JPetTaskIO(name, in_file_type, out_file_type)
 {
   if (std::string(out_file_type).empty()) {
@@ -66,7 +66,7 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
   std::tie(isOK, firstEvent, lastEvent) = fInputHandler->getEventRange(fParams.getOptions());
   if (!isOK) {
     ERROR("Some error occured in getEventRange");
-        return false;
+    return false;
   }
   assert(lastEvent >= 0);
 
@@ -77,20 +77,20 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
     }
 
     // subsequently run all subtasks on the same event
-    TObject * output_event = &(fInputHandler->getNextEntry());
+    TObject* output_event = &(fInputHandler->getNextEntry());
 
     // iterator
     auto subtask_it = fSubTasks.begin();
 
     bool ok;
-    while(subtask_it != fSubTasks.end()){
+    while (subtask_it != fSubTasks.end()) {
 
       auto& current_task = *subtask_it;
 
       ok = current_task->run(JPetData(*output_event));
 
       if (!ok) {
-	ERROR("In run() of:" + current_task->getName() + ". ");
+        ERROR("In run() of:" + current_task->getName() + ". ");
       }
 
       output_event = dynamic_cast<JPetUserTask*>(current_task.get())->getOutputEvents();
@@ -99,14 +99,14 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
     }
 
     auto& lastTask = fSubTasks.back();
-    
+
     if (isOutput()) {
       if (!fOutputHandler->writeEventToFile(lastTask.get())) {
-	WARNING("Some problems occured, while writing the event to file.");
-	return false;
+        WARNING("Some problems occured, while writing the event to file.");
+        return false;
       }
     }
-    
+
   }
 
   // terminate all subtasks after all processing
@@ -119,7 +119,7 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
     }
     fParams = mergeWithExtraParams(fParams, subTaskParams);
   }
-  
+
   return true;
 }
 
