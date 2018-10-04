@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(constructor_Test)
   BOOST_REQUIRE_EQUAL(sigCh1.getValue(), JPetSigCh::kUnset);
   BOOST_REQUIRE_EQUAL(sigCh1.getThreshold(), JPetSigCh::kUnset);
   BOOST_REQUIRE_EQUAL(sigCh1.getThresholdNumber(), 0);
-  BOOST_REQUIRE_EQUAL(sigCh1.getDAQch(), 0);
+  BOOST_REQUIRE_EQUAL(sigCh1.getDAQch(), -1);
 
   JPetSigCh sigCh2(JPetSigCh::Trailing, 15.3);
   float epsilon = 0.001;
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(constructor_Test)
   BOOST_REQUIRE_CLOSE(sigCh2.getValue(), 15.3, epsilon);
   BOOST_REQUIRE_EQUAL(sigCh2.getThreshold(), JPetSigCh::kUnset);
   BOOST_REQUIRE_EQUAL(sigCh2.getThresholdNumber(), 0);
-  BOOST_REQUIRE_EQUAL(sigCh2.getDAQch(), 0);
+  BOOST_REQUIRE_EQUAL(sigCh2.getDAQch(), -1);
 }
 
 BOOST_AUTO_TEST_CASE(setters_Test)
