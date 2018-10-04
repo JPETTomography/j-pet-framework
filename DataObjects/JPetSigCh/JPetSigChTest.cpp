@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(constructor_Test)
 BOOST_AUTO_TEST_CASE(setters_Test)
 {
   JPetSigCh sigCh;
-  sigCh.setRecoFlag(JPetSigCh::Bad);
+  sigCh.setRecoFlag(JPetSigCh::Corrupted);
   sigCh.setType(JPetSigCh::Trailing);
   sigCh.setValue(14.222);
   sigCh.setThreshold(53.2);
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(setters_Test)
   JPetTOMBChannel tomb(1234);
   sigCh.setTOMBChannel(tomb);
   float epsilon = 0.001;
-  BOOST_REQUIRE_EQUAL(sigCh.getRecoFlag(), JPetSigCh::Bad);
+  BOOST_REQUIRE_EQUAL(sigCh.getRecoFlag(), JPetSigCh::Corrupted);
   BOOST_REQUIRE_EQUAL(sigCh.getType(), JPetSigCh::Trailing);
   BOOST_REQUIRE_CLOSE(sigCh.getValue(), 14.222, epsilon);
   BOOST_REQUIRE_CLOSE(sigCh.getThreshold(), 53.2, epsilon);

@@ -55,8 +55,8 @@ BOOST_AUTO_TEST_CASE(recoFlagSetterTest)
   BOOST_REQUIRE_EQUAL(lor.getRecoFlag(), JPetLOR::Unknown);
   lor.setRecoFlag(JPetLOR::Good);
   BOOST_REQUIRE_EQUAL(lor.getRecoFlag(), JPetLOR::Good);
-  lor.setRecoFlag(JPetLOR::Bad);
-  BOOST_REQUIRE_EQUAL(lor.getRecoFlag(), JPetLOR::Bad);
+  lor.setRecoFlag(JPetLOR::Corrupted);
+  BOOST_REQUIRE_EQUAL(lor.getRecoFlag(), JPetLOR::Corrupted);
 }
 
 BOOST_AUTO_TEST_CASE(hitTest)

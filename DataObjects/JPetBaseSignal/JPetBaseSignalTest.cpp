@@ -35,8 +35,8 @@ BOOST_AUTO_TEST_CASE(recoFlagSetterTest)
   BOOST_REQUIRE_EQUAL(signal.getRecoFlag(), JPetBaseSignal::Unknown);
   signal.setRecoFlag(JPetBaseSignal::Good);
   BOOST_REQUIRE_EQUAL(signal.getRecoFlag(), JPetBaseSignal::Good);
-  signal.setRecoFlag(JPetBaseSignal::Bad);
-  BOOST_REQUIRE_EQUAL(signal.getRecoFlag(), JPetBaseSignal::Bad);
+  signal.setRecoFlag(JPetBaseSignal::Corrupted);
+  BOOST_REQUIRE_EQUAL(signal.getRecoFlag(), JPetBaseSignal::Corrupted);
 }
 
 BOOST_AUTO_TEST_CASE(SetAndGetTRefPMObjectTest)

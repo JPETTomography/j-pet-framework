@@ -36,8 +36,8 @@ BOOST_AUTO_TEST_CASE(recoFlagSetterTest)
   BOOST_REQUIRE_EQUAL(event.getRecoFlag(), JPetEvent::Unknown);
   event.setRecoFlag(JPetEvent::Good);
   BOOST_REQUIRE_EQUAL(event.getRecoFlag(), JPetEvent::Good);
-  event.setRecoFlag(JPetEvent::Bad);
-  BOOST_REQUIRE_EQUAL(event.getRecoFlag(), JPetEvent::Bad);
+  event.setRecoFlag(JPetEvent::Corrupted);
+  BOOST_REQUIRE_EQUAL(event.getRecoFlag(), JPetEvent::Corrupted);
 }
 
 BOOST_AUTO_TEST_CASE(constructor)

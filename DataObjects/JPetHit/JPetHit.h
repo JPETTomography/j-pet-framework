@@ -43,7 +43,7 @@ class JPetHit: public TObject
 {
 public:
   enum Signal { SideA, SideB };
-  enum RecoFlag { Good, Bad, Unknown };
+  enum RecoFlag { Good, Corrupted, Unknown };
   JPetHit();
   JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime,
     TVector3& Position, JPetPhysSignal& SignalA, JPetPhysSignal& SignalB,

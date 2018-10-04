@@ -22,7 +22,11 @@ ClassImp(JPetRawSignal);
  *
  * @param Maximal number of points probed at one edge of the signal (defalult = 4)
  */
-JPetRawSignal::JPetRawSignal() {}
+JPetRawSignal::JPetRawSignal(const int points)
+{
+  fLeadingPoints.reserve(points);
+  fTrailingPoints.reserve(points);
+}
 
 /**
  * Destructor

@@ -35,7 +35,7 @@
 class JPetSigCh: public TObject
 {
 public:
-  enum RecoFlag { Good, Bad, Unknown };
+  enum RecoFlag { Good, Corrupted, Unknown };
   enum EdgeType { Trailing, Leading };
   const static float kUnset;
 
@@ -74,7 +74,7 @@ private:
   float fValue = 0.0f;
   float fThreshold = 0.0f;
   unsigned int fThresholdNumber = 0;
-  int fDAQch = 0;
+  int fDAQch = -1;
   TRef fPM = NULL;
   TRef fFEB = NULL;
   TRef fTRB = NULL;

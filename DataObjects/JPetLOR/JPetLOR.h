@@ -35,7 +35,7 @@ class JPetHit;
 class JPetLOR: public TObject
 {
 public:
-  enum RecoFlag { Good, Bad, Unknown };
+  enum RecoFlag { Good, Corrupted, Unknown };
 
   JPetLOR();
   JPetLOR(float time, float qualityOfTime, JPetHit& firstHit, JPetHit& secondHit);

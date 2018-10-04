@@ -34,7 +34,7 @@ class JPetRawSignal: public JPetBaseSignal
 public:
   enum PointsSortOrder { ByThrValue, ByThrNum };
 
-  JPetRawSignal();
+  JPetRawSignal(const int points = 4);
   virtual ~JPetRawSignal();
   int getNumberOfPoints(JPetSigCh::EdgeType edge) const;
   void addPoint(const JPetSigCh& sigch);

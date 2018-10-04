@@ -43,7 +43,7 @@ class JPetEvent: public TObject
 {
 
 public:
-  enum RecoFlag { Good, Bad, Unknown };
+  enum RecoFlag { Good, Corrupted, Unknown };
 
   JPetEvent();
   JPetEvent(const std::vector<JPetHit>& hits,

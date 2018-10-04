@@ -24,13 +24,13 @@ const float JPetSigCh::kUnset = std::numeric_limits<float>::infinity();
  * Default constructor
  */
 JPetSigCh::JPetSigCh(): TObject(), fFlag(JPetSigCh::Unknown), fType(JPetSigCh::Leading),
-fValue(kUnset), fThreshold(kUnset), fThresholdNumber(0), fDAQch(0) {}
+fValue(kUnset), fThreshold(kUnset), fThresholdNumber(0), fDAQch(-1) {}
 
 /**
  * Constructor
  */
 JPetSigCh::JPetSigCh(EdgeType edge, float time): TObject(), fFlag(JPetSigCh::Unknown),
-fType(edge), fValue(time), fThreshold(kUnset), fThresholdNumber(0), fDAQch(0) {}
+fType(edge), fValue(time), fThreshold(kUnset), fThresholdNumber(0), fDAQch(-1) {}
 
 /**
  * Destructor
@@ -252,7 +252,7 @@ void JPetSigCh::Clear(Option_t *){
   fValue = 0.0f;
   fThreshold = 0.0f;
   fThresholdNumber = 0;
-  fDAQch = 0;
+  fDAQch = -1;
   fPM = NULL;
   fFEB = NULL;
   fTRB = NULL;

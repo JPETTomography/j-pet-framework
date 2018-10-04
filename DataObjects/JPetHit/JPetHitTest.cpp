@@ -45,8 +45,8 @@ BOOST_AUTO_TEST_CASE(recoFlagSetterTest)
   BOOST_REQUIRE_EQUAL(hit.getRecoFlag(), JPetHit::Unknown);
   hit.setRecoFlag(JPetHit::Good);
   BOOST_REQUIRE_EQUAL(hit.getRecoFlag(), JPetHit::Good);
-  hit.setRecoFlag(JPetHit::Bad);
-  BOOST_REQUIRE_EQUAL(hit.getRecoFlag(), JPetHit::Bad);
+  hit.setRecoFlag(JPetHit::Corrupted);
+  BOOST_REQUIRE_EQUAL(hit.getRecoFlag(), JPetHit::Corrupted);
 }
 
 BOOST_AUTO_TEST_CASE(consistency_check_test)

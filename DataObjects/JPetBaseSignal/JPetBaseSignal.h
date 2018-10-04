@@ -32,7 +32,7 @@
 class JPetBaseSignal: public TObject
 {
 public:
-  enum RecoFlag { Good, Bad, Unknown };
+  enum RecoFlag { Good, Corrupted, Unknown };
 
   JPetBaseSignal();
   explicit JPetBaseSignal(bool isNull);
