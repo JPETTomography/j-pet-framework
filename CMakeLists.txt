@@ -160,6 +160,7 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetUser
   JPetUnpacker
   JPetEvent
+  JPetOpsEvent
   JPetMCHit
   JPetTimeWindowMC
   JPetMCDecayTree
