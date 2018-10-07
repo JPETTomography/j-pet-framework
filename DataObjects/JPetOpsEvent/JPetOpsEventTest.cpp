@@ -90,7 +90,8 @@ BOOST_AUTO_TEST_CASE(annihilation_position_setter2)
 
 }
 
-BOOST_AUTO_TEST_CASE(annihilation_time){
+BOOST_AUTO_TEST_CASE(annihilation_time)
+{
 
   double epsilon = 0.0001;
   JPetOpsEvent event;
@@ -98,7 +99,7 @@ BOOST_AUTO_TEST_CASE(annihilation_time){
   event.setAnnihilationTime(t);
 
   BOOST_REQUIRE_CLOSE(event.getAnnihilationTime(), t, epsilon);
-  
+
 }
 
 

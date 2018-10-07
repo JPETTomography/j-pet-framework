@@ -33,27 +33,33 @@ JPetOpsEvent::JPetOpsEvent(const std::vector<JPetHit>& hits, JPetEventType event
 }
 
 
-void JPetOpsEvent::Clear(Option_t *){
+void JPetOpsEvent::Clear(Option_t*)
+{
   fType = kUnknown;
   fHits.clear();
 }
 
-void JPetOpsEvent::setAnnihilationPoint(double x, double y, double z){
-  setAnnihilationPoint(TVector3(x,y,z));
+void JPetOpsEvent::setAnnihilationPoint(double x, double y, double z)
+{
+  setAnnihilationPoint(TVector3(x, y, z));
 }
 
-void JPetOpsEvent::setAnnihilationPoint(const TVector3& point){
+void JPetOpsEvent::setAnnihilationPoint(const TVector3& point)
+{
   fAnnihilationPoint = point;
 }
 
-const TVector3& JPetOpsEvent::getAnnihilationPoint() const{
+const TVector3& JPetOpsEvent::getAnnihilationPoint() const
+{
   return fAnnihilationPoint;
 }
 
-void JPetOpsEvent::setAnnihilationTime(double t){
+void JPetOpsEvent::setAnnihilationTime(double t)
+{
   fAnnihilationTime = t;
 }
 
-double JPetOpsEvent::getAnnihilationTime() const{
+double JPetOpsEvent::getAnnihilationTime() const
+{
   return fAnnihilationTime;
 }

@@ -33,20 +33,20 @@ public:
   JPetOpsEvent(const JPetEvent& event);
   JPetOpsEvent(const std::vector<JPetHit>& hits, JPetEventType eventType = JPetEventType::kUnknown, bool orderedByTime = true);
 
-  void Clear(Option_t * opt = "");
+  void Clear(Option_t* opt = "");
 
   void setAnnihilationPoint(double x, double y, double z);
   void setAnnihilationPoint(const TVector3& point);
   void setAnnihilationTime(double t);
-  
+
   const TVector3& getAnnihilationPoint() const;
   double getAnnihilationTime() const;
-  
+
 protected:
 
   TVector3 fAnnihilationPoint;
   double fAnnihilationTime;
-  
+
   ClassDef(JPetOpsEvent, 1);
 };
 #endif /*  !JPETOPSEVENT_H */
