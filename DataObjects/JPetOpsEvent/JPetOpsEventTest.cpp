@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "./JPetWriter/JPetWriter.h"
-#include "./JPetEventTest/JPetEventTest.h"
+#include "./JPetOpsEvent/JPetOpsEvent.h"
 #include "./JPetLoggerInclude.h"
 
 
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(annihilation_position_setter1)
   double x = 11.5;
   double y = -20.1;
   double z = 0.1;
-  event.setAnninihationPoint(x, y, z);
+  event.setAnnihilationPoint(x, y, z);
 
   BOOST_REQUIRE_CLOSE(event.getAnnihilationPoint().X(), x, epsilon );
   BOOST_REQUIRE_CLOSE(event.getAnnihilationPoint().Y(), y, epsilon );
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(annihilation_position_setter2)
   double y = -20.1;
   double z = 0.1;
   TVector3 vec(x, y, z);
-  event.setAnninihationPoint(vec);
+  event.setAnnihilationPoint(vec);
 
   BOOST_REQUIRE_CLOSE(event.getAnnihilationPoint().X(), x, epsilon );
   BOOST_REQUIRE_CLOSE(event.getAnnihilationPoint().Y(), y, epsilon );
