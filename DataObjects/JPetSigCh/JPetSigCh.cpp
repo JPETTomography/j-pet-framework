@@ -227,11 +227,7 @@ void JPetSigCh::setTOMBChannel(const JPetTOMBChannel & channel)
  */
 bool JPetSigCh::compareByThresholdValue(const JPetSigCh& sigA, const JPetSigCh& sigB)
 {
-  if (sigA.getThreshold() < sigB.getThreshold()) {
-    return true;
-  } else {
-    return false;
-  }
+  return sigA.getThreshold() < sigB.getThreshold();
 }
 
 /**
@@ -239,11 +235,7 @@ bool JPetSigCh::compareByThresholdValue(const JPetSigCh& sigA, const JPetSigCh& 
  */
 bool JPetSigCh::compareByThresholdNumber(const JPetSigCh& sigA, const JPetSigCh& sigB)
 {
-  if (sigA.getThresholdNumber() < sigB.getThresholdNumber()) {
-    return true;
-  } else {
-    return false;
-  }
+  return sigA.getThresholdNumber() < sigB.getThresholdNumber();
 }
 
 void JPetSigCh::Clear(Option_t *){

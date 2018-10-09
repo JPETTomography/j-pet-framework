@@ -88,7 +88,7 @@ public:
   void Clear(Option_t * opt  = "");
 
 private:
-  RecoFlag fFlag;
+  RecoFlag fFlag = JPetHit::Unknown;
   float fEnergy = 0.0f;
   float fQualityOfEnergy = 0.0f;
   float fTime = 0.0f;

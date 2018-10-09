@@ -18,7 +18,6 @@
 
 #include "./JPetManager/JPetManager.h"
 #include <boost/test/unit_test.hpp>
-#include <cstdio>
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE(create_unique_manager)

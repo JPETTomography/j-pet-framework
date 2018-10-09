@@ -66,7 +66,7 @@ private:
   float fTimeDiff;
   float fQualityOfTimeDiff;
   bool fIsHitSet[2];
-  RecoFlag fFlag;
+  RecoFlag fFlag = JPetLOR::Unknown;
   JPetHit fFirstHit;
   JPetHit fSecondHit;
 

@@ -75,7 +75,7 @@ public:
 private:
   TRef fPM;
   TRef fBarrelSlot;
-  RecoFlag fFlag;
+  RecoFlag fFlag = JPetBaseSignal::Unknown;
 
 protected:
   #ifndef __CINT__

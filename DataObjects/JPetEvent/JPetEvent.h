@@ -70,7 +70,7 @@ protected:
 #endif
 
 private:
-  RecoFlag fFlag;
+  RecoFlag fFlag = JPetEvent::Unknown;
 
   ClassDef(JPetEvent, 5);
 };

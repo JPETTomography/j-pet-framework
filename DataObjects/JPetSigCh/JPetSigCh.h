@@ -69,8 +69,8 @@ public:
   void Clear(Option_t * = "");
 
 private:
-  RecoFlag fFlag;
-  EdgeType fType;
+  RecoFlag fFlag = JPetSigCh::Unknown;
+  EdgeType fType = JPetSigCh::Leading;
   float fValue = 0.0f;
   float fThreshold = 0.0f;
   unsigned int fThresholdNumber = 0;
