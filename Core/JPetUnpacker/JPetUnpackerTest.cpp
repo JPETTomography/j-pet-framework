@@ -39,18 +39,20 @@ BOOST_AUTO_TEST_CASE( my_test )
   BOOST_REQUIRE(unpack.getEventsToProcess() == 0);
   BOOST_REQUIRE(unpack.getHldFile() == "");
   BOOST_REQUIRE(unpack.getCfgFile() == "");
-  BOOST_REQUIRE(unpack.getCalibFile() == "");
+  BOOST_REQUIRE(unpack.getTOTCalibFile() == "");
+  BOOST_REQUIRE(unpack.getTDCCalibFile() == "");
   BOOST_REQUIRE(!unpack.exec());
 }
 
 BOOST_AUTO_TEST_CASE( my_test2 )
 {
   JPetUnpacker unpack;
-  unpack.setParams("test.hld", 10, "conf_test.xml", "calib.root");
+  unpack.setParams("test.hld", 10, "conf_test.xml", "calib.root", "calib2.root");
   BOOST_REQUIRE(unpack.getEventsToProcess() == 10);
   BOOST_REQUIRE(unpack.getHldFile() == "test.hld");
   BOOST_REQUIRE(unpack.getCfgFile() == "conf_test.xml");
-  BOOST_REQUIRE(unpack.getCalibFile() == "calib.root");
+  BOOST_REQUIRE(unpack.getTOTCalibFile() == "calib.root");
+  BOOST_REQUIRE(unpack.getTDCCalibFile() == "calib2.root");
   BOOST_REQUIRE(!unpack.exec());
 }
 
@@ -58,12 +60,14 @@ BOOST_FIXTURE_TEST_CASE( my_test3, Fixture )
 {
   JPetUnpacker unpack;
   unpack.setParams("unitTestData/JPetUnpackerTest/xx14099113231.hld", 10,
-    "unitTestData/JPetUnpackerTest/conf_trb3.xml", "unitTestData/JPetUnpackerTest/calib.root");
+                   "unitTestData/JPetUnpackerTest/conf_trb3.xml", "unitTestData/JPetUnpackerTest/calib.root",
+                   "unitTestData/JPetUnpackerTest/tdccalib.root");
   BOOST_REQUIRE(unpack.exec());
   BOOST_REQUIRE(unpack.getEventsToProcess() == 10);
   BOOST_REQUIRE(unpack.getHldFile() == "unitTestData/JPetUnpackerTest/xx14099113231.hld");
   BOOST_REQUIRE(unpack.getCfgFile() == "unitTestData/JPetUnpackerTest/conf_trb3.xml");
-  BOOST_REQUIRE(unpack.getCalibFile() == "unitTestData/JPetUnpackerTest/calib.root");
+  BOOST_REQUIRE(unpack.getTOTCalibFile() == "unitTestData/JPetUnpackerTest/calib.root");
+  BOOST_REQUIRE(unpack.getTDCCalibFile() == "unitTestData/JPetUnpackerTest/tdccalib.root");
   BOOST_REQUIRE(unpack.exec());
 }
 
@@ -71,16 +75,20 @@ BOOST_FIXTURE_TEST_CASE( my_test4, Fixture )
 {
   JPetUnpacker unpack;
   unpack.setParams("unitTestData/JPetUnpackerTest/xx14099113231.hld", 10,
-    "unitTestData/JPetUnpackerTest/conf_trb3.xml");
+                   "unitTestData/JPetUnpackerTest/conf_trb3.xml");
   BOOST_REQUIRE(unpack.exec());
   unpack.setParams("unitTestData/JPetUnpackerTest/xx14099113231.hld", 10,
-    "unitTestData/JPetUnpackerTest/conf_trb.xml");
+                   "unitTestData/JPetUnpackerTest/conf_trb.xml");
   BOOST_REQUIRE(!unpack.exec());
   unpack.setParams("unitTestData/JPetUnpackerTest/xx14099113231.hld", 10,
-    "unitTestData/JPetUnpackerTest/conf_trb3.xml", "unitTestData/JPetUnpackerTest/calib.root");
+                   "unitTestData/JPetUnpackerTest/conf_trb3.xml", "unitTestData/JPetUnpackerTest/calib.root");
   BOOST_REQUIRE(unpack.exec());
   unpack.setParams("unitTestData/JPetUnpackerTest/xx14099113231.hld", 10,
-    "unitTestData/JPetUnpackerTest/conf_trb3.xml", "unitTestData/JPetUnpackerTest/calib2.root");
+                   "unitTestData/JPetUnpackerTest/conf_trb3.xml", "unitTestData/JPetUnpackerTest/calib2.root");
+  BOOST_REQUIRE(!unpack.exec());
+  unpack.setParams("unitTestData/JPetUnpackerTest/xx14099113231.hld", 10,
+                   "unitTestData/JPetUnpackerTest/conf_trb3.xml", "unitTestData/JPetUnpackerTest/calib.root",
+                   "unitTestData/JPetUnpackerTest/calib2.root");
   BOOST_REQUIRE(!unpack.exec());
 }
 

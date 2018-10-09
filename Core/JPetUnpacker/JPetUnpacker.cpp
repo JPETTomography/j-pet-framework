@@ -21,7 +21,7 @@
 ClassImp(JPetUnpacker);
 
 JPetUnpacker::JPetUnpacker(): fUnpacker(0), fEventsToProcess(0), fHldFile(""),
-  fCfgFile(""), fCalibFile("") {}
+			      fCfgFile(""), fTOTCalibFile(""), fTDCCalibFile("") {}
 
 JPetUnpacker::~JPetUnpacker()
 {
@@ -32,11 +32,13 @@ JPetUnpacker::~JPetUnpacker()
 }
 
 void JPetUnpacker::setParams(const std::string& hldFile, int numOfEvents,
-   const std::string& cfgFile, const std::string& calibFile)
+			     const std::string& cfgFile, const std::string& totCalibFile,
+			     const std::string& tdcCalibFile)
 {
   fHldFile = hldFile;
   fCfgFile = cfgFile;
-  fCalibFile = calibFile;
+  fTOTCalibFile = totCalibFile;
+  fTDCCalibFile = tdcCalibFile;
   fEventsToProcess = numOfEvents;
 }
 
@@ -50,8 +52,12 @@ bool JPetUnpacker::exec()
     ERROR("The config file doesnt exist");
     return false;
   }
-  if (getCalibFile()!="" && !boost::filesystem::exists(getCalibFile())) {
-    ERROR("The provided calib file doesnt exist");
+  if (getTOTCalibFile()!="" && !boost::filesystem::exists(getTOTCalibFile())) {
+    ERROR("The provided calibration file with TOT stretcher offsets does not exist");
+    return false;
+  }
+  if (getTDCCalibFile()!="" && !boost::filesystem::exists(getTDCCalibFile())) {
+    ERROR("The provided file with TDC nonlinearity calibration does not exist");
     return false;
   }
   if(getEventsToProcess() <= 0) {
@@ -65,7 +71,8 @@ bool JPetUnpacker::exec()
   fUnpacker = new Unpacker2();
   int refChannelOffset = 65;
   fUnpacker->UnpackSingleStep(fHldFile.c_str(), fCfgFile.c_str(),
-    fEventsToProcess, refChannelOffset, fCalibFile.c_str()
+			      fEventsToProcess, refChannelOffset,
+			      fTOTCalibFile.c_str(), fTDCCalibFile.c_str()
   );
   return true;
 }

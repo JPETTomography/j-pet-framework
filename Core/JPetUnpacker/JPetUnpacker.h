@@ -33,11 +33,14 @@ public:
   inline int getEventsToProcess() const { return fEventsToProcess; }
   inline std::string getHldFile() const { return fHldFile; }
   inline std::string getCfgFile() const { return fCfgFile; }
-  inline std::string getCalibFile() const { return fCalibFile; }
+  inline std::string getTOTCalibFile() const { return fTOTCalibFile; }
+  inline std::string getTDCCalibFile() const { return fTDCCalibFile; }
   void setParams(const std::string& hldFile,
                  int numOfEvents = 100000000,
                  const std::string& cfgFile = "conf_trb3.xml",
-                 const std::string& calibFile = "");
+                 const std::string& totCalibFile = "",
+		 const std::string& tdcCalibFile = ""
+		 );
 
   ClassDef(JPetUnpacker, 2);
 
@@ -46,7 +49,8 @@ private:
   int fEventsToProcess;
   std::string fHldFile;
   std::string fCfgFile;
-  std::string fCalibFile;
+  std::string fTOTCalibFile;
+  std::string fTDCCalibFile;
 };
 
 #endif /* !_JPETUNPACKER_H_ */

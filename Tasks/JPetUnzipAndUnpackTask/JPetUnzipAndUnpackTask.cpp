@@ -21,12 +21,27 @@
 #include "./JPetUnzipAndUnpackTask.h"
 #include "./JPetParams/JPetParams.h"
 
+using namespace jpet_options_tools;
+
 JPetUnzipAndUnpackTask::JPetUnzipAndUnpackTask(const char* name):
   JPetTask(name), fUnpackHappened(false){}
 
 bool JPetUnzipAndUnpackTask::init(const JPetParams& inParams)
 {
   fOptions = inParams.getOptions();
+
+  if (isOptionSet(inParams.getOptions(), kTOToffsetCalibKey)) {
+    fTOToffsetCalibFile = getOptionAsString(inParams.getOptions(), kTOToffsetCalibKey);
+  } else {
+    WARNING("No calibration file with TOT stretcher offsets was provided by the user. Expect incorrect TOT values.");
+  }
+
+  if (isOptionSet(inParams.getOptions(), kTDCnonlinearityCalibKey)) {
+    fTDCnonlinearityCalibFile = getOptionAsString(inParams.getOptions(), kTDCnonlinearityCalibKey);
+  } else {
+    WARNING("No file with TDC nonlinearity calibration was provided by the user.");
+  }
+
   return true;
 }
 
@@ -36,9 +51,8 @@ bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
   auto inputFile = getInputFile(fOptions);
   auto inputFileType = FileTypeChecker::getInputFileType(fOptions);
   auto unpackerConfigFile = getUnpackerConfigFile(fOptions);
-  auto unpackerCalibFile = getUnpackerCalibFile(fOptions);
   if (inputFileType == FileTypeChecker::kHld) {
-    unpackFile(inputFile, getTotalEvents(fOptions), unpackerConfigFile, unpackerCalibFile);
+    unpackFile(inputFile, getTotalEvents(fOptions), unpackerConfigFile, fTOToffsetCalibFile, fTDCnonlinearityCalibFile);
     fUnpackHappened = true;
   }
   else if ( inputFileType == FileTypeChecker::kZip) {
@@ -49,7 +63,7 @@ bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
     } else {
       INFO( std::string("Unpacking") );
       auto unzippedFilename = JPetCommonTools::stripFileNameSuffix(std::string(inputFile)).c_str();
-      unpackFile(unzippedFilename, getTotalEvents(fOptions), unpackerConfigFile, unpackerCalibFile);
+      unpackFile(unzippedFilename, getTotalEvents(fOptions), unpackerConfigFile, fTOToffsetCalibFile, fTDCnonlinearityCalibFile);
       fUnpackHappened = true;
     }
   }
@@ -97,18 +111,18 @@ bool JPetUnzipAndUnpackTask::unzipFile(const std::string& filename)
 }
 
 void JPetUnzipAndUnpackTask::unpackFile(const std::string& filename,
-  long long nevents, const std::string& configfile = "",
-  const std::string& calibfile = "")
+					long long nevents, const std::string& configfile = "",
+					const std::string& totCalibFile = "", const std::string& tdcCalibFile = "")
 {
   JPetUnpacker unpacker;
   if (nevents > 0) {
-    unpacker.setParams(filename, nevents, configfile, calibfile);
+    unpacker.setParams(filename, nevents, configfile, totCalibFile, tdcCalibFile);
     WARNING(std::string("Even though the range of events was set, only the first ")
       + JPetCommonTools::intToString(nevents)
       + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file.")
     );
   } else {
-    unpacker.setParams(filename, 100000000, configfile, calibfile);
+    unpacker.setParams(filename, 100000000, configfile, totCalibFile, tdcCalibFile);
   }
   unpacker.exec();
 }
