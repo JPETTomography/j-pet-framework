@@ -30,10 +30,21 @@ bool JPetUnzipAndUnpackTask::init(const JPetParams& inParams)
 {
   fOptions = inParams.getOptions();
 
+  auto unpackerCalibFileFromCmdLine = getUnpackerCalibFile(fOptions);
   if (isOptionSet(inParams.getOptions(), kTOToffsetCalibKey)) {
     fTOToffsetCalibFile = getOptionAsString(inParams.getOptions(), kTOToffsetCalibKey);
+    if(!unpackerCalibFileFromCmdLine.empty()){
+      WARNING("The calibration file with TOT stretcher offsets was defined both on the command line and in user parameters\n"
+              "The file given as a user parameter will be used.");
+    }
   } else {
-    WARNING("No calibration file with TOT stretcher offsets was provided by the user. Expect incorrect TOT values.");
+    if(unpackerCalibFileFromCmdLine.empty()){
+      WARNING("No calibration file with TOT stretcher offsets was provided by the user. Expect incorrect TOT values.");
+    }else{
+      fTOToffsetCalibFile = unpackerCalibFileFromCmdLine;
+      WARNING("Using the calibration file with TOT stretcher offsets defined on the command line.\n"
+              "Note that it can also be given as a user parameter in the JSON file.");
+    }
   }
 
   if (isOptionSet(inParams.getOptions(), kTDCnonlinearityCalibKey)) {
@@ -51,6 +62,7 @@ bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
   auto inputFile = getInputFile(fOptions);
   auto inputFileType = FileTypeChecker::getInputFileType(fOptions);
   auto unpackerConfigFile = getUnpackerConfigFile(fOptions);
+  
   if (inputFileType == FileTypeChecker::kHld) {
     unpackFile(inputFile, getTotalEvents(fOptions), unpackerConfigFile, fTOToffsetCalibFile, fTDCnonlinearityCalibFile);
     fUnpackHappened = true;
