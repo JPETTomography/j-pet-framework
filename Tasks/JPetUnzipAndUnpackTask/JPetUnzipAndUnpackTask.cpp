@@ -24,7 +24,7 @@
 using namespace jpet_options_tools;
 
 JPetUnzipAndUnpackTask::JPetUnzipAndUnpackTask(const char* name):
-  JPetTask(name), fUnpackHappened(false){}
+  JPetTask(name), fUnpackHappened(false) {}
 
 bool JPetUnzipAndUnpackTask::init(const JPetParams& inParams)
 {
@@ -33,14 +33,14 @@ bool JPetUnzipAndUnpackTask::init(const JPetParams& inParams)
   auto unpackerCalibFileFromCmdLine = getUnpackerCalibFile(fOptions);
   if (isOptionSet(inParams.getOptions(), kTOToffsetCalibKey)) {
     fTOToffsetCalibFile = getOptionAsString(inParams.getOptions(), kTOToffsetCalibKey);
-    if(!unpackerCalibFileFromCmdLine.empty()){
+    if (!unpackerCalibFileFromCmdLine.empty()) {
       WARNING("The calibration file with TOT stretcher offsets was defined both on the command line and in user parameters\n"
               "The file given as a user parameter will be used.");
     }
   } else {
-    if(unpackerCalibFileFromCmdLine.empty()){
+    if (unpackerCalibFileFromCmdLine.empty()) {
       WARNING("No calibration file with TOT stretcher offsets was provided by the user. Expect incorrect TOT values.");
-    }else{
+    } else {
       fTOToffsetCalibFile = unpackerCalibFileFromCmdLine;
       WARNING("Using the calibration file with TOT stretcher offsets defined on the command line.\n"
               "Note that it can also be given as a user parameter in the JSON file.");
@@ -62,12 +62,11 @@ bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
   auto inputFile = getInputFile(fOptions);
   auto inputFileType = FileTypeChecker::getInputFileType(fOptions);
   auto unpackerConfigFile = getUnpackerConfigFile(fOptions);
-  
+
   if (inputFileType == FileTypeChecker::kHld) {
     unpackFile(inputFile, getTotalEvents(fOptions), unpackerConfigFile, fTOToffsetCalibFile, fTDCnonlinearityCalibFile);
     fUnpackHappened = true;
-  }
-  else if ( inputFileType == FileTypeChecker::kZip) {
+  } else if ( inputFileType == FileTypeChecker::kZip) {
     INFO( std::string("Unzipping file before unpacking") );
     if ( !unzipFile(inputFile) ) {
       ERROR( std::string("Problem with unpacking file: ") + inputFile );
@@ -94,15 +93,15 @@ bool JPetUnzipAndUnpackTask::terminate(JPetParams& outParams)
     OptsStrAny new_opts;
     jpet_options_generator_tools::setOutputFileType(new_opts, "hldRoot");
     if (jpet_options_tools::isOptionSet(fOptions, "firstEvent_int") &&
-      jpet_options_tools::isOptionSet(fOptions, "lastEvent_int")) {
+        jpet_options_tools::isOptionSet(fOptions, "lastEvent_int")) {
       if ( jpet_options_tools::getOptionAsInt(fOptions, "firstEvent_int") != -1 &&
-        jpet_options_tools::getOptionAsInt(fOptions, "lastEvent_int") != -1 ) {
+           jpet_options_tools::getOptionAsInt(fOptions, "lastEvent_int") != -1 ) {
         jpet_options_generator_tools::setResetEventRangeOption(new_opts, true);
       }
     }
     jpet_options_generator_tools::setOutputFile(new_opts,
-      JPetCommonTools::replaceDataTypeInFileName(getInputFile(fOptions), "hld")
-    );
+        JPetCommonTools::replaceDataTypeInFileName(getInputFile(fOptions), "hld")
+                                               );
     outParams = JPetParams(new_opts, outParams.getParamManagerAsShared());
   }
   return true;
@@ -123,16 +122,16 @@ bool JPetUnzipAndUnpackTask::unzipFile(const std::string& filename)
 }
 
 void JPetUnzipAndUnpackTask::unpackFile(const std::string& filename,
-					long long nevents, const std::string& configfile = "",
-					const std::string& totCalibFile = "", const std::string& tdcCalibFile = "")
+                                        long long nevents, const std::string& configfile = "",
+                                        const std::string& totCalibFile = "", const std::string& tdcCalibFile = "")
 {
   JPetUnpacker unpacker;
   if (nevents > 0) {
     unpacker.setParams(filename, nevents, configfile, totCalibFile, tdcCalibFile);
     WARNING(std::string("Even though the range of events was set, only the first ")
-      + JPetCommonTools::intToString(nevents)
-      + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file.")
-    );
+            + JPetCommonTools::intToString(nevents)
+            + std::string(" will be unpacked by the unpacker. \n The unpacker always starts from the beginning of the file.")
+           );
   } else {
     unpacker.setParams(filename, 100000000, configfile, totCalibFile, tdcCalibFile);
   }
