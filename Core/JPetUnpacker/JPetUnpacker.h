@@ -42,8 +42,6 @@ public:
 		 const std::string& tdcCalibFile = ""
 		 );
 
-  ClassDef(JPetUnpacker, 2);
-
 private:
   Unpacker2* fUnpacker;
   int fEventsToProcess;

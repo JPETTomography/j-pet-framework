@@ -18,8 +18,6 @@
 #include "./JPetUnpacker.h"
 #include <cassert>
 
-ClassImp(JPetUnpacker);
-
 JPetUnpacker::JPetUnpacker(): fUnpacker(0), fEventsToProcess(0), fHldFile(""),
 			      fCfgFile(""), fTOTCalibFile(""), fTDCCalibFile("") {}
 
