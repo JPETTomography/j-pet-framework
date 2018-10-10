@@ -29,12 +29,17 @@ public:
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParams& outOptions) override;
   static void unpackFile(const std::string& filename, long long nevents,
-    const std::string& configfile, const std::string& calibfile);
+			 const std::string& configfile, const std::string& totCalibFile,
+			 const std::string& tdcCalibFile);
   static bool unzipFile(const std::string& filename);
 
 protected:
   OptsStrAny fOptions;
   bool fUnpackHappened = false;
+  const std::string kTOToffsetCalibKey = "Unpacker_TOToffsetCalib_std::string";
+  const std::string kTDCnonlinearityCalibKey = "Unpacker_TDCnonlinearityCalib_std::string";
+  std::string fTOToffsetCalibFile;
+  std::string fTDCnonlinearityCalibFile;
 };
 
 #endif /* !JPETUNZIPANDUNPACKTASK_H */
