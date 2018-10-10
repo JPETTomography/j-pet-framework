@@ -27,7 +27,6 @@ class Unpacker2;
 class JPetUnpacker: public TObject
 {
 public:
-  JPetUnpacker();
   ~JPetUnpacker();
   bool exec();
   inline int getEventsToProcess() const
@@ -58,12 +57,12 @@ public:
                 );
 
 private:
-  Unpacker2* fUnpacker;
-  int fEventsToProcess;
-  std::string fHldFile;
-  std::string fCfgFile;
-  std::string fTOTCalibFile;
-  std::string fTDCCalibFile;
+  Unpacker2* fUnpacker = nullptr;
+  int fEventsToProcess = 0;
+  std::string fHldFile = "";
+  std::string fCfgFile = "";
+  std::string fTOTCalibFile = "";
+  std::string fTDCCalibFile = "";
 };
 
 #endif /* !_JPETUNPACKER_H_ */
