@@ -20,12 +20,27 @@ ClassImp(JPetBaseSignal);
 /**
  * Constructor
  */
-JPetBaseSignal::JPetBaseSignal(): TObject(), fPM(0), fBarrelSlot(0) {}
+JPetBaseSignal::JPetBaseSignal(): TObject(), fPM(0), fBarrelSlot(0), fFlag(JPetBaseSignal::Unknown) {}
 
 /**
  * Constructor with boolean argument isNull
  */
 JPetBaseSignal::JPetBaseSignal(bool isNull): fIsNullObject(isNull) {}
+
+/**
+* Destructor
+*/
+JPetBaseSignal::~JPetBaseSignal() {}
+
+void JPetBaseSignal::setRecoFlag(JPetBaseSignal::RecoFlag flag)
+{
+  fFlag = flag;
+}
+
+JPetBaseSignal::RecoFlag JPetBaseSignal::getRecoFlag() const
+{
+  return fFlag;
+}
 
 bool JPetBaseSignal::isNullObject() const
 {
@@ -37,11 +52,6 @@ JPetBaseSignal& JPetBaseSignal::getDummyResult()
   static JPetBaseSignal dummyResult(true);
   return dummyResult;
 }
-
-/**
- * Destructor
- */
-JPetBaseSignal::~JPetBaseSignal() {}
 
 void JPetBaseSignal::Clear(Option_t *)
 {

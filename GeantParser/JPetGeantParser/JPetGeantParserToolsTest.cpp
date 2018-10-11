@@ -30,7 +30,7 @@ JPetGeantEventPack* createPack(bool genPrompt, bool gen2g, bool gen3g ){
     }
 
     if(gen2g){
-        for ( uint i=0; i <2; i++){
+        for ( unsigned int i=0; i <2; i++){
             JPetGeantScinHits* hit0 =  pack->ConstructNextHit();
             hit0->SetGenGammaMultiplicity(2);
             hit0->SetGenGammaIndex(i+1);
@@ -38,7 +38,7 @@ JPetGeantEventPack* createPack(bool genPrompt, bool gen2g, bool gen3g ){
     }
 
     if(gen3g){
-        for ( uint i=0; i <3; i++){
+        for ( unsigned int i=0; i <3; i++){
             JPetGeantScinHits* hit0 =  pack->ConstructNextHit();
             hit0->SetGenGammaMultiplicity(3);
             hit0->SetGenGammaIndex(i+1);
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE( testIdentification )
                 // generate only prompt
                 JPetGeantEventPack* pack = createPack(genPrompt, gen2g, gen3g);
 
-                for ( uint i=0; i < pack->GetNumberOfHits(); i++){
+                for ( unsigned int i=0; i < pack->GetNumberOfHits(); i++){
                     JPetHit  recHit; // does not matter if empty
                     JPetGeantParserTools::identifyRecoHits(pack->GetHit(i), recHit,
                             isRecPrompt, isSaved2g, isSaved3g,

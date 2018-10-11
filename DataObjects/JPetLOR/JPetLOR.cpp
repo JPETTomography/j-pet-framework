@@ -22,7 +22,7 @@ ClassImp(JPetLOR);
  */
 JPetLOR::JPetLOR():
   TObject(), fTime(0.0f), fQualityOfTime(0.0f),
-  fTimeDiff(0.0f), fQualityOfTimeDiff(0.0f)
+  fTimeDiff(0.0f), fQualityOfTimeDiff(0.0f), fFlag(JPetLOR::Unknown)
 {
   fIsHitSet[0] = false;
   fIsHitSet[1] = false;
@@ -44,6 +44,16 @@ JPetLOR::JPetLOR(float Time, float QualityOfTime,
  * Destructor
  */
 JPetLOR::~JPetLOR(){}
+
+JPetLOR::RecoFlag JPetLOR::getRecoFlag() const
+{
+  return fFlag;
+}
+
+void JPetLOR::setRecoFlag(JPetLOR::RecoFlag flag)
+{
+  fFlag = flag;
+}
 
 /**
  * Get LOR time in [ps].
@@ -161,7 +171,7 @@ bool JPetLOR::isHitSet(const unsigned int index){
  *
  * Returns flase and logs an error message, if both hits come from the same barrel slot
  * or hits are inappropriately time-ordered.
- * 
+ *
  * @return true if the checks are successful.
  */
 bool JPetLOR::isFromSameBarrelSlot() const {

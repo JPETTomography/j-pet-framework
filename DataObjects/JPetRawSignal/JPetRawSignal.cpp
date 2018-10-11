@@ -80,11 +80,10 @@ void JPetRawSignal::addPoint(const JPetSigCh& sigch)
  * @param Sort method: JPetRawSignal::byThrValue or JPetRawSignal::byThrNum
  */
 std::vector<JPetSigCh> JPetRawSignal::getPoints(
-    JPetSigCh::EdgeType edge,
-    JPetRawSignal::PointsSortOrder order) const
-{
+    JPetSigCh::EdgeType edge, JPetRawSignal::PointsSortOrder order
+) const {
   std::vector<JPetSigCh> sorted = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
-  if ( order == JPetRawSignal::ByThrNum ){
+  if (order == JPetRawSignal::ByThrNum){
     std::sort(sorted.begin(), sorted.end(), JPetSigCh::compareByThresholdNumber);
   } else {
     std::sort(sorted.begin(), sorted.end(), JPetSigCh::compareByThresholdValue);
@@ -99,8 +98,14 @@ std::map<int, double> JPetRawSignal::getTimesVsThresholdNumber(JPetSigCh::EdgeTy
 {
   std::map<int, double> thrToTime;
   const std::vector<JPetSigCh> & vec = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
-  for( std::vector<JPetSigCh>::const_iterator it = vec.begin(); it!=vec.end(); ++it) {
-     thrToTime[ it->getThresholdNumber() ] = it->getValue();
+  for(std::vector<JPetSigCh>::const_iterator it = vec.begin(); it!=vec.end(); ++it) {
+    if (thrToTime.find(it->getThresholdNumber()) == thrToTime.end()) {
+      thrToTime[it->getThresholdNumber()] = it->getValue();
+    } else {
+      WARNING("Doube threshold in edge signal channels, returning empty map.");
+      std::map<int, double> empty;
+      return empty;
+    }
   }
   return thrToTime;
 }
@@ -108,12 +113,18 @@ std::map<int, double> JPetRawSignal::getTimesVsThresholdNumber(JPetSigCh::EdgeTy
 /**
  * @brief Get a map with (threshold value [mV], time [ps]) pairs.
  */
-std::map<int, std::pair<float, float> > JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const
+std::map<int, std::pair<float, float>> JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const
 {
-  std::map<int, std::pair<float, float> > thrToTime;
+  std::map<int, std::pair<float, float>> thrToTime;
   const std::vector<JPetSigCh> & vec = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
   for(std::vector<JPetSigCh>::const_iterator it = vec.begin(); it!=vec.end(); ++it) {
-    thrToTime[it->getThresholdNumber()] = std::make_pair(it->getThreshold(), it->getValue());
+    if (thrToTime.find(it->getThresholdNumber()) == thrToTime.end()) {
+      thrToTime[it->getThresholdNumber()] = std::make_pair(it->getThreshold(), it->getValue());
+    } else {
+      WARNING("Doube threshold in edge signal channels, returning empty map.");
+      std::map<int, std::pair<float, float>> empty;
+      return empty;
+    }
   }
   return thrToTime;
 }
@@ -124,10 +135,11 @@ std::map<int, std::pair<float, float> > JPetRawSignal::getTimesVsThresholdValue(
 std::map<int, double> JPetRawSignal::getTOTsVsThresholdNumber() const
 {
   std::map<int, double> thrToTOT;
-  for(std::vector<JPetSigCh>::const_iterator it1 = fLeadingPoints.begin(); it1!=fLeadingPoints.end(); ++it1){
-    for(std::vector<JPetSigCh>::const_iterator it2 = fTrailingPoints.begin(); it2!=fTrailingPoints.end(); ++it2){
-      if(it1->getThresholdNumber() == it2->getThresholdNumber()){
-        thrToTOT[it1->getThresholdNumber()] = it2->getValue() - it1->getValue();
+  for(auto leading : fLeadingPoints){
+    for(auto trailing : fTrailingPoints){
+      if(leading.getThresholdNumber() == trailing.getThresholdNumber()) {
+        thrToTOT[leading.getThresholdNumber()] = trailing.getValue() - leading.getValue();
+        break;
       }
     }
   }
@@ -140,10 +152,11 @@ std::map<int, double> JPetRawSignal::getTOTsVsThresholdNumber() const
 std::map<int, double> JPetRawSignal::getTOTsVsThresholdValue() const
 {
   std::map<int, double> thrToTOT;
-  for(std::vector<JPetSigCh>::const_iterator it1 = fLeadingPoints.begin(); it1!=fLeadingPoints.end(); ++it1){
-    for(std::vector<JPetSigCh>::const_iterator it2 = fTrailingPoints.begin(); it2!=fTrailingPoints.end(); ++it2){
-      if(it1->getThreshold() == it2->getThreshold()){
-        thrToTOT[ it1->getThreshold() ] = it2->getValue() - it1->getValue();
+  for(auto leading : fLeadingPoints){
+    for(auto trailing : fTrailingPoints){
+      if(leading.getThreshold() == trailing.getThreshold()) {
+        thrToTOT[leading.getThreshold()] = trailing.getValue() - leading.getValue();
+        break;
       }
     }
   }

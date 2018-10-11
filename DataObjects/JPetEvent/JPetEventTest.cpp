@@ -26,7 +26,18 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetEvent event;
+  BOOST_REQUIRE_EQUAL(event.getRecoFlag(), JPetEvent::Unknown);
   BOOST_REQUIRE(event.getHits().empty());
+}
+
+BOOST_AUTO_TEST_CASE(recoFlagSetterTest)
+{
+  JPetEvent event;
+  BOOST_REQUIRE_EQUAL(event.getRecoFlag(), JPetEvent::Unknown);
+  event.setRecoFlag(JPetEvent::Good);
+  BOOST_REQUIRE_EQUAL(event.getRecoFlag(), JPetEvent::Good);
+  event.setRecoFlag(JPetEvent::Corrupted);
+  BOOST_REQUIRE_EQUAL(event.getRecoFlag(), JPetEvent::Corrupted);
 }
 
 BOOST_AUTO_TEST_CASE(constructor)

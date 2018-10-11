@@ -13,8 +13,8 @@
  *  @file JPetHit.h
  */
 
-#ifndef _JPETHIT_H_
-#define _JPETHIT_H_
+#ifndef JPETHIT_H
+#define JPETHIT_H
 
 #include "./JPetBarrelSlot/JPetBarrelSlot.h"
 #include "./JPetPhysSignal/JPetPhysSignal.h"
@@ -42,12 +42,14 @@ class JPetScin;
 class JPetHit: public TObject
 {
 public:
-  enum Signal {SideA, SideB};
+  enum Signal { SideA, SideB };
+  enum RecoFlag { Good, Corrupted, Unknown };
   JPetHit();
   JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime,
     TVector3& Position, JPetPhysSignal& SignalA, JPetPhysSignal& SignalB,
     JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator);
   virtual ~JPetHit();
+  JPetHit::RecoFlag getRecoFlag() const;
   float getEnergy() const;
   float getQualityOfEnergy() const;
   float getTime() const ;
@@ -66,6 +68,7 @@ public:
   const JPetBarrelSlot& getBarrelSlot() const;
   bool isSignalASet()const;
   bool isSignalBSet()const;
+  void setRecoFlag(JPetHit::RecoFlag flag);
   void setEnergy(float energy);
   void setQualityOfEnergy(float qualityOfEnergy);
   void setTime(float time);
@@ -85,6 +88,7 @@ public:
   void Clear(Option_t * opt  = "");
 
 private:
+  RecoFlag fFlag = JPetHit::Unknown;
   float fEnergy = 0.0f;
   float fQualityOfEnergy = 0.0f;
   float fTime = 0.0f;
@@ -99,7 +103,7 @@ private:
   TRef fBarrelSlot = NULL;
   TRef fScintillator = NULL;
 
-  ClassDef(JPetHit, 5);
+  ClassDef(JPetHit, 6);
 };
 
-#endif
+#endif /* !JPETHIT_H */

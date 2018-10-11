@@ -19,15 +19,20 @@
 
 ClassImp(JPetHit);
 
-JPetHit::JPetHit(): TObject() {}
+/**
+ * Default constructor
+ */
+JPetHit::JPetHit(): TObject(), fFlag(JPetHit::Unknown) {}
 
 /**
  * Constructor with checking the consistency of the hit being created.
  */
-JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos,
-  JPetPhysSignal& siga, JPetPhysSignal& sigb, JPetBarrelSlot& bslot, JPetScin& scin):
-  TObject(), fEnergy(e), fQualityOfEnergy(qe), fTime(t), fQualityOfTime(qt),
-  fPos(pos), fSignalA(siga), fSignalB(sigb), fBarrelSlot(&bslot), fScintillator(&scin)
+JPetHit::JPetHit(float energy, float qualityOfEnergy, float time, float qualityOfTime,
+  TVector3& position, JPetPhysSignal& signalA, JPetPhysSignal& signalB,
+  JPetBarrelSlot& barreSlot, JPetScin& scin):
+  TObject(), fFlag(JPetHit::Unknown) ,fEnergy(energy), fQualityOfEnergy(qualityOfEnergy),
+  fTime(time), fQualityOfTime(qualityOfTime), fPos(position), fSignalA(signalA), fSignalB(signalB),
+  fBarrelSlot(&barreSlot), fScintillator(&scin)
 {
   fIsSignalAset = true;
   fIsSignalBset = true;
@@ -38,6 +43,14 @@ JPetHit::JPetHit(float e, float qe, float t, float qt, TVector3& pos,
  * Destructor
  */
 JPetHit::~JPetHit(){}
+
+/**
+ * Get the reconstruction flag
+ */
+JPetHit::RecoFlag JPetHit::getRecoFlag() const
+{
+  return fFlag;
+}
 
 /**
  * Get hit energy in [keV]
@@ -190,6 +203,14 @@ bool JPetHit::isSignalASet() const
 bool JPetHit::isSignalBSet() const
 {
   return fIsSignalBset;
+}
+
+/**
+ * Set the reconstruction flag with enum
+ */
+void JPetHit::setRecoFlag(JPetHit::RecoFlag flag)
+{
+  fFlag = flag;
 }
 
 /**

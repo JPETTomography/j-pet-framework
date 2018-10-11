@@ -13,8 +13,8 @@
  *  @file JPetLOR.h
  */
 
-#ifndef _JPETLOR_H_
-#define _JPETLOR_H_
+#ifndef JPETLOR_H
+#define JPETLOR_H
 
 #include "./JPetHit/JPetHit.h"
 #include <cstddef>
@@ -35,10 +35,14 @@ class JPetHit;
 class JPetLOR: public TObject
 {
 public:
+  enum RecoFlag { Good, Corrupted, Unknown };
+
   JPetLOR();
   JPetLOR(float time, float qualityOfTime, JPetHit& firstHit, JPetHit& secondHit);
   virtual ~JPetLOR();
 
+  JPetLOR::RecoFlag getRecoFlag() const;
+  void setRecoFlag(JPetLOR::RecoFlag flag);
 	float getTime() const;
 	float getQualityOfTime() const;
 	void setTime(const float time);
@@ -56,16 +60,17 @@ public:
   bool isFromSameBarrelSlot() const;
   void Clear(Option_t * opt = "");
 
-  ClassDef(JPetLOR,3);
-
 private:
   float fTime;
   float fQualityOfTime;
   float fTimeDiff;
   float fQualityOfTimeDiff;
   bool fIsHitSet[2];
+  RecoFlag fFlag = JPetLOR::Unknown;
   JPetHit fFirstHit;
   JPetHit fSecondHit;
+
+  ClassDef(JPetLOR, 4);
 };
 
-#endif
+#endif /* !JPETLOR_H */

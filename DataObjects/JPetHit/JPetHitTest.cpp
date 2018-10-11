@@ -27,6 +27,7 @@ BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetHit hit;
   double epsilon = 0.0001;
+  BOOST_REQUIRE_EQUAL(hit.getRecoFlag(), JPetHit::Unknown);
   BOOST_REQUIRE_CLOSE(hit.getEnergy(), 0.0f, epsilon);
   BOOST_REQUIRE_CLOSE(hit.getQualityOfEnergy(), 0.0f, epsilon);
   BOOST_REQUIRE_CLOSE(hit.getTime(), 0.0f, epsilon);
@@ -36,6 +37,16 @@ BOOST_AUTO_TEST_CASE(default_constructor)
   BOOST_REQUIRE_CLOSE(hit.getPosZ(), 0, epsilon);
   BOOST_REQUIRE_EQUAL(hit.isSignalASet(), false);
   BOOST_REQUIRE_EQUAL(hit.isSignalBSet(), false);
+}
+
+BOOST_AUTO_TEST_CASE(recoFlagSetterTest)
+{
+  JPetHit hit;
+  BOOST_REQUIRE_EQUAL(hit.getRecoFlag(), JPetHit::Unknown);
+  hit.setRecoFlag(JPetHit::Good);
+  BOOST_REQUIRE_EQUAL(hit.getRecoFlag(), JPetHit::Good);
+  hit.setRecoFlag(JPetHit::Corrupted);
+  BOOST_REQUIRE_EQUAL(hit.getRecoFlag(), JPetHit::Corrupted);
 }
 
 BOOST_AUTO_TEST_CASE(consistency_check_test)
@@ -57,11 +68,11 @@ BOOST_AUTO_TEST_CASE(consistency_check_test)
   hit1.setSignalB(rightSignal);
   BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), true);
   pmB.setBarrelSlot(slot2);
-  BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), false );
+  BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), false);
   pmB.setBarrelSlot(slot1);
-  BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), true );
+  BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), true);
   pmB.setSide(JPetPM::SideA);
-  BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), false );
+  BOOST_REQUIRE_EQUAL( hit1.checkConsistency(), false);
 }
 
 BOOST_AUTO_TEST_CASE(set_get_scalars_test)
