@@ -49,8 +49,6 @@ if(ROOT_USE_FILE)
   include(${ROOT_USE_FILE})
 endif()
 
-message(STATUS "ROOT version: ")
-
 ################################################################################
 ## Find BOOST LIBs
 set(BOOST_LOG_DYN_LINK -DBOOST_LOG_DYN_LINK)
@@ -238,6 +236,30 @@ if(SHELL)
   add_custom_command(TARGET JPetFramework POST_BUILD
     COMMAND ${SHELL}  ${pcm_script}
   )
+
+  if(${ROOT_VERSION} VERSION_GREATER "6.0")
+    set(rootmap_script ${CMAKE_CURRENT_BINARY_DIR}/change_rootmaps.sh)
+
+    FILE(WRITE ${rootmap_script}  "#!${SHELL}\n")
+    FILE(APPEND ${rootmap_script} "sed -i \"1 s/^.*$/[ libJPetFramework.so ]/\" *.rootmap\n")
+    FILE(APPEND ${rootmap_script} "exit 0\n")
+
+    add_custom_command(TARGET JPetFramework POST_BUILD
+      COMMAND ${SHELL}  ${rootmap_script}
+    )
+  endif()
+
+  set(thisframework_script ${CMAKE_CURRENT_BINARY_DIR}/thisframework.sh)
+
+  FILE(WRITE ${thisframework_script}  "#!${SHELL}\n")
+  FILE(APPEND ${thisframework_script} "pathadd() {\n")
+  FILE(APPEND ${thisframework_script} "if [ -d \"\$1\" ] && [[ \":\$LD_LIBRARY_PATH:\" != *\":\$1:\"* ]]; then\n")
+  FILE(APPEND ${thisframework_script} "LD_LIBRARY_PATH=\"\${LD_LIBRARY_PATH:+\"\$LD_LIBRARY_PATH:\"}\$1\"\n")
+  FILE(APPEND ${thisframework_script} "fi\n")
+  FILE(APPEND ${thisframework_script} "}\n\n")
+  FILE(APPEND ${thisframework_script} "pathadd ${CMAKE_CURRENT_BINARY_DIR}/\n")
+  FILE(APPEND ${thisframework_script} "export LD_LIBRARY_PATH\n")
+
 endif(SHELL)
 
 ################################################################################
