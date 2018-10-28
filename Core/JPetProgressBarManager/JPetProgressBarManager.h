@@ -16,6 +16,8 @@
 #ifndef JPETPROGRESSBARMANAGER_H
 #define JPETPROGRESSBARMANAGER_H
 
+#include <string>
+
 /**
  * @brief Class managing the progress bar used in while processing events.
  */
@@ -23,6 +25,7 @@ class JPetProgressBarManager
 {
 public:
   void display(long long currentEventNumber, long long numberOfEvents) const;
+  void displayWithTaskName(std::string taskName, long long currentEventNumber, long long numberOfEvents) const;
   float getCurrentValue(int currentEventNumber, int numberOfEvents) const;
 };
 #endif /* !JPETPROGRESSBARMANAGER_H */

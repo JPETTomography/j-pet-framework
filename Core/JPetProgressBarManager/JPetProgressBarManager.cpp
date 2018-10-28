@@ -14,11 +14,21 @@
  */
 
 #include "JPetProgressBarManager.h"
-#include <stdio.h>
+#include <iostream>
 
-void JPetProgressBarManager::display(long long done, long long end) const
+void JPetProgressBarManager::display(long long currentNumber, long long totalNumber) const
 {
-  printf("\r[%6.1f%%]", getCurrentValue(done, end));
+  std::cout << std::string(5, '\b');
+  std::cout << std::string(5, ' ');
+  std::cout << '\r' << getCurrentValue(currentNumber, totalNumber) << '%' << std::flush;
+}
+
+void JPetProgressBarManager::displayWithTaskName(
+  std::string taskName, long long currentNumber, long long totalNumber
+) const {
+  std::cout << std::string(30, '\b');
+  std::cout << std::string(30, ' ');
+  std::cout << '\r' << taskName << " " << getCurrentValue(currentNumber, totalNumber) << '%' << std::flush;
 }
 
 float JPetProgressBarManager::getCurrentValue(int currentEventNumber, int numberOfEvents) const

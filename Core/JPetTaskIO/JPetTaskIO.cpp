@@ -13,25 +13,21 @@
  *  @file JPetTaskIO.cpp
  */
 
-#include "JPetTaskIO.h"
-#include "JPetTaskIOTools.h"
-#include <memory>
-#include <cassert>
-#include "./JPetTreeHeader/JPetTreeHeader.h"
-#include "./JPetTask/JPetTask.h"
-#include "./JPetUserTask/JPetUserTask.h"
-#include "./JPetCommonTools/JPetCommonTools.h"
-#include "./JPetData/JPetData.h"
 #include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetTreeHeader/JPetTreeHeader.h"
+#include "./JPetUserTask/JPetUserTask.h"
+#include "./JPetTask/JPetTask.h"
+#include "./JPetData/JPetData.h"
 #include "./JPetLoggerInclude.h"
+#include "JPetTaskIOTools.h"
+#include "JPetTaskIO.h"
 #include "./version.h"
+#include <cassert>
+#include <memory>
 
-
-JPetTaskIO::JPetTaskIO(const char* name,
-                       const char* in_file_type,
-                       const char* out_file_type):
-  JPetTask(name),
-  fTaskInfo(in_file_type, out_file_type, "", false)
+JPetTaskIO::JPetTaskIO(const char* name, const char* in_file_type, const char* out_file_type):
+  JPetTask(name), fTaskInfo(in_file_type, out_file_type, "", false)
 {
   if (std::string(out_file_type).empty()) {
     fIsOutput = false;
@@ -41,13 +37,7 @@ JPetTaskIO::JPetTaskIO(const char* name,
   }
 }
 
-void JPetTaskIO::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
-{
-  if (dynamic_cast<JPetUserTask*>(subTask.get()) == nullptr) {
-    ERROR("JPetTaskIO currently only allows JPetUserTask as subtask");
-  }
-  fSubTasks.push_back(std::move(subTask));
-}
+JPetTaskIO::~JPetTaskIO(){}
 
 bool JPetTaskIO::init(const JPetParams& params)
 {
@@ -86,12 +76,6 @@ bool JPetTaskIO::init(const JPetParams& params)
   return true;
 }
 
-std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFile(const OptsStrAny opts) const
-{
-  /// We cannot remove this method completely and leave the one from JPetTaskIOTools, because it  is overloaded in JPetScopeLoader class.
-  return JPetTaskIOTools::setInputAndOutputFile(opts, fTaskInfo.fResetOutputPath, fTaskInfo.fInFileType, fTaskInfo.fOutFileType);
-}
-
 bool JPetTaskIO::run(const JPetDataInterface&)
 {
   using namespace jpet_options_tools;
@@ -126,9 +110,8 @@ bool JPetTaskIO::run(const JPetDataInterface&)
       assert(lastEvent >= 0);
 
       for (auto i = firstEvent; i <= lastEvent; i++) {
-
         if (isProgressBar(fParams.getOptions())) {
-          displayProgressBar(i, lastEvent);
+          displayProgressBar(subTaskName, i, lastEvent);
         }
         JPetData event(fInputHandler->getNextEntry());
         ok = pTask->run(event);
@@ -148,7 +131,6 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     }
 
     JPetParams subTaskParams;
-
     ok = pTask->terminate(subTaskParams);
     if (!ok) {
       ERROR("In terminate() of:" + subTaskName + ". ");
@@ -192,9 +174,34 @@ bool JPetTaskIO::terminate(JPetParams& output_params)
   return true;
 }
 
-JPetParams JPetTaskIO::getParams() const
+void JPetTaskIO::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
 {
-  return fParams;
+  if (dynamic_cast<JPetUserTask*>(subTask.get()) == nullptr) {
+    ERROR("JPetTaskIO currently only allows JPetUserTask as subtask");
+  }
+  fSubTasks.push_back(std::move(subTask));
+}
+
+void JPetTaskIO::displayProgressBar(std::string taskName, int currentEventNumber, int numberOfEvents) const
+{
+  return fProgressBar.displayWithTaskName(taskName, currentEventNumber, numberOfEvents);
+}
+
+/**
+ * @brief Currently this method passes "stopIteration_bool" option from subTask to fParams if present.
+ */
+JPetParams JPetTaskIO::mergeWithExtraParams(const JPetParams& oldParams, const JPetParams& extraParams) const
+{
+  using namespace jpet_options_tools;
+  using namespace jpet_options_generator_tools;
+  auto oldOpts = oldParams.getOptions();
+  auto extraOpts = extraParams.getOptions();
+  // @todo this is hardcoded and should be moved somewhere.
+  const std::string stopIterationOptName = "stopIteration_bool";
+  if (isOptionSet(extraOpts, stopIterationOptName)) {
+    oldOpts[stopIterationOptName] = getOptionValue(extraOpts, stopIterationOptName);
+  }
+  return JPetParams(oldOpts, oldParams.getParamManagerAsShared());
 }
 
 void JPetTaskIO::setParams(const JPetParams& opts)
@@ -202,18 +209,29 @@ void JPetTaskIO::setParams(const JPetParams& opts)
   fParams = opts;
 }
 
-JPetParamManager& JPetTaskIO::getParamManager()
+JPetParams JPetTaskIO::getParams() const
 {
-  DEBUG("JPetTaskIO");
-  auto paramManager = fParams.getParamManager();
-  static JPetParamManager NullManager(true);
-  if (paramManager) {
-    DEBUG("JPetParamManger returning normal parammanager");
-    return *paramManager;
-  } else {
-    DEBUG("JPetParamManger returning NullManager ");
-    return NullManager;
-  }
+  return fParams;
+}
+
+bool JPetTaskIO::isOutput() const
+{
+  return fIsOutput;
+}
+
+bool JPetTaskIO::isInput() const
+{
+  return fIsInput;
+}
+
+/**
+ * @return (isOK, inputFile, outputFileFullPath, isResetOutputPath) based on provided options.
+ * If isOK is set to false, that means that an error has occured.
+ */
+std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFile(const OptsStrAny opts) const
+{
+  // We cannot remove this method completely and leave the one from JPetTaskIOTools, because it is overloaded in JPetScopeLoader class.
+  return JPetTaskIOTools::setInputAndOutputFile(opts, fTaskInfo.fResetOutputPath, fTaskInfo.fInFileType, fTaskInfo.fOutFileType);
 }
 
 bool JPetTaskIO::createInputObjects(const char* inputFilename)
@@ -268,10 +286,8 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
     int i = 0;
     for (auto fSubTask = fSubTasks.begin(); fSubTask != fSubTasks.end(); fSubTask++) {
       auto task = dynamic_cast<JPetUserTask*>(fSubTask->get());
-      std::string subtaskStatisticsName = task->getName()
-                                          + std::string(" subtask ")
-                                          + std::to_string(i)
-                                          + std::string(" stats");
+      std::string subtaskStatisticsName =
+        task->getName() + std::string(" subtask ") + std::to_string(i) + std::string(" stats");
       fSubTasksStatistics[subtaskStatisticsName] = std::move(jpet_common_tools::make_unique<JPetStatistics>(*fStatistics));
       task->setStatistics(fSubTasksStatistics[subtaskStatisticsName].get());
       i++;
@@ -282,11 +298,6 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
   return true;
 }
 
-void JPetTaskIO::displayProgressBar(int currentEventNumber, int numberOfEvents) const
-{
-  return fProgressBar.display(currentEventNumber, numberOfEvents);
-}
-
 const JPetParamBank& JPetTaskIO::getParamBank()
 {
   DEBUG("from JPetTaskIO");
@@ -295,31 +306,18 @@ const JPetParamBank& JPetTaskIO::getParamBank()
   return paramManager->getParamBank();
 }
 
-JPetTaskIO::~JPetTaskIO()
+JPetParamManager& JPetTaskIO::getParamManager()
 {
-}
-
-bool JPetTaskIO::isOutput() const
-{
-  return fIsOutput;
-}
-
-bool JPetTaskIO::isInput() const
-{
-  return fIsInput;
-}
-
-JPetParams JPetTaskIO::mergeWithExtraParams(const JPetParams& oldParams, const JPetParams& extraParams) const
-{
-  using namespace jpet_options_tools;
-  using namespace jpet_options_generator_tools;
-  auto oldOpts = oldParams.getOptions();
-  auto extraOpts = extraParams.getOptions();
-  const std::string stopIterationOptName = "stopIteration_bool"; /// @todo this is hardcoded and should be moved somewhere.
-  if (isOptionSet(extraOpts, stopIterationOptName)) {
-    oldOpts[stopIterationOptName] = getOptionValue(extraOpts, stopIterationOptName);
+  DEBUG("JPetTaskIO");
+  auto paramManager = fParams.getParamManager();
+  static JPetParamManager NullManager(true);
+  if (paramManager) {
+    DEBUG("JPetParamManger returning normal parammanager");
+    return *paramManager;
+  } else {
+    DEBUG("JPetParamManger returning NullManager ");
+    return NullManager;
   }
-  return JPetParams(oldOpts, oldParams.getParamManagerAsShared());
 }
 
 std::string JPetTaskIO::getFirstSubTaskName() const

@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_SUITE( FirstSuite )
 BOOST_AUTO_TEST_CASE(progressBarTest)
 {
   JPetTaskIO taskIO;
-  taskIO.displayProgressBar(5, 100);
+  taskIO.displayProgressBar("Test task", 5, 100);
 }
 
 BOOST_AUTO_TEST_CASE(No_output_no_input )
