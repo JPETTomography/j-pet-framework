@@ -23,7 +23,8 @@
 
 BOOST_AUTO_TEST_SUITE(JPetHaddTestSuite)
 
-BOOST_AUTO_TEST_CASE(good_file_with_constructor) {
+BOOST_AUTO_TEST_CASE(good_file_with_constructor)
+{
   std::string resultFileName = "";
 #if ROOT_VERSION_CODE < ROOT_VERSION(6, 0, 0)
   resultFileName = "unitTestData/JPetHaddTest/result_root5.hadd.test.root";
@@ -46,9 +47,9 @@ BOOST_AUTO_TEST_CASE(good_file_with_constructor) {
   for (long long i = 0; i < resultFileNumberOfEntires; i++) {
     const auto& timeWindow = static_cast<const JPetTimeWindow&>(readerResultFile.getCurrentEntry());
     const auto& secondTimeWindow = i < firstFileNumberOfEntries ? static_cast<const JPetTimeWindow&>(readerFirstFile.getCurrentEntry())
-                                                                : static_cast<const JPetTimeWindow&>(readerSecondFile.getCurrentEntry());
+                                   : static_cast<const JPetTimeWindow&>(readerSecondFile.getCurrentEntry());
     BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfEvents(), secondTimeWindow.getNumberOfEvents());
-    BOOST_REQUIRE_NO_EQUAL
+    BOOST_CHECK_PREDICATE(std::not_equal_to<size_t>(), (timeWindow.getNumberOfEvents())(0));
     for (size_t i = 0; i < timeWindow.getNumberOfEvents(); i++) {
       const auto& event = static_cast<const JPetEvent&>(timeWindow[i]);
       const auto& secondEvent = static_cast<const JPetEvent&>(secondTimeWindow[i]);
