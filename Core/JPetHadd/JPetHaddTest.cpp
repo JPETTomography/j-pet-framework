@@ -19,14 +19,20 @@
 #include "JPetReader/JPetReader.h"
 #include "JPetTimeWindow/JPetTimeWindow.h"
 #include <boost/test/unit_test.hpp>
-#include <iostream>
+#include <string>
 
 BOOST_AUTO_TEST_SUITE(JPetHaddTestSuite)
 
 BOOST_AUTO_TEST_CASE(good_file_with_constructor) {
+  std::string resultFileName = "";
+#if ROOT_VERSION_CODE < ROOT_VERSION(6, 0, 0)
+  resultFileName = "unitTestData/JPetHaddTest/result_root5.hadd.test.root";
+#else
+  resultFileName = "unitTestData/JPetHaddTest/result_root6.hadd.test.root";
+#endif
   JPetReader readerFirstFile("unitTestData/JPetHaddTest/dabc_17237091818.hadd.test.root");
   JPetReader readerSecondFile("unitTestData/JPetHaddTest/dabc_17237093844.hadd.test.root");
-  JPetReader readerResultFile("unitTestData/JPetHaddTest/result.hadd.test.root");
+  JPetReader readerResultFile(resultFileName.c_str());
   BOOST_REQUIRE(readerFirstFile.isOpen());
   BOOST_REQUIRE(readerSecondFile.isOpen());
   BOOST_REQUIRE(readerResultFile.isOpen());
@@ -42,6 +48,7 @@ BOOST_AUTO_TEST_CASE(good_file_with_constructor) {
     const auto& secondTimeWindow = i < firstFileNumberOfEntries ? static_cast<const JPetTimeWindow&>(readerFirstFile.getCurrentEntry())
                                                                 : static_cast<const JPetTimeWindow&>(readerSecondFile.getCurrentEntry());
     BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfEvents(), secondTimeWindow.getNumberOfEvents());
+    BOOST_REQUIRE_NO_EQUAL
     for (size_t i = 0; i < timeWindow.getNumberOfEvents(); i++) {
       const auto& event = static_cast<const JPetEvent&>(timeWindow[i]);
       const auto& secondEvent = static_cast<const JPetEvent&>(secondTimeWindow[i]);
