@@ -249,17 +249,6 @@ if(SHELL)
     )
   endif()
 
-  set(thisframework_script ${CMAKE_CURRENT_BINARY_DIR}/thisframework.sh)
-
-  FILE(WRITE ${thisframework_script}  "#!${SHELL}\n")
-  FILE(APPEND ${thisframework_script} "pathadd() {\n")
-  FILE(APPEND ${thisframework_script} "if [ -d \"\$1\" ] && [[ \":\$LD_LIBRARY_PATH:\" != *\":\$1:\"* ]]; then\n")
-  FILE(APPEND ${thisframework_script} "LD_LIBRARY_PATH=\"\${LD_LIBRARY_PATH:+\"\$LD_LIBRARY_PATH:\"}\$1\"\n")
-  FILE(APPEND ${thisframework_script} "fi\n")
-  FILE(APPEND ${thisframework_script} "}\n\n")
-  FILE(APPEND ${thisframework_script} "pathadd ${CMAKE_CURRENT_BINARY_DIR}/\n")
-  FILE(APPEND ${thisframework_script} "export LD_LIBRARY_PATH\n")
-
 endif(SHELL)
 
 ################################################################################
@@ -280,6 +269,10 @@ exec_program(
 ## Create the header file with framework version information
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
   ${CMAKE_CURRENT_SOURCE_DIR}/version.h ESCAPE_QUOTES @ONLY)
+
+## Create the thisframework.sh file with correct LD_LIBRARY_PATH information
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh.in
+  ${CMAKE_CURRENT_BINARY_DIR}/thisframework.sh ESCAPE_QUOTES @ONLY)
 
 ## Extra files, so they are visible in your editor
 file(GLOB EXTRAS extras/**)
