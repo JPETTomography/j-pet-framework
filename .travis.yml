@@ -20,7 +20,7 @@ script:
   - source thisframework.sh
   - make all tests
   - cd tests
-  - hadd unitTestData/JPetHaddTest/result_root5.hadd.test.root unitTestData/JPetHaddTest/dabc_17237091818.hadd.test.root unitTestData/JPetHaddTest/dabc_17237093844.hadd.test.root
+  - hadd -f unitTestData/JPetHaddTest/result_root5.hadd.test.root unitTestData/JPetHaddTest/dabc_17237091818.hadd.test.root unitTestData/JPetHaddTest/dabc_17237093844.hadd.test.root
   - ./run_tests.pl -f xml
   - chmod a+x parseXML.py
   - ./parseXML.py
