@@ -52,6 +52,7 @@ public:
 protected :
   JPetGeomMapping* fDetectorMap;
 
+  bool fProcessSingleEventinWindow = false;
   bool fMakeEffiHisto = true;
   bool fMakeHisto = true;
   double fMaxTime = 0.;
@@ -65,9 +66,6 @@ protected :
   int kEffiHisto_ene_nBin = 200;
   double kEffiHisto_ene_width = 8;
 
-  int kEffiMap_nSlice = 81;
-  float kEffiMap_width = 0.5; // cm  -20:20
-
   // internal variables
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";
   const std::string kMinTimeWindowParamKey = "GeantParser_MinTimeWindow_double";
@@ -76,11 +74,12 @@ protected :
   const std::string kMakeEfficienciesParamKey = "GeantParser_MakeEfficiencies_bool";
   const std::string kZresolutionParamKey = "GeantParser_Zresolution_double";
   const std::string kEnergyThresholdParamKey = "GeantParser_EnergyThreshold_double";
+  const std::string kProcessSingleEventinWindowParamKey = "GeantParser_ProcessSingleEventInWindow_bool";
 
   long fActivityIndex = 0;
 
-  std::vector<JPetMCHit> fStoredMCHits; ///< save MC hits into single time window when it contains enought hits
-  std::vector<JPetHit> fStoredHits; ///< save RECONSTRUCTED MC hits into single time window when it contains enought hits
+  std::vector<JPetMCHit> fStoredMCHits; ///< save MC hits into single time window when it contains enough hits
+  std::vector<JPetHit> fStoredHits; ///< save RECONSTRUCTED MC hits into single time window when it contains enough hits
 
   void processMCEvent(JPetGeantEventPack*);
   void saveHits();
@@ -88,9 +87,10 @@ protected :
   void bookEfficiencyHistograms();
   void bookBasicHistograms();
 
-  void fillHistoGenInfo(JPetGeantEventInformation*, bool, bool, bool);
+  void fillHistoGenInfo(JPetGeantEventInformation*);
   void fillHistoMCGen(JPetMCHit&);
   void fillHistoMCRec(JPetHit&);
+
 
 };
 
