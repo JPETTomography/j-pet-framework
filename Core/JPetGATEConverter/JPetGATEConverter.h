@@ -12,18 +12,22 @@
 
 using namespace std;
 
+enum FileInputType {kFirstGate,kSecondGate};   
+
 class JPetGATEConverter 
 {
   
 public:
   
  JPetGATEConverter();   
- JPetGATEConverter(std::string json_file,int run_id);   
- int checkArgument(TString inputFile);
+ JPetGATEConverter(std::string json_file,int run_id); 
+ std::string getfTreeName(int a);   
+ bool checkArgument(const TString& inputFile);  
  TString createOutputFileName(TString inputFile);  //it creates output root file name
- int converterJPetHit(TString inputFile); 
- int converterJPetMCHit(TString inputFile); 
-
+ bool checkSimulationType(const TString& inputFile);  
+ bool converterJPetHit(const TString& inputFile); 
+ bool converterJPetMCHit(const TString& inputFile); 
+ FileInputType finputType = kFirstGate;     
 
 private:
   
@@ -31,7 +35,7 @@ private:
   int fnumb_strips;  
   std::vector<JPetScin> fscins;  
   JPetParamManager fManager; 
-  std::vector<std::string> fTreeName = {"Hits", "gosia"};
+  std::vector<std::string> fTreeName = {"Hits","GateGlobalActorTree"}; 
             
 };
 

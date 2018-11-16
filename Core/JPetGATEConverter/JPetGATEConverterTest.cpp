@@ -12,10 +12,10 @@ BOOST_AUTO_TEST_CASE( default_constructor )
 {
   std::cout << "Converter test" << std::endl;
   TString root_file = "unitTestData/JPetGATEConverterTest/test_384strips.root";       
-  int dd;
+  bool dd;
   JPetGATEConverter conv; 
   dd = conv.converterJPetHit(root_file);                              
-  BOOST_REQUIRE_EQUAL(dd, -1); 
+  BOOST_REQUIRE(!dd); 
 }
 
 BOOST_AUTO_TEST_CASE( default_c )            
@@ -25,18 +25,18 @@ BOOST_AUTO_TEST_CASE( default_c )
   std::string json_file = "unitTestData/JPetGATEConverterTest/detectorSetupRun2345.json"; 
   int run_id = 2; 
   JPetGATEConverter conv(json_file,run_id);                    
-  BOOST_REQUIRE_EQUAL(conv.converterJPetMCHit(root_file),1);  				
+  BOOST_REQUIRE_EQUAL(conv.converterJPetMCHit(root_file),true);  				
 }
 
 BOOST_AUTO_TEST_CASE( read_param_bank )            
 {
-
+  JPetGATEConverter conv; 
   JPetMCHit* MChit = NULL;
   int idStripTab[10];
   int id_strip;     
-  TFile file1("unitTestData/JPetGATEConverterTest/output_192str_3lay_L050.root","READ");   
-  TTree *tree1 = (TTree*)file1.Get("Hits"); 
-  
+  TFile file1("unitTestData/JPetGATEConverterTest/output_192str_3lay_L050.root","READ");
+   
+  TTree *tree1 = (TTree*)file1.Get(conv.getfTreeName(0).c_str()); 
   tree1->SetBranchAddress("volumeID",&idStripTab);   
 
   TFile file2("unitTestData/JPetGATEConverterTest/output_192str_3lay_L050.gate.root", "READ");   
@@ -63,31 +63,33 @@ BOOST_AUTO_TEST_CASE( create_output_file_name)
   BOOST_REQUIRE_EQUAL(conv.createOutputFileName("blabla.root"),"blabla.gate.root"); 
   BOOST_REQUIRE_EQUAL(conv.createOutputFileName("abcd.root"),"abcd.gate.root"); 
   BOOST_REQUIRE_EQUAL(conv.createOutputFileName("jkl.root"),"jkl.gate.root"); 
-
 }
 
 BOOST_AUTO_TEST_CASE(check_argument)
 {
   JPetGATEConverter conv;	
-  BOOST_REQUIRE_EQUAL(conv.checkArgument("blabla.root"),1); 
-  BOOST_REQUIRE_EQUAL(conv.checkArgument("abc.root"),1);
+  BOOST_REQUIRE(conv.checkArgument("blabla.root")); 
+  BOOST_REQUIRE(conv.checkArgument("abc.root"))	;   
 
 } 
 
 BOOST_AUTO_TEST_CASE(tree_indicators_test)  
 {
   JPetGATEConverter conv;
-  TString root_file = "unitTestData/JPetGATEConverterTest/output_192str_3lay_L050.root";
-  TFile *f = new TFile(root_file);   
-  TTree *t_test = (TTree*)f->Get("gosia");  
-  if(t_test == NULL)
+  TString root_file = "unitTestData/JPetGATEConverterTest/output_192str_3lay_L050.root";  //inputType named FirstGate
+  //TString root_file = "unitTestData/JPetGATEConverterTest/GlobalActorOutputFile/GlobalActorExampleFile.root"; //inputType named SecondGate
+  TFile *f = new TFile(root_file); 
+   TTree *t_test = (TTree*)f->Get(conv.getfTreeName(0).c_str()); 
+  if(t_test != NULL)
   {
-   cout<<" indicator is null"<<endl;
+    conv.finputType = kFirstGate;
   }
-  else
+
+  t_test = (TTree*)f->Get(conv.getfTreeName(1).c_str()); 
+  if(t_test != NULL)
   {
-   cout<<" tree indicator is ok"<<endl;                                   
-  }                
+    conv.finputType = kSecondGate;
+  }	                                                    
 }
 
 BOOST_AUTO_TEST_SUITE_END()

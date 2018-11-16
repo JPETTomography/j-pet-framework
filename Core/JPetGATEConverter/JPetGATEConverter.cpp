@@ -10,6 +10,7 @@
 
 using namespace std;
 
+
 JPetGATEConverter::JPetGATEConverter() 
 {    
 }
@@ -19,18 +20,21 @@ JPetGATEConverter::JPetGATEConverter(string json_file,int run_id): fManager(new 
   fManager.fillParameterBank(run_id);      
 }
 
-
-int JPetGATEConverter::checkArgument(TString inputFile)                   
+std::string JPetGATEConverter::getfTreeName(int a) 
 {
-  TString ss = ".root";        
-                                                                                       
+  return fTreeName[a];
+}
+
+bool JPetGATEConverter::checkArgument(const TString& inputFile)                  
+{
+  TString ss = ".root";        																																																																																																																																																																																					                                                                                    
   Long64_t dl = inputFile.Length();
   
   if(inputFile.Index(ss) + 5 == dl)
   {
-    return 1; 
+    return true; 
   }
-  return -1;
+  return false;
 }
 
 TString JPetGATEConverter::createOutputFileName(TString inputFile)    
@@ -43,27 +47,48 @@ TString JPetGATEConverter::createOutputFileName(TString inputFile)
   return b;
 }	
 
-int JPetGATEConverter::converterJPetHit(TString inputFile)                  
+bool JPetGATEConverter::checkSimulationType(const TString& inputFile)
+{
+  TFile *f = new TFile(inputFile);     
+  TTree *t_test = (TTree*)f->Get(fTreeName[0].c_str()); 
+  if(t_test != NULL)
+  {
+    finputType = kFirstGate;
+    return true;
+  }
+  t_test = (TTree*)f->Get(fTreeName[1].c_str()); 
+  if(t_test != NULL)
+  {
+    finputType = kSecondGate;
+    return true;
+  }	                                                    
+  return false; 	
+}
+
+bool JPetGATEConverter::converterJPetHit(const TString& inputFile)                  
 {  
-   Float_t x, y, z;  //mno-> xyz
+   Float_t x, y, z;  
    Float_t u,r,s;    
    Double_t p;
    int id_strip;  
    int idStripTab[10]; 
                      
   const JPetParamBank& bank = fManager.getParamBank();   
-
+  JPetHit hit;
   if (bank.isDummy()) {
-	ERROR("Param bank is not correct, we cannot convert JPetHit.");
-	return -1;
-	}             
+   ERROR("Param bank is not correct, we cannot convert JPetHit.");
+   return false;    
+   }             
 
-
-
-  if (checkArgument(inputFile)==-1) { 
+  if (checkArgument(inputFile)==false) { 
    ERROR("argument is incorrect");
-   return -1;
+   return false;
    }
+   
+  if (checkSimulationType(inputFile)== false) { 
+  ERROR("File Type is incorrect");
+  return false;                                
+  }
 
   finputFile = inputFile;   
   TFile *f = new TFile(inputFile);
@@ -73,8 +98,7 @@ int JPetGATEConverter::converterJPetHit(TString inputFile)
   b = createOutputFileName(inputFile);              
   TFile *nf = new TFile(b,"recreate");                  
   TTree *tree = new TTree("tree","description");
-  
-  JPetHit hit;    
+      
   g->SetBranchAddress("posX",&x);   
   g->SetBranchAddress("posY",&y);
   g->SetBranchAddress("posZ",&z); 
@@ -109,26 +133,33 @@ int JPetGATEConverter::converterJPetHit(TString inputFile)
    delete f;
    delete nf;  
    
-   return 1; 
+   return true; 
 }
 
-int JPetGATEConverter::converterJPetMCHit(TString inputFile) 
+bool JPetGATEConverter::converterJPetMCHit(const TString& inputFile) 
 {  
   Int_t dti = -1;  	//MCDecayTreeIndex
   Int_t vi  = -1;   	//MCVtxIndex
   Float_t en,ti,x,y,z; 
   Double_t tim; 
   int id_strip;
-  int idStripTab[10]; 
-                     
-  const JPetParamBank& bank = fManager.getParamBank();  
-  
-  JPetMCHit MChit; 
-  if (checkArgument(inputFile)==-1) { 
+  int idStripTab[10];
+                      
+  const JPetParamBank& bank = fManager.getParamBank(); 
+  JPetMCHit MChit;
+  if (bank.isDummy()) { 
+  ERROR("Param bank is not correct, we cannot convert JPetMCHit.");
+  return false;    
+	}   
+  if (checkArgument(inputFile)==false) { 
    ERROR("argument is incorrect");
-   return -1;
+   return false;
    }                                          
-
+  if (checkSimulationType(inputFile)== false) { 
+  ERROR("File Type is incorrect");
+  return false;                                
+  }
+   
   finputFile = inputFile;                     				
   TFile *fm = new TFile(inputFile);						
   TTree *gm = (TTree*)fm->Get(fTreeName[0].c_str()); 					
@@ -177,7 +208,7 @@ int JPetGATEConverter::converterJPetMCHit(TString inputFile)
   delete fm;
   delete nfm; 
    
-  return 1;  
+  return true;  
 }
 
 					
