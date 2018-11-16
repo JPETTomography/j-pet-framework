@@ -77,10 +77,17 @@ BOOST_AUTO_TEST_CASE (good_file_with_constructor)
     std::string(reader.getCurrentEntry().GetName()),
     std::string("JPetTimeWindow")
   );
+  BOOST_REQUIRE_EQUAL(reader.getCurrentEntryNumber(), 0);
   BOOST_REQUIRE(reader.nextEntry());
+  BOOST_REQUIRE_EQUAL(reader.getCurrentEntryNumber(), 1);
+  BOOST_REQUIRE(reader.nextEntry());
+  BOOST_REQUIRE_EQUAL(reader.getCurrentEntryNumber(), 2);
   BOOST_REQUIRE(reader.firstEntry());
+  BOOST_REQUIRE_EQUAL(reader.getCurrentEntryNumber(), 0);
   BOOST_REQUIRE(reader.lastEntry());
+  BOOST_REQUIRE_EQUAL(reader.getCurrentEntryNumber(), 9);
   BOOST_REQUIRE(reader.nthEntry(0));
+  BOOST_REQUIRE_EQUAL(reader.getCurrentEntryNumber(), 0);
   BOOST_REQUIRE(reader.nthEntry(5));
   BOOST_REQUIRE_EQUAL(reader.getCurrentEntryNumber(), 5);
   BOOST_REQUIRE_EQUAL(reader.getNbOfAllEntries(), 10);
