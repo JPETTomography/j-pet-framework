@@ -32,7 +32,8 @@ public:
   std::tuple<bool, long long, long long> getEventRange(const jpet_options_tools::OptsStrAny& options) const;
   bool openInput(const char* inputFileName, const JPetParams& params);
   void closeInput();
-  TObject& getNextEntry();
+  TObject& getEntry();
+  bool nextEntry();
 
   JPetTreeHeader* getHeaderClone(); /// @todo what to do with this function?
 protected:

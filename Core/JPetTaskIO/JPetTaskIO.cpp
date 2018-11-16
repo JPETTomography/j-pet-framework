@@ -113,7 +113,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
         if (isProgressBar(fParams.getOptions())) {
           displayProgressBar(subTaskName, i, lastEvent);
         }
-        JPetData event(fInputHandler->getNextEntry());
+        JPetData event(fInputHandler->getEntry());
         ok = pTask->run(event);
         if (!ok) {
           ERROR("In run() of:" + subTaskName + ". ");
@@ -124,6 +124,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
             return false;
           }
         }
+        fInputHandler->nextEntry();
       }
     } else {
       JPetDataInterface dummyEvent;
