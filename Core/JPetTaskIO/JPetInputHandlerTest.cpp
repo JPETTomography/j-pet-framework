@@ -19,7 +19,8 @@ BOOST_AUTO_TEST_CASE(getEventRange)
   JPetParams params(opts, mgr);
 
   JPetInputHandler handler;
-  handler.openInput("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root", params);
+  auto res = handler.openInput("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root", params);
+  BOOST_REQUIRE(res);
   auto firstEvent = 0ll;
   auto lastEvent = 0ll;
   bool isOK = false;
@@ -132,6 +133,23 @@ BOOST_AUTO_TEST_CASE(getEventRange6)
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(firstEvent, 0);
   BOOST_REQUIRE_EQUAL(lastEvent, 5);
+}
+
+BOOST_AUTO_TEST_CASE(getNextEntry)
+{
+  using namespace jpet_options_generator_tools;
+  auto opts = getDefaultOptions();
+
+  opts["firstEvent_int"] = -1;
+  opts["lastEvent_int"] = 5;
+  auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager(new JPetParamGetterAscii(dataFileName)));
+  JPetParams params(opts, mgr);
+
+  JPetInputHandler handler;
+  handler.openInput("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root", params);
+  BOOST_REQUIRE(handler.nextEntry());
+  BOOST_REQUIRE(handler.nextEntry());
+  BOOST_REQUIRE(handler.nextEntry());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

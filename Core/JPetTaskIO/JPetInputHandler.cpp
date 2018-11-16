@@ -67,13 +67,17 @@ void JPetInputHandler::closeInput()
   }
 }
 
-TObject& JPetInputHandler::getNextEntry()
+TObject& JPetInputHandler::getEntry()
 {
   assert (fReader);
-  ///@todo this is bad code. To be changed.
   auto& ob = fReader->getCurrentEntry();
-  fReader->nextEntry();
   return ob;
+}
+
+bool JPetInputHandler::nextEntry()
+{
+  assert (fReader);
+  return fReader->nextEntry();
 }
 
 JPetTreeHeader* JPetInputHandler::getHeaderClone()
