@@ -28,7 +28,8 @@
 
 BOOST_AUTO_TEST_SUITE(JPetHaddTestSuite)
 
-std::string exec(std::string cmd) {
+std::string exec(std::string cmd)
+{
   char buffer[128];
   std::string result = "";
   FILE* pipe = popen(cmd.c_str(), "r");
@@ -47,7 +48,8 @@ std::string exec(std::string cmd) {
   return result;
 }
 
-BOOST_AUTO_TEST_CASE(good_file_with_constructor) {
+BOOST_AUTO_TEST_CASE(good_file_with_constructor)
+{
   std::string resultFileName = "";
   std::string firstFileName = "unitTestData/JPetHaddTest/dabc_17237091818.hadd.test.root";
   std::string secondFileName = "unitTestData/JPetHaddTest/dabc_17237093844.hadd.test.root";
@@ -73,7 +75,7 @@ BOOST_AUTO_TEST_CASE(good_file_with_constructor) {
   for (long long i = 0; i < resultFileNumberOfEntires; i++) {
     const auto& timeWindow = static_cast<const JPetTimeWindow&>(readerResultFile.getCurrentEntry());
     const auto& secondTimeWindow = i < firstFileNumberOfEntries ? static_cast<const JPetTimeWindow&>(readerFirstFile.getCurrentEntry())
-                                                                : static_cast<const JPetTimeWindow&>(readerSecondFile.getCurrentEntry());
+                                   : static_cast<const JPetTimeWindow&>(readerSecondFile.getCurrentEntry());
     BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfEvents(), secondTimeWindow.getNumberOfEvents());
     BOOST_CHECK_PREDICATE(std::not_equal_to<size_t>(), (timeWindow.getNumberOfEvents())(0));
     for (size_t i = 0; i < timeWindow.getNumberOfEvents(); i++) {
@@ -92,8 +94,8 @@ BOOST_AUTO_TEST_CASE(good_file_with_constructor) {
         BOOST_REQUIRE_EQUAL(hits[i].getTimeDiff(), secondHits[i].getTimeDiff());
         BOOST_REQUIRE_EQUAL(hits[i].getQualityOfTime(), secondHits[i].getQualityOfTime());
         BOOST_REQUIRE_EQUAL(hits[i].getQualityOfTimeDiff(), secondHits[i].getQualityOfTimeDiff());
-        BOOST_REQUIRE_EQUAL(hits[i].getScintillator(), secondHits[i].getScintillator());
-        BOOST_REQUIRE_EQUAL(hits[i].getBarrelSlot(), secondHits[i].getBarrelSlot());
+        BOOST_REQUIRE(hits[i].getScintillator() == secondHits[i].getScintillator());
+        BOOST_REQUIRE(hits[i].getBarrelSlot() == secondHits[i].getBarrelSlot());
       }
     }
     readerResultFile.nextEntry();
