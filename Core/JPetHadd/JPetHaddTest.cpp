@@ -53,7 +53,6 @@ BOOST_AUTO_TEST_CASE(good_file_with_constructor)
   std::string secondFileName = "unitTestData/JPetHaddTest/dabc_17237093844.hadd.test.root";
 #if ROOT_VERSION_CODE < ROOT_VERSION(6, 0, 0)
   resultFileName = "unitTestData/JPetHaddTest/result_root5.hadd.test.root";
-
 #else
   resultFileName = "unitTestData/JPetHaddTest/result_root6.hadd.test.root";
 #endif
@@ -93,6 +92,8 @@ BOOST_AUTO_TEST_CASE(good_file_with_constructor)
         BOOST_REQUIRE_EQUAL(hits[i].getTimeDiff(), secondHits[i].getTimeDiff());
         BOOST_REQUIRE_EQUAL(hits[i].getQualityOfTime(), secondHits[i].getQualityOfTime());
         BOOST_REQUIRE_EQUAL(hits[i].getQualityOfTimeDiff(), secondHits[i].getQualityOfTimeDiff());
+        BOOST_REQUIRE_EQUAL(hits[i].getScintillator(), secondHits[i].getScintillator());
+        BOOST_REQUIRE_EQUAL(hits[i].getBarrelSlot(), secondHits[i].getBarrelSlot());
       }
     }
     readerResultFile.nextEntry();
