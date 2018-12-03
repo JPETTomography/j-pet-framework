@@ -40,25 +40,20 @@ function(generate_root_dictionaries OUT_VAR)
       endif()
     endif()
     if(NOT skip)
-      # output dictionary file will be kept in CMake build folder
-      file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries)
-      set(dictionary
-        ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/${name}Dictionary)
-      set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${ARG_INCLUDE_DIRS};/")
-      if(EXISTS ${linkdef})
-        root_generate_dictionary(${dictionary} ${header}
-          LINKDEF ${linkdef}
-          OPTIONS -p
-          )
-      else()
-        root_generate_dictionary(${dictionary} ${header}
-          OPTIONS -p
-          )
-      endif()
-      set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${ARG_INCLUDE_DIRS}")
-      list(APPEND dictionaries ${dictionary}.cxx)
+     list(APPEND headers_to_generate ${header})
     endif()
   endforeach()
+  # output dictionary file will be kept in CMake build folder
+  file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries)
+  set(dictionary
+    ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/JPetFrameworkDictionary)
+  set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${ARG_INCLUDE_DIRS};/")
+    root_generate_dictionary(${dictionary} ${headers_to_generate}
+      LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/JPetFramework_LinkDef.h
+      OPTIONS -p
+      MODULE JPetFramework
+      )
+  list(APPEND dictionaries ${dictionary}.cxx)
   # return generated dictionary sources to given variable
   set(${OUT_VAR} ${dictionaries} PARENT_SCOPE)
 endfunction()
