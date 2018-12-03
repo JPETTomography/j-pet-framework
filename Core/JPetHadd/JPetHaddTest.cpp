@@ -48,7 +48,7 @@ std::string exec(std::string cmd)
   return result;
 }
 
-BOOST_AUTO_TEST_CASE(good_file_with_constructor)
+BOOST_AUTO_TEST_CASE(hadd_test)
 {
   std::string resultFileName = "";
   std::string firstFileName = "unitTestData/JPetHaddTest/dabc_17237091818.hadd.test.root";
