@@ -33,18 +33,18 @@ class JPetGeantEventInformation : public TObject {
         ~JPetGeantEventInformation();
         void Clear();
 
-        void SetThreeGammaGen(bool tf){fgenGammaNum.SetBitNumber(2,tf);};
-        void SetTwoGammaGen(bool tf){fgenGammaNum.SetBitNumber(1,tf);};
-        void SetPromptGammaGen(bool tf){fgenGammaNum.SetBitNumber(0,tf);};
+        void SetThreeGammaGen(bool tf){fGenGammaNum.SetBitNumber(2,tf);};
+        void SetTwoGammaGen(bool tf){fGenGammaNum.SetBitNumber(1,tf);};
+        void SetPromptGammaGen(bool tf){fGenGammaNum.SetBitNumber(0,tf);};
         void SetRunNr(int x){fnRun =x;};
         void SetVtxPosition(double x, double y, double z){fVtxPosition.SetXYZ(x,y,z);};
         void SetVtxPromptPosition(double x, double y, double z){fVtxPromptPosition.SetXYZ(x,y,z);};
         void SetLifetime(double x){fLifetime=x;};
         void SetPromptLifetime(double x){fPromptLifetime=x;};
 
-        bool GetThreeGammaGen(){return fgenGammaNum.TestBitNumber(2);};
-        bool GetTwoGammaGen(){return fgenGammaNum.TestBitNumber(1);};
-        bool GetPromptGammaGen(){return fgenGammaNum.TestBitNumber(0);};
+        bool GetThreeGammaGen(){return fGenGammaNum.TestBitNumber(2);};
+        bool GetTwoGammaGen(){return fGenGammaNum.TestBitNumber(1);};
+        bool GetPromptGammaGen(){return fGenGammaNum.TestBitNumber(0);};
         int GetRunNr(){return fnRun;};
         double GetVtxPositionX(){return fVtxPosition.X();};
         double GetVtxPositionY(){return fVtxPosition.Y();};
@@ -58,9 +58,10 @@ class JPetGeantEventInformation : public TObject {
 
 
     private:
+      const unsigned int fMaxGammaNumberIndex = 3;
         TVector3 fVtxPosition; ///< xyz annihilation coordinated
         TVector3 fVtxPromptPosition; ///< xyz of prompt photon emmision
-        TBits fgenGammaNum; ///< bitNR 0-prompt; 1-back-to-back; 2- oPs 
+        TBits fGenGammaNum; ///< bitNR 0-prompt; 1-back-to-back; 2- oPs 
         int fnRun; ///< number should follow the JPet run numbering scheme
         double fLifetime; ///< lifetime of generated bound state or direct annihilation; see specific simulation details
         double fPromptLifetime; ///< generated lifetime of emmited prompt photon; filled only if prompt gamma is generated

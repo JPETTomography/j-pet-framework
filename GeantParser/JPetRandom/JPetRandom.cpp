@@ -15,11 +15,11 @@
 
 #include <JPetRandom/JPetRandom.h>
 
-TRandom3* JPetRandom::fRandomGenerator =0; 
+TRandom3* JPetRandom::fRandomGenerator = nullptr; 
 
 TRandom3* JPetRandom::GetRandomGenerator()
 {
-      if (fRandomGenerator == 0)
+      if (fRandomGenerator == nullptr)
       {
             fRandomGenerator = new TRandom3(0);
       }
