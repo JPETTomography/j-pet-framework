@@ -133,7 +133,7 @@ set(DOWNLOAD_DATA ${CMAKE_CURRENT_SOURCE_DIR}/download_data.sh ${CMAKE_CURRENT_S
 execute_process(COMMAND ${DOWNLOAD_DATA})
 
 ################################################################################
-# Generating ROOT dictionaries
+## Generating ROOT dictionaries
 generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   INCLUDE
   JPetTimeWindow
@@ -210,7 +210,7 @@ file(COPY unitTestUtils/run_tests.pl DESTINATION ${TESTS_DIR})
 file(COPY unitTestUtils/parseXML.py DESTINATION ${TESTS_DIR})
 foreach(test_source ${UNIT_TEST_SOURCES})
   get_filename_component(test ${test_source} NAME_WE)
-  #generate_root_dictionaries(test_dictionaries SOURCES ${test_source} INCLUDE_DIRS ${FOLDERS})
+  generate_root_dictionaries(test_dictionaries SOURCES ${test_source} INCLUDE_DIRS ${FOLDERS})
   list(APPEND test_binaries ${test}.x)
   add_executable(${test}.x EXCLUDE_FROM_ALL ${test_source}
     ${test_dictionaries}
