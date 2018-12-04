@@ -69,10 +69,18 @@ function(generate_root_dictionaries OUT_VAR)
     set(dictionary
       ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/Dictionaries/JPetFrameworkDictionary)
     set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${ARG_INCLUDE_DIRS};/")
+    if (ROOT_VERSION VERSION_LESS 6)
     root_generate_dictionary(${dictionary} ${headers_to_generate}
       LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/JPetFramework_LinkDef.h
       OPTIONS -p
       )
+    else()
+    root_generate_dictionary(${dictionary} ${headers_to_generate}
+      LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/JPetFramework_LinkDef.h
+      OPTIONS -p
+      MODULE ${ARG_RESULT_NAME}
+      )
+    endif()
   list(APPEND dictionaries ${dictionary}.cxx)
   endif()
   # return generated dictionary sources to given variable
