@@ -25,7 +25,7 @@
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
-/*
+
 BOOST_AUTO_TEST_CASE(goodRootFile)
 {
   JPetParamBankHandlerTask task;
@@ -43,7 +43,6 @@ BOOST_AUTO_TEST_CASE(goodRootFile)
   auto& bank2 = manager->getParamBank();
   BOOST_REQUIRE(!bank2.isDummy());
 }
-*/
 
 BOOST_AUTO_TEST_CASE(badRootFile)
 {

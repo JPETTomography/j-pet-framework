@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(test0)
   // TODO restore tests with files with new structures
 }
 
-/*
+
 BOOST_AUTO_TEST_CASE(test1)
 {
   auto opt = jpet_options_generator_tools::getDefaultOptions();
@@ -99,5 +99,5 @@ BOOST_AUTO_TEST_CASE(test2)
   JPetTaskChainExecutor taskExecutor(chain, 1, opt);
   BOOST_REQUIRE(taskExecutor.process());
 }
-*/
+
 BOOST_AUTO_TEST_SUITE_END()
