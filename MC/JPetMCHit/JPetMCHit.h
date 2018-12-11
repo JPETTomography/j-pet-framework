@@ -47,7 +47,7 @@ private:
   UInt_t fMCVtxIndex = 0u;
   TVector3 fPolarization;
   TVector3 fMomentum;
-  UInt_t fGenGammaMultiplicity = -1; ///< generated gamma cheat sheet: 1- prompt; 2- back-to-back; 3- 3gamma annihilation
+  UInt_t fGenGammaMultiplicity = 0u; ///< generated gamma cheat sheet: 1- prompt; 2- back-to-back; 3- 3gamma annihilation
 
   ClassDef(JPetMCHit, 1);
 };
