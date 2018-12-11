@@ -68,8 +68,8 @@ bool JPetGeantParser::init()
   if (isOptionSet(fParams.getOptions(), kProcessSingleEventinWindowParamKey)) {
     fProcessSingleEventinWindow = getOptionAsBool(fParams.getOptions(), kProcessSingleEventinWindowParamKey);
   }
-  if ( fMakeHisto) bookBasicHistograms();
-  if ( fMakeEffiHisto ) bookEfficiencyHistograms();
+  if (fMakeHisto) bookBasicHistograms();
+  if (fMakeEffiHisto) bookEfficiencyHistograms();
 
   INFO("MC Hit wrapper started.");
 
@@ -167,7 +167,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
 
   // fill efficiency histograms
 
-  if ( isGenPrompt && fMakeEffiHisto ) {
+  if (isGenPrompt && fMakeEffiHisto) {
     for ( int i = 0; i < kEffiHisto_ene_nBin; i++) {
       getStatistics().getEffiHisto("effi_prompt_eneDepos")->Fill(isRecPrompt &&
           ( enePrompt > i * kEffiHisto_ene_width )
@@ -175,7 +175,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     }
   }
 
-  if (isGen2g && fMakeEffiHisto ) {
+  if (isGen2g && fMakeEffiHisto) {
     for ( int i = 0; i < kEffiHisto_ene_nBin; i++) {
       getStatistics().getEffiHisto("effi_2g_hit_eneDepos")->Fill(isRec2g &&
           ( ene2g[0] > i * kEffiHisto_ene_width ) && ( ene2g[1] > i * kEffiHisto_ene_width)
@@ -184,7 +184,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
 
   }
 
-  if (isGen3g && fMakeEffiHisto ) {
+  if (isGen3g && fMakeEffiHisto) {
     for ( int i = 0; i < kEffiHisto_ene_nBin; i++) {
       getStatistics().getEffiHisto("effi_3g_hit_eneDepos")->Fill(isRec3g &&
           ( ene3g[0] > i * kEffiHisto_ene_width ) && ( ene3g[1] > i * kEffiHisto_ene_width) && (ene3g[2] > i * kEffiHisto_ene_width)

@@ -50,7 +50,7 @@ public:
 
 
 protected :
-  JPetGeomMapping* fDetectorMap;
+  JPetGeomMapping* fDetectorMap =  nullptr;
 
   bool fProcessSingleEventinWindow = false;
   bool fMakeEffiHisto = true;

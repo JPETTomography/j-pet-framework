@@ -29,14 +29,15 @@ float JPetSmearingFunctions::addZHitSmearing(float zIn, float z_res)
 
 float JPetSmearingFunctions::addEnergySmearing(float eneIn)
 {
-  // eneIn in keV
+  /// @param eneIn in keV
   float alpha = 0.044 / sqrt(eneIn / 1000.);
   return eneIn + alpha * eneIn * fRandomGenerator->Gaus(0., 1.);
 }
 
 float JPetSmearingFunctions::addTimeSmearing(float timeIn, float eneIn)
 {
-  // eneIn in keV, timeIn in ps
+  /// @param eneIn in keV
+  /// @param timeIn in ps
   float time;
 
   if ( eneIn > kEnergyThreshold ) {
