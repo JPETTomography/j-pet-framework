@@ -184,7 +184,7 @@ void JPetTaskIO::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
 
 void JPetTaskIO::displayProgressBar(std::string taskName, int currentEventNumber, int numberOfEvents) const
 {
-  return fProgressBar.displayWithTaskName(taskName, currentEventNumber, numberOfEvents);
+  return fProgressBar.display(taskName, currentEventNumber, numberOfEvents);
 }
 
 /**
