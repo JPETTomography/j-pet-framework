@@ -27,6 +27,7 @@
 #include <JPetGeantEventPack/JPetGeantEventPack.h>
 #include <JPetGeomMapping/JPetGeomMapping.h>
 #include "JPetParamBank/JPetParamBank.h"
+#include <JPetRandom/JPetRandom.h>
 
 #ifdef __CINT__
 //when cint is used instead of compiler, override word is not recognized
@@ -41,10 +42,6 @@ public:
 
   static JPetHit reconstructHit(JPetMCHit& hit, const JPetParamBank& paramBank, const float timeShift, const float z_resolution );
 
-  static float addEnergySmearing(float);
-  static float addZHitSmearing(float, float);
-  static float addTimeSmearing(float, float);
-
   static bool isHitReconstructed(JPetHit& hit, const float th);
 
   static void identifyRecoHits(JPetGeantScinHits* geantHit, const JPetHit& hit,
@@ -53,13 +50,8 @@ public:
                                float& enePrompt, std::array<float, 2>& ene2g,
                                std::array<float, 3>& ene3g );
 
-  static void setGeneratorSeed(unsigned long seed);
-
 private:
-  static TRandom3 fRandomGenerator;
-  static const float kEnergyThreshold;
-  static const float kReferenceEnergy;
-  static const float kTimeResolutionConstant;
+  static TRandom3* fRandomGenerator;
   
 };
 

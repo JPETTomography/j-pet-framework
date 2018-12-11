@@ -10,30 +10,31 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetGeantEventInformation.cpp
+ *  @file JPetRandom.h
  */
 
-#include "JPetGeantEventInformation.h"
+#ifndef JPETRANDOM_H
+#define JPETRANDOM_H
 
-ClassImp(JPetGeantEventInformation)
+#include<TRandom3.h>
 
-
-JPetGeantEventInformation::JPetGeantEventInformation()
-    :fVtxPosition(0,0,0), fVtxPromptPosition(0,0,0), fGenGammaNum(fMaxGammaNumberIndex), fnRun(0), fLifetime(0), fPromptLifetime(0)
-{}
-
-
-JPetGeantEventInformation::~JPetGeantEventInformation()
-{}
-
-void JPetGeantEventInformation::Clear()
+/**
+ * @brief wrapping class for random generator 
+ * Allows to create only a single instance of random generator 
+ * through the program (see c++ singleton)
+ */
+class JPetRandom : public TRandom3  
 {
-    fGenGammaNum.ResetAllBits();  
-    fnRun = 0;
-    fLifetime = 0.;
-    fPromptLifetime = 0.;
-    fVtxPosition.SetXYZ(0,0,0);
-    fVtxPromptPosition.SetXYZ(0,0,0);
+      public:
+      static TRandom3* GetRandomGenerator(); ///< only single instance can exists
+      static void setGeneratorSeed(unsigned long seed);
+      static unsigned long getGeneratorSeed();
 
-}
+      protected:
+      static TRandom3* fRandomGenerator;
+      JPetRandom();
+      ~JPetRandom();
+};
+#endif
+
 

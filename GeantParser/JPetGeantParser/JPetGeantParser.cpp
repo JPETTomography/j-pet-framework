@@ -19,10 +19,10 @@
 #include <JPetOptionsTools/JPetOptionsTools.h>
 #include <JPetGeantParser/JPetGeantParser.h>
 #include <JPetGeantParser/JPetGeantParserTools.h>
+#include <JPetRandom/JPetRandom.h>
 
 
 #include <JPetScin/JPetScin.h>
-#include<TRandom3.h>
 #include <string>
 #include <TMath.h>
 #include <cmath>
@@ -65,12 +65,13 @@ bool JPetGeantParser::init()
   if (isOptionSet(fParams.getOptions(), kEnergyThresholdParamKey)) {
     fExperimentalThreshold = getOptionAsDouble(fParams.getOptions(), kEnergyThresholdParamKey);
   }
-
-  if ( fMakeHisto) bookBasicHistograms();
-  if ( fMakeEffiHisto ) bookEfficiencyHistograms();
+  if (isOptionSet(fParams.getOptions(), kProcessSingleEventinWindowParamKey)) {
+    fProcessSingleEventinWindow = getOptionAsBool(fParams.getOptions(), kProcessSingleEventinWindowParamKey);
+  }
+  if (fMakeHisto) bookBasicHistograms();
+  if (fMakeEffiHisto) bookEfficiencyHistograms();
 
   INFO("MC Hit wrapper started.");
-
 
   return true;
 }
@@ -83,12 +84,17 @@ bool JPetGeantParser::exec()
 
     processMCEvent(mcEventPack);
 
-    if (fActivityIndex > abs(fMinTime * fSimulatedActivity * pow(10, -6))) {
-      saveHits();
-      fActivityIndex = 0;
-    } else {
-      fActivityIndex++;
-    }
+      if (fProcessSingleEventinWindow){
+              saveHits();
+      } else {
+            if (fActivityIndex > abs(fMinTime * fSimulatedActivity * pow(10, -6))) {
+              saveHits();
+              fActivityIndex = 0;
+            } else {
+              fActivityIndex++;
+            }
+      }
+      
 
   } else {
     return false;
@@ -125,8 +131,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
 
 
   // first adjust all hits in single event to time window scheme
-  std::unique_ptr<TRandom3> random(new TRandom3(0));
-  float timeShift = random->Uniform(fMinTime, fMaxTime);
+  float timeShift = JPetRandom::GetRandomGenerator()->Uniform(fMinTime, fMaxTime);
 
   for ( unsigned int i = 0; i < evPack->GetNumberOfHits(); i++) {
 
@@ -156,13 +161,13 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
   isRec3g = isSaved3g[0] && isSaved3g[1] && isSaved3g[2];
 
 
-  if (fMakeHisto) fillHistoGenInfo(evPack->GetEventInformation(), isRecPrompt, isRec2g, isRec3g);
+  if (fMakeHisto) fillHistoGenInfo(evPack->GetEventInformation());
 
 
 
   // fill efficiency histograms
 
-  if ( isGenPrompt && fMakeEffiHisto ) {
+  if (isGenPrompt && fMakeEffiHisto) {
     for ( int i = 0; i < kEffiHisto_ene_nBin; i++) {
       getStatistics().getEffiHisto("effi_prompt_eneDepos")->Fill(isRecPrompt &&
           ( enePrompt > i * kEffiHisto_ene_width )
@@ -170,7 +175,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     }
   }
 
-  if (isGen2g && fMakeEffiHisto ) {
+  if (isGen2g && fMakeEffiHisto) {
     for ( int i = 0; i < kEffiHisto_ene_nBin; i++) {
       getStatistics().getEffiHisto("effi_2g_hit_eneDepos")->Fill(isRec2g &&
           ( ene2g[0] > i * kEffiHisto_ene_width ) && ( ene2g[1] > i * kEffiHisto_ene_width)
@@ -179,7 +184,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
 
   }
 
-  if (isGen3g && fMakeEffiHisto ) {
+  if (isGen3g && fMakeEffiHisto) {
     for ( int i = 0; i < kEffiHisto_ene_nBin; i++) {
       getStatistics().getEffiHisto("effi_3g_hit_eneDepos")->Fill(isRec3g &&
           ( ene3g[0] > i * kEffiHisto_ene_width ) && ( ene3g[1] > i * kEffiHisto_ene_width) && (ene3g[2] > i * kEffiHisto_ene_width)
@@ -192,7 +197,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
 }
 
 
-void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo, bool isRecPrompt, bool isRec2g, bool isRec3g)
+void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo)
 {
   bool isGenPrompt = evInfo->GetPromptGammaGen();
   bool isGen2g = evInfo->GetTwoGammaGen();
@@ -209,45 +214,15 @@ void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo, bool i
     getStatistics().getHisto2D("gen_prompt_XZ")->Fill(evInfo->GetVtxPromptPositionX(), evInfo->GetVtxPromptPositionZ());
     getStatistics().getHisto2D("gen_prompt_YZ")->Fill(evInfo->GetVtxPromptPositionY(), evInfo->GetVtxPromptPositionZ());
 
-
-    for (Int_t i = 0; i < kEffiMap_nSlice; i++) {
-      if ((-20 + kEffiMap_width * i < evInfo->GetVtxPromptPositionZ()) && (evInfo->GetVtxPromptPositionZ() < -20 + kEffiMap_width * (i + 1))) {
-        if (fMakeEffiHisto) {
-          getStatistics().getEffiHisto("effi_prompt_vtx_" + TString::Itoa(i, 10))->Fill(
-            isRecPrompt,
-            evInfo->GetVtxPromptPositionX(), evInfo->GetVtxPromptPositionY());
-        }
-      }
-    }
-
   }
 
   // histograms for annihilation 2g 3g
   if (isGen2g) {
     getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(2);
-
-    for (Int_t i = 0; i < kEffiMap_nSlice; i++) {
-      if ((-20 + kEffiMap_width * i < evInfo->GetVtxPositionZ()) && (evInfo->GetVtxPositionZ() < -20 + kEffiMap_width * (i + 1))) {
-        if (fMakeEffiHisto) {
-          getStatistics().getEffiHisto("effi_2g_vtx_" + TString::Itoa(i, 10))->Fill(
-            isRec2g,
-            evInfo->GetVtxPositionX(), evInfo->GetVtxPositionY());
-        }
-      }
-    }
   }
 
   if (isGen3g) {
     getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(3);
-    for (Int_t i = 0; i < kEffiMap_nSlice; i++) {
-      if ((-20. + kEffiMap_width * i < evInfo->GetVtxPositionZ()) && (evInfo->GetVtxPositionZ() < -20. + kEffiMap_width * (i + 1))) {
-        if (fMakeEffiHisto) {
-          getStatistics().getEffiHisto("effi_3g_vtx_" + TString::Itoa(i, 10))->Fill(
-            isRec3g,
-            evInfo->GetVtxPositionX(), evInfo->GetVtxPositionY());
-        }
-      }
-    }
   }
 
   if ( isGen2g || isGen3g ) {
@@ -449,33 +424,6 @@ void JPetGeantParser::bookEfficiencyHistograms()
                     kEffiHisto_ene_nBin, 0.0, kEffiHisto_ene_nBin * kEffiHisto_ene_width )
   );
 
-
-
-
-  for (Int_t i = 0; i < kEffiMap_nSlice; i++) {
-    getStatistics().createHistogram(
-      new TEfficiency(TString("effi_prompt_vtx_") + TString::Itoa(i, 10),
-                      "effi prompt registration as vtx ",
-                      121, -60., 60.,
-                      121, -60., 60.
-                     ));
-
-    getStatistics().createHistogram(
-      new TEfficiency(TString("effi_2g_vtx_") + TString::Itoa(i, 10),
-                      "effi 2g annihilation registration as vtx ",
-                      121, -60., 60.,
-                      121, -60., 60.
-                     ));
-
-    getStatistics().createHistogram(
-      new TEfficiency(TString("effi_3g_vtx_") + TString::Itoa(i, 10),
-                      "effi 3g annihilation registration as vtx ",
-                      121, -60., 60.,
-                      121, -60., 60.
-                     ));
-
-
-  };
 
 }
 

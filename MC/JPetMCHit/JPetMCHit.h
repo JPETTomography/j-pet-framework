@@ -37,11 +37,17 @@ public:
   void setPolarization(Int_t xx, Int_t yy, Int_t zz);
   void setMomentum(Float_t dd, Float_t ee, Float_t ff);
 
+  //  generated cheatsheet
+  void setGenGammaMultiplicity(UInt_t i){fGenGammaMultiplicity=i;} ///< 1-prompt gamma; 2-gamma from back-to-bak; 3-gamma from oPs
+  UInt_t getGenGammaMultiplicity(){return fGenGammaMultiplicity;}
+
+
 private:
   UInt_t fMCDecayTreeIndex = 0u;
   UInt_t fMCVtxIndex = 0u;
   TVector3 fPolarization;
   TVector3 fMomentum;
+  UInt_t fGenGammaMultiplicity = 0u; ///< generated gamma cheat sheet: 1- prompt; 2- back-to-back; 3- 3gamma annihilation
 
   ClassDef(JPetMCHit, 1);
 };
