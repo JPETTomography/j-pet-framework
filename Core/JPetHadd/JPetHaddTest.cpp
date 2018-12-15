@@ -59,8 +59,8 @@ BOOST_AUTO_TEST_CASE(hadd_test)
   resultFileName = "unitTestData/JPetHaddTest/result_root6.hadd.test.root";
 #endif
   exec("hadd -f " + resultFileName + " " + firstFileName + " " + secondFileName);
-  JPetReader readerFirstFile(firstFileName);
-  JPetReader readerSecondFile(secondFileName);
+  JPetReader readerFirstFile(firstFileName.c_str());
+  JPetReader readerSecondFile(secondFileName.c_str());
   JPetReader readerResultFile(resultFileName.c_str());
   BOOST_REQUIRE(readerFirstFile.isOpen());
   BOOST_REQUIRE(readerSecondFile.isOpen());
