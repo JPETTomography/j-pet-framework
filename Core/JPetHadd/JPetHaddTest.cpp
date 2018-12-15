@@ -51,16 +51,16 @@ std::string exec(std::string cmd)
 BOOST_AUTO_TEST_CASE(hadd_test)
 {
   std::string resultFileName = "";
-  std::string firstFileName = "unitTestData/JPetHaddTest/dabc_17237091818.hadd.test.root";
-  std::string secondFileName = "unitTestData/JPetHaddTest/dabc_17237093844.hadd.test.root";
+  std::string firstFileName = "unitTestData/JPetHaddTest/single_link_def/dabc_17237091818.hadd.test.root";
+  std::string secondFileName = "unitTestData/JPetHaddTest/single_link_def/dabc_17237093844.hadd.test.root";
 #if ROOT_VERSION_CODE < ROOT_VERSION(6, 0, 0)
   resultFileName = "unitTestData/JPetHaddTest/result_root5.hadd.test.root";
 #else
   resultFileName = "unitTestData/JPetHaddTest/result_root6.hadd.test.root";
 #endif
   exec("hadd -f " + resultFileName + " " + firstFileName + " " + secondFileName);
-  JPetReader readerFirstFile("unitTestData/JPetHaddTest/dabc_17237091818.hadd.test.root");
-  JPetReader readerSecondFile("unitTestData/JPetHaddTest/dabc_17237093844.hadd.test.root");
+  JPetReader readerFirstFile(firstFileName);
+  JPetReader readerSecondFile(secondFileName);
   JPetReader readerResultFile(resultFileName.c_str());
   BOOST_REQUIRE(readerFirstFile.isOpen());
   BOOST_REQUIRE(readerSecondFile.isOpen());
