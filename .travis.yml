@@ -2,26 +2,27 @@ language: cpp
 sudo: required
 dist: trusty
 compiler:
-- gcc
+  - gcc
 os:
-- linux
+  - linux
 install:
   - sudo apt-get -qq update
   - sudo apt-get install -y git
-  - sudo apt-get install -y libboost-all-dev 
-  - sudo apt-get install -y cmake 
+  - sudo apt-get install -y libboost-all-dev
+  - sudo apt-get install -y cmake
   - sudo apt-get install -y doxygen
   - sudo apt-get install -y root-system
   - sudo apt-get install -y libfftw3-3 libfftw3-dev
 script:
-    - mkdir build
-    - cd build
-    - cmake ..
-    - make all tests
-    - cd tests
-    - ./run_tests.pl -f xml
-    - chmod a+x parseXML.py
-    - ./parseXML.py
+  - mkdir build
+  - cd build
+  - cmake ..
+  - source thisframework.sh
+  - make all tests
+  - cd tests
+  - ./run_tests.pl -f xml
+  - chmod a+x parseXML.py
+  - ./parseXML.py
 notifications:
   email:
     - aleksander.gajos@uj.edu.pl

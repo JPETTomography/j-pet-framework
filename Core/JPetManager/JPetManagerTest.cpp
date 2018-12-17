@@ -45,7 +45,6 @@ BOOST_AUTO_TEST_CASE(emptyRun)
   BOOST_CHECK_THROW(manager.run(0, nullptr), std::exception);
 }
 
-/*
 BOOST_AUTO_TEST_CASE(goodRootRun)
 {
   JPetManager& manager = JPetManager::getManager();
@@ -60,7 +59,6 @@ BOOST_AUTO_TEST_CASE(goodRootRun)
   };
   BOOST_REQUIRE_NO_THROW(manager.run(7, args));
 }
-*/
 
 BOOST_AUTO_TEST_CASE(goodZipRun)
 {

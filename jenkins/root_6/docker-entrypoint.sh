@@ -11,6 +11,7 @@ executeCommand "export CMAKE_LIBRARY_PATH=$CMAKE_LIBRARY_PATH:/framework-depende
 executeCommand "export CMAKE_INCLUDE_PATH=$CMAKE_INCLUDE_PATH:/framework-dependencies/include"
 executeCommand "source /root-system/bin/thisroot.sh"
 executeCommand "cmake .."
+executeCommand "source thisframework.sh"
 executeCommand "make all tests -j4"
 executeCommand "cd tests"
 executeCommand "./run_tests.pl -f xml"
