@@ -76,7 +76,7 @@ protected:
 
   friend class JPetParamManager;
 
-  ClassDef(JPetScin, 4);
+  ClassDef(JPetScin, 5);
 };
 
 #endif /* !_JPETSCIN_H_ */

@@ -217,7 +217,7 @@ private:
   double fOffset;
   double fCharge;
 
- ClassDef(JPetRecoSignal, 2);
+ ClassDef(JPetRecoSignal, 3);
 
 };
 

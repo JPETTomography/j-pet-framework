@@ -43,7 +43,7 @@ private:
   TVector3 fPolarization;
   TVector3 fMomentum;
 
-  ClassDef(JPetMCHit, 1);
+  ClassDef(JPetMCHit, 2);
 };
 
 #endif /* !_JPETMCHIT_H_ */

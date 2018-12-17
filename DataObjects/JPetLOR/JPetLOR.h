@@ -70,7 +70,7 @@ private:
   JPetHit fFirstHit;
   JPetHit fSecondHit;
 
-  ClassDef(JPetLOR, 4);
+  ClassDef(JPetLOR, 8);
 };
 
 #endif /* !JPETLOR_H */

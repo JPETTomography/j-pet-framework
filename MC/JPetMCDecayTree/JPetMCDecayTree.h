@@ -35,7 +35,7 @@ private:
   UInt_t fnTracks = 0u;
   // add also track and vertices structures
 
-  ClassDef(JPetMCDecayTree, 1);
+  ClassDef(JPetMCDecayTree, 2);
 };
 
 #endif
