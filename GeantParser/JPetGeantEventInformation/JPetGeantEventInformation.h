@@ -19,8 +19,14 @@
 #include "TObject.h"
 #include <vector>
 #include "TVector3.h"
+#include "TBits.h"
 
 
+/**
+ * @brief keeps information about initial simulation parameters
+ * e.g. vertices and times distributions for annihilation
+ * and prompt gamma photons
+ */
 class JPetGeantEventInformation : public TObject
 {
 public:
@@ -30,15 +36,15 @@ public:
 
   void SetThreeGammaGen(bool tf)
   {
-    fThreeGammaGen = tf;
+    fGenGammaNum.SetBitNumber(2, tf);
   };
   void SetTwoGammaGen(bool tf)
   {
-    fTwoGammaGen = tf;
+    fGenGammaNum.SetBitNumber(1, tf);
   };
   void SetPromptGammaGen(bool tf)
   {
-    fPromptGammaGen = tf;
+    fGenGammaNum.SetBitNumber(0, tf);
   };
   void SetRunNr(int x)
   {
@@ -61,69 +67,68 @@ public:
     fPromptLifetime = x;
   };
 
-  bool GetThreeGammaGen()
+  bool GetThreeGammaGen() const
   {
-    return fThreeGammaGen;
+    return fGenGammaNum.TestBitNumber(2);
   };
-  bool GetTwoGammaGen()
+  bool GetTwoGammaGen() const
   {
-    return fTwoGammaGen;
+    return fGenGammaNum.TestBitNumber(1);
   };
-  bool GetPromptGammaGen()
+  bool GetPromptGammaGen() const
   {
-    return fPromptGammaGen;
+    return fGenGammaNum.TestBitNumber(0);
   };
-  int GetRunNr()
+  int GetRunNr() const
   {
     return fnRun;
   };
-  double GetVtxPositionX()
+  double GetVtxPositionX() const
   {
     return fVtxPosition.X();
   };
-  double GetVtxPositionY()
+  double GetVtxPositionY() const
   {
     return fVtxPosition.Y();
   };
-  double GetVtxPositionZ()
+  double GetVtxPositionZ() const
   {
     return fVtxPosition.Z();
   };
-  double GetVtxPromptPositionX()
+  double GetVtxPromptPositionX() const
   {
     return fVtxPromptPosition.X();
   };
-  double GetVtxPromptPositionY()
+  double GetVtxPromptPositionY() const
   {
     return fVtxPromptPosition.Y();
   };
-  double GetVtxPromptPositionZ()
+  double GetVtxPromptPositionZ() const
   {
     return fVtxPromptPosition.Z();
   };
 
-  double GetLifetime()
+  double GetLifetime() const
   {
     return fLifetime;
   };
-  double GetPromptLifetime()
+  double GetPromptLifetime() const
   {
     return fPromptLifetime;
   };
 
 
 private:
-  TVector3 fVtxPosition;
-  TVector3 fVtxPromptPosition;
-  bool fTwoGammaGen;
-  bool fThreeGammaGen;
-  bool fPromptGammaGen;
-  int fnRun;
-  double fLifetime;
-  double fPromptLifetime;
+  const unsigned int fMaxGammaNumberIndex = 3;
+  TVector3 fVtxPosition; ///< xyz annihilation coordinated
+  TVector3 fVtxPromptPosition; ///< xyz of prompt photon emmision
+  TBits fGenGammaNum; ///< bitNR 0-prompt; 1-back-to-back; 2- oPs
+  int fnRun = -1; ///< number should follow the JPet run numbering scheme
+  double fLifetime = -1.0; ///< lifetime of generated bound state or direct annihilation; see specific simulation details
+  double fPromptLifetime = -1.0; ///< generated lifetime of emmited prompt photon; filled only if prompt gamma is generated
 
 private:
-  ClassDef(JPetGeantEventInformation, 3)
+  ClassDef(JPetGeantEventInformation, 4)
 
 };
 

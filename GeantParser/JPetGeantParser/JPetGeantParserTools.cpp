@@ -14,27 +14,10 @@
  */
 
 #include <JPetGeantParser/JPetGeantParserTools.h>
+#include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 #include <TMath.h>
 
-const float JPetGeantParserTools::kEnergyThreshold = 200.;
-const float JPetGeantParserTools::kReferenceEnergy = 270.;
-const float JPetGeantParserTools::kTimeResolutionConstant = 80.;
-
-TRandom3 JPetGeantParserTools::fRandomGenerator = TRandom3();
-
-/**
- * @brief Set the seed of a single pseudorandom number generator used for smearing of generated values in JPetGeantParserTools methods
- *
- * This method can be optionally used to have the pseudorandom number generator
- * start with a particular seed. If this method is not used, the generator will
- * be initialized with seed=4357, see:
- * https://root.cern.ch/doc/master/classTRandom3.html
- *
- */
-void JPetGeantParserTools::setGeneratorSeed(unsigned long seed)
-{
-  fRandomGenerator.SetSeed(seed);
-}
+TRandom3* JPetGeantParserTools::fRandomGenerator = JPetRandom::GetRandomGenerator();
 
 JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank  )
 {
@@ -57,43 +40,17 @@ JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, con
 JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBank& paramBank, const float timeShift, const float z_resolution )
 {
   JPetHit hit = dynamic_cast<JPetHit&>(mcHit);
-  hit.setEnergy( addEnergySmearing(mcHit.getEnergy()) );
+  hit.setEnergy( JPetSmearingFunctions::addEnergySmearing(mcHit.getEnergy()) );
   // adjust to time window and smear
-  hit.setTime( addTimeSmearing( -(mcHit.getTime() - timeShift), mcHit.getEnergy()) );
+  hit.setTime(JPetSmearingFunctions::addTimeSmearing( -(mcHit.getTime() - timeShift), mcHit.getEnergy()) );
 
   auto radius = paramBank.getScintillator(mcHit.getScintillator().getID()).getBarrelSlot().getLayer().getRadius();
   auto theta = TMath::DegToRad() * paramBank.getScintillator(mcHit.getScintillator().getID()).getBarrelSlot().getTheta();
   hit.setPosX(radius * std::cos(theta));
   hit.setPosY(radius * std::sin(theta));
-  hit.setPosZ( addZHitSmearing(hit.getPosZ(), z_resolution) );
+  hit.setPosZ( JPetSmearingFunctions::addZHitSmearing(hit.getPosZ(), z_resolution) );
 
   return hit;
-}
-
-float JPetGeantParserTools::addZHitSmearing(float zIn, float z_res)
-{
-  return fRandomGenerator.Gaus(zIn, z_res);
-}
-
-float JPetGeantParserTools::addEnergySmearing(float eneIn)
-{
-  // eneIn in keV
-  float alpha = 0.044 / sqrt(eneIn / 1000.);
-  return eneIn + alpha * eneIn * fRandomGenerator.Gaus(0., 1.);
-}
-
-float JPetGeantParserTools::addTimeSmearing(float timeIn, float eneIn)
-{
-  // eneIn in keV, timeIn in ps
-  float time;
-
-  if ( eneIn > kEnergyThreshold ) {
-    time = timeIn + kTimeResolutionConstant * fRandomGenerator.Gaus(0., 1.);
-  } else {
-    time = timeIn + kTimeResolutionConstant * fRandomGenerator.Gaus(0., 1.) / sqrt(eneIn / kReferenceEnergy);
-  }
-
-  return time;
 }
 
 bool JPetGeantParserTools::isHitReconstructed(JPetHit& hit, const float th)
