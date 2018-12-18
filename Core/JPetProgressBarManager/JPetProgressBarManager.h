@@ -24,7 +24,7 @@
 class JPetProgressBarManager
 {
 public:
-  void display(std::string taskName, long long currentEventNumber, long long numberOfEvents) const;
+  void display(const std::string& taskName, long long currentEventNumber, long long numberOfEvents) const;
   float getCurrentValue(int currentEventNumber, int numberOfEvents) const;
 };
 #endif /* !JPETPROGRESSBARMANAGER_H */

@@ -17,7 +17,7 @@
 #include <iostream>
 
 void JPetProgressBarManager::display(
-  std::string taskName, long long currentNumber, long long totalNumber
+  const std::string& taskName, long long currentNumber, long long totalNumber
 ) const {
   std::cout << std::string(30, '\b');
   std::cout << std::string(30, ' ');
