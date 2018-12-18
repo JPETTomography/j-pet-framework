@@ -85,6 +85,7 @@ bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
     break;
   case FileTypeChecker::kUndefinedFileType:
     runStatus = false;
+    ERROR("Undefined input file type: " + inputFile);
     break;
   case FileTypeChecker::kNoType:
   case FileTypeChecker::kScope:
