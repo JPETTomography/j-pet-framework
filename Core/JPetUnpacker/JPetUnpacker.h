@@ -16,7 +16,6 @@
 #ifndef _JPETUNPACKER_H_
 #define _JPETUNPACKER_H_
 #include "./Unpacker2/Unpacker2/Unpacker2.h"
-#include <TObject.h>
 #include <string>
 
 class Unpacker2;
@@ -24,7 +23,7 @@ class Unpacker2;
 /**
  * @brief Facade for Unpacker program which unpacks raw data to root files
  */
-class JPetUnpacker: public TObject
+class JPetUnpacker
 {
 public:
   ~JPetUnpacker();

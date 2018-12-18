@@ -59,31 +59,49 @@ bool JPetUnzipAndUnpackTask::init(const JPetParams& inParams)
 bool JPetUnzipAndUnpackTask::run(const JPetDataInterface&)
 {
   using namespace jpet_options_tools;
-  auto inputFile = getInputFile(fOptions);
-  auto inputFileType = FileTypeChecker::getInputFileType(fOptions);
-  auto unpackerConfigFile = getUnpackerConfigFile(fOptions);
+  const auto inputFile = getInputFile(fOptions);
+  const auto inputFileType = FileTypeChecker::getInputFileType(fOptions);
+  const auto unzippedFilename = JPetCommonTools::stripFileNameSuffix(inputFile);
+  const auto unpackerConfigFile = getUnpackerConfigFile(fOptions);
 
-  if (inputFileType == FileTypeChecker::kHld) {
-    unpackFile(inputFile, getTotalEvents(fOptions), unpackerConfigFile, fTOToffsetCalibFile, fTDCnonlinearityCalibFile);
+  bool runStatus = false;
+
+  switch (inputFileType) {
+  case FileTypeChecker::kHld:
+    INFO("Unpacking file " + inputFile);
+    runStatus = unpackFile(inputFile, getTotalEvents(fOptions), unpackerConfigFile, fTOToffsetCalibFile, fTDCnonlinearityCalibFile);
     fUnpackHappened = true;
-  } else if ( inputFileType == FileTypeChecker::kZip) {
-    INFO( std::string("Unzipping file before unpacking") );
-    if ( !unzipFile(inputFile) ) {
-      ERROR( std::string("Problem with unpacking file: ") + inputFile );
-      return false;
-    } else {
-      INFO( std::string("Unpacking") );
-      auto unzippedFilename = JPetCommonTools::stripFileNameSuffix(std::string(inputFile)).c_str();
-      unpackFile(unzippedFilename, getTotalEvents(fOptions), unpackerConfigFile, fTOToffsetCalibFile, fTDCnonlinearityCalibFile);
-      fUnpackHappened = true;
+    break;
+  case FileTypeChecker::kZip:
+    INFO("Unzipping file before unpacking, file name: " + inputFile);
+    runStatus = unzipFile(inputFile);
+    if (!runStatus) {
+      ERROR("Problem with unzipping file: " + inputFile );
+      break;
     }
+    INFO("Unpacking file " + unzippedFilename);
+    runStatus = unpackFile(unzippedFilename, getTotalEvents(fOptions), unpackerConfigFile, fTOToffsetCalibFile, fTDCnonlinearityCalibFile);
+    fUnpackHappened = true;
+    break;
+  case FileTypeChecker::kUndefinedFileType:
+    runStatus = false;
+    ERROR("Undefined input file type: " + inputFile);
+    break;
+  case FileTypeChecker::kNoType:
+  case FileTypeChecker::kScope:
+  case FileTypeChecker::kHldRoot:
+  case FileTypeChecker::kMCGeant:
+  case FileTypeChecker::kRoot:
+  default:
+    runStatus = true;
+    break;
   }
 
-  if (FileTypeChecker::getInputFileType(fOptions) == FileTypeChecker::kUndefinedFileType) {
-    ERROR( Form("Unknown file type provided for file: %s", getInputFile(fOptions).c_str()) );
-    return false;
+  if (!runStatus) {
+    ERROR("Error occurred while unpacking/unzipping file: " + inputFile);
   }
-  return true;
+
+  return runStatus;
 }
 
 bool JPetUnzipAndUnpackTask::terminate(JPetParams& outParams)
@@ -121,7 +139,7 @@ bool JPetUnzipAndUnpackTask::unzipFile(const std::string& filename)
     return false;
 }
 
-void JPetUnzipAndUnpackTask::unpackFile(const std::string& filename,
+bool JPetUnzipAndUnpackTask::unpackFile(const std::string& filename,
                                         long long nevents, const std::string& configfile = "",
                                         const std::string& totCalibFile = "", const std::string& tdcCalibFile = "")
 {
@@ -135,5 +153,5 @@ void JPetUnzipAndUnpackTask::unpackFile(const std::string& filename,
   } else {
     unpacker.setParams(filename, 100000000, configfile, totCalibFile, tdcCalibFile);
   }
-  unpacker.exec();
+  return unpacker.exec();
 }

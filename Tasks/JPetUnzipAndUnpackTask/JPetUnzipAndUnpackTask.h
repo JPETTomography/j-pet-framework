@@ -28,9 +28,9 @@ public:
   bool init(const JPetParams& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParams& outOptions) override;
-  static void unpackFile(const std::string& filename, long long nevents,
-			 const std::string& configfile, const std::string& totCalibFile,
-			 const std::string& tdcCalibFile);
+  static bool unpackFile(const std::string& filename, long long nevents,
+                         const std::string& configfile, const std::string& totCalibFile,
+                         const std::string& tdcCalibFile);
   static bool unzipFile(const std::string& filename);
 
 protected:
