@@ -117,6 +117,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
         isOK = pTask->run(event);
         if (!isOK) {
           ERROR("In run() of:" + subTaskName + ". ");
+          return false;
         }
         if (isOutput()) {
           if (!fOutputHandler->writeEventToFile(pTask.get())) {
