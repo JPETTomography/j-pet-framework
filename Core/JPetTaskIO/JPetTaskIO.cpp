@@ -37,7 +37,7 @@ JPetTaskIO::JPetTaskIO(const char* name, const char* in_file_type, const char* o
   }
 }
 
-JPetTaskIO::~JPetTaskIO(){}
+JPetTaskIO::~JPetTaskIO() {}
 
 bool JPetTaskIO::init(const JPetParams& params)
 {
@@ -91,49 +91,51 @@ bool JPetTaskIO::run(const JPetDataInterface&)
   }
   for (const auto& pTask : fSubTasks) {
     auto subTaskName = pTask->getName();
-    auto ok = pTask->init(fParams);
-    if (!ok) {
-      ERROR("In init() of:" + subTaskName + ". run()  and terminate() of this task will be skipped.");
+    bool isOK = false;
+
+    isOK = pTask->init(fParams);
+    if (!isOK) {
+      WARNING("In init() of:" + subTaskName + ". run()  and terminate() of this task will be skipped.");
       continue;
     }
 
     if (isInput()) {
-      auto firstEvent = 0ll;
-      auto lastEvent = 0ll;
-      bool isOK = false;
       assert(fInputHandler);
-      std::tie(isOK, firstEvent, lastEvent) = fInputHandler->getEventRange(fParams.getOptions());
+      bool isProgressBarOn = isProgressBar(fParams.getOptions());
+      isOK = fInputHandler->setEntryRange(fParams.getOptions());
       if (!isOK) {
-        ERROR("Some error occured in getEventRange");
+        ERROR("Some error occured in setEntryRange");
         return false;
       }
+      auto lastEvent = fInputHandler->getLastEntryNumber();
       assert(lastEvent >= 0);
-
-      for (auto i = firstEvent; i <= lastEvent; i++) {
-        if (isProgressBar(fParams.getOptions())) {
-          displayProgressBar(subTaskName, i, lastEvent);
+      do {
+        if (isProgressBarOn) {
+          displayProgressBar(subTaskName, fInputHandler->getCurrentEntryNumber(), lastEvent);
         }
-        JPetData event(fInputHandler->getNextEntry());
-        ok = pTask->run(event);
-        if (!ok) {
+        JPetData event(fInputHandler->getEntry());
+        isOK = pTask->run(event);
+        if (!isOK) {
           ERROR("In run() of:" + subTaskName + ". ");
+          return false;
         }
         if (isOutput()) {
           if (!fOutputHandler->writeEventToFile(pTask.get())) {
-            WARNING("Some problems occured, while writing the event to file.");
+            ERROR("Some problems occured, while writing the event to file.");
             return false;
           }
         }
-      }
+      } while (fInputHandler->nextEntry());
     } else {
       JPetDataInterface dummyEvent;
       pTask->run(dummyEvent);
     }
 
     JPetParams subTaskParams;
-    ok = pTask->terminate(subTaskParams);
-    if (!ok) {
+    isOK = pTask->terminate(subTaskParams);
+    if (!isOK) {
       ERROR("In terminate() of:" + subTaskName + ". ");
+      return false;
     }
     fParams = mergeWithExtraParams(fParams, subTaskParams);
   }

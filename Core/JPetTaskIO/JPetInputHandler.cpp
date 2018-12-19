@@ -23,17 +23,6 @@ JPetInputHandler::JPetInputHandler()
   fReader = jpet_common_tools::make_unique<JPetReader>() ;
 }
 
-std::tuple<bool, long long, long long> JPetInputHandler::getEventRange(const jpet_options_tools::OptsStrAny& options) const
-{
-  auto totalEntries = 0ll;
-  if (fReader) {
-    totalEntries = fReader->getNbOfAllEntries();
-  } else {
-    WARNING("no JPETReader,  totalEntries set to -1");
-    totalEntries = -1;
-  }
-  return JPetTaskIOTools::setUserLimits(options, totalEntries);
-}
 
 bool JPetInputHandler::openInput(const char* inputFilename, const JPetParams& params)
 {
@@ -67,13 +56,71 @@ void JPetInputHandler::closeInput()
   }
 }
 
-TObject& JPetInputHandler::getNextEntry()
+EntryRange JPetInputHandler::getEntryRange(const jpet_options_tools::OptsStrAny& options) const
+{
+  return fEntryRange;
+}
+
+bool JPetInputHandler::setEntryRange(const jpet_options_tools::OptsStrAny& options)
+{
+  bool isOK = false;
+  auto firstEntry = 0ll;
+  auto lastEntry = 0ll;
+  std::tie(isOK, firstEntry, lastEntry) = calculateEntryRange(options);
+  if (!isOK) {
+    ERROR("Some error occured in getEntryRange");
+    return false;
+  }
+  fEntryRange.firstEntry = firstEntry;
+  fEntryRange.lastEntry = lastEntry;
+  fEntryRange.currentEntry = firstEntry;
+  assert (fReader);
+  return fReader->nthEntry(fEntryRange.currentEntry);
+}
+
+std::tuple<bool, long long, long long> JPetInputHandler::calculateEntryRange(const jpet_options_tools::OptsStrAny& options) const
+{
+  auto totalEntries = 0ll;
+  if (fReader) {
+    totalEntries = fReader->getNbOfAllEntries();
+  } else {
+    WARNING("no JPETReader,  totalEntries set to -1");
+    totalEntries = -1;
+  }
+  return JPetTaskIOTools::setUserLimits(options, totalEntries);
+}
+
+TObject& JPetInputHandler::getEntry()
 {
   assert (fReader);
-  ///@todo this is bad code. To be changed.
   auto& ob = fReader->getCurrentEntry();
-  fReader->nextEntry();
   return ob;
+}
+
+bool JPetInputHandler::nextEntry()
+{
+  if (fEntryRange.currentEntry == fEntryRange.lastEntry) {
+    return false;
+  }
+  fEntryRange.currentEntry++;
+  assert (fReader);
+  return fReader->nextEntry();
+}
+
+long long JPetInputHandler::getCurrentEntryNumber() const
+{
+  assert (fReader);
+  return fReader->getCurrentEntryNumber();
+}
+
+long long JPetInputHandler::getFirstEntryNumber() const
+{
+  return fEntryRange.firstEntry;
+}
+
+long long JPetInputHandler::getLastEntryNumber() const
+{
+  return fEntryRange.lastEntry;
 }
 
 JPetTreeHeader* JPetInputHandler::getHeaderClone()
