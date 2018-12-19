@@ -93,7 +93,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     auto subTaskName = pTask->getName();
     auto ok = pTask->init(fParams);
     if (!ok) {
-      ERROR("In init() of:" + subTaskName + ". run()  and terminate() of this task will be skipped.");
+      WARNING("In init() of:" + subTaskName + ". run()  and terminate() of this task will be skipped.");
       continue;
     }
 
@@ -117,7 +117,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
         }
         if (isOutput()) {
           if (!fOutputHandler->writeEventToFile(pTask.get())) {
-            WARNING("Some problems occured, while writing the event to file.");
+            ERROR("Some problems occured, while writing the event to file.");
             return false;
           }
         }
@@ -132,6 +132,7 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     ok = pTask->terminate(subTaskParams);
     if (!ok) {
       ERROR("In terminate() of:" + subTaskName + ". ");
+      return false;
     }
     fParams = mergeWithExtraParams(fParams, subTaskParams);
   }
