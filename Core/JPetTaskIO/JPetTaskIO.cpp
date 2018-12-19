@@ -91,15 +91,18 @@ bool JPetTaskIO::run(const JPetDataInterface&)
   }
   for (const auto& pTask : fSubTasks) {
     auto subTaskName = pTask->getName();
-    auto ok = pTask->init(fParams);
-    if (!ok) {
+    bool isOK = false;
+
+    isOK = pTask->init(fParams);
+    if (!isOK) {
       WARNING("In init() of:" + subTaskName + ". run()  and terminate() of this task will be skipped.");
       continue;
     }
 
     if (isInput()) {
       assert(fInputHandler);
-      bool isOK = fInputHandler->setEntryRange(fParams.getOptions());
+      bool isProgressBarOn = isProgressBar(fParams.getOptions());
+      isOK = fInputHandler->setEntryRange(fParams.getOptions());
       if (!isOK) {
         ERROR("Some error occured in setEntryRange");
         return false;
@@ -107,12 +110,12 @@ bool JPetTaskIO::run(const JPetDataInterface&)
       auto lastEvent = fInputHandler->getLastEntryNumber();
       assert(lastEvent >= 0);
       do {
-        if (isProgressBar(fParams.getOptions())) {
+        if (isProgressBarOn) {
           displayProgressBar(subTaskName, fInputHandler->getCurrentEntryNumber(), lastEvent);
         }
         JPetData event(fInputHandler->getEntry());
-        ok = pTask->run(event);
-        if (!ok) {
+        isOK = pTask->run(event);
+        if (!isOK) {
           ERROR("In run() of:" + subTaskName + ". ");
         }
         if (isOutput()) {
@@ -122,15 +125,14 @@ bool JPetTaskIO::run(const JPetDataInterface&)
           }
         }
       } while (fInputHandler->nextEntry());
-
     } else {
       JPetDataInterface dummyEvent;
       pTask->run(dummyEvent);
     }
 
     JPetParams subTaskParams;
-    ok = pTask->terminate(subTaskParams);
-    if (!ok) {
+    isOK = pTask->terminate(subTaskParams);
+    if (!isOK) {
       ERROR("In terminate() of:" + subTaskName + ". ");
       return false;
     }
