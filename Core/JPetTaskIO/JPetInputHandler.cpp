@@ -75,7 +75,7 @@ bool JPetInputHandler::setEntryRange(const jpet_options_tools::OptsStrAny& optio
   fEntryRange.lastEntry = lastEntry;
   fEntryRange.currentEntry = firstEntry;
   assert (fReader);
-  fReader->nthEntry(fEntryRange.currentEntry);
+  return fReader->nthEntry(fEntryRange.currentEntry);
 }
 
 std::tuple<bool, long long, long long> JPetInputHandler::calculateEntryRange(const jpet_options_tools::OptsStrAny& options) const
