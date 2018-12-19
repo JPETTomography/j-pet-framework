@@ -34,16 +34,18 @@ class JPetInputHandler
 public:
   JPetInputHandler();
 
-  bool setEntryRange(const jpet_options_tools::OptsStrAny& options);
-
-  std::tuple<bool, long long, long long> getEntryRange(const jpet_options_tools::OptsStrAny& options) const;
   bool openInput(const char* inputFileName, const JPetParams& params);
   void closeInput();
-  TObject& getEntry();
-  bool nextEntry();
+  bool setEntryRange(const jpet_options_tools::OptsStrAny& options);
+  EntryRange getEntryRange(const jpet_options_tools::OptsStrAny& options) const;
   long long getFirstEntryNumber() const;
   long long getLastEntryNumber() const;
   long long getCurrentEntryNumber() const;
+  TObject& getEntry();
+  bool nextEntry();
+
+  /// Function calculates the correct entry range [first, last] based on the options provided and the internal reader state
+  std::tuple<bool, long long, long long> calculateEntryRange(const jpet_options_tools::OptsStrAny& options) const;
 
   JPetTreeHeader* getHeaderClone(); /// @todo what to do with this function?
 protected:

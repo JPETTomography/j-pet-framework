@@ -27,7 +27,26 @@ int getEntrysInWindow(JPetInputHandler& handler)
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-BOOST_AUTO_TEST_CASE(getEntryRange)
+BOOST_AUTO_TEST_CASE(basicTest)
+{
+  gErrorIgnoreLevel = 6000; /// to supress Error in TFile ROOT error invoked by openInput
+  JPetParams params;
+  using namespace jpet_options_generator_tools;
+  auto opts = getDefaultOptions();
+  JPetInputHandler handler;
+  BOOST_REQUIRE(!handler.openInput("", params));
+  auto range = handler.getEntryRange(opts);
+  BOOST_REQUIRE_EQUAL(range.firstEntry, 0);
+  BOOST_REQUIRE_EQUAL(range.lastEntry, 0);
+  BOOST_REQUIRE_EQUAL(range.currentEntry, -1);
+  BOOST_REQUIRE_EQUAL(handler.getFirstEntryNumber(), 0);
+  BOOST_REQUIRE_EQUAL(handler.getLastEntryNumber(), 0);
+  BOOST_REQUIRE_EQUAL(handler.getCurrentEntryNumber(), -1);
+  BOOST_REQUIRE(!handler.nextEntry());
+}
+
+
+BOOST_AUTO_TEST_CASE(calculateEntryRange)
 {
   using namespace jpet_options_generator_tools;
   auto opts = getDefaultOptions();
@@ -41,7 +60,7 @@ BOOST_AUTO_TEST_CASE(getEntryRange)
   auto firstEvent = 0ll;
   auto lastEvent = 0ll;
   bool isOK = false;
-  std::tie(isOK, firstEvent, lastEvent) = handler.getEntryRange(opts);
+  std::tie(isOK, firstEvent, lastEvent) = handler.calculateEntryRange(opts);
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(firstEvent, 0);
   BOOST_REQUIRE_EQUAL(lastEvent, 100);
@@ -67,7 +86,7 @@ BOOST_AUTO_TEST_CASE(setEntryRange2)
   BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 31);
 }
 
-BOOST_AUTO_TEST_CASE(getEntryRange3)
+BOOST_AUTO_TEST_CASE(calculateEntryRange3)
 {
   using namespace jpet_options_generator_tools;
   auto opts = getDefaultOptions();
@@ -87,7 +106,7 @@ BOOST_AUTO_TEST_CASE(getEntryRange3)
   BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 34);
 }
 
-BOOST_AUTO_TEST_CASE(getEntryRange4)
+BOOST_AUTO_TEST_CASE(calculateEntryRange4)
 {
   using namespace jpet_options_generator_tools;
   auto opts = getDefaultOptions();
@@ -107,7 +126,7 @@ BOOST_AUTO_TEST_CASE(getEntryRange4)
   BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 31);
 }
 
-BOOST_AUTO_TEST_CASE(getEntryRange5)
+BOOST_AUTO_TEST_CASE(calculateEntryRange5)
 {
   using namespace jpet_options_generator_tools;
   auto opts = getDefaultOptions();
@@ -127,7 +146,7 @@ BOOST_AUTO_TEST_CASE(getEntryRange5)
   BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 34);
 }
 
-BOOST_AUTO_TEST_CASE(getEntryRange6)
+BOOST_AUTO_TEST_CASE(calculateEntryRange6)
 {
   using namespace jpet_options_generator_tools;
   auto opts = getDefaultOptions();
@@ -147,7 +166,7 @@ BOOST_AUTO_TEST_CASE(getEntryRange6)
   BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 34);
 }
 
-BOOST_AUTO_TEST_CASE(getEntryRange7)
+BOOST_AUTO_TEST_CASE(calculateEntryRange7)
 {
   using namespace jpet_options_generator_tools;
   auto opts = getDefaultOptions();
@@ -181,8 +200,11 @@ BOOST_AUTO_TEST_CASE(getNextEntry)
   JPetInputHandler handler;
   handler.openInput(kInputTestFile, params);
   handler.setEntryRange(opts);
+  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 34);
   BOOST_REQUIRE(handler.nextEntry());
+  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 31);
   BOOST_REQUIRE(handler.nextEntry());
+  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 28);
   BOOST_REQUIRE(handler.nextEntry());
   BOOST_REQUIRE(handler.nextEntry());
   BOOST_REQUIRE(handler.nextEntry());
