@@ -37,7 +37,7 @@ JPetTaskIO::JPetTaskIO(const char* name, const char* in_file_type, const char* o
   }
 }
 
-JPetTaskIO::~JPetTaskIO(){}
+JPetTaskIO::~JPetTaskIO() {}
 
 bool JPetTaskIO::init(const JPetParams& params)
 {
@@ -98,20 +98,17 @@ bool JPetTaskIO::run(const JPetDataInterface&)
     }
 
     if (isInput()) {
-      auto firstEvent = 0ll;
-      auto lastEvent = 0ll;
-      bool isOK = false;
       assert(fInputHandler);
-      std::tie(isOK, firstEvent, lastEvent) = fInputHandler->getEventRange(fParams.getOptions());
+      bool isOK = fInputHandler->setEntryRange(fParams.getOptions());
       if (!isOK) {
-        ERROR("Some error occured in getEventRange");
+        ERROR("Some error occured in setEntryRange");
         return false;
       }
+      auto lastEvent = fInputHandler->getLastEntryNumber();
       assert(lastEvent >= 0);
-
-      for (auto i = firstEvent; i <= lastEvent; i++) {
+      do {
         if (isProgressBar(fParams.getOptions())) {
-          displayProgressBar(subTaskName, i, lastEvent);
+          displayProgressBar(subTaskName, fInputHandler->getCurrentEntryNumber(), lastEvent);
         }
         JPetData event(fInputHandler->getEntry());
         ok = pTask->run(event);
@@ -124,8 +121,8 @@ bool JPetTaskIO::run(const JPetDataInterface&)
             return false;
           }
         }
-        fInputHandler->nextEntry();
-      }
+      } while (fInputHandler->nextEntry());
+
     } else {
       JPetDataInterface dummyEvent;
       pTask->run(dummyEvent);

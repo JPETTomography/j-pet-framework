@@ -22,6 +22,11 @@
 #include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include "./JPetTreeHeader/JPetTreeHeader.h"
 
+struct EntryRange {
+  long long firstEntry = 0ll;
+  long long lastEntry = 0ll;
+  long long currentEntry = -1ll;
+};
 
 class JPetInputHandler
 {
@@ -29,11 +34,16 @@ class JPetInputHandler
 public:
   JPetInputHandler();
 
-  std::tuple<bool, long long, long long> getEventRange(const jpet_options_tools::OptsStrAny& options) const;
+  bool setEntryRange(const jpet_options_tools::OptsStrAny& options);
+
+  std::tuple<bool, long long, long long> getEntryRange(const jpet_options_tools::OptsStrAny& options) const;
   bool openInput(const char* inputFileName, const JPetParams& params);
   void closeInput();
   TObject& getEntry();
   bool nextEntry();
+  long long getFirstEntryNumber() const;
+  long long getLastEntryNumber() const;
+  long long getCurrentEntryNumber() const;
 
   JPetTreeHeader* getHeaderClone(); /// @todo what to do with this function?
 protected:
@@ -42,6 +52,7 @@ protected:
 private:
   JPetInputHandler(const JPetInputHandler&);
   void operator=(const JPetInputHandler&);
+  EntryRange fEntryRange;
 
 };
 #endif /*  !JPETINPUTHANDLER_H */
