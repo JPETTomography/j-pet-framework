@@ -23,7 +23,7 @@ JPetInputHandler::JPetInputHandler()
   fReader = jpet_common_tools::make_unique<JPetReader>() ;
 }
 
-std::tuple<bool, long long, long long> JPetInputHandler::getEventRange(const jpet_options_tools::OptsStrAny& options) const
+std::tuple<bool, long long, long long> JPetInputHandler::getEntryRange(const jpet_options_tools::OptsStrAny& options) const
 {
   auto totalEntries = 0ll;
   if (fReader) {
@@ -76,8 +76,28 @@ TObject& JPetInputHandler::getEntry()
 
 bool JPetInputHandler::nextEntry()
 {
+  if (fEntryRange.currentEntry == fEntryRange.lastEntry) {
+    return false;
+  }
+  fEntryRange.currentEntry++;
   assert (fReader);
   return fReader->nextEntry();
+}
+
+long long JPetInputHandler::getCurrentEntryNumber() const
+{
+  assert (fReader);
+  return fReader->getCurrentEntryNumber();
+}
+
+long long JPetInputHandler::getFirstEntryNumber() const
+{
+  return fEntryRange.firstEntry;
+}
+
+long long JPetInputHandler::getLastEntryNumber() const
+{
+  return fEntryRange.lastEntry;
 }
 
 JPetTreeHeader* JPetInputHandler::getHeaderClone()
@@ -85,3 +105,22 @@ JPetTreeHeader* JPetInputHandler::getHeaderClone()
   assert(fReader);
   return dynamic_cast<JPetReader*>(fReader.get())->getHeaderClone();
 }
+
+bool JPetInputHandler::setEntryRange(const jpet_options_tools::OptsStrAny& options)
+{
+  bool isOK = false;
+  auto firstEntry = 0ll;
+  auto lastEntry = 0ll;
+  std::tie(isOK, firstEntry, lastEntry) = getEntryRange(options);
+  if (!isOK) {
+    ERROR("Some error occured in getEntryRange");
+    return false;
+  }
+  fEntryRange.firstEntry = firstEntry;
+  fEntryRange.lastEntry = lastEntry;
+  fEntryRange.currentEntry = firstEntry;
+  assert (fReader);
+  fReader->nthEntry(fEntryRange.currentEntry);
+}
+
+
