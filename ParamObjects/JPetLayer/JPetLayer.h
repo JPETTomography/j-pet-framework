@@ -65,6 +65,6 @@ protected:
   bool fIsNullObject;
 #endif
 
-  ClassDef(JPetLayer, 5);
+  ClassDef(JPetLayer, 4);
 };
 #endif /* !JPET_LAYER_H */

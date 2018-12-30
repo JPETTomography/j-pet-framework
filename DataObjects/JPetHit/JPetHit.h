@@ -46,8 +46,8 @@ public:
   enum RecoFlag { Good, Corrupted, Unknown };
   JPetHit();
   JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime,
-          TVector3& Position, JPetPhysSignal& SignalA, JPetPhysSignal& SignalB,
-          JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator);
+    TVector3& Position, JPetPhysSignal& SignalA, JPetPhysSignal& SignalB,
+    JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator);
   virtual ~JPetHit();
   JPetHit::RecoFlag getRecoFlag() const;
   float getEnergy() const;
@@ -85,7 +85,7 @@ public:
   void setSignalA(const JPetPhysSignal& p_sig);
   void setSignalB(const JPetPhysSignal& p_sig);
   bool checkConsistency() const;
-  void Clear(Option_t* opt  = "");
+  void Clear(Option_t * opt  = "");
 
 private:
   RecoFlag fFlag = JPetHit::Unknown;
@@ -103,7 +103,7 @@ private:
   TRef fBarrelSlot = NULL;
   TRef fScintillator = NULL;
 
-  ClassDef(JPetHit, 7);
+  ClassDef(JPetHit, 6);
 };
 
 #endif /* !JPETHIT_H */

@@ -32,75 +32,67 @@ class JPetTimeWindowMC: public JPetTimeWindow
 {
 public:
 
-  JPetTimeWindowMC() : JPetTimeWindow(),
-    fMCHits(),
-    fDecayTrees()
+  JPetTimeWindowMC() : JPetTimeWindow(), 
+		       fMCHits(),
+		       fDecayTrees()
   {}
-
-  JPetTimeWindowMC(const char* event_type) : JPetTimeWindow(event_type),
-    fMCHits("TObject", 1),
-    fDecayTrees("TObject", 1)
+  
+  JPetTimeWindowMC(const char * event_type) : JPetTimeWindow(event_type),
+					      fMCHits("TObject",1),
+					      fDecayTrees("TObject",1)
   {}
-
-  JPetTimeWindowMC(const char* event_type, const char* mcHit_type, const char* decayTree_type) :
+  
+  JPetTimeWindowMC(const char * event_type, const char * mcHit_type, const char * decayTree_type) :
     JPetTimeWindow(event_type),
-    fMCHits(mcHit_type, 2000),
-    fDecayTrees(decayTree_type, 2000)
+    fMCHits(mcHit_type,2000),
+    fDecayTrees(decayTree_type,2000)
   {}
-
+  
   template<typename T>
-  void addMCHit(const T& evt)
-  {
+  void addMCHit(const T & evt){
     dynamic_cast<T&>(*(fMCHits.ConstructedAt(fMCHitsCount++))) = evt;
   }
-
+ 
   template<typename T>
-  void addDecayTree(const T& evt)
-  {
+  void addDecayTree(const T & evt){
     dynamic_cast<T&>(*(fDecayTrees.ConstructedAt(fDecayTreesCount++))) = evt;
   }
-
-  inline size_t getNumberOfMCHits() const
-  {
+ 
+  inline size_t getNumberOfMCHits() const {
     return fMCHitsCount;
   }
 
-  inline size_t getNumberOfDecayTrees() const
-  {
+  inline size_t getNumberOfDecayTrees() const {
     return fDecayTreesCount;
   }
 
   template<typename T>
-  inline const T& getMCHit(int i) const
-  {
+  inline const T& getMCHit(int i) const {
     return *(dynamic_cast<T*>(fMCHits[i]));
   }
 
   template<typename T>
-  inline const T& getDecayTrees(int i) const
-  {
+  inline const T& getDecayTrees(int i) const {
     return *(dynamic_cast<T*>(fDecayTrees[i]));
   }
 
 
-  virtual ~JPetTimeWindowMC()
-  {
+  virtual ~JPetTimeWindowMC(){
     fMCHits.Clear("C");
     fDecayTrees.Clear("C");
     fMCHitsCount = 0;
     fDecayTreesCount = 0;
   }
 
-  virtual void Clear()
-  {
+  virtual void Clear() {
     JPetTimeWindow::Clear();
     fMCHits.Clear("C");
     fDecayTrees.Clear("C");
     fMCHitsCount = 0;
     fDecayTreesCount = 0;
   }
-
-  ClassDef(JPetTimeWindowMC, 2);
+  
+  ClassDef(JPetTimeWindowMC, 1);
 
 private:
   TClonesArray fMCHits;

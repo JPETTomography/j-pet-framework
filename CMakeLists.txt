@@ -114,9 +114,7 @@ foreach(dir ${FOLDERS_WITH_SOURCE})
   file(GLOB UNIT_TEST_SOURCES_TMP ${dir}/JPet*/*Test.cpp)
   file(GLOB FOLDERS_TMP ${dir})
   list(REMOVE_ITEM FOLDERS_TMP ${HEADERS_TMP} ${SOURCES_TMP})
-  if(UNIT_TEST_SOURCES_TMP)
-    list(REMOVE_ITEM SOURCES_TMP ${UNIT_TEST_SOURCES_TMP})
-  endif()
+  list(REMOVE_ITEM SOURCES_TMP ${UNIT_TEST_SOURCES_TMP})
   list(APPEND HEADERS ${HEADERS_TMP})
   list(APPEND SOURCES ${SOURCES_TMP})
   list(APPEND UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES_TMP})
@@ -168,21 +166,11 @@ generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
   JPetGeantEventPack
   JPetGeantEventInformation
   INCLUDE_DIRS ${FOLDERS}
-  RESULT_NAME JPetFramework
 )
 
 ################################################################################
 ## Building Framework library
 add_library(JPetFramework SHARED ${SOURCES} ${HEADERS} ${DICTIONARIES})
-
-if (ROOT_VERSION VERSION_LESS 6)
-    add_custom_command(TARGET JPetFramework POST_BUILD
-        COMMAND rlibmap -o ${PROJECT_BINARY_DIR}/libJPetFramework.rootmap
-                        -l ${PROJECT_BINARY_DIR}/libJPetFramework.so
-                        -d ${ROOT_LIBRARIES}
-                        -c ${CMAKE_SOURCE_DIR}/JPetFramework_LinkDef.h
-    )
-endif()
 
 foreach(dir ${FOLDERS_WITH_SOURCE})
   target_include_directories(JPetFramework PUBLIC
@@ -248,6 +236,18 @@ if(SHELL)
   add_custom_command(TARGET JPetFramework POST_BUILD
     COMMAND ${SHELL}  ${pcm_script}
   )
+
+  if(${ROOT_VERSION} VERSION_GREATER "6.0")
+    set(rootmap_script ${CMAKE_CURRENT_BINARY_DIR}/change_rootmaps.sh)
+
+    FILE(WRITE ${rootmap_script}  "#!${SHELL}\n")
+    FILE(APPEND ${rootmap_script} "sed -i \"1 s/^.*$/[ libJPetFramework.so ]/\" *.rootmap\n")
+    FILE(APPEND ${rootmap_script} "exit 0\n")
+
+    add_custom_command(TARGET JPetFramework POST_BUILD
+      COMMAND ${SHELL}  ${rootmap_script}
+    )
+  endif()
 
 endif(SHELL)
 

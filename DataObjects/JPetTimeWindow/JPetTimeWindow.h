@@ -33,43 +33,37 @@ class JPetTimeWindow: public TObject
 public:
 
   JPetTimeWindow() : fEvents() {}
-  JPetTimeWindow(const char* event_type) : fEvents(event_type, 2000) {}
+  JPetTimeWindow(const char * event_type) : fEvents(event_type, 2000) {}
 
   template<typename T>
-  void add(const T& evt)
-  {
+  void add(const T & evt){
     dynamic_cast<T&>(*(fEvents.ConstructedAt(fEventCount++))) = evt;
   }
 
-  inline size_t getNumberOfEvents() const
-  {
+  inline size_t getNumberOfEvents() const {
     return fEventCount;
   }
 
-  inline const TObject& operator[](int i) const
-  {
+  inline const TObject & operator[](int i) const {
     return *fEvents[i];
   }
 
   template<typename T>
-  inline const T& getEvent(int i) const
-  {
+  inline const T& getEvent(int i) const {
     return *(dynamic_cast<T*>(fEvents[i]));
   }
 
-  virtual ~JPetTimeWindow()
-  {
+  virtual ~JPetTimeWindow() {
     fEvents.Clear("C");
     fEventCount = 0;
   }
 
-  virtual void Clear()
-  {
+  virtual void Clear() {
     fEvents.Clear("C");
     fEventCount = 0;
   }
 
-  ClassDef(JPetTimeWindow, 5);
+  ClassDef(JPetTimeWindow, 4);
 
 private:
   TClonesArray fEvents;
