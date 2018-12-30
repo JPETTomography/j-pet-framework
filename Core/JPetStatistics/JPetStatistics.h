@@ -63,7 +63,7 @@ public:
   }
 
   const THashTable* getStatsTable() const;
-  ClassDef(JPetStatistics, 4);
+  ClassDef(JPetStatistics, 5);
 
 protected:
   THashTable fStats;
