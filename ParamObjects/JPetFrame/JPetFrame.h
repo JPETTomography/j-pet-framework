@@ -62,6 +62,6 @@ protected:
   bool fIsNullObject;
 #endif
 
-  ClassDef(JPetFrame, 3);
+  ClassDef(JPetFrame, 2);
 };
 #endif /* !JPET_FRAME_H */

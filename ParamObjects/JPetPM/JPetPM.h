@@ -95,7 +95,7 @@ protected:
 
   friend class JPetParamManager;
 
-  ClassDef(JPetPM, 6);
+  ClassDef(JPetPM, 5);
 };
 
 #endif

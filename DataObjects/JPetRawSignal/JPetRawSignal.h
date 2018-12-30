@@ -51,7 +51,7 @@ private:
   std::vector<JPetSigCh> fLeadingPoints;
   std::vector<JPetSigCh> fTrailingPoints;
 
-  ClassDef(JPetRawSignal, 7);
+  ClassDef(JPetRawSignal, 6);
 };
 
 #endif /* !JPETRAWSIGNAL_H */

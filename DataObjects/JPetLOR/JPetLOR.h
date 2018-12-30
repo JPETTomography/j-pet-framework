@@ -43,13 +43,13 @@ public:
 
   JPetLOR::RecoFlag getRecoFlag() const;
   void setRecoFlag(JPetLOR::RecoFlag flag);
-  float getTime() const;
-  float getQualityOfTime() const;
-  void setTime(const float time);
-  void setQualityOfTime(const float qualityOfTime);
-  const JPetHit& getFirstHit() const;
-  const JPetHit& getSecondHit() const;
-  void setHits(const JPetHit& firstHit, const JPetHit& secondHit);
+	float getTime() const;
+	float getQualityOfTime() const;
+	void setTime(const float time);
+	void setQualityOfTime(const float qualityOfTime);
+	const JPetHit& getFirstHit() const;
+	const JPetHit& getSecondHit() const;
+  void setHits(const JPetHit& firstHit,const JPetHit& secondHit);
   void setFirstHit(const JPetHit& firstHit);
   void setSecondHit(const JPetHit& secondHit);
   void setTimeDiff(const float td);
@@ -58,7 +58,7 @@ public:
   float getQualityOfTimeDiff() const;
   bool isHitSet(const unsigned int index);
   bool isFromSameBarrelSlot() const;
-  void Clear(Option_t* opt = "");
+  void Clear(Option_t * opt = "");
 
 private:
   float fTime;
@@ -70,7 +70,7 @@ private:
   JPetHit fFirstHit;
   JPetHit fSecondHit;
 
-  ClassDef(JPetLOR, 5);
+  ClassDef(JPetLOR, 4);
 };
 
 #endif /* !JPETLOR_H */

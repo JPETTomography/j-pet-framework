@@ -13,8 +13,8 @@
  *  @file JPetMCDecayTree.h
  */
 
-#ifndef _JPETMCDECAYTREE_H_
-#define _JPETMCDECAYTREE_H_
+#ifndef _JPETMCHIT_H_
+#define _JPETMCHIT_H_
 
 #include "./JPetHit/JPetHit.h"
 
@@ -22,20 +22,22 @@
  * @brief Data class representing a hit of a photon in the scintillator strip based on Monte Carlo simulation.
  *
  */
-class JPetMCDecayTree : public TObject {
+class JPetMCDecayTree : public TObject 
+{
 
 public:
   JPetMCDecayTree();
 
 private:
+
   UInt_t fMCMCDecayTreeIndex = 0u;
   UInt_t fMCVtxIndex = 0u;
 
   UInt_t fnVertices = 0u;
   UInt_t fnTracks = 0u;
-  // add also track and vertices structures
+  // add also track and vertices structures  
 
-  ClassDef(JPetMCDecayTree, 2);
+  ClassDef(JPetMCDecayTree, 1);
 };
 
 #endif

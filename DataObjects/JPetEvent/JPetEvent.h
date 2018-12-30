@@ -47,8 +47,8 @@ public:
 
   JPetEvent();
   JPetEvent(const std::vector<JPetHit>& hits,
-            JPetEventType eventType = JPetEventType::kUnknown,
-            bool orderedByTime = true);
+    JPetEventType eventType = JPetEventType::kUnknown,
+    bool orderedByTime = true);
   JPetEvent::RecoFlag getRecoFlag() const;
   const std::vector<JPetHit>& getHits() const;
   void setRecoFlag(JPetEvent::RecoFlag flag);
@@ -59,7 +59,7 @@ public:
   void addEventType(JPetEventType type);
   bool isTypeOf(JPetEventType type) const;
   bool isOnlyTypeOf(JPetEventType type) const;
-  void Clear(Option_t* opt = "");
+  void Clear(Option_t * opt = "");
 
 protected:
   std::vector<JPetHit> fHits;
@@ -72,6 +72,6 @@ protected:
 private:
   RecoFlag fFlag = JPetEvent::Unknown;
 
-  ClassDef(JPetEvent, 6);
+  ClassDef(JPetEvent, 5);
 };
 #endif /* !JPETEVENT_H */

@@ -84,7 +84,7 @@ protected:
   bool fIsNullObject;
   #endif
 
-  ClassDef(JPetBaseSignal, 5);
+  ClassDef(JPetBaseSignal, 4);
 
 };
 #endif /* !JPETBASESIGNAL_H */

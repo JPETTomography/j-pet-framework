@@ -102,7 +102,7 @@ protected:
 #endif
   TRef fTRefTRBs;
   friend class JPetParamManager;
-  ClassDef(JPetFEB, 3);
+  ClassDef(JPetFEB, 2);
 };
 
 #endif /* JPET_FEB_H */

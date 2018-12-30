@@ -84,7 +84,7 @@ protected:
   bool fIsNullObject;
 #endif
 
-  ClassDef(JPetTOMBChannel, 5);
+  ClassDef(JPetTOMBChannel, 4);
 };
 
 #endif /* JPET_TOMB_CHANNEL_H */

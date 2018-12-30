@@ -31,7 +31,7 @@ class JPetGeantDecayTree : public TObject
     private:
 
 
-     ClassDef(JPetGeantDecayTree,2)
+     ClassDef(JPetGeantDecayTree,1)
 
 };
 

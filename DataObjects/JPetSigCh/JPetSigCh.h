@@ -80,7 +80,7 @@ private:
   TRef fTRB = NULL;
   TRef fTOMBChannel = NULL;
 
-  ClassDef(JPetSigCh, 9);
+  ClassDef(JPetSigCh, 8);
 };
 
 #endif /* !JPETSIGCH_H */
