@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(basicTest)
   auto opts = getDefaultOptions();
   JPetInputHandler handler;
   BOOST_REQUIRE(!handler.openInput("", params));
-  auto range = handler.getEntryRange(opts);
+  auto range = handler.getEntryRange();
   BOOST_REQUIRE_EQUAL(range.firstEntry, 0);
   BOOST_REQUIRE_EQUAL(range.lastEntry, 0);
   BOOST_REQUIRE_EQUAL(range.currentEntry, -1);

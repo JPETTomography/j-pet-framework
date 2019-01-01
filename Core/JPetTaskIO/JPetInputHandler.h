@@ -37,7 +37,7 @@ public:
   bool openInput(const char* inputFileName, const JPetParams& params);
   void closeInput();
   bool setEntryRange(const jpet_options_tools::OptsStrAny& options);
-  EntryRange getEntryRange(const jpet_options_tools::OptsStrAny& options) const;
+  EntryRange getEntryRange() const;
   long long getFirstEntryNumber() const;
   long long getLastEntryNumber() const;
   long long getCurrentEntryNumber() const;

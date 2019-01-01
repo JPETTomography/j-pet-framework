@@ -56,7 +56,7 @@ void JPetInputHandler::closeInput()
   }
 }
 
-EntryRange JPetInputHandler::getEntryRange(const jpet_options_tools::OptsStrAny& options) const
+EntryRange JPetInputHandler::getEntryRange() const
 {
   return fEntryRange;
 }
@@ -68,7 +68,7 @@ bool JPetInputHandler::setEntryRange(const jpet_options_tools::OptsStrAny& optio
   auto lastEntry = 0ll;
   std::tie(isOK, firstEntry, lastEntry) = calculateEntryRange(options);
   if (!isOK) {
-    ERROR("Some error occured in getEntryRange");
+    ERROR("Some error occured in setEntryRange");
     return false;
   }
   fEntryRange.firstEntry = firstEntry;
