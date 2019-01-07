@@ -165,7 +165,7 @@ private:
     }
   }
 
-  ClassDef(JPetParamBank, 5);
+  ClassDef(JPetParamBank, 6);
 };
 
 #endif /* !JPETPARAMBANK_H */

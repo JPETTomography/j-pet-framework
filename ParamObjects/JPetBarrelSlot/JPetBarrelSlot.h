@@ -68,7 +68,7 @@ protected:
   bool fIsNullObject;
 #endif
 
-  ClassDef(JPetBarrelSlot, 4);
+  ClassDef(JPetBarrelSlot, 5);
 };
 
 #endif /* !_JPETBARRELSLOT_H_ */

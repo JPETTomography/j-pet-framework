@@ -117,7 +117,7 @@ protected:
   bool fIsNullObject;
   #endif
 
-  ClassDef(JPetPhysSignal, 2);
+  ClassDef(JPetPhysSignal, 3);
 
 };
 #endif /* !JPETPHYSSIGNAL_H */

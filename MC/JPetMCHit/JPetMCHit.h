@@ -49,7 +49,7 @@ private:
   TVector3 fMomentum;
   UInt_t fGenGammaMultiplicity = 0u; ///< generated gamma cheat sheet: 1- prompt; 2- back-to-back; 3- 3gamma annihilation
 
-  ClassDef(JPetMCHit, 1);
+  ClassDef(JPetMCHit, 2);
 };
 
 #endif /* !_JPETMCHIT_H_ */
