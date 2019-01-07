@@ -53,7 +53,7 @@ protected:
 #endif
 
   friend class JPetParamManager;
-  ClassDef(JPetTRB, 3);
+  ClassDef(JPetTRB, 4);
 };
 
 #endif
