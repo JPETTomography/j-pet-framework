@@ -23,26 +23,33 @@ endif()
 
 ################################################################################
 ## Find CERN ROOT
-## Try the old-school ROOTSYS variable
-set(root_prefix $ENV{ROOTSYS})
-if(root_prefix)
-  list(APPEND CMAKE_MODULE_PATH ${root_prefix}/etc/cmake/)
-endif()
+# first try to find ROOT 6 or ROOT 5 compiled with CMake
+# if present, such ROOT should be possible to find without explicit setting of any paths
+find_package(ROOT 5 QUIET)
 
-## Try search based on root-config
-execute_process(COMMAND root-config --etcdir OUTPUT_VARIABLE ROOT_ETCDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
-list(APPEND CMAKE_MODULE_PATH ${ROOT_ETCDIR}/cmake)
-
-## Try with package search
-find_package(ROOT QUIET)
-
-## If found - print version. If not, use fallback root-config version from cmake/fallback/
 if(ROOT_FOUND)
-  message(STATUS "Found ROOT version: ${ROOT_VERSION} (${ROOT_CONFIG_EXECUTABLE})")
+  message(STATUS "ROOT (version ${ROOT_VERSION}) was found using ROOTConfig")
 else()
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/fallback)
-  message(WARNING "No CMake modules from a ROOT installation found. Trying fallback mode.")
-  find_package(ROOT 5 REQUIRED)
+  # try to locate ROOT using ROOTSYS and root-config in case ROOTSYS is not set
+  # this might be necessary for ROOT 5 built with autotools rather than CMake
+  set(root_prefix $ENV{ROOTSYS})
+  if(root_prefix)
+    list(APPEND CMAKE_MODULE_PATH ${root_prefix}/etc/cmake/)
+  else()
+    execute_process(COMMAND root-config --etcdir OUTPUT_VARIABLE ROOT_ETCDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+    list(APPEND CMAKE_MODULE_PATH ${ROOT_ETCDIR}/cmake)
+  endif()
+  find_package(ROOT 5 QUIET)
+  if(ROOT_FOUND)
+    message(STATUS "ROOT (version ${ROOT_VERSION}) was found using FindROOT (legacy mode)")
+  else()
+    # as last resort, use the bundled FindROOT module
+    list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/fallback)
+    find_package(ROOT 5 REQUIRED)
+    if(ROOT_FOUND)
+      message(WARNING "No CMake modules from a ROOT installation were found. ROOT (version ${ROOT_VERSION}) was only found using fallback mode)")
+    endif()
+  endif()
 endif()
 
 if(ROOT_USE_FILE)
