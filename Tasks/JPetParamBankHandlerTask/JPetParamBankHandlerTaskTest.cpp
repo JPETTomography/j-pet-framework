@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(badHldFile)
   auto& bank2 = manager->getParamBank();
   BOOST_REQUIRE(bank2.isDummy());
 }
-/*
+
 BOOST_AUTO_TEST_CASE(goodUnknownFileFromFile)
 {
   JPetParamBankHandlerTask task;
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE(goodUnknownFileFromFile)
   auto& bank2 = manager->getParamBank();
   BOOST_REQUIRE(!bank2.isDummy());
 }
-*/
+
 BOOST_AUTO_TEST_CASE(badUnknownFileFromFile)
 {
   gErrorIgnoreLevel = kFatal; /// To turn off ROOT error reporting.
