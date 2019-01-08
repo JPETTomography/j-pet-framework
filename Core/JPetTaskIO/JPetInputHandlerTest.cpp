@@ -11,11 +11,11 @@ const char* kInputTestFile = "unitTestData/JPetTaskChainExecutorTest/dabc_170251
 // Number of events per time window in the file
 // unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root"
 // time window    |    events
-// 0                      34
-// 1                      31
-// 2                      28
-// 99                     32
-// 100 (last one)         33
+// 0                      15
+// 1                      10
+// 2                      6
+// 99                     10
+// 100 (last one)         11
 
 int getEntrysInWindow(JPetInputHandler& handler)
 {
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(setEntryRange2)
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(1, handler.getFirstEntryNumber());
   BOOST_REQUIRE_EQUAL(1, handler.getLastEntryNumber());
-  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 31);
+  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 10);
 }
 
 BOOST_AUTO_TEST_CASE(calculateEntryRange3)
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange3)
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(0, handler.getFirstEntryNumber());
   BOOST_REQUIRE_EQUAL(1, handler.getLastEntryNumber());
-  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 34);
+  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 15);
 }
 
 BOOST_AUTO_TEST_CASE(calculateEntryRange4)
@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange4)
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(1, handler.getFirstEntryNumber());
   BOOST_REQUIRE_EQUAL(100, handler.getLastEntryNumber());
-  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 31);
+  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 10);
 }
 
 BOOST_AUTO_TEST_CASE(calculateEntryRange5)
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange5)
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(0, handler.getFirstEntryNumber());
   BOOST_REQUIRE_EQUAL(100, handler.getLastEntryNumber());
-  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 34);
+  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 15);
 }
 
 BOOST_AUTO_TEST_CASE(calculateEntryRange6)
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange6)
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(0, handler.getFirstEntryNumber());
   BOOST_REQUIRE_EQUAL(5, handler.getLastEntryNumber());
-  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 34);
+  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 15);
 }
 
 BOOST_AUTO_TEST_CASE(calculateEntryRange7)
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange7)
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(2, handler.getFirstEntryNumber());
   BOOST_REQUIRE_EQUAL(5, handler.getLastEntryNumber());
-  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 28);
+  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 6);
 }
 
 
@@ -200,11 +200,11 @@ BOOST_AUTO_TEST_CASE(getNextEntry)
   JPetInputHandler handler;
   handler.openInput(kInputTestFile, params);
   handler.setEntryRange(opts);
-  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 34);
+  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 15);
   BOOST_REQUIRE(handler.nextEntry());
-  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 31);
+  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 10);
   BOOST_REQUIRE(handler.nextEntry());
-  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 28);
+  BOOST_REQUIRE_EQUAL(getEntrysInWindow(handler), 6);
   BOOST_REQUIRE(handler.nextEntry());
   BOOST_REQUIRE(handler.nextEntry());
   BOOST_REQUIRE(handler.nextEntry());
