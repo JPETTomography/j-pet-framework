@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,18 +13,15 @@
  *  @file JPetFrameFactory.cpp
  */
 
+#include <boost/lexical_cast.hpp>
 #include "JPetFrameFactory.h"
-
 #include <exception>
 #include <string>
 #include <tuple>
-#include <boost/lexical_cast.hpp>
 
-std::map<int, JPetFrame *> & JPetFrameFactory::getFrames()
+std::map<int, JPetFrame*> & JPetFrameFactory::getFrames()
 {
-  if (!fInitialized) {
-    initialize();
-  }
+  if (!fInitialized) { initialize(); }
   return fFrames;
 }
 
@@ -40,7 +37,7 @@ void JPetFrameFactory::initialize()
   fInitialized = true;
 }
 
-JPetFrame * JPetFrameFactory::build(ParamObjectDescription data)
+JPetFrame* JPetFrameFactory::build(ParamObjectDescription data)
 {
   try {
     int id = boost::lexical_cast<int>(data.at("id"));

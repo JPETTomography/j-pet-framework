@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -11,26 +11,12 @@
  *  limitations under the License.
  *
  *  @file JPetUnpacker.cpp
- *  @brief facade for Unpacker program which unpacks raw data to root files
  */
 
-#include "./JPetUnpacker.h"
 #include "./JPetLoggerInclude.h"
 #include <boost/filesystem.hpp>
+#include "./JPetUnpacker.h"
 #include <cassert>
-
-ClassImp(JPetUnpacker);
-
-JPetUnpacker::JPetUnpacker():
-fUnpacker(0),
-fEventsToProcess(0),
-fHldFile(""),
-fCfgFile(""),
-fCalibFile("")
-{
-  /**/
-}
-
 
 JPetUnpacker::~JPetUnpacker()
 {
@@ -40,34 +26,36 @@ JPetUnpacker::~JPetUnpacker()
   }
 }
 
-
-void JPetUnpacker::setParams(const std::string& hldFile,  int numOfEvents, const std::string& cfgFile, const std::string& calibFile)
+void JPetUnpacker::setParams(const std::string& hldFile, int numOfEvents,
+                             const std::string& cfgFile, const std::string& totCalibFile,
+                             const std::string& tdcCalibFile)
 {
   fHldFile = hldFile;
   fCfgFile = cfgFile;
-  fCalibFile = calibFile;
+  fTOTCalibFile = totCalibFile;
+  fTDCCalibFile = tdcCalibFile;
   fEventsToProcess = numOfEvents;
 }
 
 bool JPetUnpacker::exec()
 {
-  if ( !boost::filesystem::exists(getHldFile())) 
-  {
+  if ( !boost::filesystem::exists(getHldFile())) {
     ERROR(std::string( "The hld file doesnt exist: ") + getHldFile() );
     return false;
   }
-  if (!boost::filesystem::exists(getCfgFile())) 
-  {
+  if (!boost::filesystem::exists(getCfgFile())) {
     ERROR("The config file doesnt exist");
     return false;
   }
-  if (getCalibFile()!="" && !boost::filesystem::exists(getCalibFile())) 
-  {
-    ERROR("The provided calib file doesnt exist");
+  if (getTOTCalibFile() != "" && !boost::filesystem::exists(getTOTCalibFile())) {
+    ERROR("The provided calibration file with TOT stretcher offsets does not exist");
     return false;
   }
-  if(getEventsToProcess() <= 0)
-  {
+  if (getTDCCalibFile() != "" && !boost::filesystem::exists(getTDCCalibFile())) {
+    ERROR("The provided file with TDC nonlinearity calibration does not exist");
+    return false;
+  }
+  if (getEventsToProcess() <= 0) {
     ERROR("No events to process");
     return false;
   }
@@ -75,14 +63,11 @@ bool JPetUnpacker::exec()
     delete fUnpacker;
     fUnpacker = 0;
   }
-
   fUnpacker = new Unpacker2();
-
   int refChannelOffset = 65;
-  fUnpacker->UnpackSingleStep(fHldFile.c_str(), fCfgFile.c_str(), fEventsToProcess, refChannelOffset, fCalibFile.c_str());
-  
+  fUnpacker->UnpackSingleStep(fHldFile.c_str(), fCfgFile.c_str(),
+                              fEventsToProcess, refChannelOffset,
+                              fTOTCalibFile.c_str(), fTDCCalibFile.c_str()
+                             );
   return true;
 }
-
-
-

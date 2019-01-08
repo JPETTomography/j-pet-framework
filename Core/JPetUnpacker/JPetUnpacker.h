@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -11,43 +11,57 @@
  *  limitations under the License.
  *
  *  @file JPetUnpacker.h
- *  @brief facade for Unpacker program which unpacks raw data to root files
  */
 
 #ifndef _JPETUNPACKER_H_
 #define _JPETUNPACKER_H_
-
-//#include <cstddef>
-#include <string>
-#include <TObject.h>
 #include "./Unpacker2/Unpacker2/Unpacker2.h"
+#include <string>
 
 class Unpacker2;
 
-class JPetUnpacker: public TObject
+/**
+ * @brief Facade for Unpacker program which unpacks raw data to root files
+ */
+class JPetUnpacker
 {
- public:
-
-  JPetUnpacker();
+public:
   ~JPetUnpacker();
   bool exec();
-  inline int getEventsToProcess() const { return fEventsToProcess; }
-  inline std::string getHldFile() const { return fHldFile; }
-  inline std::string getCfgFile() const { return fCfgFile; }
-  inline std::string getCalibFile() const { return fCalibFile; }
+  inline int getEventsToProcess() const
+  {
+    return fEventsToProcess;
+  }
+  inline std::string getHldFile() const
+  {
+    return fHldFile;
+  }
+  inline std::string getCfgFile() const
+  {
+    return fCfgFile;
+  }
+  inline std::string getTOTCalibFile() const
+  {
+    return fTOTCalibFile;
+  }
+  inline std::string getTDCCalibFile() const
+  {
+    return fTDCCalibFile;
+  }
   void setParams(const std::string& hldFile,
                  int numOfEvents = 100000000,
                  const std::string& cfgFile = "conf_trb3.xml",
-                 const std::string& calibFile = "");
+                 const std::string& totCalibFile = "",
+                 const std::string& tdcCalibFile = ""
+                );
 
-  ClassDef(JPetUnpacker, 2);
-
- private:
-  Unpacker2* fUnpacker;  
-  int fEventsToProcess;
-  std::string fHldFile;
-  std::string fCfgFile;
-  std::string fCalibFile;
+private:
+  Unpacker2* fUnpacker = nullptr;
+  int fEventsToProcess = 0;
+  std::string fHldFile = "";
+  std::string fCfgFile = "";
+  std::string fTOTCalibFile = "";
+  std::string fTDCCalibFile = "";
 };
 
-#endif
+#endif /* !_JPETUNPACKER_H_ */

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -20,20 +20,16 @@
 
 /**
  * @brief Parametric class representing database information on parameters of a TRB board.
- *
  */
 class JPetTRB: public TNamed
 {
 public:
-
-  static  JPetTRB& getDummyResult();
-
   JPetTRB();
-  explicit JPetTRB(int id);
-  explicit JPetTRB(bool isNull);
   JPetTRB(int id, int type, int channel);
+  static  JPetTRB& getDummyResult();
+  explicit JPetTRB(bool isNull);
+  explicit JPetTRB(int id);
   ~JPetTRB();
-
   bool operator==(const JPetTRB& trb) const;
   bool operator!=(const JPetTRB& trb) const;
   int getID() const;
@@ -57,7 +53,7 @@ protected:
 #endif
 
   friend class JPetParamManager;
-  ClassDef(JPetTRB, 3);
+  ClassDef(JPetTRB, 4);
 };
 
 #endif

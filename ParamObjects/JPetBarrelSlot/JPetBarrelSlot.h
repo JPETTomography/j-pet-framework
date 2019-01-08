@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,27 +16,26 @@
 #ifndef _JPETBARRELSLOT_H_
 #define	_JPETBARRELSLOT_H_
 
-#include <TRef.h>
 #include "./JPetLayer/JPetLayer.h"
 #include "./JPetLoggerInclude.h"
 #include "TNamed.h"
+#include <TRef.h>
 
 /**
- * @brief Parametric class representing database information on a single slot of the physical PET barrel.
+ * @brief Representation of a single slot in J-PET barrel
  *
- * A BarrelSlot consists of one scintillator strip and two photomultipliers at the scintillator's ends.
+ * Parametric class representing database information about a single slot
+ * of the J-PET barrel. A BarrelSlot consists of one scintillator strip
+ * and two photomultipliers at the scintillator's ends.
  */
 class JPetBarrelSlot: public TNamed
 {
-
 public:
   JPetBarrelSlot();
   JPetBarrelSlot(int id, bool isActive, std::string name, float theta, int inFrameID);
   explicit JPetBarrelSlot(bool isNull);
-
   bool operator==(const JPetBarrelSlot& bslot) const;
   bool operator!=(const JPetBarrelSlot& bslot) const;
-
   int getID() const;
   float getTheta() const;
   bool isActive() const;
@@ -44,10 +43,8 @@ public:
   int getInFrameID() const;
   bool hasLayer() const;
   const JPetLayer& getLayer() const;
-
   bool isNullObject() const;
   static  JPetBarrelSlot& getDummyResult();
-
   void setLayer(JPetLayer& p_layer);
 
 protected:
@@ -71,8 +68,7 @@ protected:
   bool fIsNullObject;
 #endif
 
-
-  ClassDef(JPetBarrelSlot, 4);
+  ClassDef(JPetBarrelSlot, 5);
 };
 
-#endif
+#endif /* !_JPETBARRELSLOT_H_ */

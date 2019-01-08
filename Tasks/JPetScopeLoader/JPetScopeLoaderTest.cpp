@@ -1,14 +1,29 @@
+/**
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may find a copy of the License in the LICENCE file.
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *  @file JPetScopeLoaderTest.cpp
+ */
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE ScopeLoader
 #define BOOST_TEST_LOG_LEVEL message
-#include <cstddef>
-#include <functional>
-#include <boost/test/unit_test.hpp>
-#include <boost/filesystem.hpp>
-#include "./JPetManager/JPetManager.h"
-#include "./JPetCommonTools/JPetCommonTools.h"
 
 #include "./JPetScopeLoader/JPetScopeLoader.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetManager/JPetManager.h"
+#include <boost/test/unit_test.hpp>
+#include <boost/filesystem.hpp>
+#include <functional>
+#include <cstddef>
 
 BOOST_AUTO_TEST_SUITE (JPetScopeLoaderTestSuite)
 
@@ -29,7 +44,8 @@ BOOST_AUTO_TEST_CASE (createInputScopeFileNames)
   JPetScopeLoader reader(0);
   BOOST_REQUIRE(reader.createInputScopeFileNames("", {}).empty());
   BOOST_REQUIRE(reader.createInputScopeFileNames("non_existing", {}).empty());
-  BOOST_REQUIRE(!reader.createInputScopeFileNames("unitTestData/JPetScopeLoaderTest/scope_files/0", {{"C1", 0}, {"C2", 1}, {"C3", 2}, {"C4", 3}}).empty());
+  BOOST_REQUIRE(!reader.createInputScopeFileNames(
+    "unitTestData/JPetScopeLoaderTest/scope_files/0", {{"C1", 0}, {"C2", 1}, {"C3", 2}, {"C4", 3}}).empty());
   std::map<std::string, int>  expectedRes0 {
     {"C1_00003.txt", 0}, {"C1_00004.txt", 0},  {"C2_00003.txt", 1}, {"C2_00004.txt", 1},
     {"C3_00003.txt", 2}, {"C3_00004.txt", 2}, {"C4_00003.txt", 3}, {"C4_00004.txt", 3}
@@ -39,7 +55,8 @@ BOOST_AUTO_TEST_CASE (createInputScopeFileNames)
   for (const auto& el : expectedRes0) {
     expectedRes[pathToFiles + "/" + el.first] = el.second;
   }
-  std::map<std::string, int> obtainedRes = reader.createInputScopeFileNames(pathToFiles, {{"C1", 0}, {"C2", 1}, {"C3", 2}, {"C4", 3}});
+  std::map<std::string, int> obtainedRes = reader.createInputScopeFileNames(
+    pathToFiles, {{"C1", 0}, {"C2", 1}, {"C3", 2}, {"C4", 3}});
   BOOST_REQUIRE(!obtainedRes.empty());
   BOOST_REQUIRE_EQUAL(obtainedRes.size(), expectedRes.size());
   auto it2 = obtainedRes.begin();
@@ -72,7 +89,6 @@ BOOST_AUTO_TEST_CASE (generate_root_file)
   auto args_char = JPetCommonTools::createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
-
   JPetManager& manager = JPetManager::getManager();
   manager.parseCmdLine(argc, argv);
   manager.run(argc, argv);
@@ -85,11 +101,9 @@ BOOST_AUTO_TEST_CASE (position_does_not_exist)
   const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/wrong_file_test_30.reco.sig.root";
   boost::filesystem::remove(test_root_filename);
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/wrong_file.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1";
-  //contains a single position 30 that does not exist
   auto args_char = JPetCommonTools::createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
-
   JPetManager& manager = JPetManager::getManager();
   manager.parseCmdLine(argc, argv);
   manager.run(argc, argv);
@@ -101,11 +115,9 @@ BOOST_AUTO_TEST_CASE (folder_does_not_exist)
   const char* test_root_filename = "unitTestData/JPetScopeLoaderTest/wrong_file2_test_0.reco.sig.root";
   boost::filesystem::remove(test_root_filename);
   auto commandLine = "main.exe  -t scope -f unitTestData/JPetScopeLoaderTest/wrong_file2.json -l unitTestData/JPetScopeLoaderTest/test_params.json -i 1";
-  //contains a wrong data folder name
   auto args_char = JPetCommonTools::createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
-
   JPetManager& manager = JPetManager::getManager();
   manager.run(argc, argv);
   BOOST_REQUIRE_MESSAGE(!boost::filesystem::exists(test_root_filename), "File " << test_root_filename << " exists.");
@@ -121,7 +133,6 @@ BOOST_AUTO_TEST_CASE (generate_root_file2)
   auto args_char = JPetCommonTools::createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
-
   JPetManager& manager = JPetManager::getManager();
   manager.run(argc, argv);
   BOOST_REQUIRE_MESSAGE(boost::filesystem::exists("test.root"), "File " << "test.root" << " does not exist.");
@@ -157,7 +168,6 @@ BOOST_AUTO_TEST_CASE (groupScopeFileNamesByTimeWindowIndex)
 
 BOOST_AUTO_TEST_CASE(getTimeWindowIndex)
 {
-  ///always 4th character if it is a number or digit
   BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex(""), -1);
   BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex("02"), -1);
   BOOST_REQUIRE_EQUAL(JPetScopeLoader::getTimeWindowIndex("023"), -1);

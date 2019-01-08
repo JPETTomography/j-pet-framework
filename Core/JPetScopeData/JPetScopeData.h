@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,23 +13,21 @@
  *  @file JPetScopeData.h
  */
 
-#ifndef JPETSCOPEDATA_H 
-#define JPETSCOPEDATA_H 
+#ifndef JPETSCOPEDATA_H
+#define JPETSCOPEDATA_H
 #include "./JPetDataInterface/JPetDataInterface.h"
-#include <map>
 #include <string>
+#include <map>
 
 /**
- * @brief Wrapper class that contains data send to JPetScopeTask.
- *
+ * @brief Wrapper class that contains data sent to JPetScopeTask.
  */
 class JPetScopeData : public JPetDataInterface
 {
- public:
+public:
   explicit JPetScopeData(const std::pair<int, std::map<std::string, int>>& event);
   std::pair<int, std::map<std::string, int> > getEvent() const;
- protected:
+protected:
   std::pair<int, std::map<std::string, int>> fEvent;
-//
 };
-#endif /*  !JPETSCOPEDATA_H */
+#endif /* !JPETSCOPEDATA_H */

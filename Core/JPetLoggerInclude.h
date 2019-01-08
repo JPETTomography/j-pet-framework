@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -12,53 +12,76 @@
  *
  *  @file JPetLoggerInclude.h
  *  @brief Configuration file for the Logger class
- *  Three independent level of logging are defined: LEVEL_INFO, LEVEL_WARNING and LEVEL_ERROR
- *  Levels can be switched on/off separately, by assign the value different than 1.
- *  The messages can be redirected to the screen if the SCREEN_OUTPUT is 1.
- *  Also the whole JPetLogger can be switched off/on by setting the JPETLOGGER_ON flag to 1.
+ *  Four independent level of logging are defined: INFO, WARNING, ERROR and DEBUG.
+ *  Also general macro is defined that allows to create user own level of logging.
  */
+
+/**
+  * @brief Configuration file for the Logger class
+  * Four independent level of logging are defined: INFO, WARNING, ERROR and DEBUG.
+  * Also general macro is defined that allows to create user own level of logging.
+  */
+
 #ifndef JPETLOGGER_INCLUDE_H
 #define JPETLOGGER_INCLUDE_H
 
-// current settings
-// 1 - switched on
-#define JPETLOGGER_ON 1
-#define JPET_LOGGER_LEVEL_INFO 1
-#define JPET_LOGGER_LEVEL_WARNING 1
-#define JPET_LOGGER_LEVEL_ERROR 1
-#define JPET_LOGGER_LEVEL_DEBUG 0
-#define JPET_SCREEN_OUTPUT 0
-
-// don't touch this part
-#if JPETLOGGER_ON == 1
 #include "./JPetLogger/JPetLogger.h"
-#define DATE_AND_TIME()   JPetLogger::dateAndTime()
-#if JPET_LOGGER_LEVEL_INFO == 1
-#define INFO(X)   JPetLogger::info(__func__, X)
-#else
-#define INFO(X)
-#endif
-#if JPET_LOGGER_LEVEL_WARNING == 1
-#define WARNING(X) JPetLogger::warning(__func__, X)
-#else
-#define WARNING(X)
-#endif
-#if JPET_LOGGER_LEVEL_ERROR == 1
-#define ERROR(X)   JPetLogger::error(__func__, X)
-#else
-#define ERROR(X)
-#endif
-#if JPET_LOGGER_LEVEL_DEBUG == 1
-#define DEBUG(X)   JPetLogger::debug(__func__, X)
-#else
-#define DEBUG(X)
-#endif
-#else
-#define WARNING(X)
-#define ERROR(X)
-#define INFO(X)
-#define DEBUG(X)
-#define DATE_AND_TIME()
+
+#ifndef __CINT__
+#include <boost/log/attributes/scoped_attribute.hpp>
+#include <boost/log/utility/manipulators/add_value.hpp>
 #endif
 
-#endif
+/* Macro with multi-line statement
+ * DO not use directly, instead use INFO, WARNING, ERROR, DEBUG or LOG macros
+ * See: http://www.cs.technion.ac.il/users/yechiel/c++-faq/macros-with-multi-stmts.html
+ */
+#define CUSTOM_LOG(logger, sev, X)                                                                                                                   \
+  if (true) {                                                                                                                                        \
+    BOOST_LOG_SEV(logger, sev) << boost::log::add_value("Line", __LINE__) << boost::log::add_value("File", __FILE__)                                 \
+                               << boost::log::add_value("Function", __func__) << X;                                                                  \
+  } else                                                                                                                                             \
+  (void)0
+
+/* To log information you should use macros INFO(X), WARNING(X), ERROR(X), DEBUG(X) or
+ * if you want to provie your own level of sevarity of message use macro LOG(X, sev).
+ *
+ * DO not use macro CUSTOM_LOG.
+ *
+ * Example usage: INFO("Log message");
+ *
+ * This message will be logged to file "JPet_%Y-%m-%d_%H-%M-%S.%N.log" if minimal log level is above or equal info.
+ *
+ * To use LOG macro you need to define your own enum with severity levels e.g.:
+ *
+ * enum severity_level
+ * {
+ *   normal,
+ *   notification,
+ *   warning,
+ *   error,
+ *   critical
+ * };
+ *
+ * And then use it as LOG("Log message", critical);
+ *
+*/
+#define INFO(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::info, X)
+#define WARNING(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::warning, X)
+#define ERROR(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::error, X)
+#define DEBUG(X) CUSTOM_LOG(JPetLogger::getInstance().getSeverity(), boost::log::trivial::debug, X)
+
+#define LOG(X, sev) CUSTOM_LOG(JPetLogger::getInstance().getSevarity(), sev, X)
+
+#define SET_MINIMAL_LOG_ERROR() JPetLogger::getInstance().setLogLevel(boost::log::trivial::error)     // prints only error messages
+#define SET_MINIMAL_LOG_WARNING() JPetLogger::getInstance().setLogLevel(boost::log::trivial::warning) // prints error + warning messages
+#define SET_MINIMAL_LOG_INFO() JPetLogger::getInstance().setLogLevel(boost::log::trivial::info)       // prints error + warning + info messages
+#define SET_MINIMAL_LOG_DEBUG() JPetLogger::getInstance().setLogLevel(boost::log::trivial::debug) // prints error + warning + info + debug messages
+
+#define SET_MINIMAL_LOG_LEVEL(X) JPetLogger::getInstance().setLogLevel(X)
+
+// for backward compability
+#define ENABLE_DEBUG JPetLogger::getInstance().setLogLevel(boost::log::trivial::debug)
+#define DISABLE_DEBUG JPetLogger::getInstance().setLogLevel(boost::log::trivial::info)
+
+#endif /* !JPETLOGGER_INCLUDE_H */

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -17,9 +17,8 @@
 #define JPET_LAYER_FACTORY_H
 
 #include "./JPetParamGetter/JPetParamGetter.h"
-#include "JPetLayer.h"
 #include "./JPetFrame/JPetFrameFactory.h"
-
+#include "JPetLayer.h"
 #include <map>
 
 /**
@@ -29,24 +28,19 @@
  */
 class JPetLayerFactory
 {
-  public:
-    JPetLayerFactory(JPetParamGetter & paramGetter, int runId, JPetFrameFactory & frameFactory) :
-      paramGetter(paramGetter),
-      runId(runId),
-      frameFactory(frameFactory),
-      fInitialized(false) {}
+public:
+  JPetLayerFactory(JPetParamGetter & paramGetter, int runId, JPetFrameFactory & frameFactory):
+    paramGetter(paramGetter), runId(runId), frameFactory(frameFactory), fInitialized(false) {}
+  std::map<int, JPetLayer*>& getLayers();
 
-    std::map<int, JPetLayer *> & getLayers();
-  private:
-    JPetParamGetter & paramGetter;
-    const int runId;
-    JPetFrameFactory & frameFactory;
-
-    bool fInitialized;
-    std::map<int, JPetLayer *> fLayers;
-
-    void initialize();
-    JPetLayer * build(ParamObjectDescription data);
+private:
+  JPetParamGetter &paramGetter;
+  const int runId;
+  JPetFrameFactory &frameFactory;
+  bool fInitialized;
+  std::map<int, JPetLayer*> fLayers;
+  void initialize();
+  JPetLayer* build(ParamObjectDescription data);
 };
 
-#endif // JPET_LAYER_FACTORY_H
+#endif /* !JPET_LAYER_FACTORY_H */

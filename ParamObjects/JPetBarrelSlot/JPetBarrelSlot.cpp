@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -15,24 +15,15 @@
 
 #include "JPetBarrelSlot.h"
 
-JPetBarrelSlot::JPetBarrelSlot()
-{
-  SetName("JPetBarrelSlot");
-}
-
+JPetBarrelSlot::JPetBarrelSlot() { SetName("JPetBarrelSlot"); }
 
 JPetBarrelSlot::JPetBarrelSlot(int id, bool isActive, std::string name, float theta, int inFrameID):
-  fId(id),
-  fIsActive(isActive),
-  fName(name),
-  fTheta(theta),
-  fInFrameID(inFrameID)
+  fId(id), fIsActive(isActive), fName(name), fTheta(theta), fInFrameID(inFrameID)
 {
   SetName("JPetBarrelSlot");
 }
 
-JPetBarrelSlot::JPetBarrelSlot(bool isNull) :
-  fIsNullObject(isNull)
+JPetBarrelSlot::JPetBarrelSlot(bool isNull): fIsNullObject(isNull)
 {
   SetName("JPetBarrelSlot");
 }
@@ -41,6 +32,7 @@ bool JPetBarrelSlot::operator==(const JPetBarrelSlot& bslot) const
 {
   return getID() == bslot.getID();
 }
+
 bool JPetBarrelSlot::operator!=(const JPetBarrelSlot& bslot) const
 {
   return getID() != bslot.getID();
@@ -50,26 +42,32 @@ int JPetBarrelSlot::getID() const
 {
   return fId;
 }
+
 float JPetBarrelSlot::getTheta() const
 {
   return fTheta;
 }
+
 bool JPetBarrelSlot::isActive() const
 {
   return fIsActive;
 }
+
 std::string JPetBarrelSlot::getName() const
 {
   return fName;
 }
+
 int JPetBarrelSlot::getInFrameID() const
 {
   return fInFrameID;
 }
+
 bool JPetBarrelSlot::hasLayer() const
 {
   return fTRefLayer.GetObject() != 0;
 }
+
 const JPetLayer& JPetBarrelSlot::getLayer() const
 {
   if (fTRefLayer.GetObject()) return static_cast<JPetLayer&>(*(fTRefLayer.GetObject()));
@@ -89,7 +87,6 @@ JPetBarrelSlot& JPetBarrelSlot::getDummyResult()
   static JPetBarrelSlot DummyResult(true);
   return DummyResult;
 }
-
 
 void JPetBarrelSlot::setLayer(JPetLayer& p_layer)
 {

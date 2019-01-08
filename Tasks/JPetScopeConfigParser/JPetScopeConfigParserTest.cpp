@@ -1,20 +1,21 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
- *  @file JPetScopeConfigParser.h
+ *  @file JPetScopeConfigParserTest.cpp
  */
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetScopeConfigParser
+
 #include <boost/test/unit_test.hpp>
 #include "JPetScopeConfigParser.h"
 #include "JPetScopeConfigPOD.h"
@@ -73,19 +74,14 @@ BOOST_AUTO_TEST_CASE(getJsonContent)
   BOOST_REQUIRE(!parser.getJsonContent(gInputConfigJsonFilenameTest).empty());
 }
 
-
-
 BOOST_AUTO_TEST_CASE(getInputDirectoriesAndFakeInputFile)
 {
   JPetScopeConfigParser parser;
   using namespace scope_config;
   Config config;
   BOOST_REQUIRE(parser.getInputDirectoriesAndFakeInputFiles("").empty());
-  /// The result is still empty, because now the result contains only elements with directories which actually exist
-  /// and there are no directories in this location.
   BOOST_REQUIRE(parser.getInputDirectoriesAndFakeInputFiles(gInputConfigJsonFilenameTest).empty());
 }
-
 
 BOOST_AUTO_TEST_CASE(getConfig)
 {
@@ -96,14 +92,11 @@ BOOST_AUTO_TEST_CASE(getConfig)
   BOOST_REQUIRE_EQUAL(emptyConf.fName, "");
   BOOST_REQUIRE_EQUAL(emptyConf.fLocation, "");
   BOOST_REQUIRE(emptyConf.fCollimatorPositions.empty());
-
   Config config;
   config.fLocation = "data";
   config.fCollimatorPositions = VecOfStrings { "1 5 2", "12", "6"};
   config.fName = "config1";
-
   auto res = parser.getConfig(gInputConfigJsonFilenameTest);
-
   BOOST_REQUIRE(res.fName == config.fName);
   BOOST_REQUIRE(res.fLocation == config.fLocation);
   BOOST_REQUIRE(res.fCollimatorPositions == config.fCollimatorPositions);
@@ -111,9 +104,10 @@ BOOST_AUTO_TEST_CASE(getConfig)
 
 BOOST_AUTO_TEST_CASE(getElementsWithExistingDirs)
 {
-  std::vector<std::pair<std::string, std::string> >  dirsAndFakeFiles = { std::make_pair("./", "file1"), std::make_pair("fake/directory", "file2")};
+  std::vector<std::pair<std::string, std::string>> dirsAndFakeFiles =
+    {std::make_pair("./", "file1"), std::make_pair("fake/directory", "file2")};
   JPetScopeConfigParser parser;
-  auto result = parser.getElementsWithExistingDirs(dirsAndFakeFiles );
+  auto result = parser.getElementsWithExistingDirs(dirsAndFakeFiles);
   BOOST_REQUIRE_EQUAL(result.size(), 1u);
   BOOST_REQUIRE_EQUAL(result.at(0).first, "./");
   BOOST_REQUIRE_EQUAL(result.at(0).second, "file1");

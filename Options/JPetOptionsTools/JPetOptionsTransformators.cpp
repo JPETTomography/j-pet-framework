@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,25 +13,23 @@
  *  @file JPetOptionsTransformators.cpp
  */
 
-#include "./JPetOptionsTransformators.h"
-#include <string>
-#include <boost/any.hpp>
 #include "./JPetCommonTools/JPetCommonTools.h"
-#include <iostream>
+#include "./JPetOptionsTransformators.h"
 #include "./JPetOptionsTools.h"
+#include <boost/any.hpp>
+#include <iostream>
+#include <string>
 
 using boost::any_cast;
 
 namespace jpet_options_tools
 {
 
-
 std::pair <std::string, boost::any>appendSlash(boost::any option)
 {
   auto path = JPetCommonTools::appendSlashToPathIfAbsent(any_cast<std::string>(option));
   return std::make_pair("outputPath_std::string", path);
 }
-
 
 std::pair <std::string, boost::any>generateLowerEventBound(boost::any option)
 {
@@ -51,14 +49,15 @@ std::pair <std::string, boost::any>generateHigherEventBound(boost::any option)
     return std::make_pair("wrongLastEvent_int", -1);
 }
 
-
-/// Function generates transformation function for file type
-/// if the input file name terminates with hld.root and the file type value is set to root
-/// then the file type value is changed to hldRoot.
-/// At this stage the options might be for many input file names as there are stored std::vector<std::string> array
-/// , so getInputFiles() method must be used.
-/// This distinction is important because hld.root files have different internal structure than all other
-/// root files used in the framework
+/**
+ * Function generates transformation function for file type if the input file
+ * name terminates with hld.root and the file type value is set to root then
+ * the file type value is changed to hldRoot. At this stage the options might be
+ * for many input file names as there are stored std::vector<std::string> array,
+ * so getInputFiles() method must be used. This distinction is important because
+ * hld.root files have different internal structure than all other root files
+ * used in the framework
+ */
 Transformer generateSetFileTypeTransformator(const std::map<std::string, boost::any>& options)
 {
   auto setFileType = [options](boost::any option)->std::pair <std::string, boost::any> {

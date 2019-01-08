@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -30,7 +30,7 @@ JPetTOMBChannel::JPetTOMBChannel(unsigned int p_channel): fChannel(p_channel)
 JPetTOMBChannel::JPetTOMBChannel(int p_channel): fChannel(p_channel)
 {
   if (p_channel < 0) {
-    ERROR("p_channel cannot be negative"); //
+    ERROR("p_channel cannot be negative");
   }
   SetName("JPetTOMBChannel");
 }
@@ -40,9 +40,7 @@ JPetTOMBChannel::JPetTOMBChannel(bool isNull): fIsNullObject(isNull)
   SetName("JPetTOMBChannel");
 }
 
-JPetTOMBChannel::~JPetTOMBChannel()
-{
-}
+JPetTOMBChannel::~JPetTOMBChannel(){}
 
 void JPetTOMBChannel::setFEB(JPetFEB& p_FEB)
 {
@@ -116,6 +114,15 @@ bool JPetTOMBChannel::operator!=(const JPetTOMBChannel& channel)
   return getChannel() != channel.getChannel();
 }
 
+/**
+ * @brief Get the local channel number
+ *
+ * All thresholds (together on leading and trailing edge) applied to a single PM
+ * signal can be ordered starting from 1, with an order corresponding to
+ * the ascending order of DAQ channels assigned to the thresholds.
+ * Therefore, if there are 4 thresholds applied to each signal edge,
+ * the local channel number should be between 1 and 8.
+ */
 unsigned int JPetTOMBChannel::getLocalChannelNumber() const
 {
   return fLocalChannelNumber;
@@ -126,11 +133,19 @@ void JPetTOMBChannel::setLocalChannelNumber(unsigned int lcn)
   fLocalChannelNumber = lcn;
 }
 
+/**
+ * @brief Get the number of input channel (Numbering starts from 1) of the FEB
+ * which corresponds to this TOMB channel.
+ */
 unsigned int JPetTOMBChannel::getFEBInputNumber() const
 {
   return fFEBInputNumber;
 }
 
+/**
+ * @brief Set the number of input channel (Numbering starts from 1) of the FEB
+ * which corresponds to this TOMB channel
+ */
 void JPetTOMBChannel::setFEBInputNumber(unsigned int fin)
 {
   fFEBInputNumber = fin;

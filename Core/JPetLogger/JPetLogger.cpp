@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,77 +13,33 @@
  *  @file JPetLogger.cpp
  */
 
-#include <ctime>
-#include <cassert>
 #include "./JPetLogger.h"
-#include "./JPetLoggerInclude.h"
 
+JPetLogger::JPetLogger() { init(); }
 
-#if JPET_SCREEN_OUTPUT == 1
-bool JPetLogger::fIsLogFile = false;
-#else
-bool JPetLogger::fIsLogFile = true;
-#endif
-
-const std::string JPetLogger::fFileName = JPetLogger::generateFilename();
-
-void JPetLogger::dateAndTime() {
-  std::ofstream log(fFileName.c_str(), std::ios_base::app);
-  std::streambuf* originalCoutBuffer = 0; 
-  // we redirect std::cout to a file 
-  if (fIsLogFile) {
-    originalCoutBuffer = std::cout.rdbuf();
-    std::cout.rdbuf(log.rdbuf());
-  }
-
-  if (std::cout.fail()) {
-    std::cerr << "Unable to open log file!" << std::endl;
-    return;
-  }
-  time_t t = time(0);   /// current time
-  struct tm * now = localtime(&t);
-  std::cout << (now->tm_year + 1900) << '-'
-  << (now->tm_mon + 1) << '-'
-  <<  now->tm_mday << " "
-  <<  now->tm_hour << ":"
-  <<  now->tm_min << ":"
-  <<  now->tm_sec << std::endl;
-  if (fIsLogFile) {
-    std::cout.rdbuf(originalCoutBuffer);  // back to original stream
-  }
+void JPetLogger::init() {
+  sink = boost::make_shared<sink_t>(boost::log::keywords::file_name = "JPet_%Y-%m-%d_%H-%M-%S.%N.log", boost::log::keywords::auto_flush = true);
+  sink->set_formatter(&JPetLogger::formatter);
+  boost::log::core::get()->add_sink(sink);
+  boost::log::add_common_attributes();
+  boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::info);
 }
 
+void JPetLogger::setLogLevel(boost::log::trivial::severity_level level) { sink->set_filter(boost::log::trivial::severity >= level); }
 
-void JPetLogger::logMessage(const char* func, const char* msg, MessageType type) {
-  std::ofstream log(fFileName.c_str(), std::ios_base::app);
-  std::streambuf* originalCoutBuffer = 0; 
-  // we redirect std::cout to a file 
-  if (fIsLogFile) {
-    originalCoutBuffer = std::cout.rdbuf();
-    std::cout.rdbuf(log.rdbuf());
-  }
-  if (std::cout.fail()) {
-    std::cerr << "Unable to open log file!" << std::endl;
-    return;
-  }
-  switch (type) {
-    case kInfo:
-      std::cout << "Info ";
-      break;
-    case kWarning:
-      std::cout << "Warning ";
-      break;
-    case kError:
-      std::cout << "Error ";
-      break;
-    case kDebug:
-      std::cout << "Debug ";
-      break;
-  }
-  std::cout << func << "():"
-  << msg
-  << std::endl;
-  if (fIsLogFile) {
-    std::cout.rdbuf(originalCoutBuffer);  // back to original stream
-  }
+void JPetLogger::formatter(boost::log::record_view const& rec, boost::log::formatting_ostream& out_stream) {
+  boost::log::value_ref<std::string> fullpath = boost::log::extract<std::string>("File", rec);
+  boost::log::value_ref<std::string> fullfunction = boost::log::extract<std::string>("Function", rec);
+  out_stream << boost::log::extract<unsigned int>("LineID", rec) << ": [";
+  out_stream << boost::filesystem::path(fullpath.get()).filename().string() << ":";
+  out_stream << fullfunction << "@";
+  out_stream << boost::log::extract<int>("Line", rec) << "] ";
+  out_stream << "ThreadID: " << boost::log::extract<boost::log::attributes::current_thread_id::value_type>("ThreadID", rec) << " ";
+  out_stream << "<" << rec[boost::log::trivial::severity] << "> ";
+  out_stream << rec[boost::log::expressions::smessage];
+}
+
+boost::log::sources::severity_logger<boost::log::trivial::severity_level>& JPetLogger::getSeverity() {
+  static boost::log::sources::severity_logger<boost::log::trivial::severity_level> sev;
+  return sev;
 }

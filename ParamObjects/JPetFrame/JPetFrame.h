@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -18,20 +18,20 @@
 
 #include "TNamed.h"
 
-
 /**
- * @brief Parametric class representing database information on a whole mechanical structure frame of the PET setup.
+ * @brief Representation of a frame in the J-PET setup
  *
- * The frame consists of one or more layers represented by JPetLayer objects.
+ * Parametric class representing database information on a whole mechanical
+ * structure frame of the J-PET setup. The frame consists of one or more layers
+ * represented by JPetLayer objects.
  */
 class JPetFrame: public TNamed
 {
 public:
-
   JPetFrame();
-  JPetFrame(int id, bool isActive, std::string status, std::string description, int version, int creator_id);
+  JPetFrame(int id, bool isActive, std::string status, std::string description,
+    int version, int creator_id);
   explicit JPetFrame(bool isNull);
-
   bool operator==(const JPetFrame& frame);
   bool operator!=(const JPetFrame& frame);
   int getID() const;
@@ -62,6 +62,6 @@ protected:
   bool fIsNullObject;
 #endif
 
-  ClassDef(JPetFrame, 2);
+  ClassDef(JPetFrame, 3);
 };
-#endif // JPET_FRAME_H
+#endif /* !JPET_FRAME_H */

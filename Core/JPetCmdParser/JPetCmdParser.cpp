@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,12 +13,14 @@
  *  @file JPetCmdParser.cpp
  */
 
+#include "./JPetLoggerInclude.h"
 #include "JPetCmdParser.h"
 #include <iostream>
 #include <stdexcept>
-#include "./JPetLoggerInclude.h"
 
-
+/**
+ * Constructor with definitios of input arguments for an executable file
+ */
 JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
 {
   fOptionsDescriptions.add_options()
@@ -36,12 +38,14 @@ JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
   ("userCfg,u", po::value<std::string>(), "Json file with optional user parameters.");
 }
 
-JPetCmdParser::~JPetCmdParser()
-{
-  /**/
-}
+/**
+ * Destructor
+ */
+JPetCmdParser::~JPetCmdParser(){}
 
-
+/**
+ * This function can throw std::invalid_argument exception.
+ */
 po::variables_map JPetCmdParser::parseCmdLineArgs(int argc, const char** argv) const
 {
   po::variables_map variablesMap;
@@ -52,7 +56,7 @@ po::variables_map JPetCmdParser::parseCmdLineArgs(int argc, const char** argv) c
   }
   po::store(po::parse_command_line(argc, argv, fOptionsDescriptions), variablesMap);
 
-  /* print out help */
+  // Print out help
   if (variablesMap.count("help")) {
     std::cout << getOptionsDescription() << "\n";
     exit(0);

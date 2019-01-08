@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -14,15 +14,17 @@
  */
 
 #include "JPetProgressBarManager.h"
-#include <stdio.h>
+#include <iostream>
 
-void JPetProgressBarManager::display(long long done, long long end) const
-{
-  printf("\r[%6.1f%%]", getCurrentValue(done, end));
+void JPetProgressBarManager::display(
+  const std::string& taskName, long long currentNumber, long long totalNumber
+) const {
+  std::cout << std::string(30, '\b');
+  std::cout << std::string(30, ' ');
+  std::cout << '\r' << taskName << " " << getCurrentValue(currentNumber, totalNumber) << '%' << std::flush;
 }
 
 float JPetProgressBarManager::getCurrentValue(int currentEventNumber, int numberOfEvents) const
 {
-  return ( ((float)currentEventNumber) / numberOfEvents ) * 100;
+  return (((float)currentEventNumber) / numberOfEvents) * 100;
 }
-

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -17,30 +17,44 @@
 
 ClassImp(JPetBaseSignal);
 
-JPetBaseSignal::JPetBaseSignal() :
-  TObject(), fPM(0), fBarrelSlot(0) {
+/**
+ * Constructor
+ */
+JPetBaseSignal::JPetBaseSignal(): TObject(), fPM(0), fBarrelSlot(0), fFlag(JPetBaseSignal::Unknown) {}
+
+/**
+ * Constructor with boolean argument isNull
+ */
+JPetBaseSignal::JPetBaseSignal(bool isNull): fIsNullObject(isNull) {}
+
+/**
+* Destructor
+*/
+JPetBaseSignal::~JPetBaseSignal() {}
+
+void JPetBaseSignal::setRecoFlag(JPetBaseSignal::RecoFlag flag)
+{
+  fFlag = flag;
 }
-JPetBaseSignal::JPetBaseSignal(bool isNull):
-  fIsNullObject(isNull)
-{}
+
+JPetBaseSignal::RecoFlag JPetBaseSignal::getRecoFlag() const
+{
+  return fFlag;
+}
 
 bool JPetBaseSignal::isNullObject() const
 {
-   return fIsNullObject;
+  return fIsNullObject;
 }
 
 JPetBaseSignal& JPetBaseSignal::getDummyResult()
 {
-   static JPetBaseSignal DummyResult(true);
-   return DummyResult;
+  static JPetBaseSignal dummyResult(true);
+  return dummyResult;
 }
 
-JPetBaseSignal::~JPetBaseSignal() {
-}
-
-void JPetBaseSignal::Clear(Option_t *){
-
-  fPM = NULL;
+void JPetBaseSignal::Clear(Option_t *)
+{
   fBarrelSlot = NULL;
-
+  fPM = NULL;
 }
