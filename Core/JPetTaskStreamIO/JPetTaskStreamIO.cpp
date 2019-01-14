@@ -59,25 +59,19 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
     }
   }
 
-  auto firstEvent = 0ll;
-  auto lastEvent = 0ll;
-  bool isOK = false;
   assert(fInputHandler);
-  std::tie(isOK, firstEvent, lastEvent) = fInputHandler->getEventRange(fParams.getOptions());
-  if (!isOK) {
-    ERROR("Some error occured in getEventRange");
-    return false;
-  }
+  auto firstEvent = fInputHandler->getFirstEntryNumber();
+  auto lastEvent =  fInputHandler->getLastEntryNumber();
   assert(lastEvent >= 0);
 
   for (auto i = firstEvent; i <= lastEvent; i++) {
 
     if (isProgressBar(fParams.getOptions())) {
-      displayProgressBar(i, lastEvent);
+      displayProgressBar(getName(), i, lastEvent);
     }
 
     // subsequently run all subtasks on the same event
-    TObject* output_event = &(fInputHandler->getNextEntry());
+    TObject* output_event = &(fInputHandler->getEntry());
 
     // iterator
     auto subtask_it = fSubTasks.begin();
