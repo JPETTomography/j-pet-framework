@@ -76,12 +76,6 @@ bool JPetTaskIO::init(const JPetParams& params)
   return true;
 }
 
-std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFile(const OptsStrAny opts) const
-{
-  /// We cannot remove this method completely and leave the one from JPetTaskIOTools, because it  is overloaded in JPetScopeLoader class.
-  return JPetTaskIOTools::setInputAndOutputFile(opts, fTaskInfo.fResetOutputPath, fTaskInfo.fInFileType, fTaskInfo.fOutFileType);
-}
-
 bool JPetTaskIO::run(const JPetDataInterface& data)
 {
   using namespace jpet_options_tools;
