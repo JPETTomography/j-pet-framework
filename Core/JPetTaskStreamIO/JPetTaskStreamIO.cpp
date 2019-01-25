@@ -60,14 +60,20 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
   }
 
   assert(fInputHandler);
+  bool isOK = fInputHandler->setEntryRange(fParams.getOptions());
+  if (!isOK) {
+    ERROR("Some error occured in setEntryRange");
+    return false;
+  }
+  
   auto firstEvent = fInputHandler->getFirstEntryNumber();
   auto lastEvent =  fInputHandler->getLastEntryNumber();
   assert(lastEvent >= 0);
 
-  for (auto i = firstEvent; i <= lastEvent; i++) {
+  do{
 
     if (isProgressBar(fParams.getOptions())) {
-      displayProgressBar(getName(), i, lastEvent);
+      displayProgressBar(getName(), fInputHandler->getCurrentEntryNumber(), lastEvent);
     }
 
     // subsequently run all subtasks on the same event
@@ -101,7 +107,7 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
       }
     }
 
-  }
+  }while(fInputHandler->nextEntry());
 
   // terminate all subtasks after all processing
   for (const auto& pTask : fSubTasks) {
