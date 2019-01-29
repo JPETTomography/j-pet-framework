@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,18 +13,15 @@
  *  @file JPetPMFactory.cpp
  */
 
+#include <boost/lexical_cast.hpp>
 #include "JPetPMFactory.h"
-
 #include <exception>
 #include <string>
 #include <tuple>
-#include <boost/lexical_cast.hpp>
 
 std::map<int, JPetPM*>& JPetPMFactory::getPMs()
 {
-  if (!fInitialized) {
-    initialize();
-  }
+  if (!fInitialized) { initialize(); }
   return fPMs;
 }
 
@@ -38,7 +35,8 @@ void JPetPMFactory::initialize()
     fPMs[description.first] = build(description.second);
   }
   fInitialized = true;
-  ParamRelationalData relations = paramGetter.getAllRelationalData(ParamObjectType::kPM, ParamObjectType::kFEB, runId);
+  ParamRelationalData relations = paramGetter.getAllRelationalData(
+    ParamObjectType::kPM, ParamObjectType::kFEB, runId);
   for (auto relation : relations) {
     fPMs[relation.first]->setFEB(*febFactory.getFEBs().at(relation.second));
   }

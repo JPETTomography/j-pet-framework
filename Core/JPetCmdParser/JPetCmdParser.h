@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,14 +16,13 @@
 #ifndef _JPET_CMD_PARSER_H_
 #define _JPET_CMD_PARSER_H_
 
-
-#include "boost/program_options.hpp" // Library parsing command line arguments
+#include "boost/program_options.hpp"
 namespace po = boost::program_options;
 
 /**
  * @brief Parser of the command line arguments provided by users.
  *
- * It is based on boost program_options.
+ * It is based on Boost library program_options.
  * The exception std::invalid_argument can be thrown in case of parsing error.
  */
 class JPetCmdParser
@@ -31,12 +30,12 @@ class JPetCmdParser
 public:
   JPetCmdParser();
   ~JPetCmdParser();
-  po::variables_map parseCmdLineArgs(int argc, const char** argv) const; ///This function can throw std::invalid_argument exception.
-
+  po::variables_map parseCmdLineArgs(int argc, const char** argv) const;
   inline const po::options_description getOptionsDescription() const
   {
     return fOptionsDescriptions;
   }
+
 protected:
   po::options_description fOptionsDescriptions;
 

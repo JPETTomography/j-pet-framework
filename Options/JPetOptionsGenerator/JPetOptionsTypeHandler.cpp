@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,16 +13,20 @@
  *  @file JPetOptionsTypeHandler.cpp
  */
 
-#include "JPetOptionsTypeHandler.h"
-#include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include "./JPetCommonTools/JPetCommonTools.h"
+#include <boost/property_tree/ptree.hpp>
+#include "JPetOptionsTypeHandler.h"
 #include "./JPetLoggerInclude.h"
+
 namespace pt = boost::property_tree;
+const std::vector<std::string> JPetOptionsTypeHandler::kAllowedTypes = {
+  "int", "std::string", "bool",
+  "std::vector<std::string>",
+  "std::vector<int>", "float", "double"};
 
-const std::vector<std::string> JPetOptionsTypeHandler::kAllowedTypes = {"int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>", "float"};
-
-std::map<std::string, std::string> JPetOptionsTypeHandler::anyMapToStringMap(const std::map<std::string, boost::any>& optionsMap)
+std::map<std::string, std::string> JPetOptionsTypeHandler::anyMapToStringMap(
+  const std::map<std::string, boost::any>& optionsMap)
 {
   using boost::any_cast;
   std::map<std::string, std::string> newOptionsMap;
@@ -69,4 +73,3 @@ std::vector<std::string> JPetOptionsTypeHandler::getAllowedTypes()
 {
   return JPetOptionsTypeHandler::kAllowedTypes;
 }
-

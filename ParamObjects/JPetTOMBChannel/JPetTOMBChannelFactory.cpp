@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -14,17 +14,14 @@
  */
 
 #include "JPetTOMBChannelFactory.h"
-
+#include <boost/lexical_cast.hpp>
 #include <exception>
 #include <string>
 #include <tuple>
-#include <boost/lexical_cast.hpp>
 
 std::map<int, JPetTOMBChannel *> & JPetTOMBChannelFactory::getTOMBChannels()
 {
-  if (!fInitialized) {
-    initialize();
-  }
+  if (!fInitialized) { initialize(); }
   return fTOMBChannels;
 }
 

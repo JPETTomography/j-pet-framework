@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -11,25 +11,19 @@
  *  limitations under the License.
  *
  *  @file JPetScopeTask.cpp
- *  @brief Module for oscilloscope data
- *  Reads oscilloscope ASCII files and produces JPetRecoSignal objects.
  */
 
+#include "JPetCommonTools/JPetCommonTools.h"
+#include "JPetScopeData/JPetScopeData.h"
+#include "JPetScopeTaskUtils.h"
+#include <boost/filesystem.hpp>
 #include "JPetScopeTask.h"
-
 #include <iostream>
 #include <memory>
-#include <boost/filesystem.hpp>
-#include "JPetScopeTaskUtils.h"
-#include "JPetScopeData/JPetScopeData.h"
-#include "JPetCommonTools/JPetCommonTools.h"
 
 using namespace boost::filesystem;
 
-JPetScopeTask::JPetScopeTask(const char* name):
-  JPetUserTask(name)
-{
-}
+JPetScopeTask::JPetScopeTask(const char* name): JPetUserTask(name){}
 
 bool JPetScopeTask::run(const JPetDataInterface& inData)
 {
@@ -71,7 +65,6 @@ bool JPetScopeTask::exec()
 
 bool JPetScopeTask::terminate()
 {
-
   INFO("Scope Task finished");
   return true;
 }

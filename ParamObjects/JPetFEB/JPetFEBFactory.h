@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -17,9 +17,8 @@
 #define JPET_FEB_FACTORY_H
 
 #include "./JPetParamGetter/JPetParamGetter.h"
-#include "JPetFEB.h"
 #include "./JPetTRB/JPetTRBFactory.h"
-
+#include "JPetFEB.h"
 #include <map>
 
 /**
@@ -29,24 +28,19 @@
  */
 class JPetFEBFactory
 {
-  public:
-    JPetFEBFactory(JPetParamGetter & paramGetter, int runId, JPetTRBFactory & trbFactory) :
-      paramGetter(paramGetter),
-      runId(runId),
-      trbFactory(trbFactory),
-      fInitialized(false) {}
+public:
+  JPetFEBFactory(JPetParamGetter &paramGetter, int runId, JPetTRBFactory &trbFactory):
+    paramGetter(paramGetter), runId(runId), trbFactory(trbFactory), fInitialized(false) {}
+  std::map<int, JPetFEB*> &getFEBs();
 
-    std::map<int, JPetFEB *> & getFEBs();
-  private:
-    JPetParamGetter & paramGetter;
-    const int runId;
-    JPetTRBFactory & trbFactory;
-
-    bool fInitialized;
-    std::map<int, JPetFEB *> fFEBs;
-
-    void initialize();
-    JPetFEB * build(ParamObjectDescription data);
+private:
+  JPetParamGetter &paramGetter;
+  const int runId;
+  JPetTRBFactory &trbFactory;
+  bool fInitialized;
+  std::map<int, JPetFEB*> fFEBs;
+  void initialize();
+  JPetFEB* build(ParamObjectDescription data);
 };
 
-#endif // JPET_FEB_FACTORY_H
+#endif /* !JPET_FEB_FACTORY_H */

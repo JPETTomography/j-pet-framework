@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,18 +16,17 @@
 #ifndef _JPETSIMPLEPHYSSIGNALRECO_H_
 #define _JPETSIMPLEPHYSSIGNALRECO_H_
 
-#include "./JPetUserTask/JPetUserTask.h"
 #include "./JPetPhysSignal/JPetPhysSignal.h"
 #include "./JPetRecoSignal/JPetRecoSignal.h"
+#include "./JPetUserTask/JPetUserTask.h"
 
 class JPetWriter;
 
-class JPetSimplePhysSignalReco : public JPetUserTask
+class JPetSimplePhysSignalReco: public JPetUserTask
 {
 public:
   JPetSimplePhysSignalReco();
   virtual ~JPetSimplePhysSignalReco();
-
   virtual bool exec() override;
   inline int getAlpha() const { return fAlpha; }
   inline float getThresholdSel() const { return fThresholdSel; }
@@ -40,7 +39,6 @@ private:
   void savePhysSignal( JPetPhysSignal signal);
   int fAlpha;
   float fThresholdSel;
-
 };
-#endif
 
+#endif /* !_JPETSIMPLEPHYSSIGNALRECO_H_ */

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,31 +16,34 @@
 #ifndef _JPET_STATISTICS_H_
 #define _JPET_STATISTICS_H_
 
+#include "JPetLoggerInclude.h"
 #include <THashTable.h>
 #include <TH1F.h>
 #include <TH2F.h>
 #include <TString.h>
-#include <map>
-#include <TGraph.h>
 #include <TCanvas.h>
+#include <TGraph.h>
+#include <TEfficiency.h>
 #include <string>
-#include "JPetLoggerInclude.h"
+#include <map>
 
 /**
- * @brief An class for storing statistics of the processing (e.g histograms and counters) during execution of a JPetTask
+ * @brief Cointainer class for processing statistics
  *
+ * A class for storing statistics of the processing during the execution of a JPetTask.
+ * Available for storing Graphs, Canvases and 1D, 2D Histograms,
  */
 
 class JPetStatistics: public TObject
 {
-
 public:
-  JPetStatistics() {}
-  JPetStatistics(const JPetStatistics& copy);
+  JPetStatistics();
+  JPetStatistics(const JPetStatistics& old);
   ~JPetStatistics();
   void createHistogram(TObject* object);
   void createGraph(TObject* object);
   void createCanvas(TObject* object);
+  TEfficiency* getEffiHisto(const char* name);
   TH1F* getHisto1D(const char* name);
   TH2F* getHisto2D(const char* name);
   TGraph* getGraph(const char* name);
@@ -60,13 +63,11 @@ public:
   }
 
   const THashTable* getStatsTable() const;
-
-  ClassDef(JPetStatistics, 4);
+  ClassDef(JPetStatistics, 5);
 
 protected:
   THashTable fStats;
   std::map<TString, double> fCounters;
-
 };
 
-#endif
+#endif /* !_JPET_STATISTICS_H_ */

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,32 +13,34 @@
  *  @file JPetUserTask.cpp
  */
 
-#include "./JPetUserTask.h"
 #include "./JPetData/JPetData.h"
+#include "./JPetUserTask.h"
 
-JPetUserTask::JPetUserTask(const char* name):
-  JPetTask(name)
-{
-}
+JPetUserTask::JPetUserTask(const char* name): JPetTask(name) {}
 
-bool JPetUserTask::init(const JPetParamsInterface& inOptions)
+bool JPetUserTask::init(const JPetParams& inOptions)
 {
-  fParams = dynamic_cast<const JPetParams&>(inOptions);
-  return init(); /// virtual function must be defined in the descendent class
+  fParams = inOptions;
+  return init();
 }
 
 bool JPetUserTask::run(const JPetDataInterface& inData)
 {
-  auto event = dynamic_cast<const JPetData&>(inData);
-  setEvent(&(event.getEvent()));
+  clearOutputEvents();
+  try {
+    auto event = dynamic_cast<const JPetData&>(inData);
+    setEvent(&(event.getEvent()));
+  } catch (const std::bad_cast& ex) {
+    WARNING("Input data type is not the expected one in User Task,  No event is set.");
+  }
   return exec();
 }
 
-
-bool JPetUserTask::terminate(JPetParamsInterface& outOptions)
+bool JPetUserTask::terminate(JPetParams& outOptions)
 {
+  bool result = terminate();
   outOptions = fParams;
-  return terminate(); /// virtual function must be defined in the descendent class
+  return result;
 }
 
 const JPetParamBank& JPetUserTask::getParamBank()
@@ -73,4 +75,11 @@ jpet_options_tools::OptsStrAny JPetUserTask::getOptions() const
 JPetTimeWindow* JPetUserTask::getOutputEvents()
 {
   return fOutputEvents;
+}
+
+void JPetUserTask::clearOutputEvents()
+{
+  if (fOutputEvents) {
+    fOutputEvents->Clear();
+  }
 }

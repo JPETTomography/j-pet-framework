@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,12 +13,12 @@
  *  @file JPetParamGetterAscii.cpp
  */
 
-#include "./JPetParamGetterAscii.h"
-#include "./JPetParamAsciiConstants.h"
-#include "./JPetParamBank/JPetParamBank.h"
-#include <boost/filesystem.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include "./JPetParamBank/JPetParamBank.h"
+#include "./JPetParamAsciiConstants.h"
+#include "./JPetParamGetterAscii.h"
+#include <boost/lexical_cast.hpp>
+#include <boost/filesystem.hpp>
 
 ParamObjectsDescriptions JPetParamGetterAscii::getAllBasicData(ParamObjectType type, const int runId)
 {
@@ -43,19 +43,14 @@ ParamObjectsDescriptions JPetParamGetterAscii::getAllBasicData(ParamObjectType t
           }
           result[id] = description;
         }
-      }  else {
-        ERROR(std::string("No ") + objectsName + " in the specified run.");
-      }
-    } else {
-      ERROR(std::string("No run with such id:") + runNumberS);
-    }
-  } else {
-    ERROR(std::string("Input file does not exist:") + filename);
-  }
+      } else { ERROR(std::string("No ") + objectsName + " in the specified run."); }
+    } else { ERROR(std::string("No run with such id:") + runNumberS); }
+  } else { ERROR(std::string("Input file does not exist:") + filename); }
   return result;
 }
 
-ParamRelationalData JPetParamGetterAscii::getAllRelationalData(ParamObjectType type1, ParamObjectType type2, const int runId)
+ParamRelationalData JPetParamGetterAscii::getAllRelationalData(
+  ParamObjectType type1, ParamObjectType type2, const int runId)
 {
   std::string runNumberS = boost::lexical_cast<std::string>(runId);
   std::string objectsName = objectsNames.at(type1);
@@ -82,15 +77,9 @@ ParamRelationalData JPetParamGetterAscii::getAllRelationalData(ParamObjectType t
             result[id] = otherId;
           }
         }
-      }  else {
-        ERROR(std::string("No ") + objectsName + " in the specified run.");
-      }
-    } else {
-      ERROR(std::string("No run with such id:") + runNumberS);
-    }
-  } else {
-    ERROR(std::string("Input file does not exist:") + filename);
-  }
+      } else { ERROR(std::string("No ") + objectsName + " in the specified run."); }
+    } else { ERROR(std::string("No run with such id:") + runNumberS); }
+  } else { ERROR(std::string("Input file does not exist:") + filename); }
   return result;
 }
 
@@ -99,13 +88,8 @@ ParamObjectDescription JPetParamGetterAscii::toDescription(boost::property_tree:
   ParamObjectDescription description;
   for (auto value : info) {
     std::string val = value.second.get_value<std::string>();
-    // Ugly hack since boost::lexical_cast does not understand booleans properly.
-    if (val == "true") {
-      val = "1";
-    }
-    if (val == "false") {
-      val = "0";
-    }
+    if (val == "true") { val = "1"; }
+    if (val == "false") { val = "0"; }
     description[value.first] = val;
   }
   return description;

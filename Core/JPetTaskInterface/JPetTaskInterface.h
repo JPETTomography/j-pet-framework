@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,27 +16,24 @@
 #ifndef JPETTASKINTERFACE_H
 #define JPETTASKINTERFACE_H
 
-#include "./JPetParamsInterface/JPetParamsInterface.h"
+#include "./JPetParams/JPetParams.h"
 #include "./JPetDataInterface/JPetDataInterface.h"
 #include <string>
 #include <memory>
 #include <vector>
 
-
-
 /**
  * @brief Interface class representing a computing task unit.
- *
  */
 class JPetTaskInterface
 {
 public:
   virtual ~JPetTaskInterface() {}
-  virtual bool init(const JPetParamsInterface& inOptions) = 0;
+  virtual bool init(const JPetParams& inOptions) = 0;
   virtual bool run(const JPetDataInterface& inData) = 0;
-  virtual bool terminate(JPetParamsInterface& outOptions) = 0;
+  virtual bool terminate(JPetParams& outOptions) = 0;
   virtual void addSubTask(std::unique_ptr<JPetTaskInterface> subTask) = 0;
   virtual const std::vector<JPetTaskInterface*> getSubTasks() const = 0;
   virtual std::string getName() const = 0;
 };
-#endif /*  !JPETTASKINTERFACE_H */
+#endif /* !JPETTASKINTERFACE_H */

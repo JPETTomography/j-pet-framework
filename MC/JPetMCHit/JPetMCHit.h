@@ -19,35 +19,37 @@
 #include "./JPetHit/JPetHit.h"
 
 /**
- * @brief Data class representing a hit of a photon in the scintillator strip based on Monte Carlo simulation.
- *
+ * @brief Data class representing a hit of a photon in the scintillator strip
+ * based on Monte Carlo simulation.
  */
 class JPetMCHit : public JPetHit
 {
-
 public:
-
   JPetMCHit();
-  JPetMCHit(UInt_t MCDecayTreeIndex, UInt_t MCVtxIndex, float Energy, float Time, const TVector3& Position, const TVector3& Polarization, const TVector3& Momentum);
-
+  JPetMCHit(UInt_t MCDecayTreeIndex, UInt_t MCVtxIndex, float Energy, float Time,
+    const TVector3& Position, const TVector3& Polarization, const TVector3& Momentum);
   UInt_t getMCDecayTreeIndex() const;
   UInt_t getMCVtxIndex() const;
   const TVector3& getPolarization() const;
   const TVector3& getMomentum() const;
-
   void setMCDecayTreeIndex(Int_t dti);
   void setMCVtxIndex(Int_t vi);
   void setPolarization(Int_t xx, Int_t yy, Int_t zz);
   void setMomentum(Float_t dd, Float_t ee, Float_t ff);
 
-private:
+  //  generated cheatsheet
+  void setGenGammaMultiplicity(UInt_t i){fGenGammaMultiplicity=i;} ///< 1-prompt gamma; 2-gamma from back-to-bak; 3-gamma from oPs
+  UInt_t getGenGammaMultiplicity(){return fGenGammaMultiplicity;}
 
+
+private:
   UInt_t fMCDecayTreeIndex = 0u;
   UInt_t fMCVtxIndex = 0u;
-  TVector3 fPolarization; 	// initial polarisation of gamma photon
-  TVector3 fMomentum;     	// initial momentum of gamma photon
+  TVector3 fPolarization;
+  TVector3 fMomentum;
+  UInt_t fGenGammaMultiplicity = 0u; ///< generated gamma cheat sheet: 1- prompt; 2- back-to-back; 3- 3gamma annihilation
 
-  ClassDef(JPetMCHit, 1);
+  ClassDef(JPetMCHit, 2);
 };
 
-#endif
+#endif /* !_JPETMCHIT_H_ */

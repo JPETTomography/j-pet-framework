@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,12 +13,12 @@
  *  @file JPetOptionsTools.cpp
  */
 
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include "./JPetOptionsTools.h"
-#include "./JPetCommonTools/JPetCommonTools.h"
-#include "./JPetLoggerInclude.h"
 #include "./JPetOptionsGenerator/JPetOptionsTypeHandler.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include "./JPetLoggerInclude.h"
+#include "./JPetOptionsTools.h"
 #include <typeinfo>
 
 namespace pt = boost::property_tree;
@@ -30,6 +30,7 @@ namespace jpet_options_tools
 std::map<std::string, FileTypeChecker::FileType> FileTypeChecker::fStringToFileType = {
   {"", kNoType},
   {"root", kRoot},
+  {"mcGeant", kMCGeant},
   {"scope", kScope},
   {"hld", kHld},
   {"hldRoot", kHldRoot},
@@ -108,7 +109,11 @@ bool getOptionAsBool(const OptsStrAny& opts, std::string optionName)
 }
 
 
-
+/**
+ * Specialized getter functions to extract option values with predefined names
+ * This function returns a valid result only if the inputFile option is given
+ * in the untransformed form: std::vector<std::string>
+ */
 std::vector<std::string> getInputFiles(const std::map<std::string, boost::any>& opts)
 {
   std::vector<std::string> dummy;
@@ -119,6 +124,10 @@ std::vector<std::string> getInputFiles(const std::map<std::string, boost::any>& 
   return any_cast<std::vector<std::string>>(opts.at("file_std::vector<std::string>"));
 }
 
+/**
+ * This function returns a valid result only if the inputFile option is given
+ * in the transformed form with _std::string suffix
+ */
 std::string getInputFile(const std::map<std::string, boost::any>& opts)
 {
   return any_cast<std::string>(opts.at("inputFile_std::string"));
@@ -154,6 +163,12 @@ long long getLastEvent(const std::map<std::string, boost::any>& opts)
   return any_cast<int>(opts.at("lastEvent_int"));
 }
 
+/**
+ * It returns the total number of events calculated from the first and the last
+ * event given in the range of events to calculate. If first or last event is
+ * set to -1 then the -1 is returned. If last - first < 0 then -1 is returned.
+ * Otherwise last - first +1 is returned.
+ */
 long long getTotalEvents(const std::map<std::string, boost::any>& opts)
 {
   long long first = getFirstEvent(opts);
@@ -242,6 +257,9 @@ void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine)
   }
 }
 
+/**
+ * Creates json file based on given options.
+ */
 bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile)
 {
   pt::ptree optionsTree;
@@ -256,6 +274,9 @@ bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& o
   return true;
 }
 
+/**
+ * Creates option map based on the content of the json file.
+ */
 std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string& filename)
 {
   pt::ptree optionsTree;

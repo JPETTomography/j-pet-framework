@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -17,10 +17,14 @@
 
 ClassImp(JPetStatistics);
 
-JPetStatistics::JPetStatistics(const JPetStatistics& copy)
+JPetStatistics::JPetStatistics()
 {
-  fStats.AddAll(copy.getStatsTable());
-  fCounters = copy.fCounters;
+  ;
+}
+JPetStatistics::JPetStatistics(const JPetStatistics& old)
+{
+  fStats.AddAll(old.getStatsTable());
+  fCounters = old.fCounters;
 }
 
 JPetStatistics::~JPetStatistics()
@@ -41,6 +45,11 @@ void JPetStatistics::createGraph(TObject* object)
 void JPetStatistics::createCanvas(TObject* object)
 {
   fStats.Add(object);
+}
+
+TEfficiency* JPetStatistics::getEffiHisto(const char* name)
+{
+  return getObject<TEfficiency>(name);
 }
 
 TH1F* JPetStatistics::getHisto1D(const char* name)

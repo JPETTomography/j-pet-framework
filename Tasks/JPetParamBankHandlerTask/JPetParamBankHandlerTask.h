@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2017 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,29 +16,29 @@
 #ifndef JPETPARAMBANKHANDLERTASK_H
 #define JPETPARAMBANKHANDLERTASK_H
 
-#include "./JPetTask/JPetTask.h"
-#include "./JPetParams/JPetParams.h"
 #include "./JPetParamGetterAscii/JPetParamSaverAscii.h"
+#include "./JPetParams/JPetParams.h"
+#include "./JPetTask/JPetTask.h"
 
 /**
- * @brief class that reads param manager and fill param bank, also if needed saves param bank to ascii file
- * methods:
- * init: inOptions - options with param manager, returns true if param bank readed correctly, false otherwise
- * run: always return true
- * terminate: always return true
+ * @brief Reading params and filling ParamBank
+ *
+ * Extension of JPetTask (with init(), run() and terminate() methods) for
+ * reading the parameters from options and filling the Paramere Bank.
+ * Init() method returns false if readout is successful. It is possible
+ * to save parameters to ASCII file.
  */
-
 class JPetParamBankHandlerTask : public JPetTask
 {
 public:
   explicit JPetParamBankHandlerTask(const char* name = "");
-  bool init(const JPetParamsInterface& inOptions) override;
+  bool init(const JPetParams& inOptions) override;
   bool run(const JPetDataInterface&) override;
-  bool terminate(JPetParamsInterface&) override;
+  bool terminate(JPetParams&) override;
 
 private:
   bool generateParamBankFromConfig(const JPetParams& params);
   bool generateParamBankFromRootFile(const JPetParams& params);
 };
 
-#endif /*  !JPETPARAMBANKHANDLERTASK_H */
+#endif /* !JPETPARAMBANKHANDLERTASK_H */

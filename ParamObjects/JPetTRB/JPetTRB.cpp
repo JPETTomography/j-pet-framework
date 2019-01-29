@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -22,45 +22,43 @@ JPetTRB::JPetTRB()
   SetName("JPetTRB");
 }
 
-JPetTRB::JPetTRB(int id) : fID(id)
+JPetTRB::JPetTRB(int id): fID(id)
 {
   SetName("JPetTRB");
 }
 
-JPetTRB::JPetTRB(int id, int type, int ch):
-  fID(id),
-  fType(type),
-  fChannel(ch)
+JPetTRB::JPetTRB(int id, int type, int ch): fID(id), fType(type), fChannel(ch)
 {
   SetName("JPetTRB");
 }
 
-JPetTRB::JPetTRB(bool isNull):
-  fIsNullObject(isNull)
+JPetTRB::JPetTRB(bool isNull): fIsNullObject(isNull)
 {
   SetName("JPetTRB");
 }
 
-JPetTRB::~JPetTRB()
-{
-}
+JPetTRB::~JPetTRB(){}
 
 int JPetTRB::getID() const
 {
   return fID;
 }
+
 int JPetTRB::getType() const
 {
   return fType;
 }
+
 int JPetTRB::getChannel() const
 {
   return fChannel;
 }
+
 void JPetTRB::setType(int type)
 {
   fType = type;
 }
+
 void JPetTRB::setChannel(int ch)
 {
   fChannel = ch;
@@ -70,6 +68,7 @@ bool JPetTRB::operator==(const JPetTRB& trb) const
 {
   return getID() == trb.getID();
 }
+
 bool JPetTRB::operator!=(const JPetTRB& trb) const
 {
   return getID() != trb.getID();

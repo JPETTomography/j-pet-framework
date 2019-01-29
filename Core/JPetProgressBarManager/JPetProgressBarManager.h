@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,14 +16,15 @@
 #ifndef JPETPROGRESSBARMANAGER_H
 #define JPETPROGRESSBARMANAGER_H
 
+#include <string>
+
 /**
  * @brief Class managing the progress bar used in while processing events.
- *
  */
 class JPetProgressBarManager
 {
 public:
-  void display(long long currentEventNumber, long long numberOfEvents) const;
+  void display(const std::string& taskName, long long currentEventNumber, long long numberOfEvents) const;
   float getCurrentValue(int currentEventNumber, int numberOfEvents) const;
 };
-#endif /*  !JPETPROGRESSBARMANAGER_H */
+#endif /* !JPETPROGRESSBARMANAGER_H */

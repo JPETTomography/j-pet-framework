@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -11,7 +11,6 @@
  *  limitations under the License.
  *
  *  @file JPetHitUtils.cpp
- *  @brief Helper class to calculate properties of JPetHit objects.
  */
 
 #include "JPetHitUtils.h"
@@ -20,34 +19,23 @@
 const double JPetHitUtils::Unset = -std::numeric_limits<double>::infinity();
 
 double JPetHitUtils::getTimeDiffAtThr(const JPetHit& hit, int thr){
-  
   std::map<int,double> lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal()
     .getTimesVsThresholdNumber(JPetSigCh::Leading);
   std::map<int,double> lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal()
     .getTimesVsThresholdNumber(JPetSigCh::Leading);
-  
-  // it there was TDC signal at this threshold on leading edge at both sides
-  if( lead_times_B.count(thr) > 0 && lead_times_A.count(thr) > 0 ){
+  if(lead_times_B.count(thr) > 0 && lead_times_A.count(thr) > 0) {
     return lead_times_A[thr] - lead_times_B[thr];
   }
   return Unset;
-
 }
 
-double JPetHitUtils::getTimeAtThr(const JPetHit& hit, int thr){
-  
+double JPetHitUtils::getTimeAtThr(const JPetHit& hit, int thr) {
   std::map<int,double> lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal()
     .getTimesVsThresholdNumber(JPetSigCh::Leading);
   std::map<int,double> lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal()
     .getTimesVsThresholdNumber(JPetSigCh::Leading);
-  
-  // it there was TDC signal at this threshold on leading edge at both sides
-  if( lead_times_B.count(thr) > 0 && lead_times_A.count(thr) > 0 ){
+  if(lead_times_B.count(thr) > 0 && lead_times_A.count(thr) > 0) {
     return 0.5 * (lead_times_A[thr] + lead_times_B[thr]);
   }
   return Unset;
-  
 }
-
-
-

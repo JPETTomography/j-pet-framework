@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,41 +16,30 @@
 #include "JPetScin.h"
 #include <cassert>
 
-
 ClassImp(JPetScin);
 
-JPetScin::JPetScin() :
-  fScinSize(0., 0., 0.)
+JPetScin::JPetScin(): fScinSize(0., 0., 0.)
 {
-  /* */
   SetName("JPetScin");
 }
 
-JPetScin::JPetScin(int id) : fID(id),
-  fScinSize(0., 0., 0.)
+JPetScin::JPetScin(int id): fID(id), fScinSize(0., 0., 0.)
 {
   SetName("JPetScin");
 }
 
 JPetScin::JPetScin(int id, float attenLen, float length, float height, float width):
-  fID(id),
-  fAttenLen(attenLen),
-  fScinSize(length, height, width)
-{
-  /* */
-  SetName("JPetScin");
-}
-
-JPetScin::JPetScin(bool isNull) :
-  fScinSize(0., 0., 0.),
-  fIsNullObject(isNull)
+  fID(id), fAttenLen(attenLen), fScinSize(length, height, width)
 {
   SetName("JPetScin");
 }
 
-JPetScin::~JPetScin()
+JPetScin::JPetScin(bool isNull): fScinSize(0., 0., 0.), fIsNullObject(isNull)
 {
+  SetName("JPetScin");
 }
+
+JPetScin::~JPetScin(){}
 
 float JPetScin::getScinSize(JPetScin::Dimension dim) const
 {
@@ -113,15 +102,19 @@ JPetScin::ScinDimensions JPetScin::getScinSize() const
 {
   return fScinSize;
 }
+
 float JPetScin::getScinSize(Dimension dim) const;
+
 void JPetScin::setAttenLen(float attenLen)
 {
   fAttenLen = attenLen;
 }
+
 void JPetScin::setScinSize(ScinDimensions size)
 {
   fScinSize = size;
 }
+
 void JPetScin::setScinSize(Dimension dim, float value);
 
 void JPetScin::setBarrelSlot(JPetBarrelSlot& p_barrelSlot)
