@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE( default_c )
   std::cout << "ConverterMC test" << std::endl;
   TString root_file = "unitTestData/JPetGATEConverterTest/output_192str_3lay_L050.root"; 
   std::string json_file = "unitTestData/JPetGATEConverterTest/detectorSetupRun2345.json"; 
-  int run_id = 2; 
+  int run_id = 2;		 
   JPetGATEConverter conv(json_file,run_id);                    
   BOOST_REQUIRE_EQUAL(conv.converterJPetMCHit(root_file),true);  				
 }

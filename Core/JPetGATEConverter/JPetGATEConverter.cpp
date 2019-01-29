@@ -54,14 +54,17 @@ bool JPetGATEConverter::checkSimulationType(const TString& inputFile)
   if(t_test != NULL)
   {
     finputType = kFirstGate;
+    delete f;
     return true;
   }
   t_test = (TTree*)f->Get(fTreeName[1].c_str()); 
   if(t_test != NULL)
   {
     finputType = kSecondGate;
+    delete f;
     return true;
-  }	                                                    
+  }
+  delete f;	                                                    
   return false; 	
 }
 
@@ -115,7 +118,7 @@ bool JPetGATEConverter::converterJPetHit(const TString& inputFile)
      hit.setPos(x,y,z);
      hit.setTime(u);
      hit.setEnergy(r);  
-   //  hit.setPosAlongStrip(s);
+   
 
     //a) volumeID variable is a 10 elements int table. For our purpose, to get index of the strip, we use only second element of the table[1] 
   //b) the number of strip ID in framework is given as the strip Id defined in gate + 1
@@ -148,16 +151,16 @@ bool JPetGATEConverter::converterJPetMCHit(const TString& inputFile)
   const JPetParamBank& bank = fManager.getParamBank(); 
   JPetMCHit MChit;
   if (bank.isDummy()) { 
-  ERROR("Param bank is not correct, we cannot convert JPetMCHit.");
-  return false;    
-	}   
+  	ERROR("Param bank is not correct, we cannot convert JPetMCHit.");
+  	return false;    
+  }   
   if (checkArgument(inputFile)==false) { 
-   ERROR("argument is incorrect");
-   return false;
+   	ERROR("argument is incorrect");
+   	return false;
    }                                          
   if (checkSimulationType(inputFile)== false) { 
-  ERROR("File Type is incorrect");
-  return false;                                
+  	ERROR("File Type is incorrect");
+  	return false;                                
   }
    
   finputFile = inputFile;                     				
