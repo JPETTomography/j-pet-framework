@@ -37,11 +37,11 @@ OptsStrAny resetEventRange(const OptsStrAny& srcOpts);
 OptsStrAny addTypeSuffixes(const OptsStrAny& oldMap);
 OptsStrAny getDefaultOptions();
 void addTransformFunction(TransformersMap& oldMap,  const std::string& name,
-  jpet_options_tools::Transformer transformFunction);
+                          jpet_options_tools::Transformer transformFunction);
 void addNewOptionsFromCfgFile(const std::string& cfgFile, OptsStrAny& options);
-void setOutputFileType(OptsStrAny& options, const std::string& fileType);
+void setOutputFileType(OptsStrAny& options, const std::string fileType);
 void setResetEventRangeOption(OptsStrAny& options, bool isReset);
-void setOutputFile(OptsStrAny& options, const std::string& file);
-void setOutputPath(OptsStrAny& options, const std::string& path);
+void setOutputFile(OptsStrAny& options, const std::string file);
+void setOutputPath(OptsStrAny& options, const std::string path);
 };
 #endif /* !JPETOPTIONSGENERATORTOOLS_H */
