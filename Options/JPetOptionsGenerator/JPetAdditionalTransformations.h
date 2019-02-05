@@ -14,7 +14,8 @@
  */
 
 #include <boost/any.hpp>
+#include <string>
 
 using boost::any_cast;
 
-std::pair <std::string, boost::any> setAdditionalRunIdInTheMap(boost::any option);
+std::pair<std::string, boost::any> setAdditionalRunIdInTheMap(boost::any option);
