@@ -108,7 +108,7 @@ private:
 };
 
 /// Option name used to stop the task iteration loop.
-const std::string kStopIterationOptionName = "stopIteration_bool";
+const std::string kStopIterationOptionName = "StopIteration_bool";
 
 /// Set of helper factory functions used by the JPetTaskFactory methods
 
