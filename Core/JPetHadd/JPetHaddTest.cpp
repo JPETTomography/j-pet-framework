@@ -69,9 +69,9 @@ BOOST_AUTO_TEST_CASE(hadd_test) {
   const auto firstParamBank = readerFirstFile.getObjectFromFile("ParamBank");
   const auto secondParamBank = readerSecondFile.getObjectFromFile("ParamBank");
   const auto haddedParamBank = readerHaddedFile.getObjectFromFile("ParamBank");
-  BOOST_CHECK_PREDICATE(std::not_equal_to<size_t>(), (firstParamBank)(0));
-  BOOST_CHECK_PREDICATE(std::not_equal_to<size_t>(), (secondParamBank)(0));
-  BOOST_CHECK_PREDICATE(std::not_equal_to<size_t>(), (haddedParamBank)(0));
+  BOOST_CHECK(firstParamBank);
+  BOOST_CHECK(secondParamBank);
+  BOOST_CHECK(haddedParamBank);
 
   long long firstFileNumberOfEntries = readerFirstFile.getNbOfAllEntries();
   long long secondFileNumberOfEntries = readerSecondFile.getNbOfAllEntries();
