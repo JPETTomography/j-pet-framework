@@ -28,8 +28,7 @@
 
 BOOST_AUTO_TEST_SUITE(JPetHaddTestSuite)
 
-std::string exec(std::string cmd)
-{
+std::string exec(std::string cmd) {
   char buffer[128];
   std::string result = "";
   FILE* pipe = popen(cmd.c_str(), "r");
@@ -48,57 +47,63 @@ std::string exec(std::string cmd)
   return result;
 }
 
-BOOST_AUTO_TEST_CASE(hadd_test)
-{
-  std::string resultFileName = "";
+BOOST_AUTO_TEST_CASE(hadd_test) {
+  std::string haddedFileName = "";
   std::string firstFileName = "unitTestData/JPetHaddTest/single_link_def/dabc_17237091818.hadd.test.root";
   std::string secondFileName = "unitTestData/JPetHaddTest/single_link_def/dabc_17237093844.hadd.test.root";
 #if ROOT_VERSION_CODE < ROOT_VERSION(6, 0, 0)
-  resultFileName = "unitTestData/JPetHaddTest/result_root5.hadd.test.root";
+  haddedFileName = "unitTestData/JPetHaddTest/hadded_root5.hadd.test.root";
 #else
-  resultFileName = "unitTestData/JPetHaddTest/result_root6.hadd.test.root";
+  haddedFileName = "unitTestData/JPetHaddTest/hadded_root6.hadd.test.root";
 #endif
-  exec("hadd -f " + resultFileName + " " + firstFileName + " " + secondFileName);
+  exec("hadd -f " + haddedFileName + " " + firstFileName + " " + secondFileName);
   JPetReader readerFirstFile(firstFileName.c_str());
   JPetReader readerSecondFile(secondFileName.c_str());
-  JPetReader readerResultFile(resultFileName.c_str());
+  JPetReader readerHaddedFile(haddedFileName.c_str());
   BOOST_REQUIRE(readerFirstFile.isOpen());
   BOOST_REQUIRE(readerSecondFile.isOpen());
-  BOOST_REQUIRE(readerResultFile.isOpen());
+  BOOST_REQUIRE(readerHaddedFile.isOpen());
   BOOST_REQUIRE_EQUAL(std::string(readerFirstFile.getCurrentEntry().GetName()), std::string("JPetTimeWindow"));
   BOOST_REQUIRE_EQUAL(std::string(readerSecondFile.getCurrentEntry().GetName()), std::string("JPetTimeWindow"));
-  BOOST_REQUIRE_EQUAL(std::string(readerResultFile.getCurrentEntry().GetName()), std::string("JPetTimeWindow"));
+  BOOST_REQUIRE_EQUAL(std::string(readerHaddedFile.getCurrentEntry().GetName()), std::string("JPetTimeWindow"));
+  const auto firstParamBank = readerFirstFile.getObjectFromFile("ParamBank");
+  const auto secondParamBank = readerSecondFile.getObjectFromFile("ParamBank");
+  const auto haddedParamBank = readerHaddedFile.getObjectFromFile("ParamBank");
+  BOOST_CHECK_PREDICATE(std::not_equal_to<size_t>(), (firstParamBank)(0));
+  BOOST_CHECK_PREDICATE(std::not_equal_to<size_t>(), (secondParamBank)(0));
+  BOOST_CHECK_PREDICATE(std::not_equal_to<size_t>(), (haddedParamBank)(0));
+
   long long firstFileNumberOfEntries = readerFirstFile.getNbOfAllEntries();
   long long secondFileNumberOfEntries = readerSecondFile.getNbOfAllEntries();
-  long long resultFileNumberOfEntires = readerResultFile.getNbOfAllEntries();
-  BOOST_REQUIRE_EQUAL(resultFileNumberOfEntires, firstFileNumberOfEntries + secondFileNumberOfEntries);
-  for (long long i = 0; i < resultFileNumberOfEntires; i++) {
-    const auto& timeWindow = static_cast<const JPetTimeWindow&>(readerResultFile.getCurrentEntry());
-    const auto& secondTimeWindow = i < firstFileNumberOfEntries ? static_cast<const JPetTimeWindow&>(readerFirstFile.getCurrentEntry())
-                                   : static_cast<const JPetTimeWindow&>(readerSecondFile.getCurrentEntry());
-    BOOST_REQUIRE_EQUAL(timeWindow.getNumberOfEvents(), secondTimeWindow.getNumberOfEvents());
-    BOOST_CHECK_PREDICATE(std::not_equal_to<size_t>(), (timeWindow.getNumberOfEvents())(0));
-    for (size_t i = 0; i < timeWindow.getNumberOfEvents(); i++) {
-      const auto& event = static_cast<const JPetEvent&>(timeWindow[i]);
-      const auto& secondEvent = static_cast<const JPetEvent&>(secondTimeWindow[i]);
-      const auto& hits = event.getHits();
-      const auto& secondHits = secondEvent.getHits();
-      BOOST_REQUIRE_EQUAL(hits.size(), secondHits.size());
-      for (unsigned int i = 0; i < hits.size(); i++) {
-        BOOST_REQUIRE_EQUAL(hits[i].getPosX(), secondHits[i].getPosX());
-        BOOST_REQUIRE_EQUAL(hits[i].getPosY(), secondHits[i].getPosY());
-        BOOST_REQUIRE_EQUAL(hits[i].getPosZ(), secondHits[i].getPosZ());
-        BOOST_REQUIRE_EQUAL(hits[i].getEnergy(), secondHits[i].getEnergy());
-        BOOST_REQUIRE_EQUAL(hits[i].getQualityOfEnergy(), secondHits[i].getQualityOfEnergy());
-        BOOST_REQUIRE_EQUAL(hits[i].getTime(), secondHits[i].getTime());
-        BOOST_REQUIRE_EQUAL(hits[i].getTimeDiff(), secondHits[i].getTimeDiff());
-        BOOST_REQUIRE_EQUAL(hits[i].getQualityOfTime(), secondHits[i].getQualityOfTime());
-        BOOST_REQUIRE_EQUAL(hits[i].getQualityOfTimeDiff(), secondHits[i].getQualityOfTimeDiff());
-        BOOST_REQUIRE(hits[i].getScintillator() == secondHits[i].getScintillator());
-        BOOST_REQUIRE(hits[i].getBarrelSlot() == secondHits[i].getBarrelSlot());
+  long long haddedFileNumberOfEntries = readerHaddedFile.getNbOfAllEntries();
+  BOOST_REQUIRE_EQUAL(haddedFileNumberOfEntries, firstFileNumberOfEntries + secondFileNumberOfEntries);
+  for (long long i = 0; i < haddedFileNumberOfEntries; i++) {
+    const auto& haddedTimeWindow = static_cast<const JPetTimeWindow&>(readerHaddedFile.getCurrentEntry());
+    const auto& compareTimeWindow = i < firstFileNumberOfEntries ? static_cast<const JPetTimeWindow&>(readerFirstFile.getCurrentEntry())
+                                                                 : static_cast<const JPetTimeWindow&>(readerSecondFile.getCurrentEntry());
+    BOOST_REQUIRE_EQUAL(haddedTimeWindow.getNumberOfEvents(), compareTimeWindow.getNumberOfEvents());
+    BOOST_CHECK_PREDICATE(std::not_equal_to<size_t>(), (haddedTimeWindow.getNumberOfEvents())(0));
+    for (size_t i = 0; i < haddedTimeWindow.getNumberOfEvents(); i++) {
+      const auto& haddedEvent = static_cast<const JPetEvent&>(haddedTimeWindow[i]);
+      const auto& compareEvent = static_cast<const JPetEvent&>(compareTimeWindow[i]);
+      const auto& haddedHits = haddedEvent.getHits();
+      const auto& compareHits = compareEvent.getHits();
+      BOOST_REQUIRE_EQUAL(haddedHits.size(), compareHits.size());
+      for (unsigned int i = 0; i < haddedHits.size(); i++) {
+        BOOST_REQUIRE_EQUAL(haddedHits[i].getPosX(), compareHits[i].getPosX());
+        BOOST_REQUIRE_EQUAL(haddedHits[i].getPosY(), compareHits[i].getPosY());
+        BOOST_REQUIRE_EQUAL(haddedHits[i].getPosZ(), compareHits[i].getPosZ());
+        BOOST_REQUIRE_EQUAL(haddedHits[i].getEnergy(), compareHits[i].getEnergy());
+        BOOST_REQUIRE_EQUAL(haddedHits[i].getQualityOfEnergy(), compareHits[i].getQualityOfEnergy());
+        BOOST_REQUIRE_EQUAL(haddedHits[i].getTime(), compareHits[i].getTime());
+        BOOST_REQUIRE_EQUAL(haddedHits[i].getTimeDiff(), compareHits[i].getTimeDiff());
+        BOOST_REQUIRE_EQUAL(haddedHits[i].getQualityOfTime(), compareHits[i].getQualityOfTime());
+        BOOST_REQUIRE_EQUAL(haddedHits[i].getQualityOfTimeDiff(), compareHits[i].getQualityOfTimeDiff());
+        BOOST_REQUIRE(haddedHits[i].getScintillator() == compareHits[i].getScintillator());
+        BOOST_REQUIRE(haddedHits[i].getBarrelSlot() == compareHits[i].getBarrelSlot());
       }
     }
-    readerResultFile.nextEntry();
+    readerHaddedFile.nextEntry();
     if (i < firstFileNumberOfEntries)
       readerFirstFile.nextEntry();
     else
