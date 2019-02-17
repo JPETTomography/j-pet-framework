@@ -47,7 +47,7 @@ std::string exec(std::string cmd) {
   return result;
 }
 
-BOOST_AUTO_TEST_CASE(hadd_test) {
+BOOST_AUTO_TEST_CASE(check_same_data) {
   std::string haddedFileName = "";
   std::string firstFileName = "unitTestData/JPetHaddTest/single_link_def/dabc_17237091818.hadd.test.root";
   std::string secondFileName = "unitTestData/JPetHaddTest/single_link_def/dabc_17237093844.hadd.test.root";
@@ -109,6 +109,42 @@ BOOST_AUTO_TEST_CASE(hadd_test) {
     else
       readerSecondFile.nextEntry();
   }
+  delete firstParamBank;
+  delete secondParamBank;
+  delete haddedParamBank;
+}
+
+BOOST_AUTO_TEST_CASE(check_param_bank) {
+  std::string haddedFileName = "";
+  std::string firstFileName = "unitTestData/JPetHaddTest/single_link_def/dabc_17237091818.hadd.test.root";
+  std::string secondFileName = "unitTestData/JPetHaddTest/single_link_def/dabc_17237093844.hadd.test.root";
+#if ROOT_VERSION_CODE < ROOT_VERSION(6, 0, 0)
+  haddedFileName = "unitTestData/JPetHaddTest/hadded_parambank_root5.hadd.test.root";
+#else
+  haddedFileName = "unitTestData/JPetHaddTest/hadded_parambank_root6.hadd.test.root";
+#endif
+  exec("hadd -f " + haddedFileName + " " + firstFileName + " " + secondFileName);
+  JPetReader readerHaddedFile(haddedFileName.c_str());
+  BOOST_REQUIRE(readerHaddedFile.isOpen());
+  BOOST_REQUIRE_EQUAL(std::string(readerHaddedFile.getCurrentEntry().GetName()), std::string("JPetTimeWindow"));
+  const auto haddedParamBank = readerHaddedFile.getObjectFromFile("ParamBank");
+  BOOST_CHECK(haddedParamBank);
+
+  long long haddedFileNumberOfEntries = readerHaddedFile.getNbOfAllEntries();
+  for (long long i = 0; i < haddedFileNumberOfEntries; i++) {
+    const auto& haddedTimeWindow = static_cast<const JPetTimeWindow&>(readerHaddedFile.getCurrentEntry());
+
+    BOOST_CHECK_PREDICATE(std::not_equal_to<size_t>(), (haddedTimeWindow.getNumberOfEvents())(0));
+    for (size_t i = 0; i < haddedTimeWindow.getNumberOfEvents(); i++) {
+      const auto& haddedEvent = static_cast<const JPetEvent&>(haddedTimeWindow[i]);
+      const auto& haddedHits = haddedEvent.getHits();
+      for (unsigned int i = 0; i < haddedHits.size(); i++) {
+        BOOST_CHECK_PREDICATE(std::not_equal_to<size_t>(), (haddedHits[i].getScintillator().getID())(0));
+      }
+    }
+    readerHaddedFile.nextEntry();
+  }
+  delete haddedParamBank;
 }
 
 BOOST_AUTO_TEST_SUITE_END()
