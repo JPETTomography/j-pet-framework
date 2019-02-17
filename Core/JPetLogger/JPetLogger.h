@@ -36,22 +36,29 @@
  * Don't use directly, rather by including JPetLoggerInclude.h
  * and using macros from there. It is wrapper for Boost.Log
  * that is multithread safe and implements own formatter.
-*/
+ */
 
 class JPetLogger {
 public:
 #ifndef __CINT__
 
-  boost::log::sources::severity_logger<boost::log::trivial::severity_level>& getSeverity();
+  static boost::log::sources::severity_logger<boost::log::trivial::severity_level>& getSeverity() {
+    static boost::log::sources::severity_logger<boost::log::trivial::severity_level> sev;
+    return sev;
+  }
 
   static void formatter(boost::log::record_view const& rec, boost::log::formatting_ostream& out_stream);
 
-  void setLogLevel(boost::log::trivial::severity_level level);
+  static void setLogLevel(boost::log::trivial::severity_level level) {
+    JPetLogger::getInstance().sink->set_filter(boost::log::trivial::severity >= level);
+  }
 
   static JPetLogger& getInstance() {
     static JPetLogger logger;
     return logger;
   }
+
+  static void setThreadsEnabled(bool value) { JPetLogger::getInstance().isThreadsEnabled = value; }
 #else
   void getSeverity();
   void formatter();
@@ -65,10 +72,12 @@ private:
 
 #ifndef __CINT__
 
+  void init();
+
   typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_file_backend> sink_t;
   boost::shared_ptr<sink_t> sink;
 
-  void init();
+  bool isThreadsEnabled = false;
 #endif
 };
 

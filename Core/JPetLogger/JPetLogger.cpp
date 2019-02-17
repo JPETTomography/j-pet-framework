@@ -14,15 +14,10 @@
  */
 
 #include "./JPetLogger.h"
-#include "JPetManager/JPetManager.h"
 
-JPetLogger::JPetLogger()
-{
-  init();
-}
+JPetLogger::JPetLogger() { init(); }
 
-void JPetLogger::init()
-{
+void JPetLogger::init() {
   sink = boost::make_shared<sink_t>(boost::log::keywords::file_name = "JPet_%Y-%m-%d_%H-%M-%S.%N.log", boost::log::keywords::auto_flush = true);
   sink->set_formatter(&JPetLogger::formatter);
   boost::log::core::get()->add_sink(sink);
@@ -30,27 +25,15 @@ void JPetLogger::init()
   boost::log::core::get()->set_filter(boost::log::trivial::severity >= boost::log::trivial::info);
 }
 
-void JPetLogger::setLogLevel(boost::log::trivial::severity_level level)
-{
-  sink->set_filter(boost::log::trivial::severity >= level);
-}
-
-void JPetLogger::formatter(boost::log::record_view const& rec, boost::log::formatting_ostream& out_stream)
-{
+void JPetLogger::formatter(boost::log::record_view const& rec, boost::log::formatting_ostream& out_stream) {
   boost::log::value_ref<std::string> fullpath = boost::log::extract<std::string>("File", rec);
   boost::log::value_ref<std::string> fullfunction = boost::log::extract<std::string>("Function", rec);
   out_stream << boost::log::extract<unsigned int>("LineID", rec) << ": ";
   out_stream << "<" << rec[boost::log::trivial::severity] << "> ";
   out_stream << rec[boost::log::expressions::smessage];
-  out_stream << "[" << boost::filesystem::path(fullpath.get()).filename().string() << ":";
+  out_stream << " [" << boost::filesystem::path(fullpath.get()).filename().string() << ":";
   out_stream << fullfunction << "@";
   out_stream << boost::log::extract<int>("Line", rec) << "]";
-  if (JPetManager::getManager().areThreadsEnabled())
+  if (JPetLogger::getInstance().isThreadsEnabled)
     out_stream << " ThreadID: " << boost::log::extract<boost::log::attributes::current_thread_id::value_type>("ThreadID", rec) << " ";
-}
-
-boost::log::sources::severity_logger<boost::log::trivial::severity_level>& JPetLogger::getSeverity()
-{
-  static boost::log::sources::severity_logger<boost::log::trivial::severity_level> sev;
-  return sev;
 }
