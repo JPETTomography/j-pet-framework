@@ -43,6 +43,11 @@ public:
 #ifndef __CINT__
 
   static boost::log::sources::severity_logger<boost::log::trivial::severity_level>& getSeverity() {
+    static bool isInitialized = false;
+    if (!isInitialized) {
+      JPetLogger::getInstance(); // if JPetLogger is not initialized, get instance to call constructor
+      isInitialized = true;
+    }
     static boost::log::sources::severity_logger<boost::log::trivial::severity_level> sev;
     return sev;
   }
@@ -71,7 +76,6 @@ private:
   JPetLogger& operator=(const JPetLogger&);
 
 #ifndef __CINT__
-
   void init();
 
   typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_file_backend> sink_t;
