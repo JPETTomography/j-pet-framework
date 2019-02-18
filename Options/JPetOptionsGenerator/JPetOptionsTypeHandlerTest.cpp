@@ -22,18 +22,16 @@
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-BOOST_AUTO_TEST_CASE(getTypeOfOption)
-{
-  BOOST_REQUIRE_EQUAL(JPetOptionsTypeHandler::getTypeOfOption(""), "default");
-  BOOST_REQUIRE_EQUAL(JPetOptionsTypeHandler::getTypeOfOption("blabla"), "default");
+BOOST_AUTO_TEST_CASE(getTypeOfOption) {
+  BOOST_REQUIRE_EQUAL(JPetOptionsTypeHandler::getTypeOfOption(""), "noType");
+  BOOST_REQUIRE_EQUAL(JPetOptionsTypeHandler::getTypeOfOption("blabla"), "noType");
   BOOST_REQUIRE_EQUAL(JPetOptionsTypeHandler::getTypeOfOption("blabla_int"), "int");
   BOOST_REQUIRE_EQUAL(JPetOptionsTypeHandler::getTypeOfOption("blwblw_std::string"), "std::string");
   BOOST_REQUIRE_EQUAL(JPetOptionsTypeHandler::getTypeOfOption("bla_bla_int"), "int");
   BOOST_REQUIRE_EQUAL(JPetOptionsTypeHandler::getTypeOfOption("_int"), "int");
 }
 
-BOOST_AUTO_TEST_CASE(getNameOfOption)
-{
+BOOST_AUTO_TEST_CASE(getNameOfOption) {
   BOOST_REQUIRE_EQUAL(JPetOptionsTypeHandler::getNameOfOption(""), "");
   BOOST_REQUIRE_EQUAL(JPetOptionsTypeHandler::getNameOfOption("blabla"), "blabla");
   BOOST_REQUIRE_EQUAL(JPetOptionsTypeHandler::getNameOfOption("blabla_int"), "blabla");

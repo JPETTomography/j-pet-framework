@@ -31,9 +31,9 @@ std::map<std::string, FileTypeChecker::FileType> FileTypeChecker::fStringToFileT
 
 bool isOptionSet(const OptsStrAny& opts, const std::string& optionName) { return static_cast<bool>(opts.count(optionName)); }
 
-boost::any getOptionValue(const OptsStrAny& opts, std::string optionName) { return opts.at(optionName); }
+boost::any getOptionValue(const OptsStrAny& opts, const std::string& optionName) { return opts.at(optionName); }
 
-std::string getOptionAsString(const OptsStrAny& opts, std::string optionName) {
+std::string getOptionAsString(const OptsStrAny& opts, const std::string& optionName) {
   try {
     return any_cast<std::string>(getOptionValue(opts, optionName));
   } catch (const std::exception& excep) {
@@ -42,7 +42,7 @@ std::string getOptionAsString(const OptsStrAny& opts, std::string optionName) {
   }
 }
 
-int getOptionAsInt(const OptsStrAny& opts, std::string optionName) {
+int getOptionAsInt(const OptsStrAny& opts, const std::string& optionName) {
   try {
     return any_cast<int>(getOptionValue(opts, optionName));
   } catch (const std::exception& excep) {
@@ -51,7 +51,7 @@ int getOptionAsInt(const OptsStrAny& opts, std::string optionName) {
   }
 }
 
-float getOptionAsFloat(const OptsStrAny& opts, std::string optionName) {
+float getOptionAsFloat(const OptsStrAny& opts, const std::string& optionName) {
   try {
     return any_cast<float>(getOptionValue(opts, optionName));
   } catch (const std::exception& excep) {
@@ -60,7 +60,7 @@ float getOptionAsFloat(const OptsStrAny& opts, std::string optionName) {
   }
 }
 
-double getOptionAsDouble(const OptsStrAny& opts, std::string optionName) {
+double getOptionAsDouble(const OptsStrAny& opts, const std::string& optionName) {
   try {
     return any_cast<double>(getOptionValue(opts, optionName));
   } catch (const std::exception& excep) {

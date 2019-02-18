@@ -18,8 +18,8 @@
 
 #include "./JPetOptionsTools/JPetOptionsTransformators.h"
 #include <boost/any.hpp>
-#include <vector>
 #include <map>
+#include <vector>
 
 /**
  * @brief Set of helper methods to operate on options.
@@ -27,18 +27,17 @@
  * Options are represented as:
  * std::map<std::string, boost::any> a.k.a. OptsStrAny
  */
-namespace jpet_options_tools
-{
+namespace jpet_options_tools {
 using OptsStrAny = std::map<std::string, boost::any>;
 using OptsStrStr = std::map<std::string, std::string>;
 bool isOptionSet(const OptsStrAny& opts, const std::string& optionName);
-boost::any getOptionValue(const OptsStrAny& opts, std::string optionName);
-std::string getOptionAsString(const OptsStrAny& opts, std::string optionName);
-int getOptionAsInt(const OptsStrAny& opts, std::string optionName);
-float getOptionAsFloat(const OptsStrAny& opts, std::string optionName);
-double getOptionAsDouble(const OptsStrAny& opts, std::string optionName);
-std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, std::string optionName);
-bool getOptionAsBool(const OptsStrAny& opts, std::string optionName);
+boost::any getOptionValue(const OptsStrAny& opts, const std::string& optionName);
+std::string getOptionAsString(const OptsStrAny& opts, const std::string& optionName);
+int getOptionAsInt(const OptsStrAny& opts, const std::string& optionName);
+float getOptionAsFloat(const OptsStrAny& opts, const std::string& optionName);
+double getOptionAsDouble(const OptsStrAny& opts, const std::string& optionName);
+std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, const std::string& optionName);
+bool getOptionAsBool(const OptsStrAny& opts, const std::string& optionName);
 std::vector<std::string> getInputFiles(const OptsStrAny& opts);
 std::string getInputFile(const OptsStrAny& opts);
 std::string getScopeConfigFile(const OptsStrAny& opts);
@@ -62,12 +61,9 @@ void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine);
 bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile = "");
 OptsStrAny createOptionsFromConfigFile(const std::string& inFile);
 
-class FileTypeChecker
-{
+class FileTypeChecker {
 public:
-  enum FileType {
-    kNoType, kRoot, kScope, kHld, kHldRoot, kZip, kMCGeant, kUndefinedFileType
-  };
+  enum FileType { kNoType, kRoot, kScope, kHld, kHldRoot, kZip, kMCGeant, kUndefinedFileType };
   static FileType getInputFileType(const OptsStrAny& opts);
   static FileType getOutputFileType(const OptsStrAny& opts);
 
@@ -80,5 +76,5 @@ private:
   static std::map<std::string, FileType> fStringToFileType;
 };
 
-}
+} // namespace jpet_options_tools
 #endif /* !JPETOPTIONSTOOLS_H */
