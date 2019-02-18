@@ -13,63 +13,90 @@
  *  @file JPetOptionsTypeHandler.cpp
  */
 
-#include <boost/property_tree/json_parser.hpp>
-#include "./JPetCommonTools/JPetCommonTools.h"
-#include <boost/property_tree/ptree.hpp>
 #include "JPetOptionsTypeHandler.h"
-#include "./JPetLoggerInclude.h"
+#include "JPetCommonTools/JPetCommonTools.h"
+#include "JPetLoggerInclude.h"
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
 
 namespace pt = boost::property_tree;
-const std::vector<std::string> JPetOptionsTypeHandler::kAllowedTypes = {
-  "int", "std::string", "bool",
-  "std::vector<std::string>",
-  "std::vector<int>", "float", "double"};
 
-std::map<std::string, std::string> JPetOptionsTypeHandler::anyMapToStringMap(
-  const std::map<std::string, boost::any>& optionsMap)
-{
+std::map<std::string, std::string> JPetOptionsTypeHandler::anyMapToStringMap(const std::map<std::string, boost::any>& optionsMap) {
   using boost::any_cast;
   std::map<std::string, std::string> newOptionsMap;
-  for (auto& option : optionsMap) {
+  for (const auto& option : optionsMap) {
     std::string typeOfOption = getTypeOfOption(option.first);
-    if (std::find(kAllowedTypes.begin(), kAllowedTypes.end(), typeOfOption) != kAllowedTypes.end()) {
-      if (typeOfOption == "int") {
-        newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<int>(optionsMap.at(option.first)));
-      } else if (typeOfOption == "float") {
-        newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<float>(optionsMap.at(option.first)));
-      } else if (typeOfOption == "double") {
-        newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<double>(optionsMap.at(option.first)));
-      } else if (typeOfOption == "std::string") {
-        newOptionsMap[getNameOfOption(option.first)] = any_cast<std::string>(optionsMap.at(option.first));
-      } else if (typeOfOption == "bool") {
-        if (any_cast<bool>(optionsMap.at(option.first)))
-          newOptionsMap[getNameOfOption(option.first)] = "true";
-        else
-          newOptionsMap[getNameOfOption(option.first)] = "false";
-      } else if (typeOfOption == "default") {
-        newOptionsMap[option.first] = any_cast<std::string>(optionsMap.at(option.first));
-      }
+    switch (kAllowedTypesMap[typeOfOption]) {
+    case JPetOptionsTypeHandler::kAllowedTypes::kInt:
+      newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<int>(option.second));
+      break;
+    case JPetOptionsTypeHandler::kAllowedTypes::kFloat:
+      newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<float>(option.second));
+      break;
+    case JPetOptionsTypeHandler::kAllowedTypes::kDouble:
+      newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<double>(option.second));
+      break;
+    case JPetOptionsTypeHandler::kAllowedTypes::kString:
+      newOptionsMap[getNameOfOption(option.first)] = any_cast<std::string>(option.second);
+      break;
+    case JPetOptionsTypeHandler::kAllowedTypes::kBool:
+      if (any_cast<bool>(option.second))
+        newOptionsMap[getNameOfOption(option.first)] = "true";
+      else
+        newOptionsMap[getNameOfOption(option.first)] = "false";
+      break;
+    case JPetOptionsTypeHandler::kAllowedTypes::kNoType:
+      newOptionsMap[option.first] = any_cast<std::string>(option.second);
+      break;
+    case JPetOptionsTypeHandler::kAllowedTypes::kVectorString:
+      newOptionsMap[option.first] = [&option]() -> std::string {
+        std::string result = "";
+        for (const auto& s : any_cast<std::vector<std::string>>(option.second)) {
+          result += s + " ";
+        }
+        return result;
+      }();
+      break;
+    case JPetOptionsTypeHandler::kAllowedTypes::kVectorInt:
+      newOptionsMap[option.first] = [&option]() -> std::string {
+        std::string result = "";
+        for (const auto& s : any_cast<std::vector<int>>(option.second)) {
+          result += std::to_string(s) + " ";
+        }
+        return result;
+      }();
+      break;
+    default:
+      WARNING("Cant convert " + typeOfOption + " to string map, skipping it");
+      break;
     }
   }
   return newOptionsMap;
 }
 
-std::string JPetOptionsTypeHandler::getTypeOfOption(const std::string& nameOfOption)
-{
+std::string JPetOptionsTypeHandler::getTypeOfOption(const std::string& nameOfOption) {
   std::size_t pos = nameOfOption.rfind("_");
   if (pos == std::string::npos) {
-    return "default";
+    return "noType";
   }
   return nameOfOption.substr(pos + 1);
 }
 
-std::string JPetOptionsTypeHandler::getNameOfOption(const std::string& option)
-{
+std::string JPetOptionsTypeHandler::getNameOfOption(const std::string& option) {
   std::size_t pos = option.rfind("_");
   return option.substr(0, pos);
 }
 
-std::vector<std::string> JPetOptionsTypeHandler::getAllowedTypes()
-{
-  return JPetOptionsTypeHandler::kAllowedTypes;
+std::map<std::string, int> JPetOptionsTypeHandler::getAllowedTypes() {
+  if (JPetOptionsTypeHandler::kAllowedTypesMap.empty()) {
+    JPetOptionsTypeHandler::kAllowedTypesMap["int"] = JPetOptionsTypeHandler::kAllowedTypes::kInt;
+    JPetOptionsTypeHandler::kAllowedTypesMap["std::string"] = JPetOptionsTypeHandler::kAllowedTypes::kString;
+    JPetOptionsTypeHandler::kAllowedTypesMap["std::vector<std::string>"] = JPetOptionsTypeHandler::kAllowedTypes::kVectorString;
+    JPetOptionsTypeHandler::kAllowedTypesMap["std::vector<int>"] = JPetOptionsTypeHandler::kAllowedTypes::kVectorInt;
+    JPetOptionsTypeHandler::kAllowedTypesMap["float"] = JPetOptionsTypeHandler::kAllowedTypes::kFloat;
+    JPetOptionsTypeHandler::kAllowedTypesMap["double"] = JPetOptionsTypeHandler::kAllowedTypes::kDouble;
+    JPetOptionsTypeHandler::kAllowedTypesMap["bool"] = JPetOptionsTypeHandler::kAllowedTypes::kBool;
+    JPetOptionsTypeHandler::kAllowedTypesMap["noType"] = JPetOptionsTypeHandler::kAllowedTypes::kNoType;
+  }
+  return JPetOptionsTypeHandler::kAllowedTypesMap;
 }

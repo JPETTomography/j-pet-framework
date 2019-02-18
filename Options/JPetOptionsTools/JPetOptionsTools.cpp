@@ -13,42 +13,27 @@
  *  @file JPetOptionsTools.cpp
  */
 
-#include "./JPetOptionsGenerator/JPetOptionsTypeHandler.h"
+#include "./JPetOptionsTools.h"
 #include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetLoggerInclude.h"
+#include "./JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
-#include "./JPetLoggerInclude.h"
-#include "./JPetOptionsTools.h"
 #include <typeinfo>
 
 namespace pt = boost::property_tree;
 using boost::any_cast;
 
-namespace jpet_options_tools
-{
+namespace jpet_options_tools {
 
 std::map<std::string, FileTypeChecker::FileType> FileTypeChecker::fStringToFileType = {
-  {"", kNoType},
-  {"root", kRoot},
-  {"mcGeant", kMCGeant},
-  {"scope", kScope},
-  {"hld", kHld},
-  {"hldRoot", kHldRoot},
-  {"zip", kZip}
-};
+    {"", kNoType}, {"root", kRoot}, {"mcGeant", kMCGeant}, {"scope", kScope}, {"hld", kHld}, {"hldRoot", kHldRoot}, {"zip", kZip}};
 
-bool isOptionSet(const OptsStrAny& opts, const std::string& optionName)
-{
-  return static_cast<bool>(opts.count(optionName));
-}
+bool isOptionSet(const OptsStrAny& opts, const std::string& optionName) { return static_cast<bool>(opts.count(optionName)); }
 
-boost::any getOptionValue(const OptsStrAny& opts, std::string optionName)
-{
-  return opts.at(optionName);
-}
+boost::any getOptionValue(const OptsStrAny& opts, std::string optionName) { return opts.at(optionName); }
 
-std::string getOptionAsString(const OptsStrAny& opts, std::string optionName)
-{
+std::string getOptionAsString(const OptsStrAny& opts, std::string optionName) {
   try {
     return any_cast<std::string>(getOptionValue(opts, optionName));
   } catch (const std::exception& excep) {
@@ -57,8 +42,7 @@ std::string getOptionAsString(const OptsStrAny& opts, std::string optionName)
   }
 }
 
-int getOptionAsInt(const OptsStrAny& opts, std::string optionName)
-{
+int getOptionAsInt(const OptsStrAny& opts, std::string optionName) {
   try {
     return any_cast<int>(getOptionValue(opts, optionName));
   } catch (const std::exception& excep) {
@@ -67,8 +51,7 @@ int getOptionAsInt(const OptsStrAny& opts, std::string optionName)
   }
 }
 
-float getOptionAsFloat(const OptsStrAny& opts, std::string optionName)
-{
+float getOptionAsFloat(const OptsStrAny& opts, std::string optionName) {
   try {
     return any_cast<float>(getOptionValue(opts, optionName));
   } catch (const std::exception& excep) {
@@ -77,8 +60,7 @@ float getOptionAsFloat(const OptsStrAny& opts, std::string optionName)
   }
 }
 
-double getOptionAsDouble(const OptsStrAny& opts, std::string optionName)
-{
+double getOptionAsDouble(const OptsStrAny& opts, std::string optionName) {
   try {
     return any_cast<double>(getOptionValue(opts, optionName));
   } catch (const std::exception& excep) {
@@ -87,8 +69,7 @@ double getOptionAsDouble(const OptsStrAny& opts, std::string optionName)
   }
 }
 
-std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, std::string optionName)
-{
+std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, std::string optionName) {
   try {
     return any_cast<std::vector<std::string>>(getOptionValue(opts, optionName));
   } catch (const std::exception& excep) {
@@ -98,8 +79,7 @@ std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, std:
   }
 }
 
-bool getOptionAsBool(const OptsStrAny& opts, std::string optionName)
-{
+bool getOptionAsBool(const OptsStrAny& opts, std::string optionName) {
   try {
     return any_cast<bool>(getOptionValue(opts, optionName));
   } catch (const std::exception& excep) {
@@ -108,14 +88,12 @@ bool getOptionAsBool(const OptsStrAny& opts, std::string optionName)
   }
 }
 
-
 /**
  * Specialized getter functions to extract option values with predefined names
  * This function returns a valid result only if the inputFile option is given
  * in the untransformed form: std::vector<std::string>
  */
-std::vector<std::string> getInputFiles(const std::map<std::string, boost::any>& opts)
-{
+std::vector<std::string> getInputFiles(const std::map<std::string, boost::any>& opts) {
   std::vector<std::string> dummy;
   if (!isOptionSet(opts, "file_std::vector<std::string>")) {
     ERROR("key:file_std::vector<std::string> not found in options");
@@ -128,40 +106,23 @@ std::vector<std::string> getInputFiles(const std::map<std::string, boost::any>& 
  * This function returns a valid result only if the inputFile option is given
  * in the transformed form with _std::string suffix
  */
-std::string getInputFile(const std::map<std::string, boost::any>& opts)
-{
-  return any_cast<std::string>(opts.at("inputFile_std::string"));
-}
+std::string getInputFile(const std::map<std::string, boost::any>& opts) { return any_cast<std::string>(opts.at("inputFile_std::string")); }
 
-std::string getScopeConfigFile(const std::map<std::string, boost::any>& opts)
-{
+std::string getScopeConfigFile(const std::map<std::string, boost::any>& opts) {
   return any_cast<std::string>(opts.at("scopeConfigFile_std::string"));
 }
 
-std::string getScopeInputDirectory(const std::map<std::string, boost::any>& opts)
-{
+std::string getScopeInputDirectory(const std::map<std::string, boost::any>& opts) {
   return any_cast<std::string>(opts.at("scopeInputDirectory_std::string"));
 }
 
-std::string getOutputFile(const std::map<std::string, boost::any>& opts)
-{
-  return any_cast<std::string>(opts.at("outputFile_std::string"));
-}
+std::string getOutputFile(const std::map<std::string, boost::any>& opts) { return any_cast<std::string>(opts.at("outputFile_std::string")); }
 
-std::string getOutputPath(const std::map<std::string, boost::any>& opts)
-{
-  return any_cast<std::string>(opts.at("outputPath_std::string"));
-}
+std::string getOutputPath(const std::map<std::string, boost::any>& opts) { return any_cast<std::string>(opts.at("outputPath_std::string")); }
 
-long long getFirstEvent(const std::map<std::string, boost::any>& opts)
-{
-  return any_cast<int>(opts.at("firstEvent_int"));
-}
+long long getFirstEvent(const std::map<std::string, boost::any>& opts) { return any_cast<int>(opts.at("firstEvent_int")); }
 
-long long getLastEvent(const std::map<std::string, boost::any>& opts)
-{
-  return any_cast<int>(opts.at("lastEvent_int"));
-}
+long long getLastEvent(const std::map<std::string, boost::any>& opts) { return any_cast<int>(opts.at("lastEvent_int")); }
 
 /**
  * It returns the total number of events calculated from the first and the last
@@ -169,8 +130,7 @@ long long getLastEvent(const std::map<std::string, boost::any>& opts)
  * set to -1 then the -1 is returned. If last - first < 0 then -1 is returned.
  * Otherwise last - first +1 is returned.
  */
-long long getTotalEvents(const std::map<std::string, boost::any>& opts)
-{
+long long getTotalEvents(const std::map<std::string, boost::any>& opts) {
   long long first = getFirstEvent(opts);
   long long last = getLastEvent(opts);
   long long diff = -1;
@@ -180,36 +140,22 @@ long long getTotalEvents(const std::map<std::string, boost::any>& opts)
   return diff;
 }
 
-int getRunNumber(const std::map<std::string, boost::any>& opts)
-{
-  return any_cast<int>(opts.at("runId_int"));
-}
+int getRunNumber(const std::map<std::string, boost::any>& opts) { return any_cast<int>(opts.at("runId_int")); }
 
-bool isProgressBar(const std::map<std::string, boost::any>& opts)
-{
-  return any_cast<bool>(opts.at("progressBar_bool"));
-}
+bool isProgressBar(const std::map<std::string, boost::any>& opts) { return any_cast<bool>(opts.at("progressBar_bool")); }
 
-bool isLocalDB(const std::map<std::string, boost::any>& opts)
-{
-  return (bool)opts.count("localDB_std::string");
-}
+bool isLocalDB(const std::map<std::string, boost::any>& opts) { return (bool)opts.count("localDB_std::string"); }
 
-std::string getLocalDB(const std::map<std::string, boost::any>& opts)
-{
+std::string getLocalDB(const std::map<std::string, boost::any>& opts) {
   std::string result("");
   if (isLocalDB(opts)) {
     result = any_cast<std::string>(opts.at("localDB_std::string"));
   }
   return result;
 }
-bool isLocalDBCreate(const std::map<std::string, boost::any>& opts)
-{
-  return (bool)opts.count("localDBCreate_std::string");
-}
+bool isLocalDBCreate(const std::map<std::string, boost::any>& opts) { return (bool)opts.count("localDBCreate_std::string"); }
 
-std::string getLocalDBCreate(const std::map<std::string, boost::any>& opts)
-{
+std::string getLocalDBCreate(const std::map<std::string, boost::any>& opts) {
   std::string result("");
   if (isLocalDBCreate(opts)) {
     result = any_cast<std::string>(opts.at("localDBCreate_std::string"));
@@ -217,18 +163,15 @@ std::string getLocalDBCreate(const std::map<std::string, boost::any>& opts)
   return result;
 }
 
-std::string getUnpackerConfigFile(const std::map<std::string, boost::any>& opts)
-{
+std::string getUnpackerConfigFile(const std::map<std::string, boost::any>& opts) {
   return any_cast<std::string>(opts.at("unpackerConfigFile_std::string"));
 }
 
-std::string getUnpackerCalibFile(const std::map<std::string, boost::any>& opts)
-{
+std::string getUnpackerCalibFile(const std::map<std::string, boost::any>& opts) {
   return any_cast<std::string>(opts.at("unpackerCalibFile_std::string"));
 }
 
-std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap)
-{
+std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap) {
   if (optsMap.count("userCfg_std::string")) {
     return any_cast<std::string>(optsMap.at("userCfg_std::string"));
   } else {
@@ -236,8 +179,7 @@ std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap)
   }
 }
 
-void printOptions(const OptsStrAny& opts)
-{
+void printOptions(const OptsStrAny& opts) {
   std::cout << "Current options:" << std::endl;
   auto stringOptions = JPetOptionsTypeHandler::anyMapToStringMap(opts);
   for (const auto& el : stringOptions) {
@@ -245,8 +187,7 @@ void printOptions(const OptsStrAny& opts)
   }
 }
 
-void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine)
-{
+void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine) {
   if (!firstLine.empty()) {
     INFO(firstLine.c_str());
   }
@@ -260,8 +201,7 @@ void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine)
 /**
  * Creates json file based on given options.
  */
-bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile)
-{
+bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile) {
   pt::ptree optionsTree;
   for (auto& entry : options)
     optionsTree.put(entry.first, entry.second);
@@ -277,8 +217,7 @@ bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& o
 /**
  * Creates option map based on the content of the json file.
  */
-std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string& filename)
-{
+std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string& filename) {
   pt::ptree optionsTree;
   std::map<std::string, boost::any> mapOptions, emptyMap;
   if (JPetCommonTools::ifFileExisting(filename)) {
@@ -288,39 +227,47 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
         auto key = item.first;
         std::string typeOfOption = JPetOptionsTypeHandler::getTypeOfOption(key);
         auto allowedTypes = JPetOptionsTypeHandler::getAllowedTypes();
-        if (std::find(allowedTypes.begin(), allowedTypes.end(), typeOfOption) != allowedTypes.end()) {
-          if (typeOfOption == "int") {
-            auto value = item.second.get_value<int>();
-            mapOptions.insert(std::make_pair(key, value));
-          } else if (typeOfOption == "std::string") {
-            auto value = item.second.get_value<std::string>();
-            mapOptions.insert(std::make_pair(key, value));
-          } else if (typeOfOption == "float") {
-            auto value = item.second.get_value<float>();
-            mapOptions.insert(std::make_pair(key, value));
-          } else if (typeOfOption == "double") {
-            auto value = item.second.get_value<double>();
-            mapOptions.insert(std::make_pair(key, value));
-          } else if (typeOfOption == "bool") {
-            auto value = item.second.get_value<bool>();
-            mapOptions.insert(std::make_pair(key, value));
-          } else if (typeOfOption == "std::vector<std::string>") {
+        switch (allowedTypes[typeOfOption]) {
+        case JPetOptionsTypeHandler::kAllowedTypes::kInt:
+          mapOptions.insert(std::make_pair(key, item.second.get_value<int>()));
+          break;
+        case JPetOptionsTypeHandler::kAllowedTypes::kString:
+          mapOptions.insert(std::make_pair(key, item.second.get_value<std::string>()));
+          break;
+        case JPetOptionsTypeHandler::kAllowedTypes::kFloat:
+          mapOptions.insert(std::make_pair(key, item.second.get_value<float>()));
+          break;
+        case JPetOptionsTypeHandler::kAllowedTypes::kDouble:
+          mapOptions.insert(std::make_pair(key, item.second.get_value<double>()));
+          break;
+        case JPetOptionsTypeHandler::kAllowedTypes::kBool:
+          mapOptions.insert(std::make_pair(key, item.second.get_value<bool>()));
+          break;
+        case JPetOptionsTypeHandler::kAllowedTypes::kVectorString:
+          mapOptions.insert(std::make_pair(key, [&optionsTree, &key]() -> std::vector<std::string> {
             std::vector<std::string> values;
             for (pt::ptree::value_type& value : optionsTree.get_child(key)) {
               values.push_back(value.second.get_value<std::string>());
             }
-            mapOptions.insert(std::make_pair(key, values));
-          } else if (typeOfOption == "std::vector<int>") {
+            return values;
+          }));
+          break;
+        case JPetOptionsTypeHandler::kAllowedTypes::kVectorInt:
+          mapOptions.insert(std::make_pair(key, [&optionsTree, &key]() -> std::vector<int> {
             std::vector<int> values;
             for (pt::ptree::value_type& value : optionsTree.get_child(key)) {
               values.push_back(value.second.get_value<int>());
             }
-            mapOptions.insert(std::make_pair(key, values));
-          }
+            return values;
+          }));
+          break;
+        default:
+          WARNING("Unknow option type: " + typeOfOption + " skipping option: " + key);
+          break;
         }
       }
     } catch (pt::json_parser_error) {
-      ERROR("ERROR IN READINIG OPTIONS FROM JSON FILE! FILENAME:" + filename );
+      ERROR("ERROR IN READINIG OPTIONS FROM JSON FILE! FILENAME:" + filename);
       return emptyMap;
     }
   } else {
@@ -329,24 +276,20 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
   return mapOptions;
 }
 
-FileTypeChecker::FileType FileTypeChecker::getInputFileType(const std::map<std::string, boost::any>& opts)
-{
+FileTypeChecker::FileType FileTypeChecker::getInputFileType(const std::map<std::string, boost::any>& opts) {
   return getFileType(opts, "inputFileType_std::string");
 }
 
-FileTypeChecker::FileType FileTypeChecker::getOutputFileType(const std::map<std::string, boost::any>& opts)
-{
+FileTypeChecker::FileType FileTypeChecker::getOutputFileType(const std::map<std::string, boost::any>& opts) {
   return getFileType(opts, "outputFileType_std::string");
 }
 
-void FileTypeChecker::handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException)
-{
+void FileTypeChecker::handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException) {
   std::cerr << errorMessage << outOfRangeException.what() << '\n';
   ERROR(errorMessage);
 }
 
-FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::string, boost::any>& opts, const std::string& fileTypeName)
-{
+FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::string, boost::any>& opts, const std::string& fileTypeName) {
   try {
     auto option = any_cast<std::string>(opts.at(fileTypeName));
     try {
@@ -360,4 +303,4 @@ FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::strin
   return FileType::kUndefinedFileType;
 }
 
-}
+} // namespace jpet_options_tools
