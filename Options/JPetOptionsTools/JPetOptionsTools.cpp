@@ -69,7 +69,7 @@ double getOptionAsDouble(const OptsStrAny& opts, const std::string& optionName) 
   }
 }
 
-std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, std::string optionName) {
+std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, const std::string& optionName) {
   try {
     return any_cast<std::vector<std::string>>(getOptionValue(opts, optionName));
   } catch (const std::exception& excep) {
@@ -79,7 +79,7 @@ std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, std:
   }
 }
 
-bool getOptionAsBool(const OptsStrAny& opts, std::string optionName) {
+bool getOptionAsBool(const OptsStrAny& opts, const std::string& optionName) {
   try {
     return any_cast<bool>(getOptionValue(opts, optionName));
   } catch (const std::exception& excep) {
