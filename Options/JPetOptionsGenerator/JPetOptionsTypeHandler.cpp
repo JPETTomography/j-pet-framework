@@ -26,7 +26,7 @@ std::map<std::string, std::string> JPetOptionsTypeHandler::anyMapToStringMap(con
   std::map<std::string, std::string> newOptionsMap;
   for (const auto& option : optionsMap) {
     std::string typeOfOption = getTypeOfOption(option.first);
-    switch (kAllowedTypesMap[typeOfOption]) {
+    switch (getAllowedTypes()[typeOfOption]) {
     case JPetOptionsTypeHandler::kAllowedTypes::kInt:
       newOptionsMap[getNameOfOption(option.first)] = std::to_string(any_cast<int>(option.second));
       break;
@@ -88,15 +88,16 @@ std::string JPetOptionsTypeHandler::getNameOfOption(const std::string& option) {
 }
 
 std::map<std::string, int> JPetOptionsTypeHandler::getAllowedTypes() {
-  if (JPetOptionsTypeHandler::kAllowedTypesMap.empty()) {
-    JPetOptionsTypeHandler::kAllowedTypesMap["int"] = JPetOptionsTypeHandler::kAllowedTypes::kInt;
-    JPetOptionsTypeHandler::kAllowedTypesMap["std::string"] = JPetOptionsTypeHandler::kAllowedTypes::kString;
-    JPetOptionsTypeHandler::kAllowedTypesMap["std::vector<std::string>"] = JPetOptionsTypeHandler::kAllowedTypes::kVectorString;
-    JPetOptionsTypeHandler::kAllowedTypesMap["std::vector<int>"] = JPetOptionsTypeHandler::kAllowedTypes::kVectorInt;
-    JPetOptionsTypeHandler::kAllowedTypesMap["float"] = JPetOptionsTypeHandler::kAllowedTypes::kFloat;
-    JPetOptionsTypeHandler::kAllowedTypesMap["double"] = JPetOptionsTypeHandler::kAllowedTypes::kDouble;
-    JPetOptionsTypeHandler::kAllowedTypesMap["bool"] = JPetOptionsTypeHandler::kAllowedTypes::kBool;
-    JPetOptionsTypeHandler::kAllowedTypesMap["noType"] = JPetOptionsTypeHandler::kAllowedTypes::kNoType;
+  static std::map<std::string, int> kAllowedTypesMap;
+  if (kAllowedTypesMap.empty()) {
+    kAllowedTypesMap["int"] = JPetOptionsTypeHandler::kAllowedTypes::kInt;
+    kAllowedTypesMap["std::string"] = JPetOptionsTypeHandler::kAllowedTypes::kString;
+    kAllowedTypesMap["std::vector<std::string>"] = JPetOptionsTypeHandler::kAllowedTypes::kVectorString;
+    kAllowedTypesMap["std::vector<int>"] = JPetOptionsTypeHandler::kAllowedTypes::kVectorInt;
+    kAllowedTypesMap["float"] = JPetOptionsTypeHandler::kAllowedTypes::kFloat;
+    kAllowedTypesMap["double"] = JPetOptionsTypeHandler::kAllowedTypes::kDouble;
+    kAllowedTypesMap["bool"] = JPetOptionsTypeHandler::kAllowedTypes::kBool;
+    kAllowedTypesMap["noType"] = JPetOptionsTypeHandler::kAllowedTypes::kNoType;
   }
-  return JPetOptionsTypeHandler::kAllowedTypesMap;
+  return kAllowedTypesMap;
 }
