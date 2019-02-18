@@ -250,7 +250,7 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
               values.push_back(value.second.get_value<std::string>());
             }
             return values;
-          }));
+          }()));
           break;
         case JPetOptionsTypeHandler::kAllowedTypes::kVectorInt:
           mapOptions.insert(std::make_pair(key, [&optionsTree, &key]() -> std::vector<int> {
@@ -259,7 +259,7 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
               values.push_back(value.second.get_value<int>());
             }
             return values;
-          }));
+          }()));
           break;
         default:
           WARNING("Unknow option type: " + typeOfOption + " skipping option: " + key);

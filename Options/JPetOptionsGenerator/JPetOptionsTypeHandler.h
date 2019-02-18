@@ -46,7 +46,5 @@ public:
 private:
   JPetOptionsTypeHandler() = delete;
   JPetOptionsTypeHandler(const JPetOptionsTypeHandler&) = delete;
-
-  static std::map<std::string, int> kAllowedTypesMap;
 };
 #endif /* !JPETOPTIONSTYPEHANDLER_H */
