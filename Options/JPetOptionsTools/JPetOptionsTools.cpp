@@ -116,6 +116,7 @@ std::string getScopeInputDirectory(const std::map<std::string, boost::any>& opts
   return any_cast<std::string>(opts.at("scopeInputDirectory_std::string"));
 }
 
+// cppcheck-suppress unusedFunction
 std::string getOutputFile(const std::map<std::string, boost::any>& opts) { return any_cast<std::string>(opts.at("outputFile_std::string")); }
 
 std::string getOutputPath(const std::map<std::string, boost::any>& opts) { return any_cast<std::string>(opts.at("outputPath_std::string")); }
@@ -179,6 +180,7 @@ std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap) 
   }
 }
 
+// cppcheck-suppress unusedFunction
 void printOptions(const OptsStrAny& opts) {
   std::cout << "Current options:" << std::endl;
   auto stringOptions = JPetOptionsTypeHandler::anyMapToStringMap(opts);
