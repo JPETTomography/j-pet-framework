@@ -25,7 +25,7 @@ JPetCmdParser::JPetCmdParser(): fOptionsDescriptions("Allowed options")
 {
   fOptionsDescriptions.add_options()
   ("help,h", "Displays this help message.")
-  ("type,t", po::value<std::string>()->required(), "Type of file: hld, zip, root or scope.")
+  ("type,t", po::value<std::string>()->required(), "Type of file: hld, zip, mcGeant, root or scope.")
   ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
   ("outputPath,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
   ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
