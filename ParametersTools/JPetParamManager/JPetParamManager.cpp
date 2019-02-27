@@ -321,7 +321,7 @@ bool JPetParamManager::saveParametersToFile(std::string filename)
   }
   file.cd();
   assert(fBank);
-  file.WriteObject(fBank, "ParamBank");
+  file.WriteObject(fBank, "ParamBank;1");
   return true;
 }
 
