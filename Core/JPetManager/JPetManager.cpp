@@ -10,371 +10,121 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetParamManager.cpp
+ *  @file JPetManager.cpp
  */
 
-#include "./JPetParamGetterAscii/JPetParamGetterAscii.h"
-#include "./JPetOptionsTools/JPetOptionsTools.h"
-#include <boost/property_tree/xml_parser.hpp>
-#include "JPetParamManager.h"
-#include <TFile.h>
+#include "./JPetGeantParser/JPetGeantParser.h"
+#include "./JPetManager.h"
 
-std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(
-  const std::map<std::string, boost::any>& options)
+#include <cassert>
+#include <string>
+#include <exception>
+#include <TThread.h>
+
+#include "./JPetTaskChainExecutor/JPetTaskChainExecutor.h"
+#include "./JPetCommonTools/JPetCommonTools.h"
+#include "./JPetCmdParser/JPetCmdParser.h"
+#include "./JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "./GeantParser/JPetGeantParser/JPetGeantParser.h"
+#include "./JPetLoggerInclude.h"
+
+
+using namespace jpet_options_tools;
+
+JPetManager::JPetManager()
 {
-  using namespace jpet_options_tools;
-  if (isLocalDB(options)) {
-    std::set<ParamObjectType> expectMissing;
-    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kScope) {
-      expectMissing.insert(ParamObjectType::kTRB);
-      expectMissing.insert(ParamObjectType::kFEB);
-      expectMissing.insert(ParamObjectType::kFrame);
-      expectMissing.insert(ParamObjectType::kLayer);
-      expectMissing.insert(ParamObjectType::kTOMBChannel);
-    }
-    return std::make_shared<JPetParamManager>(new JPetParamGetterAscii(getLocalDB(options)), expectMissing);
-  } else {
-    ERROR("No local database file found.");
-    return std::make_shared<JPetParamManager>();
+}
+
+JPetManager& JPetManager::getManager()
+{
+  static JPetManager instance;
+  return instance;
+}
+
+void JPetManager::run(int argc, const char** argv)
+{
+  bool isOk = true;
+  std::map<std::string, boost::any> allValidatedOptions;
+  std::tie(isOk, allValidatedOptions) = parseCmdLine(argc, argv);
+  if (!isOk) {
+    ERROR("While parsing command line arguments");
+    std::cerr << "Error has occurred while parsing command line! Check the log!" << std::endl;
+    throw std::invalid_argument("Error in parsing command line arguments");  /// temporary change to check if the examples are working
   }
-}
+  registerDefaultTasks();
+  auto chainOfTasks = fTaskFactory.createTaskGeneratorChain(allValidatedOptions);
+  JPetOptionsGenerator optionsGenerator;
+  auto options = optionsGenerator.generateOptionsForTasks(allValidatedOptions, chainOfTasks.size());
 
-JPetParamManager::~JPetParamManager()
-{
-  if (fBank) {
-    delete fBank;
-    fBank = 0;
-  }
-  if (fParamGetter) {
-    delete fParamGetter;
-    fParamGetter = 0;
-  }
-}
-
-std::map<int, JPetTRB*>& JPetParamManager::getTRBs(const int runId)
-{
-  return getTRBFactory(runId).getTRBs();
-}
-
-JPetTRBFactory& JPetParamManager::getTRBFactory(const int runId)
-{
-  if (fTRBFactories.count(runId) == 0) {
-    fTRBFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId));
-  }
-  return fTRBFactories.at(runId);
-}
-
-std::map<int, JPetFEB*>& JPetParamManager::getFEBs(const int runId)
-{
-  return getFEBFactory(runId).getFEBs();
-}
-
-JPetFEBFactory& JPetParamManager::getFEBFactory(const int runId)
-{
-  if (fFEBFactories.count(runId) == 0) {
-    fFEBFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getTRBFactory(runId)));
-  }
-  return fFEBFactories.at(runId);
-}
-
-std::map<int, JPetFrame*>& JPetParamManager::getFrames(const int runId)
-{
-  return getFrameFactory(runId).getFrames();
-}
-
-JPetFrameFactory& JPetParamManager::getFrameFactory(const int runId)
-{
-  if (fFrameFactories.count(runId) == 0) {
-    fFrameFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId));
-  }
-  return fFrameFactories.at(runId);
-}
-
-std::map<int, JPetLayer*>& JPetParamManager::getLayers(const int runId)
-{
-  return getLayerFactory(runId).getLayers();
-}
-
-JPetLayerFactory& JPetParamManager::getLayerFactory(const int runId)
-{
-  if (fLayerFactories.count(runId) == 0) {
-    fLayerFactories.emplace(
-      std::piecewise_construct,
-      std::forward_as_tuple(runId),
-      std::forward_as_tuple(*fParamGetter, runId, getFrameFactory(runId))
-    );
-  }
-  return fLayerFactories.at(runId);
-}
-
-std::map<int, JPetBarrelSlot*>& JPetParamManager::getBarrelSlots(const int runId)
-{
-  return getBarrelSlotFactory(runId).getBarrelSlots();
-}
-
-JPetBarrelSlotFactory& JPetParamManager::getBarrelSlotFactory(const int runId)
-{
-  if (fBarrelSlotFactories.count(runId) == 0) {
-    fBarrelSlotFactories.emplace(
-      std::piecewise_construct,
-      std::forward_as_tuple(runId),
-      std::forward_as_tuple(*fParamGetter, runId, getLayerFactory(runId))
-    );
-  }
-  fBarrelSlotFactories.at(runId);
-  return fBarrelSlotFactories.at(runId);
-}
-
-std::map<int, JPetScin*>& JPetParamManager::getScins(const int runId)
-{
-  return getScinFactory(runId).getScins();
-}
-
-JPetScinFactory& JPetParamManager::getScinFactory(const int runId)
-{
-  if (fScinFactories.count(runId) == 0) {
-    fScinFactories.emplace(
-      std::piecewise_construct,
-      std::forward_as_tuple(runId),
-      std::forward_as_tuple(*fParamGetter, runId, getBarrelSlotFactory(runId))
-    );
-  }
-  return fScinFactories.at(runId);
-}
-
-std::map<int, JPetPM*>& JPetParamManager::getPMs(const int runId)
-{
-  return getPMFactory(runId).getPMs();
-}
-
-JPetPMFactory& JPetParamManager::getPMFactory(const int runId)
-{
-  if (fPMFactories.count(runId) == 0) {
-    fPMFactories.emplace(
-      std::piecewise_construct,
-      std::forward_as_tuple(runId),
-      std::forward_as_tuple(
-        *fParamGetter,
-        runId,
-        getFEBFactory(runId),
-        getScinFactory(runId),
-        getBarrelSlotFactory(runId)
-      )
-    );
-  }
-  return fPMFactories.at(runId);
-}
-
-std::map<int, JPetTOMBChannel*>& JPetParamManager::getTOMBChannels(const int runId)
-{
-  return getTOMBChannelFactory(runId).getTOMBChannels();
-}
-
-JPetTOMBChannelFactory& JPetParamManager::getTOMBChannelFactory(const int runId)
-{
-  if (fTOMBChannelFactories.count(runId) == 0) {
-    fTOMBChannelFactories.emplace(
-      std::piecewise_construct,
-      std::forward_as_tuple(runId),
-      std::forward_as_tuple(
-        *fParamGetter,
-        runId,
-        getFEBFactory(runId),
-        getTRBFactory(runId),
-        getPMFactory(runId)
-      )
-    );
-  }
-  return fTOMBChannelFactories.at(runId);
-}
-
-void JPetParamManager::fillParameterBank(const int run)
-{
-  if (fBank) {
-    delete fBank;
-    fBank = 0;
-  }
-  fBank = new JPetParamBank();
-  if (!fExpectMissing.count(ParamObjectType::kTRB)) {
-    for (auto& trbp : getTRBs(run)) {
-      auto& trb = *trbp.second;
-      fBank->addTRB(trb);
-    }
-  }
-  if (!fExpectMissing.count(ParamObjectType::kFEB)) {
-    for (auto& febp : getFEBs(run)) {
-      auto& feb = *febp.second;
-      fBank->addFEB(feb);
-      fBank->getFEB(feb.getID()).setTRB(fBank->getTRB(feb.getTRB().getID()));
-    }
-  }
-  if (!fExpectMissing.count(ParamObjectType::kFrame)) {
-    for (auto& framep : getFrames(run)) {
-      auto& frame = *framep.second;
-      fBank->addFrame(frame);
-    }
-  }
-  if (!fExpectMissing.count(ParamObjectType::kLayer)) {
-    for (auto& layerp : getLayers(run)) {
-      auto& layer = *layerp.second;
-      fBank->addLayer(layer);
-      fBank->getLayer(layer.getID()).setFrame(fBank->getFrame(layer.getFrame().getID()));
-    }
-  }
-  if (!fExpectMissing.count(ParamObjectType::kBarrelSlot)) {
-    for (auto& barrelSlotp : getBarrelSlots(run)) {
-      auto& barrelSlot = *barrelSlotp.second;
-      fBank->addBarrelSlot(barrelSlot);
-      if (barrelSlot.hasLayer()) {
-        fBank->getBarrelSlot(barrelSlot.getID()).setLayer(fBank->getLayer(barrelSlot.getLayer().getID()));
+  INFO( "======== Starting processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
+  std::vector<TThread*> threads;
+  auto inputDataSeq = 0;
+  /// For every input option, new TaskChainExecutor is created, which creates the chain of previously
+  /// registered tasks. The inputDataSeq is the identifier of given chain.
+  for (auto opt : options) {
+    auto executor = jpet_common_tools::make_unique<JPetTaskChainExecutor>(chainOfTasks, inputDataSeq, opt.second);
+    if (areThreadsEnabled()) {
+      auto thr = executor->run();
+      if (thr) {
+        threads.push_back(thr);
+      } else {
+        ERROR("thread pointer is null");
+      }
+    } else {
+      if (!executor->process()) {
+        ERROR("While running process");
+        std::cerr << "Stopping program, error has occurred while calling executor->process! Check the log!" << std::endl;
+        throw std::runtime_error("Error in executor->process");
       }
     }
+    inputDataSeq++;
   }
-  if (!fExpectMissing.count(ParamObjectType::kScintillator)) {
-    for (auto& scinp : getScins(run)) {
-      auto& scin = *scinp.second;
-      fBank->addScintillator(scin);
-      fBank->getScintillator(scin.getID()).setBarrelSlot(
-        fBank->getBarrelSlot(scin.getBarrelSlot().getID())
-      );
+  if (areThreadsEnabled()) {
+    for (auto thread : threads) {
+      assert(thread);
+      thread->Join();
     }
   }
-  if (!fExpectMissing.count(ParamObjectType::kPM)) {
-    for (auto& pmp : getPMs(run)) {
-      auto& pm = *pmp.second;
-      fBank->addPM(pm);
-      if (pm.hasFEB()) {
-        fBank->getPM(pm.getID()).setFEB(fBank->getFEB(pm.getFEB().getID()));
-      }
-      fBank->getPM(pm.getID()).setScin(fBank->getScintillator(pm.getScin().getID()));
-      fBank->getPM(pm.getID()).setBarrelSlot(
-        fBank->getBarrelSlot(pm.getBarrelSlot().getID())
-      );
-    }
+  INFO( "======== Finished processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n" );
+}
+
+std::pair<bool, std::map<std::string, boost::any> >  JPetManager::parseCmdLine(int argc, const char** argv)
+{
+  std::map<std::string, boost::any> allValidatedOptions;
+  try {
+    JPetOptionsGenerator optionsGenerator;
+    JPetCmdParser parser;
+    auto optionsFromCmdLine = parser.parseCmdLineArgs(argc, argv);
+    allValidatedOptions = optionsGenerator.generateAndValidateOptions(optionsFromCmdLine);
+  } catch (std::exception& e) {
+    ERROR(e.what());
+    return std::make_pair(false, std::map<std::string, boost::any> {});
   }
-  if (!fExpectMissing.count(ParamObjectType::kTOMBChannel)) {
-    for (auto& tombChannelp : getTOMBChannels(run)) {
-      auto& tombChannel = *tombChannelp.second;
-      fBank->addTOMBChannel(tombChannel);
-      fBank->getTOMBChannel(tombChannel.getChannel()).setFEB(
-        fBank->getFEB(tombChannel.getFEB().getID())
-      );
-      fBank->getTOMBChannel(tombChannel.getChannel()).setTRB(
-        fBank->getTRB(tombChannel.getTRB().getID())
-      );
-      fBank->getTOMBChannel(tombChannel.getChannel()).setPM(
-        fBank->getPM(tombChannel.getPM().getID())
-      );
-    }
+  return std::make_pair(true, allValidatedOptions);
+}
+
+void JPetManager::useTask(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numTimes)
+{
+  if (!fTaskFactory.addTaskInfo(name, inputFileType, outputFileType, numTimes)) {
+    std::cerr << "Error has occurred while calling useTask! Check the log!" << std::endl;
+    throw std::runtime_error("error in addTaskInfo");
   }
 }
 
-bool JPetParamManager::readParametersFromFile(JPetReader* reader)
+bool JPetManager::areThreadsEnabled() const
 {
-  assert(reader);
-  if (!reader->isOpen()) {
-    ERROR("Cannot read parameters from file. The provided JPetReader is closed.");
-    return false;
-  }
-  fBank = static_cast<JPetParamBank*>(reader->getObjectFromFile("ParamBank"));
-  if (!fBank) return false;
-  return true;
+  return fThreadsEnabled;
 }
 
-bool JPetParamManager::saveParametersToFile(JPetWriter* writer)
+void JPetManager::setThreadsEnabled(bool enable)
 {
-  assert(writer);
-  if (!writer->isOpen()) {
-    ERROR("Could not write parameters to file. The provided JPetWriter is closed.");
-    return false;
-  }
-  writer->writeObject(fBank, "ParamBank");
-  return true;
+  fThreadsEnabled = enable;
 }
 
-bool JPetParamManager::readParametersFromFile(std::string filename)
+/// @brief Adds any built-in tasks based on JPetTaskIO to the map of taska generators to facilitate their later generation on demand
+///
+/// Any built-in tasks which are handled by JPetTaskIO the same way as user-defined tasks (rather than using a dedicated task wrapper as is the case for JPetUnzipAndUpackTask or JPetParamBankHandlerTask) can be easily added to the chain of tasks using the same mehanics as exposed to the user for adding users' tasks prvided that the built-in tasks are registered in the map of tasks generators in advance. This provate method is intended to register all such tasks in advance of creation of the task generator chain.
+void JPetManager::registerDefaultTasks()
 {
-  TFile file(filename.c_str(), "READ");
-  if (!file.IsOpen()) {
-    ERROR("Could not read from file.");
-    return false;
-  }
-  fBank = static_cast<JPetParamBank*>(file.Get("ParamBank"));
-  if (!fBank) return false;
-  return true;
-}
-
-const JPetParamBank& JPetParamManager::getParamBank() const
-{
-  DEBUG("getParamBank() from JPetParamManager");
-  static JPetParamBank DummyResult(true);
-  if (fBank) return *fBank;
-  else return DummyResult;
-}
-
-bool JPetParamManager::saveParametersToFile(std::string filename)
-{
-  TFile file(filename.c_str(), "UPDATE");
-  if (!file.IsOpen()) {
-    ERROR("Could not write to file.");
-    return false;
-  }
-  file.cd();
-  assert(fBank);
-  file.WriteObject(fBank, "ParamBank;1");
-  return true;
-}
-
-void JPetParamManager::clearParameters()
-{
-  assert(fBank);
-  fBank->clear();
-}
-
-void JPetParamManager::createXMLFile(const std::string& channelDataFileName,
-  int channelOffset, int numberOfChannels)
-{
-  using boost::property_tree::ptree;
-  ptree pt;
-  std::string debug = "OFF";
-  std::string dataSourceType = "TRB3_S";
-  std::string dataSourceTrbNetAddress = "8000";
-  std::string dataSourceHubAddress = "8000";
-  std::string dataSourceReferenceChannel = "0";
-  std::string dataSourceCorrectionFile = "raw";
-  pt.put("READOUT.DEBUG", debug);
-  pt.put("READOUT.DATA_SOURCE.TYPE", dataSourceType);
-  pt.put("READOUT.DATA_SOURCE.TRBNET_ADDRESS", dataSourceTrbNetAddress);
-  pt.put("READOUT.DATA_SOURCE.HUB_ADDRESS", dataSourceHubAddress);
-  pt.put("READOUT.DATA_SOURCE.REFERENCE_CHANNEL", dataSourceReferenceChannel);
-  pt.put("READOUT.DATA_SOURCE.CORRECTION_FILE", dataSourceCorrectionFile);
-  ptree& externalNode = pt.add("READOUT.DATA_SOURCE.MODULES", "");
-  ptree& internalNode = externalNode.add("MODULE", "");
-  internalNode.put("TYPE", "LATTICE_TDC");
-  internalNode.put("TRBNET_ADDRESS", "e000");
-  internalNode.put("NUMBER_OF_CHANNELS", numberOfChannels);
-  internalNode.put("CHANNEL_OFFSET", channelOffset);
-  internalNode.put("RESOLUTION", "100");
-  internalNode.put("MEASUREMENT_TYPE", "TDC");
-  write_xml(channelDataFileName, pt);
-}
-
-void JPetParamManager::getTOMBDataAndCreateXMLFile(const int p_run_id)
-{
-  fillParameterBank(p_run_id);
-  int TOMBChannelsSize = fBank->getTOMBChannelsSize();
-  int channelOffset = 0;
-  int numberOfChannels = 0;
-  if (TOMBChannelsSize) {
-    for (int i = 0; i < TOMBChannelsSize; ++i) {
-      if (i == 0) {
-        std::string description = fBank->getTOMBChannel(i).getDescription();
-        channelOffset = JPetParamGetter::getTOMBChannelFromDescription(description);
-      }
-      ++numberOfChannels;
-    }
-    createXMLFile("conf.xml", channelOffset, numberOfChannels);
-    return;
-  }
-  ERROR("TOMBChannelsSize is equal to zero.");
+  registerTask<JPetGeantParser>("JPetGeantParser");
 }
