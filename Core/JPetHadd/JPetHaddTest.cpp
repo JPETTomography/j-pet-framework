@@ -66,9 +66,9 @@ BOOST_AUTO_TEST_CASE(check_same_data) {
   BOOST_REQUIRE_EQUAL(std::string(readerFirstFile.getCurrentEntry().GetName()), std::string("JPetTimeWindow"));
   BOOST_REQUIRE_EQUAL(std::string(readerSecondFile.getCurrentEntry().GetName()), std::string("JPetTimeWindow"));
   BOOST_REQUIRE_EQUAL(std::string(readerHaddedFile.getCurrentEntry().GetName()), std::string("JPetTimeWindow"));
-  const auto firstParamBank = readerFirstFile.getObjectFromFile("ParamBank;1");
-  const auto secondParamBank = readerSecondFile.getObjectFromFile("ParamBank;1");
-  const auto haddedParamBank = readerHaddedFile.getObjectFromFile("ParamBank;1");
+  const auto firstParamBank = readerFirstFile.getObjectFromFile("ParamBank");
+  const auto secondParamBank = readerSecondFile.getObjectFromFile("ParamBank");
+  const auto haddedParamBank = readerHaddedFile.getObjectFromFile("ParamBank");
   BOOST_CHECK(firstParamBank);
   BOOST_CHECK(secondParamBank);
   BOOST_CHECK(haddedParamBank);
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(check_param_bank) {
   JPetReader readerHaddedFile(haddedFileName.c_str());
   BOOST_REQUIRE(readerHaddedFile.isOpen());
   BOOST_REQUIRE_EQUAL(std::string(readerHaddedFile.getCurrentEntry().GetName()), std::string("JPetTimeWindow"));
-  const auto haddedParamBank = readerHaddedFile.getObjectFromFile("ParamBank;1");
+  const auto haddedParamBank = readerHaddedFile.getObjectFromFile("ParamBank");
   BOOST_CHECK(haddedParamBank);
 
   long long haddedFileNumberOfEntries = readerHaddedFile.getNbOfAllEntries();
