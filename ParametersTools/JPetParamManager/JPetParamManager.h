@@ -16,44 +16,47 @@
 #ifndef _J_PET_PARAM_MANAGER_
 #define _J_PET_PARAM_MANAGER_
 
-#include "./JPetBarrelSlot/JPetBarrelSlotFactory.h"
-#include "./JPetFEB/JPetFEBFactory.h"
-#include "./JPetFrame/JPetFrameFactory.h"
-#include "./JPetLayer/JPetLayerFactory.h"
-#include "./JPetLoggerInclude.h"
-#include "./JPetPM/JPetPMFactory.h"
-#include "./JPetParamBank/JPetParamBank.h"
-#include "./JPetReader/JPetReader.h"
-#include "./JPetScin/JPetScinFactory.h"
 #include "./JPetScopeConfigParser/JPetScopeConfigPOD.h"
 #include "./JPetTOMBChannel/JPetTOMBChannelFactory.h"
+#include "./JPetBarrelSlot/JPetBarrelSlotFactory.h"
+#include "./JPetParamBank/JPetParamBank.h"
+#include "./JPetFrame/JPetFrameFactory.h"
+#include "./JPetLayer/JPetLayerFactory.h"
+#include "./JPetScin/JPetScinFactory.h"
+#include "./JPetFEB/JPetFEBFactory.h"
 #include "./JPetTRB/JPetTRBFactory.h"
+#include "./JPetReader/JPetReader.h"
 #include "./JPetWriter/JPetWriter.h"
+#include "./JPetPM/JPetPMFactory.h"
+#include "./JPetLoggerInclude.h"
 #include <boost/any.hpp>
 #include <cassert>
 #include <fstream>
-#include <set>
 #include <sstream>
 #include <string>
+#include <set>
 
-class JPetParamManager {
+class JPetParamManager
+{
 public:
-  JPetParamManager() : fParamGetter(), fBank(0), fIsNullObject(false) {}
-  JPetParamManager(JPetParamGetter* paramGetter) : fParamGetter(paramGetter), fBank(0), fIsNullObject(false) {}
-  JPetParamManager(JPetParamGetter* paramGetter, std::set<ParamObjectType> expectMissing)
-      : fParamGetter(paramGetter), fExpectMissing(expectMissing), fBank(0), fIsNullObject(false) {}
+  JPetParamManager(): fParamGetter(), fBank(0), fIsNullObject(false) {}
+  JPetParamManager(JPetParamGetter* paramGetter):
+    fParamGetter(paramGetter), fBank(0) , fIsNullObject(false) {}
+  JPetParamManager(JPetParamGetter* paramGetter, std::set<ParamObjectType> expectMissing):
+    fParamGetter(paramGetter), fExpectMissing(expectMissing), fBank(0), fIsNullObject(false) {}
 
   /**
    * Special constructor to create NullObject. This object can be returned
    * if JPetParamManager is not created, and the const& is expected to be returned.
    */
-  explicit JPetParamManager(bool isNull) : fParamGetter(), fBank(0), fIsNullObject(isNull) {}
+  explicit JPetParamManager(bool isNull): fParamGetter(), fBank(0), fIsNullObject(isNull) {}
   ~JPetParamManager();
 
   /**
    * Factory method to produce JPetParamManager instance based on provided options
    */
-  static std::shared_ptr<JPetParamManager> generateParamManager(const std::map<std::string, boost::any>& options);
+  static std::shared_ptr<JPetParamManager> generateParamManager(
+    const std::map<std::string, boost::any>& options);
   std::map<int, JPetTRB*>& getTRBs(const int runId);
   std::map<int, JPetFEB*>& getFEBs(const int runId);
   std::map<int, JPetFrame*>& getFrames(const int runId);
