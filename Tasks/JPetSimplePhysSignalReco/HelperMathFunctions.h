@@ -38,7 +38,6 @@ float polynomialFit(const ublas::vector<float>& t, const ublas::vector<float>& v
   float meanT = 0.0;
   float meanV = 0.0;
   float sx = 0.0;
-  float sy = 0.0;
   float sxy = 0.0;
   if (v.size() != t.size())
     return tSig;
@@ -59,7 +58,6 @@ float polynomialFit(const ublas::vector<float>& t, const ublas::vector<float>& v
   meanV = meanV / K;
   for (int i = 0; i < K; i++) {
     sx = sx + (t(i) - meanT) * (t(i) - meanT);
-    sy = sy + (v(i) - meanV) * (v(i) - meanV);
     sxy = sxy + (t(i) - meanT) * (v(i) - meanV);
   }
   a = sxy / sx;
