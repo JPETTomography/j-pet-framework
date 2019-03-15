@@ -81,3 +81,8 @@ void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit, const J
   }
 
 }
+
+long JPetGeantParserTools::estimateNumberOfEventsinTimeWindow(float windowWidth, float sourceActivity)
+{
+      return fRandomGenerator->Poisson(abs(windowWidth)*sourceActivity*pow(10, -6));
+}

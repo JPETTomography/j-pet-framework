@@ -71,6 +71,9 @@ bool JPetGeantParser::init()
   if (fMakeHisto) bookBasicHistograms();
   if (fMakeEffiHisto) bookEfficiencyHistograms();
 
+
+  fExpectedNumberOfEvents = JPetGeantParserTools::estimateNumberOfEventsinTimeWindow(fMinTime,fSimulatedActivity);
+
   INFO("MC Hit wrapper started.");
 
   return true;
@@ -87,9 +90,10 @@ bool JPetGeantParser::exec()
       if (fProcessSingleEventinWindow){
               saveHits();
       } else {
-            if (fActivityIndex > abs(fMinTime * fSimulatedActivity * pow(10, -6))) {
+            if (fActivityIndex > fExpectedNumberOfEvents) {
               saveHits();
               fActivityIndex = 0;
+              fExpectedNumberOfEvents = JPetGeantParserTools::estimateNumberOfEventsinTimeWindow(fMinTime,fSimulatedActivity);
             } else {
               fActivityIndex++;
             }

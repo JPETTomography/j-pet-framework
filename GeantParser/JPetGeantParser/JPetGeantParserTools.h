@@ -50,6 +50,7 @@ public:
                                float& enePrompt, std::array<float, 2>& ene2g,
                                std::array<float, 3>& ene3g );
 
+  static long estimateNumberOfEventsinTimeWindow(float windowWidth, float sourceActivity);
 private:
   static TRandom3* fRandomGenerator;
   
