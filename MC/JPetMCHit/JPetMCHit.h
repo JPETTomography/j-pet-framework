@@ -41,6 +41,8 @@ public:
   void setGenGammaMultiplicity(UInt_t i){fGenGammaMultiplicity=i;} ///< 1-prompt gamma; 2-gamma from back-to-bak; 3-gamma from oPs
   UInt_t getGenGammaMultiplicity(){return fGenGammaMultiplicity;}
 
+  Int_t getRecoHitIndex(){return fRecoHitIndex;}
+  void setRecoHitIndex(Int_t i){fRecoHitIndex=i;}
 
 private:
   UInt_t fMCDecayTreeIndex = 0u;
@@ -48,6 +50,7 @@ private:
   TVector3 fPolarization;
   TVector3 fMomentum;
   UInt_t fGenGammaMultiplicity = 0u; ///< generated gamma cheat sheet: 1- prompt; 2- back-to-back; 3- 3gamma annihilation
+  Int_t fRecoHitIndex = -1;
 
   ClassDef(JPetMCHit, 2);
 };

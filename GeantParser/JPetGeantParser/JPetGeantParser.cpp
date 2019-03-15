@@ -139,7 +139,6 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     JPetMCHit mcHit = JPetGeantParserTools::createJPetMCHit(evPack->GetHit(i), getParamBank());
 
 
-    fStoredMCHits.push_back(mcHit);
     if (fMakeHisto) fillHistoMCGen(mcHit);
 
     // create reconstructed hit and add all smearings
@@ -147,6 +146,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     // add criteria for possible rejection of reconstructed events (e.g. E>50 keV)
 
     if (JPetGeantParserTools::isHitReconstructed(recHit, fExperimentalThreshold)) {
+      mcHit.setRecoHitIndex(fStoredHits.size()); // tables indexing starts from zero
       fStoredHits.push_back(recHit);
       JPetGeantParserTools::identifyRecoHits(evPack->GetHit(i), recHit,
                                              isRecPrompt, isSaved2g, isSaved3g,
@@ -154,6 +154,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
 
       if (fMakeHisto) fillHistoMCRec(recHit);
     }
+    fStoredMCHits.push_back(mcHit);
 
   }
 
