@@ -86,3 +86,8 @@ long JPetGeantParserTools::estimateNumberOfEventsinTimeWindow(float windowWidth,
 {
       return fRandomGenerator->Poisson(abs(windowWidth)*sourceActivity*pow(10, -6));
 }
+
+float JPetGeantParserTools::estimateNextDecayTime(float activityMBq)
+{
+      return fRandomGenerator->Exp((pow(10, 6)/activityMBq));
+}

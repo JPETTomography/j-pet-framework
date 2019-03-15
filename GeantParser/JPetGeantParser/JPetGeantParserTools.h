@@ -51,6 +51,8 @@ public:
                                std::array<float, 3>& ene3g );
 
   static long estimateNumberOfEventsinTimeWindow(float windowWidth, float sourceActivity);
+
+  static float estimateNextDecayTime(float activityMBq);
 private:
   static TRandom3* fRandomGenerator;
   

@@ -90,12 +90,12 @@ bool JPetGeantParser::exec()
       if (fProcessSingleEventinWindow){
               saveHits();
       } else {
-            if (fActivityIndex > fExpectedNumberOfEvents) {
+             // first adjust all hits in single event to time window scheme
+             fTimeShift = fTimeShift + JPetGeantParserTools::estimateNextDecayTime(fSimulatedActivity);
+ 
+            if (fTimeShift > fMaxTime) {
               saveHits();
-              fActivityIndex = 0;
-              fExpectedNumberOfEvents = JPetGeantParserTools::estimateNumberOfEventsinTimeWindow(fMinTime,fSimulatedActivity);
-            } else {
-              fActivityIndex++;
+              fTimeShift = fMinTime;
             }
       }
       
@@ -134,8 +134,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
   bool isGen3g = evPack->GetEventInformation()->GetThreeGammaGen();
 
 
-  // first adjust all hits in single event to time window scheme
-  float timeShift = JPetRandom::GetRandomGenerator()->Uniform(fMinTime, fMaxTime);
+ 
 
   for ( unsigned int i = 0; i < evPack->GetNumberOfHits(); i++) {
 
@@ -146,7 +145,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     if (fMakeHisto) fillHistoMCGen(mcHit);
 
     // create reconstructed hit and add all smearings
-    JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), timeShift, fZresolution);
+    JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), fTimeShift, fZresolution);
     // add criteria for possible rejection of reconstructed events (e.g. E>50 keV)
 
     if (JPetGeantParserTools::isHitReconstructed(recHit, fExperimentalThreshold)) {
