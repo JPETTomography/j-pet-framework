@@ -24,9 +24,11 @@
 /**
  * @brief Class handling the type of option provided by the user.
  */
-class JPetOptionsTypeHandler {
+class JPetOptionsTypeHandler
+{
 public:
-  enum kAllowedTypes {
+  enum kAllowedTypes
+  {
     kNotFound,
     kInt,
     kString,
