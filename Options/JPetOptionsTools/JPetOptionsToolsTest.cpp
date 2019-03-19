@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(getOptionBy)
   BOOST_REQUIRE_EQUAL(getOptionAsDouble(opts, "my_double"), 14.6);
   BOOST_REQUIRE(!getOptionAsVectorOfStrings(opts, "my_vectS").empty());
   BOOST_REQUIRE_EQUAL(getOptionAsVectorOfStrings(opts, "my_vectS").size(), 2u);
-  BOOST_REQUIRE_EQUAL(getOptionAsVectorOfStrings(opts, "my_intV").size(), 3u);
+  BOOST_REQUIRE_EQUAL(getOptionAsVectorOfInts(opts, "my_intV").size(), 3u);
   BOOST_REQUIRE_EQUAL(getOptionAsBool(opts, "my_bool"), false);
 }
 
