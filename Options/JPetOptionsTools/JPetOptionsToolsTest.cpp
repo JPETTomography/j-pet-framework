@@ -46,7 +46,6 @@ BOOST_AUTO_TEST_CASE(createOptionsFromConfigFile)
   std::sort(keys_expected.begin(), keys_expected.end());
   BOOST_REQUIRE_EQUAL_COLLECTIONS(keys.begin(), keys.end(), keys_expected.begin(), keys_expected.end());
 
-  std::vector<std::string> allowedTypes = {"int", "std::string", "bool", "std::vector<std::string>", "std::vector<int>"};
   for (const auto& opt : options)
   {
     if (JPetOptionsTypeHandler::getTypeOfOption(opt.first) == "std::string")
