@@ -78,16 +78,17 @@ public:
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
 
-  void addUserParamsUsedTasks(const std::map<std::string, boost::any> &opts);
-
 private:
   JPetManager(const JPetManager &);
   void operator=(const JPetManager &);
 
   void registerDefaultTasks();
+  void addUserParamsUsedTasks(const std::map<std::string, boost::any> &opts);
 
   JPetManager();
   bool fThreadsEnabled = false;
   jpet_task_factory::JPetTaskFactory fTaskFactory;
+  const std::string kUseTasksKey =
+      "JPetManager_useTasks_std::vector<std::string>";
 };
 #endif /* !JPETMANAGER_H */

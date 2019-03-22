@@ -149,8 +149,6 @@ void JPetManager::addUserParamsUsedTasks(
     const std::map<std::string, boost::any> &opts) {
   using namespace jpet_options_tools;
   std::vector<std::string> useTasksValue;
-  const std::string kUseTasksKey =
-      "JPetManager_useTasks_std::vector<std::string>";
   if (isOptionSet(opts, kUseTasksKey)) {
     useTasksValue = getOptionAsVectorOfStrings(opts, kUseTasksKey);
   }
