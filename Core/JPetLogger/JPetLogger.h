@@ -16,6 +16,7 @@
 #ifndef JPETLOGGER_H
 #define JPETLOGGER_H
 
+#include "JPetTMessageHandler.h"
 #include <fstream>
 #include <iostream>
 #include <ostream>
@@ -42,28 +43,37 @@ class JPetLogger {
 public:
 #ifndef __CINT__
 
-  static boost::log::sources::severity_logger<boost::log::trivial::severity_level>& getSeverity() {
+  static boost::log::sources::severity_logger<
+      boost::log::trivial::severity_level> &
+  getSeverity() {
     static bool isInitialized = false;
     if (!isInitialized) {
-      JPetLogger::getInstance(); // if JPetLogger is not initialized, get instance to call constructor
+      JPetLogger::getInstance(); // if JPetLogger is not initialized, get
+                                 // instance to call constructor
       isInitialized = true;
     }
-    static boost::log::sources::severity_logger<boost::log::trivial::severity_level> sev;
+    static boost::log::sources::severity_logger<
+        boost::log::trivial::severity_level>
+        sev;
     return sev;
   }
 
-  static void formatter(boost::log::record_view const& rec, boost::log::formatting_ostream& out_stream);
+  static void formatter(boost::log::record_view const &rec,
+                        boost::log::formatting_ostream &out_stream);
 
   static void setLogLevel(boost::log::trivial::severity_level level) {
-    JPetLogger::getInstance().sink->set_filter(boost::log::trivial::severity >= level);
+    JPetLogger::getInstance().sink->set_filter(boost::log::trivial::severity >=
+                                               level);
   }
 
-  static JPetLogger& getInstance() {
+  static JPetLogger &getInstance() {
     static JPetLogger logger;
     return logger;
   }
 
-  static void setThreadsEnabled(bool value) { JPetLogger::getInstance().isThreadsEnabled = value; }
+  static void setThreadsEnabled(bool value) {
+    JPetLogger::getInstance().isThreadsEnabled = value;
+  }
 #else
   void getSeverity();
   void formatter();
@@ -72,17 +82,20 @@ public:
 
 private:
   JPetLogger();
-  JPetLogger(const JPetLogger&);
-  JPetLogger& operator=(const JPetLogger&);
+  JPetLogger(const JPetLogger &);
+  JPetLogger &operator=(const JPetLogger &);
 
 #ifndef __CINT__
   void init();
 
-  typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_file_backend> sink_t;
+  typedef boost::log::sinks::synchronous_sink<
+      boost::log::sinks::text_file_backend>
+      sink_t;
   boost::shared_ptr<sink_t> sink;
 
   bool isThreadsEnabled = false;
 #endif
+  JPetTMessageHandler rootHandler;
 };
 
 #endif /* !JPETLOGGER_H */
