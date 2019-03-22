@@ -41,7 +41,7 @@ public:
   /// validated option generated based on it.
   /// @return pair of boolean status and the map of validated options. In case
   /// of errors the status is set to false.
-  std::pair<bool, std::map<std::string, boost::any>>
+  static std::pair<bool, std::map<std::string, boost::any>>
   parseCmdLine(int argc, const char **argv);
 
   /// @brief Method to register tasks that can form a chain of tasks to be
@@ -82,7 +82,7 @@ private:
   JPetManager(const JPetManager &);
   void operator=(const JPetManager &);
 
-  void registerDefaultTasks();
+  static void registerDefaultTasks();
   void addUserParamsUsedTasks(const std::map<std::string, boost::any> &opts);
 
   JPetManager();

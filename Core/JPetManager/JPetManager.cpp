@@ -50,7 +50,7 @@ void JPetManager::run(int argc, const char **argv) {
                                                     /// check if the examples
                                                     /// are working
   }
-  registerDefaultTasks();
+  JPetManager::registerDefaultTasks();
   addUserParamsUsedTasks(allValidatedOptions);
   auto chainOfTasks =
       fTaskFactory.createTaskGeneratorChain(allValidatedOptions);
@@ -112,7 +112,6 @@ JPetManager::parseCmdLine(int argc, const char **argv) {
   return std::make_pair(true, allValidatedOptions);
 }
 
-// cppcheck-suppress unusedFunction
 void JPetManager::useTask(const std::string &name,
                           const std::string &inputFileType,
                           const std::string &outputFileType, int numTimes) {
@@ -142,7 +141,7 @@ void JPetManager::setThreadsEnabled(bool enable) {
 /// the map of tasks generators in advance. This provate method is intended to
 /// register all such tasks in advance of creation of the task generator chain.
 void JPetManager::registerDefaultTasks() {
-  registerTask<JPetGeantParser>("JPetGeantParser");
+  JPetManager::getManager().registerTask<JPetGeantParser>("JPetGeantParser");
 }
 
 void JPetManager::addUserParamsUsedTasks(
