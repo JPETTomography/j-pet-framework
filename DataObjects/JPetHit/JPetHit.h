@@ -66,6 +66,7 @@ public:
   const JPetPhysSignal& getSignalB() const;
   const JPetScin& getScintillator() const;
   const JPetBarrelSlot& getBarrelSlot() const;
+  uint getMCindex() const;
   bool isSignalASet()const;
   bool isSignalBSet()const;
   void setRecoFlag(JPetHit::RecoFlag flag);
@@ -84,6 +85,7 @@ public:
   void setSignals(const JPetPhysSignal& p_sigA, const JPetPhysSignal& p_sigB);
   void setSignalA(const JPetPhysSignal& p_sig);
   void setSignalB(const JPetPhysSignal& p_sig);
+  void setMCindex(uint i);
   bool checkConsistency() const;
   void Clear(Option_t* opt  = "");
 
@@ -102,6 +104,7 @@ private:
   JPetPhysSignal fSignalB;
   TRef fBarrelSlot = NULL;
   TRef fScintillator = NULL;
+  uint fMCindex = 0u;
 
   ClassDef(JPetHit, 7);
 };

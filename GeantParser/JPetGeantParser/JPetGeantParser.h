@@ -62,9 +62,6 @@ protected :
   float fZresolution = 0.976; // 80ps   12.2  velocity
   double fExperimentalThreshold = 10; //< in keV
 
-  // constants for histograms
-  int kEffiHisto_ene_nBin = 200;
-  double kEffiHisto_ene_width = 8;
 
   // internal variables
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";
@@ -76,7 +73,8 @@ protected :
   const std::string kEnergyThresholdParamKey = "GeantParser_EnergyThreshold_double";
   const std::string kProcessSingleEventinWindowParamKey = "GeantParser_ProcessSingleEventInWindow_bool";
 
-  long fActivityIndex = 0;
+  long fExpectedNumberOfEvents = 0;
+  float fTimeShift = fMinTime;
 
   std::vector<JPetMCHit> fStoredMCHits; ///< save MC hits into single time window when it contains enough hits
   std::vector<JPetHit> fStoredHits; ///< save RECONSTRUCTED MC hits into single time window when it contains enough hits
@@ -90,6 +88,14 @@ protected :
   void fillHistoGenInfo(JPetGeantEventInformation*);
   void fillHistoMCGen(JPetMCHit&);
   void fillHistoMCRec(JPetHit&);
+
+  ulong  nPromptGen = 0u;
+  ulong  nPromptRec = 0u;
+  ulong  n2gGen = 0u;
+  ulong  n2gRec = 0u;
+  ulong  n3gGen = 0u;
+  ulong  n3gRec = 0u;
+
 
 
 };

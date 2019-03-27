@@ -50,9 +50,22 @@ public:
                                float& enePrompt, std::array<float, 2>& ene2g,
                                std::array<float, 3>& ene3g );
 
+  static float estimateNextDecayTimeExp(float activityMBq);
+  static void fillTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax);
+  static float getNextTimeShift();
+  static uint getNumberOfDecaysInWindow();
+  static bool isTimeWindowFilled();
+  static void clearTimeDistoOfDecays();
+  static std::vector<float> getTimeDistoOfDecays();
+  static std::vector<float> getTimeDiffDistoOfDecays();
+  static std::pair<float, float> calculateEfficiency(ulong, ulong);
+
 private:
   static TRandom3* fRandomGenerator;
-  
+  static std::vector<float> fTimeDistroOfDecays;
+  static std::vector<float> fTimeDiffDistro;
+  static uint fCurrentIndexTimeShift;
+
 };
 
 #endif
