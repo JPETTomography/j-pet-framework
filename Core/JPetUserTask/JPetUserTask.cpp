@@ -67,6 +67,11 @@ void JPetUserTask::setEvent(TObject* ev)
   fEvent = ev;
 }
 
+TObject* JPetUserTask::getInputEvents()
+{
+  return fEvent;
+}
+
 jpet_options_tools::OptsStrAny JPetUserTask::getOptions() const
 {
   return fParams.getOptions();
