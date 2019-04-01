@@ -89,12 +89,12 @@ protected :
   void fillHistoMCGen(JPetMCHit&);
   void fillHistoMCRec(JPetHit&);
 
-  ulong  nPromptGen = 0u;
-  ulong  nPromptRec = 0u;
-  ulong  n2gGen = 0u;
-  ulong  n2gRec = 0u;
-  ulong  n3gGen = 0u;
-  ulong  n3gRec = 0u;
+  unsigned long  nPromptGen = 0u;
+  unsigned long  nPromptRec = 0u;
+  unsigned long  n2gGen = 0u;
+  unsigned long  n2gRec = 0u;
+  unsigned long  n3gGen = 0u;
+  unsigned long  n3gRec = 0u;
 
 
 

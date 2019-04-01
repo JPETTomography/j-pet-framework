@@ -191,7 +191,7 @@ const JPetBarrelSlot& JPetHit::getBarrelSlot() const
 
 /** Get the index to MC hit structure
  */
-uint JPetHit::getMCindex() const
+unsigned int JPetHit::getMCindex() const
 {
   return fMCindex;
 }

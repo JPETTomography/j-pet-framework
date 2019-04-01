@@ -64,7 +64,7 @@ private:
   static TRandom3* fRandomGenerator;
   static std::vector<float> fTimeDistroOfDecays;
   static std::vector<float> fTimeDiffDistro;
-  static uint fCurrentIndexTimeShift;
+  static uint fCurrentIndexTimeShift = 0;
 
 };
 
