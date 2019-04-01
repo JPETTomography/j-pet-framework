@@ -418,7 +418,7 @@ void JPetHit::setSignalB(const JPetPhysSignal& p_sig)
 /**
  * Set index to MC hit structure
  */
-void JPetHit::setMCindex(uint i)
+void JPetHit::setMCindex(unsigned int i)
 {
   fMCindex = i;
 }

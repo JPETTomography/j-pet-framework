@@ -18,7 +18,7 @@
 #include <TMath.h>
 
 TRandom3* JPetGeantParserTools::fRandomGenerator = JPetRandom::GetRandomGenerator();
-uint JPetGeantParserTools::fCurrentIndexTimeShift = 0;
+unsigned int JPetGeantParserTools::fCurrentIndexTimeShift = 0;
 std::vector<float> JPetGeantParserTools::fTimeDistroOfDecays = {};
 std::vector<float> JPetGeantParserTools::fTimeDiffDistro = {};
 
@@ -133,7 +133,7 @@ std::pair<float, float> JPetGeantParserTools::calculateEfficiency( ulong n, ulon
   return std::make_pair(effi, err_effi);
 }
 
-uint JPetGeantParserTools::getNumberOfDecaysInWindow()
+unsigned int JPetGeantParserTools::getNumberOfDecaysInWindow()
 {
   return fTimeDistroOfDecays.size();
 }

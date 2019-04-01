@@ -53,7 +53,7 @@ public:
   static float estimateNextDecayTimeExp(float activityMBq);
   static void fillTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax);
   static float getNextTimeShift();
-  static uint getNumberOfDecaysInWindow();
+  static unsigned int getNumberOfDecaysInWindow();
   static bool isTimeWindowFilled();
   static void clearTimeDistoOfDecays();
   static std::vector<float> getTimeDistoOfDecays();
@@ -64,7 +64,7 @@ private:
   static TRandom3* fRandomGenerator;
   static std::vector<float> fTimeDistroOfDecays;
   static std::vector<float> fTimeDiffDistro;
-  static uint fCurrentIndexTimeShift = 0;
+  static unsigned int fCurrentIndexTimeShift = 0;
 
 };
 
