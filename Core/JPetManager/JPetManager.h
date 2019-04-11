@@ -16,10 +16,10 @@
 #ifndef JPETMANAGER_H
 #define JPETMANAGER_H
 
+#include "JPetTaskFactory/JPetTaskFactory.h"
+#include <boost/any.hpp>
 #include <map>
 #include <string>
-#include <boost/any.hpp>
-#include "./JPetTaskFactory/JPetTaskFactory.h"
 
 /**
  * @brief Main Manager of the analyses performed with the J-PET Framework.
@@ -40,13 +40,13 @@ public:
 
   /// @brief Method parses command line arguments and returns the set of validated option generated based on it.
   /// @return pair of boolean status and the map of validated options. In case of errors the status is set to false.
-  std::pair<bool, std::map<std::string, boost::any> > parseCmdLine(int argc, const char** argv);
+  std::pair<bool, std::map<std::string, boost::any>> parseCmdLine(int argc, const char** argv);
 
   /// @brief Method to register tasks that can form a chain of tasks to be executed.
   /// The registered tasks can be used later by calling useTask method.
   /// The task must inherit from JPetTaskInterface.
   /// @param name string that identifies given registered task. Also, this string is passed to the constructor as argument.
-  template<typename T>
+  template <typename T>
   void registerTask(const std::string& name)
   {
     fTaskFactory.registerTask<T>(name);
@@ -61,7 +61,8 @@ public:
   /// @param name string that identifies registered task. Also, this string is passed to the constructor as argument.
   /// @param inputFileType string corresponding to the input file extension. If empty, the task with no typical input is assumed.
   /// @param outputFileType string corresponding to the output file extension. If empty, the task with no typical output is assumed.
-  /// @param numTimes Number of times given task will be executed in a row. If value is less then zero, the task will be executed in infinite loop and some condition must be given to stop it.
+  /// @param numTimes Number of times given task will be executed in a row. If value is less then zero, the task will be executed in infinite loop and
+  /// some condition must be given to stop it.
   /// @throws exception in case of errors.
   void useTask(const std::string& name, const std::string& inputFileType = "", const std::string& outputFileType = "", int numTimes = 1);
 

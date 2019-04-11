@@ -15,7 +15,7 @@
 
 #ifndef _JPETUNPACKER_H_
 #define _JPETUNPACKER_H_
-#include "./Unpacker2/Unpacker2/Unpacker2.h"
+#include "Unpacker2.h"
 #include <string>
 
 class Unpacker2;
@@ -28,32 +28,13 @@ class JPetUnpacker
 public:
   ~JPetUnpacker();
   bool exec();
-  inline int getEventsToProcess() const
-  {
-    return fEventsToProcess;
-  }
-  inline std::string getHldFile() const
-  {
-    return fHldFile;
-  }
-  inline std::string getCfgFile() const
-  {
-    return fCfgFile;
-  }
-  inline std::string getTOTCalibFile() const
-  {
-    return fTOTCalibFile;
-  }
-  inline std::string getTDCCalibFile() const
-  {
-    return fTDCCalibFile;
-  }
-  void setParams(const std::string& hldFile,
-                 int numOfEvents = 100000000,
-                 const std::string& cfgFile = "conf_trb3.xml",
-                 const std::string& totCalibFile = "",
-                 const std::string& tdcCalibFile = ""
-                );
+  inline int getEventsToProcess() const { return fEventsToProcess; }
+  inline std::string getHldFile() const { return fHldFile; }
+  inline std::string getCfgFile() const { return fCfgFile; }
+  inline std::string getTOTCalibFile() const { return fTOTCalibFile; }
+  inline std::string getTDCCalibFile() const { return fTDCCalibFile; }
+  void setParams(const std::string& hldFile, int numOfEvents = 100000000, const std::string& cfgFile = "conf_trb3.xml",
+                 const std::string& totCalibFile = "", const std::string& tdcCalibFile = "");
 
 private:
   Unpacker2* fUnpacker = nullptr;
