@@ -50,6 +50,9 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion
     )
 
+################################################################################
+## Find Threads package
+#
 find_package(Threads)
 
 ################################################################################
@@ -90,8 +93,8 @@ set_property(TARGET ROOT::Flags_CXX APPEND PROPERTY
 
 ################################################################################
 ## Find BOOST LIBs
-set(BOOST_LOG_DYN_LINK -DBOOST_LOG_DYN_LINK)
-add_definitions(${BOOST_LOG_DYN_LINK})
+#set(BOOST_LOG_DYN_LINK -DBOOST_LOG_DYN_LINK)
+#add_definitions(${BOOST_LOG_DYN_LINK})
 
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
@@ -101,7 +104,6 @@ find_package(Boost 1.50 REQUIRED
                         program_options
                         regex
                         system
-                        unit_test_framework
                         log_setup
                         log
                         date_time
@@ -121,7 +123,7 @@ message(STATUS "Boost_VERSION: ${Boost_VERSION}")
 
 ################################################################################
 ## Find Unpacker2
-find_package(Unpacker2 REQUIRED)
+find_package(Unpacker2 CONFIG REQUIRED)
 
 ################################################################################
 ## Specify source folders
@@ -137,23 +139,14 @@ set(FOLDERS_WITH_SOURCE
   )
 
 ## Point sources and headers
-foreach(dir ${FOLDERS_WITH_SOURCE})
-  file(GLOB HEADERS_TMP ${dir}/JPet*/*.h)
-  file(GLOB SOURCES_TMP ${dir}/JPet*/*.cpp)
-  file(GLOB UNIT_TEST_SOURCES_TMP ${dir}/JPet*/*Test.cpp)
-  file(GLOB FOLDERS_TMP ${dir})
-  list(REMOVE_ITEM FOLDERS_TMP ${HEADERS_TMP} ${SOURCES_TMP})
-  if(UNIT_TEST_SOURCES_TMP)
-    list(REMOVE_ITEM SOURCES_TMP ${UNIT_TEST_SOURCES_TMP})
-  endif()
-  list(APPEND HEADERS ${HEADERS_TMP})
-  list(APPEND SOURCES ${SOURCES_TMP})
-  list(APPEND UNIT_TEST_SOURCES ${UNIT_TEST_SOURCES_TMP})
-  list(APPEND FOLDERS ${FOLDERS_TMP}) # path to include for dictionaries
-endforeach()
+file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*/JPet*/*.cpp)
+file(GLOB UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/tests/*/JPet*/*Test.cpp)
 
 list(APPEND FOLDERS ${CMAKE_PREFIX_PATH}/include)
-list(APPEND FOLDERS ${CMAKE_CURRENT_SOURCE_DIR})
+foreach(dir ${FOLDERS_WITH_SOURCE})
+  list(APPEND FOLDERS ${CMAKE_CURRENT_SOURCE_DIR}/include/${dir})
+endforeach()
+list(APPEND FOLDERS ${CMAKE_CURRENT_SOURCE_DIR}/include)
 list(APPEND FOLDERS ${Boost_INCLUDE_DIRS})
 
 ################################################################################
@@ -162,56 +155,61 @@ list(APPEND FOLDERS ${Boost_INCLUDE_DIRS})
 set(DOWNLOAD_DATA ${CMAKE_CURRENT_SOURCE_DIR}/download_data.sh ${CMAKE_CURRENT_SOURCE_DIR})
 execute_process(COMMAND ${DOWNLOAD_DATA})
 
-message(FOLDERS: ${FOLDERS})
 ################################################################################
 ## Generating ROOT dictionaries
-generate_root_dictionaries(DICTIONARIES SOURCES ${SOURCES}
-  INCLUDE
-  JPetTimeWindow
-  JPetSigCh
-  JPetBaseSignal
-  JPetRawSignal
-  JPetRecoSignal
-  JPetPhysSignal
-  JPetStatistics
-  JPetAuxilliaryData
-  JPetTreeHeader
-  JPetParamBank
-  JPetHit
-  JPetLOR
-  JPetPM
-  JPetScin
-  JPetTRB
-  JPetTOMBChannel
-  JPetBarrel
-  JPetLayer
-  JPetBarrelSlot
-  JPetFrame
-  JPetFEB
-  JPetUser
-  JPetUnpacker
-  JPetEvent
-  JPetMCHit
-  JPetTimeWindowMC
-  JPetMCDecayTree
-  JPetGeantScinHits
-  JPetGeantDecayTree
-  JPetGeantEventPack
-  JPetGeantEventInformation
-  INCLUDE_DIRS ${FOLDERS}
-  RESULT_NAME JPetFramework
-)
+set(DICTIONARY_NAME G__JPetFramework)
+set(HEADERS_WITH_DICTIONARY_REQUIRED
+  include/DataObjects/JPetTimeWindow/JPetTimeWindow.h
+  include/DataObjects/JPetSigCh/JPetSigCh.h
+  include/DataObjects/JPetBaseSignal/JPetBaseSignal.h
+  include/DataObjects/JPetRawSignal/JPetRawSignal.h
+  include/DataObjects/JPetRecoSignal/JPetRecoSignal.h
+  include/DataObjects/JPetPhysSignal/JPetPhysSignal.h
+  include/DataObjects/JPetHit/JPetHit.h
+  include/DataObjects/JPetLOR/JPetLOR.h
+  include/DataObjects/JPetEvent/JPetEvent.h
+  include/Core/JPetStatistics/JPetStatistics.h
+  include/Core/JPetTreeHeader/JPetTreeHeader.h
+  include/Core/JPetUnpacker/JPetUnpacker.h
+  include/ParamObjects/JPetPM/JPetPM.h
+  include/ParamObjects/JPetScin/JPetScin.h
+  include/ParamObjects/JPetTRB/JPetTRB.h
+  include/ParamObjects/JPetTOMBChannel/JPetTOMBChannel.h
+  include/ParamObjects/JPetLayer/JPetLayer.h
+  include/ParamObjects/JPetBarrelSlot/JPetBarrelSlot.h
+  include/ParamObjects/JPetFrame/JPetFrame.h
+  include/ParamObjects/JPetFEB/JPetFEB.h
+  include/ParametersTools/JPetParamBank/JPetParamBank.h
+  include/MC/JPetMCHit/JPetMCHit.h
+  include/MC/JPetTimeWindowMC/JPetTimeWindowMC.h
+  include/MC/JPetMCDecayTree/JPetMCDecayTree.h
+  include/GeantParser/JPetGeantScinHits/JPetGeantScinHits.h
+  include/GeantParser/JPetGeantDecayTree/JPetGeantDecayTree.h
+  include/GeantParser/JPetGeantEventPack/JPetGeantEventPack.h
+  include/GeantParser/JPetGeantEventInformation/JPetGeantEventInformation.h
+  )
+
+set(LINKDEF_NAME JPetFramework_LinkDef.h)
+
+foreach(dir ${FOLDERS})
+  list(APPEND DICTIONARY_INCLUDES -I${dir})
+endforeach()
+
+include_directories(ROOT_BUG) # Fix bug in NewMacros Root file
+ROOT_GENERATE_DICTIONARY(${DICTIONARY_NAME} ${HEADERS_WITH_DICTIONARY_REQUIRED}
+  LINKDEF ${LINKDEF_NAME}
+  OPTIONS ${DICTIONARY_INCLUDES})
 
 ################################################################################
 ## Building Framework library
-add_library(JPetFramework SHARED ${SOURCES} ${HEADERS} ${DICTIONARIES})
+add_library(JPetFramework SHARED ${SOURCES} ${DICTIONARY_NAME}.cxx)
 add_library(JPetFramework::JPetFramework ALIAS JPetFramework)
 target_compile_options(JPetFramework PRIVATE -Wunused-parameter -Wall)
 target_compile_definitions(JPetFramework PRIVATE BOOST_LOG_DYN_LINK=true)
 foreach(dir ${FOLDERS_WITH_SOURCE})
   target_include_directories(JPetFramework PUBLIC
-                             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${dir}>
-                             $<INSTALL_INTERFACE:${dir}>
+                             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${dir}>
+                             $<INSTALL_INTERFACE:include/${dir}>
                             )
 endforeach()
 set_target_properties(JPetFramework PROPERTIES LINKER_LANGUAGE CXX)
@@ -221,7 +219,6 @@ target_link_libraries(JPetFramework PUBLIC Unpacker2::Unpacker2
                                            Boost::program_options
                                            Boost::regex
                                            Boost::system
-                                           Boost::unit_test_framework
                                            Boost::log_setup
                                            Boost::log
                                            Boost::date_time
@@ -238,32 +235,6 @@ target_link_libraries(JPetFramework PUBLIC Unpacker2::Unpacker2
                                            Threads::Threads
                                            )
 
-################################################################################
-## Unit tests build
-set(TESTS_DIR ${CMAKE_CURRENT_BINARY_DIR}/tests)
-file(MAKE_DIRECTORY ${TESTS_DIR})
-file(COPY unitTestUtils/run_tests.pl DESTINATION ${TESTS_DIR})
-file(COPY unitTestUtils/parseXML.py DESTINATION ${TESTS_DIR})
-foreach(test_source ${UNIT_TEST_SOURCES})
-  get_filename_component(test ${test_source} NAME_WE)
-  generate_root_dictionaries(test_dictionaries SOURCES ${test_source} INCLUDE_DIRS ${FOLDERS})
-  list(APPEND test_binaries ${test}.x)
-  add_executable(${test}.x EXCLUDE_FROM_ALL ${test_source}
-    ${test_dictionaries}
-  )
-  set_target_properties(${test}.x PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_DIR})
-  target_link_libraries(${test}.x
-    JPetFramework
-    ${Boost_LIBRARIES}
-  )
-endforeach()
-
-add_custom_target(tests DEPENDS ${test_binaries} ${TESTS_DIR}/unitTestData)
-
-## Create a symlink to the directory with data necessary for some unit tests
-add_custom_command(OUTPUT ${TESTS_DIR}/unitTestData
-  COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/unitTestData ${TESTS_DIR}/unitTestData
-)
 
 ## handle the ROOT's *.pcm files in case they were generated not in the build dir
 find_program(SHELL bash)
@@ -299,7 +270,7 @@ exec_program(
 
 ## Create the header file with framework version information
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
-  ${CMAKE_CURRENT_SOURCE_DIR}/version.h ESCAPE_QUOTES @ONLY)
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/Core/JPetTaskIO/version.h ESCAPE_QUOTES @ONLY)
 
 ## Create the thisframework.sh file with correct LD_LIBRARY_PATH information
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh.in
@@ -370,3 +341,11 @@ if(has_parent)
 endif()
 
 ################################################################################
+
+#unit tests
+option(PACKAGE_TESTS "Build the tests" ON)
+if(PACKAGE_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
+
