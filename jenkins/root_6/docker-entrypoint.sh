@@ -4,6 +4,7 @@ function executeCommand {
     rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
     echo "Exit code[" $@ "]: $rc"
 }
+executeCommand "rm -rf Unpacker2 || true"
 executeCommand "git clone --single-branch --branch cmake https://github.com/grey277/Unpacker2.git"
 executeCommand "mkdir -p Unpacker2/build"
 executeCommand "cd Unpacker2/build"
