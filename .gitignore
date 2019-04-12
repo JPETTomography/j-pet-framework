@@ -41,3 +41,4 @@ version.h
 
 #build directory
 build*
+.dist*
