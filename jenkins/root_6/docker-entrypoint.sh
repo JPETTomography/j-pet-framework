@@ -4,7 +4,13 @@ function executeCommand {
     rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
     echo "Exit code[" $@ "]: $rc"
 }
-
+executeCommand "git clone --single-branch --branch cmake https://github.com/grey277/Unpacker2.git"
+executeCommand "mkdir -p Unpacker2/build"
+executeCommand "cd Unpacker2/build"
+executeCommand "cmake .."
+executeCommand "cmake --build ."
+executeCommand "make install"
+executeCommand "cd ../.."
 executeCommand "mkdir -p build"
 executeCommand "cd build"
 executeCommand "export CMAKE_LIBRARY_PATH=$CMAKE_LIBRARY_PATH:/framework-dependencies/lib"
