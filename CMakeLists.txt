@@ -19,8 +19,9 @@ if(EXISTS "${LOC_PATH}")
 endif()
 
 project(JPetFramework VERSION 1.0.0
-                  DESCRIPTION "JPetFramework module"
+                  DESCRIPTION ""
                   LANGUAGES CXX)
+set(PROJECT_DESCRIPTION "JPetFramework module")
 
 set(CMAKE_CXX_STANDARD 11) # maybe not best solution to set it globally? upgrate minimal cmake version to 3.8 or find another way to set it only for target with interface
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
