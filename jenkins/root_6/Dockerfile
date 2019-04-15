@@ -46,7 +46,7 @@ RUN mkdir -p /framework-dependencies/include
 RUN wget https://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.gz -P /framework-dependencies
 RUN tar xvxf /framework-dependencies/boost_1_58_0.tar.gz
 RUN cd /boost_1_58_0 && ./bootstrap.sh 
-RUN cd /boost_1_58_0 && ./b2 install --prefix=/framework-dependencies --with-regex --with-test --with-program_options --with-filesystem --with-log
+RUN cd /boost_1_58_0 && ./b2 install --prefix=/framework-dependencies --with-regex --with-test --with-program_options --with-filesystem --with-log --with-atomic
 RUN wget https://root.cern.ch/download/root_v6.12.06.source.tar.gz
 RUN tar xvzf root_v6.12.06.source.tar.gz
 RUN mkdir -p root-system
