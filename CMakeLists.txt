@@ -109,6 +109,7 @@ find_package(Boost 1.50 REQUIRED
                         date_time
                         thread
                         chrono
+                        atomic
                         )
 
 if(NOT TARGET Boost::filesystem)
