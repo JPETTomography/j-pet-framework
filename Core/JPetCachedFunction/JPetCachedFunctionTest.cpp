@@ -53,4 +53,15 @@ BOOST_AUTO_TEST_CASE(getTot_quadratic)
   BOOST_CHECK_CLOSE(func(3), 13, 0.1);
 }
 
+BOOST_AUTO_TEST_CASE(cached_2D)
+{
+  JPetCachedFunctionParams params("[0] + [1] * x  + [2] * y", {1, 1, 2}); /// 1 + x + 2 * y
+  JPetCachedFunction2D func(params, Range(100, 0., 100.), Range(100, 0., 100.));
+  BOOST_CHECK(func.getParams().fValidFunction);
+  BOOST_CHECK_CLOSE(func(0, 0), 1, 0.1);
+  BOOST_CHECK_CLOSE(func(1, 1), 4, 0.1);
+  BOOST_CHECK_CLOSE(func(0, 1), 3, 0.1);
+  BOOST_CHECK_CLOSE(func(1, 0), 2, 0.1);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

@@ -66,7 +66,7 @@ JPetCachedFunction2D::JPetCachedFunction2D(const JPetCachedFunctionParams& param
   }
 
   double stepX = (fRange.first.fMax - fRange.first.fMin) / fRange.first.fBins;
-  double stepY = (fRange.first.fMax - fRange.first.fMin) / fRange.first.fBins;
+  double stepY = (fRange.second.fMax - fRange.second.fMin) / fRange.second.fBins;
   if (stepX <= 0) {
     ERROR("Check values of XMin:" + std::to_string(fRange.first.fMin) << " and XMax:" << std::to_string(fRange.first.fMax) << " !!!");
     fParams.fValidFunction = false;
@@ -82,12 +82,13 @@ JPetCachedFunction2D::JPetCachedFunction2D(const JPetCachedFunctionParams& param
   fValues.reserve(fRange.first.fBins * fRange.second.fBins);
   double currX = fRange.first.fMin;
   double currY = fRange.second.fMin;
-  for (int i = 0; i < fRange.first.fBins; i++) {
-    currX = currX + stepX;
-    for (int j = 0; j < fRange.second.fBins; j++) {
+  for (int j = 0; j < fRange.second.fBins; j++) {
+    for (int i = 0; i < fRange.first.fBins; i++) {
       fValues.push_back(func.Eval(currX, currY));
-      currY = currY + stepY;
+      currX = currX + stepX;
     }
+    currX = fRange.first.fMin;
+    currY = currY + stepY;
   }
   fParams.fValidFunction = true;
 }
