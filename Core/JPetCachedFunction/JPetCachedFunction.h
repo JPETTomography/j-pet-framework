@@ -44,8 +44,10 @@ struct JPetCachedFunctionParams {
 /**
  * @brief  Class represent function of TFormula type with the cached values
  *
+ * Special class based on TFormula that precomputes and stores function values in the cache. 
+ * The classes JPetCachedFunction1D and JPetCachedFunction2D correspond to  func(x,p0,p1,...) 
+ * and func(x,y, p0,p1, ...) implementations.
  * Base class JPetCachedFunction is not ment to be created separately.
- * The two implementations 1D and 2D are given. 
  * 
  */
 class JPetCachedFunction
