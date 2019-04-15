@@ -19,7 +19,6 @@ if(EXISTS "${LOC_PATH}")
 endif()
 
 project(JPetFramework VERSION 1.0.0
-                  DESCRIPTION ""
                   LANGUAGES CXX)
 set(PROJECT_DESCRIPTION "JPetFramework module")
 
