@@ -18,7 +18,7 @@ script:
     - "cmake .."
     - "cmake --build ."
     - "sudo make install"
-    - "cd ../..
+    - "cd ../.."
     - mkdir build
     - cd build
     - cmake ..
