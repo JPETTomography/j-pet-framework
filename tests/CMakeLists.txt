@@ -1,3 +1,20 @@
+enable_testing()
+
+set(CMAKE_CXX_STANDARD 11) # maybe not best solutio to set it globally? upgrate minimal cmake version to 3.8 or find another way to set it only for target with interface
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_PLATFORM_INDEPENDENT_CODE ON)
+
+set(default_build_type "Release")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
+  set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
+      STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+    "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
+
 #Configure Boost
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
@@ -18,7 +35,7 @@ macro(package_add_test TESTNAME)
     target_compile_options(${TESTNAME}.x PRIVATE -Wunused-parameter -Wall)
     target_compile_definitions(${TESTNAME}.x PRIVATE BOOST_LOG_DYN_LINK=true)
     target_link_libraries(${TESTNAME}.x JPetFramework Boost::unit_test_framework)
-    add_test(NAME ${TESTNAME}.x COMMAND ${TESTNAME}.x)
+    add_test(NAME ${TESTNAME}.x COMMAND ${TESTNAME}.x "--log_level=ALL --log_format=XML --log_sink=${TESTNAME}.xml")
     set_target_properties(${TESTNAME}.x PROPERTIES FOLDER tests)
     list(APPEND test_binaries ${TESTNAME}.x)
 endmacro()
@@ -33,23 +50,6 @@ add_custom_command(OUTPUT ${TESTS_DIR}/unitTestData
   COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/../unitTestData ${TESTS_DIR}/unitTestData
 )
 
-file(COPY ../unitTestUtils/run_tests.pl DESTINATION ${TESTS_DIR})
 file(COPY ../unitTestUtils/parseXML.py DESTINATION ${TESTS_DIR})
 
 add_custom_target(tests DEPENDS ${test_binaries} ${TESTS_DIR}/unitTestData)
-
-
-#set(TESTS_DIR ${CMAKE_CURRENT_BINARY_DIR}/tests)
-#
-#  get_filename_component(test ${test_source} NAME_WE)
-#  generate_root_dictionaries(test_dictionaries SOURCES ${test_source} INCLUDE_DIRS ${FOLDERS})
-#  
-#  add_executable(${test} EXCLUDE_FROM_ALL ${test_source}
-#    ${test_dictionaries}
-#  )
-#  set_target_properties(${test}.x PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${TESTS_DIR})
-#  target_link_libraries(${test}.x
-#    JPetFramework
-#    ${Boost_LIBRARIES}
-#  )
-#

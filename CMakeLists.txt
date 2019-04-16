@@ -282,7 +282,6 @@ file(GLOB EXTRAS extras/**)
 add_custom_target(extra SOURCES ${EXTRAS}
   README.md
   Doxyfile
-  unitTestUtils/run_tests.pl
 )
 
 ## Make clang print colored diagnostics when invoked from Ninja

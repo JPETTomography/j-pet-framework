@@ -23,6 +23,7 @@ script:
     - cd build
     - cmake ..
     - make
+    - source thisframework.sh
     - ctest
     - cd tests
     - chmod a+x parseXML.py
