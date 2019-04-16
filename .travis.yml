@@ -1,0 +1,29 @@
+language: cpp
+sudo: required
+dist: xenial
+compiler:
+- gcc
+os:
+- linux
+install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y git libboost-all-dev libtbb-dev cmake
+script:
+    - wget https://root.cern/download/root_v6.12.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
+    - tar xzf root_v6.12.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
+    - source root/bin/thisroot.sh
+    - "git clone --single-branch --branch cmake https://github.com/grey277/Unpacker2.git"
+    - "mkdir -p Unpacker2/build"
+    - "cd Unpacker2/build"
+    - "cmake .."
+    - "cmake --build ."
+    - "sudo make install"
+    - "cd ../..
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+    - ctest
+    - cd tests
+    - chmod a+x parseXML.py
+    - ./parseXML.py
