@@ -7,7 +7,7 @@ os:
 - linux
 install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y git libboost-all-dev cmake
+  - sudo apt-get install -y git libboost-all-dev libtbb-dev cmake
 script:
     - wget https://root.cern/download/root_v6.12.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
     - tar xzf root_v6.12.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
