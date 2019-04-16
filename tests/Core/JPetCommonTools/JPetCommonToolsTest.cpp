@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(toBoolTest)
 
 BOOST_AUTO_TEST_CASE(ifFileExistingTest)
 {
-  std::string fileTest = "run_tests.pl";
+  std::string fileTest = "JPetCommonToolsTest.x";
   bool ifFileExisting = JPetCommonTools::ifFileExisting(fileTest);
   BOOST_REQUIRE(ifFileExisting);
 }
