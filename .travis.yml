@@ -26,7 +26,5 @@ script:
     - source thisframework.sh
     - ctest
     - cd tests
-    - ls -la unitTestData/JPetGeomMappingTest/
-    - cat JPetGeomMappingTest.xml
     - chmod a+x parseXML.py
     - ./parseXML.py
