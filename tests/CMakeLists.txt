@@ -29,6 +29,10 @@ if(NOT TARGET Boost::unit_test_framework)
         INTERFACE_LINK_LIBRARIES ${Boost_LIBRARIES})
 endif()
 #End of configuration of Boost
+set(TESTS_DIR ${CMAKE_CURRENT_BINARY_DIR})
+
+add_custom_target(link_target ALL
+                  COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../unitTestData ${TESTS_DIR}/unitTestData)
 
 macro(package_add_test TESTNAME)
     add_executable(${TESTNAME}.x ${ARGN})
@@ -37,19 +41,12 @@ macro(package_add_test TESTNAME)
     target_link_libraries(${TESTNAME}.x JPetFramework Boost::unit_test_framework)
     add_test(NAME ${TESTNAME}.x COMMAND ${TESTNAME}.x "--log_level=ALL --log_format=XML --log_sink=${TESTNAME}.xml --raport_level=no")
     set_target_properties(${TESTNAME}.x PROPERTIES FOLDER tests)
-    list(APPEND test_binaries ${TESTNAME}.x)
+    add_dependencies(${TESTNAME}.x link_target)
 endmacro()
 
-set(TESTS_DIR ${CMAKE_CURRENT_BINARY_DIR})
 foreach(test_source ${UNIT_TEST_SOURCES})
     get_filename_component(test ${test_source} NAME_WE)
     package_add_test(${test} ${test_source})
 endforeach()
 
-add_custom_command(OUTPUT ${TESTS_DIR}/unitTestData
-  COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/../unitTestData ${TESTS_DIR}/unitTestData
-)
-
 file(COPY ../unitTestUtils/parseXML.py DESTINATION ${TESTS_DIR})
-
-add_custom_target(tests DEPENDS ${test_binaries} ${TESTS_DIR}/unitTestData)
