@@ -30,28 +30,26 @@
  * which executes the chain of registered tasks.
  *
  */
-class JPetManager
-{
+class JPetManager {
 public:
-  static JPetManager& getManager();
+  static JPetManager &getManager();
 
   /// @throws exceptions in case of errors.
-  void run(int argc, const char** argv);
+  void run(int argc, const char **argv);
 
   /// @brief Method parses command line arguments and returns the set of
   /// validated option generated based on it.
   /// @return pair of boolean status and the map of validated options. In case
   /// of errors the status is set to false.
-  static std::pair<bool, std::map<std::string, boost::any>> parseCmdLine(int argc, const char** argv);
+  static std::pair<bool, std::map<std::string, boost::any>>
+  parseCmdLine(int argc, const char **argv);
 
   /// @brief Method to register tasks that can form a chain of tasks to be
   /// executed. The registered tasks can be used later by calling useTask
   /// method. The task must inherit from JPetTaskInterface.
   /// @param name string that identifies given registered task. Also, this
   /// string is passed to the constructor as argument.
-  template <typename T>
-  void registerTask(const std::string& name)
-  {
+  template <typename T> void registerTask(const std::string &name) {
     fTaskFactory.registerTask<T>(name);
   }
 
@@ -74,21 +72,44 @@ public:
   /// value is less then zero, the task will be executed in infinite loop and
   /// some condition must be given to stop it.
   /// @throws exception in case of errors.
-  void useTask(const std::string& name, const std::string& inputFileType = "", const std::string& outputFileType = "", int numTimes = 1);
+  void useTask(const std::string &name, const std::string &inputFileType = "",
+               const std::string &outputFileType = "", int numTimes = 1);
 
   bool areThreadsEnabled() const;
   void setThreadsEnabled(bool enable);
 
 private:
-  JPetManager(const JPetManager&);
-  void operator=(const JPetManager&);
+  JPetManager(const JPetManager &);
+  void operator=(const JPetManager &);
 
+  /// @brief Adds any built-in tasks based on JPetTaskIO to the map of taska
+  /// generators to facilitate their later generation on demand
+  ///
+  /// Any built-in tasks which are handled by JPetTaskIO the same way as
+  /// user-defined tasks (rather than using a dedicated task wrapper as is the
+  /// case for JPetUnzipAndUpackTask or JPetParamBankHandlerTask) can be easily
+  /// added to the chain of tasks using the same mehanics as exposed to the user
+  /// for adding users' tasks prvided that the built-in tasks are registered in
+  /// the map of tasks generators in advance. This provate method is intended to
+  /// register all such tasks in advance of creation of the task generator
+  /// chain.
   static void registerDefaultTasks();
-  void addUserParamsUsedTasks(const std::map<std::string, boost::any>& opts);
+
+  /**
+   * @brief Adds any tasks definded in userParams.json
+   *
+   * Adds any user-defined task and registered dynamically from userParams to
+   * run setup.
+   * Example: JPetManager_useTasks_std::vector<std::string>: ["TaskName", "input
+   * type", "output type", "TaskName2", "input type", "output type"]
+   * Will add 2 user defined tasks: TaskName and TaskName2 to run.
+   **/
+  void useTasksFromUserParams(const std::map<std::string, boost::any> &opts);
 
   JPetManager();
   bool fThreadsEnabled = false;
   jpet_task_factory::JPetTaskFactory fTaskFactory;
-  const std::string kUseTasksKey = "JPetManager_useTasks_std::vector<std::string>";
+  const std::string kUseTasksFromParamsKey =
+      "JPetManager_useTasks_std::vector<std::string>";
 };
 #endif /* !JPETMANAGER_H */
