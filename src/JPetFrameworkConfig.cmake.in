@@ -1,0 +1,20 @@
+include(CMakeFindDependencyMacro)
+
+# Same syntax as find_package
+find_dependency(ROOT CONFIG REQUIRED)
+find_dependency(Unpacker2 CONFIG REQUIRED)
+find_dependency(Boost 1.50 REQUIRED 
+             COMPONENTS filesystem
+                        program_options
+                        regex
+                        system
+                        log_setup
+                        log
+                        date_time
+                        thread
+                        chrono
+                        atomic
+                        unit_test_framework)
+
+# Add the targets file
+include("${CMAKE_CURRENT_LIST_DIR}/JPetFrameworkTargets.cmake")

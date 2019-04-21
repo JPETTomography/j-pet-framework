@@ -26,5 +26,4 @@ script:
     - source thisframework.sh
     - ctest
     - cd tests
-    - chmod a+x parseXML.py
-    - ./parseXML.py
+    - grep -rwnl . -e 'Error' | xarg cat
