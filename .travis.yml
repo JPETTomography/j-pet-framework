@@ -23,7 +23,7 @@ script:
     - cd build
     - cmake ..
     - make
-    - source thisframework.sh
+    - source src/thisframework.sh
     - ctest
     - cd tests
     - grep -rwnl . -e 'Error' | xarg cat
