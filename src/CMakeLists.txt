@@ -268,7 +268,7 @@ ROOT_GENERATE_DICTIONARY(${DICTIONARY_NAME} ${HEADERS_WITH_DICTIONARY_REQUIRED}
 add_library(JPetFramework SHARED ${SOURCES} ${DICTIONARY_NAME}.cxx)
 add_library(JPetFramework::JPetFramework ALIAS JPetFramework)
 target_compile_options(JPetFramework PRIVATE -Wunused-parameter -Wall)
-target_compile_definitions(JPetFramework PRIVATE BOOST_LOG_DYN_LINK=true)
+target_compile_definitions(JPetFramework PUBLIC BOOST_LOG_DYN_LINK=true)
 foreach(dir ${FOLDERS_WITH_SOURCE})
   target_include_directories(JPetFramework PUBLIC
                              $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/${dir}>
