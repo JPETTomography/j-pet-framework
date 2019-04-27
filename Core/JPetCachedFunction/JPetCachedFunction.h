@@ -79,7 +79,7 @@ public:
 
 private:
   Range fRange;
-  double fStep = 1; /// Step size with which the lookup table is filled.
+  double fStep = 1.; /// Step size with which the lookup table is filled.
 };
 
 /**
@@ -96,7 +96,7 @@ public:
 
 private:
   std::pair<Range, Range> fRange;
-  std::pair<double, double> fSteps = {1, 1}; /// Step size with which the lookup table is filled.
+  std::pair<double, double> fSteps = {1., 1.}; /// Step size with which the lookup table is filled.
 };
 
 }

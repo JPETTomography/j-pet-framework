@@ -34,7 +34,7 @@ JPetCachedFunction1D::JPetCachedFunction1D(const JPetCachedFunctionParams& param
     return;
   }
   double step = (fRange.fMax - fRange.fMin) / fRange.fBins;
-  if (step <= 0) {
+  if (step <= 0.) {
     ERROR("Check values of XMin:" + std::to_string(fRange.fMin) << " and XMax:" << std::to_string(fRange.fMax) << " !!! getX() function will not work correctly.");
     fParams.fValidFunction = false;
     return;
@@ -67,12 +67,12 @@ JPetCachedFunction2D::JPetCachedFunction2D(const JPetCachedFunctionParams& param
 
   double stepX = (fRange.first.fMax - fRange.first.fMin) / fRange.first.fBins;
   double stepY = (fRange.second.fMax - fRange.second.fMin) / fRange.second.fBins;
-  if (stepX <= 0) {
+  if (stepX <= 0.) {
     ERROR("Check values of XMin:" + std::to_string(fRange.first.fMin) << " and XMax:" << std::to_string(fRange.first.fMax) << " !!!");
     fParams.fValidFunction = false;
     return;
   }
-  if (stepY <= 0) {
+  if (stepY <= 0.) {
     ERROR("Check values of YMin:" + std::to_string(fRange.second.fMin) << " and YMax:" << std::to_string(fRange.second.fMax) << " !!!");
     fParams.fValidFunction = false;
     return;
@@ -116,8 +116,8 @@ double JPetCachedFunction1D::operator()(double x) const
 
 int JPetCachedFunction1D::xValueToIndex(double x) const
 {
-  assert(fStep > 0);
-  return x / fStep; /// maybe some floor or round needed?
+  assert(fStep > 0.);
+  return x / fStep;
 }
 
 
@@ -132,8 +132,8 @@ double JPetCachedFunction2D::operator()(double x, double y) const
 
 int JPetCachedFunction2D::xyValueToIndex(double x, double y) const
 {
-  assert(fSteps.first > 0 && fSteps.second > 0);
-  return (x / fSteps.first) + (y / fSteps.second) * fRange.first.fBins; /// maybe some floor or round needed?
+  assert(fSteps.first > 0. && fSteps.second > 0.);
+  return (x / fSteps.first) + (y / fSteps.second) * fRange.first.fBins;
 }
 
 }
