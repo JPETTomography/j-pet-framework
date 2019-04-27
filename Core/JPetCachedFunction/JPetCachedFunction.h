@@ -26,8 +26,8 @@ struct Range {
   Range(int bins, double min, double max): fBins(bins), fMin(min), fMax(max) {}
   Range() = default;
   int fBins = 100 ;  /// Number of times the function is sampled.
-  double fMin =  -1;
-  double fMax = -1;
+  double fMin =  -1.;
+  double fMax = -1.;
 };
 
 
