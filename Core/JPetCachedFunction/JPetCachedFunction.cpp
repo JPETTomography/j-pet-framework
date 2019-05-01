@@ -49,9 +49,8 @@ JPetCachedFunction1D::JPetCachedFunction1D(const JPetCachedFunctionParams& param
   fParams.fValidFunction = true;
 }
 
-JPetCachedFunction2D::JPetCachedFunction2D(const JPetCachedFunctionParams& params, const Range& xRange, const Range& yRange): JPetCachedFunction(params)
+JPetCachedFunction2D::JPetCachedFunction2D(const JPetCachedFunctionParams& params, const Range& xRange, const Range& yRange): JPetCachedFunction(params), fRange(xRange, yRange)
 {
-  fRange = {xRange, yRange};
   TFormula func("myFunc", fParams.fFormula.c_str());
   func.SetParameters(fParams.fParams.data());
   if (fRange.first.fBins <= 0) {
