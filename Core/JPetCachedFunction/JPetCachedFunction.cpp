@@ -109,7 +109,7 @@ double JPetCachedFunction1D::operator()(double x) const
   if ((x < fRange.fMin) || (x > fRange.fMax)) return 0;
   int index = xValueToIndex(x);
   assert(index >= 0);
-  assert(index < getValues().size());
+  assert(((unsigned int) index) < getValues().size());
   return getValues()[index];
 }
 
