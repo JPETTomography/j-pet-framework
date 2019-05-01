@@ -75,6 +75,8 @@ public:
   explicit JPetCachedFunction1D(const JPetCachedFunctionParams& params, const Range& range);
 
   double operator()(double x) const;
+
+protected:
   int xValueToIndex(double x) const;
 
 private:
@@ -92,6 +94,8 @@ public:
   JPetCachedFunction2D(const JPetCachedFunctionParams& params, const Range& xRange, const Range& yRange);
 
   double operator()(double x, double y) const;
+
+protected:
   int xyValueToIndex(double x, double y) const;
 
 private:
