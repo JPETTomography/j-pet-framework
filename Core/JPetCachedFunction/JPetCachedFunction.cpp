@@ -125,7 +125,7 @@ double JPetCachedFunction2D::operator()(double x, double y) const
   if ((x < fRange.first.fMin) || (x > fRange.first.fMax) || (y < fRange.second.fMin) || (y > fRange.second.fMax)) return 0;
   auto index = xyValueToIndex(x, y);
   assert(index >= 0);
-  assert(index < fValues.size());
+  assert(((unsigned int) index) < fValues.size());
   return fValues[index];
 }
 
