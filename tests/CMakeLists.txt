@@ -100,10 +100,16 @@ endif()
 
 ## Add custom target to create symlink from test dir to unitTestData
 add_custom_target(link_target ALL
-                  COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/../unitTestData ${CMAKE_CURRENT_BINARY_DIR}/unitTestData)
+                  COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROJECT_SOURCE_DIR}/unitTestData ${CMAKE_CURRENT_BINARY_DIR}/unitTestData)
 
 
 foreach(test_source IN ITEMS ${UNIT_TEST_SOURCES})
     get_filename_component(test ${test_source} NAME_WE)
     package_add_test(${test} ${test_source})
 endforeach()
+
+################################################################################
+## Download test files with external script
+## Does not do anything if data has been already downloaded
+set(DOWNLOAD_DATA ${PROJECT_SOURCE_DIR}/download_data.sh ${PROJECT_SOURCE_DIR})
+execute_process(COMMAND ${DOWNLOAD_DATA})
