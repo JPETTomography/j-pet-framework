@@ -91,9 +91,10 @@ bool JPetGeantParser::exec()
     if (fProcessSingleEventinWindow) {
       saveHits();
     } else {
-      if (JPetGeantParserTools::isTimeWindowFilled()) saveHits();
+      if (JPetGeantParserTools::isTimeWindowFull()) saveHits();
     }
-
+    JPetGeantParserTools::clearTimeDistoOfDecays();
+    JPetGeantParserTools::fillTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
 
   } else {
     return false;
@@ -276,9 +277,6 @@ void JPetGeantParser::saveHits()
 
   fStoredMCHits.clear();
   fStoredHits.clear();
-  JPetGeantParserTools::clearTimeDistoOfDecays();
-  JPetGeantParserTools::fillTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
-
 }
 
 void JPetGeantParser::fillHistoMCGen(JPetMCHit& mcHit)

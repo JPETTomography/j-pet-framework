@@ -54,7 +54,7 @@ public:
   static void fillTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax);
   static float getNextTimeShift();
   static unsigned int getNumberOfDecaysInWindow();
-  static bool isTimeWindowFilled();
+  static bool isTimeWindowFull();
   static void clearTimeDistoOfDecays();
   static std::vector<float> getTimeDistoOfDecays();
   static std::vector<float> getTimeDiffDistoOfDecays();

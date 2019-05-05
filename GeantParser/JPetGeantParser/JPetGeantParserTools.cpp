@@ -117,7 +117,7 @@ void JPetGeantParserTools::fillTimeDistoOfDecays(float activityMBq, float timeWi
   }
 }
 
-bool JPetGeantParserTools::isTimeWindowFilled()
+bool JPetGeantParserTools::isTimeWindowFull()
 {
   if (fCurrentIndexTimeShift > getNumberOfDecaysInWindow()) {
     return true;
