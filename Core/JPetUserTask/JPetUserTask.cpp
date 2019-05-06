@@ -67,7 +67,7 @@ void JPetUserTask::setEvent(TObject* ev)
   fEvent = ev;
 }
 
-TObject* JPetUserTask::getInputEvents()
+JPetTimeWindow* JPetUserTask::getInputEvents()
 {
   return fEvent;
 }
