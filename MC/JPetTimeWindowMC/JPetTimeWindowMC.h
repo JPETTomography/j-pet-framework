@@ -51,7 +51,9 @@ public:
 
   JPetTimeWindowMC(JPetTimeWindowMC const & other, JPetTimeWindow const & inner) : JPetTimeWindow(inner),
     fMCHits(other.fMCHits),
-    fDecayTrees(other.fDecayTrees)
+    fDecayTrees(other.fDecayTrees),
+    fDecayTreesCount(other.fDecayTreesCount), 
+    fMCHitsCount(other.fMCHitsCount)  
   {}
 
 
