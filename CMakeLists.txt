@@ -12,7 +12,13 @@ else()
     cmake_policy(VERSION 3.14)
 endif()
 
-project(JPetFramework VERSION 1.0.0
+## Set correct project version based on: https://semver.org/
+# Given a version number MAJOR.MINOR.PATCH, increment the:
+#
+# MAJOR version when you make incompatible API changes,
+# MINOR version when you add functionality in a backwards-compatible manner, and
+# PATCH version when you make backwards-compatible bug fixes.
+project(JPetFramework VERSION 9.0.0
                   LANGUAGES CXX)
 set(PROJECT_DESCRIPTION "JPetFramework module")
 
@@ -91,4 +97,3 @@ message(STATUS "CMAKE_BUILD_TYPE:     ${CMAKE_BUILD_TYPE}")
 message(STATUS "  possible options: Debug Release RelWithDebInfo MinSizeRel")
 message(STATUS "  set with ` cmake -DCMAKE_BUILD_TYPE=Debug .. `")
 message(STATUS "")
-

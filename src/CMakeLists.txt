@@ -71,8 +71,6 @@ set_property(TARGET ROOT::Flags_CXX APPEND PROPERTY
 
 ################################################################################
 ## Find BOOST LIBs
-#set(BOOST_LOG_DYN_LINK -DBOOST_LOG_DYN_LINK)
-#add_definitions(${BOOST_LOG_DYN_LINK})
 
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
@@ -297,6 +295,8 @@ target_link_libraries(JPetFramework PUBLIC Unpacker2::Unpacker2
                                            ROOT::Flags_CXX
                                            Threads::Threads
                                            )
+
+set_target_properties(JPetFramework PROPERTIES VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 
 ################################################################################
 ## Read the version from git tag and git revision
