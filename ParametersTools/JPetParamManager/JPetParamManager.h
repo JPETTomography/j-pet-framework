@@ -39,10 +39,10 @@
 class JPetParamManager
 {
 public:
-  JPetParamManager(): fParamGetter(), fBank(0), fIsNullObject(false) {}
-  JPetParamManager(JPetParamGetter* paramGetter):
+  explicit JPetParamManager(): fParamGetter(), fBank(0), fIsNullObject(false) {}
+  explicit JPetParamManager(JPetParamGetter* paramGetter):
     fParamGetter(paramGetter), fBank(0) , fIsNullObject(false) {}
-  JPetParamManager(JPetParamGetter* paramGetter, std::set<ParamObjectType> expectMissing):
+  explicit JPetParamManager(JPetParamGetter* paramGetter, const std::set<ParamObjectType>& expectMissing):
     fParamGetter(paramGetter), fExpectMissing(expectMissing), fBank(0), fIsNullObject(false) {}
 
   /**
@@ -98,11 +98,6 @@ private:
   JPetScinFactory& getScinFactory(const int runId);
   JPetPMFactory& getPMFactory(const int runId);
   JPetTOMBChannelFactory& getTOMBChannelFactory(const int runId);
-
-protected:
-  void createXMLFile(const std::string& channelDataFileName,
-    int channelOffset, int numberOfChannels);
-  void getTOMBDataAndCreateXMLFile(const int p_run_id);
 };
 
 #endif /* !_J_PET_PARAM_MANAGER_ */

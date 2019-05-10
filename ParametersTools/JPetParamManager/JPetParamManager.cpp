@@ -321,7 +321,7 @@ bool JPetParamManager::saveParametersToFile(std::string filename)
   }
   file.cd();
   assert(fBank);
-  file.WriteObject(fBank, "ParamBank");
+  file.WriteObject(fBank, "ParamBank;1");
   return true;
 }
 
@@ -329,52 +329,4 @@ void JPetParamManager::clearParameters()
 {
   assert(fBank);
   fBank->clear();
-}
-
-void JPetParamManager::createXMLFile(const std::string& channelDataFileName,
-  int channelOffset, int numberOfChannels)
-{
-  using boost::property_tree::ptree;
-  ptree pt;
-  std::string debug = "OFF";
-  std::string dataSourceType = "TRB3_S";
-  std::string dataSourceTrbNetAddress = "8000";
-  std::string dataSourceHubAddress = "8000";
-  std::string dataSourceReferenceChannel = "0";
-  std::string dataSourceCorrectionFile = "raw";
-  pt.put("READOUT.DEBUG", debug);
-  pt.put("READOUT.DATA_SOURCE.TYPE", dataSourceType);
-  pt.put("READOUT.DATA_SOURCE.TRBNET_ADDRESS", dataSourceTrbNetAddress);
-  pt.put("READOUT.DATA_SOURCE.HUB_ADDRESS", dataSourceHubAddress);
-  pt.put("READOUT.DATA_SOURCE.REFERENCE_CHANNEL", dataSourceReferenceChannel);
-  pt.put("READOUT.DATA_SOURCE.CORRECTION_FILE", dataSourceCorrectionFile);
-  ptree& externalNode = pt.add("READOUT.DATA_SOURCE.MODULES", "");
-  ptree& internalNode = externalNode.add("MODULE", "");
-  internalNode.put("TYPE", "LATTICE_TDC");
-  internalNode.put("TRBNET_ADDRESS", "e000");
-  internalNode.put("NUMBER_OF_CHANNELS", numberOfChannels);
-  internalNode.put("CHANNEL_OFFSET", channelOffset);
-  internalNode.put("RESOLUTION", "100");
-  internalNode.put("MEASUREMENT_TYPE", "TDC");
-  write_xml(channelDataFileName, pt);
-}
-
-void JPetParamManager::getTOMBDataAndCreateXMLFile(const int p_run_id)
-{
-  fillParameterBank(p_run_id);
-  int TOMBChannelsSize = fBank->getTOMBChannelsSize();
-  int channelOffset = 0;
-  int numberOfChannels = 0;
-  if (TOMBChannelsSize) {
-    for (int i = 0; i < TOMBChannelsSize; ++i) {
-      if (i == 0) {
-        std::string description = fBank->getTOMBChannel(i).getDescription();
-        channelOffset = JPetParamGetter::getTOMBChannelFromDescription(description);
-      }
-      ++numberOfChannels;
-    }
-    createXMLFile("conf.xml", channelOffset, numberOfChannels);
-    return;
-  }
-  ERROR("TOMBChannelsSize is equal to zero.");
 }

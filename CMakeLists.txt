@@ -303,6 +303,12 @@ if(UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
 endif()
 
 ################################################################################
+## Install format hook to git
+## Automatically installs hook to .git/hooks/pre-commit to format code with clang-format
+set(INSTALL_HOOK ${CMAKE_CURRENT_SOURCE_DIR}/hooks/git-pre-commit-format install)
+execute_process(COMMAND ${INSTALL_HOOK})
+
+################################################################################
 ## Generating documentation with Doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)

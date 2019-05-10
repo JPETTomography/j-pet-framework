@@ -190,7 +190,7 @@ void JPetTaskIO::displayProgressBar(std::string taskName, int currentEventNumber
 }
 
 /**
- * @brief Currently this method passes "stopIteration_bool" option from subTask to fParams if present.
+ * @brief Currently this method passes "StopIteration_bool" option from subTask to fParams if present.
  */
 JPetParams JPetTaskIO::mergeWithExtraParams(const JPetParams& oldParams, const JPetParams& extraParams) const
 {
@@ -199,7 +199,7 @@ JPetParams JPetTaskIO::mergeWithExtraParams(const JPetParams& oldParams, const J
   auto oldOpts = oldParams.getOptions();
   auto extraOpts = extraParams.getOptions();
   // @todo this is hardcoded and should be moved somewhere.
-  const std::string stopIterationOptName = "stopIteration_bool";
+  const std::string stopIterationOptName = "StopIteration_bool";
   if (isOptionSet(extraOpts, stopIterationOptName)) {
     oldOpts[stopIterationOptName] = getOptionValue(extraOpts, stopIterationOptName);
   }
