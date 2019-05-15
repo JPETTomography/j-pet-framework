@@ -123,10 +123,16 @@ std::string JPetCommonTools::replaceDataTypeInFileName(const std::string& filena
       return result;
     }
 
+    // handle only root files as a special case
+    if ( suffix == "root" ) {
+      auto result = prefix.append(newType).append(".root");
+      if ( !path.empty() ) result = path.append("/").append(result);
+      return result;
+    }
+
     auto pos2 = suffix.find(".root");
     if ( pos2 != std::string::npos ) {
-      auto root_extension = suffix.substr(pos2);
-      auto result = prefix.append(newType).append(root_extension);
+      auto result = prefix.append(newType).append(".root");
       if ( !path.empty() ) result = path.append("/").append(result);
       return result;
     }
