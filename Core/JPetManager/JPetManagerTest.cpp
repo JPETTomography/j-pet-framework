@@ -118,4 +118,19 @@ BOOST_AUTO_TEST_CASE(goodControlTasks)
   BOOST_REQUIRE_NO_THROW(manager.run(args.size(), args.data()));
 }
 
+BOOST_AUTO_TEST_CASE(notRegisteredTask)
+{
+  JPetManager& manager = JPetManager::getManager();
+  std::vector<const char*> args = {
+    "test/Path",
+    "--file",
+    "unitTestData/JPetManagerTest/goodRootFile.root",
+    "--type",
+    "root",
+    "-u",
+    "unitTestData/JPetManagerTest/userParamsUnregisteredTask.json",
+  };
+  BOOST_CHECK_THROW(manager.run(args.size(), args.data()), std::runtime_error);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
