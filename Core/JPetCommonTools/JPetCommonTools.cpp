@@ -67,6 +67,7 @@ std::vector<const char*> JPetCommonTools::createArgs(const std::string& commandL
 /**
  * Get std::string with current date and time
  */
+// cppcheck-supress unusedFunction
 const std::string JPetCommonTools::currentDateTime()
 {
   time_t now = time(0);
