@@ -23,7 +23,7 @@
 class TestTask: public JPetUserTask
 {
 public:
-  TestTask(const char* name = ""): JPetUserTask(name) {}
+  explicit TestTask(const char* name = ""): JPetUserTask(name) {}
   bool init() override
   {
     fOutputEvents = new JPetTimeWindow("JPetEvent");
@@ -131,6 +131,22 @@ BOOST_AUTO_TEST_CASE(notRegisteredTask)
     "unitTestData/JPetManagerTest/userParamsUnregisteredTask.json",
   };
   BOOST_CHECK_THROW(manager.run(args.size(), args.data()), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(badOptionsTask)
+{
+  JPetManager& manager = JPetManager::getManager();
+  std::vector<const char*> args = {
+    "test/Path",
+    "--file",
+    "unitTestData/JPetManagerTest/goodRootFile.root",
+    "--type",
+    "root",
+    "-u",
+    "unitTestData/JPetManagerTest/userParamsBadOptions.json",
+  };
+  manager.registerTask<TestTask>("BadOptionsTask");
+  BOOST_REQUIRE_NO_THROW(manager.run(args.size(), args.data()));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
