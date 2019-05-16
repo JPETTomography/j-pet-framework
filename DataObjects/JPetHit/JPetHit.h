@@ -88,6 +88,7 @@ public:
   void setMCindex(unsigned int i);
   bool checkConsistency() const;
   void Clear(Option_t* opt  = "");
+  static const unsigned int kMCindexError = 888888;
 
 private:
   RecoFlag fFlag = JPetHit::Unknown;
@@ -104,7 +105,7 @@ private:
   JPetPhysSignal fSignalB;
   TRef fBarrelSlot = NULL;
   TRef fScintillator = NULL;
-  unsigned int fMCindex = 0u;
+  unsigned int fMCindex = kMCindexError;
 
   ClassDef(JPetHit, 8);
 };

@@ -25,6 +25,8 @@
 #include <JPetGeantScinHits/JPetGeantScinHits.h>
 #include <JPetGeantEventPack/JPetGeantEventPack.h>
 #include <JPetGeomMapping/JPetGeomMapping.h>
+#include <tuple>
+#include <functional>
 
 class JPetWriter;
 
@@ -81,6 +83,7 @@ protected :
 
   void processMCEvent(JPetGeantEventPack*);
   void saveHits();
+  void saveReconstructedHit(JPetHit recHit);
 
   void bookEfficiencyHistograms();
   void bookBasicHistograms();
@@ -96,6 +99,14 @@ protected :
   unsigned long  n3gGen = 0u;
   unsigned long  n3gRec = 0u;
 
+  std::vector<float> fTimeDistroOfDecays = {};
+  std::vector<float> fTimeDiffDistro = {};
+  unsigned int fCurrentIndexTimeShift = 0;
+
+  unsigned int getNumberOfDecaysInWindow();
+  float getNextTimeShift();
+  void clearTimeDistoOfDecays();
+  bool isTimeWindowFull();
 
 
 };

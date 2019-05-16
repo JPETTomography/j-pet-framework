@@ -18,9 +18,6 @@
 #include <TMath.h>
 
 TRandom3* JPetGeantParserTools::fRandomGenerator = JPetRandom::GetRandomGenerator();
-unsigned int JPetGeantParserTools::fCurrentIndexTimeShift = 0;
-std::vector<float> JPetGeantParserTools::fTimeDistroOfDecays = {};
-std::vector<float> JPetGeantParserTools::fTimeDiffDistro = {};
 
 JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank  )
 {
@@ -90,61 +87,35 @@ float JPetGeantParserTools::estimateNextDecayTimeExp(float activityMBq)
   return fRandomGenerator->Exp((pow(10, 6) / activityMBq));
 }
 
-float JPetGeantParserTools::getNextTimeShift()
-{
-  float t = fTimeDistroOfDecays[fCurrentIndexTimeShift];
-  fCurrentIndexTimeShift++;
-  return t;
-}
 
-void JPetGeantParserTools::clearTimeDistoOfDecays()
+std::tuple<std::vector<float>,std::vector<float>> JPetGeantParserTools::getTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax)
 {
-  fCurrentIndexTimeShift = 0;
-  fTimeDiffDistro.clear();
-  fTimeDistroOfDecays.clear();
-}
+  std::vector<float> fTimeDistroOfDecays;
+  std::vector<float> fTimeDiffOfDecays;
 
-void JPetGeantParserTools::fillTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax)
-{
   float timeShift =  estimateNextDecayTimeExp(activityMBq);
   float nextTime = timeWindowMin + timeShift;
 
   while ( nextTime < timeWindowMax ) {
     fTimeDistroOfDecays.push_back(nextTime);
-    fTimeDiffDistro.push_back(timeShift);
+    fTimeDiffOfDecays.push_back(timeShift);
     timeShift =  estimateNextDecayTimeExp(activityMBq);
     nextTime = nextTime + timeShift;
   }
+  return std::make_tuple(fTimeDistroOfDecays,fTimeDiffOfDecays); 
 }
 
-bool JPetGeantParserTools::isTimeWindowFull()
-{
-  if (fCurrentIndexTimeShift > getNumberOfDecaysInWindow()) {
-    return true;
-  } else {
-    return false;
-  }
-}
+
 
 std::pair<float, float> JPetGeantParserTools::calculateEfficiency( ulong n, ulong k)
 {
-  float effi = float(k) / float(n);
-  float err_effi = sqrt(float(k) * (1. - effi)) / float(n);
-  return std::make_pair(effi, err_effi);
+  if (n!=0) { 
+    float effi = float(k) / float(n);
+    float err_effi = sqrt(float(k) * (1. - effi)) / float(n);
+    return std::make_pair(effi, err_effi);
+  } else {
+    return std::make_pair(0,0);
+  }
 }
 
-unsigned int JPetGeantParserTools::getNumberOfDecaysInWindow()
-{
-  return fTimeDistroOfDecays.size();
-}
-
-std::vector<float> JPetGeantParserTools::getTimeDistoOfDecays()
-{
-  return fTimeDistroOfDecays;
-}
-
-std::vector<float> JPetGeantParserTools::getTimeDiffDistoOfDecays()
-{
-  return fTimeDiffDistro;
-}
 

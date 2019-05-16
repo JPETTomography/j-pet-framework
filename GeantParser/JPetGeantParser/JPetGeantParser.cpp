@@ -73,7 +73,7 @@ bool JPetGeantParser::init()
 
   // make distribution of decays in time window
   // needed to adjust simulation times into time window scheme
-  JPetGeantParserTools::fillTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
+  std::tie(fTimeDistroOfDecays,fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
 
   INFO("MC Hit wrapper started.");
 
@@ -91,11 +91,10 @@ bool JPetGeantParser::exec()
     if (fProcessSingleEventinWindow) {
       saveHits();
     } else {
-      if (JPetGeantParserTools::isTimeWindowFull()) saveHits();
+      if (isTimeWindowFull()) saveHits();
     }
-    JPetGeantParserTools::clearTimeDistoOfDecays();
-    JPetGeantParserTools::fillTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
-
+    clearTimeDistoOfDecays();
+    std::tie(fTimeDistroOfDecays,fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
   } else {
     return false;
   }
@@ -151,12 +150,11 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
 
     if (fMakeHisto) fillHistoMCGen(mcHit);
     // create reconstructed hit and add all smearings
-    JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), JPetGeantParserTools::getNextTimeShift(), fZresolution);
+    JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), getNextTimeShift(), fZresolution);
 
     // add criteria for possible rejection of reconstructed events (e.g. E>50 keV)
     if (JPetGeantParserTools::isHitReconstructed(recHit, fExperimentalThreshold)) {
-      recHit.setMCindex(fStoredMCHits.size());
-      fStoredHits.push_back(recHit);
+      saveReconstructedHit(recHit);
       JPetGeantParserTools::identifyRecoHits(evPack->GetHit(i), recHit,
                                              isRecPrompt, isSaved2g, isSaved3g,
                                              enePrompt, ene2g, ene3g);
@@ -220,6 +218,11 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
 //    // add loop processing DecayTree
 }
 
+void JPetGeantParser::saveReconstructedHit(JPetHit recHit)
+{
+  recHit.setMCindex(fStoredMCHits.size());
+  fStoredHits.push_back(recHit);
+}
 
 void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo)
 {
@@ -270,7 +273,7 @@ void JPetGeantParser::saveHits()
 
   if (fMakeHisto) {
     getStatistics().getHisto1D("hits_per_time_window")->Fill(fStoredHits.size());
-    for (const auto i : JPetGeantParserTools::getTimeDiffDistoOfDecays()) {
+    for (const auto i : fTimeDiffDistro) {
       getStatistics().getHisto1D("time_diff_bw_decays")->Fill(i);
     }
   }
@@ -461,3 +464,30 @@ void JPetGeantParser::bookEfficiencyHistograms()
 
 }
 
+unsigned int JPetGeantParser::getNumberOfDecaysInWindow()
+{
+  return fTimeDistroOfDecays.size();
+}
+
+float JPetGeantParser::getNextTimeShift()
+{
+  float t = fTimeDistroOfDecays[fCurrentIndexTimeShift];
+  fCurrentIndexTimeShift++;
+  return t;
+}
+
+void JPetGeantParser::clearTimeDistoOfDecays()
+{
+  fCurrentIndexTimeShift = 0;
+  fTimeDiffDistro.clear();
+  fTimeDistroOfDecays.clear();
+}
+
+bool JPetGeantParser::isTimeWindowFull()
+{
+  if (fCurrentIndexTimeShift > getNumberOfDecaysInWindow()) {
+    return true;
+  } else {
+    return false;
+  }
+}
