@@ -13,9 +13,9 @@
  *  @file JPetCachedFunction.cpp
  */
 
-#include <TFormula.h>
-#include "./JPetCachedFunction.h"
+#include "JPetCachedFunction/JPetCachedFunction.h"
 #include "JPetLoggerInclude.h"
+#include <TFormula.h>
 
 namespace  jpet_common_tools
 {

@@ -1,9 +1,9 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetCachedFunctionTest
 
-#include <boost/test/unit_test.hpp>
+#include "JPetCachedFunction/JPetCachedFunction.h"
 #include "JPetLoggerInclude.h"
-#include "JPetCachedFunction.h"
+#include <boost/test/unit_test.hpp>
 
 using namespace jpet_common_tools;
 /// Returns Time-over-threshold for given deposited energy

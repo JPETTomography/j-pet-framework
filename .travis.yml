@@ -24,6 +24,4 @@ script:
     - cmake ..
     - make
     - source src/thisframework.sh
-    - ctest
-    - cd tests
-    - grep -rwnl . -e 'Error' | xarg cat
+    - ctest -j6 -C Debug -T test --output-on-failure
