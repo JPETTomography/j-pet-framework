@@ -72,7 +72,7 @@ endif()
 add_subdirectory(src)
 
 #documentation
-option(PACKAGE_DOC "Build the documentation" ON)
+option(PACKAGE_DOC "Build the documentation" OFF)
 if(PACKAGE_TESTS)
   add_subdirectory(doc)
 endif()
