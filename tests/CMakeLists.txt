@@ -3,8 +3,6 @@ message(STATUS "Starting to configure libJPetFrameworkTests..")
 message(STATUS "")
 enable_testing()
 
-include(../cmake/JPetFramework-Utilities.cmake)
-
 set(UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisToolsTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetCmdParser/JPetCmdParserTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetCommonTools/JPetCommonToolsTest.cpp
