@@ -1,25 +1,6 @@
-message(STATUS "")
-message(STATUS "Starting to configure libJPetFramework..")
-message(STATUS "")
-set(default_build_type "Release")
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
-  set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
-      STRING "Choose the type of build." FORCE)
-  # Set the possible values of build type for cmake-gui
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
-    "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
-endif()
-
 # Be nice and export compile commands by default, this is handy for clang-tidy
 # and for other tools.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# Helpful option enable build profiling to identify slowly compiling files
-option(MEASURE_ALL "When enabled all commands will be passed through time command" OFF)
-if(MEASURE_ALL)
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "time")
-endif()
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
@@ -210,12 +191,6 @@ foreach(dir ${FOLDERS_WITH_SOURCE})
   list(APPEND DICTIONARY_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include/${dir})
 endforeach()
 list(APPEND DICTIONARY_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
-
-################################################################################
-## Download test files with external script
-## Does not do anything if data has been already downloaded
-set(DOWNLOAD_DATA ${CMAKE_CURRENT_SOURCE_DIR}/download_data.sh ${CMAKE_CURRENT_SOURCE_DIR})
-execute_process(COMMAND ${DOWNLOAD_DATA})
 
 ################################################################################
 ## Generating ROOT dictionaries

@@ -3,21 +3,6 @@ message(STATUS "Starting to configure libJPetFrameworkTests..")
 message(STATUS "")
 enable_testing()
 
-set(CMAKE_CXX_STANDARD 11) # maybe not best solutio to set it globally? upgrate minimal cmake version to 3.8 or find another way to set it only for target with interface
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_PLATFORM_INDEPENDENT_CODE ON)
-
-set(default_build_type "Release")
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
-  set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
-      STRING "Choose the type of build." FORCE)
-  # Set the possible values of build type for cmake-gui
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
-    "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
-endif()
-
 include(../cmake/JPetFramework-Utilities.cmake)
 
 set(UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisToolsTest.cpp
@@ -103,14 +88,40 @@ endif()
 add_custom_target(link_target ALL
                   COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROJECT_SOURCE_DIR}/unitTestData ${CMAKE_CURRENT_BINARY_DIR}/unitTestData)
 
-
+set(TESTS_NAMES "")
 foreach(test_source IN ITEMS ${UNIT_TEST_SOURCES})
     get_filename_component(test ${test_source} NAME_WE)
     package_add_test(${test} ${test_source})
+    list(APPEND TESTS_NAMES ${test}.x)
 endforeach()
 
 ################################################################################
 ## Download test files with external script
 ## Does not do anything if data has been already downloaded
-set(DOWNLOAD_DATA ${PROJECT_SOURCE_DIR}/download_data.sh ${PROJECT_SOURCE_DIR})
-execute_process(COMMAND ${DOWNLOAD_DATA})
+option(DOWNLOAD_DATA "Download data" ON)
+if(DOWNLOAD_DATA)
+  set(DOWNLOAD_BASE_PATH ${PROJECT_SOURCE_DIR})
+  set(SHA_FILENAME all_data.sha)
+
+  file(DOWNLOAD "http://sphinx.if.uj.edu.pl/framework/${SHA_FILENAME}" ${DOWNLOAD_BASE_PATH}/${SHA_FILENAME})
+  file(READ ${DOWNLOAD_BASE_PATH}/${SHA_FILENAME} SHA_HASHES)
+  string(REGEX REPLACE "\n" ";" SHA_HASHES "${SHA_HASHES}") #create cmake array from hash + file path
+  foreach(SHA_HASH ${SHA_HASHES})
+    string(REGEX REPLACE "  " ";" SHA_HASH "${SHA_HASH}") #Split hash and file path
+    list(GET SHA_HASH 0 SHA256) #get sha hash
+    list(GET SHA_HASH 1 PATH) #get file path
+    string(REPLACE "ExamplesReformed/" "" SAVE_PATH ${PATH})
+
+    if(EXISTS "${DOWNLOAD_BASE_PATH}/${SAVE_PATH}")
+      file(SHA256 ${DOWNLOAD_BASE_PATH}/${SAVE_PATH} CURRENT_SHA256)
+    endif(EXISTS "${DOWNLOAD_BASE_PATH}/${SAVE_PATH}")
+    if(NOT ${CURRENT_SHA256} STREQUAL ${SHA256})
+      message(STATUS "SHA value of ${DOWNLOAD_BASE_PATH}/${SAVE_PATH} to not match! Downloading file..")
+      file(DOWNLOAD "http://sphinx.if.uj.edu.pl/framework/${PATH}" ${DOWNLOAD_BASE_PATH}/${SAVE_PATH} EXPECTED_HASH SHA256=${SHA256})
+    endif(NOT ${CURRENT_SHA256} STREQUAL ${SHA256})
+  endforeach(SHA_HASH ${SHA_HASHES})
+  file(REMOVE ${DOWNLOAD_BASE_PATH}/${SHA_FILENAME})
+endif()
+
+##Add tests target
+add_custom_target(tests DEPENDS ${TESTS_NAMES})
