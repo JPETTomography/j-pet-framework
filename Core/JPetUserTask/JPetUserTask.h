@@ -53,6 +53,7 @@ public:
   const JPetParamBank& getParamBank();
   jpet_options_tools::OptsStrAny getOptions() const;
   virtual JPetTimeWindow* getOutputEvents();
+  JPetTimeWindow* getInputEvents();
 
 protected:
   virtual bool init() = 0; /// should be implemented in descendent class

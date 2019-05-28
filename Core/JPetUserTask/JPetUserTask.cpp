@@ -67,6 +67,11 @@ void JPetUserTask::setEvent(TObject* ev)
   fEvent = ev;
 }
 
+JPetTimeWindow* JPetUserTask::getInputEvents()
+{
+  return dynamic_cast<JPetTimeWindow*> (fEvent);
+}
+
 jpet_options_tools::OptsStrAny JPetUserTask::getOptions() const
 {
   return fParams.getOptions();

@@ -17,12 +17,13 @@
 #include "./JPetWriter/JPetWriter.h"
 #include "./JPetTreeHeader/JPetTreeHeader.h"
 #include "./JPetUserTask/JPetUserTask.h"
+#include "./JPetTimeWindowMC/JPetTimeWindowMC.h"
 #include "./version.h"
 #include <cassert>
 
-JPetOutputHandler::JPetOutputHandler():fWriter("defaultOutput.root")
+JPetOutputHandler::JPetOutputHandler(): fWriter("defaultOutput.root")
 {
-} 
+}
 
 JPetOutputHandler::JPetOutputHandler(const char* outputFilename): fWriter(outputFilename)
 {
@@ -51,7 +52,12 @@ bool JPetOutputHandler::writeEventToFile(JPetTaskInterface* task)
   auto pUserTask = (dynamic_cast<JPetUserTask*>(task));
   auto pOutputEntry = pUserTask->getOutputEvents();
   if (pOutputEntry != nullptr) {
-    fWriter.write(*pOutputEntry);
+    auto pInputEvent = dynamic_cast<JPetTimeWindowMC*>(pUserTask->getInputEvents());
+    if ( (pInputEvent != nullptr) ) {
+      fWriter.write(JPetTimeWindowMC(*pInputEvent, *pOutputEntry));
+    } else {
+      fWriter.write(*pOutputEntry);
+    }
   } else {
     ERROR("No proper timeWindow object returned to save to file, returning from subtask " + task->getName());
     return false;
@@ -63,6 +69,6 @@ bool JPetOutputHandler::writeEventToFile(JPetTaskInterface* task)
 /// @todo change it!!!
 void JPetOutputHandler::saveAndCloseOutput(JPetParamManager& manager, JPetTreeHeader* fHeader, JPetStatistics* fStatistics, std::map<std::string, std::unique_ptr<JPetStatistics>>& fSubTasksStatistics)
 {
-    saveOutput(manager, fHeader, fStatistics, fSubTasksStatistics);
-    fWriter.closeFile();
+  saveOutput(manager, fHeader, fStatistics, fSubTasksStatistics);
+  fWriter.closeFile();
 }
