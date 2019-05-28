@@ -189,6 +189,13 @@ const JPetBarrelSlot& JPetHit::getBarrelSlot() const
   }
 }
 
+/** Get the index to MC hit structure
+ */
+unsigned int JPetHit::getMCindex() const
+{
+  return fMCindex;
+}
+
 /**
  * Check if signal on side A is set
  */
@@ -409,6 +416,14 @@ void JPetHit::setSignalB(const JPetPhysSignal& p_sig)
 }
 
 /**
+ * Set index to MC hit structure
+ */
+void JPetHit::setMCindex(unsigned int i)
+{
+  fMCindex = i;
+}
+
+/**
  * Set values of the hit to zero/false/null
  */
 void JPetHit::Clear(Option_t *){
@@ -425,4 +440,5 @@ void JPetHit::Clear(Option_t *){
   fIsSignalBset = false;
   fBarrelSlot = NULL;
   fScintillator = NULL;
+  fMCindex = 0u;
 }

@@ -28,6 +28,8 @@
 #include <JPetGeomMapping/JPetGeomMapping.h>
 #include "JPetParamBank/JPetParamBank.h"
 #include <JPetRandom/JPetRandom.h>
+#include <tuple>
+#include <functional>
 
 #ifdef __CINT__
 //when cint is used instead of compiler, override word is not recognized
@@ -50,9 +52,12 @@ public:
                                float& enePrompt, std::array<float, 2>& ene2g,
                                std::array<float, 3>& ene3g );
 
+  static float estimateNextDecayTimeExp(float activityMBq);
+  static std::tuple<std::vector<float>,std::vector<float>> getTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax);
+  static std::pair<float, float> calculateEfficiency(ulong, ulong);
+
 private:
   static TRandom3* fRandomGenerator;
-  
 };
 
 #endif

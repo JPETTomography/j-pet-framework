@@ -34,6 +34,7 @@ JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, con
   JPetScin& scin =  paramBank.getScintillator(geantHit->GetScinID());
   mcHit.setScintillator(scin);
   mcHit.setBarrelSlot(scin.getBarrelSlot());
+  mcHit.setGenGammaMultiplicity(geantHit->GetGenGammaMultiplicity());
   return mcHit;
 }
 
@@ -80,3 +81,41 @@ void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit, const J
   }
 
 }
+
+float JPetGeantParserTools::estimateNextDecayTimeExp(float activityMBq)
+{
+  return fRandomGenerator->Exp((pow(10, 6) / activityMBq));
+}
+
+
+std::tuple<std::vector<float>,std::vector<float>> JPetGeantParserTools::getTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax)
+{
+  std::vector<float> fTimeDistroOfDecays;
+  std::vector<float> fTimeDiffOfDecays;
+
+  float timeShift =  estimateNextDecayTimeExp(activityMBq);
+  float nextTime = timeWindowMin + timeShift;
+
+  while ( nextTime < timeWindowMax ) {
+    fTimeDistroOfDecays.push_back(nextTime);
+    fTimeDiffOfDecays.push_back(timeShift);
+    timeShift =  estimateNextDecayTimeExp(activityMBq);
+    nextTime = nextTime + timeShift;
+  }
+  return std::make_tuple(fTimeDistroOfDecays,fTimeDiffOfDecays); 
+}
+
+
+
+std::pair<float, float> JPetGeantParserTools::calculateEfficiency( ulong n, ulong k)
+{
+  if (n!=0) { 
+    float effi = float(k) / float(n);
+    float err_effi = sqrt(float(k) * (1. - effi)) / float(n);
+    return std::make_pair(effi, err_effi);
+  } else {
+    return std::make_pair(0,0);
+  }
+}
+
+
