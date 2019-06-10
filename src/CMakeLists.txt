@@ -79,10 +79,29 @@ endif()
 
 ################################################################################
 ## Find Unpacker2
-find_package(Unpacker2 CONFIG REQUIRED)
+find_package(Unpacker2 CONFIG QUIET)
 if(Unpacker2_FOUND)
   message(STATUS "Unpacker2 (version ${Unpacker2_VERSION}) was found using Unpacker2Config")
-endif()
+else()
+  include(ExternalProject)
+  message(STATUS "Unpacker2 was not found..")
+  set(GITHUB_URL "https://github.com/grey277/Unpacker2.git")
+  set(GIT_TAG "cmake")
+
+  message(STATUS "Adding external project to download and compile Unpacker2 from: ${GITHUB_URL} with tag: ${GIT_TAG}")
+
+  configure_file(CMakeListsUnpacker2.txt.in
+                 Unpacker2-download/CMakeLists.txt)
+
+  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . 
+                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/Unpacker2-download )
+
+  execute_process(COMMAND ${CMAKE_COMMAND} --build .
+                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/Unpacker2-download )
+
+  add_subdirectory(${CMAKE_BINARY_DIR}/src/Unpacker2-src
+                  ${CMAKE_BINARY_DIR}/src/Unpacker2-build)
+endif(Unpacker2_FOUND)
 
 ################################################################################
 ## Specify source folders
@@ -328,5 +347,6 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/JPetFrameworkConfig.cmake"
         
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libJPetFramework_rdict.pcm"
               "${CMAKE_CURRENT_BINARY_DIR}/libJPetFramework.rootmap"
+              "${CMAKE_CURRENT_BINARY_DIR}/thisframework.sh"
         DESTINATION lib
         )

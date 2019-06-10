@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 2.8.2)
+
+project(Unpacker2-download NONE)
+
+include(ExternalProject)
+ExternalProject_Add(
+    Unpacker2
+
+    GIT_REPOSITORY "${GITHUB_URL}"
+    GIT_TAG "${GIT_TAG}"
+    UPDATE_COMMAND ""
+    PATCH_COMMAND "" 
+    SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/Unpacker2-src"
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/Unpacker2-build
+    TEST_COMMAND "" #disable tests
+  )
