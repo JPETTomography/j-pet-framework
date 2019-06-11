@@ -59,7 +59,7 @@ public:
 class TestLooperUserTask : public JPetUserTask
 {
 public:
-  TestLooperUserTask(const char* name = "") : JPetUserTask(name) {}
+  explicit TestLooperUserTask(const char* name = "") : JPetUserTask(name) {}
   virtual ~TestLooperUserTask() { ; }
   int fRunCounter = 0;
 
@@ -107,7 +107,8 @@ BOOST_AUTO_TEST_CASE(my_test_10_iterations)
   using namespace jpet_options_generator_tools;
   const int maxIter = 10;
   int counter = 0;
-  auto condFunc = [maxIter, &counter](const JPetParams&) -> bool {
+  auto condFunc = [&counter](const JPetParams&) -> bool {
+    // cppcheck-suppress knownConditionTrueFalse
     if (counter < maxIter)
     {
       counter++;
