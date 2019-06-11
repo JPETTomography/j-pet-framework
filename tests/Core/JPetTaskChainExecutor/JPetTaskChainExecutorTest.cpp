@@ -70,7 +70,6 @@ BOOST_AUTO_TEST_CASE(test2)
   opt["lastEvent_int"] = 10;
   opt["inputFile_std::string"] = std::string("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root");
   opt["inputFileType_std::string"] = std::string("root");
-  opt["outputFile_std::string"] = std::string("JPetTaskChainExecutorTest2Chain1.root");
   opt["outputFile_std::string"] = std::string("JPetTaskChainExecutorTest2Chain2.root");
   auto taskGenerator1 = []() {
     auto taskIO = jpet_common_tools::make_unique<JPetTaskIO>("TaskA", "unk.evt", "test.file");
