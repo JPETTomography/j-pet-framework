@@ -66,7 +66,6 @@ BOOST_AUTO_TEST_CASE(my_helperTest_for_test3)
   TTree tree("tree", "tree");
   tree.SetAutoSave(1000);
   TNamed* filler = 0;
-  // cppcheck-suppress nullPointer
   tree.Branch("TNamed", "TNamed", &filler);
   const int kHugeNumberOfObjects = 10000;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
