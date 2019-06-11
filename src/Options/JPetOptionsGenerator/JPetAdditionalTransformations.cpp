@@ -19,6 +19,7 @@
 
 using boost::any_cast;
 
+// cppcheck-suppress unusedFunction
 std::pair<std::string, boost::any> setAdditionalRunIdInTheMap(boost::any option)
 {
   int run = any_cast<int>(option);
