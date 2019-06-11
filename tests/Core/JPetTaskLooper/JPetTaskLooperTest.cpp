@@ -11,7 +11,7 @@
 class TestTask : public JPetTask
 {
 public:
-  TestTask(const char* name = "") : JPetTask(name) {}
+  explicit TestTask(const char* name = "") : JPetTask(name) {}
   bool init(const JPetParams&) override { return true; }
   bool run(const JPetDataInterface&) override
   {
@@ -25,7 +25,7 @@ public:
 class TestTaskRun20Times : public JPetTask
 {
 public:
-  TestTaskRun20Times(const char* name = "") : JPetTask(name) {}
+  explicit TestTaskRun20Times(const char* name = "") : JPetTask(name) {}
   bool init(const JPetParams& paramsI) override
   {
     fParams = static_cast<const JPetParams&>(paramsI);
