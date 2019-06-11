@@ -16,7 +16,7 @@
 #ifndef _JPETTIMEWINDOWMC_H_
 #define _JPETTIMEWINDOWMC_H_
 
-#include "./JPetData/JPetData.h"
+#include "JPetData/JPetData.h"
 #include <JPetTimeWindow/JPetTimeWindow.h>
 #include <TClonesArray.h>
 #include <TNamed.h>
@@ -50,8 +50,8 @@ public:
   {}
 
   JPetTimeWindowMC(JPetTimeWindowMC const& other, JPetTimeWindow const& inner)
-      : JPetTimeWindow(inner), fMCHits(other.fMCHits), fDecayTrees(other.fDecayTrees), fDecayTreesCount(other.fDecayTreesCount),
-        fMCHitsCount(other.fMCHitsCount)
+      : JPetTimeWindow(inner), fMCHits(other.fMCHits), fDecayTrees(other.fDecayTrees), fMCHitsCount(other.fMCHitsCount),
+        fDecayTreesCount(other.fDecayTreesCount)
   {
   }
 
