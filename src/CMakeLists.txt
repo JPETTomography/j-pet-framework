@@ -93,7 +93,7 @@ else()
   configure_file(CMakeListsUnpacker2.txt.in
                  Unpacker2-download/CMakeLists.txt)
 
-  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . 
+  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -DPACKAGE_TESTS=OFF . 
                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/Unpacker2-download )
 
   execute_process(COMMAND ${CMAKE_COMMAND} --build .

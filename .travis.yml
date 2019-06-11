@@ -22,6 +22,6 @@ script:
     - mkdir build
     - cd build
     - cmake ..
-    - make
+    - make all
     - source src/thisframework.sh
     - ctest -j6 -C Debug -T test --output-on-failure

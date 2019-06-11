@@ -120,6 +120,3 @@ if(DOWNLOAD_DATA)
   endforeach(SHA_HASH ${SHA_HASHES})
   file(REMOVE ${DOWNLOAD_BASE_PATH}/${SHA_FILENAME})
 endif()
-
-##Add tests target
-add_custom_target(tests DEPENDS ${TESTS_NAMES})
