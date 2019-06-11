@@ -16,21 +16,21 @@
 #ifndef JPETPARAM_AND_DATA_FACTORY_H
 #define JPETPARAM_AND_DATA_FACTORY_H
 
-#include "./JPetTOMBChannel/JPetTOMBChannel.h"
-#include "./JPetBarrelSlot/JPetBarrelSlot.h"
-#include "./JPetTimeWindow/JPetTimeWindow.h"
-#include "./JPetPhysSignal/JPetPhysSignal.h"
-#include "./JPetBaseSignal/JPetBaseSignal.h"
-#include "./JPetRawSignal/JPetRawSignal.h"
-#include "./JPetLayer/JPetLayer.h"
-#include "./JPetSigCh/JPetSigCh.h"
-#include "./JPetFrame/JPetFrame.h"
-#include "./JPetScin/JPetScin.h"
-#include "./JPetFEB/JPetFEB.h"
-#include "./JPetHit/JPetHit.h"
-#include "./JPetTRB/JPetTRB.h"
-#include "./JPetPM/JPetPM.h"
-#include  "TVector3.h"
+#include "JPetBarrelSlot/JPetBarrelSlot.h"
+#include "JPetBaseSignal/JPetBaseSignal.h"
+#include "JPetFEB/JPetFEB.h"
+#include "JPetFrame/JPetFrame.h"
+#include "JPetHit/JPetHit.h"
+#include "JPetLayer/JPetLayer.h"
+#include "JPetPM/JPetPM.h"
+#include "JPetPhysSignal/JPetPhysSignal.h"
+#include "JPetRawSignal/JPetRawSignal.h"
+#include "JPetScin/JPetScin.h"
+#include "JPetSigCh/JPetSigCh.h"
+#include "JPetTOMBChannel/JPetTOMBChannel.h"
+#include "JPetTRB/JPetTRB.h"
+#include "JPetTimeWindow/JPetTimeWindow.h"
+#include "TVector3.h"
 
 /**
  * @brief Set of facotry methods for params
@@ -63,8 +63,6 @@ JPetSigCh makeSigCh(JPetPM& pm, JPetTRB& trb, JPetFEB& feb,
 
 JPetBarrelSlot makeBarrelSlot(JPetLayer& p_layer, int id, bool isActive,
   const std::string& name, float theta, int inFrameID);
-
-JPetTimeWindow makeTimeWindow(const std::vector<JPetSigCh>& vec);
 
 JPetPM makePM(JPetPM::Side side, int id, int set, int opt,
   std::pair<float, float>& gain, std::string description,
