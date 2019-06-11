@@ -29,7 +29,7 @@
 class TestTask : public JPetUserTask
 {
 public:
-  TestTask(const char* name = "") : JPetUserTask(name) {}
+  explicit TestTask(const char* name = "") : JPetUserTask(name) {}
   bool init() override
   {
     fOutputEvents = new JPetTimeWindow("JPetEvent");
