@@ -16,9 +16,9 @@
 #ifndef JPETOUTPUTHANDLER_H
 #define JPETOUTPUTHANDLER_H
 
-#include "./JPetStatistics/JPetStatistics.h"
-#include "./JPetParamManager/JPetParamManager.h"
-#include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "JPetStatistics/JPetStatistics.h"
+#include "JPetParamManager/JPetParamManager.h"
+#include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include <map>
 #include <string>
 #include <memory>

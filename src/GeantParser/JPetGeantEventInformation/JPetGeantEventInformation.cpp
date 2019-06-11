@@ -17,11 +17,6 @@
 
 ClassImp(JPetGeantEventInformation)
 
-    JPetGeantEventInformation::JPetGeantEventInformation()
-    : fVtxPosition(0, 0, 0), fVtxPromptPosition(0, 0, 0), fGenGammaNum(fMaxGammaNumberIndex), fnRun(0), fLifetime(0), fPromptLifetime(0)
-{
-}
-
 JPetGeantEventInformation::JPetGeantEventInformation()
     : fVtxPosition(0, 0, 0), fVtxPromptPosition(0, 0, 0), fGenGammaNum(fMaxGammaNumberIndex), fnRun(0), fLifetime(0), fPromptLifetime(0),
       fMomentumGamma(4)
