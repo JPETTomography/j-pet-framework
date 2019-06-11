@@ -144,7 +144,6 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionToAddOptionsFromCfgFileWork)
 
 BOOST_AUTO_TEST_CASE(generateOptionsForTask_emptyControlSettings)
 {
-  std::vector<std::string> tmp = {"aa", "bb"};
   std::map<std::string, boost::any> inOpts = {
       {"my_string", std::string("my_value")},
       {"my_int", int(12)},
