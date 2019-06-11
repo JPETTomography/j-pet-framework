@@ -12,12 +12,11 @@ BOOST_AUTO_TEST_CASE(setUserLimits)
 {
   using namespace jpet_options_generator_tools;
   auto opts = getDefaultOptions();
-  auto total = 0ll;
+  auto total = 10ll;
   auto first = 0ll;
   auto last = 0ll;
   bool isOK = true;
 
-  total = 10;
   opts["firstEvent_int"] = 0;
   opts["lastEvent_int"] = 0;
   std::tie(isOK, first, last) = JPetTaskIOTools::setUserLimits(opts, total);
@@ -25,7 +24,6 @@ BOOST_AUTO_TEST_CASE(setUserLimits)
   BOOST_REQUIRE_EQUAL(first, 0);
   BOOST_REQUIRE_EQUAL(last, 0);
 
-  total = 10;
   opts["firstEvent_int"] = 1;
   opts["lastEvent_int"] = 7;
   std::tie(isOK, first, last) = JPetTaskIOTools::setUserLimits(opts, total);
