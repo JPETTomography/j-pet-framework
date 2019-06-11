@@ -117,6 +117,12 @@ public:
     return fPromptLifetime;
   };
 
+  TVector3 GetVtxPromptPosition() const { return fVtxPromptPosition; }
+  TVector3 GetVtxPosition() const { return fVtxPosition; }
+
+  void SetMomentumGamma(int index, double x, double y, double z) { fMomentumGamma[index].SetXYZ(x, y, z); }
+
+  TVector3 GetMomentumGamma(int index) const { return fMomentumGamma[index]; }
 
 private:
   const unsigned int fMaxGammaNumberIndex = 3;
@@ -126,10 +132,10 @@ private:
   int fnRun = -1; ///< number should follow the JPet run numbering scheme
   double fLifetime = -1.0; ///< lifetime of generated bound state or direct annihilation; see specific simulation details
   double fPromptLifetime = -1.0; ///< generated lifetime of emmited prompt photon; filled only if prompt gamma is generated
+  std::vector<TVector3> fMomentumGamma;
 
 private:
-  ClassDef(JPetGeantEventInformation, 4)
-
+  ClassDef(JPetGeantEventInformation, 6)
 };
 
 

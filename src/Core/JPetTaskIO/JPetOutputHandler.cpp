@@ -13,12 +13,12 @@
  *  @file JPetOutputHandler.cpp
  */
 
-#include "JPetTaskIO/JPetOutputHandler.h"
-#include "JPetTaskIO/version.h"
+#include "JPetOutputHandler.h"
+#include "JPetTimeWindowMC/JPetTimeWindowMC.h"
 #include "JPetTreeHeader/JPetTreeHeader.h"
 #include "JPetUserTask/JPetUserTask.h"
 #include "JPetWriter/JPetWriter.h"
-
+#include "version.h"
 #include <cassert>
 
 JPetOutputHandler::JPetOutputHandler() : fWriter("defaultOutput.root") {}
@@ -50,7 +50,15 @@ bool JPetOutputHandler::writeEventToFile(JPetTaskInterface* task)
   auto pOutputEntry = pUserTask->getOutputEvents();
   if (pOutputEntry != nullptr)
   {
-    fWriter.write(*pOutputEntry);
+    auto pInputEvent = dynamic_cast<JPetTimeWindowMC*>(pUserTask->getInputEvents());
+    if ((pInputEvent != nullptr))
+    {
+      fWriter.write(JPetTimeWindowMC(*pInputEvent, *pOutputEntry));
+    }
+    else
+    {
+      fWriter.write(*pOutputEntry);
+    }
   }
   else
   {

@@ -16,18 +16,20 @@
 #ifndef JPETGEANTPARSERTOOLS_H
 #define JPETGEANTPARSERTOOLS_H
 
-#include <map>
-#include <vector>
-#include <array>
-#include <TRandom3.h>
-#include <JPetMCHit/JPetMCHit.h>
+#include "JPetParamBank/JPetParamBank.h"
+#include <JPetGeantEventPack/JPetGeantEventPack.h>
+#include <JPetGeantScinHits/JPetGeantScinHits.h>
+#include <JPetGeomMapping/JPetGeomMapping.h>
 #include <JPetHit/JPetHit.h>
 #include <JPetMCDecayTree/JPetMCDecayTree.h>
-#include <JPetGeantScinHits/JPetGeantScinHits.h>
-#include <JPetGeantEventPack/JPetGeantEventPack.h>
-#include <JPetGeomMapping/JPetGeomMapping.h>
-#include "JPetParamBank/JPetParamBank.h"
+#include <JPetMCHit/JPetMCHit.h>
 #include <JPetRandom/JPetRandom.h>
+#include <TRandom3.h>
+#include <array>
+#include <functional>
+#include <map>
+#include <tuple>
+#include <vector>
 
 #ifdef __CINT__
 //when cint is used instead of compiler, override word is not recognized
@@ -50,9 +52,12 @@ public:
                                float& enePrompt, std::array<float, 2>& ene2g,
                                std::array<float, 3>& ene3g );
 
+  static float estimateNextDecayTimeExp(float activityMBq);
+  static std::tuple<std::vector<float>, std::vector<float>> getTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax);
+  static std::pair<float, float> calculateEfficiency(ulong, ulong);
+
 private:
   static TRandom3* fRandomGenerator;
-  
 };
 
 #endif

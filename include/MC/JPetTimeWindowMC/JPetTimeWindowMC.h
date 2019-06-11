@@ -16,12 +16,13 @@
 #ifndef _JPETTIMEWINDOWMC_H_
 #define _JPETTIMEWINDOWMC_H_
 
-#include <vector>
-#include <map>
-#include <TNamed.h>
-#include <TClonesArray.h>
-#include <iostream>
+#include "./JPetData/JPetData.h"
 #include <JPetTimeWindow/JPetTimeWindow.h>
+#include <TClonesArray.h>
+#include <TNamed.h>
+#include <iostream>
+#include <map>
+#include <vector>
 
 /**
  * @brief Container class representing a time window of the DAQ system
@@ -47,6 +48,12 @@ public:
     fMCHits(mcHit_type, 2000),
     fDecayTrees(decayTree_type, 2000)
   {}
+
+  JPetTimeWindowMC(JPetTimeWindowMC const& other, JPetTimeWindow const& inner)
+      : JPetTimeWindow(inner), fMCHits(other.fMCHits), fDecayTrees(other.fDecayTrees), fDecayTreesCount(other.fDecayTreesCount),
+        fMCHitsCount(other.fMCHitsCount)
+  {
+  }
 
   template<typename T>
   void addMCHit(const T& evt)
