@@ -31,7 +31,6 @@ BOOST_AUTO_TEST_CASE(setUserLimits)
   BOOST_REQUIRE_EQUAL(first, 1);
   BOOST_REQUIRE_EQUAL(last, 7);
 
-  total = 10;
   opts["firstEvent_int"] = 2;
   opts["lastEvent_int"] = 10;
   std::tie(isOK, first, last) = JPetTaskIOTools::setUserLimits(opts, total);
@@ -39,7 +38,6 @@ BOOST_AUTO_TEST_CASE(setUserLimits)
   BOOST_REQUIRE_EQUAL(first, 2);
   BOOST_REQUIRE_EQUAL(last, 9);
 
-  total = 10;
   opts["firstEvent_int"] = 1;
   opts["lastEvent_int"] = 11;
   std::tie(isOK, first, last) = JPetTaskIOTools::setUserLimits(opts, total);
