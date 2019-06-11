@@ -19,6 +19,7 @@
 
 using boost::any_cast;
 
+// cppcheck-suppress unusedFunction
 bool additionalCheckIfRunIdIsOk(std::pair<std::string, boost::any> option)
 {
   if (any_cast<int>(option.second) != 10)
