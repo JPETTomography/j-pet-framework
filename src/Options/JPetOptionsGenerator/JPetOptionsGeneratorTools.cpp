@@ -178,6 +178,7 @@ void addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, 
   options.insert(optionsFromJson.begin(), optionsFromJson.end());
 }
 
+// cppcheck-suppress passedByValue
 void setOutputFileType(OptsStrAny& options, const std::string fileType) { options["outputFileType_std::string"] = fileType; }
 
 /**
@@ -186,8 +187,10 @@ void setOutputFileType(OptsStrAny& options, const std::string fileType) { option
  */
 void setResetEventRangeOption(OptsStrAny& options, bool isReset) { options["resetEventRange_bool"] = isReset; }
 
+// cppcheck-suppress passedByValue
 void setOutputFile(OptsStrAny& options, const std::string file) { options["outputFile_std::string"] = file; }
 
+// cppcheck-suppress passedByValue
 void setOutputPath(OptsStrAny& options, const std::string path) { options["outputPath_std::string"] = path; }
 
 } // namespace jpet_options_generator_tools
