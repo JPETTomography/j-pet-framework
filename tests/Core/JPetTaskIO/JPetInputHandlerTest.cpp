@@ -77,8 +77,7 @@ BOOST_AUTO_TEST_CASE(setEntryRange2)
 
   JPetInputHandler handler;
   handler.openInput(kInputTestFile, params);
-  bool isOK = false;
-  isOK = handler.setEntryRange(opts);
+  bool isOK = handler.setEntryRange(opts);
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(1, handler.getFirstEntryNumber());
   BOOST_REQUIRE_EQUAL(1, handler.getLastEntryNumber());
@@ -97,8 +96,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange3)
 
   JPetInputHandler handler;
   handler.openInput(kInputTestFile, params);
-  bool isOK = false;
-  isOK = handler.setEntryRange(opts);
+  bool isOK = handler.setEntryRange(opts);
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(0, handler.getFirstEntryNumber());
   BOOST_REQUIRE_EQUAL(1, handler.getLastEntryNumber());
@@ -117,8 +115,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange4)
 
   JPetInputHandler handler;
   handler.openInput(kInputTestFile, params);
-  bool isOK = false;
-  isOK = handler.setEntryRange(opts);
+  bool isOK = handler.setEntryRange(opts);
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(1, handler.getFirstEntryNumber());
   BOOST_REQUIRE_EQUAL(100, handler.getLastEntryNumber());
@@ -137,8 +134,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange5)
 
   JPetInputHandler handler;
   handler.openInput(kInputTestFile, params);
-  bool isOK = false;
-  isOK = handler.setEntryRange(opts);
+  bool isOK = handler.setEntryRange(opts);
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(0, handler.getFirstEntryNumber());
   BOOST_REQUIRE_EQUAL(100, handler.getLastEntryNumber());
@@ -157,8 +153,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange6)
 
   JPetInputHandler handler;
   handler.openInput(kInputTestFile, params);
-  bool isOK = false;
-  isOK = handler.setEntryRange(opts);
+  bool isOK = handler.setEntryRange(opts);
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(0, handler.getFirstEntryNumber());
   BOOST_REQUIRE_EQUAL(5, handler.getLastEntryNumber());
@@ -177,8 +172,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange7)
 
   JPetInputHandler handler;
   handler.openInput(kInputTestFile, params);
-  bool isOK = false;
-  isOK = handler.setEntryRange(opts);
+  bool isOK = handler.setEntryRange(opts);
   BOOST_REQUIRE(isOK);
   BOOST_REQUIRE_EQUAL(2, handler.getFirstEntryNumber());
   BOOST_REQUIRE_EQUAL(5, handler.getLastEntryNumber());
