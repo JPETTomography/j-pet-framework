@@ -42,3 +42,6 @@ version.h
 #build directory
 build*
 .dist*
+
+compile_commands.json
+.vscode*
