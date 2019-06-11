@@ -252,12 +252,11 @@ struct MyFixture
 {
   MyFixture()
   {
-    fInputFile = "dabc_17025151847.hld.root";
     std::ofstream outfile(fInputFile);
     outfile.close();
   }
   ~MyFixture() { boost::filesystem::remove(fInputFile); }
-  std::string fInputFile;
+  std::string fInputFile = "dabc_17025151847.hld.root";
 };
 
 BOOST_FIXTURE_TEST_CASE(generateAndValidateOptions_roothld, MyFixture)
