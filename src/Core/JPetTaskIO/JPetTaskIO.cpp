@@ -103,9 +103,8 @@ bool JPetTaskIO::run(const JPetDataInterface&)
   for (const auto& pTask : fSubTasks)
   {
     auto subTaskName = pTask->getName();
-    bool isOK = false;
+    bool isOK = pTask->init(fParams);
 
-    isOK = pTask->init(fParams);
     if (!isOK)
     {
       WARNING("In init() of:" + subTaskName + ". run()  and terminate() of this task will be skipped.");
