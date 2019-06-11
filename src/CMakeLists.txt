@@ -99,8 +99,11 @@ else()
   execute_process(COMMAND ${CMAKE_COMMAND} --build .
                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/Unpacker2-download )
 
-  add_subdirectory(${CMAKE_BINARY_DIR}/src/Unpacker2-src
-                  ${CMAKE_BINARY_DIR}/src/Unpacker2-build)
+  set(Unpacker2_DIR ${CMAKE_BINARY_DIR}/src/Unpacker2-build/lib/cmake/Unpacker2)
+  find_package(Unpacker2 CONFIG REQUIRED)
+  if(Unpacker2_FOUND)
+    message(STATUS "Unpacker2 (version ${Unpacker2_VERSION}) was found using Unpacker2Config")
+  endif()
 endif(Unpacker2_FOUND)
 
 ################################################################################
