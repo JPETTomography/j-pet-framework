@@ -16,13 +16,12 @@
 #ifndef JPETOUTPUTHANDLER_H
 #define JPETOUTPUTHANDLER_H
 
-#include "JPetStatistics/JPetStatistics.h"
-#include "JPetParamManager/JPetParamManager.h"
 #include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "JPetParamManager/JPetParamManager.h"
+#include "JPetStatistics/JPetStatistics.h"
 #include <map>
-#include <string>
 #include <memory>
-
+#include <string>
 
 class JPetTreeHeader;
 class JPetTaskInterface;

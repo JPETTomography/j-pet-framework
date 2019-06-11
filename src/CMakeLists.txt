@@ -267,7 +267,7 @@ foreach(dir ${FOLDERS_WITH_SOURCE})
                              $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/${dir}>
                              $<INSTALL_INTERFACE:include/${dir}>
                             )
-endforeach()
+endforeach(dir ${FOLDERS_WITH_SOURCE})
 set_target_properties(JPetFramework PROPERTIES LINKER_LANGUAGE CXX)
 
 target_link_libraries(JPetFramework PUBLIC Unpacker2::Unpacker2

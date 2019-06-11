@@ -14,11 +14,11 @@
  */
 
 #include "JPetTaskIO/JPetOutputHandler.h"
+#include "JPetTaskIO/version.h"
 #include "JPetTimeWindowMC/JPetTimeWindowMC.h"
 #include "JPetTreeHeader/JPetTreeHeader.h"
 #include "JPetUserTask/JPetUserTask.h"
 #include "JPetWriter/JPetWriter.h"
-#include "JPetTaskIO/version.h"
 #include <cassert>
 
 JPetOutputHandler::JPetOutputHandler() : fWriter("defaultOutput.root") {}
