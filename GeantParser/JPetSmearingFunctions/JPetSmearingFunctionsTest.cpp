@@ -26,7 +26,7 @@
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-const bool plotControlHisto = true;
+const bool plotControlHisto = false;
 
 BOOST_AUTO_TEST_CASE( checkSeed )
 {
@@ -246,3 +246,30 @@ BOOST_AUTO_TEST_CASE( CompareOldTimeSmearing )
 
 BOOST_AUTO_TEST_SUITE_END()
 
+
+BOOST_AUTO_TEST_SUITE(SecondSuite)
+
+class NewSmearingFunctions
+{
+  public:
+    double newHitZSmearing(double *x, double *p){return 7.;}
+}; 
+
+
+BOOST_AUTO_TEST_CASE( overrrideSmearingFunctions )
+{
+
+  double point = 6.;
+
+  NewSmearingFunctions* sf = new NewSmearingFunctions();
+  TF1* fun = new TF1("newEnergySmearing",sf,&NewSmearingFunctions::newHitZSmearing, -200., 200.,3,"NewSmearingFunctions","newHitZSmearing");
+  JPetSmearingFunctions::getSmearingFunctions().setFunZHitSmearing(fun);
+
+  auto r1 = JPetSmearingFunctions::getSmearingFunctions().getFunZHitSmearing()->Eval(point);
+
+  BOOST_REQUIRE_EQUAL(r1,7.);
+
+
+}
+
+BOOST_AUTO_TEST_SUITE_END()

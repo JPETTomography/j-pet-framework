@@ -28,9 +28,9 @@
 class JPetHitSmearingFunctions
 {
   public:
-    virtual double hitEnergySmearing(double *x, double *p);
-    virtual double hitZSmearing(double *x, double *p);
-    virtual double hitTimeSmearing(double *x, double *p);
+    double hitEnergySmearing(double *x, double *p);
+    double hitZSmearing(double *x, double *p);
+    double hitTimeSmearing(double *x, double *p);
 };
 
 
@@ -42,6 +42,10 @@ class JPetSmearingFunctionsContainer
     TF1* getFunEnergySmearing();
     TF1* getFunZHitSmearing();
     TF1* getFunTimeHitSmearing();
+    void setFunEnergySmearing(TF1* fun);
+    void setFunZHitSmearing(TF1* fun);
+    void setFunTimeHitSmearing(TF1* fun);
+
   private:
     JPetHitSmearingFunctions* sf = nullptr;
     TF1* fFunEnergySmearing;
@@ -61,6 +65,7 @@ class JPetSmearingFunctions
     static double addEnergySmearing(int scinID, double zIn, double eneIn);
     static double addZHitSmearing(int scinID, double zIn, double eneIn);
     static double addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn);
+    static JPetSmearingFunctionsContainer& getSmearingFunctions();
 
   private:
     static JPetSmearingFunctionsContainer fSmearingFunctions; 

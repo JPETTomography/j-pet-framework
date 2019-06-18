@@ -25,6 +25,25 @@ JPetSmearingFunctionsContainer::JPetSmearingFunctionsContainer()
   fFunTimeHitSmearing = new TF1("funTimeHitSmearing",sf,&JPetHitSmearingFunctions::hitTimeSmearing, -200., 200.,4,"JPetHitSmearingFunctions","hitTimeSmearing");
 }
 
+JPetSmearingFunctionsContainer& JPetSmearingFunctions::getSmearingFunctions()
+{
+  return fSmearingFunctions;
+}
+
+void JPetSmearingFunctionsContainer::setFunEnergySmearing(TF1* fun)
+{
+  fFunEnergySmearing = fun;
+}
+
+void JPetSmearingFunctionsContainer::setFunZHitSmearing(TF1* fun)
+{
+  fFunZHitSmearing = fun;
+}
+
+void JPetSmearingFunctionsContainer::setFunTimeHitSmearing(TF1* fun)
+{
+  fFunTimeHitSmearing = fun;
+}
 
 double JPetHitSmearingFunctions::hitEnergySmearing(double *x, double *p)
 {
@@ -58,7 +77,6 @@ double JPetHitSmearingFunctions::hitTimeSmearing(double *x, double *p)
   const double kReferenceEnergy = 270.; ///< see Eur. Phys. J. C (2016) 76:445  equation 4 and 5
   const double kTimeResolutionConstant = 80.; ///< see Eur. Phys. J. C (2016) 76:445  equation 3
 
-  double time;
   double eneIn = p[2];
   double timeIn = p[3];
 
