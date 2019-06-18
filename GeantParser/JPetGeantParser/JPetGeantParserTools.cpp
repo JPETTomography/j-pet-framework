@@ -17,7 +17,6 @@
 #include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 #include <TMath.h>
 
-TRandom3* JPetGeantParserTools::fRandomGenerator = JPetRandom::GetRandomGenerator();
 
 JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank  )
 {

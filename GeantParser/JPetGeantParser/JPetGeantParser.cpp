@@ -19,7 +19,6 @@
 #include <JPetOptionsTools/JPetOptionsTools.h>
 #include <JPetGeantParser/JPetGeantParser.h>
 #include <JPetGeantParser/JPetGeantParserTools.h>
-#include <JPetRandom/JPetRandom.h>
 
 
 #include <JPetScin/JPetScin.h>
@@ -128,7 +127,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
 
 
   // first adjust all hits in single event to time window scheme
-  float timeShift = JPetRandom::GetRandomGenerator()->Uniform(fMinTime, fMaxTime);
+  float timeShift = gRandom->Uniform(fMinTime, fMaxTime);
 
   for ( unsigned int i = 0; i < evPack->GetNumberOfHits(); i++) {
 

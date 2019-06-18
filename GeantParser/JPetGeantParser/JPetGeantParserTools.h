@@ -19,7 +19,7 @@
 #include <map>
 #include <vector>
 #include <array>
-#include <TRandom3.h>
+#include <TRandom.h>
 #include <JPetMCHit/JPetMCHit.h>
 #include <JPetHit/JPetHit.h>
 #include <JPetMCDecayTree/JPetMCDecayTree.h>
@@ -27,7 +27,6 @@
 #include <JPetGeantEventPack/JPetGeantEventPack.h>
 #include <JPetGeomMapping/JPetGeomMapping.h>
 #include "JPetParamBank/JPetParamBank.h"
-#include <JPetRandom/JPetRandom.h>
 
 #ifdef __CINT__
 //when cint is used instead of compiler, override word is not recognized
@@ -49,9 +48,6 @@ public:
                                std::array<bool, 3>& isSaved3g,
                                float& enePrompt, std::array<float, 2>& ene2g,
                                std::array<float, 3>& ene3g );
-
-private:
-  static TRandom3* fRandomGenerator;
   
 };
 
