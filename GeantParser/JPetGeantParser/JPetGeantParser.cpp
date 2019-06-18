@@ -59,9 +59,6 @@ bool JPetGeantParser::init()
   if (isOptionSet(fParams.getOptions(), kMakeEfficienciesParamKey)) {
     fMakeEffiHisto = getOptionAsBool(fParams.getOptions(), kMakeEfficienciesParamKey);
   }
-  if (isOptionSet(fParams.getOptions(), kZresolutionParamKey)) {
-    fZresolution = getOptionAsDouble(fParams.getOptions(), kZresolutionParamKey);
-  }
   if (isOptionSet(fParams.getOptions(), kEnergyThresholdParamKey)) {
     fExperimentalThreshold = getOptionAsDouble(fParams.getOptions(), kEnergyThresholdParamKey);
   }
