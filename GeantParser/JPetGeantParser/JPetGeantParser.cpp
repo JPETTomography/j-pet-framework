@@ -91,10 +91,12 @@ bool JPetGeantParser::exec()
     if (fProcessSingleEventinWindow) {
       saveHits();
     } else {
-      if (isTimeWindowFull()) saveHits();
+      if (isTimeWindowFull()) { 
+        saveHits();
+        clearTimeDistoOfDecays();
+        std::tie(fTimeDistroOfDecays,fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
+      }
     }
-    clearTimeDistoOfDecays();
-    std::tie(fTimeDistroOfDecays,fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
   } else {
     return false;
   }
