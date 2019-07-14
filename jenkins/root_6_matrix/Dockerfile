@@ -56,7 +56,7 @@ WORKDIR /j-pet-framework
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod 777 /usr/local/bin/docker-entrypoint.sh \
   && ln -s /usr/local/bin/docker-entrypoint.sh / && ln -s /usr/local/bin/docker-entrypoint.sh /j-pet-framework
-RUN groupadd -g 9999 jenkins && useradd -r -u 999 -g jenkins jenkins
+RUN groupadd -g 999 jenkins && useradd -r -u 9999 -g jenkins jenkins
 RUN usermod -a -G root jenkins
 RUN echo "jenkins ALL=(ALL:ALL) NOPASSWD: ALL" | (EDITOR="tee -a" visudo)
 USER jenkins
