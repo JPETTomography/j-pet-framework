@@ -9,6 +9,12 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion
     )
 
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+if(NOT DEFINED ${CMAKE_INSTALL_PREFIX} AND ${CMAKE_INSTALL_PREFIX} STREQUAL "")
+  set(ARG_NOINSTALL TRUE)
+endif(NOT ${CMAKE_INSTALL_PREFIX})
+
 ################################################################################
 ## Find Threads package
 #
@@ -326,8 +332,8 @@ write_basic_package_version_file(
 
 install(TARGETS JPetFramework
         EXPORT JPetFramework
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
         )
 
 install(DIRECTORY ../include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
@@ -344,11 +350,11 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/JPetFrameworkConfig.cmake"
         DESTINATION ${CMAKE_INSTALL_PREFIX}/cmake
         )
         
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libJPetFramework_rdict.pcm"
-              "${CMAKE_CURRENT_BINARY_DIR}/libJPetFramework.rootmap"
+install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libJPetFramework_rdict.pcm"
+              "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libJPetFramework.rootmap"
         DESTINATION ${CMAKE_INSTALL_LIBDIR}
         )
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh"
         DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh" "${CMAKE_CURRENT_BINARY_DIR}/thisframework.sh" COPYONLY) # copy thisframework to build/src also
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh" "${PROJECT_BINARY_DIR}/src/thisframework.sh" COPYONLY) # copy thisframework to build/src also
