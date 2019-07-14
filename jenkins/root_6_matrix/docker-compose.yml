@@ -3,4 +3,4 @@ framework_rootv6:
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - ${WORKSPACE_JENKINS}:/j-pet-framework/
-  user: "1000:1000"
+  user: "9999:999"
