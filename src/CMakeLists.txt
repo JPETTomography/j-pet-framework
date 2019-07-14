@@ -350,3 +350,5 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libJPetFramework_rdict.pcm"
         )
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh"
         DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh" "${CMAKE_CURRENT_BINARY_DIR}/thisframework.sh" COPYONLY) # copy thisframework to build/src also
