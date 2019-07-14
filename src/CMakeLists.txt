@@ -99,7 +99,7 @@ else()
   execute_process(COMMAND ${CMAKE_COMMAND} --build .
                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/Unpacker2-download )
 
-  set(Unpacker2_DIR ${CMAKE_BINARY_DIR}/src/Unpacker2-build/lib/cmake/Unpacker2)
+  set(Unpacker2_DIR ${CMAKE_BINARY_DIR}/src/Unpacker2-build/cmake)
   find_package(Unpacker2 CONFIG REQUIRED)
   if(Unpacker2_FOUND)
     message(STATUS "Unpacker2 (version ${Unpacker2_VERSION}) was found using Unpacker2Config")
@@ -315,10 +315,6 @@ exec_program(
 configure_file(${PROJECT_SOURCE_DIR}/version.h.in
   ${PROJECT_SOURCE_DIR}/include/Core/JPetTaskIO/version.h ESCAPE_QUOTES @ONLY)
 
-## Create the thisframework.sh file with correct LD_LIBRARY_PATH information
-configure_file(${PROJECT_SOURCE_DIR}/thisframework.sh.in
-  ${CMAKE_CURRENT_BINARY_DIR}/thisframework.sh ESCAPE_QUOTES @ONLY)
-
 include(GNUInstallDirs)
 
 include(CMakePackageConfigHelpers)
@@ -330,8 +326,8 @@ write_basic_package_version_file(
 
 install(TARGETS JPetFramework
         EXPORT JPetFramework
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}
         )
 
 install(DIRECTORY ../include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
@@ -339,17 +335,18 @@ install(DIRECTORY ../include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(EXPORT JPetFramework
         FILE JPetFrameworkTargets.cmake
         NAMESPACE JPetFramework::
-        DESTINATION lib/cmake/JPetFramework
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/cmake
          )
 
 configure_file(JPetFrameworkConfig.cmake.in JPetFrameworkConfig.cmake @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/JPetFrameworkConfig.cmake"
               "${CMAKE_CURRENT_BINARY_DIR}/JPetFrameworkConfigVersion.cmake"
-        DESTINATION lib/cmake/JPetFramework
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/cmake
         )
         
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libJPetFramework_rdict.pcm"
               "${CMAKE_CURRENT_BINARY_DIR}/libJPetFramework.rootmap"
-              "${CMAKE_CURRENT_BINARY_DIR}/thisframework.sh"
-        DESTINATION lib
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}
         )
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh"
+        DESTINATION ${CMAKE_INSTALL_BINDIR})

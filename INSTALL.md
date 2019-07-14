@@ -10,14 +10,19 @@
    `mkdir build`  
    `cd build`
 
-3. Invoke the CMake build tool and provide the path to the main directory
+3. Invoke the CMake build tool and provide the path to the source directory as well as path to install.
    If you created the build directory in the main one and entered `build` as in step 2. then do:  
-   `cmake ..`
+   `cmake -DCMAKE_INSTALL_PREFIX=<install_path> ..`
+   If you didn't install Unpacker2 globally on the system also provide path to Unpacker2_DIR:
+   `cmake -DCMAKE_INSTALL_PREFIX=<install_path> -DUnpacker2_DIR=<path_to_unpacker2> ..`
 
 4. To compile the J-PET Framework Library do:  
    `make`
 
-5. Once the compilation is finished, there should be a file `libJPetFramework.so` in the build directory.
+5. Once the compilation is finished, you can run tests with:
+   `ctest`
+   or install libraries in <install_path> using:
+   `make install`
 
 **NOTE:** Full install procedure with tips and troubleshootung can be found on [PetWiki](http://koza.if.uj.edu.pl/petwiki/index.php/Installing_the_J-PET_Framework_on_Ubuntu)
 
@@ -38,27 +43,10 @@ and the documentation will be generated and put in folders named latex and html 
 2. [cmake](https://cmake.org/)
 
 3. [ROOT](http://root.cern.ch)  
-   Works with ROOT 5 (recommended 5.34/26)
-   and ROOT 6 (tested 6.10/08)
+   Works with ROOT 6 (tested 6.10/08)
 
 4. [BOOST](https://www.boost.org/)
 
-5. [FFTW3](http://www.fftw.org/)
+5. [Unpacker2](https://github.com/JPETTomography/Unpacker2)
 
-Optional, if you want to generate documentation: [Doxygen](www.doxygen.org)
-
-## Tested Platforms
-
-1. Ubuntu x86_64 GNU/Linux; gcc 4.6.3; ROOT 5.32
-2. Ubuntu 12.04.1 LTS 2013 i386 GNU/Linux; gcc 4.6.3; ROOT 5.34/18
-3. Debian GNU/Linux Sid; gcc-4.9.real 4.9.2; ROOT 5.34/26
-4. Fedora 20
-5. Ubuntu 18.04.1 LTS; gcc 7.3.0; ROOT 6.10/08
-
-## Requirements installation
-
-For Ubuntu:  
-`sudo apt-get -y install git cmake libboost-all-dev libtinyxml2-dev doxygen libfftw3-3 libfftw3-dev`
-
-For Fedora 20:  
-`sudo yum install boost-devel cmake tinyxml-devel doxygen fftw3-devel`
+6. (Optional)To generate documentation: [Doxygen](www.doxygen.org)
