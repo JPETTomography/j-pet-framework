@@ -9,12 +9,7 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion
     )
 
-
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
-if(NOT DEFINED ${CMAKE_INSTALL_PREFIX} AND ${CMAKE_INSTALL_PREFIX} STREQUAL "")
-  set(ARG_NOINSTALL TRUE)
-endif(NOT ${CMAKE_INSTALL_PREFIX})
-
 ################################################################################
 ## Find Threads package
 #
@@ -263,7 +258,8 @@ endforeach()
 include_directories(ROOT_BUG) # Fix bug in NewMacros Root file
 ROOT_GENERATE_DICTIONARY(${DICTIONARY_NAME} ${HEADERS_WITH_DICTIONARY_REQUIRED}
   LINKDEF ${LINKDEF_NAME}
-  OPTIONS ${DICTIONARY_INCLUDES})
+  OPTIONS ${DICTIONARY_INCLUDES}
+  NOINSTALL)
 
 ################################################################################
 ## Building Framework library
