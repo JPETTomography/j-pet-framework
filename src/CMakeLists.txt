@@ -24,7 +24,19 @@ if(ROOT_FOUND)
   message(STATUS "ROOT (version ${ROOT_VERSION}) was found using ROOTConfig")
 endif()
 
-include("${ROOT_DIR}/modules/RootNewMacros.cmake")
+if(EXISTS "${ROOT_DIR}/modules/RootNewMacros.cmake")
+  include("${ROOT_DIR}/modules/RootNewMacros.cmake")
+  message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/modules!")
+elseif(EXISTS "${ROOT_DIR}/cmake/modules/RootNewMacros.cmake")
+  include("${ROOT_DIR}/cmake/modules/RootNewMacros.cmake")
+  message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/cmake/modules!")
+elseif(EXISTS "${ROOT_DIR}/../cmake/modules/RootNewMacros.cmake")
+  include("${ROOT_DIR}/../cmake/modules/RootNewMacros.cmake")
+  message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/../cmake/modules!")
+else()
+  message("ERROR! Could not find RootNewMacros.cmake file! Aborting..")
+  return(1)
+endif()
 # fix missing include directories property in versions < ROOT 6.12
 set_target_properties(ROOT::Core PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${ROOT_INCLUDE_DIRS}")
@@ -219,7 +231,7 @@ list(APPEND DICTIONARY_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
 ## Generating ROOT dictionaries
 set(DICTIONARY_NAME G__JPetFramework)
 set(HEADERS_WITH_DICTIONARY_REQUIRED
-  JPetTimeWindow/JPetTimeWindow.h
+  ${PROJECT_SOURCE_DIR}/include/DataObjects/JPetTimeWindow/JPetTimeWindow.h
   JPetSigCh/JPetSigCh.h
   JPetBaseSignal/JPetBaseSignal.h
   JPetRawSignal/JPetRawSignal.h
@@ -257,8 +269,8 @@ endforeach()
 
 include_directories(ROOT_BUG) # Fix bug in NewMacros Root file
 ROOT_GENERATE_DICTIONARY(${DICTIONARY_NAME} ${HEADERS_WITH_DICTIONARY_REQUIRED}
-  LINKDEF ${LINKDEF_NAME}
   OPTIONS ${DICTIONARY_INCLUDES}
+  LINKDEF ${LINKDEF_NAME}
   NOINSTALL)
 
 ################################################################################
