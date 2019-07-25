@@ -16,5 +16,5 @@ script:
     - cd build
     - cmake ..
     - make all tests -j4
-    - source src/thisframework.sh
+    - source bin/thisframework.sh
     - ctest -j6 -C Debug -T test --output-on-failure
