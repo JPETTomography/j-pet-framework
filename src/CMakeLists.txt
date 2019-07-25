@@ -369,4 +369,8 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh" "${PROJECT_BINARY_
 configure_file("${PROJECT_BINARY_DIR}/src/JPetFrameworkConfig.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkConfig.cmake" COPYONLY) 
 configure_file("${PROJECT_BINARY_DIR}/src/JPetFrameworkConfigVersion.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkConfigVersion.cmake" COPYONLY) 
 export(EXPORT JPetFramework FILE JPetFrameworkTargets.cmake NAMESPACE JPetFramework::)
-configure_file("${PROJECT_BINARY_DIR}/src/JPetFrameworkTargets.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkTargets.cmake" COPYONLY) 
+add_custom_target(
+  copy_target
+  COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_BINARY_DIR}/src/JPetFrameworkTargets.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkTargets.cmake"
+  DEPENDS "${PROJECT_BINARY_DIR}/src/JPetFrameworkTargets.cmake")
+add_dependencies(JPetFramework copy_target) 
