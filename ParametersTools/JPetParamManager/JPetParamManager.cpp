@@ -288,7 +288,7 @@ bool JPetParamManager::saveParametersToFile(JPetWriter* writer)
     ERROR("Could not write parameters to file. The provided JPetWriter is closed.");
     return false;
   }
-  writer->writeObject(fBank, "ParamBank;1");
+  writer->writeObject(fBank, "ParamBank");
   return true;
 }
 
@@ -321,7 +321,7 @@ bool JPetParamManager::saveParametersToFile(std::string filename)
   }
   file.cd();
   assert(fBank);
-  file.WriteObject(fBank, "ParamBank;1");
+  file.WriteObject(fBank, "ParamBank");
   return true;
 }
 
