@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE(saving_reading_file)
   BOOST_REQUIRE(bank.getFramesSize() == 1);
   TFile file("test.root", "UPDATE");
   file.cd();
-  file.WriteObject(&bank, "ParamBank;1");
+  file.WriteObject(&bank, "ParamBank");
   file.Close();
   bank.clear();
   TFile file2("test.root", "READ");
