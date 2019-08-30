@@ -276,7 +276,7 @@ bool JPetParamManager::readParametersFromFile(JPetReader* reader)
     ERROR("Cannot read parameters from file. The provided JPetReader is closed.");
     return false;
   }
-  fBank = static_cast<JPetParamBank*>(reader->getObjectFromFile("ParamBank"));
+  fBank = static_cast<JPetParamBank*>(reader->getObjectFromFile("ParamBank;1"));
   if (!fBank) return false;
   return true;
 }
@@ -299,7 +299,7 @@ bool JPetParamManager::readParametersFromFile(std::string filename)
     ERROR("Could not read from file.");
     return false;
   }
-  fBank = static_cast<JPetParamBank*>(file.Get("ParamBank"));
+  fBank = static_cast<JPetParamBank*>(file.Get("ParamBank;1"));
   if (!fBank) return false;
   return true;
 }
@@ -321,7 +321,7 @@ bool JPetParamManager::saveParametersToFile(std::string filename)
   }
   file.cd();
   assert(fBank);
-  file.WriteObject(fBank, "ParamBank;1");
+  file.WriteObject(fBank, "ParamBank");
   return true;
 }
 
