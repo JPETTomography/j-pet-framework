@@ -84,7 +84,7 @@ void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit, const J
 
 float JPetGeantParserTools::estimateNextDecayTimeExp(float activityMBq)
 {
-  return fRandomGenerator->Exp((pow(10, 6) / activityMBq));
+  return gRandom->Exp((pow(10, 6) / activityMBq));
 }
 
 

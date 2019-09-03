@@ -19,7 +19,7 @@
 #include <map>
 #include <vector>
 #include <array>
-#include <TRandom3.h>
+#include <TRandom.h>
 #include <JPetMCHit/JPetMCHit.h>
 #include <JPetHit/JPetHit.h>
 #include <JPetMCDecayTree/JPetMCDecayTree.h>
@@ -55,8 +55,6 @@ public:
   static std::tuple<std::vector<float>,std::vector<float>> getTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax);
   static std::pair<float, float> calculateEfficiency(ulong, ulong);
 
-private:
-  static TRandom3* fRandomGenerator;
 };
 
 #endif
