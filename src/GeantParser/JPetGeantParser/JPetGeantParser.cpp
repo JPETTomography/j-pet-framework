@@ -103,10 +103,12 @@ bool JPetGeantParser::exec()
     else
     {
       if (isTimeWindowFull())
+      {
         saveHits();
+        clearTimeDistoOfDecays();
+        std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
+      }
     }
-    clearTimeDistoOfDecays();
-    std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
   }
   else
   {

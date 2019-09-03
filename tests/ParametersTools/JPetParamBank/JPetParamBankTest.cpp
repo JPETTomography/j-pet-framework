@@ -234,7 +234,7 @@ BOOST_AUTO_TEST_CASE(saving_reading_file)
   file.Close();
   bank.clear();
   TFile file2("test.root", "READ");
-  JPetParamBank* pBank = static_cast<JPetParamBank*>(file2.Get("ParamBank"));
+  JPetParamBank* pBank = static_cast<JPetParamBank*>(file2.Get("ParamBank;1"));
   JPetParamBank& bank2 = *pBank;
   BOOST_REQUIRE(bank2.getScintillatorsSize() == 2);
   BOOST_REQUIRE(bank2.getPMsSize() == 4);
