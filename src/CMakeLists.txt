@@ -98,8 +98,8 @@ if(Unpacker2_FOUND)
 else()
   include(ExternalProject)
   message(STATUS "Unpacker2 was not found..")
-  set(GITHUB_URL "https://github.com/grey277/Unpacker2.git")
-  set(GIT_TAG "cmake")
+  set(GITHUB_URL "https://github.com/JPETTomography/Unpacker2.git")
+  set(GIT_TAG "master")
 
   message(STATUS "Adding external project to download and compile Unpacker2 from: ${GITHUB_URL} with tag: ${GIT_TAG}")
 
