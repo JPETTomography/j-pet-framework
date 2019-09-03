@@ -17,9 +17,9 @@
 #define JPETOPTIONSTYPEHANDLER_H
 
 #include <boost/any.hpp>
-#include <vector>
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
 
 /**
  * @brief Class handling the type of option provided by the user.
@@ -27,13 +27,26 @@
 class JPetOptionsTypeHandler
 {
 public:
-  static std::map<std::string, std::string> anyMapToStringMap(
-    const std::map<std::string, boost::any>& optionsMap);
-  static std::vector<std::string> getAllowedTypes();
+  enum kAllowedTypes
+  {
+    kNotFound,
+    kInt,
+    kString,
+    kBool,
+    kVectorString,
+    kVectorInt,
+    kFloat,
+    kDouble,
+    kNoType
+  }; // if map do not find value it returns 0, so make extra type to handle this
+
+  static std::map<std::string, std::string> anyMapToStringMap(const std::map<std::string, boost::any>& optionsMap);
+  static std::map<std::string, int> getAllowedTypes();
   static std::string getTypeOfOption(const std::string& option);
   static std::string getNameOfOption(const std::string& option);
 
 private:
-  static const std::vector<std::string> kAllowedTypes;
+  JPetOptionsTypeHandler() = delete;
+  JPetOptionsTypeHandler(const JPetOptionsTypeHandler&) = delete;
 };
 #endif /* !JPETOPTIONSTYPEHANDLER_H */

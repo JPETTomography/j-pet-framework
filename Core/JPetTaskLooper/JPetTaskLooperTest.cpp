@@ -48,7 +48,7 @@ public:
     /// Here I set the condition that it should stop after 20th iteration, but it can be some other condition.
     if (fRunCounter == 20) {
       auto newOpts = params.getOptions();
-      newOpts["stopIteration_bool"] = true;
+      newOpts["StopIteration_bool"] = true;
       params = JPetParams(newOpts, nullptr);
     } else {
       params = fParams;
@@ -84,7 +84,7 @@ protected:
     /// Here I set the condition that it should stop after 100th iteration, but it can be some other condition.
     if (fRunCounter == 100) {
       auto newOpts = getOptions();
-      newOpts["stopIteration_bool"] = true;
+      newOpts["StopIteration_bool"] = true;
       fParams = JPetParams(newOpts, fParams.getParamManagerAsShared());
     }
     return true;
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE( my_test_10_iterations_with_predefined_function)
 
 BOOST_AUTO_TEST_CASE( my_test_withSettingOptions)
 {
-  std::string optName = "stopIteration_bool";
+  std::string optName = "StopIteration_bool";
   auto condFunc =  JPetTaskLooper::getStopOnOptionPredicate(optName);
 
   using namespace jpet_options_generator_tools;
@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_CASE( my_test_withSettingOptions)
 
 BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO)
 {
-  std::string optName = "stopIteration_bool";
+  std::string optName = "StopIteration_bool";
   auto condFunc =  JPetTaskLooper::getStopOnOptionPredicate(optName);
 
   using namespace jpet_options_generator_tools;
@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO_2)
 
 BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO_3)
 {
-  std::string optName = "stopIteration_bool";
+  std::string optName = "StopIteration_bool";
   auto condFunc =  JPetTaskLooper::getStopOnOptionPredicate(optName);
 
   using namespace jpet_options_generator_tools;

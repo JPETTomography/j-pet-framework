@@ -207,6 +207,11 @@ BOOST_AUTO_TEST_CASE(fileTypeSuffixOperations)
   path2 = JPetCommonTools::replaceDataTypeInFileName(path, "tslot.raw");
   BOOST_REQUIRE_EQUAL(path2, "/some/path/foo.tslot.raw.root");
   BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFileName(path2), "tslot.raw");
+
+  path = "/some/path/foo.root";
+  path2 = JPetCommonTools::replaceDataTypeInFileName(path, "tslot.raw");
+  BOOST_REQUIRE_EQUAL(path2, "/some/path/foo.tslot.raw.root");
+  BOOST_REQUIRE_EQUAL(JPetCommonTools::extractDataTypeFromFileName(path2), "tslot.raw");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -25,6 +25,8 @@
 #include <JPetGeantScinHits/JPetGeantScinHits.h>
 #include <JPetGeantEventPack/JPetGeantEventPack.h>
 #include <JPetGeomMapping/JPetGeomMapping.h>
+#include <tuple>
+#include <functional>
 
 class JPetWriter;
 
@@ -61,9 +63,6 @@ protected :
 
   double fExperimentalThreshold = 10; //< in keV
 
-  // constants for histograms
-  int kEffiHisto_ene_nBin = 200;
-  double kEffiHisto_ene_width = 8;
 
   // internal variables
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";
@@ -74,13 +73,15 @@ protected :
   const std::string kEnergyThresholdParamKey = "GeantParser_EnergyThreshold_double";
   const std::string kProcessSingleEventinWindowParamKey = "GeantParser_ProcessSingleEventInWindow_bool";
 
-  long fActivityIndex = 0;
+  long fExpectedNumberOfEvents = 0;
+  float fTimeShift = fMinTime;
 
   std::vector<JPetMCHit> fStoredMCHits; ///< save MC hits into single time window when it contains enough hits
   std::vector<JPetHit> fStoredHits; ///< save RECONSTRUCTED MC hits into single time window when it contains enough hits
 
   void processMCEvent(JPetGeantEventPack*);
   void saveHits();
+  void saveReconstructedHit(JPetHit recHit);
 
   void bookEfficiencyHistograms();
   void bookBasicHistograms();
@@ -88,6 +89,22 @@ protected :
   void fillHistoGenInfo(JPetGeantEventInformation*);
   void fillHistoMCGen(JPetMCHit&);
   void fillHistoMCRec(JPetHit&);
+
+  unsigned long  nPromptGen = 0u;
+  unsigned long  nPromptRec = 0u;
+  unsigned long  n2gGen = 0u;
+  unsigned long  n2gRec = 0u;
+  unsigned long  n3gGen = 0u;
+  unsigned long  n3gRec = 0u;
+
+  std::vector<float> fTimeDistroOfDecays = {};
+  std::vector<float> fTimeDiffDistro = {};
+  unsigned int fCurrentIndexTimeShift = 0;
+
+  unsigned int getNumberOfDecaysInWindow();
+  float getNextTimeShift();
+  void clearTimeDistoOfDecays();
+  bool isTimeWindowFull();
 
 
 };

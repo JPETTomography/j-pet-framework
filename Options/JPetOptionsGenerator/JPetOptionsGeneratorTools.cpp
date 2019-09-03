@@ -90,17 +90,17 @@ OptsStrAny generateOptionsForTask(const OptsStrAny& inOptions, const OptsStrAny&
   }
   if (isOptionSet(controlSettings, "outputFileType_std::string")) {
     newOpts["inputFileType_std::string"] = getOptionAsString(controlSettings,
-      "outputFileType_std::string");
+                                           "outputFileType_std::string");
   }
   if (isOptionSet(controlSettings, "outputFile_std::string")) {
     newOpts["inputFile_std::string"] = getOptionAsString(controlSettings,
-      "outputFile_std::string");
+                                       "outputFile_std::string");
   }
   if (isOptionSet(controlSettings, "outputPath_std::string")) {
     auto outPath  = std::string(getOutputPath(controlSettings));
     if (!outPath.empty()) {
       newOpts.at("inputFile_std::string") = outPath
-        + JPetCommonTools::extractFileNameFromFullPath(getInputFile(newOpts));
+                                            + JPetCommonTools::extractFileNameFromFullPath(getInputFile(newOpts));
     }
   }
   return newOpts;
@@ -134,7 +134,7 @@ std::map<std::string, std::vector<Transformer> > generateTransformationMap(OptsS
   transformationMap["range_std::vector<int>"].push_back(generateLowerEventBound);
   transformationMap["range_std::vector<int>"].push_back(generateHigherEventBound);
   addTransformFunction(transformationMap, "type_std::string",
-    jpet_options_tools::generateSetFileTypeTransformator(options));
+                       jpet_options_tools::generateSetFileTypeTransformator(options));
   return transformationMap;
 }
 
@@ -170,8 +170,8 @@ std::map<std::string, boost::any> getDefaultOptions()
 }
 
 void addTransformFunction(TransformersMap& map,
-  const std::string& name,
-  Transformer transformFunction)
+                          const std::string& name,
+                          Transformer transformFunction)
 {
   map[name].push_back(transformFunction);
 }
@@ -186,7 +186,7 @@ void addNewOptionsFromCfgFile(const std::string& cfgFile, std::map<std::string, 
   options.insert(optionsFromJson.begin(), optionsFromJson.end());
 }
 
-void setOutputFileType(OptsStrAny& options, const std::string& fileType)
+void setOutputFileType(OptsStrAny& options, const std::string fileType)
 {
   options["outputFileType_std::string"] = fileType;
 }
@@ -200,12 +200,12 @@ void setResetEventRangeOption(OptsStrAny& options, bool isReset)
   options["resetEventRange_bool"] = isReset;
 }
 
-void setOutputFile(OptsStrAny& options, const std::string& file)
+void setOutputFile(OptsStrAny& options, const std::string file)
 {
   options["outputFile_std::string"] = file;
 }
 
-void setOutputPath(OptsStrAny& options, const std::string& path)
+void setOutputPath(OptsStrAny& options, const std::string path)
 {
   options["outputPath_std::string"] = path;
 }
