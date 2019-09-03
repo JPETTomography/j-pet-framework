@@ -14,6 +14,8 @@
  */
 
 #include <JPetSmearingFunctions/JPetSmearingFunctions.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 JPetSmearingFunctionsContainer JPetSmearingFunctions::fSmearingFunctions = JPetSmearingFunctionsContainer();
 
