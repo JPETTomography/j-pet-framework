@@ -1,0 +1,8 @@
+UseTab: Never
+TabWidth: 2
+Standard: Cpp11
+IndentWidth: 2
+PointerBindsToType: true
+ColumnLimit: 150
+AlwaysBreakTemplateDeclarations: true
+BreakBeforeBraces: Allman
