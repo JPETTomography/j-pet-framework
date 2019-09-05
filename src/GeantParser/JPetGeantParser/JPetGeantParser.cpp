@@ -17,7 +17,6 @@
 #include <JPetGeantParser/JPetGeantParser.h>
 #include <JPetGeantParser/JPetGeantParserTools.h>
 #include <JPetOptionsTools/JPetOptionsTools.h>
-#include <JPetRandom/JPetRandom.h>
 #include <JPetWriter/JPetWriter.h>
 #include <iostream>
 
