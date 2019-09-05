@@ -17,7 +17,6 @@
 #include <JPetGeantParser/JPetGeantParser.h>
 #include <JPetGeantParser/JPetGeantParserTools.h>
 #include <JPetOptionsTools/JPetOptionsTools.h>
-#include <JPetRandom/JPetRandom.h>
 #include <JPetWriter/JPetWriter.h>
 #include <iostream>
 
@@ -62,12 +61,7 @@ bool JPetGeantParser::init()
   {
     fMakeEffiHisto = getOptionAsBool(fParams.getOptions(), kMakeEfficienciesParamKey);
   }
-  if (isOptionSet(fParams.getOptions(), kZresolutionParamKey))
-  {
-    fZresolution = getOptionAsDouble(fParams.getOptions(), kZresolutionParamKey);
-  }
-  if (isOptionSet(fParams.getOptions(), kEnergyThresholdParamKey))
-  {
+  if (isOptionSet(fParams.getOptions(), kEnergyThresholdParamKey)) {
     fExperimentalThreshold = getOptionAsDouble(fParams.getOptions(), kEnergyThresholdParamKey);
   }
   if (isOptionSet(fParams.getOptions(), kProcessSingleEventinWindowParamKey))
@@ -165,7 +159,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     if (fMakeHisto)
       fillHistoMCGen(mcHit);
     // create reconstructed hit and add all smearings
-    JPetHit recHit = JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), getNextTimeShift(), fZresolution);
+    JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), getNextTimeShift());
 
     // add criteria for possible rejection of reconstructed events (e.g. E>50 keV)
     if (JPetGeantParserTools::isHitReconstructed(recHit, fExperimentalThreshold))
@@ -177,6 +171,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
         fillHistoMCRec(recHit);
     }
     fStoredMCHits.push_back(mcHit);
+
   }
 
   isRec2g = isSaved2g[0] && isSaved2g[1];
@@ -330,50 +325,145 @@ void JPetGeantParser::bookBasicHistograms()
 
   // GENERATED HISTOGRAMS
 
-  getStatistics().createHistogram(new TH1F("gen_hits_z_pos", "Gen hits Z position", 100, -60.0, 60.0));
+  getStatistics().createHistogram(
+    new TH1F("gen_hits_z_pos",
+             "Gen hits Z position",
+             100, -60.0, 60.0)
+  );
 
-  getStatistics().createHistogram(new TH2F("gen_hits_xy_pos", "GEN hits XY pos", 121, -60.5, 60.5, 121, -60.5, 60.5));
+  getStatistics().createHistogram(
+    new TH2F("gen_hits_xy_pos",
+             "GEN hits XY pos",
+             121, -60.5, 60.5,
+             121, -60.5, 60.5
+            ));
 
-  getStatistics().createHistogram(new TH1F("gen_hit_time", "Gen hit time", 100, 0.0, 15000.0));
 
-  getStatistics().createHistogram(new TH1F("gen_hit_eneDepos", "Gen hit ene deposition", 750, 0.0, 1500.0));
+  getStatistics().createHistogram(
+    new TH1F("gen_hit_time",
+             "Gen hit time",
+             100, 0.0, 15000.0)
+  );
 
-  getStatistics().createHistogram(new TH2F("gen_XY", "GEN XY coordinates of annihilation point", 121, -60.5, 60.5, 121, -60.5, 60.5));
+  getStatistics().createHistogram(
+    new TH1F("gen_hit_eneDepos",
+             "Gen hit ene deposition",
+             750, 0.0, 1500.0)
+  );
 
-  getStatistics().createHistogram(new TH2F("gen_XZ", "GEN XZ coordinates of annihilation point", 121, -60.5, 60.5, 121, -60.5, 60.5));
 
-  getStatistics().createHistogram(new TH2F("gen_YZ", "GEN YZ coordinates of annihilation point", 121, -60.5, 60.5, 121, -60.5, 60.5));
+  getStatistics().createHistogram(
+    new TH2F("gen_XY",
+             "GEN XY coordinates of annihilation point",
+             121, -60.5, 60.5,
+             121, -60.5, 60.5
+            ));
 
-  getStatistics().createHistogram(new TH2F("gen_prompt_XY", "GEN XY coordinates of prompt emission point", 121, -60.5, 60.5, 121, -60.5, 60.5));
+  getStatistics().createHistogram(
+    new TH2F("gen_XZ",
+             "GEN XZ coordinates of annihilation point",
+             121, -60.5, 60.5,
+             121, -60.5, 60.5
+            ));
 
-  getStatistics().createHistogram(new TH2F("gen_prompt_XZ", "GEN XZ coordinates of prompt emission point", 121, -60.5, 60.5, 121, -60.5, 60.5));
+  getStatistics().createHistogram(
+    new TH2F("gen_YZ",
+             "GEN YZ coordinates of annihilation point",
+             121, -60.5, 60.5,
+             121, -60.5, 60.5
+            ));
 
-  getStatistics().createHistogram(new TH2F("gen_prompt_YZ", "GEN YZ coordinates of prompt emission point", 121, -60.5, 60.5, 121, -60.5, 60.5));
+  getStatistics().createHistogram(
+    new TH2F("gen_prompt_XY",
+             "GEN XY coordinates of prompt emission point",
+             121, -60.5, 60.5,
+             121, -60.5, 60.5
+            ));
 
-  getStatistics().createHistogram(new TH1F("gen_hit_multiplicity", "Gen hit multiplicity", 6, 0.0, 5.0));
+  getStatistics().createHistogram(
+    new TH2F("gen_prompt_XZ",
+             "GEN XZ coordinates of prompt emission point",
+             121, -60.5, 60.5,
+             121, -60.5, 60.5
+            ));
 
-  getStatistics().createHistogram(new TH1F("gen_lifetime", "Gen lifetime", 100, 0.0, 1500.0));
+  getStatistics().createHistogram(
+    new TH2F("gen_prompt_YZ",
+             "GEN YZ coordinates of prompt emission point",
+             121, -60.5, 60.5,
+             121, -60.5, 60.5
+            ));
+
+
+
+  getStatistics().createHistogram(
+    new TH1F("gen_hit_multiplicity",
+             "Gen hit multiplicity",
+             6, 0.0, 5.0)
+  );
+
+  getStatistics().createHistogram(
+    new TH1F("gen_lifetime",
+             "Gen lifetime",
+             100, 0.0, 1500.0)
+  );
+
+
+
 
   // RECONSTRUCTED HISTOGRAMS
 
-  getStatistics().createHistogram(new TH1F("hits_z_pos", "hits Z position", 100, -60.0, 60.0));
+  getStatistics().createHistogram(
+    new TH1F("hits_z_pos",
+             "hits Z position",
+             100, -60.0, 60.0)
+  );
 
-  getStatistics().createHistogram(new TH2F("hits_xy_pos", "hits XY pos", 121, -60.5, 60.5, 121, -60.5, 60.5));
+  getStatistics().createHistogram(
+    new TH2F("hits_xy_pos",
+             "hits XY pos",
+             121, -60.5, 60.5,
+             121, -60.5, 60.5
+            ));
 
-  getStatistics().createHistogram(new TH1F("rec_hit_time", "hit time", 100, 0.0, 15000.0));
+  getStatistics().createHistogram(
+    new TH1F("rec_hit_time",
+             "hit time",
+             100, 0.0, 15000.0)
+  );
 
-  getStatistics().createHistogram(new TH1F("rec_hit_eneDepos", "hit ene deposition", 750, 0.0, 1500.0));
+  getStatistics().createHistogram(
+    new TH1F("rec_hit_eneDepos",
+             "hit ene deposition",
+             750, 0.0, 1500.0)
+  );
+
+
 }
 
 void JPetGeantParser::bookEfficiencyHistograms()
 {
 
-  getStatistics().createHistogram(new TEfficiency("effi_3g_in_rho_z", "effi for 1g as function of rho and z of vtx", 100, 0., 50., 100, -25., 25.));
-
-  getStatistics().createHistogram(new TEfficiency("effi_2g_in_rho_z", "effi for 2g as function of rho and z of vtx", 100, 0., 50., 100, -25., 25.));
+  getStatistics().createHistogram(
+    new TEfficiency("effi_3g_in_rho_z",
+                    "effi for 1g as function of rho and z of vtx",
+                    100, 0., 50., 100, -25., 25.)
+  );
 
   getStatistics().createHistogram(
-      new TEfficiency("effi_prompt_in_rho_z", "effi for 3g as function of rho and z of vtx", 100, 0., 50., 100, -25., 25.));
+    new TEfficiency("effi_2g_in_rho_z",
+                    "effi for 2g as function of rho and z of vtx",
+                    100, 0., 50., 100, -25., 25.)
+  );
+
+
+  getStatistics().createHistogram(
+    new TEfficiency("effi_prompt_in_rho_z",
+                    "effi for 3g as function of rho and z of vtx",
+                    100, 0., 50., 100, -25., 25.)
+  );
+
+
 }
 
 unsigned int JPetGeantParser::getNumberOfDecaysInWindow() { return fTimeDistroOfDecays.size(); }

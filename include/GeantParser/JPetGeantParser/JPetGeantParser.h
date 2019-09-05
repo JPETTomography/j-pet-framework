@@ -61,7 +61,6 @@ protected :
   double fMinTime = -50.e6; // electronic time window 50 micro seconds - true for run 3
   double fSimulatedActivity = 4.7; //< in MBq; value for run3
 
-  float fZresolution = 0.976; // 80ps   12.2  velocity
   double fExperimentalThreshold = 10; //< in keV
 
 
@@ -71,7 +70,6 @@ protected :
   const std::string kSourceActivityParamKey = "GeantParser_SourceActivity_double";
   const std::string kMakeHistogramsParamKey = "GeantParser_MakeHistograms_bool";
   const std::string kMakeEfficienciesParamKey = "GeantParser_MakeEfficiencies_bool";
-  const std::string kZresolutionParamKey = "GeantParser_Zresolution_double";
   const std::string kEnergyThresholdParamKey = "GeantParser_EnergyThreshold_double";
   const std::string kProcessSingleEventinWindowParamKey = "GeantParser_ProcessSingleEventInWindow_bool";
 

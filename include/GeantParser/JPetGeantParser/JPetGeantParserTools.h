@@ -23,7 +23,6 @@
 #include <JPetHit/JPetHit.h>
 #include <JPetMCDecayTree/JPetMCDecayTree.h>
 #include <JPetMCHit/JPetMCHit.h>
-#include <JPetRandom/JPetRandom.h>
 #include <TRandom3.h>
 #include <array>
 #include <functional>
@@ -42,7 +41,7 @@ class JPetGeantParserTools
 public:
   static JPetMCHit createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank );
 
-  static JPetHit reconstructHit(JPetMCHit& hit, const JPetParamBank& paramBank, const float timeShift, const float z_resolution );
+  static JPetHit reconstructHit(JPetMCHit& hit, const JPetParamBank& paramBank, const float timeShift);
 
   static bool isHitReconstructed(JPetHit& hit, const float th);
 
@@ -53,11 +52,9 @@ public:
                                std::array<float, 3>& ene3g );
 
   static float estimateNextDecayTimeExp(float activityMBq);
-  static std::tuple<std::vector<float>, std::vector<float>> getTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax);
+  static std::tuple<std::vector<float>,std::vector<float>> getTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax);
   static std::pair<float, float> calculateEfficiency(ulong, ulong);
 
-private:
-  static TRandom3* fRandomGenerator;
 };
 
 #endif

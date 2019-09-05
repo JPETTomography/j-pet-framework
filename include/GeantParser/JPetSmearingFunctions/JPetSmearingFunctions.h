@@ -16,13 +16,42 @@
 #ifndef JPETSMEARINGFUNCTIONS_H
 #define JPETSMEARINGFUNCTIONS_H
 
-#include <JPetRandom/JPetRandom.h>
+#include <TF1.h>
+
 
 #ifdef __CINT__
 //when cint is used instead of compiler, override word is not recognized
 //nevertheless it's needed for checking if the structure of project is correct
 #   define override
 #endif
+
+class JPetHitSmearingFunctions
+{
+  public:
+    double hitEnergySmearing(double *x, double *p);
+    double hitZSmearing(double *x, double *p);
+    double hitTimeSmearing(double *x, double *p);
+};
+
+
+
+class JPetSmearingFunctionsContainer
+{
+  public:
+    JPetSmearingFunctionsContainer();
+    TF1* getFunEnergySmearing();
+    TF1* getFunZHitSmearing();
+    TF1* getFunTimeHitSmearing();
+    void setFunEnergySmearing(TF1* fun);
+    void setFunZHitSmearing(TF1* fun);
+    void setFunTimeHitSmearing(TF1* fun);
+
+  private:
+    JPetHitSmearingFunctions* sf = nullptr;
+    TF1* fFunEnergySmearing;
+    TF1* fFunZHitSmearing;
+    TF1* fFunTimeHitSmearing;
+};
 
 
 /**
@@ -32,16 +61,16 @@
 
 class JPetSmearingFunctions
 {
-      public:
-            static float addEnergySmearing(float);
-            static float addZHitSmearing(float, float);
-            static float addTimeSmearing(float, float);
-      private:
-            static TRandom3* fRandomGenerator;
-            static const float kEnergyThreshold;
-            static const float kReferenceEnergy;
-            static const float kTimeResolutionConstant;
+  public:
+    static double addEnergySmearing(int scinID, double zIn, double eneIn);
+    static double addZHitSmearing(int scinID, double zIn, double eneIn);
+    static double addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn);
+    static JPetSmearingFunctionsContainer& getSmearingFunctions();
 
+  private:
+    static JPetSmearingFunctionsContainer fSmearingFunctions; 
 };
+
+
 
 #endif
