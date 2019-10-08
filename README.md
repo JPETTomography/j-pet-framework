@@ -14,7 +14,7 @@ is assured by the automatized set of unit tests. The documentation of the code i
 The latest stable version can be downloaded from the github repository. You must have git client installed and do:
 
 ```
-git clone --recursive https://github.com/JPETTomography/j-pet-framework.git myFramework
+git clone https://github.com/JPETTomography/j-pet-framework.git myFramework
 ```
 
 ## Documentation
@@ -28,7 +28,7 @@ in the build directory. The `index.html` file will be available in the `html/` d
 
 ## Installation
 
-Please see the file called [INSTALL](INSTALL).
+Please see the file called [INSTALL.md](INSTALL).
 
 ## Authors
 
