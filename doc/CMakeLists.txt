@@ -42,7 +42,7 @@ if(DOXYGEN_FOUND)
   # Note: if docs shall be not a part of final release, leave this commented out
   # docs will be only available in [build_dir]/documentation/index.html
   install(
-      DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../documentation
+      DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/documentation
       DESTINATION share/doc/${PROJECT_NAME}
       OPTIONAL)
 endif()
