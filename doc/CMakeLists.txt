@@ -32,7 +32,7 @@ if(DOXYGEN_FOUND)
 
   # doc build only target, target is not in default build, so it must be
   # triggered explicitly
-  add_custom_target(doc
+  add_custom_target(documentation
       COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile}
       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
       COMMENT "Generating API documentation with Doxygen"
@@ -40,9 +40,9 @@ if(DOXYGEN_FOUND)
 
   # Where docs will be installed.
   # Note: if docs shall be not a part of final release, leave this commented out
-  # docs will be only available in [build_dir]/doc/doc/index.html
+  # docs will be only available in [build_dir]/documentation/index.html
   install(
-      DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/
+      DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../documentation
       DESTINATION share/doc/${PROJECT_NAME}
       OPTIONAL)
 endif()

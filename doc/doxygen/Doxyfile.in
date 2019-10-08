@@ -14,6 +14,7 @@ PROJECT_NUMBER         = @PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJEC
 STRIP_FROM_PATH        = @CMAKE_CURRENT_SOURCE_DIR@ \ 
                          @PROJECT_SOURCE_DIR@
 INPUT                  = @PROJECT_SOURCE_DIR@/README.md \
+                         @PROJECT_SOURCE_DIR@/INSTALL.md \
                          @CMAKE_CURRENT_SOURCE_DIR@ \ 
                          @PROJECT_SOURCE_DIR@/src \
                          @PROJECT_SOURCE_DIR@/include
@@ -29,7 +30,7 @@ FILE_PATTERNS          = *.h \
 RECURSIVE              = YES
 USE_MDFILE_AS_MAINPAGE = "@PROJECT_SOURCE_DIR@/README.md"
 # output location
-HTML_OUTPUT            = "@CMAKE_CURRENT_BINARY_DIR@/doc"
+HTML_OUTPUT            = "@CMAKE_CURRENT_BINARY_DIR@/../documentation"
 
 IMAGE_PATH = "@CMAKE_CURRENT_SOURCE_DIR@"
 
