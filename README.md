@@ -28,7 +28,7 @@ in the build directory. The `index.html` file will be available in the `html/` d
 
 ## Installation
 
-Please see the file called [INSTALL.md](INSTALL).
+Please see the file called [INSTALL](INSTALL.md).
 
 ## Authors
 
