@@ -16,6 +16,7 @@
 #ifndef JPETLOGGER_H
 #define JPETLOGGER_H
 
+#include "JPetTMessageHandler.h"
 #include <fstream>
 #include <iostream>
 #include <ostream>
@@ -42,10 +43,12 @@ class JPetLogger {
 public:
 #ifndef __CINT__
 
-  static boost::log::sources::severity_logger<boost::log::trivial::severity_level>& getSeverity() {
+  static boost::log::sources::severity_logger<boost::log::trivial::severity_level>& getSeverity()
+  {
     static bool isInitialized = false;
     if (!isInitialized) {
-      JPetLogger::getInstance(); // if JPetLogger is not initialized, get instance to call constructor
+      JPetLogger::getInstance(); // if JPetLogger is not initialized, get
+                                 // instance to call constructor
       isInitialized = true;
     }
     static boost::log::sources::severity_logger<boost::log::trivial::severity_level> sev;
@@ -58,7 +61,8 @@ public:
     JPetLogger::getInstance().sink->set_filter(boost::log::trivial::severity >= level);
   }
 
-  static JPetLogger& getInstance() {
+  static JPetLogger& getInstance()
+  {
     static JPetLogger logger;
     return logger;
   }
@@ -83,6 +87,7 @@ private:
 
   bool isThreadsEnabled = false;
 #endif
+  JPetTMessageHandler rootHandler;
 };
 
 #endif /* !JPETLOGGER_H */
