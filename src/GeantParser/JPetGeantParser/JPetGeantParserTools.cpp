@@ -23,7 +23,7 @@ JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, con
 {
   JPetMCHit mcHit = JPetMCHit(
                       0,//UInt_t MCDecayTreeIndex,
-                      0,//UInt_t MCVtxIndex,
+                      geantHit->GetEvtID(),//UInt_t MCVtxIndex,
                       geantHit->GetEneDepos(), //  keV
                       geantHit->GetTime(),   //  ps
                       geantHit->GetHitPosition(),
