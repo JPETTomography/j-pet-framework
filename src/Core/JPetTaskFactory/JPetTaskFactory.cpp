@@ -85,7 +85,7 @@ void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options
     }
     if (fileType == FileTypeChecker::kMCGeant)
     {
-      auto taskInfo = TaskInfo("JPetGeantParser", "mcGeant", "mc.hits", 1);
+      auto taskInfo = TaskInfo("JPetGeantParser", "mcGeant", "hits", 1);
       addTaskToChain(generatorsMap, taskInfo, outChain);
     }
     auto paramBankHandlerTask = []() { return jpet_common_tools::make_unique<JPetParamBankHandlerTask>("ParamBank Filling"); };
