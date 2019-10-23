@@ -150,6 +150,8 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
   bool isGen2g = evPack->GetEventInformation()->GetTwoGammaGen();
   bool isGen3g = evPack->GetEventInformation()->GetThreeGammaGen();
 
+  float timeShift = getNextTimeShift();
+  
   for (unsigned int i = 0; i < evPack->GetNumberOfHits(); i++)
   {
 
@@ -159,7 +161,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     if (fMakeHisto)
       fillHistoMCGen(mcHit);
     // create reconstructed hit and add all smearings
-    JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), getNextTimeShift());
+    JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), timeShift);
 
     // add criteria for possible rejection of reconstructed events (e.g. E>50 keV)
     if (JPetGeantParserTools::isHitReconstructed(recHit, fExperimentalThreshold))
@@ -484,7 +486,7 @@ void JPetGeantParser::clearTimeDistoOfDecays()
 
 bool JPetGeantParser::isTimeWindowFull()
 {
-  if (fCurrentIndexTimeShift > getNumberOfDecaysInWindow())
+  if (fCurrentIndexTimeShift >= getNumberOfDecaysInWindow())
   {
     return true;
   }
