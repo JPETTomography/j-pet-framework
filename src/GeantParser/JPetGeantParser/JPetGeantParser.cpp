@@ -468,7 +468,7 @@ void JPetGeantParser::bookEfficiencyHistograms()
 
 }
 
-unsigned int JPetGeantParser::getNumberOfDecaysInWindow() { return fTimeDistroOfDecays.size(); }
+unsigned int JPetGeantParser::getNumberOfDecaysInWindow() const { return fTimeDistroOfDecays.size(); }
 
 float JPetGeantParser::getNextTimeShift()
 {
@@ -484,7 +484,7 @@ void JPetGeantParser::clearTimeDistoOfDecays()
   fTimeDistroOfDecays.clear();
 }
 
-bool JPetGeantParser::isTimeWindowFull()
+bool JPetGeantParser::isTimeWindowFull() const
 {
   if (fCurrentIndexTimeShift >= getNumberOfDecaysInWindow())
   {
