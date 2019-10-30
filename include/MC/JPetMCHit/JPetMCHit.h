@@ -39,7 +39,7 @@ public:
 
   //  generated cheatsheet
   void setGenGammaMultiplicity(UInt_t i){fGenGammaMultiplicity=i;} ///< 1-prompt gamma; 2-gamma from back-to-bak; 3-gamma from oPs
-  UInt_t getGenGammaMultiplicity(){return fGenGammaMultiplicity;}
+  UInt_t getGenGammaMultiplicity() const {return fGenGammaMultiplicity;}
 
 
 private:
