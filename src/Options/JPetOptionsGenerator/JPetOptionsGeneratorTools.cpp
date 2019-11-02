@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -20,42 +20,48 @@ using namespace jpet_options_tools;
 
 namespace jpet_options_generator_tools
 {
-std::map<std::string, boost::any> kDefaultOptions = {{"inputFile_std::string", std::string("")},
-                                                     {"inputFileType_std::string", std::string("")},
-                                                     {"scopeConfigFile_std::string", std::string("")},
-                                                     {"scopeInputDirectory_std::string", std::string("")},
-                                                     {"outputPath_std::string", std::string("")},
-                                                     {"outputFile_std::string", std::string("test.root")},
-                                                     {"outputFileType_std::string", std::string("root")},
-                                                     {"firstEvent_int", -1},
-                                                     {"lastEvent_int", -1},
-                                                     {"progressBar_bool", false},
-                                                     {"runId_int", -1},
-                                                     {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
-                                                     {"unpackerCalibFile_std::string", std::string("")}};
+std::map<std::string, boost::any> kDefaultOptions = {
+  {"inputFile_std::string", std::string("")},
+  {"inputFileType_std::string", std::string("")},
+  {"scopeConfigFile_std::string", std::string("")},
+  {"scopeInputDirectory_std::string", std::string("")},
+  {"outputPath_std::string", std::string("")},
+  {"outputFile_std::string", std::string("test.root")},
+  {"outputFileType_std::string", std::string("root")},
+  {"firstEvent_int", -1},
+  {"lastEvent_int", -1},
+  {"progressBar_bool", false},
+  {"runID_int", -1},
+  {"detectorType_std::string", std::string("barrel")},
+  {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
+  {"unpackerCalibFile_std::string", std::string("")}
+};
 
-std::map<std::string, std::string> kOptCmdLineNameToExtendedName = {{"type", "type_std::string"},
-                                                                    {"file", "file_std::vector<std::string>"},
-                                                                    {"outputPath", "outputPath_std::string"},
-                                                                    {"range", "range_std::vector<int>"},
-                                                                    {"unpackerConfigFile", "unpackerConfigFile_std::string"},
-                                                                    {"unpackerCalibFile", "unpackerCalibFile_std::string"},
-                                                                    {"runId", "runId_int"},
-                                                                    {"progressBar", "progressBar_bool"},
-                                                                    {"localDB", "localDB_std::string"},
-                                                                    {"localDBCreate", "localDBCreate_std::string"},
-                                                                    {"userCfg", "userCfg_std::string"}};
+std::map<std::string, std::string> kOptCmdLineNameToExtendedName = {
+  {"type", "type_std::string"},
+  {"file", "file_std::vector<std::string>"},
+  {"outputPath", "outputPath_std::string"},
+  {"range", "range_std::vector<int>"},
+  {"unpackerConfigFile", "unpackerConfigFile_std::string"},
+  {"unpackerCalibFile", "unpackerCalibFile_std::string"},
+  {"runID", "runID_int"},
+  {"detector", "detectorType_std::string"},
+  {"progressBar", "progressBar_bool"},
+  {"localDB", "localDB_std::string"},
+  {"localDBCreate", "localDBCreate_std::string"},
+  {"userCfg", "userCfg_std::string"}
+};
 
-std::map<std::string, boost::any> transformOptions(const TransformersMap& transformationMap, const std::map<std::string, boost::any>& oldOptionsMap)
+std::map<std::string, boost::any> transformOptions(
+  const TransformersMap& transformationMap,
+  const std::map<std::string,
+  boost::any>& oldOptionsMap)
 {
   std::map<std::string, boost::any> newOptionsMap(oldOptionsMap);
-  for (auto& transformGroup : transformationMap)
-  {
+  for (auto& transformGroup : transformationMap) {
     auto key = transformGroup.first;
-    if (newOptionsMap.find(key) != newOptionsMap.end())
-    {
-      for (auto& transformFunc : transformGroup.second)
-      {
+    if (newOptionsMap.find(key) != newOptionsMap.end()) {
+      for (auto& transformFunc : transformGroup.second) {
         auto newOpt = transformFunc(newOptionsMap.at(key));
         newOptionsMap[newOpt.first] = newOpt.second;
       }
@@ -79,27 +85,22 @@ std::map<std::string, boost::any> transformOptions(const TransformersMap& transf
 OptsStrAny generateOptionsForTask(const OptsStrAny& inOptions, const OptsStrAny& controlSettings)
 {
   auto newOpts(inOptions);
-  if (isOptionSet(controlSettings, "resetEventRange_bool"))
-  {
-    if (getOptionAsBool(controlSettings, "resetEventRange_bool"))
-    {
+  if (isOptionSet(controlSettings, "resetEventRange_bool")) {
+    if (getOptionAsBool(controlSettings, "resetEventRange_bool")) {
       newOpts = resetEventRange(newOpts);
     }
   }
-  if (isOptionSet(controlSettings, "outputFileType_std::string"))
-  {
+  if (isOptionSet(controlSettings, "outputFileType_std::string")) {
     newOpts["inputFileType_std::string"] = getOptionAsString(controlSettings, "outputFileType_std::string");
   }
-  if (isOptionSet(controlSettings, "outputFile_std::string"))
-  {
+  if (isOptionSet(controlSettings, "outputFile_std::string")) {
     newOpts["inputFile_std::string"] = getOptionAsString(controlSettings, "outputFile_std::string");
   }
-  if (isOptionSet(controlSettings, "outputPath_std::string"))
-  {
-    auto outPath = std::string(getOutputPath(controlSettings));
-    if (!outPath.empty())
-    {
-      newOpts.at("inputFile_std::string") = outPath + JPetCommonTools::extractFileNameFromFullPath(getInputFile(newOpts));
+  if (isOptionSet(controlSettings, "outputPath_std::string")) {
+    auto outPath  = std::string(getOutputPath(controlSettings));
+    if (!outPath.empty()) {
+      newOpts.at("inputFile_std::string") =
+        outPath + JPetCommonTools::extractFileNameFromFullPath(getInputFile(newOpts));
     }
   }
   return newOpts;
@@ -108,8 +109,7 @@ OptsStrAny generateOptionsForTask(const OptsStrAny& inOptions, const OptsStrAny&
 std::map<std::string, boost::any> transformToStrAnyMap(const po::variables_map& inMap)
 {
   std::map<std::string, boost::any> outMap;
-  for (auto& option : inMap)
-  {
+  for (auto& option : inMap) {
     outMap[option.first] = option.second.value();
   }
   return outMap;
@@ -124,11 +124,11 @@ std::map<std::string, boost::any> addMissingDefaultOptions(const std::map<std::s
 }
 
 /**
- * The keys usedin this method correspond to the keys defined in the CmdArgMap
+ * The keys used in this method correspond to the keys defined in the CmdArgMap
  */
-std::map<std::string, std::vector<Transformer>> generateTransformationMap(OptsStrAny& options)
+std::map<std::string, std::vector<Transformer> > generateTransformationMap(OptsStrAny& options)
 {
-  std::map<std::string, std::vector<Transformer>> transformationMap;
+  std::map<std::string, std::vector<Transformer> > transformationMap;
   transformationMap["outputPath_std::string"].push_back(appendSlash);
   transformationMap["range_std::vector<int>"].push_back(generateLowerEventBound);
   transformationMap["range_std::vector<int>"].push_back(generateHigherEventBound);
@@ -150,13 +150,11 @@ OptsStrAny resetEventRange(const OptsStrAny& srcOpts)
 OptsStrAny addTypeSuffixes(const std::map<std::string, boost::any>& oldMap)
 {
   std::map<std::string, boost::any> newMap(oldMap);
-  for (auto& elem : kOptCmdLineNameToExtendedName)
-  {
+  for (auto& elem : kOptCmdLineNameToExtendedName) {
     auto oldKey = elem.first;
     auto newKey = elem.second;
     const auto it = newMap.find(oldKey);
-    if (it != newMap.end())
-    {
+    if (it != newMap.end()) {
       newMap[newKey] = it->second;
       newMap.erase(it);
     }
@@ -166,7 +164,10 @@ OptsStrAny addTypeSuffixes(const std::map<std::string, boost::any>& oldMap)
 
 std::map<std::string, boost::any> getDefaultOptions() { return kDefaultOptions; }
 
-void addTransformFunction(TransformersMap& map, const std::string& name, Transformer transformFunction) { map[name].push_back(transformFunction); }
+void addTransformFunction(TransformersMap& map, const std::string& name, Transformer transformFunction)
+{
+  map[name].push_back(transformFunction);
+}
 
 /**
  * Adding an option to already existing ones. If the key already exists the element

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -36,7 +36,8 @@ public:
   static bool isRangeOfEventsValid(std::pair <std::string, boost::any> option);
   static bool isCorrectFileType(std::pair <std::string, boost::any> option);
   static bool isFileTypeMatchingExtensions(std::pair<std::string, boost::any> option);
-  static bool isRunIdValid(std::pair <std::string, boost::any> option);
+  static bool isRunIDValid(std::pair <std::string, boost::any> option);
+  static bool isDetectorValid(std::pair <std::string, boost::any> option);
   static bool isLocalDBValid(std::pair <std::string, boost::any> option);
   static bool areFilesValid(std::pair <std::string, boost::any> option);
   static bool isOutputDirectoryValid(std::pair <std::string, boost::any> option);
@@ -52,7 +53,7 @@ public:
   };
 
 private:
-  std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)> > fValidatorMap;
+  std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)>> fValidatorMap;
   static void addFileTypeAndNameValidator(std::map<std::string, boost::any>&);
 };
 #endif /* !JPETOPTIONVALIDATOR_H */

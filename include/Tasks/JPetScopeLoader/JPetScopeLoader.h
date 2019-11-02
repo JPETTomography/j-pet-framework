@@ -66,9 +66,9 @@ public:
   static int getTimeWindowIndex(const std::string&  pathAndFileName);
   std::map<std::string, int> createInputScopeFileNames(
     const std::string& inputPathToScopeFiles,
-    std::map<std::string, int> pmPref2Id
+    std::map<std::string, int> pmPref2ID
   ) const;
-  std::map<std::string, int> getPMPrefixToPMIdMap();
+  std::map<std::string, int> getPMPrefixToPMIDMap();
   bool isCorrectScopeFileName(const std::string& filename) const;
   std::string getFilePrefix(const std::string& filename) const;
 

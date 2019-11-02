@@ -16,8 +16,8 @@
 #ifndef JPETEVENT_H
 #define JPETEVENT_H
 
-#include "./JPetEventType/JPetEventType.h"
-#include "./JPetHit/JPetHit.h"
+#include "JPetEventType/JPetEventType.h"
+#include "JPetHit/JPetHit.h"
 #include <TObject.h>
 #include <vector>
 

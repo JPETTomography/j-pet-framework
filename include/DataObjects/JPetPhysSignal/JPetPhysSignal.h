@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,8 +16,8 @@
 #ifndef JPETPHYSSIGNAL_H
 #define JPETPHYSSIGNAL_H
 
-#include "./JPetBaseSignal/JPetBaseSignal.h"
-#include "./JPetRecoSignal/JPetRecoSignal.h"
+#include "JPetBaseSignal/JPetBaseSignal.h"
+#include "JPetRecoSignal/JPetRecoSignal.h"
 
 /**
  * @brief Data class representing a physical signal reconstructed
@@ -51,6 +51,7 @@ public:
     return fQualityOfTime;
   }
 
+
   /**
    * Sets the reconstructed time of this signal in [ps].
    */
@@ -68,28 +69,28 @@ public:
   /**
    * Get the number of photoelectrons
    */
-  double getPhe() const {
+  float getPhe() const {
     return fPhe;
   }
 
   /**
    * Set the number of photoelectrons
    */
-  void setPhe(double phe) {
+  void setPhe(float phe) {
     fPhe = phe;
   }
 
   /**
    * Get the value, that describes the quality of reconstruction of number of photoelectrons
    */
-  double getQualityOfPhe() const {
+  float getQualityOfPhe() const {
     return fQualityOfPhe;
   }
 
   /**
    * Set the value, that describes the quality of reconstruction of number of photoelectrons
    */
-  void setQualityOfPhe(double qualityOfPhe) {
+  void setQualityOfPhe(float qualityOfPhe) {
     fQualityOfPhe = qualityOfPhe;
   }
 
@@ -101,13 +102,14 @@ public:
   }
 
   void setRecoSignal(const JPetRecoSignal& recoSignal);
+
   void Clear(Option_t * opt = "");
 
 private:
-  double fTime;
-  double fQualityOfTime;
-  double fPhe;
-  double fQualityOfPhe;
+  float fTime;
+  float fQualityOfTime;
+  float fPhe;
+  float fQualityOfPhe;
   JPetRecoSignal fRecoSignal;
 
 protected:
@@ -117,7 +119,7 @@ protected:
   bool fIsNullObject;
   #endif
 
-  ClassDef(JPetPhysSignal, 3);
+  ClassDef(JPetPhysSignal, 4);
 
 };
 #endif /* !JPETPHYSSIGNAL_H */

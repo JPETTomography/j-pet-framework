@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -15,9 +15,8 @@
 
 #include "JPetSimplePhysSignalReco/JPetSimplePhysSignalReco.h"
 #include "JPetSimplePhysSignalReco/HelperMathFunctions.h"
-#include "JPetWriter/JPetWriter.h"
-
 #include <boost/property_tree/json_parser.hpp>
+#include "JPetWriter/JPetWriter.h"
 #include <cassert>
 #include <math.h>
 
@@ -50,8 +49,8 @@ JPetPhysSignal JPetSimplePhysSignalReco::createPhysSignal(JPetRecoSignal& recoSi
     vector<float> vecVolt(iNumPoints);
     for (int j = 0; j < iNumPoints; j++)
     {
-      vecTime(j) = leadingPoints.at(j).getValue();
-      vecVolt(j) = leadingPoints.at(j).getThreshold();
+      vecTime(j) = leadingPoints.at(j).getTime();
+      vecVolt(j) = leadingPoints.at(j).getChannel().getThresholdValue();
     }
     int alfa = getAlpha();
     float thr_sel = getThresholdSel();

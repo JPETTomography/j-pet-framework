@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -18,15 +18,14 @@
 
 #include <JPetGeantEventPack/JPetGeantEventPack.h>
 #include <JPetGeantScinHits/JPetGeantScinHits.h>
-#include <JPetGeomMapping/JPetGeomMapping.h>
-#include <JPetHit/JPetHit.h>
 #include <JPetMCDecayTree/JPetMCDecayTree.h>
-#include <JPetMCHit/JPetMCHit.h>
 #include <JPetUserTask/JPetUserTask.h>
+#include <JPetMCHit/JPetMCHit.h>
+#include <JPetHit/JPetHit.h>
 #include <functional>
-#include <map>
 #include <tuple>
 #include <vector>
+#include <map>
 
 class JPetWriter;
 
@@ -37,7 +36,7 @@ class JPetWriter;
 #endif
 
 /**
- * @brief      Module responsible for creating JPetMCHit from GEANT MC simulations
+ * @brief Module responsible for creating JPetMCHit from GEANT MC simulations
  *
  */
 class JPetGeantParser: public JPetUserTask
@@ -52,17 +51,13 @@ public:
 
 
 protected :
-  JPetGeomMapping* fDetectorMap =  nullptr;
-
   bool fProcessSingleEventinWindow = false;
   bool fMakeEffiHisto = true;
   bool fMakeHisto = true;
   double fMaxTime = 0.;
   double fMinTime = -50.e6; // electronic time window 50 micro seconds - true for run 3
   double fSimulatedActivity = 4.7; //< in MBq; value for run3
-
   double fExperimentalThreshold = 10; //< in keV
-
 
   // internal variables
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";

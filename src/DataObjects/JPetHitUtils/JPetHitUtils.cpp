@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -14,29 +14,28 @@
  */
 
 #include "JPetHitUtils/JPetHitUtils.h"
-
 #include <limits>
 
-const double JPetHitUtils::Unset = -std::numeric_limits<double>::infinity();
+const double JPetHitUtils::kUnset = -std::numeric_limits<float>::infinity();
 
-double JPetHitUtils::getTimeDiffAtThr(const JPetHit& hit, int thr)
-{
-  std::map<int, double> lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal().getTimesVsThresholdNumber(JPetSigCh::Leading);
-  std::map<int, double> lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal().getTimesVsThresholdNumber(JPetSigCh::Leading);
-  if (lead_times_B.count(thr) > 0 && lead_times_A.count(thr) > 0)
-  {
+double JPetHitUtils::getTimeDiffAtThr(const JPetHit& hit, int thr) {
+  auto lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal()
+    .getTimesVsThresholdNumber(JPetSigCh::Leading);
+  auto lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal()
+    .getTimesVsThresholdNumber(JPetSigCh::Leading);
+  if(lead_times_B.count(thr) > 0 && lead_times_A.count(thr) > 0) {
     return lead_times_A[thr] - lead_times_B[thr];
   }
-  return Unset;
+  return kUnset;
 }
 
-double JPetHitUtils::getTimeAtThr(const JPetHit& hit, int thr)
-{
-  std::map<int, double> lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal().getTimesVsThresholdNumber(JPetSigCh::Leading);
-  std::map<int, double> lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal().getTimesVsThresholdNumber(JPetSigCh::Leading);
-  if (lead_times_B.count(thr) > 0 && lead_times_A.count(thr) > 0)
-  {
+double JPetHitUtils::getTimeAtThr(const JPetHit& hit, int thr) {
+  auto lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal()
+    .getTimesVsThresholdNumber(JPetSigCh::Leading);
+  auto lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal()
+    .getTimesVsThresholdNumber(JPetSigCh::Leading);
+  if(lead_times_B.count(thr) > 0 && lead_times_A.count(thr) > 0) {
     return 0.5 * (lead_times_A[thr] + lead_times_B[thr]);
   }
-  return Unset;
+  return kUnset;
 }

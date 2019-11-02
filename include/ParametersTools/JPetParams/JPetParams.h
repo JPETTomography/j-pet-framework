@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,8 +16,8 @@
 #ifndef JPETPARAMS_H
 #define JPETPARAMS_H
 
-#include "./JPetParamManager/JPetParamManager.h"
-#include "./JPetOptionsTools/JPetOptionsTools.h"
+#include "JPetParamManager/JPetParamManager.h"
+#include "JPetOptionsTools/JPetOptionsTools.h"
 #include <boost/any.hpp>
 #include <string>
 #include <memory>

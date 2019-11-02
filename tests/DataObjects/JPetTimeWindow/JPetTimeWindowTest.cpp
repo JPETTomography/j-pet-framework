@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -17,10 +17,9 @@
 #define BOOST_TEST_MODULE JPetTSlotTest
 
 #include "JPetTimeWindow/JPetTimeWindow.h"
-#include "JPetHit/JPetHit.h"
-#include "JPetSigCh/JPetSigCh.h"
-
 #include <boost/test/unit_test.hpp>
+#include "JPetSigCh/JPetSigCh.h"
+#include "JPetHit/JPetHit.h"
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
@@ -33,15 +32,20 @@ BOOST_AUTO_TEST_CASE(default_constructor)
 BOOST_AUTO_TEST_CASE(some_channels)
 {
   JPetTimeWindow test("JPetSigCh");
-  JPetSigCh ch_test(JPetSigCh::Trailing, 1.2), ch_test2(JPetSigCh::Leading, 1.5), ch_test3(JPetSigCh::Leading, 98);
-  test.add<JPetSigCh>(ch_test);
+  JPetSigCh ch_test1(JPetSigCh::Trailing, 1.2);
+  JPetSigCh ch_test2(JPetSigCh::Leading, 1.5);
+  JPetSigCh ch_test3(JPetSigCh::Leading, 98.0);
+  test.add<JPetSigCh>(ch_test1);
   test.add<JPetSigCh>(ch_test2);
   test.add<JPetSigCh>(ch_test3);
   BOOST_REQUIRE_EQUAL(test.getNumberOfEvents(), 3);
   double epsilon = 0.001;
-  BOOST_REQUIRE_CLOSE((dynamic_cast<const JPetSigCh&>(test[0])).getValue(), 1.2, epsilon);
-  BOOST_REQUIRE_CLOSE(test.getEvent<JPetSigCh>(1).getValue(), 1.5, epsilon);
-  BOOST_REQUIRE_CLOSE(test.getEvent<JPetSigCh>(2).getValue(), 98, epsilon);
+  BOOST_REQUIRE_CLOSE((dynamic_cast<const JPetSigCh&>(test[0])).getTime(), 1.2, epsilon);
+  BOOST_REQUIRE_CLOSE((dynamic_cast<const JPetSigCh&>(test[1])).getTime(), 1.5, epsilon);
+  BOOST_REQUIRE_CLOSE((dynamic_cast<const JPetSigCh&>(test[2])).getTime(), 98.0, epsilon);
+  BOOST_REQUIRE_CLOSE(test.getEvent<JPetSigCh>(0).getTime(), 1.2, epsilon);
+  BOOST_REQUIRE_CLOSE(test.getEvent<JPetSigCh>(1).getTime(), 1.5, epsilon);
+  BOOST_REQUIRE_CLOSE(test.getEvent<JPetSigCh>(2).getTime(), 98.0, epsilon);
 }
 
 BOOST_AUTO_TEST_CASE(clearing)

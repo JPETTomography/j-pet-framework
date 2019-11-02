@@ -18,6 +18,6 @@
 #include <boost/any.hpp>
 #include <string>
 
-bool additionalCheckIfRunIdIsOk(std::pair<std::string, boost::any> option);
+bool additionalCheckIfRunIDIsOk(std::pair<std::string, boost::any> option);
 
 #endif /* J_PET_ADDITIONAL_VALIDATORS_H */

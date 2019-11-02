@@ -17,7 +17,6 @@
 #define BOOST_TEST_MODULE JPetOptionValidatorTest
 
 #include "JPetOptionValidator/JPetOptionValidator.h"
-
 #include <boost/test/unit_test.hpp>
 #include <string>
 
@@ -36,12 +35,12 @@ BOOST_AUTO_TEST_CASE(correctOptions)
       {"type_std::string, file_std::vector<std::string>", JPetOptionValidator::ManyOptionsWrapper({std::string("hld"), files})},
       {"localDB_std::string", std::string("unitTestData/JPetCmdParserTest/data.hld")},
       {"outputPath_std::string", std::string("unitTestData/JPetCmdParserTest")},
-      {"runId_int", 3},
+      {"runID_int", 3},
   };
 
   BOOST_REQUIRE(JPetOptionValidator::isOutputDirectoryValid(std::make_pair("outputPath_std::string", options.at("outputPath_std::string"))));
   BOOST_REQUIRE(JPetOptionValidator::isLocalDBValid(std::make_pair("localDB_std::string", options.at("localDB_std::string"))));
-  BOOST_REQUIRE(JPetOptionValidator::isRunIdValid(std::make_pair("runId_int", options.at("runId_int"))));
+  BOOST_REQUIRE(JPetOptionValidator::isRunIDValid(std::make_pair("runID_int", options.at("runID_int"))));
   BOOST_REQUIRE(JPetOptionValidator::areFilesValid(std::make_pair("file_std::vector<std::string>", options.at("file_std::vector<std::string>"))));
   BOOST_REQUIRE(JPetOptionValidator::isCorrectFileType(std::make_pair("type_std::string", options.at("type_std::string"))));
   BOOST_REQUIRE(JPetOptionValidator::isFileTypeMatchingExtensions(
@@ -61,26 +60,38 @@ BOOST_AUTO_TEST_CASE(wrongOptions)
       {"type_std::string, file_std::vector<std::string>", JPetOptionValidator::ManyOptionsWrapper({std::string("tdt"), wrongFiles})},
       {"localDB_std::string", std::string("ble/ble/ble.hld")},
       {"outputPath_std::string", std::string("ble/ble/ble")},
-      {"runId_int", -1},
+      {"runID_int", -1},
+      {"detectorType_std::string", std::string("squirrel")}
   };
-  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRangeOfEventsValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
-                      false);
   BOOST_REQUIRE_EQUAL(
-      JPetOptionValidator::areFilesValid(std::make_pair("file_std::vector<std::string>", options.at("file_std::vector<std::string>"))), false);
-  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isOutputDirectoryValid(std::make_pair("outputPath_std::string", options.at("outputPath_std::string"))),
-                      false);
+    JPetOptionValidator::isRangeOfEventsValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))), false
+  );
+  BOOST_REQUIRE_EQUAL(
+      JPetOptionValidator::areFilesValid(std::make_pair("file_std::vector<std::string>", options.at("file_std::vector<std::string>"))), false
+    );
+  BOOST_REQUIRE_EQUAL(
+    JPetOptionValidator::isOutputDirectoryValid(std::make_pair("outputPath_std::string", options.at("outputPath_std::string"))), false
+  );
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isLocalDBValid(std::make_pair("localDB_std::string", options.at("localDB_std::string"))), false);
-  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRunIdValid(std::make_pair("runId_int", options.at("runId_int"))), false);
+  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRunIDValid(std::make_pair("runID_int", options.at("runID_int"))), false);
+  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isDetectorValid(std::make_pair("detectorType_std::string", options.at("detectorType_std::string"))), false);
   BOOST_REQUIRE_EQUAL(
-      JPetOptionValidator::areFilesValid(std::make_pair("file_std::vector<std::string>", options.at("file_std::vector<std::string>"))), false);
+    JPetOptionValidator::areFilesValid(std::make_pair("file_std::vector<std::string>", options.at("file_std::vector<std::string>"))), false
+  );
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isCorrectFileType(std::make_pair("type_std::string", options.at("type_std::string"))), false);
-  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isFileTypeMatchingExtensions(std::make_pair(
-                          "type_std::string, file_std::vector<std::string>", options.at("type_std::string, file_std::vector<std::string>"))),
-                      false);
-  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRangeOfEventsValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
-                      false);
-  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isNumberBoundsInRangeValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
-                      false);
+  BOOST_REQUIRE_EQUAL(
+    JPetOptionValidator::isFileTypeMatchingExtensions(
+      std::make_pair("type_std::string, file_std::vector<std::string>", options.at("type_std::string, file_std::vector<std::string>"))
+    ), false
+  );
+  BOOST_REQUIRE_EQUAL(
+    JPetOptionValidator::isRangeOfEventsValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
+    false
+  );
+  BOOST_REQUIRE_EQUAL(
+    JPetOptionValidator::isNumberBoundsInRangeValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
+    false
+  );
 }
 
 BOOST_AUTO_TEST_CASE(areCorrectAllOptionsWork)
@@ -93,12 +104,12 @@ BOOST_AUTO_TEST_CASE(areCorrectAllOptionsWork)
       {"file_std::vector<std::string>", files},
       {"localDB_std::string", std::string("unitTestData/JPetCmdParserTest/data.hld")},
       {"outputPath_std::string", std::string("unitTestData/JPetCmdParserTest")},
-      {"runId_int", 3},
+      {"runID_int", 3},
+      {"detectorType_std::string", std::string("barrel")}
   };
   JPetOptionValidator validator;
   std::vector<std::string> v;
-  for (auto& opt : options)
-  {
+  for (auto& opt : options) {
     v.push_back(opt.first);
   }
   v.push_back("type_std::string, file_std::vector<std::string>");
@@ -113,13 +124,11 @@ BOOST_AUTO_TEST_CASE(areCorrectSomeOptionsWork)
       {"range_std::vector<int>", range},
       {"type_std::string", std::string("hld")},
       {"localDB_std::string", std::string("unitTestData/JPetCmdParserTest/data.hld")},
-      {"runId_int", 3},
+      {"runID_int", 3},
   };
-
   JPetOptionValidator validator;
   std::vector<std::string> v;
-  for (auto& opt : options)
-  {
+  for (auto& opt : options) {
     v.push_back(opt.first);
   }
   options["ble"] = range;

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,11 +16,9 @@
 #ifndef JPETSIGCH_H
 #define JPETSIGCH_H
 
-#include "./JPetTOMBChannel/JPetTOMBChannel.h"
-#include "./JPetLoggerInclude.h"
-#include "./JPetFEB/JPetFEB.h"
-#include "./JPetTRB/JPetTRB.h"
-#include "./JPetPM/JPetPM.h"
+#include "JPetChannel/JPetChannel.h"
+#include "JPetLoggerInclude.h"
+#include "JPetPM/JPetPM.h"
 #include <TClass.h>
 #include <cassert>
 #include <vector>
@@ -43,44 +41,25 @@ public:
   JPetSigCh(EdgeType Edge, float EdgeTime);
   ~JPetSigCh();
 
-  JPetSigCh::RecoFlag getRecoFlag() const;
-  JPetSigCh::EdgeType getType() const;
-  float getValue() const;
-  float getThreshold() const;
-  unsigned int getThresholdNumber() const;
-  int getDAQch() const;
-  const JPetPM & getPM() const;
-  const JPetFEB & getFEB() const;
-  const JPetTRB & getTRB() const;
-  const JPetTOMBChannel & getTOMBChannel() const;
-  int getChannel() const;
   void setRecoFlag(JPetSigCh::RecoFlag flag);
   void setType(JPetSigCh::EdgeType type);
-  void setValue(float value);
-  void setThreshold(float thrValue);
-  void setThresholdNumber(unsigned int thrNumber);
-  void setDAQch(int daqCh);
-  void setPM(const JPetPM & pm);
-  void setFEB(const JPetFEB & feb);
-  void setTRB(const JPetTRB & trb);
-  void setTOMBChannel(const JPetTOMBChannel & channel);
-  static bool compareByThresholdValue(const JPetSigCh & a, const JPetSigCh & b);
-  static bool compareByThresholdNumber(const JPetSigCh & a, const JPetSigCh & b);
+  void setTime(float time);
+  void setChannel(const JPetChannel& channel);
+  JPetSigCh::RecoFlag getRecoFlag() const;
+  JPetSigCh::EdgeType getType() const;
+  float getTime() const;
+  const JPetChannel& getChannel() const;
+  static bool compareByThresholdNumber(const JPetSigCh& a, const JPetSigCh& b);
+  static bool compareByThresholdValue(const JPetSigCh& a, const JPetSigCh& b);
   void Clear(Option_t * = "");
 
 private:
   RecoFlag fFlag = JPetSigCh::Unknown;
   EdgeType fType = JPetSigCh::Leading;
-  float fValue = 0.0f;
-  float fThreshold = 0.0f;
-  unsigned int fThresholdNumber = 0;
-  int fDAQch = -1;
-  TRef fPM = NULL;
-  TRef fFEB = NULL;
-  TRef fTRB = NULL;
-  TRef fTOMBChannel = NULL;
+  float fTime = 0.0f;
+  TRef fChannel = NULL;
 
-  ClassDef(JPetSigCh, 9);
+  ClassDef(JPetSigCh, 10);
 };
 
 #endif /* !JPETSIGCH_H */

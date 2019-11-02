@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -17,10 +17,9 @@
 #define BOOST_TEST_MODULE JPetBaseSignalTest
 
 #include "JPetBaseSignal/JPetBaseSignal.h"
-#include "JPetBarrelSlot/JPetBarrelSlot.h"
-#include "JPetPM/JPetPM.h"
-
 #include <boost/test/unit_test.hpp>
+#include "JPetSlot/JPetSlot.h"
+#include "JPetPM/JPetPM.h"
 
 BOOST_AUTO_TEST_SUITE(BaseSignalTest)
 
@@ -40,20 +39,15 @@ BOOST_AUTO_TEST_CASE(recoFlagSetterTest)
   BOOST_REQUIRE_EQUAL(signal.getRecoFlag(), JPetBaseSignal::Corrupted);
 }
 
-BOOST_AUTO_TEST_CASE(SetAndGetTRefPMObjectTest)
+BOOST_AUTO_TEST_CASE(PM_Test)
 {
   JPetBaseSignal signal;
-  JPetPM pm;
+  JPetPM pm(1, JPetPM::SideB, "nice", 1);
   signal.setPM(pm);
-  BOOST_CHECK(signal.getPM().getSide() == JPetPM::SideA);
-}
-
-BOOST_AUTO_TEST_CASE(SetAndGetTRefBarrelSlotObjectTest)
-{
-  JPetBaseSignal signal;
-  JPetBarrelSlot barrelSlot(2, true, "bs2", 30., 2);
-  signal.setBarrelSlot(barrelSlot);
-  BOOST_CHECK(signal.getBarrelSlot().getID() == 2);
+  BOOST_REQUIRE_EQUAL(signal.getPM().getID(), 1);
+  BOOST_REQUIRE_EQUAL(signal.getPM().getSide(), JPetPM::SideB);
+  BOOST_REQUIRE_EQUAL(signal.getPM().getDesc(), "nice");
+  BOOST_REQUIRE_EQUAL(signal.getPM().getMatrixPosition(), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

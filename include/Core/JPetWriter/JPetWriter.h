@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -23,18 +23,7 @@ namespace boost;
 class boost::noncopyable;
 #endif /* __CINT __ */
 
-#include "./JPetBarrelSlot/JPetBarrelSlot.h"
-#include "./JPetPhysSignal/JPetPhysSignal.h"
-#include "./JPetTimeWindow/JPetTimeWindow.h"
-#include "./JPetSigCh/JPetSigCh.h"
-#include "./JPetEvent/JPetEvent.h"
-#include "./JPetLoggerInclude.h"
-#include "./JPetScin/JPetScin.h"
-#include "./JPetHit/JPetHit.h"
-#include "./JPetLOR/JPetLOR.h"
-#include "./JPetFEB/JPetFEB.h"
-#include "./JPetTRB/JPetTRB.h"
-#include "./JPetPM/JPetPM.h"
+#include "JPetLoggerInclude.h"
 #include <TFile.h>
 #include <TList.h>
 #include <TTree.h>

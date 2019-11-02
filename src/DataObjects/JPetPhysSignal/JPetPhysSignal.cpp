@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -17,40 +17,32 @@
 
 ClassImp(JPetPhysSignal);
 
-/**
- * Constructor
- */
-JPetPhysSignal::JPetPhysSignal() : fTime(0), fQualityOfTime(0), fPhe(0), fQualityOfPhe(0) {}
+JPetPhysSignal::JPetPhysSignal(): fTime(0), fQualityOfTime(0), fPhe(0), fQualityOfPhe(0) {}
 
-/**
- * Destructor
- */
 JPetPhysSignal::~JPetPhysSignal() {}
 
 /**
  * Constructor with is null setting
  */
-JPetPhysSignal::JPetPhysSignal(bool isNull) : fIsNullObject(isNull) {}
+JPetPhysSignal::JPetPhysSignal(bool isNull): fIsNullObject(isNull) {}
 
-/**
- * Is null check
- */
-bool JPetPhysSignal::isNullObject() const { return fIsNullObject; }
+bool JPetPhysSignal::isNullObject() const
+{
+   return fIsNullObject;
+}
 
 /**
  * Set the Reconstructed Signal object, that this Physical Signal is based on
  */
 void JPetPhysSignal::setRecoSignal(const JPetRecoSignal& recoSignal)
 {
-  fRecoSignal = recoSignal;
-  setPM(recoSignal.getPM());
-  setBarrelSlot(recoSignal.getBarrelSlot());
+   fRecoSignal = recoSignal;
 }
 
 /**
  * Clear the signals values (set all to zero/null)
  */
-void JPetPhysSignal::Clear(Option_t*)
+void JPetPhysSignal::Clear(Option_t *)
 {
   fTime = 0.;
   fQualityOfTime = 0.;

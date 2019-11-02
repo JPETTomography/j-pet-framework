@@ -6,10 +6,8 @@ enable_testing()
 set(UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisToolsTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetCmdParser/JPetCmdParserTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetCommonTools/JPetCommonToolsTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetGeomMapping/JPetGeomMappingTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetHadd/JPetHaddTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetManager/JPetManagerTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetParamAndDataFactory/JPetParamAndDataFactoryTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetProgressBarManager/JPetProgressBarTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetReader/JPetReaderTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTask/JPetTaskTest.cpp
@@ -21,7 +19,6 @@ set(UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAna
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskLooper/JPetTaskLooperTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTimer/JPetTimerTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTreeHeader/JPetTreeHeaderTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetUnpacker/JPetUnpackerTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetWriter/JPetWriterTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetCachedFunction/JPetCachedFunctionTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetBaseSignal/JPetBaseSignalTest.cpp
@@ -45,14 +42,12 @@ set(UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAna
                       ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionsGenerator/JPetOptionsTypeHandlerTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionsTools/JPetOptionsToolsTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionsTools/JPetOptionsTransformatorsTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetBarrelSlot/JPetBarrelSlotTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetFEB/JPetFEBTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetFrame/JPetFrameTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetLayer/JPetLayerTest.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetChannel/JPetChannelTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetPM/JPetPMTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetScin/JPetScinTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetTOMBChannel/JPetTOMBChannelTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetTRB/JPetTRBTest.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetSlot/JPetSlotTest.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetLayer/JPetLayerTest.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetSetup/JPetSetupTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamBank/JPetParamBankTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamGetterAscii/JPetParamGetterAsciiTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamManager/JPetParamManagerTest.cpp
@@ -63,7 +58,8 @@ set(UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAna
                       ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetScopeConfigParser/JPetScopeConfigParserTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetScopeLoader/JPetScopeLoaderTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetSimplePhysSignalReco/HelperMathFunctionsTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTaskTest.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnzipTask/JPetUnzipTaskTest.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnpackTask/JPetUnpackTaskTest.cpp
 )
 
 #Configure Boost

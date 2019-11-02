@@ -43,7 +43,7 @@ public :
 private:
   static void* processProxy(void*);
 
-  int fInputSeqId = -1;
+  int fInputSeqID = -1;
   std::list<std::unique_ptr<JPetTaskInterface> > fTasks;
   TaskGeneratorChain ftaskGeneratorChain;
   JPetParams fParams;

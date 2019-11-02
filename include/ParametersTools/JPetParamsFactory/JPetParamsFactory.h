@@ -16,8 +16,8 @@
 #ifndef JPETPARAMSFACTORY_H
 #define JPETPARAMSFACTORY_H
 
-#include "./JPetParamManager/JPetParamManager.h"
-#include "./JPetParams/JPetParams.h"
+#include "JPetParamManager/JPetParamManager.h"
+#include "JPetParams/JPetParams.h"
 
 /**
  * @brief Factory generates parameters based on provided options.

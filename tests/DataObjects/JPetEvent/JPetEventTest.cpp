@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,11 +16,10 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetEventTest
 
+#include <boost/test/unit_test.hpp>
+#include "JPetWriter/JPetWriter.h"
 #include "JPetEvent/JPetEvent.h"
 #include "JPetLoggerInclude.h"
-#include "JPetWriter/JPetWriter.h"
-
-#include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
@@ -43,15 +42,11 @@ BOOST_AUTO_TEST_CASE(recoFlagSetterTest)
 
 BOOST_AUTO_TEST_CASE(constructor)
 {
-  JPetBarrelSlot slot1(43, true, "", 0, 43);
-  JPetBarrelSlot slot2(44, true, "", 0, 44);
   JPetHit firstHit;
   JPetHit secondHit;
-  firstHit.setBarrelSlot(slot1);
-  secondHit.setBarrelSlot(slot2);
   JPetEvent event({firstHit, secondHit}, JPetEventType::kUnknown);
   BOOST_REQUIRE(!event.getHits().empty());
-  BOOST_REQUIRE_EQUAL(event.getHits().size(), 2u);
+  BOOST_REQUIRE_EQUAL(event.getHits().size(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(constructor_orderedHits)
@@ -124,9 +119,9 @@ BOOST_AUTO_TEST_CASE(addHit)
   JPetHit thirdHit;
   event.setHits({firstHit, secondHit});
   BOOST_REQUIRE(!event.getHits().empty());
-  BOOST_REQUIRE_EQUAL(event.getHits().size(), 2u);
+  BOOST_REQUIRE_EQUAL(event.getHits().size(), 2);
   event.addHit(thirdHit);
-  BOOST_REQUIRE_EQUAL(event.getHits().size(), 3u);
+  BOOST_REQUIRE_EQUAL(event.getHits().size(), 3);
 }
 
 BOOST_AUTO_TEST_CASE(eventTypes)
@@ -138,6 +133,7 @@ BOOST_AUTO_TEST_CASE(eventTypes)
   BOOST_REQUIRE((type & JPetEventType::k3Gamma) != JPetEventType::k3Gamma);
   BOOST_REQUIRE((type & JPetEventType::kPrompt) != JPetEventType::kPrompt);
   BOOST_REQUIRE((type & JPetEventType::kScattered) != JPetEventType::kScattered);
+  BOOST_REQUIRE((type & JPetEventType::kCosmic) != JPetEventType::kCosmic);
 }
 
 BOOST_AUTO_TEST_CASE(eventTypes2)
@@ -150,6 +146,7 @@ BOOST_AUTO_TEST_CASE(eventTypes2)
   BOOST_REQUIRE((type & JPetEventType::k2Gamma) != JPetEventType::k2Gamma);
   BOOST_REQUIRE((type & JPetEventType::k3Gamma) != JPetEventType::k3Gamma);
   BOOST_REQUIRE((type & JPetEventType::kScattered) != JPetEventType::kScattered);
+  BOOST_REQUIRE((type & JPetEventType::kCosmic) != JPetEventType::kCosmic);
 }
 
 BOOST_AUTO_TEST_CASE(eventTypes3)
@@ -162,17 +159,19 @@ BOOST_AUTO_TEST_CASE(eventTypes3)
   BOOST_REQUIRE((type & JPetEventType::kUnknown) != JPetEventType::kUnknown);
   BOOST_REQUIRE((type & JPetEventType::k3Gamma) != JPetEventType::k3Gamma);
   BOOST_REQUIRE((type & JPetEventType::kScattered) != JPetEventType::kScattered);
+  BOOST_REQUIRE((type & JPetEventType::kCosmic) != JPetEventType::kCosmic);
 }
 
 BOOST_AUTO_TEST_CASE(isTypeOf)
 {
   JPetHit firstHit;
-  JPetEvent event({firstHit}, static_cast<JPetEventType>(JPetEventType::kPrompt | JPetEventType::k2Gamma));
-  BOOST_REQUIRE(event.isTypeOf(JPetEventType::k2Gamma));
+  JPetEvent event({firstHit}, static_cast<JPetEventType>(JPetEventType::kPrompt | JPetEventType::kCosmic));
+  BOOST_REQUIRE(!event.isTypeOf(JPetEventType::k2Gamma));
   BOOST_REQUIRE(!event.isTypeOf(JPetEventType::k3Gamma));
   BOOST_REQUIRE(event.isTypeOf(JPetEventType::kPrompt));
   BOOST_REQUIRE(!event.isTypeOf(JPetEventType::kUnknown));
   BOOST_REQUIRE(!event.isTypeOf(JPetEventType::kScattered));
+  BOOST_REQUIRE(event.isTypeOf(JPetEventType::kCosmic));
 }
 
 BOOST_AUTO_TEST_CASE(isOnlyTypeOf)
@@ -184,6 +183,7 @@ BOOST_AUTO_TEST_CASE(isOnlyTypeOf)
   BOOST_REQUIRE(!event.isOnlyTypeOf(JPetEventType::kPrompt));
   BOOST_REQUIRE(!event.isOnlyTypeOf(JPetEventType::kUnknown));
   BOOST_REQUIRE(!event.isOnlyTypeOf(JPetEventType::kScattered));
+  BOOST_REQUIRE(!event.isOnlyTypeOf(JPetEventType::kCosmic));
   BOOST_REQUIRE(event.isOnlyTypeOf(static_cast<JPetEventType>(JPetEventType::kPrompt | JPetEventType::k2Gamma)));
 
   JPetEvent event2;
@@ -193,31 +193,34 @@ BOOST_AUTO_TEST_CASE(isOnlyTypeOf)
   BOOST_REQUIRE(!event2.isOnlyTypeOf(JPetEventType::k3Gamma));
   BOOST_REQUIRE(!event2.isOnlyTypeOf(JPetEventType::kUnknown));
   BOOST_REQUIRE(!event2.isOnlyTypeOf(JPetEventType::kScattered));
+  BOOST_REQUIRE(!event2.isOnlyTypeOf(JPetEventType::kCosmic));
 }
 
 BOOST_AUTO_TEST_CASE(setGetType)
 {
   JPetHit firstHit;
   JPetEvent event({firstHit}, JPetEventType::kPrompt);
-  event.setEventType(static_cast<JPetEventType>(JPetEventType::k2Gamma | JPetEventType::k3Gamma));
+  event.setEventType(static_cast<JPetEventType>(JPetEventType::kCosmic | JPetEventType::k3Gamma));
   auto type = event.getEventType();
   BOOST_REQUIRE((type & JPetEventType::kPrompt) != JPetEventType::kPrompt);
   BOOST_REQUIRE((type & JPetEventType::kUnknown) != JPetEventType::kUnknown);
   BOOST_REQUIRE((type & JPetEventType::k2Gamma) == JPetEventType::k2Gamma);
-  BOOST_REQUIRE((type & JPetEventType::k3Gamma) == JPetEventType::k3Gamma);
+  BOOST_REQUIRE((type & JPetEventType::kCosmic) == JPetEventType::kCosmic);
+  BOOST_REQUIRE((type & JPetEventType::k3Gamma) != JPetEventType::k3Gamma);
   BOOST_REQUIRE((type & JPetEventType::kScattered) != JPetEventType::kScattered);
 }
 
 BOOST_AUTO_TEST_CASE(addEventType)
 {
   JPetHit firstHit;
-  JPetEvent event({firstHit}, JPetEventType::kPrompt);
+  JPetEvent event( {firstHit}, JPetEventType::kPrompt);
   event.addEventType(JPetEventType::k2Gamma);
   auto type = event.getEventType();
   BOOST_REQUIRE((type & JPetEventType::kPrompt) == JPetEventType::kPrompt);
   BOOST_REQUIRE((type & JPetEventType::k2Gamma) == JPetEventType::k2Gamma);
   BOOST_REQUIRE((type & JPetEventType::kUnknown) != JPetEventType::kUnknown);
   BOOST_REQUIRE((type & JPetEventType::k3Gamma) != JPetEventType::k3Gamma);
+  BOOST_REQUIRE((type & JPetEventType::kCosmic) != JPetEventType::kCosmic);
   BOOST_REQUIRE((type & JPetEventType::kScattered) != JPetEventType::kScattered);
 }
 
@@ -231,6 +234,7 @@ BOOST_AUTO_TEST_CASE(addEventType2)
   BOOST_REQUIRE((type & JPetEventType::k3Gamma) != JPetEventType::k3Gamma);
   BOOST_REQUIRE((type & JPetEventType::kPrompt) != JPetEventType::kPrompt);
   BOOST_REQUIRE((type & JPetEventType::kScattered) != JPetEventType::kScattered);
+  BOOST_REQUIRE((type & JPetEventType::kCosmic) != JPetEventType::kCosmic);
 }
 
 BOOST_AUTO_TEST_CASE(addEventType3)
@@ -242,6 +246,7 @@ BOOST_AUTO_TEST_CASE(addEventType3)
   BOOST_REQUIRE((type & JPetEventType::kUnknown) != JPetEventType::kUnknown);
   BOOST_REQUIRE((type & JPetEventType::k3Gamma) != JPetEventType::k3Gamma);
   BOOST_REQUIRE((type & JPetEventType::kPrompt) != JPetEventType::kPrompt);
+  BOOST_REQUIRE((type & JPetEventType::kCosmic) != JPetEventType::kCosmic);
   BOOST_REQUIRE((type & JPetEventType::kScattered) != JPetEventType::kScattered);
 
   event.addEventType(JPetEventType::k3Gamma);
@@ -250,6 +255,7 @@ BOOST_AUTO_TEST_CASE(addEventType3)
   BOOST_REQUIRE((type & JPetEventType::k3Gamma) == JPetEventType::k3Gamma);
   BOOST_REQUIRE((type & JPetEventType::kUnknown) != JPetEventType::kUnknown);
   BOOST_REQUIRE((type & JPetEventType::kPrompt) != JPetEventType::kPrompt);
+  BOOST_REQUIRE((type & JPetEventType::kCosmic) != JPetEventType::kCosmic);
   BOOST_REQUIRE((type & JPetEventType::kScattered) != JPetEventType::kScattered);
 }
 

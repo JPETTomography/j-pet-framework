@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE(goodRootFile)
 {
   JPetParamBankHandlerTask task;
   auto options = jpet_options_generator_tools::getDefaultOptions();
-  options["runId_int"] = -1;
+  options["runID_int"] = -1;
   options["inputFileType_std::string"] = std::string("root");
   options["inputFile_std::string"] = std::string("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root");
   std::shared_ptr<JPetParamManager> manager = std::make_shared<JPetParamManager>();
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(badRootFile)
   gErrorIgnoreLevel = kFatal; /// To turn off ROOT error reporting.
   JPetParamBankHandlerTask task;
   auto options = jpet_options_generator_tools::getDefaultOptions();
-  options["runId_int"] = -1;
+  options["runID_int"] = -1;
   options["inputFileType_std::string"] = std::string("root");
   options["inputFile_std::string"] = std::string("unitTestData/auxdata.root");
   std::shared_ptr<JPetParamManager> manager = std::make_shared<JPetParamManager>();
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(goodUnknownFileFromConfig)
   gErrorIgnoreLevel = kFatal; /// To turn off ROOT error reporting.
   JPetParamBankHandlerTask task;
   auto options = jpet_options_generator_tools::getDefaultOptions();
-  options["runId_int"] = 44;
+  options["runID_int"] = 44;
   options["localDB_std::string"] = std::string("unitTestData/JPetParamBankHandlerTask/large_barrel.json");
   options["inputFile_std::string"] = std::string("unitTestData/auxdata.root");
   options["inputFileType_std::string"] = std::string("unknown");
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(badUnknownFileFromConfig)
   gErrorIgnoreLevel = kFatal; /// To turn off ROOT error reporting.
   JPetParamBankHandlerTask task;
   auto options = jpet_options_generator_tools::getDefaultOptions();
-  options["runId_int"] = 1;
+  options["runID_int"] = 1;
   options["localDB_std::string"] = std::string("unitTestData/JPetParamBankHandlerTask/large_barrel.json");
   options["inputFile_std::string"] = std::string("unitTestData/auxdata.root");
   options["inputFileType_std::string"] = std::string("unknown");
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(goodHldFile)
 {
   JPetParamBankHandlerTask task;
   auto options = jpet_options_generator_tools::getDefaultOptions();
-  options["runId_int"] = 44;
+  options["runID_int"] = 44;
   options["localDB_std::string"] = std::string("unitTestData/JPetParamBankHandlerTask/large_barrel.json");
   options["inputFileType_std::string"] = std::string("hld");
   std::shared_ptr<JPetParamManager> manager =

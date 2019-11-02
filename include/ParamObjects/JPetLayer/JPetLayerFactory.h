@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,9 +16,9 @@
 #ifndef JPET_LAYER_FACTORY_H
 #define JPET_LAYER_FACTORY_H
 
-#include "./JPetParamGetter/JPetParamGetter.h"
-#include "./JPetFrame/JPetFrameFactory.h"
-#include "JPetLayer.h"
+#include "JPetParamGetter/JPetParamGetter.h"
+#include "JPetSetup/JPetSetupFactory.h"
+#include "JPetLayer/JPetLayer.h"
 #include <map>
 
 /**
@@ -29,14 +29,14 @@
 class JPetLayerFactory
 {
 public:
-  JPetLayerFactory(JPetParamGetter & paramGetter, int runId, JPetFrameFactory & frameFactory):
-    paramGetter(paramGetter), runId(runId), frameFactory(frameFactory), fInitialized(false) {}
+  JPetLayerFactory(JPetParamGetter& paramGetter, int runID, JPetSetupFactory& setupFactory):
+    fParamGetter(paramGetter), fRunID(runID), fSetupFactory(setupFactory), fInitialized(false) {}
   std::map<int, JPetLayer*>& getLayers();
 
 private:
-  JPetParamGetter &paramGetter;
-  const int runId;
-  JPetFrameFactory &frameFactory;
+  JPetParamGetter& fParamGetter;
+  const int fRunID;
+  JPetSetupFactory& fSetupFactory;
   bool fInitialized;
   std::map<int, JPetLayer*> fLayers;
   void initialize();

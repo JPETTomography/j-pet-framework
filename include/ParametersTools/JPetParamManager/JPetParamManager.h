@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,22 +13,20 @@
  *  @file JPetParamManager.h
  */
 
-#ifndef _J_PET_PARAM_MANAGER_
-#define _J_PET_PARAM_MANAGER_
+#ifndef J_PET_PARAM_MANAGER
+#define J_PET_PARAM_MANAGER
 
-#include "./JPetScopeConfigParser/JPetScopeConfigPOD.h"
-#include "./JPetTOMBChannel/JPetTOMBChannelFactory.h"
-#include "./JPetBarrelSlot/JPetBarrelSlotFactory.h"
-#include "./JPetParamBank/JPetParamBank.h"
-#include "./JPetFrame/JPetFrameFactory.h"
-#include "./JPetLayer/JPetLayerFactory.h"
-#include "./JPetScin/JPetScinFactory.h"
-#include "./JPetFEB/JPetFEBFactory.h"
-#include "./JPetTRB/JPetTRBFactory.h"
-#include "./JPetReader/JPetReader.h"
-#include "./JPetWriter/JPetWriter.h"
-#include "./JPetPM/JPetPMFactory.h"
-#include "./JPetLoggerInclude.h"
+#include "JPetScopeConfigParser/JPetScopeConfigPOD.h"
+#include "JPetChannel/JPetChannelFactory.h"
+#include "JPetParamBank/JPetParamBank.h"
+#include "JPetSetup/JPetSetupFactory.h"
+#include "JPetLayer/JPetLayerFactory.h"
+#include "JPetScin/JPetScinFactory.h"
+#include "JPetSlot/JPetSlotFactory.h"
+#include "JPetReader/JPetReader.h"
+#include "JPetWriter/JPetWriter.h"
+#include "JPetPM/JPetPMFactory.h"
+#include "JPetLoggerInclude.h"
 #include <boost/any.hpp>
 #include <cassert>
 #include <fstream>
@@ -56,16 +54,15 @@ public:
    * Factory method to produce JPetParamManager instance based on provided options
    */
   static std::shared_ptr<JPetParamManager> generateParamManager(
-    const std::map<std::string, boost::any>& options);
-  std::map<int, JPetTRB*>& getTRBs(const int runId);
-  std::map<int, JPetFEB*>& getFEBs(const int runId);
-  std::map<int, JPetFrame*>& getFrames(const int runId);
-  std::map<int, JPetLayer*>& getLayers(const int runId);
-  std::map<int, JPetBarrelSlot*>& getBarrelSlots(const int runId);
-  std::map<int, JPetScin*>& getScins(const int runId);
-  std::map<int, JPetPM*>& getPMs(const int runId);
-  std::map<int, JPetTOMBChannel*>& getTOMBChannels(const int runId);
-  void fillParameterBank(const int run);
+    const std::map<std::string, boost::any>& options
+  );
+  std::map<int, JPetSetup*>& getSetups(const int runID);
+  std::map<int, JPetLayer*>& getLayers(const int runID);
+  std::map<int, JPetSlot*>& getSlots(const int runID);
+  std::map<int, JPetScin*>& getScins(const int runID);
+  std::map<int, JPetPM*>& getPMs(const int runID);
+  std::map<int, JPetChannel*>& getChannels(const int runID);
+  void fillParameterBank(const int runID);
   bool readParametersFromFile(JPetReader* reader);
   bool saveParametersToFile(JPetWriter* writer);
   bool readParametersFromFile(std::string filename);
@@ -82,22 +79,18 @@ private:
   std::set<ParamObjectType> fExpectMissing;
   JPetParamBank* fBank = nullptr;
   bool fIsNullObject;
-  std::map<int, JPetTRBFactory> fTRBFactories;
-  std::map<int, JPetFEBFactory> fFEBFactories;
-  std::map<int, JPetFrameFactory> fFrameFactories;
+  std::map<int, JPetSetupFactory> fSetupFactories;
   std::map<int, JPetLayerFactory> fLayerFactories;
-  std::map<int, JPetBarrelSlotFactory> fBarrelSlotFactories;
+  std::map<int, JPetSlotFactory> fSlotFactories;
   std::map<int, JPetScinFactory> fScinFactories;
   std::map<int, JPetPMFactory> fPMFactories;
-  std::map<int, JPetTOMBChannelFactory> fTOMBChannelFactories;
-  JPetTRBFactory& getTRBFactory(const int runId);
-  JPetFEBFactory& getFEBFactory(const int runId);
-  JPetFrameFactory& getFrameFactory(const int runId);
-  JPetLayerFactory& getLayerFactory(const int runId);
-  JPetBarrelSlotFactory& getBarrelSlotFactory(const int runId);
-  JPetScinFactory& getScinFactory(const int runId);
-  JPetPMFactory& getPMFactory(const int runId);
-  JPetTOMBChannelFactory& getTOMBChannelFactory(const int runId);
+  std::map<int, JPetChannelFactory> fChannelFactories;
+  JPetSetupFactory& getSetupFactory(const int runID);
+  JPetLayerFactory& getLayerFactory(const int runID);
+  JPetSlotFactory& getSlotFactory(const int runID);
+  JPetScinFactory& getScinFactory(const int runID);
+  JPetPMFactory& getPMFactory(const int runID);
+  JPetChannelFactory& getChannelFactory(const int runID);
 };
 
-#endif /* !_J_PET_PARAM_MANAGER_ */
+#endif /* !J_PET_PARAM_MANAGER */

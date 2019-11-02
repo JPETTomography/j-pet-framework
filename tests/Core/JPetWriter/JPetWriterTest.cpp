@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -15,25 +15,24 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetWriterTest
-#include "JPetWriter/JPetWriter.h"
+
 #include "JPetBaseSignal/JPetBaseSignal.h"
+#include "JPetPhysSignal/JPetPhysSignal.h"
+#include "JPetRecoSignal/JPetRecoSignal.h"
+#include "JPetRawSignal/JPetRawSignal.h"
+#include "JPetTimeWindow/JPetTimeWindow.h"
+#include <boost/test/unit_test.hpp>
+#include "JPetReader/JPetReader.h"
+#include "JPetWriter/JPetWriter.h"
 #include "JPetEvent/JPetEvent.h"
+#include "JPetSigCh/JPetSigCh.h"
+#include <boost/filesystem.hpp>
 #include "JPetHit/JPetHit.h"
 #include "JPetLOR/JPetLOR.h"
-#include "JPetPhysSignal/JPetPhysSignal.h"
-#include "JPetRawSignal/JPetRawSignal.h"
-#include "JPetReader/JPetReader.h"
-#include "JPetRecoSignal/JPetRecoSignal.h"
-#include "JPetSigCh/JPetSigCh.h"
-#include "JPetTimeWindow/JPetTimeWindow.h"
-
-#include <TFile.h>
-#include <TList.h>
 #include <TNamed.h>
 #include <iostream>
-
-#include <boost/filesystem.hpp>
-#include <boost/test/unit_test.hpp>
+#include <TFile.h>
+#include <TList.h>
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 

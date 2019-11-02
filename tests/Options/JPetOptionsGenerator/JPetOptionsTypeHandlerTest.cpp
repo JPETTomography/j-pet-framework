@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -10,14 +10,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetOptionsGeneratorTest.cpp
+ *  @file JPetOptionsTypeHandlerTest.cpp
  */
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetOptionsTypeHandlerTest
 
 #include "JPetOptionsGenerator/JPetOptionsTypeHandler.h"
-
 #include <boost/test/unit_test.hpp>
 #include <cstdlib>
 

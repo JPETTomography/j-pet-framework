@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,8 +16,8 @@
 #ifndef JPETRAWSIGNAL_H
 #define JPETRAWSIGNAL_H
 
-#include "./JPetBaseSignal/JPetBaseSignal.h"
-#include "./JPetSigCh/JPetSigCh.h"
+#include "JPetBaseSignal/JPetBaseSignal.h"
+#include "JPetSigCh/JPetSigCh.h"
 #include <algorithm>
 #include <utility>
 #include <vector>
@@ -40,10 +40,10 @@ public:
   void addPoint(const JPetSigCh& sigch);
   std::vector<JPetSigCh> getPoints(JPetSigCh::EdgeType edge,
     JPetRawSignal::PointsSortOrder order = JPetRawSignal::ByThrValue) const;
-  std::map<int, double> getTimesVsThresholdNumber(JPetSigCh::EdgeType edge) const;
+  std::map<int, float> getTimesVsThresholdNumber(JPetSigCh::EdgeType edge) const;
   std::map<int, std::pair<float, float>> getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const;
-  std::map<int, double> getTOTsVsThresholdValue() const;
-  std::map<int, double> getTOTsVsThresholdNumber() const;
+  std::map<int, float> getTOTsVsThresholdValue() const;
+  std::map<int, float> getTOTsVsThresholdNumber() const;
 
   void Clear(Option_t * opt = "");
 
@@ -51,7 +51,7 @@ private:
   std::vector<JPetSigCh> fLeadingPoints;
   std::vector<JPetSigCh> fTrailingPoints;
 
-  ClassDef(JPetRawSignal, 7);
+  ClassDef(JPetRawSignal, 8);
 };
 
 #endif /* !JPETRAWSIGNAL_H */

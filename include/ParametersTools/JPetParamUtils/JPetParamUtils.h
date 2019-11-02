@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,10 +16,10 @@
 #ifndef JPETPARAMUTILS_H
 #define JPETPARAMUTILS_H
 
-#include "./JPetBarrelSlot/JPetBarrelSlot.h"
-#include "./JPetLayer/JPetLayer.h"
-#include "./JPetLoggerInclude.h"
-#include "./JPetPM/JPetPM.h"
+#include "JPetLayer/JPetLayer.h"
+#include "JPetSlot/JPetSlot.h"
+#include "JPetLoggerInclude.h"
+#include "JPetPM/JPetPM.h"
 #include "TMath.h"
 
 /**
@@ -29,8 +29,8 @@
 class JPetParamUtils
 {
 public:
-  static double distanceXY(const JPetBarrelSlot& slot1, const JPetBarrelSlot& slot2);
-  static double distanceXY(const JPetPM& PM1, const JPetPM& PM2);
+  static double distanceXY(const JPetSlot& slot1, const JPetSlot& slot2);
+  static double distanceXY(const JPetPM& pm1, const JPetPM& pm2);
 
 private:
   JPetParamUtils(const JPetParamUtils&) {}

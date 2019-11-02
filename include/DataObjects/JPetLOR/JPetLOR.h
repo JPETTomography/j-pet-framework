@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,7 +16,7 @@
 #ifndef JPETLOR_H
 #define JPETLOR_H
 
-#include "./JPetHit/JPetHit.h"
+#include "JPetHit/JPetHit.h"
 #include <cstddef>
 #include <utility>
 
@@ -26,7 +26,7 @@ class JPetHit;
  * @brief Line of Response data class is a representation of an event
  * with two photon hits recorded in the barrel.
  *
- * LOR is an event that consists of two hits (JPetHit objects) in two barel slots,
+ * LOR is an event that consists of two hits (JPetHit objects) in two slots,
  * referred to as "first" and "second" according to their chronological order
  * in a time slot. The user is responsible for setting the first and second hit
  * in the appropriate order. The LOR reconstructed absolute time is to be set
@@ -38,39 +38,47 @@ public:
   enum RecoFlag { Good, Corrupted, Unknown };
 
   JPetLOR();
-  JPetLOR(float time, float qualityOfTime, JPetHit& firstHit, JPetHit& secondHit);
+  JPetLOR(
+    float time, float qualityOfTime, JPetHit& firstHit, JPetHit& secondHit
+  );
+  JPetLOR(
+    float time, float qualityOfTime, float timeDiff, float qualityOfTimeDiff,
+    JPetHit& firstHit, JPetHit& secondHit, JPetLOR::RecoFlag flag
+  );
   virtual ~JPetLOR();
 
-  JPetLOR::RecoFlag getRecoFlag() const;
   void setRecoFlag(JPetLOR::RecoFlag flag);
-  float getTime() const;
-  float getQualityOfTime() const;
   void setTime(const float time);
   void setQualityOfTime(const float qualityOfTime);
-  const JPetHit& getFirstHit() const;
-  const JPetHit& getSecondHit() const;
+  void setTimeDiff(const float td);
+  void setQualityOfTimeDiff(const float qtd);
   void setHits(const JPetHit& firstHit, const JPetHit& secondHit);
   void setFirstHit(const JPetHit& firstHit);
   void setSecondHit(const JPetHit& secondHit);
-  void setTimeDiff(const float td);
-  void setQualityOfTimeDiff(const float qtd);
+
+  JPetLOR::RecoFlag getRecoFlag() const;
+  float getTime() const;
+  float getQualityOfTime() const;
   float getTimeDiff() const;
   float getQualityOfTimeDiff() const;
+  const JPetHit& getFirstHit() const;
+  const JPetHit& getSecondHit() const;
+
   bool isHitSet(const unsigned int index);
-  bool isFromSameBarrelSlot() const;
+  bool checkConsistency() const;
   void Clear(Option_t* opt = "");
 
 private:
+  RecoFlag fFlag = JPetLOR::Unknown;
   float fTime;
   float fQualityOfTime;
   float fTimeDiff;
   float fQualityOfTimeDiff;
   bool fIsHitSet[2];
-  RecoFlag fFlag = JPetLOR::Unknown;
   JPetHit fFirstHit;
   JPetHit fSecondHit;
 
-  ClassDef(JPetLOR, 5);
+  ClassDef(JPetLOR, 6);
 };
 
 #endif /* !JPETLOR_H */

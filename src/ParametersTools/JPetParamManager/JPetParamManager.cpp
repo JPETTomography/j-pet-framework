@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,31 +13,25 @@
  *  @file JPetParamManager.cpp
  */
 
-#include "JPetParamManager/JPetParamManager.h"
-#include "JPetOptionsTools/JPetOptionsTools.h"
 #include "JPetParamGetterAscii/JPetParamGetterAscii.h"
-
-#include <TFile.h>
+#include "JPetOptionsTools/JPetOptionsTools.h"
+#include "JPetParamManager/JPetParamManager.h"
 #include <boost/property_tree/xml_parser.hpp>
+#include <TFile.h>
 
-std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const std::map<std::string, boost::any>& options)
+std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(
+  const std::map<std::string, boost::any>& options)
 {
   using namespace jpet_options_tools;
-  if (isLocalDB(options))
-  {
+  if (isLocalDB(options)) {
     std::set<ParamObjectType> expectMissing;
-    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kScope)
-    {
-      expectMissing.insert(ParamObjectType::kTRB);
-      expectMissing.insert(ParamObjectType::kFEB);
-      expectMissing.insert(ParamObjectType::kFrame);
+    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kScope) {
+      expectMissing.insert(ParamObjectType::kSetup);
       expectMissing.insert(ParamObjectType::kLayer);
-      expectMissing.insert(ParamObjectType::kTOMBChannel);
+      expectMissing.insert(ParamObjectType::kChannel);
     }
     return std::make_shared<JPetParamManager>(new JPetParamGetterAscii(getLocalDB(options)), expectMissing);
-  }
-  else
-  {
+  } else {
     ERROR("No local database file found.");
     return std::make_shared<JPetParamManager>();
   }
@@ -45,198 +39,166 @@ std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const s
 
 JPetParamManager::~JPetParamManager()
 {
-  if (fBank)
-  {
+  if (fBank) {
     delete fBank;
     fBank = 0;
   }
-  if (fParamGetter)
-  {
+  if (fParamGetter) {
     delete fParamGetter;
     fParamGetter = 0;
   }
 }
 
-std::map<int, JPetTRB*>& JPetParamManager::getTRBs(const int runId) { return getTRBFactory(runId).getTRBs(); }
-
-JPetTRBFactory& JPetParamManager::getTRBFactory(const int runId)
+std::map<int, JPetSetup*>& JPetParamManager::getSetups(const int runID)
 {
-  if (fTRBFactories.count(runId) == 0)
-  {
-    fTRBFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId));
-  }
-  return fTRBFactories.at(runId);
+  return getSetupFactory(runID).getSetups();
 }
 
-std::map<int, JPetFEB*>& JPetParamManager::getFEBs(const int runId) { return getFEBFactory(runId).getFEBs(); }
-
-JPetFEBFactory& JPetParamManager::getFEBFactory(const int runId)
+JPetSetupFactory& JPetParamManager::getSetupFactory(const int runID)
 {
-  if (fFEBFactories.count(runId) == 0)
-  {
-    fFEBFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId, getTRBFactory(runId)));
+  if (fSetupFactories.count(runID) == 0) {
+    fSetupFactories.emplace(
+      std::piecewise_construct,
+      std::forward_as_tuple(runID),
+      std::forward_as_tuple(*fParamGetter, runID)
+    );
   }
-  return fFEBFactories.at(runId);
+  return fSetupFactories.at(runID);
 }
 
-std::map<int, JPetFrame*>& JPetParamManager::getFrames(const int runId) { return getFrameFactory(runId).getFrames(); }
-
-JPetFrameFactory& JPetParamManager::getFrameFactory(const int runId)
+std::map<int, JPetLayer*>& JPetParamManager::getLayers(const int runID)
 {
-  if (fFrameFactories.count(runId) == 0)
-  {
-    fFrameFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId), std::forward_as_tuple(*fParamGetter, runId));
-  }
-  return fFrameFactories.at(runId);
+  return getLayerFactory(runID).getLayers();
 }
 
-std::map<int, JPetLayer*>& JPetParamManager::getLayers(const int runId) { return getLayerFactory(runId).getLayers(); }
-
-JPetLayerFactory& JPetParamManager::getLayerFactory(const int runId)
+JPetLayerFactory& JPetParamManager::getLayerFactory(const int runID)
 {
-  if (fLayerFactories.count(runId) == 0)
-  {
-    fLayerFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId),
-                            std::forward_as_tuple(*fParamGetter, runId, getFrameFactory(runId)));
+  if (fLayerFactories.count(runID) == 0) {
+    fLayerFactories.emplace(
+      std::piecewise_construct,
+      std::forward_as_tuple(runID),
+      std::forward_as_tuple(*fParamGetter, runID, getSetupFactory(runID))
+    );
   }
-  return fLayerFactories.at(runId);
+  return fLayerFactories.at(runID);
 }
 
-std::map<int, JPetBarrelSlot*>& JPetParamManager::getBarrelSlots(const int runId) { return getBarrelSlotFactory(runId).getBarrelSlots(); }
-
-JPetBarrelSlotFactory& JPetParamManager::getBarrelSlotFactory(const int runId)
+std::map<int, JPetSlot*>& JPetParamManager::getSlots(const int runID)
 {
-  if (fBarrelSlotFactories.count(runId) == 0)
-  {
-    fBarrelSlotFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId),
-                                 std::forward_as_tuple(*fParamGetter, runId, getLayerFactory(runId)));
-  }
-  fBarrelSlotFactories.at(runId);
-  return fBarrelSlotFactories.at(runId);
+  return getSlotFactory(runID).getSlots();
 }
 
-std::map<int, JPetScin*>& JPetParamManager::getScins(const int runId) { return getScinFactory(runId).getScins(); }
-
-JPetScinFactory& JPetParamManager::getScinFactory(const int runId)
+JPetSlotFactory& JPetParamManager::getSlotFactory(const int runID)
 {
-  if (fScinFactories.count(runId) == 0)
-  {
-    fScinFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId),
-                           std::forward_as_tuple(*fParamGetter, runId, getBarrelSlotFactory(runId)));
+  if (fSlotFactories.count(runID) == 0) {
+    fSlotFactories.emplace(
+      std::piecewise_construct,
+      std::forward_as_tuple(runID),
+      std::forward_as_tuple(*fParamGetter, runID, getLayerFactory(runID))
+    );
   }
-  return fScinFactories.at(runId);
+  fSlotFactories.at(runID);
+  return fSlotFactories.at(runID);
 }
 
-std::map<int, JPetPM*>& JPetParamManager::getPMs(const int runId) { return getPMFactory(runId).getPMs(); }
-
-JPetPMFactory& JPetParamManager::getPMFactory(const int runId)
+std::map<int, JPetScin*>& JPetParamManager::getScins(const int runID)
 {
-  if (fPMFactories.count(runId) == 0)
-  {
-    fPMFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId),
-                         std::forward_as_tuple(*fParamGetter, runId, getFEBFactory(runId), getScinFactory(runId), getBarrelSlotFactory(runId)));
-  }
-  return fPMFactories.at(runId);
+  return getScinFactory(runID).getScins();
 }
 
-std::map<int, JPetTOMBChannel*>& JPetParamManager::getTOMBChannels(const int runId) { return getTOMBChannelFactory(runId).getTOMBChannels(); }
-
-JPetTOMBChannelFactory& JPetParamManager::getTOMBChannelFactory(const int runId)
+JPetScinFactory& JPetParamManager::getScinFactory(const int runID)
 {
-  if (fTOMBChannelFactories.count(runId) == 0)
-  {
-    fTOMBChannelFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runId),
-                                  std::forward_as_tuple(*fParamGetter, runId, getFEBFactory(runId), getTRBFactory(runId), getPMFactory(runId)));
+  if (fScinFactories.count(runID) == 0) {
+    fScinFactories.emplace(
+      std::piecewise_construct,
+      std::forward_as_tuple(runID),
+      std::forward_as_tuple(*fParamGetter, runID, getSlotFactory(runID))
+    );
   }
-  return fTOMBChannelFactories.at(runId);
+  return fScinFactories.at(runID);
 }
 
-void JPetParamManager::fillParameterBank(const int run)
+std::map<int, JPetPM*>& JPetParamManager::getPMs(const int runID)
 {
-  if (fBank)
-  {
+  return getPMFactory(runID).getPMs();
+}
+
+JPetPMFactory& JPetParamManager::getPMFactory(const int runID)
+{
+  if (fPMFactories.count(runID) == 0) {
+    fPMFactories.emplace(
+      std::piecewise_construct,
+      std::forward_as_tuple(runID),
+      std::forward_as_tuple(*fParamGetter, runID, getScinFactory(runID))
+    );
+  }
+  return fPMFactories.at(runID);
+}
+
+std::map<int, JPetChannel*>& JPetParamManager::getChannels(const int runID)
+{
+  return getChannelFactory(runID).getChannels();
+}
+
+JPetChannelFactory& JPetParamManager::getChannelFactory(const int runID)
+{
+  if (fChannelFactories.count(runID) == 0) {
+    fChannelFactories.emplace(
+      std::piecewise_construct,
+      std::forward_as_tuple(runID),
+      std::forward_as_tuple(*fParamGetter, runID, getPMFactory(runID))
+    );
+  }
+  return fChannelFactories.at(runID);
+}
+
+void JPetParamManager::fillParameterBank(const int runID)
+{
+  if (fBank) {
     delete fBank;
     fBank = 0;
   }
   fBank = new JPetParamBank();
-  if (!fExpectMissing.count(ParamObjectType::kTRB))
-  {
-    for (auto& trbp : getTRBs(run))
-    {
-      auto& trb = *trbp.second;
-      fBank->addTRB(trb);
+  if (!fExpectMissing.count(ParamObjectType::kSetup)) {
+    for (auto& setup_p : getSetups(runID)) {
+      auto& setup = *setup_p.second;
+      fBank->addSetup(setup);
     }
   }
-  if (!fExpectMissing.count(ParamObjectType::kFEB))
-  {
-    for (auto& febp : getFEBs(run))
-    {
-      auto& feb = *febp.second;
-      fBank->addFEB(feb);
-      fBank->getFEB(feb.getID()).setTRB(fBank->getTRB(feb.getTRB().getID()));
-    }
-  }
-  if (!fExpectMissing.count(ParamObjectType::kFrame))
-  {
-    for (auto& framep : getFrames(run))
-    {
-      auto& frame = *framep.second;
-      fBank->addFrame(frame);
-    }
-  }
-  if (!fExpectMissing.count(ParamObjectType::kLayer))
-  {
-    for (auto& layerp : getLayers(run))
-    {
-      auto& layer = *layerp.second;
+  if (!fExpectMissing.count(ParamObjectType::kLayer)) {
+    for (auto& layer_p : getLayers(runID)) {
+      auto& layer = *layer_p.second;
       fBank->addLayer(layer);
-      fBank->getLayer(layer.getID()).setFrame(fBank->getFrame(layer.getFrame().getID()));
+      fBank->getLayer(layer.getID()).setSetup(fBank->getSetup(layer.getSetup().getID()));
     }
   }
-  if (!fExpectMissing.count(ParamObjectType::kBarrelSlot))
-  {
-    for (auto& barrelSlotp : getBarrelSlots(run))
-    {
-      auto& barrelSlot = *barrelSlotp.second;
-      fBank->addBarrelSlot(barrelSlot);
-      if (barrelSlot.hasLayer())
-      {
-        fBank->getBarrelSlot(barrelSlot.getID()).setLayer(fBank->getLayer(barrelSlot.getLayer().getID()));
-      }
+  if (!fExpectMissing.count(ParamObjectType::kSlot)) {
+    for (auto& slot_p : getSlots(runID)) {
+      auto& slot = *slot_p.second;
+      fBank->addSlot(slot);
+      fBank->getSlot(slot.getID()).setLayer(fBank->getLayer(slot.getLayer().getID()));
     }
   }
-  if (!fExpectMissing.count(ParamObjectType::kScintillator))
-  {
-    for (auto& scinp : getScins(run))
-    {
-      auto& scin = *scinp.second;
-      fBank->addScintillator(scin);
-      fBank->getScintillator(scin.getID()).setBarrelSlot(fBank->getBarrelSlot(scin.getBarrelSlot().getID()));
+  if (!fExpectMissing.count(ParamObjectType::kScin)) {
+    for (auto& scin_p : getScins(runID)) {
+      auto& scin = *scin_p.second;
+      fBank->addScin(scin);
+      fBank->getScin(scin.getID()).setSlot(fBank->getSlot(scin.getSlot().getID()));
     }
   }
-  if (!fExpectMissing.count(ParamObjectType::kPM))
-  {
-    for (auto& pmp : getPMs(run))
-    {
-      auto& pm = *pmp.second;
+  if (!fExpectMissing.count(ParamObjectType::kPM)) {
+    for (auto& pm_p : getPMs(runID)) {
+      auto& pm = *pm_p.second;
       fBank->addPM(pm);
-      if (pm.hasFEB())
-      {
-        fBank->getPM(pm.getID()).setFEB(fBank->getFEB(pm.getFEB().getID()));
-      }
-      fBank->getPM(pm.getID()).setScin(fBank->getScintillator(pm.getScin().getID()));
-      fBank->getPM(pm.getID()).setBarrelSlot(fBank->getBarrelSlot(pm.getBarrelSlot().getID()));
+      fBank->getPM(pm.getID()).setScin(fBank->getScin(pm.getScin().getID()));
     }
   }
-  if (!fExpectMissing.count(ParamObjectType::kTOMBChannel))
-  {
-    for (auto& tombChannelp : getTOMBChannels(run))
-    {
-      auto& tombChannel = *tombChannelp.second;
-      fBank->addTOMBChannel(tombChannel);
-      fBank->getTOMBChannel(tombChannel.getChannel()).setFEB(fBank->getFEB(tombChannel.getFEB().getID()));
-      fBank->getTOMBChannel(tombChannel.getChannel()).setTRB(fBank->getTRB(tombChannel.getTRB().getID()));
-      fBank->getTOMBChannel(tombChannel.getChannel()).setPM(fBank->getPM(tombChannel.getPM().getID()));
+  if (!fExpectMissing.count(ParamObjectType::kChannel)) {
+    for (auto& channel_p : getChannels(runID)) {
+      auto& channel = *channel_p.second;
+      fBank->addChannel(channel);
+      fBank->getChannel(channel.getID()).setPM(fBank->getPM(channel.getPM().getID())
+      );
     }
   }
 }
@@ -244,22 +206,19 @@ void JPetParamManager::fillParameterBank(const int run)
 bool JPetParamManager::readParametersFromFile(JPetReader* reader)
 {
   assert(reader);
-  if (!reader->isOpen())
-  {
+  if (!reader->isOpen()) {
     ERROR("Cannot read parameters from file. The provided JPetReader is closed.");
     return false;
   }
-  fBank = static_cast<JPetParamBank*>(reader->getObjectFromFile("ParamBank;1"));
-  if (!fBank)
-    return false;
+  fBank = static_cast<JPetParamBank*>(reader->getObjectFromFile("ParamBank"));
+  if (!fBank) return false;
   return true;
 }
 
 bool JPetParamManager::saveParametersToFile(JPetWriter* writer)
 {
   assert(writer);
-  if (!writer->isOpen())
-  {
+  if (!writer->isOpen()) {
     ERROR("Could not write parameters to file. The provided JPetWriter is closed.");
     return false;
   }
@@ -270,14 +229,12 @@ bool JPetParamManager::saveParametersToFile(JPetWriter* writer)
 bool JPetParamManager::readParametersFromFile(std::string filename)
 {
   TFile file(filename.c_str(), "READ");
-  if (!file.IsOpen())
-  {
+  if (!file.IsOpen()) {
     ERROR("Could not read from file.");
     return false;
   }
-  fBank = static_cast<JPetParamBank*>(file.Get("ParamBank;1"));
-  if (!fBank)
-    return false;
+  fBank = static_cast<JPetParamBank*>(file.Get("ParamBank"));
+  if (!fBank) return false;
   return true;
 }
 
@@ -285,23 +242,20 @@ const JPetParamBank& JPetParamManager::getParamBank() const
 {
   DEBUG("getParamBank() from JPetParamManager");
   static JPetParamBank DummyResult(true);
-  if (fBank)
-    return *fBank;
-  else
-    return DummyResult;
+  if (fBank) return *fBank;
+  else return DummyResult;
 }
 
 bool JPetParamManager::saveParametersToFile(std::string filename)
 {
   TFile file(filename.c_str(), "UPDATE");
-  if (!file.IsOpen())
-  {
+  if (!file.IsOpen()) {
     ERROR("Could not write to file.");
     return false;
   }
   file.cd();
   assert(fBank);
-  file.WriteObject(fBank, "ParamBank");
+  file.WriteObject(fBank, "ParamBank;1");
   return true;
 }
 

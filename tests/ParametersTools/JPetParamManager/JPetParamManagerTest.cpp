@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(generateParamManagerForScopeCase)
   std::map<std::string, boost::any> opts;
   opts["inputFileType_std::string"] = std::string("scope");
   opts["localDB_std::string"] = std::string("unitTestData/JPetScopeLoaderTest/test_params.json");
-  opts["runId_int"] = int(1);
+  opts["runID_int"] = int(1);
   std::shared_ptr<JPetParamManager> paramMgr = JPetParamManager::generateParamManager(opts);
   BOOST_REQUIRE(paramMgr);
   BOOST_REQUIRE(!paramMgr->isNullObject());

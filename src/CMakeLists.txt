@@ -69,7 +69,7 @@ set_property(TARGET ROOT::Flags_CXX APPEND PROPERTY
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.50 REQUIRED 
+find_package(Boost 1.50 REQUIRED
              COMPONENTS filesystem
                         program_options
                         regex
@@ -98,15 +98,17 @@ if(Unpacker2_FOUND)
 else()
   include(ExternalProject)
   message(STATUS "Unpacker2 was not found..")
-  set(GITHUB_URL "https://github.com/JPETTomography/Unpacker2.git")
-  set(GIT_TAG "master")
+  #set(GITHUB_URL "https://github.com/JPETTomography/Unpacker2.git")
+  #set(GIT_TAG "master")
+  set(GITHUB_URL "https://github.com/kkacprzak/Unpacker2.git")
+  set(GIT_TAG "modular")
 
   message(STATUS "Adding external project to download and compile Unpacker2 from: ${GITHUB_URL} with tag: ${GIT_TAG}")
 
   configure_file(CMakeListsUnpacker2.txt.in
                  Unpacker2-download/CMakeLists.txt)
 
-  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -DPACKAGE_TESTS=OFF . 
+  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -DPACKAGE_TESTS=OFF .
                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/Unpacker2-download )
 
   execute_process(COMMAND ${CMAKE_COMMAND} --build .
@@ -138,10 +140,8 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetCommonTools/JPetCommonTools.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetData/JPetData.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetDataInterface/JPetDataInterface.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetGeomMapping/JPetGeomMapping.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetLogger/JPetLogger.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetManager/JPetManager.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetParamAndDataFactory/JPetParamAndDataFactory.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetProgressBarManager/JPetProgressBarManager.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetReader/JPetReader.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetScopeData/JPetScopeData.cpp
@@ -156,7 +156,6 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskLooper/JPetTaskLooper.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTimer/JPetTimer.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTreeHeader/JPetTreeHeader.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetUnpacker/JPetUnpacker.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetUserTask/JPetUserTask.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetWriter/JPetWriter.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetCachedFunction/JPetCachedFunction.cpp
@@ -188,22 +187,18 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionsGenerator/JPetOptionsTypeHandler.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionsTools/JPetOptionsTools.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionsTools/JPetOptionsTransformators.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetBarrelSlot/JPetBarrelSlot.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetBarrelSlot/JPetBarrelSlotFactory.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetFEB/JPetFEB.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetFEB/JPetFEBFactory.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetFrame/JPetFrame.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetFrame/JPetFrameFactory.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetLayer/JPetLayer.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetLayer/JPetLayerFactory.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetChannel/JPetChannel.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetChannel/JPetChannelFactory.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetPM/JPetPM.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetPM/JPetPMFactory.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetScin/JPetScin.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetScin/JPetScinFactory.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetTOMBChannel/JPetTOMBChannel.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetTOMBChannel/JPetTOMBChannelFactory.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetTRB/JPetTRB.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetTRB/JPetTRBFactory.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetSlot/JPetSlot.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetSlot/JPetSlotFactory.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetLayer/JPetLayer.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetLayer/JPetLayerFactory.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetSetup/JPetSetup.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetSetup/JPetSetupFactory.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamBank/JPetParamBank.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamGetter/JPetParamGetter.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamGetterAscii/JPetParamGetterAscii.cpp
@@ -217,8 +212,8 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetScopeLoader/JPetScopeLoader.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetScopeTask/JPetScopeTask.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetSimplePhysSignalReco/JPetSimplePhysSignalReco.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.cpp)
-
+            ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnzipTask/JPetUnzipTask.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnpackTask/JPetUnpackTask.cpp)
 
 get_target_property(DICTIONARY_INCLUDE_DIRS Unpacker2::Unpacker2 INTERFACE_INCLUDE_DIRECTORIES)
 foreach(dir ${FOLDERS_WITH_SOURCE})
@@ -241,15 +236,12 @@ set(HEADERS_WITH_DICTIONARY_REQUIRED
   JPetEvent/JPetEvent.h
   JPetStatistics/JPetStatistics.h
   JPetTreeHeader/JPetTreeHeader.h
-  JPetUnpacker/JPetUnpacker.h
+  JPetChannel/JPetChannel.h
   JPetPM/JPetPM.h
   JPetScin/JPetScin.h
-  JPetTRB/JPetTRB.h
-  JPetTOMBChannel/JPetTOMBChannel.h
   JPetLayer/JPetLayer.h
-  JPetBarrelSlot/JPetBarrelSlot.h
-  JPetFrame/JPetFrame.h
-  JPetFEB/JPetFEB.h
+  JPetSlot/JPetSlot.h
+  JPetSetup/JPetSetup.h
   JPetParamBank/JPetParamBank.h
   JPetMCHit/JPetMCHit.h
   JPetTimeWindowMC/JPetTimeWindowMC.h
@@ -258,7 +250,7 @@ set(HEADERS_WITH_DICTIONARY_REQUIRED
   JPetGeantDecayTree/JPetGeantDecayTree.h
   JPetGeantEventPack/JPetGeantEventPack.h
   JPetGeantEventInformation/JPetGeantEventInformation.h
-  )
+)
 
 set(LINKDEF_NAME JPetFramework_LinkDef.h)
 
@@ -296,7 +288,7 @@ target_link_libraries(JPetFramework PUBLIC Unpacker2::Unpacker2
                                            Boost::date_time
                                            Boost::thread
                                            Boost::chrono
-                                           ROOT::Core 
+                                           ROOT::Core
                                            ROOT::Physics
                                            ROOT::Hist
                                            ROOT::RIO
@@ -356,7 +348,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/JPetFrameworkConfig.cmake"
               "${CMAKE_CURRENT_BINARY_DIR}/JPetFrameworkConfigVersion.cmake"
         DESTINATION ${CMAKE_INSTALL_PREFIX}/cmake
         )
-        
+
 install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libJPetFramework_rdict.pcm"
               "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libJPetFramework.rootmap"
         DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -365,11 +357,11 @@ install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh"
         DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh" "${PROJECT_BINARY_DIR}/bin/thisframework.sh" COPYONLY) # mirror paths to be same as after make install
-configure_file("${PROJECT_BINARY_DIR}/src/JPetFrameworkConfig.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkConfig.cmake" COPYONLY) 
-configure_file("${PROJECT_BINARY_DIR}/src/JPetFrameworkConfigVersion.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkConfigVersion.cmake" COPYONLY) 
+configure_file("${PROJECT_BINARY_DIR}/src/JPetFrameworkConfig.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkConfig.cmake" COPYONLY)
+configure_file("${PROJECT_BINARY_DIR}/src/JPetFrameworkConfigVersion.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkConfigVersion.cmake" COPYONLY)
 export(EXPORT JPetFramework FILE JPetFrameworkTargets.cmake NAMESPACE JPetFramework::)
 add_custom_target(
   copy_target
   COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_BINARY_DIR}/src/JPetFrameworkTargets.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkTargets.cmake"
   DEPENDS "${PROJECT_BINARY_DIR}/src/JPetFrameworkTargets.cmake")
-add_dependencies(JPetFramework copy_target) 
+add_dependencies(JPetFramework copy_target)

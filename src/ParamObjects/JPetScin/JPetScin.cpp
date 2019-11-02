@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,95 +13,149 @@
  *  @file JPetScin.cpp
  */
 
+#include "JPetLoggerInclude.h"
 #include "JPetScin/JPetScin.h"
-
-#include <cassert>
 
 ClassImp(JPetScin);
 
-JPetScin::JPetScin() : fScinSize(0., 0., 0.) { SetName("JPetScin"); }
-
-JPetScin::JPetScin(int id) : fID(id), fScinSize(0., 0., 0.) { SetName("JPetScin"); }
-
-JPetScin::JPetScin(int id, float attenLen, float length, float height, float width) : fID(id), fAttenLen(attenLen), fScinSize(length, height, width)
+JPetScin::JPetScin()
 {
   SetName("JPetScin");
 }
 
-JPetScin::JPetScin(bool isNull) : fScinSize(0., 0., 0.), fIsNullObject(isNull) { SetName("JPetScin"); }
-
-JPetScin::~JPetScin() {}
-
-float JPetScin::getScinSize(JPetScin::Dimension dim) const
+JPetScin::JPetScin(
+  int id, float length, float height, float width,
+  float center_x, float center_y, float center_z):
+  fID(id), fLength(length), fHeight(height), fWidth(width),
+  fScinCenter(center_x, center_y, center_z)
 {
-  float value = 0;
-  switch (dim)
-  {
-  case kLength:
-    value = fScinSize.fLength;
-    break;
-  case kHeight:
-    value = fScinSize.fHeight;
-    break;
-  case kWidth:
-    value = fScinSize.fWidth;
-    break;
-  default:
-    assert(1 == 0);
-  }
-  return value;
+  SetName("JPetScin");
 }
 
-void JPetScin::setScinSize(JPetScin::Dimension dim, float value)
+JPetScin::JPetScin(const JPetScin &scin):
+  fID(scin.getID()), fLength(scin.getLength()),
+  fHeight(scin.getHeight()), fWidth(scin.getWidth()),
+  fScinCenter(scin.getCenterX(), scin.getCenterY(), scin.getCenterZ())
 {
-  switch (dim)
-  {
-  case kLength:
-    fScinSize.fLength = value;
-    break;
-  case kHeight:
-    fScinSize.fHeight = value;
-    break;
-  case kWidth:
-    fScinSize.fWidth = value;
-    break;
-  default:
-    assert(1 == 0);
+  SetName("JPetScin");
+}
+
+JPetScin::JPetScin(bool isNull): fIsNullObject(isNull)
+{
+  SetName("JPetScin");
+}
+
+JPetScin::~JPetScin(){}
+
+void JPetScin::setID(int id)
+{
+  fID = id;
+}
+
+void JPetScin::setLength(float length)
+{
+  fLength = length;
+}
+
+void JPetScin::setHeight(float height)
+{
+  fHeight = height;
+}
+
+void JPetScin::setWidth(float width)
+{
+  fWidth = width;
+}
+
+void JPetScin::setCenter(TVector3 center)
+{
+  fScinCenter = center;
+}
+
+void JPetScin::setCenterX(float centerX)
+{
+  fScinCenter[0] = centerX;
+}
+
+void JPetScin::setCenterY(float centerY)
+{
+  fScinCenter[1] = centerY;
+}
+
+void JPetScin::setCenterZ(float centerZ)
+{
+  fScinCenter[2] = centerZ;
+}
+
+void JPetScin::setSlot(JPetSlot& slot)
+{
+  fTRefSlot = &slot;
+}
+
+int JPetScin::getID() const
+{
+  return fID;
+}
+
+float JPetScin::getLength() const
+{
+  return fLength;
+}
+
+float JPetScin::getHeight() const
+{
+  return fHeight;
+}
+
+float JPetScin::getWidth() const
+{
+  return fWidth;
+}
+
+TVector3 JPetScin::getCenter() const
+{
+  return fScinCenter;
+}
+
+float JPetScin::getCenterX() const
+{
+  return fScinCenter.X();
+}
+
+float JPetScin::getCenterY() const
+{
+  return fScinCenter.Y();
+}
+
+float JPetScin::getCenterZ() const
+{
+  return fScinCenter.Z();
+}
+
+const JPetSlot& JPetScin::getSlot() const
+{
+  if (fTRefSlot.GetObject()) {
+    return static_cast<JPetSlot&>(*(fTRefSlot.GetObject()));
+  } else {
+    ERROR("No JPetSlot set, Null object will be returned");
+    return JPetSlot::getDummyResult();
   }
 }
 
-bool JPetScin::operator==(const JPetScin& scin) const { return getID() == scin.getID(); }
-
-bool JPetScin::operator!=(const JPetScin& scin) const { return getID() != scin.getID(); }
-
-int JPetScin::getID() const { return fID; }
-
-float JPetScin::getAttenLen() const { return fAttenLen; }
-
-JPetScin::ScinDimensions JPetScin::getScinSize() const { return fScinSize; }
-
-float JPetScin::getScinSize(Dimension dim) const;
-
-void JPetScin::setAttenLen(float attenLen) { fAttenLen = attenLen; }
-
-void JPetScin::setScinSize(ScinDimensions size) { fScinSize = size; }
-
-void JPetScin::setScinSize(Dimension dim, float value);
-
-void JPetScin::setBarrelSlot(JPetBarrelSlot& p_barrelSlot) { fTRefBarrelSlot = &p_barrelSlot; }
-
-JPetBarrelSlot& JPetScin::getBarrelSlot() const
+bool JPetScin::operator==(const JPetScin& scin) const
 {
-  if (fTRefBarrelSlot.GetObject())
-    return (JPetBarrelSlot&)*(fTRefBarrelSlot.GetObject());
-  else
-  {
-    ERROR("No JPetBarrelSlot slot set, Null object will be returned");
-    return JPetBarrelSlot::getDummyResult();
-  }
+  return this->getID() == scin.getID()
+    && this->getLength() == scin.getLength()
+    && this->getHeight() == scin.getHeight()
+    && this->getWidth() == scin.getWidth()
+    && this->getCenter() == scin.getCenter()
+    && this->getSlot() == scin.getSlot();
 }
 
-bool JPetScin::isNullObject() const { return fIsNullObject; }
+bool JPetScin::operator!=(const JPetScin& scin) const
+{
+  return !(*this == scin);
+}
 
 JPetScin& JPetScin::getDummyResult()
 {
@@ -109,4 +163,12 @@ JPetScin& JPetScin::getDummyResult()
   return DummyResult;
 }
 
-void JPetScin::clearTRefBarrelSlot() { fTRefBarrelSlot = NULL; }
+bool JPetScin::isNullObject() const
+{
+  return fIsNullObject;
+}
+
+void JPetScin::clearTRefSlot()
+{
+  fTRefSlot = NULL;
+}

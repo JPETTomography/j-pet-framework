@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -17,12 +17,13 @@
 #define BOOST_TEST_MODULE JPetSignalTest
 
 #include "JPetRawSignal/JPetRawSignal.h"
-#include "JPetBarrelSlot/JPetBarrelSlot.h"
+#include <boost/test/unit_test.hpp>
+#include "JPetSlot/JPetSlot.h"
 #include "JPetPM/JPetPM.h"
 
-#include <boost/test/unit_test.hpp>
-
 BOOST_AUTO_TEST_SUITE(ParamDataTS)
+
+float epsilon = 0.0001;
 
 BOOST_AUTO_TEST_CASE(GetNumberOfPointsTest)
 {
@@ -49,160 +50,168 @@ BOOST_AUTO_TEST_CASE(AddTrailingPointTest)
 
 BOOST_AUTO_TEST_CASE(GetVectorOfPointsTest)
 {
+  JPetChannel channel1(1, 2, 30.0);
+  JPetChannel channel2(2, 1, 80.0);
+  JPetSigCh sigCh1(JPetSigCh::Trailing, 8.0);
+  JPetSigCh sigCh2(JPetSigCh::Trailing, 17.0);
+  sigCh1.setChannel(channel1);
+  sigCh2.setChannel(channel2);
   JPetRawSignal signal;
-  JPetSigCh sigch1(JPetSigCh::Trailing, 8.f);
-  sigch1.setThreshold(100.f);
-  sigch1.setThresholdNumber(2);
-  JPetSigCh sigch2(JPetSigCh::Trailing, 17.f);
-  sigch2.setThreshold(200.f);
-  sigch2.setThresholdNumber(1);
-  signal.addPoint(sigch1);
-  signal.addPoint(sigch2);
-  BOOST_REQUIRE_EQUAL(signal.getPoints(JPetSigCh::Trailing, JPetRawSignal::ByThrNum).at(0).getValue(), 17.f);
-  BOOST_REQUIRE_EQUAL(signal.getPoints(JPetSigCh::Trailing, JPetRawSignal::ByThrValue).at(0).getValue(), 8.f);
-  BOOST_REQUIRE_EQUAL(signal.getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrValue).size(), 0u);
+  signal.addPoint(sigCh1);
+  signal.addPoint(sigCh2);
+  BOOST_REQUIRE_CLOSE(
+    signal.getPoints(JPetSigCh::Trailing, JPetRawSignal::ByThrNum).at(0).getTime(),
+    17.0, epsilon
+  );
+  BOOST_REQUIRE_CLOSE(
+    signal.getPoints(JPetSigCh::Trailing, JPetRawSignal::ByThrValue).at(0).getTime(),
+    8.0, epsilon
+  );
+  BOOST_REQUIRE_EQUAL(
+    signal.getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrValue).size(), 0
+  );
 }
 
 BOOST_AUTO_TEST_CASE(GetMapOfTimesVsThrNumTest)
 {
+  JPetChannel channel1(1, 1, 30.0);
+  JPetChannel channel2(2, 2, 50.0);
+  JPetChannel channel3(3, 3, 80.0);
+
+  JPetSigCh sigCh1(JPetSigCh::Trailing, 10.0);
+  JPetSigCh sigCh2(JPetSigCh::Trailing, 20.0);
+  JPetSigCh sigCh3(JPetSigCh::Trailing, 30.0);
+  sigCh1.setChannel(channel1);
+  sigCh2.setChannel(channel2);
+  sigCh3.setChannel(channel3);
+
   JPetRawSignal signal;
-  JPetSigCh sigch1(JPetSigCh::Trailing, 8.f);
-  sigch1.setThreshold(100.f);
-  sigch1.setThresholdNumber(1);
-  JPetSigCh sigch2(JPetSigCh::Trailing, 17.f);
-  sigch2.setThreshold(200.f);
-  sigch2.setThresholdNumber(2);
-  JPetSigCh sigch3(JPetSigCh::Trailing, 43.f);
-  sigch3.setThreshold(400.f);
-  sigch3.setThresholdNumber(4);
-  signal.addPoint(sigch1);
-  signal.addPoint(sigch2);
-  signal.addPoint(sigch3);
+  signal.addPoint(sigCh1);
+  signal.addPoint(sigCh2);
+  signal.addPoint(sigCh3);
+
   auto map = signal.getTimesVsThresholdNumber(JPetSigCh::Trailing);
-  BOOST_REQUIRE_EQUAL(map[sigch1.getThresholdNumber()], sigch1.getValue());
-  BOOST_REQUIRE_EQUAL(map[sigch2.getThresholdNumber()], sigch2.getValue());
-  BOOST_REQUIRE_EQUAL(map[sigch3.getThresholdNumber()], sigch3.getValue());
-  BOOST_REQUIRE_EQUAL(map[3], 0.f);
+  BOOST_REQUIRE_EQUAL(map[sigCh1.getChannel().getThresholdNumber()], sigCh1.getTime());
+  BOOST_REQUIRE_EQUAL(map[sigCh2.getChannel().getThresholdNumber()], sigCh2.getTime());
+  BOOST_REQUIRE_EQUAL(map[sigCh3.getChannel().getThresholdNumber()], sigCh3.getTime());
 }
 
 BOOST_AUTO_TEST_CASE(DoubledLeadingsEmptyMapNumberTest)
 {
+  JPetChannel channel1(1, 1, 30.0);
+  JPetChannel channel2(2, 1, 50.0);
+  JPetChannel channel3(3, 3, 80.0);
+
+  JPetSigCh sigCh1(JPetSigCh::Leading, 10.0);
+  JPetSigCh sigCh2(JPetSigCh::Leading, 20.0);
+  JPetSigCh sigCh3(JPetSigCh::Leading, 30.0);
+  sigCh1.setChannel(channel1);
+  sigCh2.setChannel(channel2);
+  sigCh3.setChannel(channel3);
+
   JPetRawSignal signal;
-  JPetSigCh sigch1(JPetSigCh::Leading, 8.f);
-  JPetSigCh sigch2(JPetSigCh::Leading, 17.f);
-  JPetSigCh sigch3(JPetSigCh::Leading, 43.f);
-  sigch1.setThreshold(100.f);
-  sigch1.setThresholdNumber(1);
-  sigch2.setThreshold(200.f);
-  sigch2.setThresholdNumber(1);
-  sigch3.setThreshold(400.f);
-  sigch3.setThresholdNumber(2);
-  signal.addPoint(sigch1);
-  signal.addPoint(sigch2);
-  signal.addPoint(sigch3);
-  auto map = signal.getTimesVsThresholdNumber(JPetSigCh::Leading);
-  BOOST_REQUIRE_EQUAL(map.size(), 0);
+  signal.addPoint(sigCh1);
+  signal.addPoint(sigCh2);
+  signal.addPoint(sigCh3);
+
+  auto map1 = signal.getTimesVsThresholdNumber(JPetSigCh::Leading);
+  BOOST_REQUIRE_EQUAL(map1.size(), 0);
+  auto map2 = signal.getTimesVsThresholdValue(JPetSigCh::Leading);
+  BOOST_REQUIRE_EQUAL(map2.size(), 0);
 }
 
-BOOST_AUTO_TEST_CASE(DoubledLeadingsEmptyMapValueTest)
+BOOST_AUTO_TEST_CASE(MapsOfTimesTest)
 {
-  JPetRawSignal signal;
-  JPetSigCh sigch1(JPetSigCh::Leading, 8.f);
-  JPetSigCh sigch2(JPetSigCh::Leading, 17.f);
-  JPetSigCh sigch3(JPetSigCh::Leading, 43.f);
-  sigch1.setThreshold(100.f);
-  sigch1.setThresholdNumber(1);
-  sigch2.setThreshold(200.f);
-  sigch2.setThresholdNumber(1);
-  sigch3.setThreshold(400.f);
-  sigch3.setThresholdNumber(2);
-  signal.addPoint(sigch1);
-  signal.addPoint(sigch2);
-  signal.addPoint(sigch3);
-  auto map = signal.getTimesVsThresholdValue(JPetSigCh::Leading);
-  BOOST_REQUIRE_EQUAL(map.size(), 0);
-}
+  JPetChannel channel1(1, 1, 30.0);
+  JPetChannel channel2(2, 2, 50.0);
+  JPetChannel channel3(3, 3, 80.0);
 
-BOOST_AUTO_TEST_CASE(GetMapOfTimesVsThrValueTest)
-{
-  JPetRawSignal signal;
-  JPetSigCh sigch1(JPetSigCh::Trailing, 8.f);
-  sigch1.setThreshold(100.f);
-  sigch1.setThresholdNumber(1);
-  JPetSigCh sigch2(JPetSigCh::Trailing, 17.f);
-  sigch2.setThreshold(200.f);
-  sigch2.setThresholdNumber(2);
-  JPetSigCh sigch3(JPetSigCh::Trailing, 43.f);
-  sigch3.setThreshold(400.f);
-  sigch3.setThresholdNumber(4);
-  signal.addPoint(sigch1);
-  signal.addPoint(sigch2);
-  signal.addPoint(sigch3);
-  auto map = signal.getTimesVsThresholdValue(JPetSigCh::Trailing);
-  BOOST_REQUIRE_EQUAL(map[1].first, sigch1.getThreshold());
-  BOOST_REQUIRE_EQUAL(map[1].second, sigch1.getValue());
-  BOOST_REQUIRE_EQUAL(map[2].first, sigch2.getThreshold());
-  BOOST_REQUIRE_EQUAL(map[2].second, sigch2.getValue());
-  BOOST_REQUIRE_EQUAL(map[4].first, sigch3.getThreshold());
-  BOOST_REQUIRE_EQUAL(map[4].second, sigch3.getValue());
-}
+  JPetSigCh sigChL1(JPetSigCh::Leading, 10.0);
+  JPetSigCh sigChT1(JPetSigCh::Trailing, 20.0);
+  JPetSigCh sigChL2(JPetSigCh::Leading, 12.0);
+  JPetSigCh sigChT2(JPetSigCh::Trailing, 22.0);
+  JPetSigCh sigChL3(JPetSigCh::Leading, 15.0);
+  JPetSigCh sigChT3(JPetSigCh::Trailing, 35.0);
+  sigChL1.setChannel(channel1);
+  sigChT1.setChannel(channel1);
+  sigChL2.setChannel(channel2);
+  sigChT2.setChannel(channel2);
+  sigChL3.setChannel(channel3);
+  sigChT3.setChannel(channel3);
 
-BOOST_AUTO_TEST_CASE(SetAndGetTRefPMObjectTest)
-{
   JPetRawSignal signal;
-  JPetPM pm;
-  signal.setPM(pm);
-  BOOST_CHECK(signal.getPM().getID() == JPetPM::SideA);
-}
+  signal.addPoint(sigChL1);
+  signal.addPoint(sigChT1);
+  signal.addPoint(sigChL2);
+  signal.addPoint(sigChT2);
+  signal.addPoint(sigChL3);
+  signal.addPoint(sigChT3);
 
-BOOST_AUTO_TEST_CASE(SetAndGetTRefBarrelSlotObjectTest)
-{
-  JPetRawSignal signal;
-  JPetBarrelSlot barrelSlot(2, true, "bs2", 30., 2);
-  signal.setBarrelSlot(barrelSlot);
-  BOOST_CHECK(signal.getBarrelSlot().getID() == 2);
+  auto mapL1 = signal.getTimesVsThresholdNumber(JPetSigCh::Leading);
+  auto mapT1 = signal.getTimesVsThresholdNumber(JPetSigCh::Trailing);
+  auto mapL2 = signal.getTimesVsThresholdValue(JPetSigCh::Leading);
+  auto mapT2 = signal.getTimesVsThresholdValue(JPetSigCh::Trailing);
+
+  BOOST_REQUIRE_CLOSE(mapL1[1], sigChL1.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapL1[2], sigChL2.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapL1[3], sigChL3.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapT1[1], sigChT1.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapT1[2], sigChT2.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapT1[3], sigChT3.getTime(), epsilon);
+
+  BOOST_REQUIRE_CLOSE(mapL2[1].first, sigChL1.getChannel().getThresholdValue(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapL2[2].first, sigChL2.getChannel().getThresholdValue(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapL2[3].first, sigChL3.getChannel().getThresholdValue(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapT2[1].first, sigChT1.getChannel().getThresholdValue(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapT2[2].first, sigChT2.getChannel().getThresholdValue(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapT2[3].first, sigChT3.getChannel().getThresholdValue(), epsilon);
+
+  BOOST_REQUIRE_CLOSE(mapL2[1].second, sigChL1.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapL2[2].second, sigChL2.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapL2[3].second, sigChL3.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapT2[1].second, sigChT1.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapT2[2].second, sigChT2.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(mapT2[3].second, sigChT3.getTime(), epsilon);
 }
 
 BOOST_AUTO_TEST_CASE(GetMapOfTOTsVsThrNumOrValueTest)
 {
+  JPetChannel channel1(1, 1, 30.0);
+  JPetChannel channel2(2, 2, 50.0);
+  JPetChannel channel3(3, 3, 80.0);
+
+  JPetSigCh sigCh1l(JPetSigCh::Leading, 10.0);
+  JPetSigCh sigCh1t(JPetSigCh::Trailing, 15.0);
+  JPetSigCh sigCh2l(JPetSigCh::Leading, 20.0);
+  JPetSigCh sigCh2t(JPetSigCh::Trailing, 25.0);
+  JPetSigCh sigCh3l(JPetSigCh::Leading, 30.0);
+  JPetSigCh sigCh3t(JPetSigCh::Trailing, 35.0);
+
+  sigCh1l.setChannel(channel1);
+  sigCh1t.setChannel(channel1);
+  sigCh2l.setChannel(channel2);
+  sigCh2t.setChannel(channel2);
+  sigCh3l.setChannel(channel3);
+  sigCh3t.setChannel(channel3);
+
   JPetRawSignal signal;
-  JPetSigCh sigch1t(JPetSigCh::Trailing, 8.f);
-  sigch1t.setThreshold(400.f);
-  sigch1t.setThresholdNumber(1);
-  JPetSigCh sigch2t(JPetSigCh::Trailing, 17.f);
-  sigch2t.setThreshold(50.f);
-  sigch2t.setThresholdNumber(2);
-  JPetSigCh sigch3t(JPetSigCh::Trailing, 43.f);
-  sigch3t.setThreshold(100.f);
-  sigch3t.setThresholdNumber(4);
-  JPetSigCh sigch1l(JPetSigCh::Leading, 8.f);
-  sigch1l.setThreshold(100.f);
-  sigch1l.setThresholdNumber(1);
-  JPetSigCh sigch2l(JPetSigCh::Leading, 17.f);
-  sigch2l.setThreshold(200.f);
-  sigch2l.setThresholdNumber(3);
-  JPetSigCh sigch3l(JPetSigCh::Leading, 43.f);
-  sigch3l.setThreshold(400.f);
-  sigch3l.setThresholdNumber(4);
-  signal.addPoint(sigch1t);
-  signal.addPoint(sigch2t);
-  signal.addPoint(sigch3t);
-  signal.addPoint(sigch1l);
-  signal.addPoint(sigch2l);
-  signal.addPoint(sigch3l);
-  auto map = signal.getTOTsVsThresholdNumber();
-  BOOST_REQUIRE_EQUAL(map.size(), 2u);
-  BOOST_REQUIRE_EQUAL(map[1], sigch1t.getValue() - sigch1l.getValue());
-  BOOST_REQUIRE_EQUAL(map[4], sigch3t.getValue() - sigch3l.getValue());
-  BOOST_REQUIRE_EQUAL(map.count(2), 0u);
-  BOOST_REQUIRE_EQUAL(map.count(3), 0u);
-  BOOST_CHECK_THROW(map.at(2), std::out_of_range);
+  signal.addPoint(sigCh1l);
+  signal.addPoint(sigCh1t);
+  signal.addPoint(sigCh2l);
+  signal.addPoint(sigCh2t);
+  signal.addPoint(sigCh3l);
+  signal.addPoint(sigCh3t);
+
+  auto map1 = signal.getTOTsVsThresholdNumber();
+  BOOST_REQUIRE_EQUAL(map1.size(), 3);
+  BOOST_REQUIRE_CLOSE(map1[1], sigCh1t.getTime() - sigCh1l.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(map1[2], sigCh2t.getTime() - sigCh2l.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(map1[3], sigCh3t.getTime() - sigCh3l.getTime(), epsilon);
   auto map2 = signal.getTOTsVsThresholdValue();
-  BOOST_REQUIRE_EQUAL(map2.size(), 2u);
-  BOOST_REQUIRE_EQUAL(map2[100.f], sigch3t.getValue() - sigch1l.getValue());
-  BOOST_REQUIRE_EQUAL(map2[400.f], sigch1t.getValue() - sigch3l.getValue());
-  BOOST_REQUIRE_EQUAL(map2.count(50.f), 0u);
-  BOOST_REQUIRE_EQUAL(map2.count(200.f), 0u);
+  BOOST_REQUIRE_EQUAL(map2.size(), 3);
+  BOOST_REQUIRE_CLOSE(map2[30.0], sigCh1t.getTime() - sigCh1l.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(map2[50.0], sigCh2t.getTime() - sigCh2l.getTime(), epsilon);
+  BOOST_REQUIRE_CLOSE(map2[80.0], sigCh3t.getTime() - sigCh3l.getTime(), epsilon);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

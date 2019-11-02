@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -15,15 +15,13 @@
  *  Reads oscilloscope ASCII data and procudes JPetRecoSignal structures.
  */
 
-#include "JPetScopeLoader/JPetScopeLoader.h"
-#include "JPetCommonTools/JPetCommonTools.h"
 #include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include "JPetScopeConfigParser/JPetScopeConfigParser.h"
+#include "JPetScopeLoader/JPetScopeLoader.h"
+#include "JPetCommonTools/JPetCommonTools.h"
 #include "JPetScopeData/JPetScopeData.h"
-
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
-
 #include <TSystem.h>
 
 using namespace std;
@@ -53,14 +51,14 @@ void JPetScopeLoader::addSubTask(std::unique_ptr<JPetTaskInterface> subTask)
 
 bool JPetScopeLoader::createInputObjects(const char*) { return true; }
 
-std::map<std::string, int> JPetScopeLoader::getPMPrefixToPMIdMap()
+std::map<std::string, int> JPetScopeLoader::getPMPrefixToPMIDMap()
 {
-  std::map<std::string, int> prefixToId;
+  std::map<std::string, int> prefixToID;
   for (const auto& pm : getParamBank().getPMs())
   {
-    prefixToId[pm.second->getDescription()] = pm.first;
+    prefixToID[pm.second->getDesc()] = pm.first;
   }
-  return prefixToId;
+  return prefixToID;
 }
 
 /**
@@ -68,7 +66,7 @@ std::map<std::string, int> JPetScopeLoader::getPMPrefixToPMIdMap()
  * the corresponding indces of the photomultipliers in the param bank.
  */
 std::map<std::string, int> JPetScopeLoader::createInputScopeFileNames(const std::string& inputPathToScopeFiles,
-                                                                      std::map<std::string, int> pmPref2Id) const
+                                                                      std::map<std::string, int> pmPref2ID) const
 {
   std::map<std::string, int> scopeFiles;
   path current_dir(inputPathToScopeFiles);
@@ -80,9 +78,9 @@ std::map<std::string, int> JPetScopeLoader::createInputScopeFileNames(const std:
       if (isCorrectScopeFileName(filename))
       {
         auto prefix = getFilePrefix(filename);
-        if (pmPref2Id.find(prefix) != pmPref2Id.end())
+        if (pmPref2ID.find(prefix) != pmPref2ID.end())
         {
-          int id = pmPref2Id.find(prefix)->second;
+          int id = pmPref2ID.find(prefix)->second;
           scopeFiles[iter->path().parent_path().string() + "/" + filename] = id;
         }
         else
@@ -143,7 +141,7 @@ bool JPetScopeLoader::run(const JPetDataInterface&)
   JPetScopeConfigParser confParser;
   auto opts = fParams.getOptions();
   auto config = confParser.getConfig(getScopeConfigFile(opts));
-  auto prefix2PM = getPMPrefixToPMIdMap();
+  auto prefix2PM = getPMPrefixToPMIDMap();
   auto inputScopeFiles = createInputScopeFileNames(getScopeInputDirectory(opts), prefix2PM);
   auto events = JPetScopeLoader::groupScopeFileNamesByTimeWindowIndex(inputScopeFiles);
 

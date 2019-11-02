@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,19 +16,18 @@
 #ifndef JPETGEANTPARSERTOOLS_H
 #define JPETGEANTPARSERTOOLS_H
 
-#include "JPetParamBank/JPetParamBank.h"
 #include <JPetGeantEventPack/JPetGeantEventPack.h>
 #include <JPetGeantScinHits/JPetGeantScinHits.h>
-#include <JPetGeomMapping/JPetGeomMapping.h>
-#include <JPetHit/JPetHit.h>
 #include <JPetMCDecayTree/JPetMCDecayTree.h>
+#include <JPetParamBank/JPetParamBank.h>
 #include <JPetMCHit/JPetMCHit.h>
+#include <JPetHit/JPetHit.h>
 #include <TRandom3.h>
-#include <array>
 #include <functional>
-#include <map>
+#include <array>
 #include <tuple>
 #include <vector>
+#include <map>
 
 #ifdef __CINT__
 //when cint is used instead of compiler, override word is not recognized
@@ -39,7 +38,7 @@
 class JPetGeantParserTools
 {
 public:
-  static JPetMCHit createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank );
+  static JPetMCHit createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank);
 
   static JPetHit reconstructHit(JPetMCHit& hit, const JPetParamBank& paramBank, const float timeShift);
 

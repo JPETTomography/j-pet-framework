@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -34,10 +34,6 @@ JPetGeantParser::~JPetGeantParser() {}
 
 bool JPetGeantParser::init()
 {
-
-  // create detector map
-  std::unique_ptr<JPetGeomMapping> fDetectorMap(new JPetGeomMapping(getParamBank()));
-
   fOutputEvents = new JPetTimeWindowMC("JPetHit", "JPetMCHit", "JPetMCDecayTree");
   auto opts = getOptions();
 
@@ -232,7 +228,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
 
 void JPetGeantParser::saveReconstructedHit(JPetHit recHit)
 {
-  recHit.setMCindex(fStoredMCHits.size());
+  // recHit.setMCindex(fStoredMCHits.size());
   fStoredHits.push_back(recHit);
 }
 

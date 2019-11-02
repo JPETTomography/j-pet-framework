@@ -20,8 +20,8 @@ ClassImp(JPetMCHit);
 
 JPetMCHit::JPetMCHit() {}
 
-JPetMCHit::JPetMCHit(UInt_t decayTreetId, UInt_t vertexId, float e, float t, const TVector3& pos, const TVector3& pol, const TVector3& mom)
-    : fMCDecayTreeIndex(decayTreetId), fMCVtxIndex(vertexId), fPolarization(pol), fMomentum(mom)
+JPetMCHit::JPetMCHit(UInt_t decayTreetID, UInt_t vertexID, float e, float t, const TVector3& pos, const TVector3& pol, const TVector3& mom)
+    : fMCDecayTreeIndex(decayTreetID), fMCVtxIndex(vertexID), fPolarization(pol), fMomentum(mom)
 {
   setEnergy(e);
   setTime(t);

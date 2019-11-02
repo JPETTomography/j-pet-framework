@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,18 +16,15 @@
 #ifndef JPETHIT_H
 #define JPETHIT_H
 
-#include "./JPetBarrelSlot/JPetBarrelSlot.h"
-#include "./JPetPhysSignal/JPetPhysSignal.h"
-#include "./JPetScin/JPetScin.h"
+#include "JPetPhysSignal/JPetPhysSignal.h"
+#include "JPetScin/JPetScin.h"
 #include "TVector3.h"
 #include "TObject.h"
 #include <cstddef>
 #include <utility>
 #include <TRef.h>
 
-class JPetBarrelSlot;
 class JPetPhysSignal;
-class JPetScin;
 
 /**
  * @brief Data class representing a reconstructed hit of a photon in the scintillator strip.
@@ -45,30 +42,30 @@ public:
   enum Signal { SideA, SideB };
   enum RecoFlag { Good, Corrupted, Unknown };
   JPetHit();
-  JPetHit(float Energy, float QualityOfEnergy, float Time, float QualityOfTime,
-          TVector3& Position, JPetPhysSignal& SignalA, JPetPhysSignal& SignalB,
-          JPetBarrelSlot& BarrelSlot, JPetScin& Scintillator);
+  JPetHit(
+    float energy, float qualityOfEnergy, float time, float qualityOfTime,
+    TVector3& position, JPetPhysSignal& signalA, JPetPhysSignal& signalB,
+    JPetScin& scin
+  );
   virtual ~JPetHit();
+
   JPetHit::RecoFlag getRecoFlag() const;
   float getEnergy() const;
   float getQualityOfEnergy() const;
-  float getTime() const ;
-  float getTimeDiff() const ;
+  float getTime() const;
+  float getTimeDiff() const;
   float getQualityOfTime() const;
-  float getQualityOfTimeDiff() const ;
+  float getQualityOfTimeDiff() const;
   float getPosX() const;
-  float getPosY() const ;
+  float getPosY() const;
   float getPosZ() const;
   float getPos(int index) const;
   const TVector3& getPos() const;
   const JPetPhysSignal& getSignal(Signal pos) const;
   const JPetPhysSignal& getSignalA() const;
   const JPetPhysSignal& getSignalB() const;
-  const JPetScin& getScintillator() const;
-  const JPetBarrelSlot& getBarrelSlot() const;
-  unsigned int getMCindex() const;
-  bool isSignalASet()const;
-  bool isSignalBSet()const;
+  const JPetScin& getScin() const;
+
   void setRecoFlag(JPetHit::RecoFlag flag);
   void setEnergy(float energy);
   void setQualityOfEnergy(float qualityOfEnergy);
@@ -76,19 +73,19 @@ public:
   void setQualityOfTime(float qualityOfTime);
   void setTimeDiff(float td);
   void setQualityOfTimeDiff(float qtd);
-  void setPosX(float x) ;
+  void setPosX(float x);
   void setPosY(float y);
-  void setPosZ(float z) ;
-  void setPos (float x, float y, float z) ;
-  void setBarrelSlot( JPetBarrelSlot& bs) ;
-  void setScintillator(JPetScin& sc) ;
-  void setSignals(const JPetPhysSignal& p_sigA, const JPetPhysSignal& p_sigB);
-  void setSignalA(const JPetPhysSignal& p_sig);
-  void setSignalB(const JPetPhysSignal& p_sig);
-  void setMCindex(unsigned int i);
+  void setPosZ(float z);
+  void setPos(float x, float y, float z);
+  void setSignals(const JPetPhysSignal& sigA, const JPetPhysSignal& sigB);
+  void setSignalA(const JPetPhysSignal& sig);
+  void setSignalB(const JPetPhysSignal& sig);
+  void setScin(JPetScin& scin);
+
+  bool isSignalASet()const;
+  bool isSignalBSet()const;
   bool checkConsistency() const;
   void Clear(Option_t* opt  = "");
-  static const unsigned int kMCindexError = 888888;
 
 private:
   RecoFlag fFlag = JPetHit::Unknown;
@@ -103,11 +100,9 @@ private:
   TVector3 fPos;
   JPetPhysSignal fSignalA;
   JPetPhysSignal fSignalB;
-  TRef fBarrelSlot = NULL;
-  TRef fScintillator = NULL;
-  unsigned int fMCindex = kMCindexError;
+  TRef fScin = NULL;
 
-  ClassDef(JPetHit, 8);
+  ClassDef(JPetHit, 9);
 };
 
 #endif /* !JPETHIT_H */

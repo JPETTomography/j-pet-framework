@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,38 +16,46 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetLORTest
 
+#include <boost/test/unit_test.hpp>
 #include "JPetLOR/JPetLOR.h"
 
-#include <boost/test/unit_test.hpp>
-
 BOOST_AUTO_TEST_SUITE(FirstSuite)
+
+float epsilon = 0.0001;
 
 BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetLOR lor;
   BOOST_REQUIRE_EQUAL(lor.getRecoFlag(), JPetLOR::Unknown);
-  BOOST_REQUIRE_EQUAL(lor.getTime(), 0.0f);
-  BOOST_REQUIRE_EQUAL(lor.getQualityOfTime(), 0.0f);
-  BOOST_REQUIRE_EQUAL(lor.isFromSameBarrelSlot(), true);
+  BOOST_REQUIRE_CLOSE(lor.getTime(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getQualityOfTime(), 0.0, epsilon);
+  BOOST_REQUIRE(lor.checkConsistency());
 }
 
 BOOST_AUTO_TEST_CASE(constructor)
 {
-  JPetBarrelSlot slot1(43, true, "", 0, 43);
-  JPetBarrelSlot slot2(44, true, "", 0, 44);
+  JPetScin scin1(1, 30.0, 15.0, 7.0, 1.0, -1.0, 1.0);
+  JPetScin scin2(2, 30.0, 15.0, 7.0, 2.0, -2.0, 2.0);
   JPetHit firstHit;
   JPetHit secondHit;
-  firstHit.setBarrelSlot(slot1);
-  secondHit.setBarrelSlot(slot2);
-  JPetLOR lor(8.5f, 4.5f, firstHit, secondHit);
-  BOOST_REQUIRE_EQUAL(lor.isFromSameBarrelSlot(), true);
-  float epsilon = 0.0001f;
-  BOOST_REQUIRE_CLOSE(lor.getTime(), 8.5f, epsilon);
-  BOOST_REQUIRE_CLOSE(lor.getQualityOfTime(), 4.5f, epsilon);
-  BOOST_REQUIRE_CLOSE(lor.getTimeDiff(), 0.f, epsilon);
-  BOOST_REQUIRE_EQUAL(lor.getQualityOfTimeDiff(), 0.f);
-  BOOST_REQUIRE_EQUAL(lor.isHitSet(0), 1);
-  BOOST_REQUIRE_EQUAL(lor.isHitSet(1), 1);
+  firstHit.setScin(scin1);
+  secondHit.setScin(scin2);
+  JPetLOR lor1(111.1, 11.1, firstHit, secondHit);
+  BOOST_REQUIRE_CLOSE(lor1.getTime(), 111.1, epsilon);
+  BOOST_REQUIRE_CLOSE(lor1.getQualityOfTime(), 11.1, epsilon);
+  BOOST_REQUIRE_CLOSE(lor1.getTimeDiff(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(lor1.getQualityOfTimeDiff(), 0.0, epsilon);
+  BOOST_REQUIRE(lor1.checkConsistency());
+  BOOST_REQUIRE(lor1.isHitSet(0));
+  BOOST_REQUIRE(lor1.isHitSet(1));
+  JPetLOR lor2(111.1, 11.1, 123.1, 12.3, firstHit, secondHit, JPetLOR::Good);
+  BOOST_REQUIRE_CLOSE(lor2.getTime(), 111.1, epsilon);
+  BOOST_REQUIRE_CLOSE(lor2.getQualityOfTime(), 11.1, epsilon);
+  BOOST_REQUIRE_CLOSE(lor2.getTimeDiff(), 123.1, epsilon);
+  BOOST_REQUIRE_CLOSE(lor2.getQualityOfTimeDiff(), 12.3, epsilon);
+  BOOST_REQUIRE(lor2.checkConsistency());
+  BOOST_REQUIRE(lor2.isHitSet(0));
+  BOOST_REQUIRE(lor2.isHitSet(1));
 }
 
 BOOST_AUTO_TEST_CASE(recoFlagSetterTest)
@@ -60,78 +68,131 @@ BOOST_AUTO_TEST_CASE(recoFlagSetterTest)
   BOOST_REQUIRE_EQUAL(lor.getRecoFlag(), JPetLOR::Corrupted);
 }
 
-BOOST_AUTO_TEST_CASE(hitTest)
+BOOST_AUTO_TEST_CASE(settersTest)
 {
+  JPetLOR lor;
+  lor.setTime(100.0);
+  BOOST_REQUIRE_CLOSE(lor.getTime(), 100.0, epsilon);
+  lor.setTime(200.0);
+  BOOST_REQUIRE_CLOSE(lor.getTime(), 200.0, epsilon);
+  lor.setQualityOfTime(1.5);
+  BOOST_REQUIRE_CLOSE(lor.getQualityOfTime(), 1.5, epsilon);
+  lor.setQualityOfTime(5.5);
+  BOOST_REQUIRE_CLOSE(lor.getQualityOfTime(), 5.5, epsilon);
+  lor.setTimeDiff(24.5);
+  BOOST_REQUIRE_CLOSE(lor.getTimeDiff(), 24.5, epsilon);
+  lor.setTimeDiff(57.5);
+  BOOST_REQUIRE_CLOSE(lor.getTimeDiff(), 57.5, epsilon);
+  lor.setQualityOfTimeDiff(2.3);
+  BOOST_REQUIRE_CLOSE(lor.getQualityOfTimeDiff(), 2.3, epsilon);
+  lor.setQualityOfTimeDiff(12.3);
+  BOOST_REQUIRE_CLOSE(lor.getQualityOfTimeDiff(), 12.3, epsilon);
+
+  BOOST_REQUIRE(!lor.isHitSet(0));
+  BOOST_REQUIRE(!lor.isHitSet(1));
+  JPetHit firstHit1;
+  JPetHit secondHit1;
+  JPetHit firstHit2;
+  JPetHit secondHit2;
+  firstHit1.setTime(111.1);
+  secondHit1.setTime(222.2);
+  firstHit2.setTime(333.3);
+  secondHit2.setTime(444.4);
+  lor.setHits(firstHit1, secondHit1);
+  BOOST_REQUIRE(lor.isHitSet(0));
+  BOOST_REQUIRE(lor.isHitSet(1));
+  BOOST_REQUIRE_CLOSE(lor.getFirstHit().getTime(), 111.1, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getSecondHit().getTime(), 222.2, epsilon);
+
+  lor.setFirstHit(firstHit2);
+  lor.setSecondHit(secondHit2);
+  BOOST_REQUIRE(lor.isHitSet(0));
+  BOOST_REQUIRE(lor.isHitSet(1));
+  BOOST_REQUIRE_CLOSE(lor.getFirstHit().getTime(), 333.3, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getSecondHit().getTime(), 444.4, epsilon);
+}
+
+BOOST_AUTO_TEST_CASE(consistency_check_test_1)
+{
+  // no hits set - true
+  JPetLOR lor;
+  BOOST_REQUIRE(lor.checkConsistency());
+}
+
+BOOST_AUTO_TEST_CASE(consistency_check_test_2)
+{
+  // hits from the same scintillator - false
+  JPetScin scin(1, 30.0, 15.0, 7.0, 1.0, -1.0, 1.0);
   JPetHit firstHit;
   JPetHit secondHit;
-  JPetLOR lor(8.5f, 4.5f, firstHit, secondHit);
-  BOOST_REQUIRE(lor.getFirstHit().getEnergy() == firstHit.getEnergy());
-  BOOST_REQUIRE(lor.getSecondHit().getEnergy() == firstHit.getEnergy());
-  JPetHit fh;
-  JPetHit sh;
-  JPetScin scin1(8);
-  JPetScin scin2(16);
-  fh.setScintillator(scin1);
-  sh.setScintillator(scin2);
-  lor.setHits(fh, sh);
-  BOOST_REQUIRE(lor.getFirstHit().getScintillator().getID() == fh.getScintillator().getID());
-  BOOST_REQUIRE(lor.getSecondHit().getScintillator().getID() == sh.getScintillator().getID());
-  JPetScin scin3(32);
-  JPetScin scin4(64);
-  fh.setScintillator(scin3);
-  sh.setScintillator(scin4);
-  lor.setFirstHit(fh);
-  lor.setSecondHit(sh);
-  BOOST_REQUIRE(lor.getFirstHit().getScintillator().getID() == fh.getScintillator().getID());
-  BOOST_REQUIRE(lor.getSecondHit().getScintillator().getID() == sh.getScintillator().getID());
-}
-
-BOOST_AUTO_TEST_CASE(timeDiffTest)
-{
+  firstHit.setScin(scin);
+  secondHit.setScin(scin);
   JPetLOR lor;
-  lor.setTimeDiff(111.f);
-  float epsilon = 0.0001f;
-  BOOST_REQUIRE_CLOSE(lor.getTimeDiff(), 111.f, epsilon);
-}
-
-BOOST_AUTO_TEST_CASE(qualityOfTimeTest)
-{
-  JPetLOR lor;
-  lor.setQualityOfTimeDiff(111.f);
-  float epsilon = 0.0001f;
-  BOOST_REQUIRE_CLOSE(lor.getQualityOfTime(), 111.f, epsilon);
-}
-
-BOOST_AUTO_TEST_CASE(timeTest)
-{
-  JPetLOR lor;
-  lor.setTime(111.f);
-  float epsilon = 0.0001f;
-  BOOST_REQUIRE_CLOSE(lor.getTime(), 111.f, epsilon);
-}
-
-BOOST_AUTO_TEST_CASE(consistency_check_test)
-{
-  JPetBarrelSlot slot1(43, true, "", 0, 43);
-  JPetBarrelSlot slot2(44, true, "", 0, 44);
-  JPetHit firstHit;
-  JPetHit secondHit;
-  firstHit.setBarrelSlot(slot1);
-  secondHit.setBarrelSlot(slot2);
-  JPetLOR lor(8.5f, 4.5f, firstHit, secondHit);
-  BOOST_REQUIRE_EQUAL(lor.isFromSameBarrelSlot(), true);
-  secondHit.setBarrelSlot(slot1);
-  lor.setSecondHit(secondHit);
-  BOOST_REQUIRE_EQUAL(lor.isFromSameBarrelSlot(), false);
-  secondHit.setBarrelSlot(slot2);
-  lor.setSecondHit(secondHit);
-  BOOST_REQUIRE_EQUAL(lor.isFromSameBarrelSlot(), true);
-  firstHit.setTime(10.001);
-  secondHit.setTime(10.002);
   lor.setHits(firstHit, secondHit);
-  BOOST_REQUIRE_EQUAL(lor.isFromSameBarrelSlot(), true);
-  lor.setHits(secondHit, firstHit);
-  BOOST_REQUIRE_EQUAL(lor.isFromSameBarrelSlot(), false);
+  BOOST_REQUIRE(!lor.checkConsistency());
+}
+
+BOOST_AUTO_TEST_CASE(consistency_check_test_3)
+{
+  // wrong time order - false
+  JPetScin scin1(1, 30.0, 15.0, 7.0, 1.0, -1.0, 1.0);
+  JPetScin scin2(2, 30.0, 15.0, 7.0, 2.0, -2.0, 2.0);
+  JPetHit firstHit;
+  JPetHit secondHit;
+  firstHit.setScin(scin1);
+  secondHit.setScin(scin2);
+  firstHit.setTime(500.0);
+  secondHit.setTime(100.0);
+  JPetLOR lor;
+  lor.setHits(firstHit, secondHit);
+  BOOST_REQUIRE(!lor.checkConsistency());
+}
+
+BOOST_AUTO_TEST_CASE(consistency_check_test_4)
+{
+  // all good - true
+  JPetScin scin1(1, 30.0, 15.0, 7.0, 1.0, -1.0, 1.0);
+  JPetScin scin2(2, 30.0, 15.0, 7.0, 2.0, -2.0, 2.0);
+  JPetHit firstHit;
+  JPetHit secondHit;
+  firstHit.setScin(scin1);
+  secondHit.setScin(scin2);
+  firstHit.setTime(100.0);
+  secondHit.setTime(200.0);
+  JPetLOR lor;
+  lor.setHits(firstHit, secondHit);
+  BOOST_REQUIRE(lor.checkConsistency());
+}
+
+BOOST_AUTO_TEST_CASE(clear_test)
+{
+  JPetScin scin1(1, 30.0, 15.0, 7.0, 1.0, -1.0, 1.0);
+  JPetScin scin2(2, 30.0, 15.0, 7.0, 2.0, -2.0, 2.0);
+  JPetHit firstHit;
+  JPetHit secondHit;
+  firstHit.setScin(scin1);
+  secondHit.setScin(scin2);
+  firstHit.setTime(100.0);
+  secondHit.setTime(200.0);
+  JPetLOR lor(111.1, 11.1, 123.1, 12.3, firstHit, secondHit, JPetLOR::Good);
+  lor.setHits(firstHit, secondHit);
+  BOOST_REQUIRE_EQUAL(lor.getRecoFlag(), JPetLOR::Good);
+  BOOST_REQUIRE_CLOSE(lor.getTime(), 111.1, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getQualityOfTime(), 11.1, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getTimeDiff(), 123.1, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getQualityOfTimeDiff(), 12.3, epsilon);
+  BOOST_REQUIRE(lor.checkConsistency());
+  BOOST_REQUIRE(lor.isHitSet(0));
+  BOOST_REQUIRE(lor.isHitSet(1));
+  lor.Clear();
+  BOOST_REQUIRE_EQUAL(lor.getRecoFlag(), JPetLOR::Unknown);
+  BOOST_REQUIRE_CLOSE(lor.getTime(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getQualityOfTime(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getTimeDiff(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getQualityOfTimeDiff(), 0.0, epsilon);
+  BOOST_REQUIRE(lor.checkConsistency());
+  BOOST_REQUIRE(!lor.isHitSet(0));
+  BOOST_REQUIRE(!lor.isHitSet(1));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

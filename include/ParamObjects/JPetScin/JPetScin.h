@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,70 +13,77 @@
  *  @file JPetScin.h
  */
 
-#ifndef _JPETSCIN_H_
-#define _JPETSCIN_H_
+#ifndef JPETSCIN_H
+#define JPETSCIN_H
 
-#include "./JPetBarrelSlot/JPetBarrelSlot.h"
-#include "./JPetLoggerInclude.h"
-#include "TNamed.h"
+#include "./JPetSlot/JPetSlot.h"
+#include <TVector3.h>
+#include <TNamed.h>
 #include <TRef.h>
 
 /**
  * @brief Representation of a scintillator.
  *
  * Parametric class representing database information of a scintillator in the
- * JPetBarrelSlot object.
+ * JPetSlot object.
  */
 class JPetScin: public TNamed
 {
 public:
-  enum Dimension {kLength, kHeight, kWidth};
-  struct ScinDimensions {
-    ScinDimensions(): fLength(0), fHeight(0), fWidth(0) {}
-    ScinDimensions(float len, float h, float w): fLength(len), fHeight(h), fWidth(w) {}
-    float fLength;
-    float fHeight;
-    float fWidth;
-  };
-
   JPetScin();
-  explicit JPetScin(int id);
+  JPetScin(
+    int id, float length, float height, float width,
+    float center_x, float center_y, float center_z
+  );
+  JPetScin(const JPetScin &scin);
   explicit JPetScin(bool isNull);
-  JPetScin(int id, float attenLen, float length, float height, float width);
-  ~JPetScin();
+  virtual ~JPetScin();
+
+  void setID(int id);
+  void setLength(float length);
+  void setHeight(float height);
+  void setWidth(float width);
+  void setCenter(TVector3 center);
+  void setCenterX(float centerX);
+  void setCenterY(float centerY);
+  void setCenterZ(float centerZ);
+  void setSlot(JPetSlot& slot);
+  int getID() const;
+  float getLength() const;
+  float getHeight() const;
+  float getWidth() const;
+  TVector3 getCenter() const;
+  float getCenterX() const;
+  float getCenterY() const;
+  float getCenterZ() const;
+  const JPetSlot& getSlot() const;
   bool operator==(const JPetScin& scin) const;
   bool operator!=(const JPetScin& scin) const;
-  int getID() const;
-  void setScinSize(ScinDimensions size);
-  void setScinSize(Dimension dim, float value);
-  void setAttenLen(float attenLen);
-  void setBarrelSlot(JPetBarrelSlot& p_barrelSlot);
-  float getAttenLen() const;
-  float getScinSize(Dimension dim) const;
-  ScinDimensions getScinSize() const;
-  JPetBarrelSlot& getBarrelSlot() const;
   static JPetScin& getDummyResult();
   bool isNullObject() const;
 
 protected:
-  void clearTRefBarrelSlot();
+  void clearTRefSlot();
 
 #ifndef __CINT__
-  int fID = 0;
-  float fAttenLen = 0.0;
-  ScinDimensions fScinSize;
+  int fID = -1;
+  float fLength = 0.0;
+  float fHeight = 0.0;
+  float fWidth = 0.0;
   bool fIsNullObject = false;
 #else
   int fID;
-  float fAttenLen;
-  ScinDimensions fScinSize;
+  float fLength;
+  float fHeight;
+  float fWidth;
   bool fIsNullObject;
 #endif
-  TRef fTRefBarrelSlot;
+  TVector3 fScinCenter;
+  TRef fTRefSlot;
 
   friend class JPetParamManager;
 
-  ClassDef(JPetScin, 5);
+  ClassDef(JPetScin, 6);
 };
 
-#endif /* !_JPETSCIN_H_ */
+#endif /* !JPETSCIN_H */
