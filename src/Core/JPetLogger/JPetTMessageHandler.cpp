@@ -13,33 +13,34 @@
  *  @file JPetTMessageHandler.cpp
  */
 
-#include "./JPetTMessageHandler.h"
+#include "JPetLogger/JPetTMessageHandler.h"
 #include "JPetLoggerInclude.h"
 #include <TBufferFile.h>
 #include <TSystem.h>
 #include <iostream>
 
-JPetTMessageHandler::JPetTMessageHandler() : TMessageHandler("TObject", true) { std::cout << "Handler added" << std::endl; }
+JPetTMessageHandler::JPetTMessageHandler() : TMessageHandler("TObject", true) {}
 
-JPetTMessageHandler::~JPetTMessageHandler() { std::cout << "Handler removed" << std::endl; }
-
+JPetTMessageHandler::~JPetTMessageHandler() {}
+/// TODO: exit execution of the analysis when unrecoverable error occurs.
 Bool_t JPetTMessageHandler::Notify()
 {
   switch (fMessId)
   {
   case 1001:
-    WARNING(gSystem->GetError());
+    WARNING("ROOT warning: " + std::string(gSystem->GetError()));
+    break;
   case 1002:
-    ERROR(gSystem->GetError());
+    ERROR("ROOT error: " + std::string(gSystem->GetError()));
     break;
   case 1003:
-    ERROR(gSystem->GetError());
+    ERROR("ROOT sysError: " + std::string(gSystem->GetError()));
     break;
   case 1004:
-    ERROR(gSystem->GetError());
+    ERROR("ROOT fatalError: " + std::string(gSystem->GetError()));
     break;
   default:
-    ERROR("UNKNOWN ROOT error: " + std::to_string(fMessId));
+    ERROR("UNKNOWN ROOT message id: " + std::to_string(fMessId) + ", message: " + std::string(gSystem->GetError()));
     break;
   }
   return true;

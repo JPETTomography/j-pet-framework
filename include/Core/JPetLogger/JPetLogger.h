@@ -17,12 +17,14 @@
 #define JPETLOGGER_H
 
 #include "JPetTMessageHandler.h"
+#include "JPetTextFileBackend.h"
 #include <fstream>
 #include <iostream>
 #include <ostream>
 #include <string>
 
 #ifndef __CINT__
+#include <boost/log/attributes/attribute_cast.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/sinks/text_ostream_backend.hpp>
 #include <boost/log/trivial.hpp>
@@ -52,6 +54,7 @@ public:
       isInitialized = true;
     }
     static boost::log::sources::severity_logger<boost::log::trivial::severity_level> sev;
+    static JPetTMessageHandler rootHandler;
     return sev;
   }
 
@@ -82,12 +85,11 @@ private:
 #ifndef __CINT__
   void init();
 
-  typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_file_backend> sink_t;
+  typedef boost::log::sinks::synchronous_sink<JPetTextFileBackend> sink_t;
   boost::shared_ptr<sink_t> sink;
 
   bool isThreadsEnabled = false;
 #endif
-  JPetTMessageHandler rootHandler;
 };
 
 #endif /* !JPETLOGGER_H */
