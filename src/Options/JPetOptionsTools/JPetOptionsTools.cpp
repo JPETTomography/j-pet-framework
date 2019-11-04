@@ -344,12 +344,13 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
     catch (pt::json_parser_error)
     {
       ERROR("ERROR IN READINIG OPTIONS FROM JSON FILE! FILENAME:" + filename);
-      return emptyMap;
+      throw std::invalid_argument("ERROR parsing json user params file! Aborting execution!");
     }
   }
   else
   {
     ERROR("JSON CONFIG FILE DOES NOT EXIST! FILENAME:" + filename);
+    throw std::invalid_argument("ERROR parsing json user params file, file does not exist! Aborting execution!");
   }
   return mapOptions;
 }
