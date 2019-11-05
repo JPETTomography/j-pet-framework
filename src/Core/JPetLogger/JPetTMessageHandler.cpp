@@ -35,9 +35,11 @@ Bool_t JPetTMessageHandler::Notify()
     break;
   case 1003:
     ERROR("ROOT sysError: " + std::string(gSystem->GetError()));
+    throw "ROOT sys error occured, aborting execution, please check the log!";
     break;
   case 1004:
     ERROR("ROOT fatalError: " + std::string(gSystem->GetError()));
+    throw "ROOT fatal error occured, aborting execution, please check the log!";
     break;
   default:
     ERROR("UNKNOWN ROOT message id: " + std::to_string(fMessId) + ", message: " + std::string(gSystem->GetError()));
