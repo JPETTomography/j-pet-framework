@@ -82,6 +82,8 @@ private:
   JPetLogger(const JPetLogger&);
   JPetLogger& operator=(const JPetLogger&);
 
+  const int kRotationSize = 10 * 1024 * 1024; // 10 * MiB, log will rotate after 10MiB
+
 #ifndef __CINT__
   void init();
 

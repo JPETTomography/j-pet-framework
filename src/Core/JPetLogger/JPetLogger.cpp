@@ -19,7 +19,7 @@ JPetLogger::JPetLogger() { init(); }
 
 void JPetLogger::init() {
   sink = boost::make_shared<sink_t>(boost::log::keywords::file_name = "JPet_%Y-%m-%d_%H-%M-%S.%N.log", boost::log::keywords::auto_flush = true,
-                                    boost::log::keywords::rotation_size = 10 * 1024 * 1024);
+                                    boost::log::keywords::rotation_size = kRotationSize);
   sink->set_formatter(&JPetLogger::formatter);
   boost::log::core::get()->add_sink(sink);
   boost::log::add_common_attributes();
