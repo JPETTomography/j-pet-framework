@@ -71,6 +71,8 @@ public:
   }
 
   static void setThreadsEnabled(bool value) { JPetLogger::getInstance().isThreadsEnabled = value; }
+
+  static void setRotationSize(unsigned int value) { JPetLogger::getInstance().backend->set_rotation_size(value); }
 #else
   void getSeverity();
   void formatter();
@@ -86,7 +88,7 @@ private:
 
 #ifndef __CINT__
   void init();
-
+  boost::shared_ptr<JPetTextFileBackend> backend;
   typedef boost::log::sinks::synchronous_sink<JPetTextFileBackend> sink_t;
   boost::shared_ptr<sink_t> sink;
 
