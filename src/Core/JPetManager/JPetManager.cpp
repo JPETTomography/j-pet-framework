@@ -50,7 +50,8 @@ void JPetManager::run(int argc, const char** argv)
                                                                             /// are working
   }
   JPetManager::registerDefaultTasks();
-  useTasksFromUserParams(allValidatedOptions);
+  useTasksFromUserParams(allValidatedOptions);  // add userTasks registered in userParams to run
+  checkDisableLogRotation(allValidatedOptions); // disable log rotation if enabled
   auto chainOfTasks = fTaskFactory.createTaskGeneratorChain(allValidatedOptions);
   JPetOptionsGenerator optionsGenerator;
   auto options = optionsGenerator.generateOptionsForTasks(allValidatedOptions, chainOfTasks.size());
@@ -153,5 +154,19 @@ void JPetManager::useTasksFromUserParams(const std::map<std::string, boost::any>
   for (unsigned int i = 0; i < useTasksValue.size(); i += 3)
   {
     useTask(useTasksValue[i], useTasksValue[i + 1], useTasksValue[i + 2]);
+  }
+}
+
+void JPetManager::checkDisableLogRotation(const std::map<std::string, boost::any>& opts)
+{
+  using namespace jpet_options_tools;
+  if (isOptionSet(opts, kDisableLogRotation))
+  {
+    bool fDisableLogRotation = getOptionAsBool(opts, kDisableLogRotation);
+    if (fDisableLogRotation)
+    {
+      INFO("Disabling log rotation size!");
+      JPetLogger::setRotationSize(UINT_MAX);
+    }
   }
 }

@@ -106,9 +106,17 @@ private:
    **/
   void useTasksFromUserParams(const std::map<std::string, boost::any>& opts);
 
+  /**
+   * @brief Disables log rotation if enabled
+   *
+   * By default log rotates after 10 MiB size, if this option is set to true, log won't rotate.
+   **/
+  void checkDisableLogRotation(const std::map<std::string, boost::any>& opts);
+
   JPetManager();
   bool fThreadsEnabled = false;
   jpet_task_factory::JPetTaskFactory fTaskFactory;
   const std::string kUseTasksFromParamsKey = "JPetManager_useTasks_std::vector<std::string>";
+  const std::string kDisableLogRotation = "JPetManager_DisableLogRotation_bool";
 };
 #endif /* !JPETMANAGER_H */
