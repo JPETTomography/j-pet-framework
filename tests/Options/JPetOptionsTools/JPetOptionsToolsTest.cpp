@@ -115,8 +115,7 @@ BOOST_AUTO_TEST_CASE(createConfigFileFromOptionsAndReadItBack)
 BOOST_AUTO_TEST_CASE(createOptionsFromConfigFileThatDoesNotExist)
 {
   auto inFile = "nonExistingTestCfg.json";
-  auto options = jpet_options_tools::createOptionsFromConfigFile(inFile);
-  BOOST_REQUIRE(options.empty());
+  BOOST_REQUIRE_THROW(jpet_options_tools::createOptionsFromConfigFile(inFile), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(createConfigFileFromEmptyMap)
@@ -130,8 +129,7 @@ BOOST_AUTO_TEST_CASE(createConfigFileFromEmptyMap)
 BOOST_AUTO_TEST_CASE(createOptionsFromConfigFileThatHasWrongFormat)
 {
   auto inFile = "unitTestData/JPetOptionsToolsTest/wrongInputFile.json";
-  auto options = jpet_options_tools::createOptionsFromConfigFile(inFile);
-  BOOST_REQUIRE_EQUAL(options.size(), 0);
+  BOOST_REQUIRE_THROW(jpet_options_tools::createOptionsFromConfigFile(inFile), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(checkIfGetOptionAndIsOptionWork)
