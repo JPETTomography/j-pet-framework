@@ -165,6 +165,7 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetHitUtils/JPetHitUtils.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetLOR/JPetLOR.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetPhysSignal/JPetPhysSignal.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetMatrixSignal/JPetMatrixSignal.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetRawSignal/JPetRawSignal.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetRecoSignal/JPetRecoSignal.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetSigCh/JPetSigCh.cpp
@@ -231,6 +232,7 @@ set(HEADERS_WITH_DICTIONARY_REQUIRED
   JPetRawSignal/JPetRawSignal.h
   JPetRecoSignal/JPetRecoSignal.h
   JPetPhysSignal/JPetPhysSignal.h
+  JPetMatrixSignal/JPetMatrixSignal.h
   JPetHit/JPetHit.h
   JPetLOR/JPetLOR.h
   JPetEvent/JPetEvent.h

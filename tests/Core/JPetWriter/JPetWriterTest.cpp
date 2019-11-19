@@ -16,11 +16,12 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetWriterTest
 
+#include "JPetMatrixSignal/JPetMatrixSignal.h"
+#include "JPetTimeWindow/JPetTimeWindow.h"
 #include "JPetBaseSignal/JPetBaseSignal.h"
 #include "JPetPhysSignal/JPetPhysSignal.h"
 #include "JPetRecoSignal/JPetRecoSignal.h"
 #include "JPetRawSignal/JPetRawSignal.h"
-#include "JPetTimeWindow/JPetTimeWindow.h"
 #include <boost/test/unit_test.hpp>
 #include "JPetReader/JPetReader.h"
 #include "JPetWriter/JPetWriter.h"
@@ -237,6 +238,24 @@ BOOST_AUTO_TEST_CASE(saving_different_objects7)
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
   const auto kHugeNumberOfObjects = 10000;
+  for (int i = 0; i < kHugeNumberOfObjects; i++) {
+    if (i % 1000 == 0) { std::cout << "*" << std::flush; }
+    JPetMatrixSignal testJPetMatrixSignal;
+    writer.write(testJJPetMatrixSignal);
+  }
+  writer.closeFile();
+  BOOST_REQUIRE(boost::filesystem::exists(fileTest));
+  JPetReader reader(fileTest);
+  BOOST_REQUIRE_EQUAL(reader.getNbOfAllEntries(), kHugeNumberOfObjects);
+  reader.closeFile();
+  if (boost::filesystem::exists(fileTest)) { boost::filesystem::remove(fileTest); }
+}
+
+BOOST_AUTO_TEST_CASE(saving_different_objects8)
+{
+  auto fileTest = "saving_different_objectsTest.root";
+  JPetWriter writer(fileTest);
+  const auto kHugeNumberOfObjects = 10000;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
     if (i % 1000 == 0)
@@ -253,7 +272,7 @@ BOOST_AUTO_TEST_CASE(saving_different_objects7)
     boost::filesystem::remove(fileTest);
 }
 
-BOOST_AUTO_TEST_CASE(saving_different_objects8)
+BOOST_AUTO_TEST_CASE(saving_different_objects9)
 {
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);

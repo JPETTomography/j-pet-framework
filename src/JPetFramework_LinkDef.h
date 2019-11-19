@@ -27,6 +27,8 @@
 #pragma link C++ function JPetWriter::Write(vector<JPetRawSignal>&);
 #pragma link C++ function JPetWriter::Write(JPetRecoSignal&);
 #pragma link C++ function JPetWriter::Write(vector<JPetRecoSignal>&);
+#pragma link C++ function JPetWriter::Write(JPetMatrixSignal&);
+#pragma link C++ function JPetWriter::Write(vector<JPetMatrixSignal>&);
 #pragma link C++ function JPetWriter::Write(JPetPhysSignal&);
 #pragma link C++ function JPetWriter::Write(vector<JPetPhysSignal>&);
 #pragma link C++ function JPetWriter::Write(JPetHit&);
@@ -53,6 +55,7 @@
 #pragma link C++ class JPetRawSignal+;
 #pragma link C++ class JPetRecoSignal+;
 #pragma link C++ class JPetPhysSignal+;
+#pragma link C++ class JPetMatrixSignal+;
 #pragma link C++ class JPetHit+;
 #pragma link C++ class JPetLOR+;
 #pragma link C++ class JPetEvent+;

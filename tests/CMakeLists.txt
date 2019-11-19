@@ -26,6 +26,7 @@ set(UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAna
                       ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetEventType/JPetEventTypeTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetHit/JPetHitTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetLOR/JPetLORTest.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetMatrixSignal/JPetMatrixSignalTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetPhysSignal/JPetPhysSignalTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetRawSignal/JPetRawSignalTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetRecoSignal/JPetRecoSignalTest.cpp
