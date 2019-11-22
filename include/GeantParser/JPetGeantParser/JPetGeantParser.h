@@ -101,10 +101,10 @@ protected :
   std::vector<float> fTimeDiffDistro = {};
   unsigned int fCurrentIndexTimeShift = 0;
 
-  unsigned int getNumberOfDecaysInWindow();
+  unsigned int getNumberOfDecaysInWindow() const;
   float getNextTimeShift();
   void clearTimeDistoOfDecays();
-  bool isTimeWindowFull();
+  bool isTimeWindowFull() const;
 };
 
 #endif

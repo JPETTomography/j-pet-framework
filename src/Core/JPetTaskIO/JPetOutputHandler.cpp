@@ -57,7 +57,9 @@ bool JPetOutputHandler::writeEventToFile(JPetTaskInterface* task)
     }
     else
     {
-      fWriter.write(*pOutputEntry);
+      if(pOutputEntry->getNumberOfEvents() > 0){
+        fWriter.write(*pOutputEntry);
+      }
     }
   }
   else
