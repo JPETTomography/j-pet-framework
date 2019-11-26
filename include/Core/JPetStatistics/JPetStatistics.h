@@ -60,9 +60,9 @@ public:
   void fillHistogram(const char* name, double xValue, doubleCheck yValue=doubleCheck(), doubleCheck zValue=doubleCheck());
   void fillSquareHistogram(const char* name, double xValue, doubleCheck yValue=doubleCheck());
   TEfficiency* getEffiHisto(const char* name);
-  TH1D* getHisto1D(const char* name);
-  TH2D* getHisto2D(const char* name);
-  TH3D* getHisto3D(const char* name);
+  TH1F* getHisto1D(const char* name);
+  TH2F* getHisto2D(const char* name);
+  TH3F* getHisto3D(const char* name);
   TGraph* getGraph(const char* name);
   TCanvas* getCanvas(const char* name);
   void createCounter(const char* name);
