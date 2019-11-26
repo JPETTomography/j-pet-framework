@@ -162,11 +162,11 @@ void JPetStatistics::fillSquareHistogram(const char* name, double xValue, double
 
 TEfficiency* JPetStatistics::getEffiHisto(const char* name) { return getObject<TEfficiency>(name); }
 
-TH1D* JPetStatistics::getHisto1D(const char* name) { return getObject<TH1D>(name); }
+TH1F* JPetStatistics::getHisto1D(const char* name) { return getObject<TH1F>(name); }
 
-TH2D* JPetStatistics::getHisto2D(const char* name) { return getObject<TH2D>(name); }
+TH2F* JPetStatistics::getHisto2D(const char* name) { return getObject<TH2F>(name); }
 
-TH3D* JPetStatistics::getHisto3D(const char* name) { return getObject<TH3D>(name); }
+TH3F* JPetStatistics::getHisto3D(const char* name) { return getObject<TH3F>(name); }
 
 TGraph* JPetStatistics::getGraph(const char* name) { return getObject<TGraph>(name); }
 
