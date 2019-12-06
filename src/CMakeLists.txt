@@ -69,7 +69,7 @@ set_property(TARGET ROOT::Flags_CXX APPEND PROPERTY
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.50 REQUIRED 
+find_package(Boost 1.50 REQUIRED
              COMPONENTS filesystem
                         program_options
                         regex
@@ -106,7 +106,7 @@ else()
   configure_file(CMakeListsUnpacker2.txt.in
                  Unpacker2-download/CMakeLists.txt)
 
-  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -DPACKAGE_TESTS=OFF . 
+  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -DPACKAGE_TESTS=OFF .
                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/Unpacker2-download )
 
   execute_process(COMMAND ${CMAKE_COMMAND} --build .
@@ -157,7 +157,6 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskLooper/JPetTaskLooper.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTimer/JPetTimer.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTreeHeader/JPetTreeHeader.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetUnpacker/JPetUnpacker.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetUserTask/JPetUserTask.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetWriter/JPetWriter.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetCachedFunction/JPetCachedFunction.cpp
@@ -218,7 +217,9 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetScopeLoader/JPetScopeLoader.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetScopeTask/JPetScopeTask.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetSimplePhysSignalReco/JPetSimplePhysSignalReco.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnzipAndUnpackTask/JPetUnzipAndUnpackTask.cpp)
+            ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnpackTask/JPetUnpackTask.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnzipTask/JPetUnzipTask.cpp
+)
 
 
 get_target_property(DICTIONARY_INCLUDE_DIRS Unpacker2::Unpacker2 INTERFACE_INCLUDE_DIRECTORIES)
@@ -242,7 +243,6 @@ set(HEADERS_WITH_DICTIONARY_REQUIRED
   JPetEvent/JPetEvent.h
   JPetStatistics/JPetStatistics.h
   JPetTreeHeader/JPetTreeHeader.h
-  JPetUnpacker/JPetUnpacker.h
   JPetPM/JPetPM.h
   JPetScin/JPetScin.h
   JPetTRB/JPetTRB.h
@@ -297,7 +297,7 @@ target_link_libraries(JPetFramework PUBLIC Unpacker2::Unpacker2
                                            Boost::date_time
                                            Boost::thread
                                            Boost::chrono
-                                           ROOT::Core 
+                                           ROOT::Core
                                            ROOT::Physics
                                            ROOT::Hist
                                            ROOT::RIO
@@ -357,7 +357,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/JPetFrameworkConfig.cmake"
               "${CMAKE_CURRENT_BINARY_DIR}/JPetFrameworkConfigVersion.cmake"
         DESTINATION ${CMAKE_INSTALL_PREFIX}/cmake
         )
-        
+
 install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libJPetFramework_rdict.pcm"
               "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libJPetFramework.rootmap"
         DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -366,11 +366,11 @@ install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh"
         DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/thisframework.sh" "${PROJECT_BINARY_DIR}/bin/thisframework.sh" COPYONLY) # mirror paths to be same as after make install
-configure_file("${PROJECT_BINARY_DIR}/src/JPetFrameworkConfig.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkConfig.cmake" COPYONLY) 
-configure_file("${PROJECT_BINARY_DIR}/src/JPetFrameworkConfigVersion.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkConfigVersion.cmake" COPYONLY) 
+configure_file("${PROJECT_BINARY_DIR}/src/JPetFrameworkConfig.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkConfig.cmake" COPYONLY)
+configure_file("${PROJECT_BINARY_DIR}/src/JPetFrameworkConfigVersion.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkConfigVersion.cmake" COPYONLY)
 export(EXPORT JPetFramework FILE JPetFrameworkTargets.cmake NAMESPACE JPetFramework::)
 add_custom_target(
   copy_target
   COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_BINARY_DIR}/src/JPetFrameworkTargets.cmake" "${PROJECT_BINARY_DIR}/cmake/JPetFrameworkTargets.cmake"
   DEPENDS "${PROJECT_BINARY_DIR}/src/JPetFrameworkTargets.cmake")
-add_dependencies(JPetFramework copy_target) 
+add_dependencies(JPetFramework copy_target)
