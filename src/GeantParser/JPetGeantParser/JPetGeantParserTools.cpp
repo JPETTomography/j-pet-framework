@@ -138,4 +138,3 @@ void JPetGeantParserTools::setSeedTogRandom(unsigned long seed)
     gRandom->SetSeed(seed);     
   }
 }
-

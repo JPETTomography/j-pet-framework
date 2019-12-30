@@ -68,8 +68,8 @@ bool JPetGeantParser::init()
   {
     fProcessSingleEventinWindow = getOptionAsBool(fParams.getOptions(), kProcessSingleEventinWindowParamKey);
   }
-  if (isOptionSet(fParams.getOptions(), kSeedParamKey )) {
-    fSeed = getOptionAsInt(fParams.getOptions(), kSeedParamKey );
+  if (isOptionSet(fParams.getOptions(), kSeedParamKey)) {
+    fSeed = getOptionAsInt(fParams.getOptions(), kSeedParamKey);
   }
   JPetGeantParserTools::setSeedTogRandom(fSeed);
 
