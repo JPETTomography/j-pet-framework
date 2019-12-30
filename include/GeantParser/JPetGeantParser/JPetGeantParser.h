@@ -50,7 +50,6 @@ public:
   virtual bool exec() override;
   virtual bool terminate() override;
 
-  unsigned long getSeedFromgRandom() const; 
   unsigned long getSeed() const; 
 
 protected :
