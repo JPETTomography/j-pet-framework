@@ -68,6 +68,11 @@ bool JPetGeantParser::init()
   {
     fProcessSingleEventinWindow = getOptionAsBool(fParams.getOptions(), kProcessSingleEventinWindowParamKey);
   }
+  if (isOptionSet(fParams.getOptions(), kSeedParamKey )) {
+    fSeed = getOptionAsInt(fParams.getOptions(), kSeedParamKey );
+  }
+  JPetGeantParserTools::setSeedTogRandom(fSeed);
+
   if (fMakeHisto)
     bookBasicHistograms();
   if (fMakeEffiHisto)
@@ -494,4 +499,9 @@ bool JPetGeantParser::isTimeWindowFull() const
   {
     return false;
   }
+}
+
+unsigned long JPetGeantParser::getSeed() const 
+{
+  return fSeed;
 }

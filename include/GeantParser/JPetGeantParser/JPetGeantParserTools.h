@@ -55,6 +55,9 @@ public:
   static std::tuple<std::vector<float>,std::vector<float>> getTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax);
   static std::pair<float, float> calculateEfficiency(ulong, ulong);
 
+  static void setSeedTogRandom(unsigned long seed);
+  static unsigned long getSeedFromgRandom();
+
 };
 
 #endif
