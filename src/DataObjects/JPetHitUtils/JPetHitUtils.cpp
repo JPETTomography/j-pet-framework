@@ -18,24 +18,24 @@
 
 const double JPetHitUtils::kUnset = -std::numeric_limits<float>::infinity();
 
-double JPetHitUtils::getTimeDiffAtThr(const JPetHit& hit, int thr) {
-  auto lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal()
-    .getTimesVsThresholdNumber(JPetSigCh::Leading);
-  auto lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal()
-    .getTimesVsThresholdNumber(JPetSigCh::Leading);
-  if(lead_times_B.count(thr) > 0 && lead_times_A.count(thr) > 0) {
-    return lead_times_A[thr] - lead_times_B[thr];
-  }
+double JPetHitUtils::getTimeDiffAtThr(const JPetHit&, int) {
+  // auto lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal()
+  //   .getTimesVsThresholdNumber(JPetSigCh::Leading);
+  // auto lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal()
+  //   .getTimesVsThresholdNumber(JPetSigCh::Leading);
+  // if(lead_times_B.count(thr) > 0 && lead_times_A.count(thr) > 0) {
+  //   return lead_times_A[thr] - lead_times_B[thr];
+  // }
   return kUnset;
 }
 
-double JPetHitUtils::getTimeAtThr(const JPetHit& hit, int thr) {
-  auto lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal()
-    .getTimesVsThresholdNumber(JPetSigCh::Leading);
-  auto lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal()
-    .getTimesVsThresholdNumber(JPetSigCh::Leading);
-  if(lead_times_B.count(thr) > 0 && lead_times_A.count(thr) > 0) {
-    return 0.5 * (lead_times_A[thr] + lead_times_B[thr]);
-  }
+double JPetHitUtils::getTimeAtThr(const JPetHit&, int) {
+  // auto lead_times_A = hit.getSignalA().getRecoSignal().getRawSignal()
+  //   .getTimesVsThresholdNumber(JPetSigCh::Leading);
+  // auto lead_times_B = hit.getSignalB().getRecoSignal().getRawSignal()
+  //   .getTimesVsThresholdNumber(JPetSigCh::Leading);
+  // if(lead_times_B.count(thr) > 0 && lead_times_A.count(thr) > 0) {
+  //   return 0.5 * (lead_times_A[thr] + lead_times_B[thr]);
+  // }
   return kUnset;
 }

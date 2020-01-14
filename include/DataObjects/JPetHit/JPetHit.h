@@ -16,7 +16,7 @@
 #ifndef JPETHIT_H
 #define JPETHIT_H
 
-#include "JPetPhysSignal/JPetPhysSignal.h"
+#include "JPetMatrixSignal/JPetMatrixSignal.h"
 #include "JPetScin/JPetScin.h"
 #include "TVector3.h"
 #include "TObject.h"
@@ -24,12 +24,12 @@
 #include <utility>
 #include <TRef.h>
 
-class JPetPhysSignal;
+class JPetMatrixSignal;
 
 /**
  * @brief Data class representing a reconstructed hit of a photon in the scintillator strip.
  *
- * Hit class contains two objects of type JPetPhysSignal (from "Side A" and "Side B"
+ * Hit class contains two objects of type JPetMatrixSignal (from "Side A" and "Side B"
  * of the Barrel) which represent signals at two ends of a scintillator strip,
  * from which the hit was reconstructed. Analyst can set the energy, time and position.
  * Agreed convention of units: energy [keV], time [ps], position [cm].
@@ -44,7 +44,7 @@ public:
   JPetHit();
   JPetHit(
     float energy, float qualityOfEnergy, float time, float qualityOfTime,
-    TVector3& position, JPetPhysSignal& signalA, JPetPhysSignal& signalB,
+    TVector3& position, JPetMatrixSignal& signalA, JPetMatrixSignal& signalB,
     JPetScin& scin
   );
   virtual ~JPetHit();
@@ -61,9 +61,9 @@ public:
   float getPosZ() const;
   float getPos(int index) const;
   const TVector3& getPos() const;
-  const JPetPhysSignal& getSignal(Signal pos) const;
-  const JPetPhysSignal& getSignalA() const;
-  const JPetPhysSignal& getSignalB() const;
+  const JPetMatrixSignal& getSignal(Signal pos) const;
+  const JPetMatrixSignal& getSignalA() const;
+  const JPetMatrixSignal& getSignalB() const;
   const JPetScin& getScin() const;
 
   void setRecoFlag(JPetHit::RecoFlag flag);
@@ -77,9 +77,9 @@ public:
   void setPosY(float y);
   void setPosZ(float z);
   void setPos(float x, float y, float z);
-  void setSignals(const JPetPhysSignal& sigA, const JPetPhysSignal& sigB);
-  void setSignalA(const JPetPhysSignal& sig);
-  void setSignalB(const JPetPhysSignal& sig);
+  void setSignals(const JPetMatrixSignal& sigA, const JPetMatrixSignal& sigB);
+  void setSignalA(const JPetMatrixSignal& sig);
+  void setSignalB(const JPetMatrixSignal& sig);
   void setScin(JPetScin& scin);
 
   bool isSignalASet()const;
@@ -98,8 +98,8 @@ private:
   bool fIsSignalAset = false;
   bool fIsSignalBset = false;
   TVector3 fPos;
-  JPetPhysSignal fSignalA;
-  JPetPhysSignal fSignalB;
+  JPetMatrixSignal fSignalA;
+  JPetMatrixSignal fSignalB;
   TRef fScin = NULL;
 
   ClassDef(JPetHit, 9);

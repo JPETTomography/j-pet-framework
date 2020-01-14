@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -29,7 +29,7 @@ class JPetMatrixSignal: public JPetBaseSignal
 {
 public:
   JPetMatrixSignal();
-  explicit JPetMatrixSignal(JPetPM::Side side, int scinID);
+  explicit JPetMatrixSignal(float time, float timeStdDev, float tot);
   virtual ~JPetMatrixSignal();
   bool isNullObject() const;
   explicit JPetMatrixSignal(bool isNull);
@@ -38,19 +38,13 @@ public:
   float getTimeStdDev() const;
   float getTOT() const;
   bool addRawSignal(const JPetRawSignal& rawSignal);
-  std::map<int, JPetRawSignal> getRawSignals();
-  int getScinID();
-  void setScinID(int scinID);
-  JPetPM::Side getMtxSide();
-  void setMtxSide(JPetPM::Side side);
+  std::map<int, JPetRawSignal> getRawSignals() const;
   void Clear(Option_t * opt = "");
 
 private:
   float fTime;
   float fTimeStdDev;
   float fTOT;
-  JPetPM::Side fMtxSide;
-  int fScinID;
   std::map<int, JPetRawSignal> fRawSignalsMap;
   void setSignalTimeAndTOT();
 

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -20,8 +20,8 @@ ClassImp(JPetMatrixSignal);
 
 JPetMatrixSignal::JPetMatrixSignal(): fTime(0), fTimeStdDev(0), fTOT(0) {}
 
-JPetMatrixSignal::JPetMatrixSignal(JPetPM::Side side, int scinID):
-  fTime(0.0), fTimeStdDev(0.0), fTOT(0.0), fMtxSide(side), fScinID(scinID) {}
+JPetMatrixSignal::JPetMatrixSignal(float time, float timeStdDev, float tot):
+  fTime(time), fTimeStdDev(timeStdDev), fTOT(tot) {}
 
 JPetMatrixSignal::~JPetMatrixSignal() {}
 
@@ -64,32 +64,9 @@ bool JPetMatrixSignal::addRawSignal(const JPetRawSignal& rawSignal)
   }
 }
 
-std::map<int, JPetRawSignal> JPetMatrixSignal::getRawSignals()
+std::map<int, JPetRawSignal> JPetMatrixSignal::getRawSignals() const
 {
   return fRawSignalsMap;
-}
-
-/**
- * @brief Obtain a reference to the PhotoMultiplier parametric object
- */
-int JPetMatrixSignal::getScinID()
-{
-    return fScinID;
-}
-
-void JPetMatrixSignal::setScinID(int scinID)
-{
-  fScinID = scinID;
-}
-
-JPetPM::Side JPetMatrixSignal::getMtxSide()
-{
-  return fMtxSide;
-}
-
-void JPetMatrixSignal::setMtxSide(JPetPM::Side side)
-{
-  fMtxSide = side;
 }
 
 /**
@@ -100,7 +77,6 @@ void JPetMatrixSignal::Clear(Option_t *)
   fTime = 0.0;
   fTimeStdDev = 0.0;
   fTOT = 0.0;
-  fScinID = -1;
 }
 
 /**

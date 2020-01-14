@@ -26,7 +26,7 @@ JPetHit::JPetHit(): TObject(), fFlag(JPetHit::Unknown) {}
  */
 JPetHit::JPetHit(
   float energy, float qualityOfEnergy, float time, float qualityOfTime,
-  TVector3& position, JPetPhysSignal& signalA, JPetPhysSignal& signalB,
+  TVector3& position, JPetMatrixSignal& signalA, JPetMatrixSignal& signalB,
   JPetScin& scin):
   TObject(), fFlag(JPetHit::Unknown), fEnergy(energy), fQualityOfEnergy(qualityOfEnergy),
   fTime(time), fQualityOfTime(qualityOfTime), fPos(position),
@@ -140,7 +140,7 @@ const TVector3& JPetHit::getPos() const
 /**
  * Get one of the signals, that construct this hit, from the side A or B
  */
-const JPetPhysSignal& JPetHit::getSignal(Signal sig) const
+const JPetMatrixSignal& JPetHit::getSignal(Signal sig) const
 {
   if (sig == SideA) return fSignalA;
   else return fSignalB;
@@ -149,7 +149,7 @@ const JPetPhysSignal& JPetHit::getSignal(Signal sig) const
 /**
  * Get the signal from the side A
  */
-const JPetPhysSignal& JPetHit::getSignalA() const
+const JPetMatrixSignal& JPetHit::getSignalA() const
 {
   return fSignalA;
 }
@@ -157,7 +157,7 @@ const JPetPhysSignal& JPetHit::getSignalA() const
 /**
  * Get the signal from the side B
  */
-const JPetPhysSignal& JPetHit::getSignalB() const
+const JPetMatrixSignal& JPetHit::getSignalB() const
 {
   return fSignalB;
 }
@@ -345,7 +345,7 @@ bool JPetHit::checkConsistency() const
 /**
  * Set both signals for this hit
  */
-void JPetHit::setSignals(const JPetPhysSignal& sigA, const JPetPhysSignal& sigB)
+void JPetHit::setSignals(const JPetMatrixSignal& sigA, const JPetMatrixSignal& sigB)
 {
   fSignalA = sigA;
   fIsSignalAset = true;
@@ -357,7 +357,7 @@ void JPetHit::setSignals(const JPetPhysSignal& sigA, const JPetPhysSignal& sigB)
 /**
  * Set signal A for this hit
  */
-void JPetHit::setSignalA(const JPetPhysSignal& sig)
+void JPetHit::setSignalA(const JPetMatrixSignal& sig)
 {
   fSignalA = sig;
   fIsSignalAset = true;
@@ -366,7 +366,7 @@ void JPetHit::setSignalA(const JPetPhysSignal& sig)
 /**
  * Set signal B for this hit
  */
-void JPetHit::setSignalB(const JPetPhysSignal& sig)
+void JPetHit::setSignalB(const JPetMatrixSignal& sig)
 {
   fSignalB = sig;
   fIsSignalBset = true;
@@ -384,8 +384,8 @@ void JPetHit::Clear(Option_t*)
   fTimeDiff = 0.0f;
   fQualityOfTimeDiff = 0.0f;
   fPos = TVector3();
-  fSignalA = JPetPhysSignal();
-  fSignalB = JPetPhysSignal();
+  fSignalA = JPetMatrixSignal();
+  fSignalB = JPetMatrixSignal();
   fIsSignalAset = false;
   fIsSignalBset = false;
   fScin = NULL;
