@@ -55,28 +55,6 @@ void JPetStatistics::createHistogramWithAxes(TObject* object, TString xAxisName,
   fStats.Add(object);
 }
 
-void JPetStatistics::createSquareHistogramWithAxes(TObject* object, TString xAxisName, TString yAxisName) 
-{ 
-  TClass *cl = object->IsA();
-  if( cl->InheritsFrom("TH1D") )
-  {
-    TH1D* tempHisto = dynamic_cast<TH1D*>(object);
-    tempHisto->GetXaxis()->SetTitle(xAxisName);
-    tempHisto->GetYaxis()->SetTitle(yAxisName);
-  }
-  else if( cl->InheritsFrom("TH2D") )
-  {
-    TH2D* tempHisto = dynamic_cast<TH2D*>(object);
-    tempHisto->GetXaxis()->SetTitle(xAxisName);
-    tempHisto->GetYaxis()->SetTitle(yAxisName);
-  }
-  fStats.Add(object);
-  std::string objName = object->GetName();
-  objName += "_Square";
-  createCanvas( new TCanvas( objName.c_str(), objName.c_str(), 800, 800 ) );
-}
-
-
 void JPetStatistics::createGraph(TObject* object) { fStats.Add(object); }
 
 void JPetStatistics::createCanvas(TObject* object) { fStats.Add(object); }
@@ -113,51 +91,6 @@ void JPetStatistics::fillHistogram(const char* name, double xValue, doubleCheck 
     else
         writeError(name, " does not received argument for Z axis" );
   }  
-}
-
-void JPetStatistics::fillSquareHistogram(const char* name, double xValue, doubleCheck yValue)
-{
-  TObject *tempObject = getObject<TObject>(name);
-  if( !tempObject )
-  {
-    writeError(name, " does not exist" );
-    return;
-  }
-  std::string canvasName = name;
-  canvasName += "_Square";
-  TCanvas *squareCanvas = getCanvas( canvasName.c_str() );
-  if( !squareCanvas )
-  {
-    writeError(name, " has not defined square Canvas for it" );
-    return;
-  }
-  
-  TClass *cl = tempObject->IsA();
-  if( cl->InheritsFrom("TH1D") )
-  {
-    TH1D* tempHisto = dynamic_cast<TH1D*>(tempObject);
-    tempHisto->Fill(xValue);
-    if( squareCanvas )
-    {
-        squareCanvas->cd();
-        tempHisto->Draw("");
-        squareCanvas->Update();
-    }
-  }
-  else if( cl->InheritsFrom("TH2D") )
-  {
-    TH2D* tempHisto = dynamic_cast<TH2D*>(tempObject);
-    if(yValue.isChanged)
-        tempHisto->Fill(xValue, yValue.value);
-    else
-        writeError(name, " does not received argument for Y axis" );
-    if( squareCanvas )
-    {
-        squareCanvas->cd();
-        tempHisto->Draw("colz");
-        squareCanvas->Update();
-    }
-  }
 }
 
 TEfficiency* JPetStatistics::getEffiHisto(const char* name) { return getObject<TEfficiency>(name); }

@@ -54,11 +54,9 @@ public:
   void createObject(TObject* object);
   void createHistogram(TObject* object);
   void createHistogramWithAxes(TObject* object, TString xAxisName="Default X axis title [unit]", TString yAxisName="Default Y axis title [unit]", TString zAxisName="Default Z axis title [unit]");
-  void createSquareHistogramWithAxes(TObject* object, TString xAxisName="Default X axis title [unit]", TString yAxisName="Default Y axis title [unit]");
   void createGraph(TObject* object);
   void createCanvas(TObject* object);
   void fillHistogram(const char* name, double xValue, doubleCheck yValue=doubleCheck(), doubleCheck zValue=doubleCheck());
-  void fillSquareHistogram(const char* name, double xValue, doubleCheck yValue=doubleCheck());
   TEfficiency* getEffiHisto(const char* name);
   TH1F* getHisto1D(const char* name);
   TH2F* getHisto2D(const char* name);
