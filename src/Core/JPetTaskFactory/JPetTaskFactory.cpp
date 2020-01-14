@@ -125,7 +125,7 @@ void addDefaultTasksFromOptions(
     auto paramBankTask = []() {
       return jpet_common_tools::make_unique<JPetParamBankHandlerTask>("ParamBank Filling");
     };
-    outChain.insert(outChain.end(), paramBankTask);
+    outChain.insert(outChain.begin(), paramBankTask);
 
   };
   addDefaultTasksFromOptions(options);

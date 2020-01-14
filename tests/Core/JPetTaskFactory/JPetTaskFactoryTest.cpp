@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(factory_mcGeant)
   JPetTaskFactory factory;
   std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("mcGeant")}};
   auto chain = factory.createTaskGeneratorChain(opts);
-  BOOST_REQUIRE_EQUAL(chain.size(), 1); // ParamBankHandler only, GeantParser is added the other way
+  BOOST_REQUIRE_EQUAL(chain.size(), 1); // ParamBankHandler, GeantParser is added in another way
 }
 
 BOOST_AUTO_TEST_CASE(factory_registerTask)
