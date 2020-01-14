@@ -72,6 +72,7 @@ bool JPetGeantParser::init()
     fSeed = getOptionAsInt(fParams.getOptions(), kSeedParamKey);
   }
   JPetGeantParserTools::setSeedTogRandom(fSeed);
+  INFO("Seed value used for resolution smearing of MC simulation data:"<< boost::lexical_cast<std::string>(fSeed));
 
   if (fMakeHisto)
     bookBasicHistograms();
