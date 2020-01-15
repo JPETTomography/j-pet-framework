@@ -50,7 +50,7 @@ public:
   virtual bool exec() override;
   virtual bool terminate() override;
 
-  unsigned long getSeed() const; 
+  unsigned long getOriginalSeed() const; 
 
 protected :
   JPetGeomMapping* fDetectorMap =  nullptr;

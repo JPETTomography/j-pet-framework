@@ -71,8 +71,8 @@ bool JPetGeantParser::init()
   if (isOptionSet(fParams.getOptions(), kSeedParamKey)) {
     fSeed = getOptionAsInt(fParams.getOptions(), kSeedParamKey);
   }
-  JPetGeantParserTools::setSeedTogRandom(fSeed);
-  INFO("Seed value used for resolution smearing of MC simulation data:"<< boost::lexical_cast<std::string>(fSeed));
+  JPetGeantParserTools::setSeedTogRandom(getOriginalSeed());
+  INFO("Seed value used for resolution smearing of MC simulation data:"<< boost::lexical_cast<std::string>(getOriginalSeed()));
 
   if (fMakeHisto)
     bookBasicHistograms();
@@ -502,7 +502,7 @@ bool JPetGeantParser::isTimeWindowFull() const
   }
 }
 
-unsigned long JPetGeantParser::getSeed() const 
+unsigned long JPetGeantParser::getOriginalSeed() const 
 {
   return fSeed;
 }
