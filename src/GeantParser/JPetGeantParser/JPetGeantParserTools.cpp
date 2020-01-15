@@ -119,3 +119,12 @@ std::pair<float, float> JPetGeantParserTools::calculateEfficiency(ulong n, ulong
     return std::make_pair(0, 0);
   }
 }
+
+void JPetGeantParserTools::setSeedTogRandom(unsigned long seed)
+{
+  if (!gRandom) {
+    ERROR("gRandom is not set and we cannot set the seed");
+  } else {
+    gRandom->SetSeed(seed);     
+  }
+}

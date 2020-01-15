@@ -50,6 +50,7 @@ public:
   virtual bool exec() override;
   virtual bool terminate() override;
 
+  unsigned long getOriginalSeed() const; 
 
 protected :
   JPetGeomMapping* fDetectorMap =  nullptr;
@@ -60,9 +61,8 @@ protected :
   double fMaxTime = 0.;
   double fMinTime = -50.e6; // electronic time window 50 micro seconds - true for run 3
   double fSimulatedActivity = 4.7; //< in MBq; value for run3
-
   double fExperimentalThreshold = 10; //< in keV
-
+  unsigned long fSeed = 0.;
 
   // internal variables
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";
@@ -72,6 +72,7 @@ protected :
   const std::string kMakeEfficienciesParamKey = "GeantParser_MakeEfficiencies_bool";
   const std::string kEnergyThresholdParamKey = "GeantParser_EnergyThreshold_double";
   const std::string kProcessSingleEventinWindowParamKey = "GeantParser_ProcessSingleEventInWindow_bool";
+  const std::string kSeedParamKey = "GeantParser_Seed_int";
 
   long fExpectedNumberOfEvents = 0;
   float fTimeShift = fMinTime;
