@@ -56,7 +56,6 @@ public:
   static std::pair<float, float> calculateEfficiency(ulong, ulong);
 
   static void setSeedTogRandom(unsigned long seed);
-  static unsigned long getSeedFromgRandom();
 
 };
 
