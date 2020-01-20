@@ -113,11 +113,5 @@ const THashTable* JPetStatistics::getStatsTable() const { return &fStats; }
 
 void JPetStatistics::writeError(const char* nameOfHistogram, const char* messageEnd )
 {
-  std::set<std::string>::iterator existenceCheck = fErrorCounts.find(std::string(nameOfHistogram));
-  if( existenceCheck == fErrorCounts.end() )
-  {
-    fErrorCounts.insert(std::string(nameOfHistogram));
-    ERROR(std::string("Histogram with name ") + std::string(nameOfHistogram) + std::string(messageEnd) );
-    std::cout << "!!![Error]!!!  -  Histogram with name " << nameOfHistogram  << " " << messageEnd << std::endl;
-  }
+  ERROR(std::string("Histogram with name ") + std::string(nameOfHistogram) + std::string(messageEnd) );
 }

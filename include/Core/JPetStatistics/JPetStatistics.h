@@ -30,12 +30,6 @@
 #include <map>
 #include <set>
 
-/**
- * @brief Cointainer class for processing statistics
- *
- * A class for storing statistics of the processing during the execution of a JPetTask.
- * Available for storing Graphs, Canvases and 1D, 2D Histograms,
- */
 class doubleCheck
 {
 public:
@@ -44,6 +38,13 @@ public:
   doubleCheck(){}
   doubleCheck(double newValue) {value=newValue; isChanged=true;}
 };
+
+/**
+ * @brief Cointainer class for processing statistics
+ *
+ * A class for storing statistics of the processing during the execution of a JPetTask.
+ * Available for storing Graphs, Canvases and 1D, 2D Histograms,
+ */
 
 class JPetStatistics: public TObject
 {
@@ -66,7 +67,6 @@ public:
   void createCounter(const char* name);
   double& getCounter(const char* name);
   void writeError(const char* nameOfHistogram, const char* messageEnd );
-  
 
   template <typename T>
   T* getObject(const char* name)
@@ -85,6 +85,5 @@ public:
 protected:
   THashTable fStats;
   std::map<TString, double> fCounters;
-  std::set<std::string> fErrorCounts;
 };
 #endif /* !_JPET_STATISTICS_H_ */
