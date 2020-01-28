@@ -74,6 +74,16 @@ std::map<std::string, std::string> JPetOptionsTypeHandler::anyMapToStringMap(con
         return result;
       }();
       break;
+    case JPetOptionsTypeHandler::kAllowedTypes::kVectorDouble:
+      newOptionsMap[option.first] = [&option]() -> std::string {
+        std::string result = "";
+        for (const auto& s : any_cast<std::vector<int>>(option.second))
+        {
+          result += std::to_string(s) + " ";
+        }
+        return result;
+      }();
+      break;
     default:
       WARNING("Cant convert " + typeOfOption + " to string map, skipping it");
       break;
@@ -107,6 +117,7 @@ std::map<std::string, int> JPetOptionsTypeHandler::getAllowedTypes()
     kAllowedTypesMap["std::string"] = JPetOptionsTypeHandler::kAllowedTypes::kString;
     kAllowedTypesMap["std::vector<std::string>"] = JPetOptionsTypeHandler::kAllowedTypes::kVectorString;
     kAllowedTypesMap["std::vector<int>"] = JPetOptionsTypeHandler::kAllowedTypes::kVectorInt;
+    kAllowedTypesMap["std::vector<double>"] = JPetOptionsTypeHandler::kAllowedTypes::kVectorDouble;
     kAllowedTypesMap["float"] = JPetOptionsTypeHandler::kAllowedTypes::kFloat;
     kAllowedTypesMap["double"] = JPetOptionsTypeHandler::kAllowedTypes::kDouble;
     kAllowedTypesMap["bool"] = JPetOptionsTypeHandler::kAllowedTypes::kBool;

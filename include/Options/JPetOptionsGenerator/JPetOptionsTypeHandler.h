@@ -35,6 +35,7 @@ public:
     kBool,
     kVectorString,
     kVectorInt,
+    kVectorDouble,
     kFloat,
     kDouble,
     kNoType
