@@ -198,13 +198,15 @@ BOOST_AUTO_TEST_CASE(getOptionBy)
 {
   std::vector<std::string> tmp = {"aa", "bb"};
   std::vector<int> intVector = {1, 2, 3};
+  std::vector<double> doubleVector = {1.5, 2.1, 0.8, 0.2};
   std::map<std::string, boost::any> opts = {{"my_string", std::string("my_value")},
                                             {"my_int", int(12)},
                                             {"my_float", float(12.5)},
                                             {"my_double", double(14.6)},
                                             {"my_bool", false},
                                             {"my_vectS", tmp},
-                                            {"my_intV", intVector}};
+                                            {"my_intV", intVector},
+                                            {"my_vectD", doubleVector}};
   BOOST_REQUIRE_EQUAL(getOptionAsString(opts, "my_string"), std::string("my_value"));
   BOOST_REQUIRE_EQUAL(getOptionAsInt(opts, "my_int"), 12);
   BOOST_REQUIRE_EQUAL(getOptionAsFloat(opts, "my_float"), 12.5);
@@ -212,6 +214,8 @@ BOOST_AUTO_TEST_CASE(getOptionBy)
   BOOST_REQUIRE(!getOptionAsVectorOfStrings(opts, "my_vectS").empty());
   BOOST_REQUIRE_EQUAL(getOptionAsVectorOfStrings(opts, "my_vectS").size(), 2u);
   BOOST_REQUIRE_EQUAL(getOptionAsVectorOfInts(opts, "my_intV").size(), 3u);
+  BOOST_REQUIRE(!getOptionAsVectorOfDoubles(opts, "my_vectD").empty());
+  BOOST_REQUIRE_EQUAL(getOptionAsVectorOfDoubles(opts, "my_vectD").size(), 4u);
   BOOST_REQUIRE_EQUAL(getOptionAsBool(opts, "my_bool"), false);
 }
 

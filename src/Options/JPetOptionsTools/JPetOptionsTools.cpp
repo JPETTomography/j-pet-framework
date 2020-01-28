@@ -115,6 +115,20 @@ std::vector<int> getOptionAsVectorOfInts(const OptsStrAny& opts, const std::stri
   }
 }
 
+std::vector<double> getOptionAsVectorOfDoubles(const OptsStrAny& opts, const std::string& optionName)
+{
+  try
+  {
+    return any_cast<std::vector<double>>(getOptionValue(opts, optionName));
+  }
+  catch (const std::exception& excep)
+  {
+    std::vector<double> emptyV;
+    ERROR("Bad option type:" + std::string(excep.what()));
+    return emptyV;
+  }
+}
+
 bool getOptionAsBool(const OptsStrAny& opts, const std::string& optionName)
 {
   try
