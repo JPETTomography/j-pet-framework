@@ -68,9 +68,27 @@ bool JPetGeantParser::init()
   {
     fProcessSingleEventinWindow = getOptionAsBool(fParams.getOptions(), kProcessSingleEventinWindowParamKey);
   }
+  
+  std::vector<double> timeSmearingParams;
+  if (isOptionSet(fParams.getOptions(), kTimeSmearingParametersParamKey)) {
+    timeSmearingParams = getOptionAsVectorOfDoubles(fParams.getOptions(), kTimeSmearingParametersParamKey);
+  }
+
+  std::vector<double> energySmearingParameters;
+  if (isOptionSet(fParams.getOptions(), kEnergySmearingParametersParamKey)) {
+    energySmearingParameters =  getOptionAsVectorOfDoubles(fParams.getOptions(), kEnergySmearingParametersParamKey);
+  }
+
+  std::vector<double> zPositionSmearingParameters;
+  if (isOptionSet(fParams.getOptions(), kZPositionSmearingParametersParamKey)) {
+    zPositionSmearingParameters =  getOptionAsVectorOfDoubles(fParams.getOptions(), kZPositionSmearingParametersParamKey);
+  }
+
+
   if (isOptionSet(fParams.getOptions(), kSeedParamKey)) {
     fSeed = getOptionAsInt(fParams.getOptions(), kSeedParamKey);
   }
+
   JPetGeantParserTools::setSeedTogRandom(getOriginalSeed());
   INFO("Seed value used for resolution smearing of MC simulation data:"<< boost::lexical_cast<std::string>(getOriginalSeed()));
 
