@@ -74,6 +74,21 @@ bool JPetGeantParser::init()
     timeSmearingParams = getOptionAsVectorOfDoubles(fParams.getOptions(), kTimeSmearingParametersParamKey);
   }
 
+  std::string timeSmearingFormula;
+  if (isOptionSet(fParams.getOptions(), kTimeSmearingFunctionParamKey)) {
+    timeSmearingFormula = getOptionAsString(fParams.getOptions(), kTimeSmearingFunctionParamKey);
+  }
+
+  std::string energySmearingFormula;
+  if (isOptionSet(fParams.getOptions(), kEnergySmearingFunctionParamKey)) {
+    energySmearingFormula = getOptionAsString(fParams.getOptions(), kEnergySmearingFunctionParamKey);
+  }
+
+  std::string zPositionSmearingFormula;
+  if (isOptionSet(fParams.getOptions(), kZPositionSmearingParametersParamKey)) {
+    zPositionSmearingFormula = getOptionAsString(fParams.getOptions(), kZPositionSmearingParametersParamKey);
+  }
+
   std::vector<double> energySmearingParameters;
   if (isOptionSet(fParams.getOptions(), kEnergySmearingParametersParamKey)) {
     energySmearingParameters =  getOptionAsVectorOfDoubles(fParams.getOptions(), kEnergySmearingParametersParamKey);
