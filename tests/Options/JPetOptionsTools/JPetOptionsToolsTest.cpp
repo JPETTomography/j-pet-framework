@@ -214,7 +214,15 @@ BOOST_AUTO_TEST_CASE(getOptionBy)
   BOOST_REQUIRE(!getOptionAsVectorOfStrings(opts, "my_vectS").empty());
   BOOST_REQUIRE_EQUAL(getOptionAsVectorOfStrings(opts, "my_vectS").size(), 2u);
   BOOST_REQUIRE_EQUAL(getOptionAsVectorOfInts(opts, "my_intV").size(), 3u);
-  BOOST_REQUIRE(!getOptionAsVectorOfDoubles(opts, "my_vectD").empty());
+
+  double epsilon = 0.001;
+  auto res = getOptionAsVectorOfDoubles(opts, "my_vectD");
+  BOOST_REQUIRE(!res.empty());
+  BOOST_REQUIRE_CLOSE(res[0], 1.5, epsilon);
+  BOOST_REQUIRE_CLOSE(res[1], 2.1, epsilon);
+  BOOST_REQUIRE_CLOSE(res[2], 0.8, epsilon);
+  BOOST_REQUIRE_CLOSE(res[3], 0.2, epsilon);
+
   BOOST_REQUIRE_EQUAL(getOptionAsVectorOfDoubles(opts, "my_vectD").size(), 4u);
   BOOST_REQUIRE_EQUAL(getOptionAsBool(opts, "my_bool"), false);
 }
