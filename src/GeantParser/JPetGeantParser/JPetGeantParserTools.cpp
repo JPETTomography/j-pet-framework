@@ -38,12 +38,14 @@ JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, con
   return mcHit;
 }
 
-JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBank& paramBank, const float timeShift)
+JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBank& paramBank, const float timeShift, const JPetHitExperimentalParametrizer& parametrizer)
 {
   JPetHit hit = dynamic_cast<JPetHit&>(mcHit);
   auto scinID = mcHit.getScintillator().getID();
+  //hit.setEnergy(parametrizer.addEnergySmearing(scinID, mcHit.getPosZ() ,mcHit.getEnergy()) );
   hit.setEnergy( JPetSmearingFunctions::addEnergySmearing(scinID, mcHit.getPosZ() ,mcHit.getEnergy()) );
   // adjust to time window and smear
+  //hit.setTime(parametrizer.addTimeSmearing(scinID, mcHit.getPosZ() ,mcHit.getEnergy() , -(mcHit.getTime() - timeShift)) );
   hit.setTime(JPetSmearingFunctions::addTimeSmearing(scinID, mcHit.getPosZ() ,mcHit.getEnergy() , -(mcHit.getTime() - timeShift)) );
 
   auto radius = paramBank.getScintillator(scinID).getBarrelSlot().getLayer().getRadius();
@@ -51,6 +53,7 @@ JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBa
   hit.setPosX(radius * std::cos(theta));
   hit.setPosY(radius * std::sin(theta));
   hit.setPosZ( JPetSmearingFunctions::addZHitSmearing(scinID, hit.getPosZ(), mcHit.getEnergy()) );
+  //hit.setPosZ( parametrizer.addZHitSmearing(scinID, hit.getPosZ(), mcHit.getEnergy()) );
 
   return hit;
 }

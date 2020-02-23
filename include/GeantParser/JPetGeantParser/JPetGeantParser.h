@@ -17,6 +17,7 @@
 #define JPETGEANTPARSER_H
 
 #include <JPetGeantEventPack/JPetGeantEventPack.h>
+#include <JPetSmearingFunctions/JPetSmearingFunctionsNew.h>
 #include <JPetGeantScinHits/JPetGeantScinHits.h>
 #include <JPetGeomMapping/JPetGeomMapping.h>
 #include <JPetHit/JPetHit.h>
@@ -63,6 +64,8 @@ protected :
   double fSimulatedActivity = 4.7; //< in MBq; value for run3
   double fExperimentalThreshold = 10; //< in keV
   unsigned long fSeed = 0.;
+
+  JPetHitExperimentalParametrizer fExperimentalParametrizer;
 
   // internal variables
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";

@@ -30,6 +30,8 @@
 #include <tuple>
 #include <vector>
 
+#include "JPetSmearingFunctions/JPetSmearingFunctionsNew.h"
+
 #ifdef __CINT__
 //when cint is used instead of compiler, override word is not recognized
 //nevertheless it's needed for checking if the structure of project is correct
@@ -41,7 +43,7 @@ class JPetGeantParserTools
 public:
   static JPetMCHit createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank );
 
-  static JPetHit reconstructHit(JPetMCHit& hit, const JPetParamBank& paramBank, const float timeShift);
+  static JPetHit reconstructHit(JPetMCHit& hit, const JPetParamBank& paramBank, const float timeShift, const JPetHitExperimentalParametrizer& parametrizer);
 
   static bool isHitReconstructed(JPetHit& hit, const float th);
 

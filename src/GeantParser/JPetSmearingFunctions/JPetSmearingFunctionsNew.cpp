@@ -17,6 +17,30 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, double eneIn) const
+{
+  //fSmearingFunctionsNew.getFunZHitSmearing()->SetParameters(double(scinID),zIn,eneIn);
+  //fSmearingFunctionsNew.getFunZHitSmearing()->SetRange(zIn-5.,zIn+5.);
+  //return fSmearingFunctionsNew.getFunZHitSmearing()->GetRandom();
+  return 0;
+}
+
+double JPetHitExperimentalParametrizer::addEnergySmearing(int scinID, double zIn, double eneIn) const
+{
+  //fSmearingFunctionsNew.getFunEnergySmearing()->SetParameters(double(scinID),zIn,eneIn);
+  //fSmearingFunctionsNew.getFunEnergySmearing()->SetRange(eneIn-100.,eneIn+100.);
+  //return fSmearingFunctionsNew.getFunEnergySmearing()->GetRandom();
+  return 0;
+}
+
+double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn) const
+{
+  //fSmearingFunctionsNew.getFunTimeHitSmearing()->SetParameters(double(scinID),zIn,eneIn,timeIn);
+  //fSmearingFunctionsNew.getFunTimeHitSmearing()->SetRange(timeIn-300.,timeIn+300.);
+  //return fSmearingFunctionsNew.getFunTimeHitSmearing()->GetRandom();
+  return 0;
+}
+
 JPetSmearingFunctionsNewContainer JPetSmearingFunctionsNew::fSmearingFunctionsNew = JPetSmearingFunctionsNewContainer();
 
 JPetSmearingFunctionsNewContainer::JPetSmearingFunctionsNewContainer()

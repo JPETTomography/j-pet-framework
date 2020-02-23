@@ -18,6 +18,15 @@
 
 #include <TF1.h>
 
+class JPetHitExperimentalParametrizer
+{
+  public:
+  JPetHitExperimentalParametrizer()=default;
+  double addEnergySmearing(int scinID, double zIn, double eneIn) const;
+  double addZHitSmearing(int scinID, double zIn, double eneIn) const;
+  double addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn) const;
+};
+
 
 #ifdef __CINT__
 //when cint is used instead of compiler, override word is not recognized

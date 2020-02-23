@@ -98,6 +98,7 @@ bool JPetGeantParser::init()
   if (isOptionSet(fParams.getOptions(), kZPositionSmearingParametersParamKey)) {
     zPositionSmearingParameters =  getOptionAsVectorOfDoubles(fParams.getOptions(), kZPositionSmearingParametersParamKey);
   }
+  ///
 
 
   if (isOptionSet(fParams.getOptions(), kSeedParamKey)) {
@@ -200,7 +201,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     if (fMakeHisto)
       fillHistoMCGen(mcHit);
     // create reconstructed hit and add all smearings
-    JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), timeShift);
+    JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), timeShift, fExperimentalParametrizer);
 
     // add criteria for possible rejection of reconstructed events (e.g. E>50 keV)
     if (JPetGeantParserTools::isHitReconstructed(recHit, fExperimentalThreshold))
