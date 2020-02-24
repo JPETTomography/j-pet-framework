@@ -69,9 +69,9 @@ bool JPetGeantParser::init()
     fProcessSingleEventinWindow = getOptionAsBool(fParams.getOptions(), kProcessSingleEventinWindowParamKey);
   }
   
-  std::vector<double> timeSmearingParams;
+  std::vector<double> timeSmearingParameters;
   if (isOptionSet(fParams.getOptions(), kTimeSmearingParametersParamKey)) {
-    timeSmearingParams = getOptionAsVectorOfDoubles(fParams.getOptions(), kTimeSmearingParametersParamKey);
+    timeSmearingParameters = getOptionAsVectorOfDoubles(fParams.getOptions(), kTimeSmearingParametersParamKey);
   }
 
   std::string timeSmearingFormula;
@@ -98,8 +98,8 @@ bool JPetGeantParser::init()
   if (isOptionSet(fParams.getOptions(), kZPositionSmearingParametersParamKey)) {
     zPositionSmearingParameters =  getOptionAsVectorOfDoubles(fParams.getOptions(), kZPositionSmearingParametersParamKey);
   }
-  ///
 
+  fExperimentalParametrizer.setSmearingFunctions({{timeSmearingFormula, timeSmearingParameters}, {energySmearingFormula, energySmearingParameters}, {zPositionSmearingFormula, zPositionSmearingParameters}});
 
   if (isOptionSet(fParams.getOptions(), kSeedParamKey)) {
     fSeed = getOptionAsInt(fParams.getOptions(), kSeedParamKey);
