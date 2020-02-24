@@ -10,67 +10,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *  @file JPetSmearingFunctions.h
+ *  @file JPetSmearingFunctionsNewNew.h
  */
 
-#ifndef JPETSMEARINGFUNCTIONS_H
-#define JPETSMEARINGFUNCTIONS_H
+#ifndef JPETSMEARINGFUNCTIONSNEW_H
+#define JPETSMEARINGFUNCTIONSNEW_H
 
 #include <TF1.h>
 
 
-#ifdef __CINT__
-//when cint is used instead of compiler, override word is not recognized
-//nevertheless it's needed for checking if the structure of project is correct
-#   define override
-#endif
-
-class JPetHitSmearingFunctions
+class JPetHitExperimentalParametrizer
 {
+  using FuncAndParam= std::pair<std::string, std::vector<double> >;
   public:
-    double hitEnergySmearing(double *x, double *p);
-    double hitZSmearing(double *x, double *p);
-    double hitTimeSmearing(double *x, double *p);
-};
+  enum SmearingType {kTime, kEnergy, kZPosition};
 
+  JPetHitExperimentalParametrizer();
+  void setSmearingFunctions(const std::vector<FuncAndParam>& params);
 
-
-class JPetSmearingFunctionsContainer
-{
-  public:
-    JPetSmearingFunctionsContainer();
-    TF1* getFunEnergySmearing();
-    TF1* getFunZHitSmearing();
-    TF1* getFunTimeHitSmearing();
-    void setFunEnergySmearing(TF1* fun);
-    void setFunZHitSmearing(TF1* fun);
-    void setFunTimeHitSmearing(TF1* fun);
+  double addEnergySmearing(int scinID, double zIn, double eneIn);
+  double addZHitSmearing(int scinID, double zIn, double eneIn);
+  double addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn);
 
   private:
-    JPetHitSmearingFunctions* sf = nullptr;
-    TF1* fFunEnergySmearing;
-    TF1* fFunZHitSmearing;
-    TF1* fFunTimeHitSmearing;
+  std::map<SmearingType, TF1> fSmearingFunctions;
 };
-
-
-/**
- * @brief stores smearing functions that should be applied to generated computer simulations in
- * order to reproduce collected data 
- */
-
-class JPetSmearingFunctions
-{
-  public:
-    static double addEnergySmearing(int scinID, double zIn, double eneIn);
-    static double addZHitSmearing(int scinID, double zIn, double eneIn);
-    static double addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn);
-    static JPetSmearingFunctionsContainer& getSmearingFunctions();
-
-  private:
-    static JPetSmearingFunctionsContainer fSmearingFunctions; 
-};
-
-
 
 #endif
