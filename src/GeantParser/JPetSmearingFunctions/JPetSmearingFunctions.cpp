@@ -68,9 +68,19 @@ JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
 void JPetHitExperimentalParametrizer::setSmearingFunctions(const std::vector<FuncAndParam>& params)
 {
   assert(params.size() >= 3);
-  auto timeParams = params[0];
-  auto energyParams = params[1];
-  auto zPositionParams = params[2];
+  auto timeFuncAndParams = params[0];
+  auto energyFuncAndParams = params[1];
+  auto zPositionFuncAndParams = params[2];
+
+  auto timeFunc  = timeFuncAndParams.first;
+  auto timeParams = timeFuncAndParams.second;
+  if(!timeFunc.empty()) {
+    fSmearingFunctions[kTime] = TF1("funTimeHitSmearing", timeFunc.c_str(), -200., 200., timeParams.size() + 4);
+  }
+  int nParams = timeParams.size() + 4; /// because we have four default parameters;
+  for (int i = 4; i < nParams; i++) {
+     fSmearingFunctions[kTime].SetParameter(i, timeParams[i]); 
+  }
 }
 
 double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, double eneIn)

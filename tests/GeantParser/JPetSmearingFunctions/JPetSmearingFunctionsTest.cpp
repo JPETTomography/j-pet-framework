@@ -21,7 +21,7 @@
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-BOOST_AUTO_TEST_CASE(testOne)
+BOOST_AUTO_TEST_CASE(testConstructor)
 {
   JPetHitExperimentalParametrizer parametrizer;
   parametrizer.addEnergySmearing(1,1,1);
@@ -29,4 +29,30 @@ BOOST_AUTO_TEST_CASE(testOne)
   parametrizer.addTimeSmearing(1,1,1,1);
 }
 
+BOOST_AUTO_TEST_CASE(testSettingFunction)
+{
+  JPetHitExperimentalParametrizer parametrizer;
+  
+  std::string timeSmearing= "[&](double* x, double* p)->double{ return 7;};";
+  parametrizer.setSmearingFunctions({{timeSmearing,{}},{"",{}},{"",{}}});
+  parametrizer.addTimeSmearing(1,1,1,1);
+}
+
+BOOST_AUTO_TEST_CASE(testSettingFunction2)
+{
+  JPetHitExperimentalParametrizer parametrizer;
+  
+  std::string timeSmearing= "[&](double* x, double* p)->double{ return x[0] + p[4]*x[0];};";
+  parametrizer.setSmearingFunctions({{timeSmearing,{2}},{"",{}},{"",{}}});
+  parametrizer.addTimeSmearing(1,1,1,1);
+}
+
+BOOST_AUTO_TEST_CASE(testSettingFunction3)
+{
+  JPetHitExperimentalParametrizer parametrizer;
+  
+  std::string timeSmearing= "[&](double* x, double* p)->double{ return TMath::Gaus(x[0],p[0],p[1]);};";
+  parametrizer.setSmearingFunctions({{timeSmearing,{}},{"",{}},{"",{}}});
+  parametrizer.addTimeSmearing(1,1,1,1);
+}
 BOOST_AUTO_TEST_SUITE_END()
