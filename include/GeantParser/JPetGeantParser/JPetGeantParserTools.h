@@ -23,6 +23,7 @@
 #include <JPetHit/JPetHit.h>
 #include <JPetMCDecayTree/JPetMCDecayTree.h>
 #include <JPetMCHit/JPetMCHit.h>
+#include "JPetSmearingFunctions/JPetSmearingFunctions.h"
 #include <TRandom3.h>
 #include <array>
 #include <functional>
@@ -30,7 +31,6 @@
 #include <tuple>
 #include <vector>
 
-#include "JPetSmearingFunctions/JPetSmearingFunctionsNew.h"
 
 #ifdef __CINT__
 //when cint is used instead of compiler, override word is not recognized

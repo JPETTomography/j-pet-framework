@@ -10,20 +10,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *  @file JPetSmearingFunctionsNewNew.h
+ *  @file JPetSmearingFunctions.h
  */
 
-#ifndef JPETSMEARINGFUNCTIONSNEW_H
-#define JPETSMEARINGFUNCTIONSNEW_H
+#ifndef JPETSMEARINGFUNCTIONS_H
+#define JPETSMEARINGFUNCTIONS_H
 
 #include <TF1.h>
 
-
 class JPetHitExperimentalParametrizer
 {
-  using FuncAndParam= std::pair<std::string, std::vector<double> >;
-  public:
-  enum SmearingType {kTime, kEnergy, kZPosition};
+  using FuncAndParam = std::pair<std::string, std::vector<double>>;
+
+public:
+  enum SmearingType
+  {
+    kTime,
+    kEnergy,
+    kZPosition
+  };
 
   JPetHitExperimentalParametrizer();
   void setSmearingFunctions(const std::vector<FuncAndParam>& params);
@@ -32,7 +37,7 @@ class JPetHitExperimentalParametrizer
   double addZHitSmearing(int scinID, double zIn, double eneIn);
   double addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn);
 
-  private:
+private:
   std::map<SmearingType, TF1> fSmearingFunctions;
 };
 

@@ -17,7 +17,7 @@
 #define JPETGEANTPARSER_H
 
 #include <JPetGeantEventPack/JPetGeantEventPack.h>
-#include <JPetSmearingFunctions/JPetSmearingFunctionsNew.h>
+#include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 #include <JPetGeantScinHits/JPetGeantScinHits.h>
 #include <JPetGeomMapping/JPetGeomMapping.h>
 #include <JPetHit/JPetHit.h>
