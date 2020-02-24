@@ -24,9 +24,9 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE(testOne)
 {
   JPetHitExperimentalParametrizer parametrizer;
-  parametrizer.addEnergySmearing(0,0,0);
-  parametrizer.addZHitSmearing(0,0,0);
-  parametrizer.addTimeSmearing(0,0,0,0);
+  parametrizer.addEnergySmearing(1,1,1);
+  parametrizer.addZHitSmearing(1,1,1);
+  parametrizer.addTimeSmearing(1,1,1,1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
