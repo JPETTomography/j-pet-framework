@@ -16,30 +16,42 @@
 #include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <TMath.h>
 
 JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
 {
-
   auto timeSmearingF = [&](double* x, double* p) -> double {
     // p[0] = scinID
     // p[1] = zIn
     // p[2] = eneIn
     // p[3] = timeIn
-    const double kEnergyThreshold = 200.;       ///< see Eur. Phys. J. C (2016) 76:445  equation 4 and 5
-    const double kReferenceEnergy = 270.;       ///< see Eur. Phys. J. C (2016) 76:445  equation 4 and 5
-    const double kTimeResolutionConstant = 80.; ///< see Eur. Phys. J. C (2016) 76:445  equation 3
+    
+    // p[4] = timeResolution (sigma)
+    // p[5] = energyThreshold 
+    // p[6] = referenceEnergy
 
     double eneIn = p[2];
     double timeIn = p[3];
-    double sigma = kTimeResolutionConstant;
-    if (eneIn < kEnergyThreshold)
+    double sigma = p[4];
+    double energyTreshold = p[5];
+    double referenceEnergy = p[6];
+    double time = x[0];
+
+    if (eneIn < energyTreshold)
     {
-      sigma = sigma / sqrt(eneIn / kReferenceEnergy);
+      sigma = sigma / sqrt(eneIn / referenceEnergy);
     }
-    return exp(-0.5 * pow((x[0] - timeIn) / sigma, 2)) / (sqrt(2 * M_PI) * sigma);
+
+    return TMath::Gaus(time, timeIn, sigma, true);
   };
 
-  fSmearingFunctions[kTime] = TF1("funTimeHitSmearing", timeSmearingF, -200., 200., 4);
+  const double kTimeResolutionConstant = 80.; ///< see Eur. Phys. J. C (2016) 76:445  equation 3
+  const double kEnergyThreshold = 200.;       ///< see Eur. Phys. J. C (2016) 76:445  equation 4 and 5
+  const double kReferenceEnergy = 270.;       ///< see Eur. Phys. J. C (2016) 76:445  equation 4 and 5
+  fSmearingFunctions[kTime] = TF1("funTimeHitSmearing", timeSmearingF, -200., 200., 7);
+  fSmearingFunctions[kTime].SetParameter(4,kTimeResolutionConstant);
+  fSmearingFunctions[kTime].SetParameter(5,kEnergyThreshold);
+  fSmearingFunctions[kTime].SetParameter(6,kReferenceEnergy);
 
   auto energySmearingF = [&](double* x, double* p) -> double {
     // p[0] = scinID
@@ -47,8 +59,9 @@ JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
     // p[2] = eneIn
     double eneIn = p[2];
     double sigma = eneIn * 0.044 / sqrt(eneIn / 1000.);
+    double energy = x[0];
 
-    return exp(-0.5 * pow((x[0] - eneIn) / sigma, 2)) / (sqrt(2 * M_PI) * sigma);
+    return TMath::Gaus(energy, eneIn, sigma, true);
   };
 
   fSmearingFunctions[kEnergy] = TF1("funEnergySmearing", energySmearingF, -200., 200., 3);
@@ -57,12 +70,17 @@ JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
     // p[0] = scinID
     // p[1] = zIn
     // p[2] = eneIn
+    // p[3] = zResolution (sigma)
     double zIn = p[1];
-    double sigma = 0.976;
+    double sigma = p[3];
+    double z = x[0];
 
-    return exp(-0.5 * pow((x[0] - zIn) / sigma, 2)) / (sqrt(2 * M_PI) * sigma);
+    return TMath::Gaus(z, zIn, sigma, true);
   };
-  fSmearingFunctions[kZPosition] = TF1("funZHitSmearing", zPositionSmearingF, -200., 200., 3);
+
+  fSmearingFunctions[kZPosition] = TF1("funZHitSmearing", zPositionSmearingF, -200., 200., 4);
+  double kZresolution= 0.976;
+  fSmearingFunctions[kZPosition].SetParameter(3, kZresolution);
 }
 
 void JPetHitExperimentalParametrizer::setSmearingFunctions(const std::vector<FuncAndParam>& params)
@@ -74,32 +92,67 @@ void JPetHitExperimentalParametrizer::setSmearingFunctions(const std::vector<Fun
 
   auto timeFunc  = timeFuncAndParams.first;
   auto timeParams = timeFuncAndParams.second;
+  int nDefaultParams = 4;
+  int nParams = timeParams.size() + nDefaultParams; /// because we have four default parameters;
   if(!timeFunc.empty()) {
-    fSmearingFunctions[kTime] = TF1("funTimeHitSmearing", timeFunc.c_str(), -200., 200., timeParams.size() + 4);
+    fSmearingFunctions[kTime] = TF1("funTimeHitSmearing", timeFunc.c_str(), -200., 200., nParams);
   }
-  int nParams = timeParams.size() + 4; /// because we have four default parameters;
   for (int i = 4; i < nParams; i++) {
      fSmearingFunctions[kTime].SetParameter(i, timeParams[i]); 
   }
-}
 
-double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, double eneIn)
-{
-  fSmearingFunctions[kZPosition].SetParameters(double(scinID), zIn, eneIn);
-  fSmearingFunctions[kZPosition].SetRange(zIn - 5., zIn + 5.);
-  return fSmearingFunctions[kZPosition].GetRandom();
-}
+  auto energyFunc  = energyFuncAndParams.first;
+  auto energyParams = energyFuncAndParams.second;
+  nDefaultParams = 3; 
+  nParams = energyParams.size() + nDefaultParams; /// because we have three default parameters;
+  if(!energyFunc.empty()) {
+    fSmearingFunctions[kEnergy] = TF1("funEnergySmearing", energyFunc.c_str(), -200., 200., nParams);
+  }
+  for (int i = nDefaultParams; i < nParams; i++) {
+     fSmearingFunctions[kEnergy].SetParameter(i, energyParams[i]); 
+  }
 
-double JPetHitExperimentalParametrizer::addEnergySmearing(int scinID, double zIn, double eneIn)
-{
-  fSmearingFunctions[kEnergy].SetParameters(double(scinID), zIn, eneIn);
-  fSmearingFunctions[kEnergy].SetRange(eneIn - 100., eneIn + 100.);
-  return fSmearingFunctions[kEnergy].GetRandom();
+  auto zPositionFunc  = zPositionFuncAndParams.first;
+  auto zPositionParams = zPositionFuncAndParams.second;
+  nDefaultParams = 3; 
+  nParams = zPositionParams.size() + nDefaultParams; /// because we have three default parameters;
+  if(!zPositionFunc.empty()) {
+    fSmearingFunctions[kZPosition] = TF1("funzHitSmearing", zPositionFunc.c_str(), -200., 200., nParams);
+  }
+  for (int i = nDefaultParams; i < nParams; i++) {
+     fSmearingFunctions[kZPosition].SetParameter(i, zPositionParams[i]); 
+  }
 }
 
 double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn)
 {
-  fSmearingFunctions[kTime].SetParameters(double(scinID), zIn, eneIn, timeIn);
+  /// We cannot use setParameters(...) cause if there are more then 4 parameters
+  /// It would set it all to 0.
+  fSmearingFunctions[kTime].SetParameter(0, double(scinID));
+  fSmearingFunctions[kTime].SetParameter(1, zIn);
+  fSmearingFunctions[kTime].SetParameter(2, eneIn);
+  fSmearingFunctions[kTime].SetParameter(3, timeIn);
   fSmearingFunctions[kTime].SetRange(timeIn - 300., timeIn + 300.);
   return fSmearingFunctions[kTime].GetRandom();
 }
+
+double JPetHitExperimentalParametrizer::addEnergySmearing(int scinID, double zIn, double eneIn)
+{
+  fSmearingFunctions[kEnergy].SetParameter(0, double(scinID));
+  fSmearingFunctions[kEnergy].SetParameter(1, zIn);
+  fSmearingFunctions[kEnergy].SetParameter(2, eneIn);
+  fSmearingFunctions[kEnergy].SetRange(eneIn - 100., eneIn + 100.);
+  return fSmearingFunctions[kEnergy].GetRandom();
+}
+
+double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, double eneIn)
+{
+  /// We cannot use setParameters(...) cause if there are more then 4 parameters
+  /// It would set it all to 0.
+  fSmearingFunctions[kZPosition].SetParameter(0, double(scinID));
+  fSmearingFunctions[kZPosition].SetParameter(1, zIn);
+  fSmearingFunctions[kZPosition].SetParameter(2, eneIn);
+  fSmearingFunctions[kZPosition].SetRange(zIn - 5., zIn + 5.);
+  return fSmearingFunctions[kZPosition].GetRandom();
+}
+

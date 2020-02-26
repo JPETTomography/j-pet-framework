@@ -31,11 +31,14 @@ public:
   };
 
   JPetHitExperimentalParametrizer();
-  void setSmearingFunctions(const std::vector<FuncAndParam>& params);
+  JPetHitExperimentalParametrizer(JPetHitExperimentalParametrizer const&) = delete;
+  JPetHitExperimentalParametrizer& operator=(JPetHitExperimentalParametrizer const&) = delete;
 
   double addEnergySmearing(int scinID, double zIn, double eneIn);
   double addZHitSmearing(int scinID, double zIn, double eneIn);
   double addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn);
+
+  void setSmearingFunctions(const std::vector<FuncAndParam>& params);
 
 private:
   std::map<SmearingType, TF1> fSmearingFunctions;

@@ -29,6 +29,14 @@ BOOST_AUTO_TEST_CASE(testConstructor)
   parametrizer.addTimeSmearing(1,1,1,1);
 }
 
+BOOST_AUTO_TEST_CASE(testDefaultTimeEnergy)
+{
+  JPetHitExperimentalParametrizer parametrizer;
+  parametrizer.addTimeSmearing(1,1,1,1);
+  parametrizer.addEnergySmearing(1,1,1);
+  parametrizer.addZHitSmearing(1,1,1);
+}
+
 BOOST_AUTO_TEST_CASE(testSettingFunction)
 {
   JPetHitExperimentalParametrizer parametrizer;
