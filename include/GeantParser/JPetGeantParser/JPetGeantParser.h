@@ -118,6 +118,7 @@ protected :
   float getNextTimeShift();
   void clearTimeDistoOfDecays();
   bool isTimeWindowFull() const;
+
 };
 
 #endif
