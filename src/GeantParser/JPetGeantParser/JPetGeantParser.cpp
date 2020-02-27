@@ -69,6 +69,32 @@ bool JPetGeantParser::init()
     fProcessSingleEventinWindow = getOptionAsBool(fParams.getOptions(), kProcessSingleEventinWindowParamKey);
   }
   
+
+  if (isOptionSet(fParams.getOptions(), kSeedParamKey)) {
+    fSeed = getOptionAsInt(fParams.getOptions(), kSeedParamKey);
+  }
+
+  JPetGeantParserTools::setSeedTogRandom(getOriginalSeed());
+  INFO("Seed value used for resolution smearing of MC simulation data:"<< boost::lexical_cast<std::string>(getOriginalSeed()));
+
+  loadSmearingOptionsAndSetupExperimentalParametrizer();
+
+  if (fMakeHisto)
+    bookBasicHistograms();
+  if (fMakeEffiHisto)
+    bookEfficiencyHistograms();
+
+  // make distribution of decays in time window
+  // needed to adjust simulation times into time window scheme
+  std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
+
+  INFO("MC Hit wrapper started.");
+
+  return true;
+}
+
+void JPetGeantParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
+{
   std::vector<double> timeSmearingParameters;
   if (isOptionSet(fParams.getOptions(), kTimeSmearingParametersParamKey)) {
     timeSmearingParameters = getOptionAsVectorOfDoubles(fParams.getOptions(), kTimeSmearingParametersParamKey);
@@ -100,27 +126,8 @@ bool JPetGeantParser::init()
   }
 
   fExperimentalParametrizer.setSmearingFunctions({{timeSmearingFormula, timeSmearingParameters}, {energySmearingFormula, energySmearingParameters}, {zPositionSmearingFormula, zPositionSmearingParameters}});
-
-  if (isOptionSet(fParams.getOptions(), kSeedParamKey)) {
-    fSeed = getOptionAsInt(fParams.getOptions(), kSeedParamKey);
-  }
-
-  JPetGeantParserTools::setSeedTogRandom(getOriginalSeed());
-  INFO("Seed value used for resolution smearing of MC simulation data:"<< boost::lexical_cast<std::string>(getOriginalSeed()));
-
-  if (fMakeHisto)
-    bookBasicHistograms();
-  if (fMakeEffiHisto)
-    bookEfficiencyHistograms();
-
-  // make distribution of decays in time window
-  // needed to adjust simulation times into time window scheme
-  std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
-
-  INFO("MC Hit wrapper started.");
-
-  return true;
 }
+  
 
 bool JPetGeantParser::exec()
 {

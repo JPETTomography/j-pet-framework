@@ -67,6 +67,7 @@ protected :
 
   JPetHitExperimentalParametrizer fExperimentalParametrizer;
 
+
   // internal variables
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";
   const std::string kMinTimeWindowParamKey = "GeantParser_MinTimeWindow_double";
@@ -88,6 +89,8 @@ protected :
 
   std::vector<JPetMCHit> fStoredMCHits; ///< save MC hits into single time window when it contains enough hits
   std::vector<JPetHit> fStoredHits; ///< save RECONSTRUCTED MC hits into single time window when it contains enough hits
+
+  void loadSmearingOptionsAndSetupExperimentalParametrizer();
 
   void processMCEvent(JPetGeantEventPack*);
   void saveHits();

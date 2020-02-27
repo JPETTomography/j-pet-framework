@@ -20,6 +20,7 @@
 
 JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
 {
+
   auto timeSmearingF = [&](double* x, double* p) -> double {
     // p[0] = scinID
     // p[1] = zIn
@@ -124,6 +125,27 @@ void JPetHitExperimentalParametrizer::setSmearingFunctions(const std::vector<Fun
   }
 }
 
+/// Only those limits are modified for which first value is smaller than the second one.
+///  The limits vector is suppose to have 3 elements in the order time, energy and z Position.
+void JPetHitExperimentalParametrizer::setSmearingFunctionLimits(const std::vector<std::pair<double, double> >& limits)
+{
+  assert(limits.size() == 3);
+  auto timeLim = limits[0];
+  auto energyLim = limits[1];;
+  auto zPositionLim = limits[2];
+  if (timeLim.first < timeLim.second ) {
+    fFunctionLimits[kTime]= timeLim; 
+  }
+  if (energyLim.first < energyLim.second ) {
+    fFunctionLimits[kEnergy]= energyLim; 
+  }
+  if (zPositionLim.first < zPositionLim.second ) {
+    fFunctionLimits[kZPosition]= zPositionLim; 
+  }
+}
+
+
+/// function is randomize in the range [lowLim + timeIn, highLim + timeIn]
 double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn)
 {
   /// We cannot use setParameters(...) cause if there are more then 4 parameters
@@ -132,19 +154,21 @@ double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, 
   fSmearingFunctions[kTime].SetParameter(1, zIn);
   fSmearingFunctions[kTime].SetParameter(2, eneIn);
   fSmearingFunctions[kTime].SetParameter(3, timeIn);
-  fSmearingFunctions[kTime].SetRange(timeIn - 300., timeIn + 300.);
+  fSmearingFunctions[kTime].SetRange(timeIn + fFunctionLimits[kTime].first, timeIn + fFunctionLimits[kTime].second);
   return fSmearingFunctions[kTime].GetRandom();
 }
 
+/// function is randomize in the range [lowLim + eneIn, highLim + eneIn]
 double JPetHitExperimentalParametrizer::addEnergySmearing(int scinID, double zIn, double eneIn)
 {
   fSmearingFunctions[kEnergy].SetParameter(0, double(scinID));
   fSmearingFunctions[kEnergy].SetParameter(1, zIn);
   fSmearingFunctions[kEnergy].SetParameter(2, eneIn);
-  fSmearingFunctions[kEnergy].SetRange(eneIn - 100., eneIn + 100.);
+  fSmearingFunctions[kEnergy].SetRange(eneIn + fFunctionLimits[kEnergy].first, eneIn + fFunctionLimits[kEnergy].second);
   return fSmearingFunctions[kEnergy].GetRandom();
 }
 
+/// function is randomize in the range [lowLim + zIn, highLim + zIn]
 double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, double eneIn)
 {
   /// We cannot use setParameters(...) cause if there are more then 4 parameters
@@ -153,6 +177,7 @@ double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, 
   fSmearingFunctions[kZPosition].SetParameter(1, zIn);
   fSmearingFunctions[kZPosition].SetParameter(2, eneIn);
   fSmearingFunctions[kZPosition].SetRange(zIn - 5., zIn + 5.);
+  fSmearingFunctions[kZPosition].SetRange(zIn + fFunctionLimits[kZPosition].first, zIn + fFunctionLimits[kZPosition].second);
   return fSmearingFunctions[kZPosition].GetRandom();
 }
 
