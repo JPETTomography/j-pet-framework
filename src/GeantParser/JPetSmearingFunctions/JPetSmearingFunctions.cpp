@@ -14,8 +14,6 @@
  */
 
 #include <JPetSmearingFunctions/JPetSmearingFunctions.h>
-#define _USE_MATH_DEFINES
-#include <math.h>
 #include <TMath.h>
 
 JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
@@ -144,6 +142,12 @@ void JPetHitExperimentalParametrizer::setSmearingFunctionLimits(const std::vecto
   }
 }
 
+using SmearingType = JPetHitExperimentalParametrizer::SmearingType;
+std::map<SmearingType, SmearingFunctionLimits> JPetHitExperimentalParametrizer::getSmearingFunctionLimits() const
+{
+  return fFunctionLimits;
+}
+
 
 /// function is randomize in the range [lowLim + timeIn, highLim + timeIn]
 double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn)
@@ -176,8 +180,6 @@ double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, 
   fSmearingFunctions[kZPosition].SetParameter(0, double(scinID));
   fSmearingFunctions[kZPosition].SetParameter(1, zIn);
   fSmearingFunctions[kZPosition].SetParameter(2, eneIn);
-  fSmearingFunctions[kZPosition].SetRange(zIn - 5., zIn + 5.);
   fSmearingFunctions[kZPosition].SetRange(zIn + fFunctionLimits[kZPosition].first, zIn + fFunctionLimits[kZPosition].second);
   return fSmearingFunctions[kZPosition].GetRandom();
 }
-

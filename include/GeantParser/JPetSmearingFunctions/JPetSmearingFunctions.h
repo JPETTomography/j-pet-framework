@@ -19,7 +19,7 @@
 #include <TF1.h>
 
 /// The limit is callculated with respect to the mean value
-/// e.g. [mean + low , mean + up] 
+/// e.g. [mean + low , mean + up]
 using SmearingFunctionLimits = std::pair<double, double>;
 
 class JPetHitExperimentalParametrizer
@@ -42,12 +42,13 @@ public:
   double addZHitSmearing(int scinID, double zIn, double eneIn);
   double addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn);
 
+  std::map<SmearingType, SmearingFunctionLimits> getSmearingFunctionLimits() const;
   void setSmearingFunctions(const std::vector<FuncAndParam>& params);
-  void setSmearingFunctionLimits(const std::vector<std::pair<double, double> >& limits);
+  void setSmearingFunctionLimits(const std::vector<std::pair<double, double>>& limits);
 
 private:
   std::map<SmearingType, TF1> fSmearingFunctions;
-  std::map<SmearingType, SmearingFunctionLimits> fFunctionLimits {{kTime, {-300, 300}},{kEnergy, {-100,100}}, {kZPosition, {-5, 5}}};
+  std::map<SmearingType, SmearingFunctionLimits> fFunctionLimits{{kTime, {-300, 300}}, {kEnergy, {-100, 100}}, {kZPosition, {-5, 5}}};
 };
 
 #endif

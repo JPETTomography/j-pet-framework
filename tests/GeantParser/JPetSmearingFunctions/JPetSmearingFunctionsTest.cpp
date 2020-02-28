@@ -19,23 +19,62 @@
 
 #include "JPetSmearingFunctions/JPetSmearingFunctions.h"
 
+using SmearingType = JPetHitExperimentalParametrizer::SmearingType;
+
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-BOOST_AUTO_TEST_CASE(testConstructor)
+BOOST_AUTO_TEST_CASE(testDefaultLimits)
 {
+  double epsilon = 0.001;
   JPetHitExperimentalParametrizer parametrizer;
-  parametrizer.addEnergySmearing(1,1,1);
-  parametrizer.addZHitSmearing(1,1,1);
-  parametrizer.addTimeSmearing(1,1,1,1);
+  auto limits = parametrizer.getSmearingFunctionLimits();
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].first,-300, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].second,300, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].first,-100, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].second,100, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].first,-5, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].second,5, epsilon); 
 }
 
-BOOST_AUTO_TEST_CASE(testDefaultTimeEnergy)
+BOOST_AUTO_TEST_CASE(testCustomLimits)
 {
+  double epsilon = 0.001;
   JPetHitExperimentalParametrizer parametrizer;
-  parametrizer.addTimeSmearing(1,1,1,1);
-  parametrizer.addEnergySmearing(1,1,1);
-  parametrizer.addZHitSmearing(1,1,1);
+  parametrizer.setSmearingFunctionLimits({{-1,1}, {-2,2},{-3,3}});
+  auto limits = parametrizer.getSmearingFunctionLimits();
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].first,-1, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].second,1, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].first,-2, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].second,2, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].first,-3, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].second,3, epsilon); 
 }
+
+BOOST_AUTO_TEST_CASE(testCustomLimits2)
+{
+  double epsilon = 0.001;
+  JPetHitExperimentalParametrizer parametrizer;
+  /// The second argument has the same upper and lower limit.
+  ///  and so the energy smearing function should preserve original values.
+  parametrizer.setSmearingFunctionLimits({{-1,1}, {-2,-2},{-3,3}});
+  auto limits = parametrizer.getSmearingFunctionLimits();
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].first,-1, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].second,1, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].first,-100, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].second,100, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].first,-3, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].second,3, epsilon); 
+}
+
+//BOOST_AUTO_TEST_CASE(testDefaultZFunction)
+//{
+  //JPetHitExperimentalParametrizer parametrizer;
+  //TH1F hist("testHist","testHist",120,-6,6);  
+  //for (int i = 0; i < 10000; i++) {
+    //hist->Fill(sparametrizer.addZHitSmearing(0,1,0));
+    
+  //}
+//}
 
 BOOST_AUTO_TEST_CASE(testSettingFunction)
 {
