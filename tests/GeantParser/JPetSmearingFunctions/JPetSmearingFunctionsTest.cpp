@@ -127,7 +127,6 @@ BOOST_AUTO_TEST_CASE(testDefaultZFunctionWithCustomSigma)
 BOOST_AUTO_TEST_CASE(testCustomZFunction)
 {
   JPetHitExperimentalParametrizer parametrizer;
-  parametrizer.printAllParameters();
 
   /// default params are [0] scinId, [1] zIn, [2] eneIn
   /// we add here p[3] sigma of Landau
@@ -168,7 +167,6 @@ BOOST_AUTO_TEST_CASE(testCustomZFunction)
   std::sort(valsRef.begin(), valsRef.end());
   auto prob = TMath::KolmogorovTest(vals.size(), &vals[0], valsRef.size(), &valsRef[0], "");
   double alpha = 0.05;
-  parametrizer.printAllParameters();
   BOOST_REQUIRE(prob > alpha);
 }
 

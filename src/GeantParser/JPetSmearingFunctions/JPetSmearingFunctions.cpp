@@ -14,6 +14,8 @@
  */
 
 #include <JPetSmearingFunctions/JPetSmearingFunctions.h>
+#include "JPetLoggerInclude.h"
+
 #include <TMath.h>
 
 using SmearingType = JPetHitExperimentalParametrizer::SmearingType;
@@ -158,38 +160,73 @@ void JPetHitExperimentalParametrizer::setSmearingFunctionLimits(const std::vecto
   }
 }
 
-void JPetHitExperimentalParametrizer::printAllParameters()
+void JPetHitExperimentalParametrizer::writeAllParametersToLog() const
+{
+  auto limits = getSmearingFunctionLimits();
+
+  INFO("Time smearing function");
+  INFO(fSmearingFunctions.at(kTime)->GetName());
+  INFO(std::string("limits: low = ") + limits[kTime].first + " , high = " + limits[kTime].second);
+  auto nPar = fSmearingFunctions.at(kTime)->GetNpar();
+  INFO(std::string("number of parameters:") + nPar);
+  for (int i = 0; i < nPar; i++)
+  {
+    INFO(std::string("parameter ") + i + " = " + fSmearingFunctions.at(kTime)->GetParameter(i));
+  }
+
+  INFO("Energy smearing function");
+  INFO(fSmearingFunctions.at(kEnergy)->GetName());
+  INFO(std::string("limits: low = ") + limits[kEnergy].first + " , high = " + limits[kEnergy].second);
+  nPar = fSmearingFunctions.at(kEnergy)->GetNpar();
+  INFO(std::string("number of parameters:") + nPar);
+  for (int i = 0; i < nPar; i++)
+  {
+    INFO(std::string("parameter ") + i + " = " + fSmearingFunctions.at(kEnergy)->GetParameter(i));
+  }
+
+  INFO("ZPosition smearing function");
+  INFO(fSmearingFunctions.at(kZPosition)->GetName());
+  INFO(std::string("limits: low = ") + limits[kZPosition].first + " , high = " + limits[kZPosition].second);
+  nPar = fSmearingFunctions.at(kZPosition)->GetNpar();
+  INFO(std::string("number of parameters:") + nPar);
+  for (int i = 0; i < nPar; i++)
+  {
+    INFO(std::string("parameter ") + i + " = " + fSmearingFunctions.at(kZPosition)->GetParameter(i));
+  }
+}
+
+void JPetHitExperimentalParametrizer::printAllParameters() const
 {
   auto limits = getSmearingFunctionLimits();
 
   std::cout << "***************" << std::endl;
   std::cout << "Time smearing function" << std::endl;
-  std::cout << fSmearingFunctions[kTime]->GetName() << std::endl;
+  std::cout << fSmearingFunctions.at(kTime)->GetName() << std::endl;
   std::cout << "limits: low = " << limits[kTime].first << " , high = " << limits[kTime].second << std::endl;
-  auto nPar = fSmearingFunctions[kTime]->GetNpar();
+  auto nPar = fSmearingFunctions.at(kTime)->GetNpar();
   std::cout << "number of parameters:" << nPar << std::endl;
   for (int i = 0; i < nPar; i++)
   {
-    std::cout << "parameter " << i << " = " << fSmearingFunctions[kTime]->GetParameter(i) << std::endl;
+    std::cout << "parameter " << i << " = " << fSmearingFunctions.at(kTime)->GetParameter(i) << std::endl;
   }
 
   std::cout << "***************" << std::endl;
   std::cout << "Energy smearing function" << std::endl;
-  std::cout << fSmearingFunctions[kEnergy]->GetName() << std::endl;
+  std::cout << fSmearingFunctions.at(kEnergy)->GetName() << std::endl;
   std::cout << "limits: low = " << limits[kEnergy].first << " , high = " << limits[kEnergy].second << std::endl;
-  nPar = fSmearingFunctions[kEnergy]->GetNpar();
+  nPar = fSmearingFunctions.at(kEnergy)->GetNpar();
   for (int i = 0; i < nPar; i++)
   {
-    std::cout << "parameter " << i << " = " << fSmearingFunctions[kEnergy]->GetParameter(i) << std::endl;
+    std::cout << "parameter " << i << " = " << fSmearingFunctions.at(kEnergy)->GetParameter(i) << std::endl;
   }
   std::cout << "***************" << std::endl;
-  std::cout << fSmearingFunctions[kZPosition]->GetName() << std::endl;
+  std::cout << fSmearingFunctions.at(kZPosition)->GetName() << std::endl;
   std::cout << "Z position smearing function" << std::endl;
   std::cout << "limits: low = " << limits[kZPosition].first << " , high = " << limits[kZPosition].second << std::endl;
-  nPar = fSmearingFunctions[kZPosition]->GetNpar();
+  nPar = fSmearingFunctions.at(kZPosition)->GetNpar();
   for (int i = 0; i < nPar; i++)
   {
-    std::cout << "parameter " << i << " = " << fSmearingFunctions[kZPosition]->GetParameter(i) << std::endl;
+    std::cout << "parameter " << i << " = " << fSmearingFunctions.at(kZPosition)->GetParameter(i) << std::endl;
   }
 }
 

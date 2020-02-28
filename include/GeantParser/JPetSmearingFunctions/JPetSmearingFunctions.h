@@ -58,7 +58,8 @@ public:
   double addZHitSmearing(int scinID, double zIn, double eneIn);
 
   std::map<SmearingType, SmearingFunctionLimits> getSmearingFunctionLimits() const;
-  void printAllParameters();
+  void printAllParameters() const;
+  void writeAllParametersToLog() const;
 
   /// If any of the arguments in params is empty, then the previous value is preserved.
   /// e.g.
