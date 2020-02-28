@@ -133,7 +133,7 @@ void JPetHitExperimentalParametrizer::setSmearingFunctions(const std::vector<Fun
 }
 
 /// Only those limits are modified for which first value is smaller than the second one.
-///  The limits vector is suppose to have 3 elements in the order time, energy and z Position.
+/// The limits vector is suppose to have 3 elements in the order time, energy and z Position.
 void JPetHitExperimentalParametrizer::setSmearingFunctionLimits(const std::vector<std::pair<double, double>>& limits)
 {
   assert(limits.size() == 3);

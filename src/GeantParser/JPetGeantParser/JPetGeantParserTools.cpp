@@ -18,18 +18,13 @@
 
 #include <TMath.h>
 
-
 JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank)
 {
-  JPetMCHit mcHit = JPetMCHit(
-                      0,//UInt_t MCDecayTreeIndex,
-                      geantHit->GetEvtID(),//UInt_t MCVtxIndex,
-                      geantHit->GetEneDepos(), //  keV
-                      geantHit->GetTime(),   //  ps
-                      geantHit->GetHitPosition(),
-                      geantHit->GetPolarizationIn(),
-                      geantHit->GetMomentumIn()
-                    );
+  JPetMCHit mcHit = JPetMCHit(0,                       // UInt_t MCDecayTreeIndex,
+                              geantHit->GetEvtID(),    // UInt_t MCVtxIndex,
+                              geantHit->GetEneDepos(), //  keV
+                              geantHit->GetTime(),     //  ps
+                              geantHit->GetHitPosition(), geantHit->GetPolarizationIn(), geantHit->GetMomentumIn());
 
   JPetScin& scin = paramBank.getScintillator(geantHit->GetScinID());
   mcHit.setScintillator(scin);
@@ -38,22 +33,20 @@ JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, con
   return mcHit;
 }
 
-JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBank& paramBank, const float timeShift, JPetHitExperimentalParametrizer& parametrizer)
+JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBank& paramBank, const float timeShift,
+                                             JPetHitExperimentalParametrizer& parametrizer)
 {
   JPetHit hit = dynamic_cast<JPetHit&>(mcHit);
   auto scinID = mcHit.getScintillator().getID();
-  hit.setEnergy(parametrizer.addEnergySmearing(scinID, mcHit.getPosZ() ,mcHit.getEnergy()) );
-  //hit.setEnergy( JPetSmearingFunctions::addEnergySmearing(scinID, mcHit.getPosZ() ,mcHit.getEnergy()) );
+  hit.setEnergy(parametrizer.addEnergySmearing(scinID, mcHit.getPosZ(), mcHit.getEnergy()));
   // adjust to time window and smear
-  hit.setTime(parametrizer.addTimeSmearing(scinID, mcHit.getPosZ() ,mcHit.getEnergy() , -(mcHit.getTime() - timeShift)) );
-  //hit.setTime(JPetSmearingFunctions::addTimeSmearing(scinID, mcHit.getPosZ() ,mcHit.getEnergy() , -(mcHit.getTime() - timeShift)) );
+  hit.setTime(parametrizer.addTimeSmearing(scinID, mcHit.getPosZ(), mcHit.getEnergy(), -(mcHit.getTime() - timeShift)));
 
   auto radius = paramBank.getScintillator(scinID).getBarrelSlot().getLayer().getRadius();
   auto theta = TMath::DegToRad() * paramBank.getScintillator(mcHit.getScintillator().getID()).getBarrelSlot().getTheta();
   hit.setPosX(radius * std::cos(theta));
   hit.setPosY(radius * std::sin(theta));
-  //hit.setPosZ( JPetSmearingFunctions::addZHitSmearing(scinID, hit.getPosZ(), mcHit.getEnergy()) );
-  hit.setPosZ( parametrizer.addZHitSmearing(scinID, hit.getPosZ(), mcHit.getEnergy()) );
+  hit.setPosZ(parametrizer.addZHitSmearing(scinID, hit.getPosZ(), mcHit.getEnergy()));
 
   return hit;
 }
@@ -85,10 +78,7 @@ void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit, const J
   }
 }
 
-float JPetGeantParserTools::estimateNextDecayTimeExp(float activityMBq)
-{
-  return gRandom->Exp((pow(10, 6) / activityMBq));
-}
+float JPetGeantParserTools::estimateNextDecayTimeExp(float activityMBq) { return gRandom->Exp((pow(10, 6) / activityMBq)); }
 
 std::tuple<std::vector<float>, std::vector<float>> JPetGeantParserTools::getTimeDistoOfDecays(float activityMBq, float timeWindowMin,
                                                                                               float timeWindowMax)
@@ -125,9 +115,12 @@ std::pair<float, float> JPetGeantParserTools::calculateEfficiency(ulong n, ulong
 
 void JPetGeantParserTools::setSeedTogRandom(unsigned long seed)
 {
-  if (!gRandom) {
+  if (!gRandom)
+  {
     ERROR("gRandom is not set and we cannot set the seed");
-  } else {
-    gRandom->SetSeed(seed);     
+  }
+  else
+  {
+    gRandom->SetSeed(seed);
   }
 }
