@@ -13,8 +13,8 @@
  *  @file JPetSmearingFunctions.cpp
  */
 
-#include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 #include "JPetLoggerInclude.h"
+#include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 
 #include <TMath.h>
 
@@ -164,34 +164,17 @@ void JPetHitExperimentalParametrizer::writeAllParametersToLog() const
 {
   auto limits = getSmearingFunctionLimits();
 
-  INFO("Time smearing function");
-  INFO(fSmearingFunctions.at(kTime)->GetName());
-  INFO(std::string("limits: low = ") + limits[kTime].first + " , high = " + limits[kTime].second);
-  auto nPar = fSmearingFunctions.at(kTime)->GetNpar();
-  INFO(std::string("number of parameters:") + nPar);
-  for (int i = 0; i < nPar; i++)
+  std::vector<SmearingType> types{kTime, kEnergy, kZPosition};
+  for (auto type : types)
   {
-    INFO(std::string("parameter ") + i + " = " + fSmearingFunctions.at(kTime)->GetParameter(i));
-  }
-
-  INFO("Energy smearing function");
-  INFO(fSmearingFunctions.at(kEnergy)->GetName());
-  INFO(std::string("limits: low = ") + limits[kEnergy].first + " , high = " + limits[kEnergy].second);
-  nPar = fSmearingFunctions.at(kEnergy)->GetNpar();
-  INFO(std::string("number of parameters:") + nPar);
-  for (int i = 0; i < nPar; i++)
-  {
-    INFO(std::string("parameter ") + i + " = " + fSmearingFunctions.at(kEnergy)->GetParameter(i));
-  }
-
-  INFO("ZPosition smearing function");
-  INFO(fSmearingFunctions.at(kZPosition)->GetName());
-  INFO(std::string("limits: low = ") + limits[kZPosition].first + " , high = " + limits[kZPosition].second);
-  nPar = fSmearingFunctions.at(kZPosition)->GetNpar();
-  INFO(std::string("number of parameters:") + nPar);
-  for (int i = 0; i < nPar; i++)
-  {
-    INFO(std::string("parameter ") + i + " = " + fSmearingFunctions.at(kZPosition)->GetParameter(i));
+    INFO(fSmearingFunctions.at(type)->GetName());
+    INFO(std::string("limits: low = ") + limits[type].first + " , high = " + limits[type].second);
+    auto nPar = fSmearingFunctions.at(type)->GetNpar();
+    INFO(std::string("number of parameters:") + std::to_string(nPar));
+    for (int i = 0; i < nPar; i++)
+    {
+      INFO(std::string("parameter ") + std::to_string(i) + " = " + std::to_string(fSmearingFunctions.at(type)->GetParameter(i)));
+    }
   }
 }
 
@@ -230,7 +213,10 @@ void JPetHitExperimentalParametrizer::printAllParameters() const
   }
 }
 
-std::map<SmearingType, SmearingFunctionLimits> JPetHitExperimentalParametrizer::getSmearingFunctionLimits() const { return fFunctionLimits; }
+std::map<SmearingType, SmearingFunctionLimits> JPetHitExperimentalParametrizer::getSmearingFunctionLimits() const 
+{ 
+  return fFunctionLimits; 
+}
 
 /// function is randomize in the range [lowLim + timeIn, highLim + timeIn]
 double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn)
