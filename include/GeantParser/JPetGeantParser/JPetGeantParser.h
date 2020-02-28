@@ -76,12 +76,19 @@ protected :
   const std::string kMakeEfficienciesParamKey = "GeantParser_MakeEfficiencies_bool";
   const std::string kEnergyThresholdParamKey = "GeantParser_EnergyThreshold_double";
   const std::string kProcessSingleEventinWindowParamKey = "GeantParser_ProcessSingleEventInWindow_bool";
+
   const std::string kTimeSmearingParametersParamKey = "GeantParser_TimeSmearingParameters_std::vector<double>";
   const std::string kTimeSmearingFunctionParamKey = "GeantParser_TimeSmearingFunction_std::string";
+  const std::string kTimeSmearingFunctionLimitsParamKey = "GeantParser_TimeSmearingFunctionLimits_std::vector<double>";
+
   const std::string kEnergySmearingParametersParamKey = "GeantParser_EnergySmearingParameters_std::vector<double>";
   const std::string kEnergySmearingFunctionParamKey = "GeantParser_EnergySmearingFunction_std::string";
+  const std::string kEnergySmearingFunctionLimitsParamKey = "GeantParser_EnergySmearingFunctionLimits_std::vector<double>";
+
   const std::string kZPositionSmearingParametersParamKey = "GeantParser_ZPositionSmearingParameters_std::vector<double>";
   const std::string kZPositionSmearingFunctionParamKey = "GeantParser_ZPositionSmearingFunction_std::string";
+  const std::string kZPositionSmearingFunctionLimitsParamKey = "GeantParser_ZPositionSmearingParametersLimits_std::vector<double>";
+
   const std::string kSeedParamKey = "GeantParser_Seed_int";
 
   long fExpectedNumberOfEvents = 0;

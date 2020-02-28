@@ -105,14 +105,9 @@ void JPetGeantParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
     timeSmearingFormula = getOptionAsString(fParams.getOptions(), kTimeSmearingFunctionParamKey);
   }
 
-  std::string energySmearingFormula;
-  if (isOptionSet(fParams.getOptions(), kEnergySmearingFunctionParamKey)) {
-    energySmearingFormula = getOptionAsString(fParams.getOptions(), kEnergySmearingFunctionParamKey);
-  }
-
-  std::string zPositionSmearingFormula;
-  if (isOptionSet(fParams.getOptions(), kZPositionSmearingParametersParamKey)) {
-    zPositionSmearingFormula = getOptionAsString(fParams.getOptions(), kZPositionSmearingParametersParamKey);
+  std::vector<double> timeSmearingLimits;
+  if (isOptionSet(fParams.getOptions(), kTimeSmearingFunctionLimitsParamKey)) {
+    timeSmearingLimits= getOptionAsVectorOfDoubles(fParams.getOptions(), kTimeSmearingFunctionLimitsParamKey);
   }
 
   std::vector<double> energySmearingParameters;
@@ -120,12 +115,54 @@ void JPetGeantParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
     energySmearingParameters =  getOptionAsVectorOfDoubles(fParams.getOptions(), kEnergySmearingParametersParamKey);
   }
 
+  std::string energySmearingFormula;
+  if (isOptionSet(fParams.getOptions(), kEnergySmearingFunctionParamKey)) {
+    energySmearingFormula = getOptionAsString(fParams.getOptions(), kEnergySmearingFunctionParamKey);
+  }
+
+  std::vector<double> energySmearingLimits;
+  if (isOptionSet(fParams.getOptions(), kEnergySmearingFunctionLimitsParamKey)) {
+    energySmearingLimits= getOptionAsVectorOfDoubles(fParams.getOptions(), kEnergySmearingFunctionLimitsParamKey);
+  }
+
   std::vector<double> zPositionSmearingParameters;
   if (isOptionSet(fParams.getOptions(), kZPositionSmearingParametersParamKey)) {
     zPositionSmearingParameters =  getOptionAsVectorOfDoubles(fParams.getOptions(), kZPositionSmearingParametersParamKey);
   }
 
+  std::string zPositionSmearingFormula;
+  if (isOptionSet(fParams.getOptions(), kZPositionSmearingParametersParamKey)) {
+    zPositionSmearingFormula = getOptionAsString(fParams.getOptions(), kZPositionSmearingParametersParamKey);
+  }
+
+  std::vector<double> zPositionSmearingLimits;
+  if (isOptionSet(fParams.getOptions(), kZPositionSmearingFunctionLimitsParamKey)) {
+    zPositionSmearingLimits= getOptionAsVectorOfDoubles(fParams.getOptions(), kZPositionSmearingFunctionLimitsParamKey);
+  }
+
   fExperimentalParametrizer.setSmearingFunctions({{timeSmearingFormula, timeSmearingParameters}, {energySmearingFormula, energySmearingParameters}, {zPositionSmearingFormula, zPositionSmearingParameters}});
+
+  std::vector<std::pair<double, double>> limits;
+
+  if (timeSmearingLimits.size()==2) {
+      limits.push_back({timeSmearingLimits[0], timeSmearingLimits[1]});
+  } else {
+      limits.push_back({-1, -1});
+  }
+
+  if (energySmearingLimits.size()==2) {
+      limits.push_back({energySmearingLimits[0], energySmearingLimits[1]});
+  } else {
+      limits.push_back({-1, -1});
+  }
+
+  if (zPositionSmearingLimits.size()==2) {
+      limits.push_back({zPositionSmearingLimits[0], zPositionSmearingLimits[1]});
+  } else {
+      limits.push_back({-1, -1});
+  }
+
+  fExperimentalParametrizer.setSmearingFunctionLimits(limits);
 }
   
 
