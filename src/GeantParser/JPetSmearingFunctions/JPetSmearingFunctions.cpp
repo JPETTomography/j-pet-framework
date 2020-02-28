@@ -24,9 +24,9 @@ JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
     // p[1] = zIn
     // p[2] = eneIn
     // p[3] = timeIn
-    
+
     // p[4] = timeResolution (sigma)
-    // p[5] = energyThreshold 
+    // p[5] = energyThreshold
     // p[6] = referenceEnergy
 
     double eneIn = p[2];
@@ -48,9 +48,9 @@ JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
   const double kEnergyThreshold = 200.;       ///< see Eur. Phys. J. C (2016) 76:445  equation 4 and 5
   const double kReferenceEnergy = 270.;       ///< see Eur. Phys. J. C (2016) 76:445  equation 4 and 5
   fSmearingFunctions[kTime] = TF1("funTimeHitSmearing", timeSmearingF, -200., 200., 7);
-  fSmearingFunctions[kTime].SetParameter(4,kTimeResolutionConstant);
-  fSmearingFunctions[kTime].SetParameter(5,kEnergyThreshold);
-  fSmearingFunctions[kTime].SetParameter(6,kReferenceEnergy);
+  fSmearingFunctions[kTime].SetParameter(4, kTimeResolutionConstant);
+  fSmearingFunctions[kTime].SetParameter(5, kEnergyThreshold);
+  fSmearingFunctions[kTime].SetParameter(6, kReferenceEnergy);
 
   auto energySmearingF = [&](double* x, double* p) -> double {
     // p[0] = scinID
@@ -78,7 +78,7 @@ JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
   };
 
   fSmearingFunctions[kZPosition] = TF1("funZHitSmearing", zPositionSmearingF, -200., 200., 4);
-  double kZresolution= 0.976;
+  double kZresolution = 0.976;
   fSmearingFunctions[kZPosition].SetParameter(3, kZresolution);
 }
 
@@ -89,68 +89,74 @@ void JPetHitExperimentalParametrizer::setSmearingFunctions(const std::vector<Fun
   auto energyFuncAndParams = params[1];
   auto zPositionFuncAndParams = params[2];
 
-  auto timeFunc  = timeFuncAndParams.first;
+  auto timeFunc = timeFuncAndParams.first;
   auto timeParams = timeFuncAndParams.second;
   int nDefaultParams = 4;
   int nCustomParams = timeParams.size();
   int nTotalParams = nCustomParams + nDefaultParams;
-  if(!timeFunc.empty()) {
+  if (!timeFunc.empty())
+  {
     fSmearingFunctions[kTime] = TF1("funTimeHitSmearing", timeFunc.c_str(), -200., 200., nTotalParams);
   }
-  for (int i = 0; i < nCustomParams; i++) {
-     fSmearingFunctions[kTime].SetParameter(nDefaultParams + i, timeParams[i]); 
+  for (int i = 0; i < nCustomParams; i++)
+  {
+    fSmearingFunctions[kTime].SetParameter(nDefaultParams + i, timeParams[i]);
   }
 
-  auto energyFunc  = energyFuncAndParams.first;
+  auto energyFunc = energyFuncAndParams.first;
   auto energyParams = energyFuncAndParams.second;
-  nDefaultParams = 3; 
+  nDefaultParams = 3;
   nCustomParams = energyParams.size();
   nTotalParams = nCustomParams + nDefaultParams;
-  if(!energyFunc.empty()) {
+  if (!energyFunc.empty())
+  {
     fSmearingFunctions[kEnergy] = TF1("funEnergySmearing", energyFunc.c_str(), -200., 200., nTotalParams);
   }
-  for (int i = 0; i < nCustomParams; i++) {
-     fSmearingFunctions[kEnergy].SetParameter(nDefaultParams + i, energyParams[i]); 
+  for (int i = 0; i < nCustomParams; i++)
+  {
+    fSmearingFunctions[kEnergy].SetParameter(nDefaultParams + i, energyParams[i]);
   }
 
-  auto zPositionFunc  = zPositionFuncAndParams.first;
+  auto zPositionFunc = zPositionFuncAndParams.first;
   auto zPositionParams = zPositionFuncAndParams.second;
-  nDefaultParams = 3; 
+  nDefaultParams = 3;
   nCustomParams = zPositionParams.size();
   nTotalParams = nCustomParams + nDefaultParams;
-  if(!zPositionFunc.empty()) {
+  if (!zPositionFunc.empty())
+  {
     fSmearingFunctions[kZPosition] = TF1("funzHitSmearing", zPositionFunc.c_str(), -200., 200., nTotalParams);
   }
-  for (int i = 0; i < nCustomParams; i++) {
-     fSmearingFunctions[kZPosition].SetParameter(nDefaultParams + i, zPositionParams[i]); 
+  for (int i = 0; i < nCustomParams; i++)
+  {
+    fSmearingFunctions[kZPosition].SetParameter(nDefaultParams + i, zPositionParams[i]);
   }
 }
 
 /// Only those limits are modified for which first value is smaller than the second one.
 ///  The limits vector is suppose to have 3 elements in the order time, energy and z Position.
-void JPetHitExperimentalParametrizer::setSmearingFunctionLimits(const std::vector<std::pair<double, double> >& limits)
+void JPetHitExperimentalParametrizer::setSmearingFunctionLimits(const std::vector<std::pair<double, double>>& limits)
 {
   assert(limits.size() == 3);
   auto timeLim = limits[0];
-  auto energyLim = limits[1];;
+  auto energyLim = limits[1];
+  ;
   auto zPositionLim = limits[2];
-  if (timeLim.first < timeLim.second ) {
-    fFunctionLimits[kTime]= timeLim; 
+  if (timeLim.first < timeLim.second)
+  {
+    fFunctionLimits[kTime] = timeLim;
   }
-  if (energyLim.first < energyLim.second ) {
-    fFunctionLimits[kEnergy]= energyLim; 
+  if (energyLim.first < energyLim.second)
+  {
+    fFunctionLimits[kEnergy] = energyLim;
   }
-  if (zPositionLim.first < zPositionLim.second ) {
-    fFunctionLimits[kZPosition]= zPositionLim; 
+  if (zPositionLim.first < zPositionLim.second)
+  {
+    fFunctionLimits[kZPosition] = zPositionLim;
   }
 }
 
 using SmearingType = JPetHitExperimentalParametrizer::SmearingType;
-std::map<SmearingType, SmearingFunctionLimits> JPetHitExperimentalParametrizer::getSmearingFunctionLimits() const
-{
-  return fFunctionLimits;
-}
-
+std::map<SmearingType, SmearingFunctionLimits> JPetHitExperimentalParametrizer::getSmearingFunctionLimits() const { return fFunctionLimits; }
 
 /// function is randomize in the range [lowLim + timeIn, highLim + timeIn]
 double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn)

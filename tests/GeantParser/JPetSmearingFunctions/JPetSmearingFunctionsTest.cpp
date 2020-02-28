@@ -28,26 +28,26 @@ BOOST_AUTO_TEST_CASE(testDefaultLimits)
   double epsilon = 0.001;
   JPetHitExperimentalParametrizer parametrizer;
   auto limits = parametrizer.getSmearingFunctionLimits();
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].first,-300, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].second,300, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].first,-100, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].second,100, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].first,-5, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].second,5, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].first, -300, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].second, 300, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].first, -100, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].second, 100, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].first, -5, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].second, 5, epsilon);
 }
 
 BOOST_AUTO_TEST_CASE(testCustomLimits)
 {
   double epsilon = 0.001;
   JPetHitExperimentalParametrizer parametrizer;
-  parametrizer.setSmearingFunctionLimits({{-1,1}, {-2,2},{-3,3}});
+  parametrizer.setSmearingFunctionLimits({{-1, 1}, {-2, 2}, {-3, 3}});
   auto limits = parametrizer.getSmearingFunctionLimits();
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].first,-1, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].second,1, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].first,-2, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].second,2, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].first,-3, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].second,3, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].first, -1, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].second, 1, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].first, -2, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].second, 2, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].first, -3, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].second, 3, epsilon);
 }
 
 BOOST_AUTO_TEST_CASE(testCustomLimits2)
@@ -56,37 +56,38 @@ BOOST_AUTO_TEST_CASE(testCustomLimits2)
   JPetHitExperimentalParametrizer parametrizer;
   /// The second argument has the same upper and lower limit.
   ///  and so the energy smearing function should preserve original values.
-  parametrizer.setSmearingFunctionLimits({{-1,1}, {-2,-2},{-3,3}});
+  parametrizer.setSmearingFunctionLimits({{-1, 1}, {-2, -2}, {-3, 3}});
   auto limits = parametrizer.getSmearingFunctionLimits();
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].first,-1, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].second,1, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].first,-100, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].second,100, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].first,-3, epsilon); 
-  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].second,3, epsilon); 
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].first, -1, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kTime].second, 1, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].first, -100, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kEnergy].second, 100, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].first, -3, epsilon);
+  BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].second, 3, epsilon);
 }
 
 BOOST_AUTO_TEST_CASE(testDefaultZFunction)
 {
   JPetHitExperimentalParametrizer parametrizer;
   double mean = 1;
-  double sigma = 0.976; ///predefined sigma.
-  TF1 refFunc("refFunc","TMath::Gaus(x,[0],[1],1)", -4,6);
-  refFunc.SetParameter(0,mean); 
-  refFunc.SetParameter(1,sigma);
+  double sigma = 0.976; /// predefined sigma.
+  TF1 refFunc("refFunc", "TMath::Gaus(x,[0],[1],1)", -4, 6);
+  refFunc.SetParameter(0, mean);
+  refFunc.SetParameter(1, sigma);
 
   const int nTrials = 10000;
   std::vector<double> vals;
   std::vector<double> valsRef;
   vals.reserve(nTrials);
   valsRef.reserve(nTrials);
-  for (int i = 0; i < nTrials; i++) {
-    vals.push_back(parametrizer.addZHitSmearing(0,mean,0));
+  for (int i = 0; i < nTrials; i++)
+  {
+    vals.push_back(parametrizer.addZHitSmearing(0, mean, 0));
     valsRef.push_back(refFunc.GetRandom());
   }
   std::sort(vals.begin(), vals.end());
   std::sort(valsRef.begin(), valsRef.end());
-  auto prob = TMath::KolmogorovTest(vals.size(), &vals[0],  valsRef.size(), &valsRef[0],"" );
+  auto prob = TMath::KolmogorovTest(vals.size(), &vals[0], valsRef.size(), &valsRef[0], "");
   double alpha = 0.05;
   BOOST_REQUIRE(prob > alpha);
 }
@@ -95,18 +96,18 @@ BOOST_AUTO_TEST_CASE(testCustomZFunction)
 {
   JPetHitExperimentalParametrizer parametrizer;
 
-  /// default params are [0] scinId, [1] zIn, [2] eneIn 
+  /// default params are [0] scinId, [1] zIn, [2] eneIn
   /// we add here p[3] sigma of Landau
-  std::string zSmearing= "[&](double* x, double* p)->double{ return TMath::Landau(x[0],p[1],p[3], false);};";
+  std::string zSmearing = "[&](double* x, double* p)->double{ return TMath::Landau(x[0],p[1],p[3], false);};";
 
   double mpv = 0; /// most probable value of Landau ~~ "mean"
   double sigma = 2;
   /// we pass only the additional parameters
-  parametrizer.setSmearingFunctions({{"",{}},{"",{}},{zSmearing,{sigma}}});
-  parametrizer.setSmearingFunctionLimits({{0,0}, {0,0},{-4,4}});
+  parametrizer.setSmearingFunctions({{"", {}}, {"", {}}, {zSmearing, {sigma}}});
+  parametrizer.setSmearingFunctionLimits({{0, 0}, {0, 0}, {-4, 4}});
 
-  TF1 refFunc("refFunc","TMath::Landau(x,[0],[1],0)", -4,4);
-  refFunc.SetParameter(0, mpv); 
+  TF1 refFunc("refFunc", "TMath::Landau(x,[0],[1],0)", -4, 4);
+  refFunc.SetParameter(0, mpv);
   refFunc.SetParameter(1, sigma);
 
   const int nTrials = 10000;
@@ -114,13 +115,14 @@ BOOST_AUTO_TEST_CASE(testCustomZFunction)
   std::vector<double> valsRef;
   vals.reserve(nTrials);
   valsRef.reserve(nTrials);
-  for (int i = 0; i < nTrials; i++) {
-    vals.push_back(parametrizer.addZHitSmearing(0,mpv,0));
+  for (int i = 0; i < nTrials; i++)
+  {
+    vals.push_back(parametrizer.addZHitSmearing(0, mpv, 0));
     valsRef.push_back(refFunc.GetRandom());
   }
   std::sort(vals.begin(), vals.end());
   std::sort(valsRef.begin(), valsRef.end());
-  auto prob = TMath::KolmogorovTest(vals.size(), &vals[0],  valsRef.size(), &valsRef[0],"" );
+  auto prob = TMath::KolmogorovTest(vals.size(), &vals[0], valsRef.size(), &valsRef[0], "");
   double alpha = 0.05;
   BOOST_REQUIRE(prob > alpha);
 }
