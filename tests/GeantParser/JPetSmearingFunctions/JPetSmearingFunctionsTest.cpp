@@ -19,6 +19,9 @@
 
 #include "JPetSmearingFunctions/JPetSmearingFunctions.h"
 
+#include <TFile.h>
+#include <TH1F.h>
+
 using SmearingType = JPetHitExperimentalParametrizer::SmearingType;
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
@@ -128,7 +131,7 @@ BOOST_AUTO_TEST_CASE(testCustomZFunction)
 
   /// default params are [0] scinId, [1] zIn, [2] eneIn
   /// we add here p[3] sigma of Landau
-  std::string zSmearing = "[&](double* x, double* p)->double{ return TMath::Landau(x[0],p[1],p[3], false);};";
+  std::string zSmearing = "[&](double* x, double* p)->double{ return TMath::Landau(x[0],p[1],p[3], 0);};";
 
   double mpv = 0; /// most probable value of Landau ~~ "mean"
   double sigma = 2;
@@ -140,21 +143,32 @@ BOOST_AUTO_TEST_CASE(testCustomZFunction)
   refFunc.SetParameter(0, mpv);
   refFunc.SetParameter(1, sigma);
 
-  const int nTrials = 10000;
+  const int nTrials = 100000;
   std::vector<double> vals;
   std::vector<double> valsRef;
   vals.reserve(nTrials);
   valsRef.reserve(nTrials);
+  // TFile file("out.root", "recreate");
+  // TH1F hist("blabla","blabla",100, -5,5);
+  // TH1F hist2("blabla2","blabla2",100, -5,5);
   for (int i = 0; i < nTrials; i++)
   {
-    vals.push_back(parametrizer.addZHitSmearing(0, mpv, 0));
-    valsRef.push_back(refFunc.GetRandom());
+    double res = parametrizer.addZHitSmearing(0, mpv, 0);
+    double res2 = refFunc.GetRandom();
+    vals.push_back(res);
+    valsRef.push_back(res2);
+    // hist.Fill(res);
+    // hist2.Fill(res2);
   }
+  // hist.Draw();
+  // hist2.Draw();
+  // file.Write();
+  // file.Close();
   std::sort(vals.begin(), vals.end());
   std::sort(valsRef.begin(), valsRef.end());
   auto prob = TMath::KolmogorovTest(vals.size(), &vals[0], valsRef.size(), &valsRef[0], "");
   double alpha = 0.05;
-  std::cout << prob << std::endl;
+  parametrizer.printAllParameters();
   BOOST_REQUIRE(prob > alpha);
 }
 
