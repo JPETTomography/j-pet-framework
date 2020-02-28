@@ -66,40 +66,63 @@ BOOST_AUTO_TEST_CASE(testCustomLimits2)
   BOOST_REQUIRE_CLOSE(limits[SmearingType::kZPosition].second,3, epsilon); 
 }
 
-//BOOST_AUTO_TEST_CASE(testDefaultZFunction)
-//{
-  //JPetHitExperimentalParametrizer parametrizer;
-  //TH1F hist("testHist","testHist",120,-6,6);  
-  //for (int i = 0; i < 10000; i++) {
-    //hist->Fill(sparametrizer.addZHitSmearing(0,1,0));
-    
-  //}
-//}
-
-BOOST_AUTO_TEST_CASE(testSettingFunction)
+BOOST_AUTO_TEST_CASE(testDefaultZFunction)
 {
   JPetHitExperimentalParametrizer parametrizer;
-  
-  std::string timeSmearing= "[&](double* x, double* p)->double{ return 7;};";
-  parametrizer.setSmearingFunctions({{timeSmearing,{}},{"",{}},{"",{}}});
-  parametrizer.addTimeSmearing(1,1,1,1);
+  double mean = 1;
+  double sigma = 0.976; ///predefined sigma.
+  TF1 refFunc("refFunc","TMath::Gaus(x,[0],[1],1)", -4,6);
+  refFunc.SetParameter(0,mean); 
+  refFunc.SetParameter(1,sigma);
+
+  const int nTrials = 10000;
+  std::vector<double> vals;
+  std::vector<double> valsRef;
+  vals.reserve(nTrials);
+  valsRef.reserve(nTrials);
+  for (int i = 0; i < nTrials; i++) {
+    vals.push_back(parametrizer.addZHitSmearing(0,mean,0));
+    valsRef.push_back(refFunc.GetRandom());
+  }
+  std::sort(vals.begin(), vals.end());
+  std::sort(valsRef.begin(), valsRef.end());
+  auto prob = TMath::KolmogorovTest(vals.size(), &vals[0],  valsRef.size(), &valsRef[0],"" );
+  double alpha = 0.05;
+  BOOST_REQUIRE(prob > alpha);
 }
 
-BOOST_AUTO_TEST_CASE(testSettingFunction2)
+BOOST_AUTO_TEST_CASE(testCustomZFunction)
 {
   JPetHitExperimentalParametrizer parametrizer;
-  
-  std::string timeSmearing= "[&](double* x, double* p)->double{ return x[0] + p[4]*x[0];};";
-  parametrizer.setSmearingFunctions({{timeSmearing,{2}},{"",{}},{"",{}}});
-  parametrizer.addTimeSmearing(1,1,1,1);
+
+  /// default params are [0] scinId, [1] zIn, [2] eneIn 
+  /// we add here p[3] sigma of Landau
+  std::string zSmearing= "[&](double* x, double* p)->double{ return TMath::Landau(x[0],p[1],p[3], false);};";
+
+  double mpv = 0; /// most probable value of Landau ~~ "mean"
+  double sigma = 2;
+  /// we pass only the additional parameters
+  parametrizer.setSmearingFunctions({{"",{}},{"",{}},{zSmearing,{sigma}}});
+  parametrizer.setSmearingFunctionLimits({{0,0}, {0,0},{-4,4}});
+
+  TF1 refFunc("refFunc","TMath::Landau(x,[0],[1],0)", -4,4);
+  refFunc.SetParameter(0, mpv); 
+  refFunc.SetParameter(1, sigma);
+
+  const int nTrials = 10000;
+  std::vector<double> vals;
+  std::vector<double> valsRef;
+  vals.reserve(nTrials);
+  valsRef.reserve(nTrials);
+  for (int i = 0; i < nTrials; i++) {
+    vals.push_back(parametrizer.addZHitSmearing(0,mpv,0));
+    valsRef.push_back(refFunc.GetRandom());
+  }
+  std::sort(vals.begin(), vals.end());
+  std::sort(valsRef.begin(), valsRef.end());
+  auto prob = TMath::KolmogorovTest(vals.size(), &vals[0],  valsRef.size(), &valsRef[0],"" );
+  double alpha = 0.05;
+  BOOST_REQUIRE(prob > alpha);
 }
 
-BOOST_AUTO_TEST_CASE(testSettingFunction3)
-{
-  JPetHitExperimentalParametrizer parametrizer;
-  
-  std::string timeSmearing= "[&](double* x, double* p)->double{ return TMath::Gaus(x[0],p[0],p[1]);};";
-  parametrizer.setSmearingFunctions({{timeSmearing,{}},{"",{}},{"",{}}});
-  parametrizer.addTimeSmearing(1,1,1,1);
-}
 BOOST_AUTO_TEST_SUITE_END()

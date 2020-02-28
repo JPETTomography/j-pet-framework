@@ -92,34 +92,37 @@ void JPetHitExperimentalParametrizer::setSmearingFunctions(const std::vector<Fun
   auto timeFunc  = timeFuncAndParams.first;
   auto timeParams = timeFuncAndParams.second;
   int nDefaultParams = 4;
-  int nParams = timeParams.size() + nDefaultParams; /// because we have four default parameters;
+  int nCustomParams = timeParams.size();
+  int nTotalParams = nCustomParams + nDefaultParams;
   if(!timeFunc.empty()) {
-    fSmearingFunctions[kTime] = TF1("funTimeHitSmearing", timeFunc.c_str(), -200., 200., nParams);
+    fSmearingFunctions[kTime] = TF1("funTimeHitSmearing", timeFunc.c_str(), -200., 200., nTotalParams);
   }
-  for (int i = 4; i < nParams; i++) {
-     fSmearingFunctions[kTime].SetParameter(i, timeParams[i]); 
+  for (int i = 0; i < nCustomParams; i++) {
+     fSmearingFunctions[kTime].SetParameter(nDefaultParams + i, timeParams[i]); 
   }
 
   auto energyFunc  = energyFuncAndParams.first;
   auto energyParams = energyFuncAndParams.second;
   nDefaultParams = 3; 
-  nParams = energyParams.size() + nDefaultParams; /// because we have three default parameters;
+  nCustomParams = energyParams.size();
+  nTotalParams = nCustomParams + nDefaultParams;
   if(!energyFunc.empty()) {
-    fSmearingFunctions[kEnergy] = TF1("funEnergySmearing", energyFunc.c_str(), -200., 200., nParams);
+    fSmearingFunctions[kEnergy] = TF1("funEnergySmearing", energyFunc.c_str(), -200., 200., nTotalParams);
   }
-  for (int i = nDefaultParams; i < nParams; i++) {
-     fSmearingFunctions[kEnergy].SetParameter(i, energyParams[i]); 
+  for (int i = 0; i < nCustomParams; i++) {
+     fSmearingFunctions[kEnergy].SetParameter(nDefaultParams + i, energyParams[i]); 
   }
 
   auto zPositionFunc  = zPositionFuncAndParams.first;
   auto zPositionParams = zPositionFuncAndParams.second;
   nDefaultParams = 3; 
-  nParams = zPositionParams.size() + nDefaultParams; /// because we have three default parameters;
+  nCustomParams = zPositionParams.size();
+  nTotalParams = nCustomParams + nDefaultParams;
   if(!zPositionFunc.empty()) {
-    fSmearingFunctions[kZPosition] = TF1("funzHitSmearing", zPositionFunc.c_str(), -200., 200., nParams);
+    fSmearingFunctions[kZPosition] = TF1("funzHitSmearing", zPositionFunc.c_str(), -200., 200., nTotalParams);
   }
-  for (int i = nDefaultParams; i < nParams; i++) {
-     fSmearingFunctions[kZPosition].SetParameter(i, zPositionParams[i]); 
+  for (int i = 0; i < nCustomParams; i++) {
+     fSmearingFunctions[kZPosition].SetParameter(nDefaultParams + i, zPositionParams[i]); 
   }
 }
 
