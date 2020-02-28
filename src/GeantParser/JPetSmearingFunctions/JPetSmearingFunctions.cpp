@@ -168,7 +168,7 @@ void JPetHitExperimentalParametrizer::writeAllParametersToLog() const
   for (auto type : types)
   {
     INFO(fSmearingFunctions.at(type)->GetName());
-    INFO(std::string("limits: low = ") + limits[type].first + " , high = " + limits[type].second);
+    INFO(std::string("limits: low = ") + std::to_string(limits[type].first) + " , high = " + std::to_string(limits[type].second));
     auto nPar = fSmearingFunctions.at(type)->GetNpar();
     INFO(std::string("number of parameters:") + std::to_string(nPar));
     for (int i = 0; i < nPar; i++)
