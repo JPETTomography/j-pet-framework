@@ -147,22 +147,13 @@ BOOST_AUTO_TEST_CASE(testCustomZFunction)
   std::vector<double> valsRef;
   vals.reserve(nTrials);
   valsRef.reserve(nTrials);
-  // TFile file("out.root", "recreate");
-  // TH1F hist("blabla","blabla",100, -5,5);
-  // TH1F hist2("blabla2","blabla2",100, -5,5);
   for (int i = 0; i < nTrials; i++)
   {
     double res = parametrizer.addZHitSmearing(0, mpv, 0);
     double res2 = refFunc.GetRandom();
     vals.push_back(res);
     valsRef.push_back(res2);
-    // hist.Fill(res);
-    // hist2.Fill(res2);
   }
-  // hist.Draw();
-  // hist2.Draw();
-  // file.Write();
-  // file.Close();
   std::sort(vals.begin(), vals.end());
   std::sort(valsRef.begin(), valsRef.end());
   auto prob = TMath::KolmogorovTest(vals.size(), &vals[0], valsRef.size(), &valsRef[0], "");

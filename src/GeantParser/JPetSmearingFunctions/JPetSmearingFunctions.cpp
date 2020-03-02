@@ -144,7 +144,6 @@ void JPetHitExperimentalParametrizer::setSmearingFunctionLimits(const std::vecto
   assert(limits.size() == 3);
   auto timeLim = limits[0];
   auto energyLim = limits[1];
-  ;
   auto zPositionLim = limits[2];
   if (timeLim.first < timeLim.second)
   {

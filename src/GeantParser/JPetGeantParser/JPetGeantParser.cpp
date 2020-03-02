@@ -74,7 +74,7 @@ bool JPetGeantParser::init()
   }
 
   JPetGeantParserTools::setSeedTogRandom(getOriginalSeed());
-  INFO("Seed value used for resolution smearing of MC simulation data:"<< boost::lexical_cast<std::string>(getOriginalSeed()));
+  INFO("Seed value used for resolution smearing of MC simulation data: "<< boost::lexical_cast<std::string>(getOriginalSeed()));
 
   loadSmearingOptionsAndSetupExperimentalParametrizer();
 
