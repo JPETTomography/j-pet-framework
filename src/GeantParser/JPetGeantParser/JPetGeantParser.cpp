@@ -69,7 +69,6 @@ bool JPetGeantParser::init()
     fProcessSingleEventinWindow = getOptionAsBool(fParams.getOptions(), kProcessSingleEventinWindowParamKey);
   }
   
-
   if (isOptionSet(fParams.getOptions(), kSeedParamKey)) {
     fSeed = getOptionAsInt(fParams.getOptions(), kSeedParamKey);
   }
