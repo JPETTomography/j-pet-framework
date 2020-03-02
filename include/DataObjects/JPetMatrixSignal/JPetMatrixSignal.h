@@ -16,7 +16,6 @@
 #ifndef JPETMATRIXSIGNAL_H
 #define JPETMATRIXSIGNAL_H
 
-#include "JPetBaseSignal/JPetBaseSignal.h"
 #include "JPetRawSignal/JPetRawSignal.h"
 #include "JPetScin/JPetScin.h"
 
@@ -55,7 +54,7 @@ protected:
   bool fIsNullObject;
   #endif
 
-  ClassDef(JPetMatrixSignal, 1);
+  ClassDef(JPetMatrixSignal, 2);
 
 };
 #endif /* !JPETMATRIXSIGNAL_H */

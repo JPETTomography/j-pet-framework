@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -49,22 +49,18 @@ BOOST_AUTO_TEST_CASE(generateParamManagerForScopeCase)
   BOOST_REQUIRE(!paramMgr->getExpectMissing().empty());
   paramMgr->fillParameterBank(1);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().isDummy(), false);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getScintillatorsSize(), 2);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getScinsSize(), 2);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getPMsSize(), 4);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getFEBsSize(), 0);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getTRBsSize(), 0);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getBarrelSlotsSize(), 2);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getTOMBChannelsSize(), 0);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getSlotsSize(), 2);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getChannelsSize(), 0);
 }
 
 void checkContainersSize(const JPetParamBank& bank)
 {
-  BOOST_REQUIRE_EQUAL(bank.getScintillatorsSize(), 2);
+  BOOST_REQUIRE_EQUAL(bank.getScinsSize(), 2);
   BOOST_REQUIRE_EQUAL(bank.getPMsSize(), 4);
-  BOOST_REQUIRE_EQUAL(bank.getFEBsSize(), 1);
-  BOOST_REQUIRE_EQUAL(bank.getTRBsSize(), 1);
-  BOOST_REQUIRE_EQUAL(bank.getBarrelSlotsSize(), 2);
-  BOOST_REQUIRE_EQUAL(bank.getTOMBChannelsSize(), 4);
+  BOOST_REQUIRE_EQUAL(bank.getSlotsSize(), 2);
+  BOOST_REQUIRE_EQUAL(bank.getChannelsSize(), 4);
 }
 
 BOOST_AUTO_TEST_CASE(default_constructor)
@@ -99,12 +95,10 @@ BOOST_AUTO_TEST_CASE(some_Test_that_had_no_name)
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().isDummy(), false);
   checkContainersSize(l_paramManagerInstance.getParamBank());
   l_paramManagerInstance.clearParameters();
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getScintillatorsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getScinsSize(), 0);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getPMsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getFEBsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getTRBsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getBarrelSlotsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getTOMBChannelsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getSlotsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getChannelsSize(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(getParamBankTest)
@@ -118,22 +112,18 @@ BOOST_AUTO_TEST_CASE(getParamBankTest)
 BOOST_AUTO_TEST_CASE(getParamBankTestWithScopeSettings)
 {
   std::set<ParamObjectType> expectMissing;
-  expectMissing.insert(ParamObjectType::kTRB);
-  expectMissing.insert(ParamObjectType::kFEB);
-  expectMissing.insert(ParamObjectType::kFrame);
+  expectMissing.insert(ParamObjectType::kSetup);
   expectMissing.insert(ParamObjectType::kLayer);
-  expectMissing.insert(ParamObjectType::kTOMBChannel);
+  expectMissing.insert(ParamObjectType::kChannel);
   const std::string dataFileNameWithScope("unitTestData/JPetScopeLoaderTest/test_params.json");
   JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileNameWithScope), expectMissing);
   l_paramManagerInstance.fillParameterBank(1);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().isDummy(), false);
   BOOST_REQUIRE(!l_paramManagerInstance.getExpectMissing().empty());
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getScintillatorsSize(), 2);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getScinsSize(), 2);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getPMsSize(), 4);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getFEBsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getTRBsSize(), 0);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getBarrelSlotsSize(), 2);
-  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getTOMBChannelsSize(), 0);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getSlotsSize(), 2);
+  BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().getChannelsSize(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

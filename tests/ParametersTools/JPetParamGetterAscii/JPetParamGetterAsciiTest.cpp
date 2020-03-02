@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(minimal_basic_data_read)
 BOOST_AUTO_TEST_CASE(minimal_relational_data_read)
 {
   JPetParamGetterAscii getter(dataDir + "DB1.json");
-  ParamRelationalData relations = getter.getAllRelationalData(ParamObjectType::kPM, ParamObjectType::kBarrelSlot, 1);
+  ParamRelationalData relations = getter.getAllRelationalData(ParamObjectType::kPM, ParamObjectType::kScin, 1);
   BOOST_REQUIRE_EQUAL(relations.size(), 1u);
   BOOST_REQUIRE_EQUAL(relations[1], 1);
 }
@@ -69,42 +69,27 @@ BOOST_AUTO_TEST_CASE(minimal_example_write)
   JPetParamManager reparamManager(new JPetParamGetterAscii(writtenFileName.c_str()));
   reparamManager.fillParameterBank(1);
   const JPetParamBank& reparamBank = reparamManager.getParamBank();
-  BOOST_REQUIRE(paramBank.getScintillatorsSize() == reparamBank.getScintillatorsSize());
-  BOOST_REQUIRE(paramBank.getBarrelSlotsSize() == reparamBank.getBarrelSlotsSize());
+  BOOST_REQUIRE(paramBank.getScinsSize() == reparamBank.getScinsSize());
+  BOOST_REQUIRE(paramBank.getSlotsSize() == reparamBank.getSlotsSize());
   BOOST_REQUIRE(paramBank.getPMsSize() == reparamBank.getPMsSize());
-  BOOST_REQUIRE(paramBank.getFEBsSize() == reparamBank.getFEBsSize());
   BOOST_REQUIRE(paramBank.getLayersSize() == reparamBank.getLayersSize());
-  BOOST_REQUIRE(paramBank.getFramesSize() == reparamBank.getFramesSize());
-  BOOST_REQUIRE(paramBank.getTOMBChannelsSize() == reparamBank.getTOMBChannelsSize());
-  BOOST_REQUIRE(paramBank.getTRBsSize() == reparamBank.getTRBsSize());
-  JPetScin& scintillator = paramBank.getScintillator(1);
-  JPetScin& rescintillator = reparamBank.getScintillator(1);
+  BOOST_REQUIRE(paramBank.getSetupsSize() == reparamBank.getSetupsSize());
+  BOOST_REQUIRE(paramBank.getChannelsSize() == reparamBank.getChannelsSize());
+  JPetScin& scintillator = paramBank.getScin(1);
+  JPetScin& rescintillator = reparamBank.getScin(1);
   BOOST_REQUIRE(scintillator.getID() == rescintillator.getID());
-  BOOST_REQUIRE(scintillator.getAttenLen() == rescintillator.getAttenLen());
-  BOOST_REQUIRE(scintillator.getScinSize().fLength == rescintillator.getScinSize().fLength);
-  BOOST_REQUIRE(scintillator.getScinSize().fHeight == rescintillator.getScinSize().fHeight);
-  BOOST_REQUIRE(scintillator.getScinSize().fWidth == rescintillator.getScinSize().fWidth);
-  JPetBarrelSlot& barrelSlot = paramBank.getBarrelSlot(1);
-  JPetBarrelSlot& rebarrelSlot = reparamBank.getBarrelSlot(1);
-  BOOST_REQUIRE(barrelSlot.getID() == rebarrelSlot.getID());
-  BOOST_REQUIRE(barrelSlot.isActive() == rebarrelSlot.isActive());
-  BOOST_REQUIRE(barrelSlot.getName() == rebarrelSlot.getName());
-  BOOST_REQUIRE(barrelSlot.getTheta() == rebarrelSlot.getTheta());
-  BOOST_REQUIRE(barrelSlot.getInFrameID() == rebarrelSlot.getInFrameID());
+  BOOST_REQUIRE(scintillator.getLength() == rescintillator.getLength());
+  BOOST_REQUIRE(scintillator.getHeight() == rescintillator.getHeight());
+  BOOST_REQUIRE(scintillator.getWidth() == rescintillator.getWidth());
+  JPetSlot& slot = paramBank.getSlot(1);
+  JPetSlot& rebarrelSlot = reparamBank.getBarrelSlot(1);
+  BOOST_REQUIRE(slot.getID() == rebarrelSlot.getID());
+  BOOST_REQUIRE(slot.getTheta() == rebarrelSlot.getTheta());
   JPetPM& pm = paramBank.getPM(1);
   JPetPM& repm = reparamBank.getPM(1);
   BOOST_REQUIRE(pm.getID() == repm.getID());
   BOOST_REQUIRE(pm.getSide() == repm.getSide());
   BOOST_REQUIRE(pm.getDescription() == repm.getDescription());
-  JPetFEB& feb = paramBank.getFEB(1);
-  JPetFEB& refeb = reparamBank.getFEB(1);
-  BOOST_REQUIRE(feb.getID() == refeb.getID());
-  BOOST_REQUIRE(feb.isActive() == refeb.isActive());
-  BOOST_REQUIRE(feb.status() == refeb.status());
-  BOOST_REQUIRE(feb.description() == refeb.description());
-  BOOST_REQUIRE(feb.version() == refeb.version());
-  BOOST_REQUIRE(feb.getNtimeOutsPerInput() == refeb.getNtimeOutsPerInput());
-  BOOST_REQUIRE(feb.getNnotimeOutsPerInput() == refeb.getNnotimeOutsPerInput());
   JPetLayer& layer = paramBank.getLayer(1);
   JPetLayer& relayer = reparamBank.getLayer(1);
   BOOST_REQUIRE(layer.getID() == relayer.getID());

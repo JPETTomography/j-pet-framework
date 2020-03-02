@@ -13,18 +13,17 @@
  *  @file JPetGeantParser.cpp
  */
 
-#include <JPetAnalysisTools/JPetAnalysisTools.h>
-#include <JPetGeantParser/JPetGeantParser.h>
 #include <JPetGeantParser/JPetGeantParserTools.h>
+#include <JPetAnalysisTools/JPetAnalysisTools.h>
 #include <JPetOptionsTools/JPetOptionsTools.h>
+#include <JPetGeantParser/JPetGeantParser.h>
 #include <JPetWriter/JPetWriter.h>
-#include <iostream>
-
 #include <JPetScin/JPetScin.h>
+#include <iostream>
 #include <TMath.h>
+#include <string>
 #include <array>
 #include <cmath>
-#include <string>
 
 using namespace jpet_options_tools;
 
@@ -183,7 +182,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     double x = evPack->GetEventInformation()->GetVtxPromptPositionX();
     double y = evPack->GetEventInformation()->GetVtxPromptPositionY();
     double z = evPack->GetEventInformation()->GetVtxPromptPositionZ();
-    getStatistics().getEffiHisto("effi_prompt_in_rho_z")->Fill(isRecPrompt, sqrt(pow(x, 2) + pow(y, 2)), z);
+    // getStatistics().getEffiHisto("effi_prompt_in_rho_z")->Fill(isRecPrompt, sqrt(pow(x, 2) + pow(y, 2)), z);
   }
 
   if (isGen2g && fMakeEffiHisto)
@@ -191,7 +190,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     double x = evPack->GetEventInformation()->GetVtxPositionX();
     double y = evPack->GetEventInformation()->GetVtxPositionY();
     double z = evPack->GetEventInformation()->GetVtxPositionZ();
-    getStatistics().getEffiHisto("effi_2g_in_rho_z")->Fill(isRec2g, sqrt(pow(x, 2) + pow(y, 2)), z);
+    // getStatistics().getEffiHisto("effi_2g_in_rho_z")->Fill(isRec2g, sqrt(pow(x, 2) + pow(y, 2)), z);
   }
 
   if (isGen3g && fMakeEffiHisto)
@@ -199,7 +198,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     double x = evPack->GetEventInformation()->GetVtxPositionX();
     double y = evPack->GetEventInformation()->GetVtxPositionY();
     double z = evPack->GetEventInformation()->GetVtxPositionZ();
-    getStatistics().getEffiHisto("effi_3g_in_rho_z")->Fill(isRec3g, sqrt(pow(x, 2) + pow(y, 2)), z);
+    // getStatistics().getEffiHisto("effi_3g_in_rho_z")->Fill(isRec3g, sqrt(pow(x, 2) + pow(y, 2)), z);
   }
 
   if (isGenPrompt)
@@ -239,33 +238,33 @@ void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo)
   bool isGen3g = evInfo->GetThreeGammaGen();
 
   // general histograms
-  getStatistics().getHisto1D("gen_lifetime")->Fill(evInfo->GetLifetime());
+  // getStatistics().getHisto1D("gen_lifetime")->Fill(evInfo->GetLifetime());
 
   // histograms for prompt gamma
   if (isGenPrompt)
   {
-    getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(1);
-    getStatistics().getHisto2D("gen_prompt_XY")->Fill(evInfo->GetVtxPromptPositionX(), evInfo->GetVtxPromptPositionY());
-    getStatistics().getHisto2D("gen_prompt_XZ")->Fill(evInfo->GetVtxPromptPositionX(), evInfo->GetVtxPromptPositionZ());
-    getStatistics().getHisto2D("gen_prompt_YZ")->Fill(evInfo->GetVtxPromptPositionY(), evInfo->GetVtxPromptPositionZ());
+    // getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(1);
+    // getStatistics().getHisto2D("gen_prompt_XY")->Fill(evInfo->GetVtxPromptPositionX(), evInfo->GetVtxPromptPositionY());
+    // getStatistics().getHisto2D("gen_prompt_XZ")->Fill(evInfo->GetVtxPromptPositionX(), evInfo->GetVtxPromptPositionZ());
+    // getStatistics().getHisto2D("gen_prompt_YZ")->Fill(evInfo->GetVtxPromptPositionY(), evInfo->GetVtxPromptPositionZ());
   }
 
   // histograms for annihilation 2g 3g
   if (isGen2g)
   {
-    getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(2);
+    // getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(2);
   }
 
   if (isGen3g)
   {
-    getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(3);
+    // getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(3);
   }
 
   if (isGen2g || isGen3g)
   {
-    getStatistics().getHisto2D("gen_XY")->Fill(evInfo->GetVtxPositionX(), evInfo->GetVtxPositionY());
-    getStatistics().getHisto2D("gen_XZ")->Fill(evInfo->GetVtxPositionX(), evInfo->GetVtxPositionZ());
-    getStatistics().getHisto2D("gen_YZ")->Fill(evInfo->GetVtxPositionY(), evInfo->GetVtxPositionZ());
+    // getStatistics().getHisto2D("gen_XY")->Fill(evInfo->GetVtxPositionX(), evInfo->GetVtxPositionY());
+    // getStatistics().getHisto2D("gen_XZ")->Fill(evInfo->GetVtxPositionX(), evInfo->GetVtxPositionZ());
+    // getStatistics().getHisto2D("gen_YZ")->Fill(evInfo->GetVtxPositionY(), evInfo->GetVtxPositionZ());
   }
 }
 
@@ -284,10 +283,10 @@ void JPetGeantParser::saveHits()
 
   if (fMakeHisto)
   {
-    getStatistics().getHisto1D("hits_per_time_window")->Fill(fStoredHits.size());
+    // getStatistics().getHisto1D("hits_per_time_window")->Fill(fStoredHits.size());
     for (const auto i : fTimeDiffDistro)
     {
-      getStatistics().getHisto1D("time_diff_bw_decays")->Fill(i);
+      // getStatistics().getHisto1D("time_diff_bw_decays")->Fill(i);
     }
   }
 
@@ -297,169 +296,123 @@ void JPetGeantParser::saveHits()
 
 void JPetGeantParser::fillHistoMCGen(JPetMCHit& mcHit)
 {
-  getStatistics().getHisto1D("gen_hits_z_pos")->Fill(mcHit.getPosZ());
-  getStatistics().getHisto2D("gen_hits_xy_pos")->Fill(mcHit.getPosX(), mcHit.getPosY());
-  getStatistics().getHisto1D("gen_hit_time")->Fill(mcHit.getTime());
-  getStatistics().getHisto1D("gen_hit_eneDepos")->Fill(mcHit.getEnergy());
+  // getStatistics().getHisto1D("gen_hits_z_pos")->Fill(mcHit.getPosZ());
+  // getStatistics().getHisto2D("gen_hits_xy_pos")->Fill(mcHit.getPosX(), mcHit.getPosY());
+  // getStatistics().getHisto1D("gen_hit_time")->Fill(mcHit.getTime());
+  // getStatistics().getHisto1D("gen_hit_eneDepos")->Fill(mcHit.getEnergy());
 }
 
 void JPetGeantParser::fillHistoMCRec(JPetHit& recHit)
 {
-  getStatistics().getHisto1D("hits_z_pos")->Fill(recHit.getPosZ());
-  getStatistics().getHisto2D("hits_xy_pos")->Fill(recHit.getPosX(), recHit.getPosY());
-  getStatistics().getHisto1D("rec_hit_time")->Fill(recHit.getTime());
-  getStatistics().getHisto1D("rec_hit_eneDepos")->Fill(recHit.getEnergy());
+  // getStatistics().getHisto1D("hits_z_pos")->Fill(recHit.getPosZ());
+  // getStatistics().getHisto2D("hits_xy_pos")->Fill(recHit.getPosX(), recHit.getPosY());
+  // getStatistics().getHisto1D("rec_hit_time")->Fill(recHit.getTime());
+  // getStatistics().getHisto1D("rec_hit_eneDepos")->Fill(recHit.getEnergy());
 }
 
 void JPetGeantParser::bookBasicHistograms()
 {
   // HISTOGRAMS FROM STANDARD HITFINDER
-
-  getStatistics().createHistogram(new TH1F("hits_per_time_window", "Number of Hits in Time Window", 101, -0.5, 500.5));
-
-  getStatistics().createHistogram(new TH1F("time_diff_bw_decays", "Time difference between decays", 101, -0.5, (fMaxTime - fMinTime) / 50.));
-
-  // GENERATED HISTOGRAMS
-
-  getStatistics().createHistogram(
-    new TH1F("gen_hits_z_pos",
-             "Gen hits Z position",
-             100, -60.0, 60.0)
-  );
-
-  getStatistics().createHistogram(
-    new TH2F("gen_hits_xy_pos",
-             "GEN hits XY pos",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
-
-
-  getStatistics().createHistogram(
-    new TH1F("gen_hit_time",
-             "Gen hit time",
-             100, 0.0, 15000.0)
-  );
-
-  getStatistics().createHistogram(
-    new TH1F("gen_hit_eneDepos",
-             "Gen hit ene deposition",
-             750, 0.0, 1500.0)
-  );
-
-
-  getStatistics().createHistogram(
-    new TH2F("gen_XY",
-             "GEN XY coordinates of annihilation point",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
-
-  getStatistics().createHistogram(
-    new TH2F("gen_XZ",
-             "GEN XZ coordinates of annihilation point",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
-
-  getStatistics().createHistogram(
-    new TH2F("gen_YZ",
-             "GEN YZ coordinates of annihilation point",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
-
-  getStatistics().createHistogram(
-    new TH2F("gen_prompt_XY",
-             "GEN XY coordinates of prompt emission point",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
-
-  getStatistics().createHistogram(
-    new TH2F("gen_prompt_XZ",
-             "GEN XZ coordinates of prompt emission point",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
-
-  getStatistics().createHistogram(
-    new TH2F("gen_prompt_YZ",
-             "GEN YZ coordinates of prompt emission point",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
-
-
-
-  getStatistics().createHistogram(
-    new TH1F("gen_hit_multiplicity",
-             "Gen hit multiplicity",
-             6, 0.0, 5.0)
-  );
-
-  getStatistics().createHistogram(
-    new TH1F("gen_lifetime",
-             "Gen lifetime",
-             100, 0.0, 1500.0)
-  );
-
-
-
-
-  // RECONSTRUCTED HISTOGRAMS
-
-  getStatistics().createHistogram(
-    new TH1F("hits_z_pos",
-             "hits Z position",
-             100, -60.0, 60.0)
-  );
-
-  getStatistics().createHistogram(
-    new TH2F("hits_xy_pos",
-             "hits XY pos",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
-
-  getStatistics().createHistogram(
-    new TH1F("rec_hit_time",
-             "hit time",
-             100, 0.0, 15000.0)
-  );
-
-  getStatistics().createHistogram(
-    new TH1F("rec_hit_eneDepos",
-             "hit ene deposition",
-             750, 0.0, 1500.0)
-  );
-
-
+  // getStatistics().createHistogram(new TH1F(
+  //   "hits_per_time_window", "Number of Hits in Time Window",
+  //   101, -0.5, 500.5
+  // ));
+  //
+  // getStatistics().createHistogram(new TH1F(
+  //   "time_diff_bw_decays", "Time difference between decays",
+  //   101, -0.5, (fMaxTime - fMinTime) / 50.)
+  // );
+  //
+  // // GENERATED HISTOGRAMS
+  // getStatistics().createHistogram(new TH1F(
+  //   "gen_hits_z_pos", "Gen hits Z position", 100, -60.0, 60.0
+  // ));
+  //
+  // getStatistics().createHistogram(new TH2F(
+  //   "gen_hits_xy_pos", "GEN hits XY pos",
+  //   121, -60.5, 60.5, 121, -60.5, 60.5
+  // ));
+  //
+  // getStatistics().createHistogram(new TH1F(
+  //   "gen_hit_time", "Gen hit time", 100, 0.0, 15000.0
+  // ));
+  //
+  // getStatistics().createHistogram(new TH1F(
+  //   "gen_hit_eneDepos", "Gen hit ene deposition", 750, 0.0, 1500.0
+  // ));
+  //
+  // getStatistics().createHistogram(new TH2F(
+  //   "gen_XY", "GEN XY coordinates of annihilation point",
+  //   121, -60.5, 60.5, 121, -60.5, 60.5
+  // ));
+  //
+  // getStatistics().createHistogram(new TH2F(
+  //   "gen_XZ", "GEN XZ coordinates of annihilation point",
+  //   121, -60.5, 60.5, 121, -60.5, 60.5
+  // ));
+  //
+  // getStatistics().createHistogram(new TH2F(
+  //   "gen_YZ", "GEN YZ coordinates of annihilation point",
+  //   121, -60.5, 60.5, 121, -60.5, 60.5
+  // ));
+  //
+  // getStatistics().createHistogram(new TH2F(
+  //   "gen_prompt_XY", "GEN XY coordinates of prompt emission point",
+  //   121, -60.5, 60.5, 121, -60.5, 60.5
+  // ));
+  //
+  // getStatistics().createHistogram(new TH2F(
+  //   "gen_prompt_XZ", "GEN XZ coordinates of prompt emission point",
+  //   121, -60.5, 60.5, 121, -60.5, 60.5
+  // ));
+  //
+  // getStatistics().createHistogram(new TH2F(
+  //   "gen_prompt_YZ", "GEN YZ coordinates of prompt emission point",
+  //   121, -60.5, 60.5, 121, -60.5, 60.5
+  // ));
+  //
+  // getStatistics().createHistogram(new TH1F(
+  //   "gen_hit_multiplicity", "Gen hit multiplicity", 6, 0.0, 5.0
+  // ));
+  //
+  // getStatistics().createHistogram(new TH1F(
+  //   "gen_lifetime", "Gen lifetime", 100, 0.0, 1500.0
+  // ));
+  //
+  // // RECONSTRUCTED HISTOGRAMS
+  // getStatistics().createHistogram(new TH1F(
+  //   "hits_z_pos", "hits Z position", 100, -60.0, 60.0
+  // ));
+  //
+  // getStatistics().createHistogram(new TH2F(
+  //   "hits_xy_pos", "hits XY pos", 121, -60.5, 60.5, 121, -60.5, 60.5
+  // ));
+  //
+  // getStatistics().createHistogram(new TH1F(
+  //   "rec_hit_time", "hit time", 100, 0.0, 15000.0
+  // ));
+  //
+  // getStatistics().createHistogram(new TH1F(
+  //   "rec_hit_eneDepos", "hit ene deposition", 750, 0.0, 1500.0
+  // ));
 }
 
 void JPetGeantParser::bookEfficiencyHistograms()
 {
-
-  getStatistics().createHistogram(
-    new TEfficiency("effi_3g_in_rho_z",
-                    "effi for 1g as function of rho and z of vtx",
-                    100, 0., 50., 100, -25., 25.)
-  );
-
-  getStatistics().createHistogram(
-    new TEfficiency("effi_2g_in_rho_z",
-                    "effi for 2g as function of rho and z of vtx",
-                    100, 0., 50., 100, -25., 25.)
-  );
-
-
-  getStatistics().createHistogram(
-    new TEfficiency("effi_prompt_in_rho_z",
-                    "effi for 3g as function of rho and z of vtx",
-                    100, 0., 50., 100, -25., 25.)
-  );
-
-
+  // getStatistics().createHistogram(new TEfficiency(
+  //   "effi_3g_in_rho_z", "effi for 1g as function of rho and z of vtx",
+  //   100, 0., 50., 100, -25., 25.
+  // ));
+  //
+  // getStatistics().createHistogram(new TEfficiency(
+  //   "effi_2g_in_rho_z", "effi for 2g as function of rho and z of vtx",
+  //   100, 0., 50., 100, -25., 25.
+  // ));
+  //
+  // getStatistics().createHistogram(new TEfficiency(
+  //   "effi_prompt_in_rho_z", "effi for 3g as function of rho and z of vtx",
+  //   100, 0., 50., 100, -25., 25.
+  // ));
 }
 
 unsigned int JPetGeantParser::getNumberOfDecaysInWindow() { return fTimeDistroOfDecays.size(); }
