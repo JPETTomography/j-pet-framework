@@ -40,7 +40,7 @@ JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBa
   auto scinID = mcHit.getScintillator().getID();
   hit.setEnergy(parametrizer.addEnergySmearing(scinID, mcHit.getPosZ(), mcHit.getEnergy()));
   // adjust to time window and smear
-  hit.setTime(parametrizer.addTimeSmearing(scinID, mcHit.getPosZ(), mcHit.getEnergy(), -(mcHit.getTime() - timeShift)));
+  hit.setTime(parametrizer.addTimeSmearing(scinID, mcHit.getPosZ(), mcHit.getEnergy(), mcHit.getTime() + timeShift));
 
   auto radius = paramBank.getScintillator(scinID).getBarrelSlot().getLayer().getRadius();
   auto theta = TMath::DegToRad() * paramBank.getScintillator(mcHit.getScintillator().getID()).getBarrelSlot().getTheta();
