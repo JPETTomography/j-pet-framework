@@ -102,7 +102,7 @@ private:
   JPetMatrixSignal fSignalB;
   TRef fScin = NULL;
 
-  ClassDef(JPetHit, 11);
+  ClassDef(JPetHit, 12);
 };
 
 #endif /* !JPETHIT_H */

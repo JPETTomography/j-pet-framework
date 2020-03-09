@@ -28,13 +28,13 @@ class JPetMatrixSignal: public JPetBaseSignal
 {
 public:
   JPetMatrixSignal();
-  explicit JPetMatrixSignal(float time, float timeStdDev, float tot);
+  explicit JPetMatrixSignal(float time);
   virtual ~JPetMatrixSignal();
   bool isNullObject() const;
   explicit JPetMatrixSignal(bool isNull);
 
   float getTime() const;
-  float getTimeStdDev() const;
+  void setTime(float time);
   float getTOT() const;
   bool addRawSignal(const JPetRawSignal& rawSignal);
   std::map<int, JPetRawSignal> getRawSignals() const;
@@ -42,10 +42,7 @@ public:
 
 private:
   float fTime;
-  float fTimeStdDev;
-  float fTOT;
   std::map<int, JPetRawSignal> fRawSignalsMap;
-  void setSignalTimeAndTOT();
 
 protected:
   #ifndef __CINT__
@@ -54,7 +51,7 @@ protected:
   bool fIsNullObject;
   #endif
 
-  ClassDef(JPetMatrixSignal, 2);
+  ClassDef(JPetMatrixSignal, 4);
 
 };
 #endif /* !JPETMATRIXSIGNAL_H */

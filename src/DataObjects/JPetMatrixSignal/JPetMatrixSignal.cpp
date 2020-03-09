@@ -18,10 +18,9 @@
 
 ClassImp(JPetMatrixSignal);
 
-JPetMatrixSignal::JPetMatrixSignal(): fTime(0), fTimeStdDev(0), fTOT(0) {}
+JPetMatrixSignal::JPetMatrixSignal(): fTime(0) {}
 
-JPetMatrixSignal::JPetMatrixSignal(float time, float timeStdDev, float tot):
-  fTime(time), fTimeStdDev(timeStdDev), fTOT(tot) {}
+JPetMatrixSignal::JPetMatrixSignal(float time): fTime(time) {}
 
 JPetMatrixSignal::~JPetMatrixSignal() {}
 
@@ -40,23 +39,33 @@ float JPetMatrixSignal::getTime() const
   return fTime;
 }
 
-float JPetMatrixSignal::getTimeStdDev() const
+void JPetMatrixSignal::setTime(float time)
 {
-  return fTimeStdDev;
+  fTime = time;
 }
 
 float JPetMatrixSignal::getTOT() const
 {
-  return fTOT;
+  double tot = 0.0;
+  for(auto element : fRawSignalsMap){
+    auto leads = element.second.getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrValue);
+    auto trails = element.second.getPoints(JPetSigCh::Trailing, JPetRawSignal::ByThrValue);
+    if(leads.size()==trails.size()){
+      for(uint i = 0; i<leads.size(); i++){
+        tot += trails.at(i).getTime()-leads.at(i).getTime();
+      }
+    }
+  }
+  return tot;
 }
 
 bool JPetMatrixSignal::addRawSignal(const JPetRawSignal& rawSignal)
 {
+
   int mtxPos = rawSignal.getPM().getMatrixPosition();
   auto search = fRawSignalsMap.find(mtxPos);
   if(search == fRawSignalsMap.end()){
     fRawSignalsMap[mtxPos] = rawSignal;
-    setSignalTimeAndTOT();
     return true;
   } else {
     // There is already a signal from this SiPM in this matrix, not adding
@@ -75,40 +84,4 @@ std::map<int, JPetRawSignal> JPetMatrixSignal::getRawSignals() const
 void JPetMatrixSignal::Clear(Option_t *)
 {
   fTime = 0.0;
-  fTimeStdDev = 0.0;
-  fTOT = 0.0;
-}
-
-/**
- * Setting time of this Matrix Signal as average time of leading SigSch
- * on THR 1 from all Raw Sigs added so far
- */
-void JPetMatrixSignal::setSignalTimeAndTOT()
-{
-  std::vector<double> leadThr1Times;
-
-  // Calculating TOT - sum of all THR in all RawSignals
-  // and time as average of times of lead thr1 SigCh
-  double tot = 0.0;
-  double time = 0.0;
-  for(auto element : fRawSignalsMap){
-    auto leads = element.second.getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrValue);
-    auto trails = element.second.getPoints(JPetSigCh::Trailing, JPetRawSignal::ByThrValue);
-    time += leads.at(0).getTime();
-    leadThr1Times.push_back(leads.at(0).getTime());
-    if(leads.size()==trails.size()){
-      for(uint i = 0; i<leads.size(); i++){
-        tot += trails.at(i).getTime()-leads.at(i).getTime();
-      }
-    }
-  }
-  fTOT = tot;
-  fTime = time/((double)fRawSignalsMap.size());
-
-  // Calculating standard deviation of average time
-  double timeStdDev = 0;
-  for(auto tn : leadThr1Times){
-    timeStdDev += TMath::Power(tn-fTime, 2);
-  }
-  fTimeStdDev = TMath::Sqrt(timeStdDev/((double)leadThr1Times.size()));
 }
