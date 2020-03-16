@@ -87,7 +87,7 @@ protected :
 
   const std::string kZPositionSmearingParametersParamKey = "GeantParser_ZPositionSmearingParameters_std::vector<double>";
   const std::string kZPositionSmearingFunctionParamKey = "GeantParser_ZPositionSmearingFunction_std::string";
-  const std::string kZPositionSmearingFunctionLimitsParamKey = "GeantParser_ZPositionSmearingParametersLimits_std::vector<double>";
+  const std::string kZPositionSmearingFunctionLimitsParamKey = "GeantParser_ZPositionSmearingFunctionLimits_std::vector<double>";
 
   const std::string kSeedParamKey = "GeantParser_Seed_int";
 
