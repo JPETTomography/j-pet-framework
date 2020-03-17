@@ -17,12 +17,12 @@
 #define JPETGEANTPARSER_H
 
 #include <JPetGeantEventPack/JPetGeantEventPack.h>
-#include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 #include <JPetGeantScinHits/JPetGeantScinHits.h>
 #include <JPetGeomMapping/JPetGeomMapping.h>
 #include <JPetHit/JPetHit.h>
 #include <JPetMCDecayTree/JPetMCDecayTree.h>
 #include <JPetMCHit/JPetMCHit.h>
+#include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 #include <JPetUserTask/JPetUserTask.h>
 #include <functional>
 #include <map>
@@ -32,16 +32,16 @@
 class JPetWriter;
 
 #ifdef __CINT__
-//when cint is used instead of compiler, override word is not recognized
-//nevertheless it's needed for checking if the structure of project is correct
-#   define override
+// when cint is used instead of compiler, override word is not recognized
+// nevertheless it's needed for checking if the structure of project is correct
+#define override
 #endif
 
 /**
  * @brief      Module responsible for creating JPetMCHit from GEANT MC simulations
  *
  */
-class JPetGeantParser: public JPetUserTask
+class JPetGeantParser : public JPetUserTask
 {
 
 public:
@@ -51,22 +51,21 @@ public:
   virtual bool exec() override;
   virtual bool terminate() override;
 
-  unsigned long getOriginalSeed() const; 
+  unsigned long getOriginalSeed() const;
 
-protected :
-  JPetGeomMapping* fDetectorMap =  nullptr;
+protected:
+  JPetGeomMapping* fDetectorMap = nullptr;
 
   bool fProcessSingleEventinWindow = false;
   bool fMakeEffiHisto = true;
   bool fMakeHisto = true;
   double fMaxTime = 0.;
-  double fMinTime = -50.e6; // electronic time window 50 micro seconds - true for run 3
-  double fSimulatedActivity = 4.7; //< in MBq; value for run3
+  double fMinTime = -50.e6;           // electronic time window 50 micro seconds - true for run 3
+  double fSimulatedActivity = 4.7;    //< in MBq; value for run3
   double fExperimentalThreshold = 10; //< in keV
   unsigned long fSeed = 0.;
 
   JPetHitExperimentalParametrizer fExperimentalParametrizer;
-
 
   // internal variables
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";
@@ -95,7 +94,7 @@ protected :
   float fTimeShift = fMinTime;
 
   std::vector<JPetMCHit> fStoredMCHits; ///< save MC hits into single time window when it contains enough hits
-  std::vector<JPetHit> fStoredHits; ///< save RECONSTRUCTED MC hits into single time window when it contains enough hits
+  std::vector<JPetHit> fStoredHits;     ///< save RECONSTRUCTED MC hits into single time window when it contains enough hits
 
   void loadSmearingOptionsAndSetupExperimentalParametrizer();
 
@@ -125,7 +124,6 @@ protected :
   float getNextTimeShift();
   void clearTimeDistoOfDecays();
   bool isTimeWindowFull() const;
-
 };
 
 #endif

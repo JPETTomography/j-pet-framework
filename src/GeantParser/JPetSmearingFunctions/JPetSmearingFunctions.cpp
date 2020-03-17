@@ -212,10 +212,7 @@ void JPetHitExperimentalParametrizer::printAllParameters() const
   }
 }
 
-std::map<SmearingType, SmearingFunctionLimits> JPetHitExperimentalParametrizer::getSmearingFunctionLimits() const 
-{ 
-  return fFunctionLimits; 
-}
+std::map<SmearingType, SmearingFunctionLimits> JPetHitExperimentalParametrizer::getSmearingFunctionLimits() const { return fFunctionLimits; }
 
 /// function is randomize in the range [lowLim + timeIn, highLim + timeIn]
 double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn)
