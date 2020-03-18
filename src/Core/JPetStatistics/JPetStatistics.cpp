@@ -28,15 +28,78 @@ JPetStatistics::~JPetStatistics() { fStats.Clear("nodelete"); }
 
 void JPetStatistics::createHistogram(TObject* object) { fStats.Add(object); }
 
+void JPetStatistics::createObject(TObject* object) { fStats.Add(object); }
+
+void JPetStatistics::createHistogramWithAxes(TObject* object, TString xAxisName, TString yAxisName, TString zAxisName) 
+{ 
+  TClass *cl = object->IsA();
+  if( cl->InheritsFrom("TH1D") )
+  {
+    TH1D* tempHisto = dynamic_cast<TH1D*>(object);
+    tempHisto->GetXaxis()->SetTitle(xAxisName);
+    tempHisto->GetYaxis()->SetTitle(yAxisName);
+  }
+  else if( cl->InheritsFrom("TH2D") )
+  {
+    TH2D* tempHisto = dynamic_cast<TH2D*>(object);
+    tempHisto->GetXaxis()->SetTitle(xAxisName);
+    tempHisto->GetYaxis()->SetTitle(yAxisName);
+  }
+  else if( cl->InheritsFrom("TH3D") )
+  {
+    TH3D* tempHisto = dynamic_cast<TH3D*>(object);
+    tempHisto->GetXaxis()->SetTitle(xAxisName);
+    tempHisto->GetYaxis()->SetTitle(yAxisName);
+    tempHisto->GetZaxis()->SetTitle(zAxisName);
+  }
+  fStats.Add(object);
+}
+
 void JPetStatistics::createGraph(TObject* object) { fStats.Add(object); }
 
 void JPetStatistics::createCanvas(TObject* object) { fStats.Add(object); }
+
+void JPetStatistics::fillHistogram(const char* name, double xValue, doubleCheck yValue, doubleCheck zValue)
+{
+  TObject *tempObject = getObject<TObject>(name);
+  if( !tempObject )
+  {
+    writeError(name, " does not exist" );
+    return;
+  }
+  TClass *cl = tempObject->IsA();
+  if( cl->InheritsFrom("TH1D") )
+  {
+    TH1D* tempHisto = dynamic_cast<TH1D*>(tempObject);
+    tempHisto->Fill(xValue);
+  }
+  else if( cl->InheritsFrom("TH2D") )
+  {
+    TH2D* tempHisto = dynamic_cast<TH2D*>(tempObject);
+    if(yValue.isChanged)
+        tempHisto->Fill(xValue, yValue.value);
+    else
+        writeError(name, " does not received argument for Y axis" );
+  }
+  else if( cl->InheritsFrom("TH3D") )
+  {
+    TH3D* tempHisto = dynamic_cast<TH3D*>(tempObject);
+    if(zValue.isChanged)
+        tempHisto->Fill(xValue, yValue.value, zValue.value);
+    else if(yValue.isChanged)
+        writeError(name, " does not received argument for Y and Z axis" );
+    else
+        writeError(name, " does not received argument for Z axis" );
+  }  
+}
 
 TEfficiency* JPetStatistics::getEffiHisto(const char* name) { return getObject<TEfficiency>(name); }
 
 TH1F* JPetStatistics::getHisto1D(const char* name) { return getObject<TH1F>(name); }
 
 TH2F* JPetStatistics::getHisto2D(const char* name) { return getObject<TH2F>(name); }
+
+TH3F* JPetStatistics::getHisto3D(const char* name) { return getObject<TH3F>(name); }
 
 TGraph* JPetStatistics::getGraph(const char* name) { return getObject<TGraph>(name); }
 
@@ -47,3 +110,8 @@ void JPetStatistics::createCounter(const char* name) { fCounters[name] = 0.0; }
 double& JPetStatistics::getCounter(const char* name) { return fCounters[name]; }
 
 const THashTable* JPetStatistics::getStatsTable() const { return &fStats; }
+
+void JPetStatistics::writeError(const char* nameOfHistogram, const char* messageEnd )
+{
+  ERROR(std::string("Histogram with name ") + std::string(nameOfHistogram) + std::string(messageEnd) );
+}
