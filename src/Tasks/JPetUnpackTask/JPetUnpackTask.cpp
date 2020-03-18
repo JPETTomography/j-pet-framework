@@ -106,25 +106,25 @@ bool JPetUnpackTask::validateFiles(
   string totCalib, bool totCalibSet, string tdcCalib, bool tdcCalibSet
 ){
   if(!boost::filesystem::exists(fileNameWithPath)) {
-    ERROR("The Unpacker did not find input HLD file");
+    ERROR(Form("No input HLD file found: %s", fileNameWithPath.c_str()));
     return false;
   }
 
   if (!boost::filesystem::exists(xmlConfig)) {
-    ERROR("The Unpacker XML configuration file does not exist, exiting.");
+    ERROR(Form("No XML configuration file found: %s", xmlConfig.c_str()));
     return false;
   }
 
   if(totCalibSet) {
     if(!boost::filesystem::exists(totCalib)){
-      ERROR(Form("No TOT offset calibration file found with the provided name: %s", totCalib.c_str()));
+      ERROR(Form("No TOT offset calibration file found: %s", totCalib.c_str()));
       return false;
     }
   }
 
   if(tdcCalibSet){
     if(!boost::filesystem::exists(tdcCalib)){
-      ERROR(Form("No TDC nonlinearity file found with the provided name: %s", tdcCalib.c_str()));
+      ERROR(Form("No TDC nonlinearity file found: %s", tdcCalib.c_str()));
       return false;
     }
   }

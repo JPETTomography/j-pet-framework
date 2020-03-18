@@ -151,7 +151,6 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
   bool isGen3g = evPack->GetEventInformation()->GetThreeGammaGen();
 
   float timeShift = getNextTimeShift();
-
   for (unsigned int i = 0; i < evPack->GetNumberOfHits(); i++)
   {
 

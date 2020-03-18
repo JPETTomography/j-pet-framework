@@ -92,7 +92,7 @@ void addDefaultTasksFromOptions(
     // Create Scope task if indicated by the filetype
     if (fileType == FileTypeChecker::kScope) {
       auto scopeTask = []() {
-        return jpet_common_tools::make_unique<JPetScopeLoader>(
+        return std::make_unique<JPetScopeLoader>(
           std::unique_ptr<JPetScopeTask>(new JPetScopeTask("JPetScopeReader"))
         );
       };
@@ -101,14 +101,14 @@ void addDefaultTasksFromOptions(
 
     // Create Geant Parser task if indicated by filetype
     if (fileType == FileTypeChecker::kMCGeant) {
-      auto mcInfo = TaskInfo("JPetGeantParser", "mcGeant", "mc.hits", 1);
+      auto mcInfo = TaskInfo("JPetGeantParser", "mcGeant", "hits", 1);
       addTaskToChain(generatorsMap, mcInfo, outChain);
     }
 
     // Create task to unzip file if indicated by the filetype
     if (fileType == FileTypeChecker::kZip) {
       auto unzip = []() {
-        return jpet_common_tools::make_unique<JPetUnzipTask>("JPetUnzipTask");
+        return std::make_unique<JPetUnzipTask>("JPetUnzipTask");
       };
       outChain.insert(outChain.end(), unzip);
     }
@@ -116,14 +116,14 @@ void addDefaultTasksFromOptions(
     // Create Unpack task if indicated by the filetype
     if (fileType == FileTypeChecker::kHld || fileType == FileTypeChecker::kZip) {
       auto unpack = []() {
-        return jpet_common_tools::make_unique<JPetUnpackTask>("JPetUnpackTask");
+        return std::make_unique<JPetUnpackTask>("JPetUnpackTask");
       };
       outChain.insert(outChain.end(), unpack);
     }
 
     // Create task for Param Bank
     auto paramBankTask = []() {
-      return jpet_common_tools::make_unique<JPetParamBankHandlerTask>("ParamBank Filling");
+      return std::make_unique<JPetParamBankHandlerTask>("ParamBank Filling");
     };
     outChain.insert(outChain.begin(), paramBankTask);
 
@@ -145,7 +145,7 @@ void addTaskToChain(
     if (numOfIterations == 1) {
       outChain.push_back(
         [name, inT, outT, userTaskGen]() {
-          auto task = jpet_common_tools::make_unique<JPetTaskIO>(
+          auto task = std::make_unique<JPetTaskIO>(
             name.c_str(), inT.c_str(), outT.c_str()
           );
           task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
@@ -156,20 +156,20 @@ void addTaskToChain(
       if (numOfIterations < 0) {
         outChain.push_back(
         [name, inT, outT, userTaskGen]() {
-          auto task = jpet_common_tools::make_unique<JPetTaskIO>(name.c_str(), inT.c_str(), outT.c_str());
+          auto task = std::make_unique<JPetTaskIO>(name.c_str(), inT.c_str(), outT.c_str());
           task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-          auto looperTask = jpet_common_tools::make_unique<JPetTaskLooper>(
+          auto looperTask = std::make_unique<JPetTaskLooper>(
             name.c_str(), std::move(task), JPetTaskLooper::getStopOnOptionPredicate(kStopIterationOptionName)
           );
           return looperTask;
         });
       } else {
         outChain.push_back([name, inT, outT, numOfIterations, userTaskGen]() {
-          auto task = jpet_common_tools::make_unique<JPetTaskIO>(
+          auto task = std::make_unique<JPetTaskIO>(
             name.c_str(), inT.c_str(), outT.c_str()
           );
           task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
-          auto looperTask = jpet_common_tools::make_unique<JPetTaskLooper>(
+          auto looperTask = std::make_unique<JPetTaskLooper>(
             name.c_str(), std::move(task),
             JPetTaskLooper::getMaxIterationPredicate(numOfIterations)
           );
