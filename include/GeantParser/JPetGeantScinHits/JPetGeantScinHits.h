@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,12 +16,9 @@
 #ifndef JPETGEANTSCINHITS_H
 #define JPETGEANTSCINHITS_H
 
+#include "TVector3.h"
 #include "TObject.h"
 #include <vector>
-#include "TVector3.h"
-
-
-
 
 /**
  * \class JPetGeantScinHits
@@ -60,26 +57,32 @@ public:
   {
     fEvtID = x;
   };
+
   void SetScinID(int x)
   {
     fScinID = x;
   };
+
   void SetTrackID(int x)
   {
     fTrackID = x;
   };
+
   void SetTrackPDG(int x)
   {
     fTrackPDGencoding = x;
   };
+
   void SetNumOfInteractions(int x)
   {
     fNumOfInteractions = x;
   };
+
   void SetEneDepos(float x)
   {
     fEneDep = x;
   };
+
   void SetTime(float x)
   {
     fTime = x;
@@ -89,6 +92,7 @@ public:
   {
     fPosition = x;
   };
+
   void SetHitPosition(float x, float y, float z)
   {
     fPosition.SetXYZ(x, y, z);
@@ -98,6 +102,7 @@ public:
   {
     fPolarizationIn = x;
   };
+
   void SetPolarizationIn(float x, float y, float z)
   {
     fPolarizationIn.SetXYZ(x, y, z);
@@ -107,6 +112,7 @@ public:
   {
     fPolarizationOut = x;
   };
+
   void SetPolarizationOut(float x, float y, float z)
   {
     fPolarizationOut.SetXYZ(x, y, z);
@@ -116,6 +122,7 @@ public:
   {
     fMomentumIn = x;
   };
+
   void SetMomentumIn(float x, float y, float z)
   {
     fMomentumIn.SetXYZ(x, y, z);
@@ -125,6 +132,7 @@ public:
   {
     fMomentumOut = x;
   };
+
   void SetMomentumOut(float x, float y, float z)
   {
     fMomentumOut.SetXYZ(x, y, z);
@@ -135,46 +143,57 @@ public:
   {
     return fEvtID;
   };
+
   int GetScinID()
   {
     return fScinID;
   };
+
   int GetTrackID()
   {
     return fTrackID;
   };
+
   int GetTrackPDG()
   {
     return fTrackPDGencoding;
   };
+
   int GetNumOfInteractions()
   {
     return fNumOfInteractions;
   };
+
   float GetEneDepos()
   {
     return fEneDep;
   };
+
   float GetTime()
   {
     return fTime;
   };
+
   TVector3 GetHitPosition()
   {
     return fPosition;
   };
+
   TVector3 GetPolarizationIn()
   {
     return fPolarizationIn;
   };
+
   TVector3 GetPolarizationOut()
   {
     return fPolarizationOut;
   };
+
   TVector3 GetMomentumIn()
   {
     return fMomentumIn;
   };
+
   TVector3 GetMomentumOut()
   {
     return fMomentumOut;
@@ -185,6 +204,7 @@ public:
   {
     fGenGammaMultiplicity = i;
   }
+
   void SetGenGammaIndex(int i)
   {
     fGenGammaIndex = i;
@@ -194,22 +214,30 @@ public:
   {
     return fGenGammaMultiplicity;
   }
+
   int GetGenGammaIndex()
   {
     return fGenGammaIndex;
   }
-
 
 private:
   int fEvtID;
   int fScinID;
   int fTrackID;
   int fTrackPDGencoding;
-  int fNumOfInteractions; ///< number of interaction taking place in single scintillator whish was classified as single hit; it may be a big number since electron deposits energy in many steps
+  //! Number of interaction taking place in single scintillator,
+  //! which were classified as a single hit;
+  //! it may be a big number since electron deposits energy in many steps
+  int fNumOfInteractions;
+  //! unequivocal number identifying gamma quanta
   int fGenGammaIndex;
+  //! 2 - back-to-back; 3 - 3gamma annihilation
   int fGenGammaMultiplicity;
+  //! deposited energy (a sum if more than one gamma quanta interacted)
   float fEneDep;
+  //! Time of interaction in the scintillator with respect to the beta+ decay (start of simulation)
   float fTime;
+
   TVector3 fPosition;
   TVector3 fPolarizationIn;
   TVector3 fPolarizationOut;

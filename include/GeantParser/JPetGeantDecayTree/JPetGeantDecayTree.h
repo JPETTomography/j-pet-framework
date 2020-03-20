@@ -18,21 +18,17 @@
 
 #include "TObject.h"
 #include <vector>
-#include "TVector3.h" 
+#include "TVector3.h"
 
 
-class JPetGeantDecayTree : public TObject 
+class JPetGeantDecayTree : public TObject
 {
- 
-    public:
-        JPetGeantDecayTree();
-        ~JPetGeantDecayTree();
+public:
+  JPetGeantDecayTree();
+  ~JPetGeantDecayTree();
 
-    private:
-
-
-     ClassDef(JPetGeantDecayTree,2)
-
+private:
+  ClassDef(JPetGeantDecayTree, 1)
 };
 
 #endif

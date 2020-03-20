@@ -153,7 +153,7 @@ TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskI
  * @param outChain chain of task  generators that will be modified.
  */
 void addDefaultTasksFromOptions(
-  const std::map<std::string, boost::any>& options, const std::map<std::string, TaskGenerator>& generatorsMap,
+  const std::map<std::string, boost::any>& options,
   TaskGeneratorChain& outChain
 );
 

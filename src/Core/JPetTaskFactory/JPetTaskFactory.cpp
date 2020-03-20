@@ -68,7 +68,7 @@ TaskGeneratorChain generateTaskGeneratorChain(
   const std::map<std::string, boost::any>& options
 ) {
   TaskGeneratorChain chain;
-  addDefaultTasksFromOptions(options, generatorsMap, chain);
+  addDefaultTasksFromOptions(options, chain);
   for (const auto& taskInfo : taskInfoVect) {
     addTaskToChain(generatorsMap, taskInfo, chain);
   }
@@ -77,7 +77,6 @@ TaskGeneratorChain generateTaskGeneratorChain(
 
 void addDefaultTasksFromOptions(
   const std::map<std::string, boost::any>& options,
-  const std::map<std::string, TaskGenerator>& generatorsMap,
   TaskGeneratorChain& outChain
 ) {
   using namespace jpet_options_tools;
@@ -107,12 +106,12 @@ void addDefaultTasksFromOptions(
 
     // Create Geant Parser task if indicated by filetype
     if (fileType == FileTypeChecker::kMCGeant) {
-      auto genatTask = []() {
-        return jpet_common_tools::make_unique<JPetGeantParser>("JPetGeantParser");
+      auto geantTask = []() {
+        auto tmp1 = jpet_common_tools::make_unique<JPetTaskIO>("JPetGeantParser", "mcGeant", "hits");
+        tmp1->addSubTask(jpet_common_tools::make_unique<JPetGeantParser>("JPetGeantParser"));
+        return tmp1;
       };
-      outChain.insert(outChain.end(), genatTask);
-      // auto mcInfo = TaskInfo("JPetGeantParser", "mcGeant", "mc.hits", 1);
-      // addTaskToChain(generatorsMap, mcInfo, outChain);
+      outChain.insert(outChain.end(), geantTask);
     }
 
     // Create task to unzip file if indicated by the filetype

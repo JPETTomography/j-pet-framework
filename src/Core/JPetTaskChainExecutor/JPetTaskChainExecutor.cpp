@@ -13,17 +13,17 @@
  *  @file JPetTaskChainExecutor.cpp
  */
 
-#include "JPetTaskChainExecutor/JPetTaskChainExecutor.h"
-#include "JPetLoggerInclude.h"
 #include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "JPetTaskChainExecutor/JPetTaskChainExecutor.h"
 #include "JPetParamsFactory/JPetParamsFactory.h"
-
+#include "JPetLoggerInclude.h"
 #include <cassert>
 #include <memory>
 
-JPetTaskChainExecutor::JPetTaskChainExecutor(const TaskGeneratorChain& taskGeneratorChain, int processedFileID,
-                                             const jpet_options_tools::OptsStrAny& opts)
-    : fInputSeqID(processedFileID), ftaskGeneratorChain(taskGeneratorChain)
+JPetTaskChainExecutor::JPetTaskChainExecutor(
+  const TaskGeneratorChain& taskGeneratorChain, int processedFileID,
+ const jpet_options_tools::OptsStrAny& opts):
+ fInputSeqID(processedFileID), ftaskGeneratorChain(taskGeneratorChain)
 {
   /// ParamManager is generated and added to fParams
   fParams = jpet_params_factory::generateParams(opts);
