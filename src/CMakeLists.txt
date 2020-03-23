@@ -104,7 +104,7 @@ else()
     ${CMAKE_CURRENT_SOURCE_DIR}
     ARGS "branch --show-current"
     OUTPUT_VARIABLE framework_branchname)
-  if( ${framework_branchname} STREQUAL "develop") #
+  if( ${framework_branchname} STREQUAL "develop")
     set(GIT_TAG "develop")
   else()
     set(GIT_TAG "master")
