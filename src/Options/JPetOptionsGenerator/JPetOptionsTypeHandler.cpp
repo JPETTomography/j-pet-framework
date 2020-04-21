@@ -77,7 +77,7 @@ std::map<std::string, std::string> JPetOptionsTypeHandler::anyMapToStringMap(con
     case JPetOptionsTypeHandler::kAllowedTypes::kVectorDouble:
       newOptionsMap[option.first] = [&option]() -> std::string {
         std::string result = "";
-        for (const auto& s : any_cast<std::vector<int>>(option.second))
+        for (const auto& s : any_cast<std::vector<double>>(option.second))
         {
           result += std::to_string(s) + " ";
         }
