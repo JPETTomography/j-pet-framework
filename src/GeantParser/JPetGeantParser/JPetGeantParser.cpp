@@ -34,7 +34,6 @@ JPetGeantParser::~JPetGeantParser() {}
 
 bool JPetGeantParser::init()
 {
-
   // create detector map
   std::unique_ptr<JPetGeomMapping> fDetectorMap(new JPetGeomMapping(getParamBank()));
 
@@ -139,9 +138,9 @@ void JPetGeantParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
   }
 
   std::string zPositionSmearingFormula;
-  if (isOptionSet(fParams.getOptions(), kZPositionSmearingParametersParamKey))
+  if (isOptionSet(fParams.getOptions(), kZPositionSmearingFunctionParamKey))
   {
-    zPositionSmearingFormula = getOptionAsString(fParams.getOptions(), kZPositionSmearingParametersParamKey);
+    zPositionSmearingFormula = getOptionAsString(fParams.getOptions(), kZPositionSmearingFunctionParamKey);
   }
 
   std::vector<double> zPositionSmearingLimits;
