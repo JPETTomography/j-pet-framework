@@ -74,6 +74,11 @@ bool JPetUnpackTask::init(const JPetParams& inParams)
     ERROR("No TDC nonlinearity file set int the user options, exiting.");
   }
 
+  if (isOptionSet(fOptions, kEndpointsParamKey)) {
+    fEndpoints = getOptionAsInt(fOptions, kEndpointsParamKey);
+    INFO( Form("Unpacker2D is using number of endpoints: %d", fEndpoints) );
+  }
+
   return true;
 }
 
@@ -102,7 +107,7 @@ bool JPetUnpackTask::run(const JPetDataInterface&)
     fUnpacker2D->UnpackSingleStep(
       fInputFile, fInputFilePath, fOutputFilePath,
       fXMLConfFile, fEventsToProcess, refChannelOffset,
-      fTOTOffsetCalibFile, fTDCnonlinearityCalibFile
+      fTDCnonlinearityCalibFile, fEndpoints
     );
 
   } else {

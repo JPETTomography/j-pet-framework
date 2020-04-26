@@ -35,6 +35,7 @@ public:
 private:
   const std::string kTDCnonlinearityCalibKey = "Unpacker_TDCnonlinearityCalib_std::string";
   const std::string kTOTOffsetCalibKey = "Unpacker_TOToffsetCalib_std::string";
+  const std::string kEndpointsParamKey = "Unpacker_EndpointsNumber_int";
   std::string fTDCnonlinearityCalibFile;
   std::string fTOTOffsetCalibFile;
   std::string fXMLConfFile;
@@ -43,6 +44,7 @@ private:
   std::string fInputFilePath = std::string("");
   std::string fOutputFilePath = std::string("");
 
+  int fEndpoints = 2;
   int fEventsToProcess = 100000000;
 
   Unpacker2D* fUnpacker2D = nullptr;
