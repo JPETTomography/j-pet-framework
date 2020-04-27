@@ -63,12 +63,12 @@ public:
 
   /// If any of the arguments in params is empty, then the previous value is preserved.
   /// e.g.
-  /// std::string zSmearing = "[&](double* x, double* p)->double{ return TMath::Landau(x[0],p[1],p[3], false);};";
+  /// std::string zSmearing = "[&](double* x, double* p)->double{ return TMath::Landau(x[0],p[1],p[4], false);};";
   /// parametrizer.setSmearingFunctions({{"", {}}, {"", {}}, {zSmearing, {sigma}}});
   /// The functions for time and energy smearing will not be changed. The zSmearing will be used
   /// and the sigma parameter will be applied.
-  /// Please note that since we have 3 default paramteres: scinId, zIn, eneIn, the sigma is assigned to the
-  /// fourth one p[3].
+  /// Please note that since we have 4 default paramteres: scinId, zIn, eneIn, timeIn,  the sigma is assigned to the
+  /// fifth one p[4].
   void setSmearingFunctions(const std::vector<FuncAndParam>& params);
 
   /// If the higher limit is equal or smaller than lower one, then it is ignored
