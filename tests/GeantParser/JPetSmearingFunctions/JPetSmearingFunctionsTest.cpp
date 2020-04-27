@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(testDefaultZFunction)
   valsRef.reserve(nTrials);
   for (int i = 0; i < nTrials; i++)
   {
-    vals.push_back(parametrizer.addZHitSmearing(0, mean, 0));
+    vals.push_back(parametrizer.addZHitSmearing(0, mean, 0, -99999));
     valsRef.push_back(refFunc.GetRandom());
   }
   std::sort(vals.begin(), vals.end());
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE(testDefaultZFunctionWithCustomSigma)
   valsRef.reserve(nTrials);
   for (int i = 0; i < nTrials; i++)
   {
-    vals.push_back(parametrizer.addZHitSmearing(0, mean, 0));
+    vals.push_back(parametrizer.addZHitSmearing(0, mean, 0, -99999));
     valsRef.push_back(refFunc.GetRandom());
   }
   std::sort(vals.begin(), vals.end());
@@ -128,9 +128,9 @@ BOOST_AUTO_TEST_CASE(testCustomZFunction)
 {
   JPetHitExperimentalParametrizer parametrizer;
 
-  /// default params are [0] scinId, [1] zIn, [2] eneIn
-  /// we add here p[3] sigma of Landau
-  std::string zSmearing = "[&](double* x, double* p)->double{ return TMath::Landau(x[0],p[1],p[3], 0);};";
+  /// default params are [0] scinId, [1] zIn, [2] eneIn, [3] timeIn
+  /// we add here p[4] sigma of Landau
+  std::string zSmearing = "[&](double* x, double* p)->double{ return TMath::Landau(x[0],p[1],p[4], 0);};";
 
   double mpv = 0; /// most probable value of Landau ~~ "mean"
   double sigma = 2;
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE(testCustomZFunction)
   valsRef.reserve(nTrials);
   for (int i = 0; i < nTrials; i++)
   {
-    double res = parametrizer.addZHitSmearing(0, mpv, 0);
+    double res = parametrizer.addZHitSmearing(0, mpv, 0, -9999);
     double res2 = refFunc.GetRandom();
     vals.push_back(res);
     valsRef.push_back(res2);

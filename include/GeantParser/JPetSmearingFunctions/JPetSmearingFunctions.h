@@ -54,8 +54,8 @@ public:
   /// The limit is callculated with respect to the mean value
   /// e.g. [mean + low , mean + up]
   double addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn);
-  double addEnergySmearing(int scinID, double zIn, double eneIn);
-  double addZHitSmearing(int scinID, double zIn, double eneIn);
+  double addEnergySmearing(int scinID, double zIn, double eneIn, double timeIn);
+  double addZHitSmearing(int scinID, double zIn, double eneIn, double timeIn);
 
   std::map<SmearingType, SmearingFunctionLimits> getSmearingFunctionLimits() const;
   void printAllParameters() const;

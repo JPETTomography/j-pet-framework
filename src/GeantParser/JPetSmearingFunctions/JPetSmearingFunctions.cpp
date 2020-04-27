@@ -61,6 +61,7 @@ JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
     // p[0] = scinID
     // p[1] = zIn
     // p[2] = eneIn
+    // p[3] = timeIn
     double eneIn = p[2];
     double sigma = eneIn * 0.044 / sqrt(eneIn / 1000.);
     double energy = x[0];
@@ -68,27 +69,29 @@ JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
     return TMath::Gaus(energy, eneIn, sigma, true);
   };
 
-  fSmearingFunctions.emplace(kEnergy, std::make_unique<TF1>("funEnergySmearing", energySmearingF, -200., 200., 3));
+  fSmearingFunctions.emplace(kEnergy, std::make_unique<TF1>("funEnergySmearing", energySmearingF, -200., 200., 4));
 
   auto zPositionSmearingF = [&](double* x, double* p) -> double {
     // p[0] = scinID
     // p[1] = zIn
     // p[2] = eneIn
-    // p[3] = zResolution (sigma)
+    // p[3] = timeIn
+    // p[4] = zResolution (sigma)
     double zIn = p[1];
-    double sigma = p[3];
+    double sigma = p[4];
     double z = x[0];
 
     return TMath::Gaus(z, zIn, sigma, true);
   };
 
-  fSmearingFunctions.emplace(kZPosition, std::make_unique<TF1>("funZHitSmearing", zPositionSmearingF, -200., 200., 4));
+  fSmearingFunctions.emplace(kZPosition, std::make_unique<TF1>("funZHitSmearing", zPositionSmearingF, -200., 200., 5));
   double kZresolution = 0.976;
-  fSmearingFunctions[kZPosition]->SetParameter(3, kZresolution);
+  fSmearingFunctions[kZPosition]->SetParameter(4, kZresolution);
 }
 
 void JPetHitExperimentalParametrizer::setSmearingFunctions(const std::vector<FuncAndParam>& params)
 {
+  const int nDefaultParams = 4;
   assert(params.size() >= 3);
   auto timeFuncAndParams = params[0];
   auto energyFuncAndParams = params[1];
@@ -96,7 +99,6 @@ void JPetHitExperimentalParametrizer::setSmearingFunctions(const std::vector<Fun
 
   auto timeFunc = timeFuncAndParams.first;
   auto timeParams = timeFuncAndParams.second;
-  int nDefaultParams = 4;
   int nCustomParams = timeParams.size();
   int nTotalParams = nCustomParams + nDefaultParams;
   if (!timeFunc.empty())
@@ -110,7 +112,6 @@ void JPetHitExperimentalParametrizer::setSmearingFunctions(const std::vector<Fun
 
   auto energyFunc = energyFuncAndParams.first;
   auto energyParams = energyFuncAndParams.second;
-  nDefaultParams = 3;
   nCustomParams = energyParams.size();
   nTotalParams = nCustomParams + nDefaultParams;
   if (!energyFunc.empty())
@@ -124,7 +125,6 @@ void JPetHitExperimentalParametrizer::setSmearingFunctions(const std::vector<Fun
 
   auto zPositionFunc = zPositionFuncAndParams.first;
   auto zPositionParams = zPositionFuncAndParams.second;
-  nDefaultParams = 3;
   nCustomParams = zPositionParams.size();
   nTotalParams = nCustomParams + nDefaultParams;
   if (!zPositionFunc.empty())
@@ -228,23 +228,25 @@ double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, 
 }
 
 /// function is randomize in the range [lowLim + eneIn, highLim + eneIn]
-double JPetHitExperimentalParametrizer::addEnergySmearing(int scinID, double zIn, double eneIn)
+double JPetHitExperimentalParametrizer::addEnergySmearing(int scinID, double zIn, double eneIn, double timeIn)
 {
   fSmearingFunctions[kEnergy]->SetParameter(0, double(scinID));
   fSmearingFunctions[kEnergy]->SetParameter(1, zIn);
   fSmearingFunctions[kEnergy]->SetParameter(2, eneIn);
+  fSmearingFunctions[kEnergy]->SetParameter(3, timeIn);
   fSmearingFunctions[kEnergy]->SetRange(eneIn + fFunctionLimits[kEnergy].first, eneIn + fFunctionLimits[kEnergy].second);
   return fSmearingFunctions[kEnergy]->GetRandom();
 }
 
 /// function is randomize in the range [lowLim + zIn, highLim + zIn]
-double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, double eneIn)
+double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, double eneIn, double timeIn)
 {
   /// We cannot use setParameters(...) cause if there are more then 4 parameters
   /// It would set it all to 0.
   fSmearingFunctions[kZPosition]->SetParameter(0, double(scinID));
   fSmearingFunctions[kZPosition]->SetParameter(1, zIn);
   fSmearingFunctions[kZPosition]->SetParameter(2, eneIn);
+  fSmearingFunctions[kZPosition]->SetParameter(3, timeIn);
   fSmearingFunctions[kZPosition]->SetRange(zIn + fFunctionLimits[kZPosition].first, zIn + fFunctionLimits[kZPosition].second);
   return fSmearingFunctions[kZPosition]->GetRandom();
 }
