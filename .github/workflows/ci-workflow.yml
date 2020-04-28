@@ -1,4 +1,4 @@
-name:j-pet-continuous-integration-tests
+name: j-pet-continuous-integration-tests
 on: [push]
 
 jobs:
