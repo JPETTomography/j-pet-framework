@@ -21,6 +21,5 @@ jobs:
       run: cmake ..
       run: make all tests -j4
       run: source bin/thisframework.sh
-     
-    - name:run_tests 
+    - name: run_tests 
       run: ctest -j6 -C Debug -T test --output-on-failure
