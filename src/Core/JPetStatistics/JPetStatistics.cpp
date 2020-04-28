@@ -55,6 +55,69 @@ void JPetStatistics::createHistogramWithAxes(TObject* object, TString xAxisName,
   fStats.Add(object);
 }
 
+void JPetStatistics::createHistogramWithCustomAxes(TObject* object, std::vector<std::vector<std::string>> binLabels, 
+                                                   std::vector<std::vector<unsigned>> binNumbers, TString xAxisName, 
+                                                   TString yAxisName, TString zAxisName)
+{
+  TClass *cl = object->IsA();
+  if( cl->InheritsFrom("TH1D") )
+  {
+    TH1D* tempHisto = dynamic_cast<TH1D*>(object);
+    tempHisto->GetXaxis()->SetTitle(xAxisName);
+    tempHisto->GetYaxis()->SetTitle(yAxisName);
+    if( binLabels.size() > 0 && binNumbers.size() > 0 )
+    {
+      for( unsigned i=0; i<binLabels[0].size() || i<binNumbers[0].size(); i++ )
+        tempHisto->GetXaxis()->SetBinLabel(binNumbers[0][i],binLabels[0][i].c_str());
+    }
+    else
+      writeError(tempHisto->GetName(), " had empty custom names of axis or bin numbers" );
+  }
+  else if( cl->InheritsFrom("TH2D") )
+  {
+    TH2D* tempHisto = dynamic_cast<TH2D*>(object);
+    tempHisto->GetXaxis()->SetTitle(xAxisName);
+    tempHisto->GetYaxis()->SetTitle(yAxisName);
+    if( binLabels.size() > 0 && binNumbers.size() > 0 )
+    {
+      for( unsigned i=0; i<binLabels[0].size() || i<binNumbers[0].size(); i++ )
+        tempHisto->GetXaxis()->SetBinLabel(binNumbers[0][i],binLabels[0][i].c_str());
+      if( binLabels.size() > 1 && binNumbers.size() > 1 )
+      {
+        for( unsigned j=0; j<binLabels[1].size() || j<binNumbers[1].size(); j++ )
+          tempHisto->GetYaxis()->SetBinLabel(binNumbers[1][j],binLabels[1][j].c_str());
+      }
+    }
+    else
+      writeError(tempHisto->GetName(), " had empty custom names of axis or bin numbers" );
+  }
+  else if( cl->InheritsFrom("TH3D") )
+  {
+    TH3D* tempHisto = dynamic_cast<TH3D*>(object);
+    tempHisto->GetXaxis()->SetTitle(xAxisName);
+    tempHisto->GetYaxis()->SetTitle(yAxisName);
+    tempHisto->GetZaxis()->SetTitle(zAxisName);
+    if( binLabels.size() > 0 && binNumbers.size() > 0 )
+    {
+      for( unsigned i=0; i<binLabels[0].size() || i<binNumbers[0].size(); i++ )
+        tempHisto->GetXaxis()->SetBinLabel(binNumbers[0][i],binLabels[0][i].c_str());
+      if( binLabels.size() > 1 && binNumbers.size() > 1 )
+      {
+        for( unsigned j=0; j<binLabels[1].size() || j<binNumbers[1].size(); j++ )
+          tempHisto->GetYaxis()->SetBinLabel(binNumbers[1][j],binLabels[1][j].c_str());
+        if( binLabels.size() > 2 && binNumbers.size() > 2 )
+        {
+          for( unsigned k=0; k<binLabels[2].size() || k<binNumbers[2].size(); k++ )
+            tempHisto->GetZaxis()->SetBinLabel(binNumbers[2][k],binLabels[2][k].c_str());
+        }
+      }
+    }
+    else
+      writeError(tempHisto->GetName(), " had empty custom names of axis or bin numbers" );
+  }
+  fStats.Add(object);  
+}
+
 void JPetStatistics::createGraph(TObject* object) { fStats.Add(object); }
 
 void JPetStatistics::createCanvas(TObject* object) { fStats.Add(object); }
