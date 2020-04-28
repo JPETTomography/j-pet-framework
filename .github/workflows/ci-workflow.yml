@@ -1,0 +1,26 @@
+name:j-pet-continuous-integration-tests
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+   
+    steps:
+    - uses: actions/checkout@v2
+    - name: install 
+      run: sudo apt-get -qq update
+      run: sudo apt-get install -y git libboost-all-dev libtbb-dev cmake
+    - name: root 
+      run: wget https://root.cern/download/root_v6.12.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
+      run: tar xzf root_v6.12.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
+      run: source root/bin/thisroot.sh
+    - name: make 
+      run: mkdir build
+      run: cd build
+      run: cmake ..
+      run: make all tests -j4
+      run: source bin/thisframework.sh
+     
+    - name:run_tests 
+      run: ctest -j6 -C Debug -T test --output-on-failure
