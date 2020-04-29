@@ -52,9 +52,9 @@ public:
     
   enum AxisLabel
   {
-    xAxis,
-    yAxis,
-    zAxis,
+    kXaxis,
+    kYaxis,
+    kZaxis,
   };
 
   JPetStatistics();

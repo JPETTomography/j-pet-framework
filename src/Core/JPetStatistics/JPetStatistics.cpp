@@ -70,7 +70,7 @@ void JPetStatistics::setHistogramBinLabel(const char* name, AxisLabel axis, std:
     if( binLabels.size() > 0 )
     {
       TAxis *customAxis;
-      if( axis == AxisLabel::xAxis )
+      if( axis == AxisLabel::kXaxis )
       {
         customAxis = tempHisto->GetXaxis();
         for( unsigned i=0; i<binLabels.size(); i++ )
@@ -88,9 +88,9 @@ void JPetStatistics::setHistogramBinLabel(const char* name, AxisLabel axis, std:
     if( binLabels.size() > 0 )
     {
       TAxis *customAxis;
-      if( axis != AxisLabel::zAxis )
+      if( axis != AxisLabel::kZaxis )
       {
-        customAxis = ( axis == AxisLabel::xAxis ? tempHisto->GetXaxis() : tempHisto->GetYaxis());
+        customAxis = ( axis == AxisLabel::kXaxis ? tempHisto->GetXaxis() : tempHisto->GetYaxis());
         for( unsigned i=0; i<binLabels.size(); i++ )
           customAxis->SetBinLabel(binLabels[i].first,(binLabels[i].second).c_str());
       }
@@ -106,8 +106,8 @@ void JPetStatistics::setHistogramBinLabel(const char* name, AxisLabel axis, std:
     if( binLabels.size() > 0 )
     {
       TAxis *customAxis;
-      customAxis = ( axis == AxisLabel::xAxis ? tempHisto->GetXaxis() : 
-                                        ( axis == AxisLabel::yAxis ? tempHisto->GetYaxis() : tempHisto->GetYaxis()));
+      customAxis = ( axis == AxisLabel::kXaxis ? tempHisto->GetXaxis() : 
+                                        ( axis == AxisLabel::kYaxis ? tempHisto->GetYaxis() : tempHisto->GetZaxis()));
       for( unsigned i=0; i<binLabels.size(); i++ )
         customAxis->SetBinLabel(binLabels[i].first,(binLabels[i].second).c_str());
     }
