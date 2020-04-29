@@ -49,12 +49,22 @@ public:
 class JPetStatistics: public TObject
 {
 public:
+    
+  enum AxisLabel
+  {
+    kXaxis,
+    kYaxis,
+    kZaxis,
+  };
+
   JPetStatistics();
   JPetStatistics(const JPetStatistics& old);
   ~JPetStatistics();
   void createObject(TObject* object);
   void createHistogram(TObject* object);
-  void createHistogramWithAxes(TObject* object, TString xAxisName="Default X axis title [unit]", TString yAxisName="Default Y axis title [unit]", TString zAxisName="Default Z axis title [unit]");
+  void createHistogramWithAxes(TObject* object, TString xAxisName="Default X axis title [unit]",
+                               TString yAxisName="Default Y axis title [unit]", TString zAxisName="Default Z axis title [unit]");
+  void setHistogramBinLabel(const char* name, AxisLabel axis, std::vector<std::pair<unsigned, std::string>> binLabels);
   void createGraph(TObject* object);
   void createCanvas(TObject* object);
   void fillHistogram(const char* name, double xValue, doubleCheck yValue=doubleCheck(), doubleCheck zValue=doubleCheck());
