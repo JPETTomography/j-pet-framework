@@ -23,6 +23,7 @@ jobs:
         mkdir build
         cmake --build build 
     - name: make
+      run: |
         source root/bin/thisroot.sh
         cd build
         make all tests -j4
