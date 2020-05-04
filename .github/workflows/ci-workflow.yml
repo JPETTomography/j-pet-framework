@@ -17,12 +17,20 @@ jobs:
       run: |
         wget https://root.cern/download/root_v6.12.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
         tar xzf root_v6.12.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
-    - name: cmake,  make and run tests
+    - name: cmake
       run: |
         source root/bin/thisroot.sh
         mkdir build
         cd build
         cmake ..
+    - name: make
+      run: |
+        source root/bin/thisroot.sh
+        cd build
         make all tests -j4
+    - name: run tests
+      run: |
+        source root/bin/thisroot.sh
+        cd build
         source bin/thisframework.sh
         ctest -j6 -C Debug -T test --output-on-failure
