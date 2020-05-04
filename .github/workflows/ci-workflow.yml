@@ -2,9 +2,9 @@ name: j-pet-continuous-integration-tests
 on: [push, pull_request]
 
 jobs:
-  build:
+  build and run all tests on ubuntu:
 
-    runs-on: ubuntu-16.04
+    runs-on: [ubuntu-16.04, ubuntu-latest]
    
     steps:
     - uses: actions/checkout@v2
