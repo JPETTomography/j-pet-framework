@@ -55,6 +55,67 @@ void JPetStatistics::createHistogramWithAxes(TObject* object, TString xAxisName,
   fStats.Add(object);
 }
 
+void JPetStatistics::setHistogramBinLabel(const char* name, AxisLabel axis, std::vector<std::pair<unsigned, std::string>> binLabels)
+{
+  TObject *tempObject = getObject<TObject>(name);
+  if( !tempObject )
+  {
+    writeError(name, " does not exist" );
+    return;
+  }
+  TClass *cl = tempObject->IsA();
+  if( cl->InheritsFrom("TH1D") )
+  {
+    TH1D* tempHisto = dynamic_cast<TH1D*>(tempObject);
+    if( binLabels.size() > 0 )
+    {
+      TAxis *customAxis;
+      if( axis == AxisLabel::kXaxis )
+      {
+        customAxis = tempHisto->GetXaxis();
+        for( unsigned i=0; i<binLabels.size(); i++ )
+          customAxis->SetBinLabel(binLabels[i].first,(binLabels[i].second).c_str());
+      }
+      else
+        writeError(name, " can not have custom Y or Z axis" );
+    }
+    else
+      writeError(name, " had empty custom labels of bins" );
+  }
+  else if( cl->InheritsFrom("TH2D") )
+  {
+    TH2D* tempHisto = dynamic_cast<TH2D*>(tempObject);
+    if( binLabels.size() > 0 )
+    {
+      TAxis *customAxis;
+      if( axis != AxisLabel::kZaxis )
+      {
+        customAxis = ( axis == AxisLabel::kXaxis ? tempHisto->GetXaxis() : tempHisto->GetYaxis());
+        for( unsigned i=0; i<binLabels.size(); i++ )
+          customAxis->SetBinLabel(binLabels[i].first,(binLabels[i].second).c_str());
+      }
+      else
+        writeError(name, " can not have custom Z axis" );
+    }
+    else
+      writeError(name, " had empty custom labels of bins" );
+  }
+  else if( cl->InheritsFrom("TH3D") )
+  {
+    TH3D* tempHisto = dynamic_cast<TH3D*>(tempObject);
+    if( binLabels.size() > 0 )
+    {
+      TAxis *customAxis;
+      customAxis = ( axis == AxisLabel::kXaxis ? tempHisto->GetXaxis() : 
+                                        ( axis == AxisLabel::kYaxis ? tempHisto->GetYaxis() : tempHisto->GetZaxis()));
+      for( unsigned i=0; i<binLabels.size(); i++ )
+        customAxis->SetBinLabel(binLabels[i].first,(binLabels[i].second).c_str());
+    }
+    else
+      writeError(name, " had empty custom labels of bins" );
+  }  
+}
+
 void JPetStatistics::createGraph(TObject* object) { fStats.Add(object); }
 
 void JPetStatistics::createCanvas(TObject* object) { fStats.Add(object); }

@@ -39,6 +39,7 @@ float getOptionAsFloat(const OptsStrAny& opts, const std::string& optionName);
 double getOptionAsDouble(const OptsStrAny& opts, const std::string& optionName);
 std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, const std::string& optionName);
 std::vector<int> getOptionAsVectorOfInts(const OptsStrAny& opts, const std::string& optionName);
+std::vector<double> getOptionAsVectorOfDoubles(const OptsStrAny& opts, const std::string& optionName);
 bool getOptionAsBool(const OptsStrAny& opts, const std::string& optionName);
 std::vector<std::string> getInputFiles(const OptsStrAny& opts);
 std::string getInputFile(const OptsStrAny& opts);

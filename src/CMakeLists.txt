@@ -99,7 +99,16 @@ else()
   include(ExternalProject)
   message(STATUS "Unpacker2 was not found..")
   set(GITHUB_URL "https://github.com/JPETTomography/Unpacker2.git")
-  set(GIT_TAG "master")
+
+  exec_program("git"
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ARGS "branch --show-current"
+    OUTPUT_VARIABLE framework_branchname)
+  if( ${framework_branchname} STREQUAL "develop")
+    set(GIT_TAG "develop")
+  else()
+    set(GIT_TAG "master")
+  endif()
 
   message(STATUS "Adding external project to download and compile Unpacker2 from: ${GITHUB_URL} with tag: ${GIT_TAG}")
 
