@@ -22,6 +22,10 @@
 #pragma link C++ function JPetWriter::Write(vector <JPetRawSignal>&);
 #pragma link C++ function JPetWriter::Write(JPetTRB&);
 #pragma link C++ function JPetWriter::Write(vector <JPetTRB>&);
+#pragma link C++ function JPetWriter::Write(JPetDataSource&);
+#pragma link C++ function JPetWriter::Write(vector <JPetDataSource>&);
+#pragma link C++ function JPetWriter::Write(JPetDataModule&);
+#pragma link C++ function JPetWriter::Write(vector <JPetDataModule>&);
 #pragma link C++ function JPetWriter::Write(JPetTimeWindow&);
 #pragma link C++ function JPetWriter::Write(vector <JPetTimeWindow>&);
 
@@ -47,6 +51,8 @@
 #pragma link C++ class JPetGeantScinHits + ;
 #pragma link C++ class JPetStatistics + ;
 #pragma link C++ class JPetTRB + ;
+#pragma link C++ class JPetDataSource + ;
+#pragma link C++ class JPetDataModule + ;
 #pragma link C++ class JPetBarrelSlot + ;
 #pragma link C++ class JPetGeantDecayTree + ;
 #pragma link C++ class JPetLayer + ;

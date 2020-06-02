@@ -53,6 +53,8 @@ set(UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAna
                       ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetScin/JPetScinTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetTOMBChannel/JPetTOMBChannelTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetTRB/JPetTRBTest.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetDataSource/JPetDataSourceTest.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetDataModule/JPetDataModuleTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamBank/JPetParamBankTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamGetterAscii/JPetParamGetterAsciiTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamManager/JPetParamManagerTest.cpp
