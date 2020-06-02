@@ -64,4 +64,13 @@ BOOST_AUTO_TEST_CASE(cached_2D)
   BOOST_CHECK_CLOSE(func(1., 0.), 2., 0.1);
 }
 
+BOOST_AUTO_TEST_CASE(cached_log)
+{
+  JPetCachedFunctionParams params("[0] + [1] * TMath::Log(x)", {1., -2.}); /// 1 + -2 * log(x)
+  JPetCachedFunction1D func(params, Range(10000, 2., 100.));
+  BOOST_CHECK(func.getParams().fValidFunction);
+  BOOST_CHECK_CLOSE(func(2.), -0.386294, 0.1);
+  BOOST_CHECK_CLOSE(func(3.), -1.19696, 0.1);
+  BOOST_CHECK_CLOSE(func(99.), -8.19005, 0.1);
+}
 BOOST_AUTO_TEST_SUITE_END()
