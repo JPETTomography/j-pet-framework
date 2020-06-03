@@ -116,7 +116,7 @@ double JPetCachedFunction1D::operator()(double x) const
 int JPetCachedFunction1D::xValueToIndex(double x) const
 {
   assert(fStep > 0.);
-  return x / fStep;
+  return (x - fRange.fMin) / fStep;
 }
 
 
@@ -132,7 +132,7 @@ double JPetCachedFunction2D::operator()(double x, double y) const
 int JPetCachedFunction2D::xyValueToIndex(double x, double y) const
 {
   assert(fSteps.first > 0. && fSteps.second > 0.);
-  return (x / fSteps.first) + (y / fSteps.second) * fRange.first.fBins;
+  return ((x - fRange.first.fMin) / fSteps.first) + ((y - fRange.second.fMin) / fSteps.second) * fRange.first.fBins;
 }
 
 }

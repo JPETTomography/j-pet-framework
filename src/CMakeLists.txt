@@ -100,14 +100,17 @@ else()
   message(STATUS "Unpacker2 was not found..")
   set(GITHUB_URL "https://github.com/JPETTomography/Unpacker2.git")
 
-  exec_program("git"
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ARGS "branch --show-current"
-    OUTPUT_VARIABLE framework_branchname)
-  if( ${framework_branchname} STREQUAL "develop")
-    set(GIT_TAG "develop")
-  else()
+  execute_process(
+    COMMAND git rev-parse --abbrev-ref HEAD
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE framework_branchname
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+  if( ${framework_branchname} STREQUAL "master")
     set(GIT_TAG "master")
+  else()
+    set(GIT_TAG "develop")
   endif()
 
   message(STATUS "Adding external project to download and compile Unpacker2 from: ${GITHUB_URL} with tag: ${GIT_TAG}")
