@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -55,6 +55,8 @@ void JPetParamSaverAscii::addToTree(boost::property_tree::ptree& tree, const JPe
   fillFEBs(runContents, bank);
   fillTRBs(runContents, bank);
   fillTOMBChannels(runContents, bank);
+  fillDataSources(runContents, bank);
+  fillDataModules(runContents, bank);
   tree.add_child(runNumber, runContents);
 }
 
@@ -238,5 +240,53 @@ boost::property_tree::ptree JPetParamSaverAscii::TOMBChannelToInfo(const JPetTOM
   info.put(objectsNames.at(ParamObjectType::kTRB) + "_id", tomb.getTRB().getID());
   info.put(objectsNames.at(ParamObjectType::kFEB) + "_id", tomb.getFEB().getID());
   info.put(objectsNames.at(ParamObjectType::kPM) + "_id", tomb.getPM().getID());
+  return info;
+}
+
+
+
+
+
+
+void JPetParamSaverAscii::fillDataSources(
+  boost::property_tree::ptree& runContents, const JPetParamBank& bank
+) {
+  boost::property_tree::ptree infos;
+  for (auto dataSource : bank.getDataSources()) {
+    infos.push_back(std::make_pair("", dataSourceToInfo(*dataSource.second)));
+  }
+  runContents.add_child(objectsNames.at(ParamObjectType::kDataSource), infos);
+}
+
+boost::property_tree::ptree JPetParamSaverAscii::dataSourceToInfo(const JPetDataSource& dataSource)
+{
+  boost::property_tree::ptree info;
+  info.put("id", dataSource.getID());
+  info.put("type", dataSource.getType());
+  info.put("trbnet_address", dataSource.getTBRNetAddress());
+  info.put("hub_address", dataSource.getHubAddress());
+  return info;
+}
+
+void JPetParamSaverAscii::fillDataModules(
+  boost::property_tree::ptree& runContents, const JPetParamBank& bank
+) {
+  boost::property_tree::ptree infos;
+  for (auto dataModule : bank.getDataModules()) {
+    infos.push_back(std::make_pair("", dataModuleToInfo(*dataModule.second)));
+  }
+  runContents.add_child(objectsNames.at(ParamObjectType::kDataModule), infos);
+}
+
+boost::property_tree::ptree JPetParamSaverAscii::dataModuleToInfo(
+  const JPetDataModule& dataModule
+){
+  boost::property_tree::ptree info;
+  info.put("id", dataModule.getID());
+  info.put("type", dataModule.getType());
+  info.put("trbnet_address", dataModule.getTBRNetAddress());
+  info.put("channels_number", dataModule.getChannelsNumber());
+  info.put("channels_offset", dataModule.getChannelsOffset());
+  info.put(objectsNames.at(ParamObjectType::kDataSource) + "_id", dataModule.getDataSource().getID());
   return info;
 }
