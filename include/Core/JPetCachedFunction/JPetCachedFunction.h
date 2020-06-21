@@ -73,9 +73,7 @@ class JPetCachedFunction1D: public JPetCachedFunction
 
 public:
   explicit JPetCachedFunction1D(const JPetCachedFunctionParams& params, const Range& range);
-
   double operator()(double x) const;
-
   Range getRange() const;
 
 protected:
@@ -94,9 +92,7 @@ class JPetCachedFunction2D: public JPetCachedFunction
 
 public:
   JPetCachedFunction2D(const JPetCachedFunctionParams& params, const Range& xRange, const Range& yRange);
-
   double operator()(double x, double y) const;
-
   std::pair<Range, Range> getRange() const;
 
 protected:
