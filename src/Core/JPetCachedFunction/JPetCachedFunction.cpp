@@ -92,9 +92,15 @@ JPetCachedFunction2D::JPetCachedFunction2D(const JPetCachedFunctionParams& param
   fParams.fValidFunction = true;
 }
 
-Range JPetCachedFunction1D::getRange() const { return fRange; }
+Range JPetCachedFunction1D::getRange() const
+{
+  return fRange;
+}
 
-std::pair<Range, Range> JPetCachedFunction2D::getRange() const { return fRange; }
+std::pair<Range, Range> JPetCachedFunction2D::getRange() const
+{
+  return fRange;
+}
 
 JPetCachedFunctionParams JPetCachedFunction::getParams() const
 {
