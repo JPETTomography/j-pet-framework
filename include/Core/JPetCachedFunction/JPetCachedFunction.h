@@ -76,6 +76,8 @@ public:
 
   double operator()(double x) const;
 
+  Range getRange() const;
+
 protected:
   int xValueToIndex(double x) const;
 
@@ -94,6 +96,8 @@ public:
   JPetCachedFunction2D(const JPetCachedFunctionParams& params, const Range& xRange, const Range& yRange);
 
   double operator()(double x, double y) const;
+
+  std::pair<Range, Range> getRange() const;
 
 protected:
   int xyValueToIndex(double x, double y) const;
