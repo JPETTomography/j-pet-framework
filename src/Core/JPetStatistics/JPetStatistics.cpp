@@ -33,20 +33,26 @@ void JPetStatistics::createObject(TObject* object) { fStats.Add(object); }
 void JPetStatistics::createHistogramWithAxes(TObject* object, TString xAxisName, TString yAxisName, TString zAxisName) 
 { 
   TClass *cl = object->IsA();
-  if( cl->InheritsFrom("TH1D") )
+  if( cl->InheritsFrom("TH1D") || cl->InheritsFrom("TH1F") )
   {
+    if( cl->InheritsFrom("TH1F") )
+      INFO("TH1F given, casting to TH1D");
     TH1D* tempHisto = dynamic_cast<TH1D*>(object);
     tempHisto->GetXaxis()->SetTitle(xAxisName);
     tempHisto->GetYaxis()->SetTitle(yAxisName);
   }
-  else if( cl->InheritsFrom("TH2D") )
+  else if( cl->InheritsFrom("TH2D") || cl->InheritsFrom("TH2F") )
   {
+    if( cl->InheritsFrom("TH2F") )
+      INFO("TH2F given, casting to TH2D");
     TH2D* tempHisto = dynamic_cast<TH2D*>(object);
     tempHisto->GetXaxis()->SetTitle(xAxisName);
     tempHisto->GetYaxis()->SetTitle(yAxisName);
   }
-  else if( cl->InheritsFrom("TH3D") )
+  else if( cl->InheritsFrom("TH3D") || cl->InheritsFrom("TH3F") )
   {
+    if( cl->InheritsFrom("TH3F") )
+      INFO("TH3F given, casting to TH3D");
     TH3D* tempHisto = dynamic_cast<TH3D*>(object);
     tempHisto->GetXaxis()->SetTitle(xAxisName);
     tempHisto->GetYaxis()->SetTitle(yAxisName);
