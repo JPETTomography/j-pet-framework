@@ -28,7 +28,6 @@ BOOST_AUTO_TEST_CASE(getTot_params)
   BOOST_CHECK_EQUAL(func.getParams().fParams[1], 19341.);
   BOOST_CHECK_EQUAL(func.getValues().size(), 100);
   BOOST_CHECK_EQUAL(func.getRange().fBins, 100);
-  BOOST_CHECK_EQUAL(func.getRange().fBins, 100);
   BOOST_CHECK_CLOSE(func.getRange().fMin, 0, 0.1);
   BOOST_CHECK_CLOSE(func.getRange().fMax, 100, 0.1);
   auto vals = func.getValues();
