@@ -37,11 +37,11 @@ The former developers are [Szymon Niedźwiecki](https://github.com/wictus), Karo
 
 In case you want to refer to J-PET Analysis Framework you can use this reference:
 
-> W. Krzemien et al.  
-Analysis framework for the J-PET scanner  
-Acta Phys. Polon. A127 (2015) 1491-1494
-DOI: 10.12693/APhysPolA.127.1491  
-e-Print: arXiv:1503.00465
+> W. Krzemien, A. Gajos, K. Kacprzak, K. Rakoczy, G. Korcyl  
+J-PET Framework: Software platform for PET tomography data reconstruction and analysis
+SoftwareX 11 (2020) 100487
+DOI:10.1016/j.softx.2020.100487  
+e-Print: arXiv:2002.10183
 
 ## Bug Reporting & Contact
 
