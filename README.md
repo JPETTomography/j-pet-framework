@@ -30,7 +30,7 @@ Please see the file called [INSTALL](INSTALL.md).
 
 ## Authors
 
-J-PET Analysis Framework is being developed by [Wojciech Krzemien](https://github.com/wkrzemien), [Aleksander Gajos](https://github.com/alekgajos), [Kamil Rakoczy](https://github.com/grey277) and [Krzysztof Kacprzak](https://github.com/kkacprzak).  
+J-PET Analysis Framework is being developed by [Wojciech Krzemien](https://github.com/wkrzemien), [Aleksander Gajos](https://github.com/alekgajos), [Kamil Rakoczy](https://github.com/grey277), [Krzysztof Kacprzak](https://github.com/kkacprzak) and [Kamil Dulski](https://github.com/kdulski).  
 The former developers are [Szymon Niedźwiecki](https://github.com/wictus), Karol Stola, Damian Trybek, Andrzej Gruntowski, Klara Muzalewska, Oleksandr Rundel, Daria Kisielewska and Tomasz Kisielewski.
 
 ## Citation
