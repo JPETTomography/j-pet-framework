@@ -35,25 +35,43 @@ void JPetStatistics::createHistogramWithAxes(TObject* object, TString xAxisName,
   TClass *cl = object->IsA();
   if( cl->InheritsFrom("TH1D") || cl->InheritsFrom("TH1F") )
   {
+    TH1D* tempHisto;
     if( cl->InheritsFrom("TH1F") )
+    {
       INFO("TH1F given, casting to TH1D");
-    TH1D* tempHisto = dynamic_cast<TH1D*>(object);
+      TH1F* floatTemp = dynamic_cast<TH1F*>(object);
+      floatTemp->Copy(*tempHisto);
+    }
+    else
+      tempHisto = dynamic_cast<TH1D*>(object);
     tempHisto->GetXaxis()->SetTitle(xAxisName);
     tempHisto->GetYaxis()->SetTitle(yAxisName);
   }
   else if( cl->InheritsFrom("TH2D") || cl->InheritsFrom("TH2F") )
   {
+    TH2D* tempHisto;
     if( cl->InheritsFrom("TH2F") )
+    {
       INFO("TH2F given, casting to TH2D");
-    TH2D* tempHisto = dynamic_cast<TH2D*>(object);
+      TH2F* floatTemp = dynamic_cast<TH2F*>(object);
+      floatTemp->Copy(*tempHisto);
+    }
+    else
+      tempHisto = dynamic_cast<TH2D*>(object);
     tempHisto->GetXaxis()->SetTitle(xAxisName);
     tempHisto->GetYaxis()->SetTitle(yAxisName);
   }
   else if( cl->InheritsFrom("TH3D") || cl->InheritsFrom("TH3F") )
   {
+    TH3D* tempHisto;
     if( cl->InheritsFrom("TH3F") )
+    {
       INFO("TH3F given, casting to TH3D");
-    TH3D* tempHisto = dynamic_cast<TH3D*>(object);
+      TH3F* floatTemp = dynamic_cast<TH3F*>(object);
+      floatTemp->Copy(*tempHisto);
+    }
+    else
+      tempHisto = dynamic_cast<TH3D*>(object);
     tempHisto->GetXaxis()->SetTitle(xAxisName);
     tempHisto->GetYaxis()->SetTitle(yAxisName);
     tempHisto->GetZaxis()->SetTitle(zAxisName);
