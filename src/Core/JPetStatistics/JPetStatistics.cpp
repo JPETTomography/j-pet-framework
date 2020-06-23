@@ -35,12 +35,13 @@ void JPetStatistics::createHistogramWithAxes(TObject* object, TString xAxisName,
   TClass *cl = object->IsA();
   if( cl->InheritsFrom("TH1D") || cl->InheritsFrom("TH1F") )
   {
-    TH1D* tempHisto = new TH1D("temp", "", 2, 0, 2);
+    TH1D* tempHisto = new TH1D();
     if( cl->InheritsFrom("TH1F") )
     {
       INFO("TH1F given, casting to TH1D");
       TH1F* floatTemp = dynamic_cast<TH1F*>(object);
       floatTemp->Copy(*tempHisto);
+      tempHisto->SetDirectory(nullptr);
       delete floatTemp;
     }
     else
@@ -51,12 +52,13 @@ void JPetStatistics::createHistogramWithAxes(TObject* object, TString xAxisName,
   }
   else if( cl->InheritsFrom("TH2D") || cl->InheritsFrom("TH2F") )
   {
-    TH2D* tempHisto = new TH2D("temp", "", 2, 0, 2, 2, 0 ,2);
+    TH2D* tempHisto = new TH2D();
     if( cl->InheritsFrom("TH2F") )
     {
       INFO("TH2F given, casting to TH2D");
       TH2F* floatTemp = dynamic_cast<TH2F*>(object);
       floatTemp->Copy(*tempHisto);
+      tempHisto->SetDirectory(nullptr);
       delete floatTemp;
     }
     else
@@ -67,12 +69,13 @@ void JPetStatistics::createHistogramWithAxes(TObject* object, TString xAxisName,
   }
   else if( cl->InheritsFrom("TH3D") || cl->InheritsFrom("TH3F") )
   {
-    TH3D* tempHisto = new TH3D("temp", "", 2, 0, 2, 2, 0 ,2, 2, 0, 2);
+    TH3D* tempHisto = new TH3D();
     if( cl->InheritsFrom("TH3F") )
     {
       INFO("TH3F given, casting to TH3D");
       TH3F* floatTemp = dynamic_cast<TH3F*>(object);
       floatTemp->Copy(*tempHisto);
+      tempHisto->SetDirectory(nullptr);
       delete floatTemp;
     }
     else
