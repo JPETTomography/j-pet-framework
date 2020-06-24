@@ -233,11 +233,6 @@ std::string getUnpackerConfigFile(const std::map<std::string, boost::any>& opts)
   return any_cast<std::string>(opts.at("unpackerConfigFile_std::string"));
 }
 
-std::string getUnpackerCalibFile(const std::map<std::string, boost::any>& opts)
-{
-  return any_cast<std::string>(opts.at("unpackerCalibFile_std::string"));
-}
-
 std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap)
 {
   if (optsMap.count("userCfg_std::string"))

@@ -33,30 +33,63 @@ void JPetStatistics::createObject(TObject* object) { fStats.Add(object); }
 void JPetStatistics::createHistogramWithAxes(TObject* object, TString xAxisName, TString yAxisName, TString zAxisName) 
 { 
   TClass *cl = object->IsA();
-  if( cl->InheritsFrom("TH1D") )
+  if( cl->InheritsFrom("TH1D") || cl->InheritsFrom("TH1F") )
   {
-    TH1D* tempHisto = dynamic_cast<TH1D*>(object);
+    TH1D* tempHisto = new TH1D();
+    if( cl->InheritsFrom("TH1F") )
+    {
+      INFO("TH1F given, casting to TH1D");
+      TH1F* floatTemp = dynamic_cast<TH1F*>(object);
+      floatTemp->Copy(*tempHisto);
+      tempHisto->SetDirectory(nullptr);
+      delete floatTemp;
+    }
+    else
+      tempHisto = dynamic_cast<TH1D*>(object);
     tempHisto->GetXaxis()->SetTitle(xAxisName);
     tempHisto->GetYaxis()->SetTitle(yAxisName);
+    fStats.Add(tempHisto);
   }
-  else if( cl->InheritsFrom("TH2D") )
+  else if( cl->InheritsFrom("TH2D") || cl->InheritsFrom("TH2F") )
   {
-    TH2D* tempHisto = dynamic_cast<TH2D*>(object);
+    TH2D* tempHisto = new TH2D();
+    if( cl->InheritsFrom("TH2F") )
+    {
+      INFO("TH2F given, casting to TH2D");
+      TH2F* floatTemp = dynamic_cast<TH2F*>(object);
+      floatTemp->Copy(*tempHisto);
+      tempHisto->SetDirectory(nullptr);
+      delete floatTemp;
+    }
+    else
+      tempHisto = dynamic_cast<TH2D*>(object);
     tempHisto->GetXaxis()->SetTitle(xAxisName);
     tempHisto->GetYaxis()->SetTitle(yAxisName);
+    fStats.Add(tempHisto);
   }
-  else if( cl->InheritsFrom("TH3D") )
+  else if( cl->InheritsFrom("TH3D") || cl->InheritsFrom("TH3F") )
   {
-    TH3D* tempHisto = dynamic_cast<TH3D*>(object);
+    TH3D* tempHisto = new TH3D();
+    if( cl->InheritsFrom("TH3F") )
+    {
+      INFO("TH3F given, casting to TH3D");
+      TH3F* floatTemp = dynamic_cast<TH3F*>(object);
+      floatTemp->Copy(*tempHisto);
+      tempHisto->SetDirectory(nullptr);
+      delete floatTemp;
+    }
+    else
+      tempHisto = dynamic_cast<TH3D*>(object);
     tempHisto->GetXaxis()->SetTitle(xAxisName);
     tempHisto->GetYaxis()->SetTitle(yAxisName);
     tempHisto->GetZaxis()->SetTitle(zAxisName);
+    fStats.Add(tempHisto);
   }
-  fStats.Add(object);
 }
 
 void JPetStatistics::setHistogramBinLabel(const char* name, AxisLabel axis, std::vector<std::pair<unsigned, std::string>> binLabels)
 {
+  TAxis *customAxis;
   TObject *tempObject = getObject<TObject>(name);
   if( !tempObject )
   {
@@ -69,7 +102,6 @@ void JPetStatistics::setHistogramBinLabel(const char* name, AxisLabel axis, std:
     TH1D* tempHisto = dynamic_cast<TH1D*>(tempObject);
     if( binLabels.size() > 0 )
     {
-      TAxis *customAxis;
       if( axis == AxisLabel::kXaxis )
       {
         customAxis = tempHisto->GetXaxis();
@@ -87,7 +119,6 @@ void JPetStatistics::setHistogramBinLabel(const char* name, AxisLabel axis, std:
     TH2D* tempHisto = dynamic_cast<TH2D*>(tempObject);
     if( binLabels.size() > 0 )
     {
-      TAxis *customAxis;
       if( axis != AxisLabel::kZaxis )
       {
         customAxis = ( axis == AxisLabel::kXaxis ? tempHisto->GetXaxis() : tempHisto->GetYaxis());
@@ -105,7 +136,6 @@ void JPetStatistics::setHistogramBinLabel(const char* name, AxisLabel axis, std:
     TH3D* tempHisto = dynamic_cast<TH3D*>(tempObject);
     if( binLabels.size() > 0 )
     {
-      TAxis *customAxis;
       customAxis = ( axis == AxisLabel::kXaxis ? tempHisto->GetXaxis() : 
                                         ( axis == AxisLabel::kYaxis ? tempHisto->GetYaxis() : tempHisto->GetZaxis()));
       for( unsigned i=0; i<binLabels.size(); i++ )
