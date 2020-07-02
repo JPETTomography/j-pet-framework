@@ -227,4 +227,22 @@ BOOST_AUTO_TEST_CASE(getOptionBy)
   BOOST_REQUIRE_EQUAL(getOptionAsBool(opts, "my_bool"), false);
 }
 
+BOOST_AUTO_TEST_CASE(testBooleanOptions)
+{
+  OptsStrAny options1 = {};
+
+  BOOST_REQUIRE_EQUAL(isProgressBar(options1), false);
+  BOOST_REQUIRE_EQUAL(isDirectProcessing(options1), false);
+
+  OptsStrAny options2 = {{"progressBar_bool", false}, {"directProcessing_bool", false}};
+
+  BOOST_REQUIRE_EQUAL(isProgressBar(options2), false);
+  BOOST_REQUIRE_EQUAL(isDirectProcessing(options2), false);
+
+  OptsStrAny options3 = {{"progressBar_bool", true}, {"directProcessing_bool", true}};
+
+  BOOST_REQUIRE_EQUAL(isProgressBar(options3), true);
+  BOOST_REQUIRE_EQUAL(isDirectProcessing(options3), true);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
