@@ -21,6 +21,8 @@
 #include "JPetUnpackTask/JPetUnpackTask.h"
 #include "JPetUnzipTask/JPetUnzipTask.h"
 #include "JPetTaskIO/JPetTaskIO.h"
+#include "JPetTaskStreamIO/JPetTaskStreamIO.h"
+#include "JPetOptionsTools/JPetOptionsTools.h"
 
 using TaskGenerator = std::function<std::unique_ptr<JPetTaskInterface>()>;
 using TaskGeneratorChain = std::vector<TaskGenerator>;
@@ -33,6 +35,12 @@ JPetTaskFactory::JPetTaskFactory(){};
 std::vector<TaskGenerator> JPetTaskFactory::createTaskGeneratorChain(
   const std::map<std::string, boost::any>& options
 ) const {
+
+  if (jpet_options_tools::isDirectProcessing(options))
+  {
+    return generateDirectTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
+  }
+
   return generateTaskGeneratorChain(fTasksToUse, fTasksDictionary, options);
 }
 
@@ -75,6 +83,40 @@ TaskGeneratorChain generateTaskGeneratorChain(
   return chain;
 }
 
+  TaskGeneratorChain generateDirectTaskGeneratorChain(
+                                                      const std::vector<TaskInfo>& taskInfoVect,
+                                                      const std::map<std::string, TaskGenerator>& generatorsMap,
+                                                      const std::map<std::string, boost::any>& options)
+  {
+  TaskGeneratorChain chain;
+  addDefaultTasksFromOptions(options, generatorsMap, chain);
+
+  auto inT = taskInfoVect.front().inputFileType;
+  auto outT = taskInfoVect.back().outputFileType;
+  std::string name = "Direct Task Chain";
+
+  chain.push_back(
+  [name, inT, outT, generatorsMap, taskInfoVect]() {
+    auto task = jpet_common_tools::make_unique<JPetTaskStreamIO>(name.c_str(), inT.c_str(), outT.c_str());
+
+    for (const auto& taskInfo : taskInfoVect) {
+      auto task_name = taskInfo.name;
+
+      if (generatorsMap.find(task_name) != generatorsMap.end()) {
+        TaskGenerator userTaskGen = generatorsMap.at(task_name);
+
+        task->addSubTask(std::unique_ptr<JPetTaskInterface>(userTaskGen()));
+      } else {
+        ERROR(Form("The requested task %s is not registered! The output chain might be broken!", name.c_str()));
+        return task;
+      }
+    }
+    return task;
+  });
+
+  return chain;
+}
+  
 void addDefaultTasksFromOptions(
   const std::map<std::string, boost::any>& options,
   const std::map<std::string, TaskGenerator>& generatorsMap,
