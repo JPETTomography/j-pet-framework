@@ -158,7 +158,6 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetLogger/JPetLogger.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetLogger/JPetTMessageHandler.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetManager/JPetManager.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetParamAndDataFactory/JPetParamAndDataFactory.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetProgressBarManager/JPetProgressBarManager.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetReader/JPetReader.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetScopeData/JPetScopeData.cpp
