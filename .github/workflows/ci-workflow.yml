@@ -26,43 +26,20 @@ jobs:
         wget http://sphinx.if.uj.edu.pl/framework/root-6-20-06-ubuntu18-jpet.tar.gz 
         tar xzf root-6-20-06-ubuntu18-jpet.tar.gz
       if: matrix.os == 'ubuntu-18.04'
-    - name: cmake (for ubuntu-16-04)
+    - name: cmake
       run: |
         source root/bin/thisroot.sh
         mkdir build
         cd build
         cmake ..
-      if: matrix.os == 'ubuntu-16.04'
-    - name: cmake (for ubuntu-18-04)
-      run: |
-        source root-system/bin/thisroot.sh
-        mkdir build
-        cd build
-        cmake ..
-      if: matrix.os == 'ubuntu-18.04'
-    - name: make (for ubuntu-16.04)
+    - name: make
       run: |
         source root/bin/thisroot.sh
         cd build
         make all tests -j4
-      if: matrix.os == 'ubuntu-16.04'
-    - name: make (for ubuntu-18.04)
-      run: |
-        source root-system/bin/thisroot.sh
-        cd build
-        make all tests -j4
-      if: matrix.os == 'ubuntu-18.04'
-    - name: run tests(for ubuntu-16.04)
+    - name: run tests
       run: |
         source root/bin/thisroot.sh
         cd build
         source bin/thisframework.sh
         ctest -j6 -C Debug -T test --output-on-failure
-      if: matrix.os == 'ubuntu-16.04'
-    - name: run tests(for ubuntu-18.04)
-      run: |
-        source root-system/bin/thisroot.sh
-        cd build
-        source bin/thisframework.sh
-        ctest -j6 -C Debug -T test --output-on-failure
-      if: matrix.os == 'ubuntu-18.04'
