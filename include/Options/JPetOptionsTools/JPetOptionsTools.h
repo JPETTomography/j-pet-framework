@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -38,8 +38,9 @@ namespace jpet_options_tools
   float getOptionAsFloat(const OptsStrAny& opts, const std::string& optionName);
   double getOptionAsDouble(const OptsStrAny& opts, const std::string& optionName);
   std::string getOptionAsString(const OptsStrAny& opts, const std::string& optionName);
-  std::vector<int> getOptionAsVectorOfInts(const OptsStrAny& opts, const std::string& optionName);
   std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, const std::string& optionName);
+  std::vector<int> getOptionAsVectorOfInts(const OptsStrAny& opts, const std::string& optionName);
+  std::vector<double> getOptionAsVectorOfDoubles(const OptsStrAny& opts, const std::string& optionName);
   std::vector<std::string> getInputFiles(const OptsStrAny& opts);
   std::string getInputFile(const OptsStrAny& opts);
   std::string getScopeConfigFile(const OptsStrAny& opts);

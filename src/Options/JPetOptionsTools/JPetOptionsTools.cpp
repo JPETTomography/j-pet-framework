@@ -77,9 +77,12 @@ namespace jpet_options_tools
 
   std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, const std::string& optionName)
   {
-    try {
+    try
+    {
       return any_cast<std::vector<std::string>>(getOptionValue(opts, optionName));
-    } catch (const std::exception& excep) {
+    }
+    catch (const std::exception& excep)
+    {
       std::vector<std::string> emptyV;
       ERROR("Bad option type:" + std::string(excep.what()));
       return emptyV;
@@ -88,10 +91,27 @@ namespace jpet_options_tools
 
   std::vector<int> getOptionAsVectorOfInts(const OptsStrAny& opts, const std::string& optionName)
   {
-    try {
+    try
+    {
       return any_cast<std::vector<int>>(getOptionValue(opts, optionName));
-    } catch (const std::exception& excep) {
+    }
+    catch (const std::exception& excep)
+    {
       std::vector<int> emptyV;
+      ERROR("Bad option type:" + std::string(excep.what()));
+      return emptyV;
+    }
+  }
+
+  std::vector<double> getOptionAsVectorOfDoubles(const OptsStrAny& opts, const std::string& optionName)
+  {
+    try
+    {
+      return any_cast<std::vector<double>>(getOptionValue(opts, optionName));
+    }
+    catch (const std::exception& excep)
+    {
+      std::vector<double> emptyV;
       ERROR("Bad option type:" + std::string(excep.what()));
       return emptyV;
     }
