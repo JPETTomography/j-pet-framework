@@ -319,6 +319,13 @@ namespace jpet_options_tools
                 return values;
               }()));
               break;
+            case JPetOptionsTypeHandler::kAllowedTypes::kVectorDouble:
+              mapOptions.insert(std::make_pair(key, [&optionsTree, &key]() -> std::vector<double> {
+                std::vector<double> values;
+                for (pt::ptree::value_type& value : optionsTree.get_child(key)) { values.push_back(value.second.get_value<double>()); }
+                return values;
+              }()));
+              break;
             default: WARNING("Unknow option type: " + typeOfOption + " skipping option: " + key); break;
           }
         }
