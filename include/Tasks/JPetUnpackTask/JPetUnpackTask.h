@@ -44,7 +44,6 @@ private:
   std::string fInputFilePath = std::string("");
   std::string fOutputFilePath = std::string("");
 
-  int fEndpoints = 2;
   int fEventsToProcess = 100000000;
 
   Unpacker2D* fUnpacker2D = nullptr;
