@@ -24,18 +24,22 @@ if(ROOT_FOUND)
   message(STATUS "ROOT (version ${ROOT_VERSION}) was found using ROOTConfig")
 endif()
 
-if(EXISTS "${ROOT_DIR}/modules/RootNewMacros.cmake")
-  include("${ROOT_DIR}/modules/RootNewMacros.cmake")
-  message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/modules!")
-elseif(EXISTS "${ROOT_DIR}/cmake/modules/RootNewMacros.cmake")
-  include("${ROOT_DIR}/cmake/modules/RootNewMacros.cmake")
-  message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/cmake/modules!")
-elseif(EXISTS "${ROOT_DIR}/../cmake/modules/RootNewMacros.cmake")
-  include("${ROOT_DIR}/../cmake/modules/RootNewMacros.cmake")
-  message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/../cmake/modules!")
-else()
-  message("ERROR! Could not find RootNewMacros.cmake file! Aborting..")
-  return(1)
+# the RootNewMacros.cmake file has to be found and included manually
+# only for ROOT versions prior to 6.20
+if(ROOT_VERSION VERSION_LESS "6.20")
+  if(EXISTS "${ROOT_DIR}/modules/RootNewMacros.cmake")
+    include("${ROOT_DIR}/modules/RootNewMacros.cmake")
+    message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/modules!")
+  elseif(EXISTS "${ROOT_DIR}/cmake/modules/RootNewMacros.cmake")
+    include("${ROOT_DIR}/cmake/modules/RootNewMacros.cmake")
+    message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/cmake/modules!")
+  elseif(EXISTS "${ROOT_DIR}/../cmake/modules/RootNewMacros.cmake")
+    include("${ROOT_DIR}/../cmake/modules/RootNewMacros.cmake")
+    message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/../cmake/modules!")
+  else()
+    message("ERROR! Could not find RootNewMacros.cmake file! Aborting..")
+    return(1)
+  endif()
 endif()
 # fix missing include directories property in versions < ROOT 6.12
 set_target_properties(ROOT::Core PROPERTIES
@@ -154,7 +158,6 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetLogger/JPetLogger.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetLogger/JPetTMessageHandler.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetManager/JPetManager.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetParamAndDataFactory/JPetParamAndDataFactory.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetProgressBarManager/JPetProgressBarManager.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetReader/JPetReader.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetScopeData/JPetScopeData.cpp

@@ -57,7 +57,6 @@ std::string getLocalDB(const OptsStrAny& opts);
 bool isLocalDBCreate(const OptsStrAny& opts);
 std::string getLocalDBCreate(const OptsStrAny& opts);
 std::string getUnpackerConfigFile(const OptsStrAny& opts);
-std::string getUnpackerCalibFile(const OptsStrAny& opts);
 std::string getConfigFileName(const OptsStrAny& optsMap);
 void printOptions(const OptsStrAny& opts);
 void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine);
