@@ -9,7 +9,6 @@ set(UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAna
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetGeomMapping/JPetGeomMappingTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetHadd/JPetHaddTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetManager/JPetManagerTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetParamAndDataFactory/JPetParamAndDataFactoryTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetProgressBarManager/JPetProgressBarTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetReader/JPetReaderTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTask/JPetTaskTest.cpp

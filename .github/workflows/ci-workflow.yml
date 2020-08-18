@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-16.04]
+        os: [ubuntu-16.04, ubuntu-18.04]
    
     steps:
     - uses: actions/checkout@v2
@@ -16,10 +16,16 @@ jobs:
        sudo apt-get -qq update
        sudo apt-get install -y git libboost-all-dev libtbb-dev cmake
       
-    - name: download  ROOT 
+    - name: download  ROOT (for ubuntu 16.04)
       run: |
         wget https://root.cern/download/root_v6.12.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
         tar xzf root_v6.12.06.Linux-ubuntu16-x86_64-gcc5.4.tar.gz
+      if: matrix.os == 'ubuntu-16.04'
+    - name: download  ROOT (for ubuntu-18.04)
+      run: |
+        wget http://sphinx.if.uj.edu.pl/framework/root-6-20-06-ubuntu18-jpet.tar.gz 
+        tar xzf root-6-20-06-ubuntu18-jpet.tar.gz
+      if: matrix.os == 'ubuntu-18.04'
     - name: cmake
       run: |
         source root/bin/thisroot.sh

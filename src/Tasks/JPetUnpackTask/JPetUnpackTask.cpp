@@ -95,6 +95,7 @@ bool JPetUnpackTask::terminate(JPetParams& outParams)
     new_opts,
     JPetCommonTools::replaceDataTypeInFileName(getInputFile(fOptions), "hld")
   );
+  jpet_options_generator_tools::setOutputPath(new_opts, getOutputPath(fOptions));
   outParams = JPetParams(new_opts, outParams.getParamManagerAsShared());
   INFO("UnpackTask finished.");
 
