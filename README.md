@@ -30,18 +30,18 @@ Please see the file called [INSTALL](INSTALL.md).
 
 ## Authors
 
-J-PET Analysis Framework is being developed by [Wojciech Krzemien](https://github.com/wkrzemien), [Aleksander Gajos](https://github.com/alekgajos), [Kamil Rakoczy](https://github.com/grey277) and [Krzysztof Kacprzak](https://github.com/kkacprzak).  
+J-PET Analysis Framework is being developed by [Wojciech Krzemien](https://github.com/wkrzemien), [Aleksander Gajos](https://github.com/alekgajos), [Kamil Rakoczy](https://github.com/grey277), [Krzysztof Kacprzak](https://github.com/kkacprzak) and [Kamil Dulski](https://github.com/kdulski).  
 The former developers are [Szymon Niedźwiecki](https://github.com/wictus), Karol Stola, Damian Trybek, Andrzej Gruntowski, Klara Muzalewska, Oleksandr Rundel, Daria Kisielewska and Tomasz Kisielewski.
 
 ## Citation
 
 In case you want to refer to J-PET Analysis Framework you can use this reference:
 
-> W. Krzemien et al.  
-Analysis framework for the J-PET scanner  
-Acta Phys. Polon. A127 (2015) 1491-1494
-DOI: 10.12693/APhysPolA.127.1491  
-e-Print: arXiv:1503.00465
+> W. Krzemien, A. Gajos, K. Kacprzak, K. Rakoczy, G. Korcyl  
+J-PET Framework: Software platform for PET tomography data reconstruction and analysis
+SoftwareX 11 (2020) 100487
+DOI:10.1016/j.softx.2020.100487  
+e-Print: arXiv:2002.10183
 
 ## Bug Reporting & Contact
 
