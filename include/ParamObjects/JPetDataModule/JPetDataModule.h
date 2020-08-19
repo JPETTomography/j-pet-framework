@@ -28,13 +28,13 @@ class JPetDataModule: public TNamed
 public:
   JPetDataModule();
   explicit JPetDataModule(bool isNull);
-  JPetDataModule(int id, std::string type, std::string trb, int number, int offset);
+  JPetDataModule(int id, std::string type, unsigned long trb, int number, int offset);
   bool operator==(const JPetDataModule& dataModule) const;
   bool operator!=(const JPetDataModule& dataModule) const;
   void setDataSource(JPetDataSource& dataSource);
   int getID() const;
   std::string getType() const;
-  std::string getTBRNetAddress() const;
+  unsigned long getTBRNetAddress() const;
   int getChannelsNumber() const;
   int getChannelsOffset() const;
   bool isNullObject() const;
@@ -45,14 +45,14 @@ public:
   #ifndef __CINT__
     int fID = -1;
     std::string fType = "";
-    std::string fTRBNetAddress = "";
+    unsigned long fTRBNetAddress = 0;
     int fChannelsNumber = -1;
     int fChannelsOffset = -1;
     bool fIsNullObject = true;
   #else
     int fID;
     std::string fType;
-    std::string fTRBNetAddress;
+    unsigned long fTRBNetAddress;
     int fChannelsNumber;
     int fChannelsOffset;
     bool fIsNullObject;

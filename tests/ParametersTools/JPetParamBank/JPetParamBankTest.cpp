@@ -61,8 +61,8 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1, 8, 1);
   JPetTRB trb(333, 64, 128);
   JPetTOMBChannel tombChannel(32u);
-  JPetDataSource dataSource(1, "test_type", "8040", "8040");
-  JPetDataModule dataModule(1, "test_type", "e051", 65, 130);
+  JPetDataSource dataSource(1, "test_type", 32832, 32832);
+  JPetDataModule dataModule(1, "test_type", 57425, 65, 130);
 
   float epsilon = 0.0001f;
   bank.addScintillator(scint);
@@ -158,13 +158,13 @@ BOOST_AUTO_TEST_CASE(AddingDummyElementsTest)
   // Check Data Source
   BOOST_REQUIRE(bank.getDataSource(1).getID() == 1);
   BOOST_REQUIRE(bank.getDataSource(1).getType() == "test_type");
-  BOOST_REQUIRE(bank.getDataSource(1).getTBRNetAddress() == "8040");
-  BOOST_REQUIRE(bank.getDataSource(1).getHubAddress() == "8040");
+  BOOST_REQUIRE(bank.getDataSource(1).getTBRNetAddress() == 32832);
+  BOOST_REQUIRE(bank.getDataSource(1).getHubAddress() == 32832);
 
   // Check Data Module
   BOOST_REQUIRE(bank.getDataModule(1).getID() == 1);
   BOOST_REQUIRE(bank.getDataModule(1).getType() == "test_type");
-  BOOST_REQUIRE(bank.getDataModule(1).getTBRNetAddress() == "e051");
+  BOOST_REQUIRE(bank.getDataModule(1).getTBRNetAddress() == 57425);
   BOOST_REQUIRE(bank.getDataModule(1).getChannelsNumber() == 65);
   BOOST_REQUIRE(bank.getDataModule(1).getChannelsOffset() == 130);
 }
@@ -180,8 +180,8 @@ BOOST_AUTO_TEST_CASE(clearAllContainersTest)
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1, 8, 1);
   JPetTRB trb(333, 64, 128);
   JPetTOMBChannel TOMBChannel(32u);
-  JPetDataSource dataSource(1, "test_type", "8040", "8040");
-  JPetDataModule dataModule(1, "test_type", "e051", 65, 130);
+  JPetDataSource dataSource(1, "test_type", 32832, 32832);
+  JPetDataModule dataModule(1, "test_type", 57425, 65, 130);
 
   bank.addScintillator(scint);
   bank.addPM(pm);
@@ -229,8 +229,8 @@ BOOST_AUTO_TEST_CASE(getSizeTest)
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1, 8, 1);
   JPetTRB trb(333, 64, 128);
   JPetTOMBChannel TOMBChannel(32u);
-  JPetDataSource dataSource(1, "test_type", "8040", "8040");
-  JPetDataModule dataModule(1, "test_type", "e051", 65, 130);
+  JPetDataSource dataSource(1, "test_type", 32832, 32832);
+  JPetDataModule dataModule(1, "test_type", 57425, 65, 130);
 
   bank.addScintillator(scint);
   bank.addPM(pm);
@@ -276,8 +276,8 @@ BOOST_AUTO_TEST_CASE(saving_reading_file)
   JPetFrame frame(1, true, "OKTEST", "FrameTest", 5, 2);
   JPetFEB feb(1, true, "testStatus", "descr", 1, 1, 8, 1);
   JPetTRB trb;
-  // JPetDataSource dataSource(1, "test_type", "8040", "8040");
-  // JPetDataModule dataModule(1, "test_type", "e051", 65, 130);
+  JPetDataSource dataSource(1, "test_type", 32832, 32832);
+  JPetDataModule dataModule(1, "test_type", 57425, 65, 130);
 
   bank.addScintillator(scint1);
   bank.addScintillator(scint2);
@@ -290,8 +290,8 @@ BOOST_AUTO_TEST_CASE(saving_reading_file)
   bank.addFrame(frame);
   bank.addTRB(trb);
   bank.addFEB(feb);
-  // bank.addDataSource(dataSource);
-  // bank.addDataModule(dataModule);
+  bank.addDataSource(dataSource);
+  bank.addDataModule(dataModule);
 
   for (int i = 0; i < 100; i++) {
     JPetTOMBChannel channel(i);
@@ -300,61 +300,61 @@ BOOST_AUTO_TEST_CASE(saving_reading_file)
   BOOST_REQUIRE(bank.getBarrelSlotsSize() == 1);
   BOOST_REQUIRE(bank.getLayersSize() == 1);
   BOOST_REQUIRE(bank.getFramesSize() == 1);
-  // BOOST_REQUIRE(bank.getDataSourcesSize() == 1);
-  // BOOST_REQUIRE(bank.getDataModulesSize() == 1);
+  BOOST_REQUIRE(bank.getDataSourcesSize() == 1);
+  BOOST_REQUIRE(bank.getDataModulesSize() == 1);
 
   TFile file("test.root", "UPDATE");
   file.cd();
   file.WriteObject(&bank, "ParamBank");
   file.Close();
   bank.clear();
-  // TFile file2("test.root", "READ");
-  // JPetParamBank* pBank = static_cast<JPetParamBank*>(file2.Get("ParamBank;1"));
-  // JPetParamBank& bank2 = *pBank;
-  // BOOST_REQUIRE(bank2.getScintillatorsSize() == 2);
-  // BOOST_REQUIRE(bank2.getPMsSize() == 4);
-  // BOOST_REQUIRE(bank2.getBarrelSlotsSize() == 1);
-  // BOOST_REQUIRE(bank2.getLayersSize() == 1);
-  // BOOST_REQUIRE(bank2.getFramesSize() == 1);
-  // BOOST_REQUIRE(bank2.getFEBsSize() == 1);
-  // BOOST_REQUIRE(bank2.getTRBsSize() == 1);
-  // BOOST_REQUIRE(bank2.getDataSourcesSize() == 1);
-  // BOOST_REQUIRE(bank2.getDataModulesSize() == 1);
-  //
-  // BOOST_REQUIRE(bank2.getScintillators().size() == 2);
-  // BOOST_REQUIRE(bank2.getPMs().size() == 4);
-  // BOOST_REQUIRE(bank2.getBarrelSlots().size() == 1);
-  // BOOST_REQUIRE(bank2.getLayers().size() == 1);
-  // BOOST_REQUIRE(bank2.getFrames().size() == 1);
-  // BOOST_REQUIRE(bank2.getFEBs().size() == 1);
-  // BOOST_REQUIRE(bank2.getTRBs().size() == 1);
-  // BOOST_REQUIRE(bank2.getDataSources().size() == 1);
-  // BOOST_REQUIRE(bank2.getDataModules().size() == 1);
-  //
-  // BOOST_REQUIRE(bank2.getBarrelSlot(1).getID() == 1);
-  // BOOST_REQUIRE(bank2.getLayer(1).getID() == 1);
-  // BOOST_REQUIRE(bank2.getFrame(1).getID() == 1);
-  // BOOST_REQUIRE(bank2.getFEB(1).getID() == 1);
-  // BOOST_REQUIRE(bank2.getFEB(1).isActive());
-  // BOOST_REQUIRE(bank2.getFEB(1).status() == "testStatus");
-  // BOOST_REQUIRE(bank2.getFEB(1).description() == "descr");
-  // BOOST_REQUIRE(bank2.getFEB(1).version() == 1);
-  // BOOST_REQUIRE(bank2.getPM(1).getScin().getID() == 1);
-  // BOOST_REQUIRE(bank2.getPM(2).getScin().getID() == 1);
-  // BOOST_REQUIRE(bank2.getPM(3).getScin().getID() == 2);
-  // BOOST_REQUIRE(bank2.getPM(4).getScin().getID() == 2);
-  // BOOST_REQUIRE(bank2.getScintillator(1).getID() == 1);
-  // BOOST_REQUIRE(bank2.getScintillator(2).getID() == 2);
-  // BOOST_REQUIRE(bank2.getDataSource(1).getID() == 1);
-  // BOOST_REQUIRE(bank2.getDataSource(1).getType() == "test_type");
-  // BOOST_REQUIRE(bank2.getDataSource(1).getTBRNetAddress() == "8040");
-  // BOOST_REQUIRE(bank2.getDataSource(1).getHubAddress() == "8040");
-  // BOOST_REQUIRE(bank2.getDataModule(1).getID() == 1);
-  // BOOST_REQUIRE(bank2.getDataModule(1).getType() == "test_type");
-  // BOOST_REQUIRE(bank2.getDataModule(1).getTBRNetAddress() == "e051");
-  // BOOST_REQUIRE(bank2.getDataModule(1).getChannelsNumber() == 65);
-  // BOOST_REQUIRE(bank2.getDataModule(1).getChannelsOffset() == 130);
-  // file2.Close();
+  TFile file2("test.root", "READ");
+  JPetParamBank* pBank = static_cast<JPetParamBank*>(file2.Get("ParamBank;1"));
+  JPetParamBank& bank2 = *pBank;
+  BOOST_REQUIRE(bank2.getScintillatorsSize() == 2);
+  BOOST_REQUIRE(bank2.getPMsSize() == 4);
+  BOOST_REQUIRE(bank2.getBarrelSlotsSize() == 1);
+  BOOST_REQUIRE(bank2.getLayersSize() == 1);
+  BOOST_REQUIRE(bank2.getFramesSize() == 1);
+  BOOST_REQUIRE(bank2.getFEBsSize() == 1);
+  BOOST_REQUIRE(bank2.getTRBsSize() == 1);
+  BOOST_REQUIRE(bank2.getDataSourcesSize() == 1);
+  BOOST_REQUIRE(bank2.getDataModulesSize() == 1);
+
+  BOOST_REQUIRE(bank2.getScintillators().size() == 2);
+  BOOST_REQUIRE(bank2.getPMs().size() == 4);
+  BOOST_REQUIRE(bank2.getBarrelSlots().size() == 1);
+  BOOST_REQUIRE(bank2.getLayers().size() == 1);
+  BOOST_REQUIRE(bank2.getFrames().size() == 1);
+  BOOST_REQUIRE(bank2.getFEBs().size() == 1);
+  BOOST_REQUIRE(bank2.getTRBs().size() == 1);
+  BOOST_REQUIRE(bank2.getDataSources().size() == 1);
+  BOOST_REQUIRE(bank2.getDataModules().size() == 1);
+
+  BOOST_REQUIRE(bank2.getBarrelSlot(1).getID() == 1);
+  BOOST_REQUIRE(bank2.getLayer(1).getID() == 1);
+  BOOST_REQUIRE(bank2.getFrame(1).getID() == 1);
+  BOOST_REQUIRE(bank2.getFEB(1).getID() == 1);
+  BOOST_REQUIRE(bank2.getFEB(1).isActive());
+  BOOST_REQUIRE(bank2.getFEB(1).status() == "testStatus");
+  BOOST_REQUIRE(bank2.getFEB(1).description() == "descr");
+  BOOST_REQUIRE(bank2.getFEB(1).version() == 1);
+  BOOST_REQUIRE(bank2.getPM(1).getScin().getID() == 1);
+  BOOST_REQUIRE(bank2.getPM(2).getScin().getID() == 1);
+  BOOST_REQUIRE(bank2.getPM(3).getScin().getID() == 2);
+  BOOST_REQUIRE(bank2.getPM(4).getScin().getID() == 2);
+  BOOST_REQUIRE(bank2.getScintillator(1).getID() == 1);
+  BOOST_REQUIRE(bank2.getScintillator(2).getID() == 2);
+  BOOST_REQUIRE(bank2.getDataSource(1).getID() == 1);
+  BOOST_REQUIRE(bank2.getDataSource(1).getType() == "test_type");
+  BOOST_REQUIRE(bank2.getDataSource(1).getTBRNetAddress() == 32832);
+  BOOST_REQUIRE(bank2.getDataSource(1).getHubAddress() == 32832);
+  BOOST_REQUIRE(bank2.getDataModule(1).getID() == 1);
+  BOOST_REQUIRE(bank2.getDataModule(1).getType() == "test_type");
+  BOOST_REQUIRE(bank2.getDataModule(1).getTBRNetAddress() == 57425);
+  BOOST_REQUIRE(bank2.getDataModule(1).getChannelsNumber() == 65);
+  BOOST_REQUIRE(bank2.getDataModule(1).getChannelsOffset() == 130);
+  file2.Close();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

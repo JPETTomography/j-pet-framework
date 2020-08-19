@@ -24,7 +24,7 @@ JPetDataModule::JPetDataModule(bool isNull): fIsNullObject(isNull)
 }
 
 JPetDataModule::JPetDataModule(
-  int id, std::string type, std::string trb, int number, int offset
+  int id, std::string type, unsigned long trb, int number, int offset
 ) : fID(id), fType(type), fTRBNetAddress(trb), fChannelsNumber(number),
   fChannelsOffset(offset), fIsNullObject(false)
 {
@@ -60,7 +60,7 @@ std::string JPetDataModule::getType() const
   return fType;
 }
 
-std::string JPetDataModule::getTBRNetAddress() const
+unsigned long JPetDataModule::getTBRNetAddress() const
 {
   return fTRBNetAddress;
 }

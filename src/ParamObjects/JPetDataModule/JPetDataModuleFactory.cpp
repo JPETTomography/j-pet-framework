@@ -53,9 +53,13 @@ JPetDataModule* JPetDataModuleFactory::build(ParamObjectDescription data)
   try {
     int id = boost::lexical_cast<int>(data.at("id"));
     std::string type = boost::lexical_cast<std::string>(data.at("type"));
-    std::string trb = boost::lexical_cast<std::string>(data.at("trbnet_address"));
+    std::string trb_str = boost::lexical_cast<std::string>(data.at("trbnet_address"));
     int channelsNumber = boost::lexical_cast<int>(data.at("channels_number"));
     int channelsOffset = boost::lexical_cast<int>(data.at("channels_offset"));
+
+    // Converting TRB address from hex string to ulong in decimal format
+    unsigned long trb = std::stoul(trb_str, 0, 16);
+
     return new JPetDataModule(id, type, trb, channelsNumber, channelsOffset);
   } catch (const std::exception& e) {
     ERROR(Form("Failed to build Data Module with error: %s", e.what()));

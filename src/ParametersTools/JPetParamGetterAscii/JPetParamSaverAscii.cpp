@@ -243,11 +243,6 @@ boost::property_tree::ptree JPetParamSaverAscii::TOMBChannelToInfo(const JPetTOM
   return info;
 }
 
-
-
-
-
-
 void JPetParamSaverAscii::fillDataSources(
   boost::property_tree::ptree& runContents, const JPetParamBank& bank
 ) {
@@ -260,11 +255,17 @@ void JPetParamSaverAscii::fillDataSources(
 
 boost::property_tree::ptree JPetParamSaverAscii::dataSourceToInfo(const JPetDataSource& dataSource)
 {
+  // Converting TRB and HUB addresses from decimal to hex and to string
+  std::stringstream trb2stringStream;
+  std::stringstream hub2stringStream;
+  trb2stringStream << std::hex << dataSource.getTBRNetAddress();
+  hub2stringStream << std::hex << dataSource.getHubAddress();
+
   boost::property_tree::ptree info;
   info.put("id", dataSource.getID());
   info.put("type", dataSource.getType());
-  info.put("trbnet_address", dataSource.getTBRNetAddress());
-  info.put("hub_address", dataSource.getHubAddress());
+  info.put("trbnet_address", trb2stringStream.str());
+  info.put("hub_address", hub2stringStream.str());
   return info;
 }
 
@@ -278,13 +279,16 @@ void JPetParamSaverAscii::fillDataModules(
   runContents.add_child(objectsNames.at(ParamObjectType::kDataModule), infos);
 }
 
-boost::property_tree::ptree JPetParamSaverAscii::dataModuleToInfo(
-  const JPetDataModule& dataModule
-){
+boost::property_tree::ptree JPetParamSaverAscii::dataModuleToInfo(const JPetDataModule& dataModule)
+{
+  // Converting TRB address from decimal to hex and to string
+  std::stringstream trb2stringStream;
+  trb2stringStream << std::hex << dataModule.getTBRNetAddress();
+
   boost::property_tree::ptree info;
   info.put("id", dataModule.getID());
   info.put("type", dataModule.getType());
-  info.put("trbnet_address", dataModule.getTBRNetAddress());
+  info.put("trbnet_address", trb2stringStream.str());
   info.put("channels_number", dataModule.getChannelsNumber());
   info.put("channels_offset", dataModule.getChannelsOffset());
   info.put(objectsNames.at(ParamObjectType::kDataSource) + "_id", dataModule.getDataSource().getID());

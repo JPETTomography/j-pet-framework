@@ -27,27 +27,27 @@ class JPetDataSource: public TNamed
 public:
   JPetDataSource();
   explicit JPetDataSource(bool isNull);
-  JPetDataSource(int id, std::string type, std::string trb, std::string hub);
+  JPetDataSource(int id, std::string type, unsigned long trb, unsigned long hub);
   bool operator==(const JPetDataSource& dataSource);
   bool operator!=(const JPetDataSource& dataSource);
   int getID() const;
   std::string getType() const;
-  std::string getTBRNetAddress() const;
-  std::string getHubAddress() const;
+  unsigned long getTBRNetAddress() const;
+  unsigned long getHubAddress() const;
   bool isNullObject() const;
   static JPetDataSource& getDummyResult();
 
   #ifndef __CINT__
     int fID = -1;
     std::string fType = "";
-    std::string fTRBNetAddress = "";
-    std::string fHubAddress = "";
+    unsigned long fTRBNetAddress = 0;
+    unsigned long fHubAddress = 0;
     bool fIsNullObject = true;
   #else
     int fID;
     std::string fType;
-    std::string fTRBNetAddress;
-    std::string fHubAddress;
+    unsigned long fTRBNetAddress;
+    unsigned long fHubAddress;
     bool fIsNullObject;
   #endif
 

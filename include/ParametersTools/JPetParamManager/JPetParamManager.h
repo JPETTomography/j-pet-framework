@@ -60,7 +60,7 @@ public:
   static std::shared_ptr<JPetParamManager> generateParamManager(
     const std::map<std::string, boost::any>& options
   );
-  std::map<int, JPetTRB*>& getTRBs(const int runI);
+  std::map<int, JPetTRB*>& getTRBs(const int runID);
   std::map<int, JPetFEB*>& getFEBs(const int runID);
   std::map<int, JPetFrame*>& getFrames(const int runID);
   std::map<int, JPetLayer*>& getLayers(const int runID);

@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(default_constructor)
   JPetDataModule module;
   BOOST_REQUIRE_EQUAL(module.getID(), -1);
   BOOST_REQUIRE_EQUAL(module.getType(), "");
-  BOOST_REQUIRE_EQUAL(module.getTBRNetAddress(), "");
+  BOOST_REQUIRE_EQUAL(module.getTBRNetAddress(), 0);
   BOOST_REQUIRE_EQUAL(module.getChannelsNumber(), -1);
   BOOST_REQUIRE_EQUAL(module.getChannelsOffset(), -1);
   BOOST_REQUIRE_EQUAL(module.isNullObject(), true);
@@ -34,10 +34,10 @@ BOOST_AUTO_TEST_CASE(default_constructor)
 
 BOOST_AUTO_TEST_CASE(first_constructor)
 {
-  JPetDataModule module(123, "test_type", "e044", 456, 789);
+  JPetDataModule module(123, "test_type", 57412, 456, 789);
   BOOST_REQUIRE_EQUAL(module.getID(), 123);
   BOOST_REQUIRE_EQUAL(module.getType(), "test_type");
-  BOOST_REQUIRE_EQUAL(module.getTBRNetAddress(), "e044");
+  BOOST_REQUIRE_EQUAL(module.getTBRNetAddress(), 57412);
   BOOST_REQUIRE_EQUAL(module.getChannelsNumber(), 456);
   BOOST_REQUIRE_EQUAL(module.getChannelsOffset(), 789);
   BOOST_REQUIRE_EQUAL(module.isNullObject(), false);
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(single_object)
   auto dataModule = dataModules[1];
   BOOST_REQUIRE_EQUAL(dataModule->getID(), 1);
   BOOST_REQUIRE_EQUAL(dataModule->getType(), "LATTICE_TDC");
-  BOOST_REQUIRE_EQUAL(dataModule->getTBRNetAddress(), "e044");
+  BOOST_REQUIRE_EQUAL(dataModule->getTBRNetAddress(), 57412);
   BOOST_REQUIRE_EQUAL(dataModule->getChannelsNumber(), 65);
   BOOST_REQUIRE_EQUAL(dataModule->getChannelsOffset(), 2080);
 }
@@ -171,13 +171,13 @@ BOOST_AUTO_TEST_CASE(two_objects)
   auto dataModule = dataModules[1];
   BOOST_REQUIRE_EQUAL(dataModule->getID(), 1);
   BOOST_REQUIRE_EQUAL(dataModule->getType(), "LATTE_TDC");
-  BOOST_REQUIRE_EQUAL(dataModule->getTBRNetAddress(), "e044");
+  BOOST_REQUIRE_EQUAL(dataModule->getTBRNetAddress(), 57412);
   BOOST_REQUIRE_EQUAL(dataModule->getChannelsNumber(), 66);
   BOOST_REQUIRE_EQUAL(dataModule->getChannelsOffset(), 1000);
   dataModule = dataModules[5];
   BOOST_REQUIRE_EQUAL(dataModule->getID(), 5);
   BOOST_REQUIRE_EQUAL(dataModule->getType(), "ICE_TDC");
-  BOOST_REQUIRE_EQUAL(dataModule->getTBRNetAddress(), "e051");
+  BOOST_REQUIRE_EQUAL(dataModule->getTBRNetAddress(), 57425);
   BOOST_REQUIRE_EQUAL(dataModule->getChannelsNumber(), 77);
   BOOST_REQUIRE_EQUAL(dataModule->getChannelsOffset(), 2000);
 }

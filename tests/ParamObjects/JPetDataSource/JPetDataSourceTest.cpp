@@ -26,18 +26,18 @@ BOOST_AUTO_TEST_CASE(default_constructor)
   JPetDataSource dataSource;
   BOOST_REQUIRE_EQUAL(dataSource.getID(), -1);
   BOOST_REQUIRE_EQUAL(dataSource.getType(), "");
-  BOOST_REQUIRE_EQUAL(dataSource.getTBRNetAddress(), "");
-  BOOST_REQUIRE_EQUAL(dataSource.getHubAddress(), "");
+  BOOST_REQUIRE_EQUAL(dataSource.getTBRNetAddress(), 0);
+  BOOST_REQUIRE_EQUAL(dataSource.getHubAddress(), 0);
   BOOST_REQUIRE_EQUAL(dataSource.isNullObject(), true);
 }
 
 BOOST_AUTO_TEST_CASE(first_constructor)
 {
-  JPetDataSource dataSource(123, "test_type", "8070", "8070");
+  JPetDataSource dataSource(123, "test_type", 32880, 32880);
   BOOST_REQUIRE_EQUAL(dataSource.getID(), 123);
   BOOST_REQUIRE_EQUAL(dataSource.getType(), "test_type");
-  BOOST_REQUIRE_EQUAL(dataSource.getTBRNetAddress(), "8070");
-  BOOST_REQUIRE_EQUAL(dataSource.getHubAddress(), "8070");
+  BOOST_REQUIRE_EQUAL(dataSource.getTBRNetAddress(), 32880);
+  BOOST_REQUIRE_EQUAL(dataSource.getHubAddress(), 32880);
   BOOST_REQUIRE_EQUAL(dataSource.isNullObject(), false);
 }
 
@@ -105,8 +105,8 @@ BOOST_AUTO_TEST_CASE(single_object)
   auto dataSource = dataSources[1];
   BOOST_REQUIRE_EQUAL(dataSource->getID(), 1);
   BOOST_REQUIRE_EQUAL(dataSource->getType(), "TRB3_S");
-  BOOST_REQUIRE_EQUAL(dataSource->getTBRNetAddress(), "8040");
-  BOOST_REQUIRE_EQUAL(dataSource->getHubAddress(), "8040");
+  BOOST_REQUIRE_EQUAL(dataSource->getTBRNetAddress(), 32832);
+  BOOST_REQUIRE_EQUAL(dataSource->getHubAddress(), 32832);
 }
 
 BOOST_AUTO_TEST_CASE(two_objects)
@@ -117,13 +117,13 @@ BOOST_AUTO_TEST_CASE(two_objects)
   auto dataSource = dataSources[1];
   BOOST_REQUIRE_EQUAL(dataSource->getID(), 1);
   BOOST_REQUIRE_EQUAL(dataSource->getType(), "TRB3_S");
-  BOOST_REQUIRE_EQUAL(dataSource->getTBRNetAddress(), "8040");
-  BOOST_REQUIRE_EQUAL(dataSource->getHubAddress(), "8040");
+  BOOST_REQUIRE_EQUAL(dataSource->getTBRNetAddress(), 32832);
+  BOOST_REQUIRE_EQUAL(dataSource->getHubAddress(), 32832);
   dataSource = dataSources[5];
   BOOST_REQUIRE_EQUAL(dataSource->getID(), 5);
   BOOST_REQUIRE_EQUAL(dataSource->getType(), "TRB3_M");
-  BOOST_REQUIRE_EQUAL(dataSource->getTBRNetAddress(), "8090");
-  BOOST_REQUIRE_EQUAL(dataSource->getHubAddress(), "8090");
+  BOOST_REQUIRE_EQUAL(dataSource->getTBRNetAddress(), 32912);
+  BOOST_REQUIRE_EQUAL(dataSource->getHubAddress(), 32912);
 }
 
 BOOST_AUTO_TEST_CASE(missing_field)

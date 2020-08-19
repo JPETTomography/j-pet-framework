@@ -18,7 +18,7 @@
 JPetDataSource::JPetDataSource() { SetName("JPetDataSource"); }
 
 JPetDataSource::JPetDataSource(
-  int id, std::string type, std::string trbNetAddress, std::string hubAddress
+  int id, std::string type, unsigned long trbNetAddress, unsigned long hubAddress
 ) :
   fID(id), fType(type), fTRBNetAddress(trbNetAddress),
   fHubAddress(hubAddress), fIsNullObject(false)
@@ -48,9 +48,9 @@ int JPetDataSource::getID() const { return fID; }
 
 std::string JPetDataSource::getType() const { return fType; }
 
-std::string JPetDataSource::getTBRNetAddress() const { return fTRBNetAddress; }
+unsigned long JPetDataSource::getTBRNetAddress() const { return fTRBNetAddress; }
 
-std::string JPetDataSource::getHubAddress() const { return fHubAddress; }
+unsigned long JPetDataSource::getHubAddress() const { return fHubAddress; }
 
 bool JPetDataSource::isNullObject() const { return fIsNullObject; }
 
