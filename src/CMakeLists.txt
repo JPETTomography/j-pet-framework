@@ -219,6 +219,10 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetTOMBChannel/JPetTOMBChannelFactory.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetTRB/JPetTRB.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetTRB/JPetTRBFactory.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetDataSource/JPetDataSource.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetDataSource/JPetDataSourceFactory.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetDataModule/JPetDataModule.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetDataModule/JPetDataModuleFactory.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamBank/JPetParamBank.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamGetter/JPetParamGetter.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamGetterAscii/JPetParamGetterAscii.cpp
@@ -261,6 +265,8 @@ set(HEADERS_WITH_DICTIONARY_REQUIRED
   JPetPM/JPetPM.h
   JPetScin/JPetScin.h
   JPetTRB/JPetTRB.h
+  JPetDataSource/JPetDataSource.h
+  JPetDataModule/JPetDataModule.h
   JPetTOMBChannel/JPetTOMBChannel.h
   JPetLayer/JPetLayer.h
   JPetBarrelSlot/JPetBarrelSlot.h

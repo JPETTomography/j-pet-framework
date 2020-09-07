@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -32,7 +32,9 @@ const std::map<ParamObjectType, std::string> objectsNames{
   {ParamObjectType::kFrame, "frames"},
   {ParamObjectType::kFEB, "FEBs"},
   {ParamObjectType::kTRB, "TRBs"},
-  {ParamObjectType::kTOMBChannel, "TOMBChannels"}
+  {ParamObjectType::kTOMBChannel, "TOMBChannels"},
+  {ParamObjectType::kDataSource, "data_source"},
+  {ParamObjectType::kDataModule, "data_module"}
 };
 
 #endif /*  !JPETPARAMASCIICONSTANTS_H */
