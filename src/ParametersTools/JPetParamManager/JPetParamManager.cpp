@@ -34,6 +34,15 @@ std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const s
       expectMissing.insert(ParamObjectType::kDataSource);
       expectMissing.insert(ParamObjectType::kDataModule);
     }
+    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kMCGeant) {
+      expectMissing.insert(ParamObjectType::kPM);
+      expectMissing.insert(ParamObjectType::kPMCalib);
+      expectMissing.insert(ParamObjectType::kFEB);
+      expectMissing.insert(ParamObjectType::kTRB);
+      expectMissing.insert(ParamObjectType::kTOMBChannel);
+      expectMissing.insert(ParamObjectType::kDataSource);
+      expectMissing.insert(ParamObjectType::kDataModule);
+    }
     return std::make_shared<JPetParamManager>(
       new JPetParamGetterAscii(getLocalDB(options)), expectMissing
     );
