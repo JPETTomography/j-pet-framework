@@ -49,6 +49,7 @@ class JPetGeantDecayTree : public TObject
         void AddNode(int nodeID, int previousNodeID, int trackID, InteractionType interactionType);
 
     private:
+        int fMinSecondaryMultiplicity = 10;
 // fNodeTrackConnections is constructed as {nodeID, previous NodeID, connecting trackID}
 // previous node for primary gamma = -1
         std::vector<std::tuple<int, int, int>> fNodeConnections;
