@@ -41,8 +41,8 @@ void JPetGeantDecayTree::ClearVectors()
 InteractionType JPetGeantDecayTree::GetInteractionType(int nodeID, int trackID)
 {
   for (int i=fNodeInteractionType.size()-1; i>=0; i--) {
-    if (std::get<0>(fNodeInteractionType[i]) == nodeID && std::get<2>(fNodeInteractionType[i]) == trackID)
-      return std::get<1>(fNodeInteractionType[i]);
+    if (getNodeInteractionIDatIndex(i) == nodeID && getTrackInteractionIDatIndex(i) == trackID)
+      return getInteractionTypeatIndex(i);
   }
   return InteractionType::unknown;
 }
@@ -51,11 +51,11 @@ int JPetGeantDecayTree::GetPreviousNodeID(int nodeID, int trackID)
 {
   int previousNodeID = nodeID;
   for (int i=fNodeConnections.size()-1; i>=0; i--) {
-    if (std::get<0>(fNodeConnections[i]) == nodeID && std::get<1>(fNodeConnections[i]) != -1 
-                                                    && std::get<2>(fNodeConnections[i]) == trackID)
-      return std::get<1>(fNodeConnections[i]);
-    else if (std::get<0>(fNodeConnections[i]) == nodeID && std::get<1>(fNodeConnections[i]) != -1)
-      return std::get<1>(fNodeConnections[i]);
+    if (getNodeIDatIndex(i) == nodeID && getPreviousNodeIDatIndex(i) != fPrimaryPreviousNodeID 
+                                                    && getTrackIDatIndex(i) == trackID)
+      return getPreviousNodeIDatIndex(i);
+    else if (getNodeIDatIndex(i) == nodeID && getPreviousNodeIDatIndex(i) != fPrimaryPreviousNodeID)
+      previousNodeID = getPreviousNodeIDatIndex(i);
   }
   return previousNodeID;
 }

@@ -47,9 +47,16 @@ class JPetGeantDecayTree : public TObject
         int GetPreviousNodeID(int nodeID, int trackID);
         int GetPrimaryNodeID(int nodeID, int trackID);
         void AddNode(int nodeID, int previousNodeID, int trackID, InteractionType interactionType);
+        int getNodeIDatIndex(int index) {return std::get<0>(fNodeConnections[index]);};
+        int getPreviousNodeIDatIndex(int index) {return std::get<1>(fNodeConnections[index]);};
+        int getTrackIDatIndex(int index) {return std::get<2>(fNodeConnections[index]);};
+        int getNodeInteractionIDatIndex(int index) {return std::get<0>(fNodeInteractionType[index]);};
+        InteractionType getInteractionTypeatIndex(int index) {return std::get<1>(fNodeInteractionType[index]);};
+        int getTrackInteractionIDatIndex(int index) {return std::get<2>(fNodeInteractionType[index]);};
 
     private:
         int fMinSecondaryMultiplicity = 10;
+        int fPrimaryPreviousNodeID = -1;
 // fNodeTrackConnections is constructed as {nodeID, previous NodeID, connecting trackID}
 // previous node for primary gamma = -1
         std::vector<std::tuple<int, int, int>> fNodeConnections;
