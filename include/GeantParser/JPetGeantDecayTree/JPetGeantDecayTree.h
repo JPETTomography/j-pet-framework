@@ -32,40 +32,45 @@ enum InteractionType {
   primaryGamma, scattActivePart, scattNonActivePart, secondaryPart, unknown
 };
 
+struct Branch {
+  Branch() {};
+  Branch(int trackID, int primaryBranch);
+  int fTrackID = -1;             //ID of the track corresponding to this branch
+  std::vector<int> fNodeIDs;    //container for all of the nodes
+  std::vector<InteractionType> fInteractionType;
+  int fPrimaryBranchID = -1;       //-1 for branch coming from primary photon, primary branchId otherwise
+  
+  void AddNodeID(int nodeID, InteractionType interactionType);
+  // cppcheck-suppress unusedFunction
+  int GetTrackID() const { return fTrackID; };
+  // cppcheck-suppress unusedFunction
+  int GetPrimaryNodeID() const { return fNodeIDs[0]; };
+  // cppcheck-suppress unusedFunction
+  int GetLastNodeID() const { return fNodeIDs[fNodeIDs.size()-1]; };
+  // cppcheck-suppress unusedFunction
+  int GetPrimaryBranchID() const { return fPrimaryBranchID; };
+  int GetPreviousNodeID(int nodeID) const;
+  InteractionType GetInteractionType(int nodeID);
+};
 
-
-class JPetGeantDecayTree : public TObject 
+class JPetGeantDecayTree : public TObject
 {
- 
-    public:
-        JPetGeantDecayTree();
-        ~JPetGeantDecayTree();
-        
-        void Clean();
-        void ClearVectors();
-        InteractionType GetInteractionType(int nodeID, int trackID);
-        int GetPreviousNodeID(int nodeID, int trackID);
-        int GetPrimaryNodeID(int nodeID, int trackID);
-        void AddNode(int nodeID, int previousNodeID, int trackID, InteractionType interactionType);
-        int getNodeIDatIndex(int index) {return std::get<0>(fNodeConnections[index]);};
-        int getPreviousNodeIDatIndex(int index) {return std::get<1>(fNodeConnections[index]);};
-        int getTrackIDatIndex(int index) {return std::get<2>(fNodeConnections[index]);};
-        int getNodeInteractionIDatIndex(int index) {return std::get<0>(fNodeInteractionType[index]);};
-        InteractionType getInteractionTypeatIndex(int index) {return std::get<1>(fNodeInteractionType[index]);};
-        int getTrackInteractionIDatIndex(int index) {return std::get<2>(fNodeInteractionType[index]);};
 
-    private:
-        int fMinSecondaryMultiplicity = 10;
-        int fPrimaryPreviousNodeID = -1;
-// fNodeTrackConnections is constructed as {nodeID, previous NodeID, connecting trackID}
-// previous node for primary gamma = -1
-        std::vector<std::tuple<int, int, int>> fNodeConnections;
-// fNodeInteractionType connects nodeID with the type of interaction and trackID
-// types of interaction: 100 - scattering in active part, 10 scattering in non-active part
-// 0 - secondary particle generation
-        std::vector<std::tuple<int, InteractionType, int>> fNodeInteractionType;
+public:
+  JPetGeantDecayTree();
+  ~JPetGeantDecayTree();
+  
+  void Clean();
+  void ClearVectors();
+  
+  int FindPrimaryPhoton(int nodeID);
+  void AddNodeToBranch(int nodeID, int trackID, InteractionType interactionType);
 
-     ClassDef(JPetGeantDecayTree,3)
+private:
+  std::vector<Branch> fBranches;
+  std::map<int, int> fTrackBranchConnection;
+     
+  ClassDef(JPetGeantDecayTree,3)
 
 };
 
