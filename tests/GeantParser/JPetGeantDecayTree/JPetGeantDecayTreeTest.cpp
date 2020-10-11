@@ -25,6 +25,27 @@ BOOST_AUTO_TEST_CASE(firstTreeTest)
 {
   Branch root(6, -1);
   BOOST_REQUIRE_EQUAL(root.GetTrackID(), 6);
+  // BOOST_REQUIRE_EQUAL(root.GetPrimaryNodeID(),-1);
+  // BOOST_REQUIRE_EQUAL(root.GetLastNodeID(), -1);
+  // BOOST_REQUIRE_EQUAL(root.GetPreviousNodeID(-1), -1);
+  BOOST_REQUIRE_EQUAL(root.GetPrimaryBranchID(), -1);
+  BOOST_REQUIRE_EQUAL(root.GetInteractionType(-1), kUnknownInteractionType);
+}
+
+BOOST_AUTO_TEST_CASE(addNodeIdTreeTest)
+{
+  Branch root(6, -1);
+  root.AddNodeID(2, kScattActivePart);
+  BOOST_REQUIRE_EQUAL(root.GetTrackID(), 6);
+  BOOST_REQUIRE_EQUAL(root.GetPrimaryNodeID(), 2);
+  BOOST_REQUIRE_EQUAL(root.GetLastNodeID(), 2);
+  /// ? BOOST_REQUIRE_EQUAL(root.GetPreviousNodeID(-1), -1);
+  // BOOST_REQUIRE_EQUAL(root.GetPreviousNodeID(2), -1);
+  // BOOST_REQUIRE_EQUAL(root.GetPreviousNodeID(123), -1);
+  BOOST_REQUIRE_EQUAL(root.GetPrimaryBranchID(), -1);
+  BOOST_REQUIRE_EQUAL(root.GetInteractionType(-1), kUnknownInteractionType);
+  BOOST_REQUIRE_EQUAL(root.GetInteractionType(2), kScattActivePart);
+  BOOST_REQUIRE_EQUAL(root.GetInteractionType(123), kUnknownInteractionType);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
