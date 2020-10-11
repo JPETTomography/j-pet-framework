@@ -46,16 +46,12 @@ struct Branch {
   int fPrimaryBranchID = -1;       //-1 for branch coming from primary photon, primary branchId otherwise
   
   void AddNodeID(int nodeID, InteractionType interactionType);
-  // cppcheck-suppress unusedFunction
   int GetTrackID() const { return fTrackID; };
-  // cppcheck-suppress unusedFunction
   int GetPrimaryNodeID() const { return fNodeIDs[0]; };
-  // cppcheck-suppress unusedFunction
   int GetLastNodeID() const { return fNodeIDs[fNodeIDs.size()-1]; };
-  // cppcheck-suppress unusedFunction
   int GetPrimaryBranchID() const { return fPrimaryBranchID; };
   int GetPreviousNodeID(int nodeID) const;
-  InteractionType GetInteractionType(int nodeID);
+  InteractionType GetInteractionType(int nodeID) const;
 };
 
 class JPetGeantDecayTree : public TObject

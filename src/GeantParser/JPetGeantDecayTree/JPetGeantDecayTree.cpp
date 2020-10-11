@@ -29,7 +29,6 @@ void Branch::AddNodeID(int nodeID, InteractionType interactionType)
   fInteractionType.push_back(interactionType);
 }
 
-// cppcheck-suppress unusedFunction
 int Branch::GetPreviousNodeID(int nodeID) const
 {
   if (fNodeIDs.size() > 1) {
@@ -41,8 +40,7 @@ int Branch::GetPreviousNodeID(int nodeID) const
   return fNodeIDs[0];
 }
 
-// cppcheck-suppress unusedFunction
-InteractionType Branch::GetInteractionType(int nodeID)
+InteractionType Branch::GetInteractionType(int nodeID) const
 {
   for (unsigned i = fNodeIDs.size(); i > 0; i--)
   {
