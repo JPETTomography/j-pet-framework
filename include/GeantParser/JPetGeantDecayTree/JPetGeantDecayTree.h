@@ -28,8 +28,13 @@
  * Class is not yet fully implemented
  */
 
-enum InteractionType {
-  primaryGamma, scattActivePart, scattNonActivePart, secondaryPart, unknown
+enum InteractionType
+{
+  kPrimaryGamma,
+  kScattActivePart,
+  kScattNonActivePart,
+  kSecondaryPart,
+  kUnknownInteractionType
 };
 
 struct Branch {
