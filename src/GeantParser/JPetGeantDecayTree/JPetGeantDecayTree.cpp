@@ -29,7 +29,6 @@ void Branch::AddNodeID(int nodeID, InteractionType interactionType)
   fInteractionType.push_back(interactionType);
 }
 
-// cppcheck-suppress unusedFunction
 int Branch::GetPreviousNodeID(int nodeID) const
 {
   if (fNodeIDs.size() > 1) {
@@ -41,13 +40,14 @@ int Branch::GetPreviousNodeID(int nodeID) const
   return fNodeIDs[0];
 }
 
-// cppcheck-suppress unusedFunction
-InteractionType Branch::GetInteractionType(int nodeID)
+InteractionType Branch::GetInteractionType(int nodeID) const
 {
-  for (unsigned i=fNodeIDs.size(); i>0; i--) {
-      if (fNodeIDs[i-1] == nodeID)
-        return fInteractionType[i-1];
+  for (unsigned i = fNodeIDs.size(); i > 0; i--)
+  {
+    if (fNodeIDs[i - 1] == nodeID)
+      return fInteractionType[i - 1];
   }
+  return kUnknownInteractionType;
 }
 
 JPetGeantDecayTree::JPetGeantDecayTree() {}
@@ -84,7 +84,7 @@ void JPetGeantDecayTree::AddNodeToBranch(int nodeID, int trackID, InteractionTyp
   if (search == fTrackBranchConnection.end()) {
     int branchSize = fBranches.size();
     int primaryBranchID = -1;
-    if (interactionType == secondaryPart)
+    if (interactionType == kSecondaryPart)
       primaryBranchID = FindPrimaryPhoton(nodeID/10);
     Branch newBranch(trackID, primaryBranchID);
     newBranch.AddNodeID(nodeID, interactionType);
