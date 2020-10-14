@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -93,5 +93,17 @@ void JPetGeantDecayTree::AddNodeToBranch(int nodeID, int trackID, InteractionTyp
   } else {
     int branchID = fTrackBranchConnection.at(trackID);
     fBranches[branchID].AddNodeID(nodeID, interactionType);
+  }
+}
+
+Branch JPetGeantDecayTree::GetBranch(unsigned trackID) const
+{
+  auto search = fTrackBranchConnection.find(trackID);
+  if (search != fTrackBranchConnection.end()) {
+    int branchID = fTrackBranchConnection.at(trackID);
+    return fBranches[branchID];
+  } else {
+    Branch newBranch;
+    return newBranch;
   }
 }
