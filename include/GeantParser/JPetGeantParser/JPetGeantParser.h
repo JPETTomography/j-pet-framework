@@ -22,6 +22,7 @@
 #include <JPetHit/JPetHit.h>
 #include <JPetMCDecayTree/JPetMCDecayTree.h>
 #include <JPetMCHit/JPetMCHit.h>
+#include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 #include <JPetUserTask/JPetUserTask.h>
 #include <functional>
 #include <map>
@@ -31,16 +32,16 @@
 class JPetWriter;
 
 #ifdef __CINT__
-//when cint is used instead of compiler, override word is not recognized
-//nevertheless it's needed for checking if the structure of project is correct
-#   define override
+// when cint is used instead of compiler, override word is not recognized
+// nevertheless it's needed for checking if the structure of project is correct
+#define override
 #endif
 
 /**
  * @brief      Module responsible for creating JPetMCHit from GEANT MC simulations
  *
  */
-class JPetGeantParser: public JPetUserTask
+class JPetGeantParser : public JPetUserTask
 {
 
 public:
@@ -50,19 +51,21 @@ public:
   virtual bool exec() override;
   virtual bool terminate() override;
 
+  unsigned long getOriginalSeed() const;
 
-protected :
-  JPetGeomMapping* fDetectorMap =  nullptr;
+protected:
+  JPetGeomMapping* fDetectorMap = nullptr;
 
   bool fProcessSingleEventinWindow = false;
   bool fMakeEffiHisto = true;
   bool fMakeHisto = true;
   double fMaxTime = 0.;
-  double fMinTime = -50.e6; // electronic time window 50 micro seconds - true for run 3
-  double fSimulatedActivity = 4.7; //< in MBq; value for run3
-
+  double fMinTime = -50.e6;           // electronic time window 50 micro seconds - true for run 3
+  double fSimulatedActivity = 4.7;    //< in MBq; value for run3
   double fExperimentalThreshold = 10; //< in keV
+  unsigned long fSeed = 0.;
 
+  JPetHitExperimentalParametrizer fExperimentalParametrizer;
 
   // internal variables
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";
@@ -73,11 +76,27 @@ protected :
   const std::string kEnergyThresholdParamKey = "GeantParser_EnergyThreshold_double";
   const std::string kProcessSingleEventinWindowParamKey = "GeantParser_ProcessSingleEventInWindow_bool";
 
+  const std::string kTimeSmearingParametersParamKey = "GeantParser_TimeSmearingParameters_std::vector<double>";
+  const std::string kTimeSmearingFunctionParamKey = "GeantParser_TimeSmearingFunction_std::string";
+  const std::string kTimeSmearingFunctionLimitsParamKey = "GeantParser_TimeSmearingFunctionLimits_std::vector<double>";
+
+  const std::string kEnergySmearingParametersParamKey = "GeantParser_EnergySmearingParameters_std::vector<double>";
+  const std::string kEnergySmearingFunctionParamKey = "GeantParser_EnergySmearingFunction_std::string";
+  const std::string kEnergySmearingFunctionLimitsParamKey = "GeantParser_EnergySmearingFunctionLimits_std::vector<double>";
+
+  const std::string kZPositionSmearingParametersParamKey = "GeantParser_ZPositionSmearingParameters_std::vector<double>";
+  const std::string kZPositionSmearingFunctionParamKey = "GeantParser_ZPositionSmearingFunction_std::string";
+  const std::string kZPositionSmearingFunctionLimitsParamKey = "GeantParser_ZPositionSmearingFunctionLimits_std::vector<double>";
+
+  const std::string kSeedParamKey = "GeantParser_Seed_int";
+
   long fExpectedNumberOfEvents = 0;
   float fTimeShift = fMinTime;
 
   std::vector<JPetMCHit> fStoredMCHits; ///< save MC hits into single time window when it contains enough hits
-  std::vector<JPetHit> fStoredHits; ///< save RECONSTRUCTED MC hits into single time window when it contains enough hits
+  std::vector<JPetHit> fStoredHits;     ///< save RECONSTRUCTED MC hits into single time window when it contains enough hits
+
+  void loadSmearingOptionsAndSetupExperimentalParametrizer();
 
   void processMCEvent(JPetGeantEventPack*);
   void saveHits();

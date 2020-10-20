@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -40,6 +40,9 @@ private:
   void fillFEBs(boost::property_tree::ptree & runContents, const JPetParamBank & bank);
   void fillTRBs(boost::property_tree::ptree & runContents, const JPetParamBank & bank);
   void fillTOMBChannels(boost::property_tree::ptree & runContents, const JPetParamBank & bank);
+  void fillDataSources(boost::property_tree::ptree & runContents, const JPetParamBank & bank);
+  void fillDataModules(boost::property_tree::ptree & runContents, const JPetParamBank & bank);
+
   boost::property_tree::ptree scintillatorToInfo(const JPetScin & scin);
   boost::property_tree::ptree PMToInfo(const JPetPM & pm);
   boost::property_tree::ptree barrelSlotToInfo(const JPetBarrelSlot & bs);
@@ -48,6 +51,8 @@ private:
   boost::property_tree::ptree FEBToInfo(const JPetFEB & feb);
   boost::property_tree::ptree TRBToInfo(const JPetTRB & trb);
   boost::property_tree::ptree TOMBChannelToInfo(const JPetTOMBChannel & tomb);
+  boost::property_tree::ptree dataSourceToInfo(const JPetDataSource & dataSource);
+  boost::property_tree::ptree dataModuleToInfo(const JPetDataModule & dataModule);
 };
 
 #endif /* !JPETPARAMSAVERASCII_H */

@@ -115,6 +115,20 @@ std::vector<int> getOptionAsVectorOfInts(const OptsStrAny& opts, const std::stri
   }
 }
 
+std::vector<double> getOptionAsVectorOfDoubles(const OptsStrAny& opts, const std::string& optionName)
+{
+  try
+  {
+    return any_cast<std::vector<double>>(getOptionValue(opts, optionName));
+  }
+  catch (const std::exception& excep)
+  {
+    std::vector<double> emptyV;
+    ERROR("Bad option type:" + std::string(excep.what()));
+    return emptyV;
+  }
+}
+
 bool getOptionAsBool(const OptsStrAny& opts, const std::string& optionName)
 {
   try
@@ -217,11 +231,6 @@ std::string getLocalDBCreate(const std::map<std::string, boost::any>& opts)
 std::string getUnpackerConfigFile(const std::map<std::string, boost::any>& opts)
 {
   return any_cast<std::string>(opts.at("unpackerConfigFile_std::string"));
-}
-
-std::string getUnpackerCalibFile(const std::map<std::string, boost::any>& opts)
-{
-  return any_cast<std::string>(opts.at("unpackerCalibFile_std::string"));
 }
 
 std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap)
@@ -331,6 +340,16 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
             for (pt::ptree::value_type& value : optionsTree.get_child(key))
             {
               values.push_back(value.second.get_value<int>());
+            }
+            return values;
+          }()));
+          break;
+        case JPetOptionsTypeHandler::kAllowedTypes::kVectorDouble:
+          mapOptions.insert(std::make_pair(key, [&optionsTree, &key]() -> std::vector<double> {
+            std::vector<double> values;
+            for (pt::ptree::value_type& value : optionsTree.get_child(key))
+            {
+              values.push_back(value.second.get_value<double>());
             }
             return values;
           }()));

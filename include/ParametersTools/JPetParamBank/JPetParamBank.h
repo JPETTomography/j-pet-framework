@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,16 +16,19 @@
 #ifndef JPETPARAMBANK_H
 #define JPETPARAMBANK_H
 
-#include "./JPetBarrelSlot/JPetBarrelSlot.h"
-#include "./JPetFEB/JPetFEB.h"
-#include "./JPetFrame/JPetFrame.h"
-#include "./JPetLayer/JPetLayer.h"
-#include "./JPetLoggerInclude.h"
-#include "./JPetPM/JPetPM.h"
-#include "./JPetParamGetter/JPetParamConstants.h"
-#include "./JPetScin/JPetScin.h"
-#include "./JPetTOMBChannel/JPetTOMBChannel.h"
-#include "./JPetTRB/JPetTRB.h"
+#include "JPetParamGetter/JPetParamConstants.h"
+#include "JPetTOMBChannel/JPetTOMBChannel.h"
+#include "JPetBarrelSlot/JPetBarrelSlot.h"
+#include "JPetDataSource/JPetDataSource.h"
+#include "JPetDataModule/JPetDataModule.h"
+#include "JPetFrame/JPetFrame.h"
+#include "JPetLayer/JPetLayer.h"
+#include "JPetLoggerInclude.h"
+#include "JPetScin/JPetScin.h"
+#include "JPetFEB/JPetFEB.h"
+#include "JPetTRB/JPetTRB.h"
+#include "JPetPM/JPetPM.h"
+
 #include <cassert>
 #include <map>
 
@@ -53,7 +56,7 @@ public:
   inline int getScintillatorsSize() const { return fScintillators.size(); }
 
   /**
-   * Adds photomultipliers(PM) to Param Bank. If the scintillator with the same ID
+   * Adds photomultipliers (PM) to Param Bank. If the PM with the same ID
    * already exists in the Param Bank, the new element will not be added.
    */
   inline void addPM(JPetPM pm) {
@@ -66,7 +69,7 @@ public:
   int getPMsSize() const { return fPMs.size(); }
 
   /**
-   * Adds FEB to Param Bank. If the scintillator with the same ID
+   * Adds FEB to Param Bank. If the FEB with the same ID
    * already exists in the Param Bank, the new element will not be added.
    */
   inline void addFEB(JPetFEB feb) {
@@ -79,7 +82,7 @@ public:
   inline int getFEBsSize() const { return fFEBs.size(); }
 
   /**
-   * Adds TRB to Param Bank. If the scintillator with the same ID
+   * Adds TRB to Param Bank. If the TRB with the same ID
    * already exists in the Param Bank, the new element will not be added.
    */
   inline void addTRB(JPetTRB trb) {
@@ -92,7 +95,7 @@ public:
   inline int getTRBsSize() const { return fTRBs.size(); }
 
   /**
-   * Adds BarrelSlot to Param Bank. If the scintillator with the same ID
+   * Adds BarrelSlot to Param Bank. If the slot with the same ID
    * already exists in the Param Bank, the new element will not be added.
    */
   inline void addBarrelSlot(JPetBarrelSlot slot) {
@@ -105,7 +108,7 @@ public:
   inline int getBarrelSlotsSize() const { return fBarrelSlots.size(); }
 
   /**
-   * Adds Layer to Param Bank. If the scintillator with the same ID
+   * Adds Layer to Param Bank. If the Layer with the same ID
    * already exists in the Param Bank, the new element will not be added.
    */
   inline void addLayer(JPetLayer layer) {
@@ -118,7 +121,7 @@ public:
   inline int getLayersSize() const { return fLayers.size(); }
 
   /**
-   * Adds Frame to Param Bank. If the scintillator with the same ID
+   * Adds Frame to Param Bank. If the Frame with the same ID
    * already exists in the Param Bank, the new element will not be added.
    */
   inline void addFrame(JPetFrame frame) {
@@ -131,7 +134,7 @@ public:
   inline int getFramesSize() const { return fFrames.size(); }
 
   /**
-   * Adds TOMB to Param Bank. If the scintillator with the same ID
+   * Adds TOMB to Param Bank. If the TOMB Channel with the same ID
    * already exists in the Param Bank, the new element will not be added.
    */
   inline void addTOMBChannel(JPetTOMBChannel tombchannel) {
@@ -143,6 +146,32 @@ public:
   inline JPetTOMBChannel& getTOMBChannel(int i) const { return *(fTOMBChannels.at(i)); }
   inline int getTOMBChannelsSize() const { return fTOMBChannels.size(); }
 
+  /**
+   * Adds Data Source to Param Bank. If the data source with the same ID
+   * already exists in the Param Bank, the new element will not be added.
+   */
+  inline void addDataSource(JPetDataSource dataSource) {
+    if (fDataSources.insert(std::make_pair(dataSource.getID(), new JPetDataSource(dataSource))).second == false) {
+      WARNING("The Data Source with this id already exists in the ParamBank. It will not be added.");
+    }
+  }
+  inline const std::map<int, JPetDataSource*>& getDataSources() const { return fDataSources; }
+  inline JPetDataSource& getDataSource(int i) const { return *(fDataSources.at(i)); }
+  inline int getDataSourcesSize() const { return fDataSources.size(); }
+
+  /**
+   * Adds Data Module to Param Bank. If the data source with the same ID
+   * already exists in the Param Bank, the new element will not be added.
+   */
+  inline void addDataModule(JPetDataModule dataModule) {
+    if (fDataModules.insert(std::make_pair(dataModule.getID(), new JPetDataModule(dataModule))).second == false) {
+      WARNING("The Data Module with this id already exists in the ParamBank. It will not be added.");
+    }
+  }
+  inline const std::map<int, JPetDataModule*>& getDataModules() const { return fDataModules; }
+  inline JPetDataModule& getDataModule(int i) const { return *(fDataModules.at(i)); }
+  inline int getDataModulesSize() const { return fDataModules.size(); }
+
   Int_t Write(const char* name, Int_t option, Int_t bufsize) const { return TObject::Write(name, option, bufsize); }
 
   Int_t Write(const char* name, Int_t option, Int_t bufsize) { return ((const JPetParamBank*)this)->Write(name, option, bufsize); }
@@ -150,7 +179,10 @@ public:
 private:
   void operator=(const JPetParamBank&);
   bool fDummy;
+
   std::map<int, JPetTOMBChannel*> fTOMBChannels;
+  std::map<int, JPetDataSource*> fDataSources;
+  std::map<int, JPetDataModule*> fDataModules;
   std::map<int, JPetBarrelSlot*> fBarrelSlots;
   std::map<int, JPetScin*> fScintillators;
   std::map<int, JPetLayer*> fLayers;
@@ -165,7 +197,7 @@ private:
     }
   }
 
-  ClassDef(JPetParamBank, 6);
+  ClassDef(JPetParamBank, 7);
 };
 
 #endif /* !JPETPARAMBANK_H */
