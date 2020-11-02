@@ -79,7 +79,6 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
     // iterator
     auto subtask_it = fSubTasks.begin();
 
-    bool ok;
     while (subtask_it != fSubTasks.end()) {
 
       auto& current_task = *subtask_it;
