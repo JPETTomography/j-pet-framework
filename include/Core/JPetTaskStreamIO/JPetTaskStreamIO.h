@@ -26,16 +26,14 @@
  *
  * This class only overrides the "run" method of its base JPetTaskIO.
  */
-class JPetTaskStreamIO: public JPetTaskIO
+class JPetTaskStreamIO : public JPetTaskIO
 {
 public:
-
   JPetTaskStreamIO(const char* name = "", const char* in_file_type = "", const char* out_file_type = "");
   virtual bool run(const JPetDataInterface& inData) override;
   virtual ~JPetTaskStreamIO();
 
 protected:
-
 private:
 };
 #endif /* !JPETTASKSTREAMIO_H */
