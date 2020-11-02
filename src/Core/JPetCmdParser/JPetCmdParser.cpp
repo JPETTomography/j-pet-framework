@@ -34,7 +34,7 @@ JPetCmdParser::JPetCmdParser() : fOptionsDescriptions("Allowed options")
                                               "Progress bar.")("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")(
       "localDBCreate,L", po::value<std::string>(),
       "File name to which the parameter database will be saved.")("userCfg,u", po::value<std::string>(), "Json file with optional user parameters.")(
-      "directProcessing,d", po::bool_switch(), "Process directly to the output of last module (faster).");
+      "directProcessing,d", po::bool_switch(), "Process directly to the output of last module without creating intermediate files (faster and less storage needed).");
 }
 
 /**
