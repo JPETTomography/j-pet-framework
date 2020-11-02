@@ -34,8 +34,6 @@ public:
   virtual bool run(const JPetDataInterface& inData) override;
   virtual ~JPetTaskStreamIO();
 
-  //  void displayProgressBar(int currentEventNumber, int numberOfEvents) const;
-
 protected:
 
 private:

@@ -51,22 +51,19 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
   // init all subtasks before any processing
   for (const auto& pTask : fSubTasks) {
     auto subTaskName = pTask->getName();
-    auto ok = pTask->init(fParams);
-    if (!ok) {
+    if (!pTask->init(fParams)) {
       // if init of any task fails, execution of the task stream makes no sense
-      ERROR("Init() of:" + subTaskName + " failed. Aborting execution of the whole task stream. ");
+      ERROR("Init() of: " + subTaskName + " failed. Aborting execution of the whole task stream. ");
       return false;
     }
   }
 
   assert(fInputHandler);
-  bool isOK = fInputHandler->setEntryRange(fParams.getOptions());
-  if (!isOK) {
-    ERROR("Some error occured in setEntryRange");
+  if (!fInputHandler->setEntryRange(fParams.getOptions())) {
+    ERROR("An error occured in setEntryRange");
     return false;
   }
 
-  auto firstEvent = fInputHandler->getFirstEntryNumber();
   auto lastEvent =  fInputHandler->getLastEntryNumber();
   assert(lastEvent >= 0);
 
@@ -87,10 +84,8 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
 
       auto& current_task = *subtask_it;
 
-      ok = current_task->run(JPetData(*output_event));
-
-      if (!ok) {
-        ERROR("In run() of:" + current_task->getName() + ". ");
+      if (!current_task->run(JPetData(*output_event))) {
+        ERROR("In run() of: " + current_task->getName() + ". ");
       }
 
       output_event = dynamic_cast<JPetUserTask*>(current_task.get())->getOutputEvents();
@@ -102,7 +97,7 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
 
     if (isOutput()) {
       if (!fOutputHandler->writeEventToFile(lastTask.get())) {
-        WARNING("Some problems occured, while writing the event to file.");
+        WARNING("Some problems occured while writing the event to file.");
         return false;
       }
     }
