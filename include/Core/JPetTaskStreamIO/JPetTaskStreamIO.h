@@ -20,8 +20,9 @@
 
 /**
  * @brief Class representing a stream of computing tasks (subtasks),
- * executed subsequently for every set of events (JPetTimeWindow object)
- * so that input and output is used only for the first and last task
+ * executed on event by event basis (JPetTimeWindow object). E.g.
+ * first event is processed by all subtasks, then the next one and so on.
+ * The input and output is used only for the first and last task
  * in the stream.
  *
  * This class only overrides the "run" method of its base JPetTaskIO.

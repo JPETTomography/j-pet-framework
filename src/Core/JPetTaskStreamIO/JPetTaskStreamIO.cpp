@@ -84,13 +84,8 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
     // subsequently run all subtasks on the same event
     TObject* output_event = &(fInputHandler->getEntry());
 
-    // iterator
-    auto subtask_it = fSubTasks.begin();
-
-    while (subtask_it != fSubTasks.end())
+    for (const auto& current_task : fSubTasks)
     {
-
-      auto& current_task = *subtask_it;
 
       if (!current_task->run(JPetData(*output_event)))
       {
@@ -99,10 +94,9 @@ bool JPetTaskStreamIO::run(const JPetDataInterface&)
 
       output_event = dynamic_cast<JPetUserTask*>(current_task.get())->getOutputEvents();
 
-      subtask_it++;
     }
 
-    auto& lastTask = fSubTasks.back();
+    const auto& lastTask = fSubTasks.back();
 
     if (isOutput())
     {
