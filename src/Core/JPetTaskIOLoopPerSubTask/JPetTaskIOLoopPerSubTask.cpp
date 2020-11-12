@@ -26,7 +26,7 @@ JPetTaskIOLoopPerSubTask::JPetTaskIOLoopPerSubTask(const char* name, const char*
 
 JPetTaskIOLoopPerSubTask::~JPetTaskIOLoopPerSubTask(){};
 
-bool JPetTaskIO::run(const JPetDataInterface&)
+bool JPetTaskIOLoopPerSubTask::run(const JPetDataInterface&)
 {
   using namespace jpet_options_tools;
   if (fSubTasks.empty())
