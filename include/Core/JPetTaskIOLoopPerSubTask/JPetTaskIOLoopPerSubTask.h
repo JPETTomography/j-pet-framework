@@ -21,6 +21,8 @@
 /**
  * @brief Class representing a stream of computing tasks (subtasks),
  * executed by subsequently processing all events task by task.
+ * E.g. all events are first processed by the first subtask, next
+ * the results are processed by the second subtask and so on.
  * The intermediate results are saved in the output root files and
  * the subtasks are reading the events from those files.
  *
