@@ -282,7 +282,7 @@ bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& o
   {
     pt::write_json(outFile, optionsTree);
   }
-  catch (pt::json_parser_error)
+  catch (const pt::json_parser_error&)
   {
     ERROR("ERROR IN WRITING OPTIONS TO JSON FILE");
     return false;
@@ -360,7 +360,7 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
         }
       }
     }
-    catch (pt::json_parser_error)
+    catch (const pt::json_parser_error&)
     {
       ERROR("ERROR IN READINIG OPTIONS FROM JSON FILE! FILENAME:" + filename);
       throw std::invalid_argument("ERROR parsing json user params file! Aborting execution!");
