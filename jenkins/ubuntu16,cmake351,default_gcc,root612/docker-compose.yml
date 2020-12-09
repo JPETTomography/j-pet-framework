@@ -1,0 +1,6 @@
+ubuntu16cmake351default_gccroot612_framework_rootv6:
+  build: .
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ${WORKSPACE_JENKINS}:/j-pet-framework/
+  user: "9999:999"
