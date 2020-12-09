@@ -4,49 +4,84 @@ pipeline {
     stages {
         stage('BuildMatrix') {
             matrix {
+                agent any
                 axes {
                     axis {
                         name 'ROOT'
-                        values 'root-6.20.08', 'root-latest'
+                        values 'root612', 'root618'
+                    }
+                    axis {
+                        name 'GCC'
+                        values 'default_gcc'
+                    }
+                    axis {
+                        name 'BOOST'
+                        values 'boost_1_58'
+                    }
+                    axis {
+                        name 'OS'
+                        values 'ubuntu16'
+                    }
+                    axis {
+                        name 'CMAKE'
+                        values 'cmake351', 'cmake315'
+                    }
+                }
+                excludes {
+                    exclude {
+                        axis {
+                            name 'ROOT'
+                            values 'root612'
+                        }
+                        axis {
+                            name 'CMAKE'
+                            values 'cmake315'
+                        }
+                    }
+                    exclude {
+                        axis {
+                            name 'ROOT'
+                            values 'root618'
+                        }
+                        axis {
+                            name 'CMAKE'
+                            values 'cmake351'
+                        }
                     }
                 }
                 stages {
-                  stage('Build container') {
-                    agent {
-                        dockerfile {
-                            filename 'Dockerfile'
-                            dir "jenkins/${env.ROOT}"
-                            args "-v /var/run/docker.sock:/var/run/docker.sock"
+                    stage('Build') {
+                        environment {
+                            WORKSPACE_JENKINS=sh(returnStdout: true, script: "echo $WORKSPACE | sed --expression='s/r\\/j/r\\/www\\/j/g'").trim()
+                        }
+                        steps {
+                            echo "Building..\nStarting build job: <${JOB_NAME}> in workspace: <${WORKSPACE}> for ${ROOT}, ${GCC}, ${BOOST}, ${OS}, ${CMAKE}"
+                            echo "Jenkins workspace: <${WORKSPACE_JENKINS}>"
+                            dir("jenkins/${env.OS},${env.CMAKE},${env.GCC},${env.ROOT}") {
+                                sh label: 'docker-build', script: 'docker-compose build'
+                            }
+                            sh label: 'build framework', script: "docker-compose -f jenkins/${OS},${CMAKE},${GCC},${ROOT}/docker-compose.yml run --rm ${OS}${CMAKE}${GCC}${ROOT}_framework_rootv6"
                         }
                     }
-                    stages {
-                      stage('Build') {
-                          steps {
-                            sh label: 'Build j-pet-framework', script: "mkdir -p build && cd build && cmake .. && make all"
-                          }
-                      }
 
-                      stage('Test') {
-                          steps {
-                              sh label: 'Build j-pet-framework tests', script: "cd build && make tests"
-                              sh label: 'Run j-pet-framework tests', script: "cd build && source bin/thisframework.sh && ctest -C Debug -T test --output-on-failure"
-                              sh label: 'mkdir', script: 'mkdir -p CPPCheckRaport'
-                              sh label: 'cppcheck', script: 'cppcheck --inline-suppr --enable=all --inconclusive --xml --suppress="*:${WORKSPACE}/build/*.*" --xml-version=2 ${WORKSPACE} 2> CPPCheckRaport/cppcheck.xml'
-                          }
-                      }
-                      stage('Deploy') {
-                          steps {
-                              echo 'Deploying....'
-                          }
-                      }
+                    stage('Test') {
+                        steps {
+                            echo 'Testing..'
+                            sh label: 'mkdir', script: 'mkdir -p CPPCheckRaport'
+                            sh label: 'cppcheck', script: 'cppcheck --inline-suppr --enable=all --inconclusive --xml --suppress="*:${WORKSPACE}/build/*.*" --xml-version=2 ${WORKSPACE} 2> CPPCheckRaport/cppcheck.xml'
+                        }
                     }
-                  }
+                    stage('Deploy') {
+                        steps {
+                            echo 'Deploying....'
+                        }
+                    }
                 }
             }
         }
     }
-    post {
-        always {
+    post { 
+        always { 
             cleanWs()
         }
     }
