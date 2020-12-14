@@ -203,7 +203,21 @@ long long getTotalEvents(const std::map<std::string, boost::any>& opts)
 
 int getRunNumber(const std::map<std::string, boost::any>& opts) { return any_cast<int>(opts.at("runId_int")); }
 
-bool isProgressBar(const std::map<std::string, boost::any>& opts) { return any_cast<bool>(opts.at("progressBar_bool")); }
+bool isProgressBar(const std::map<std::string, boost::any>& opts) {
+  if (opts.find("progressBar_bool") != opts.end())
+  {
+    return any_cast<bool>(opts.at("progressBar_bool"));
+  }
+  return false;
+}
+
+bool isDirectProcessing(const std::map<std::string, boost::any>& opts){
+  if (opts.find("directProcessing_bool") != opts.end())
+  {
+    return any_cast<bool>(opts.at("directProcessing_bool"));
+  }
+  return false;
+}
 
 bool isLocalDB(const std::map<std::string, boost::any>& opts) { return (bool)opts.count("localDB_std::string"); }
 

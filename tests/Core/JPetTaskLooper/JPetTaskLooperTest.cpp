@@ -3,7 +3,7 @@
 #include "JPetTaskLooper/JPetTaskLooper.h"
 #include "JPetCommonTools/JPetCommonTools.h"
 #include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
-#include "JPetTaskIO/JPetTaskIO.h"
+#include "JPetTaskIOLoopPerSubTask/JPetTaskIOLoopPerSubTask.h"
 #include "JPetUserTask/JPetUserTask.h"
 
 #include <boost/test/unit_test.hpp>
@@ -179,14 +179,14 @@ BOOST_AUTO_TEST_CASE(my_test_withSettingOptions)
   BOOST_REQUIRE_EQUAL(subTask->fRunCounter, 20);
 }
 
-BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO)
+BOOST_AUTO_TEST_CASE(my_test_JPetTaskIOLoopPerSubTask)
 {
   std::string optName = "StopIteration_bool";
   auto condFunc = JPetTaskLooper::getStopOnOptionPredicate(optName);
 
   using namespace jpet_options_generator_tools;
 
-  auto task = jpet_common_tools::make_unique<JPetTaskIO>("bla", "", "");
+  auto task = jpet_common_tools::make_unique<JPetTaskIOLoopPerSubTask>("bla", "", "");
   task->addSubTask(std::unique_ptr<JPetTask>(new TestTaskRun20Times));
   JPetTaskLooper looper("bla", std::move(task), condFunc);
 
@@ -216,7 +216,7 @@ BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO_2)
   auto condFunc = JPetTaskLooper::getMaxIterationPredicate(maxIter);
   using namespace jpet_options_generator_tools;
 
-  auto task = jpet_common_tools::make_unique<JPetTaskIO>("IOBla", "", "");
+  auto task = jpet_common_tools::make_unique<JPetTaskIOLoopPerSubTask>("IOBla", "", "");
   task->addSubTask(jpet_common_tools::make_unique<TestLooperUserTask>("userBla"));
   JPetTaskLooper looper("looperBla", std::move(task), condFunc);
 
@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE(my_test_JPetTaskIO_3)
 
   using namespace jpet_options_generator_tools;
 
-  auto task = jpet_common_tools::make_unique<JPetTaskIO>("IOBla", "", "");
+  auto task = jpet_common_tools::make_unique<JPetTaskIOLoopPerSubTask>("IOBla", "", "");
   task->addSubTask(jpet_common_tools::make_unique<TestLooperUserTask>("userBla"));
   JPetTaskLooper looper("looperBla", std::move(task), condFunc);
 
