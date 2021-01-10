@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -47,38 +47,55 @@ bool JPetUnpackTask::init(const JPetParams& inParams)
     fEventsToProcess = getTotalEvents(fOptions);
   }
 
-  auto totCalibSet = isOptionSet(fOptions, kTOTOffsetCalibKey);
-  if (totCalibSet) {
+  bool totCalibSet = false, tdcCalibSet = false;
+  if (totCalibSet = isOptionSet(fOptions, kTOTOffsetCalibKey)) {
     fTOTOffsetCalibFile = getOptionAsString(fOptions, kTOTOffsetCalibKey);
   } else {
     WARNING("No TOT offset calibration file set int the user options!");
   }
-
-  auto tdcCalibSet = isOptionSet(fOptions, kTDCnonlinearityCalibKey);
-  if (tdcCalibSet) {
+  if (tdcCalibSet = isOptionSet(fOptions, kTDCnonlinearityCalibKey)) {
     fTDCnonlinearityCalibFile = getOptionAsString(fOptions, kTDCnonlinearityCalibKey);
   } else {
     WARNING("No TDC nonlinearity file set int the user options!");
   }
 
   return validateFiles(
-    fInputFilePath+fInputFile, fXMLConfFile,
-    fTOTOffsetCalibFile, totCalibSet,
-    fTDCnonlinearityCalibFile, tdcCalibSet
+    fInputFilePath+fInputFile, fXMLConfFile, 
+    fTOTOffsetCalibFile, totCalibSet, fTDCnonlinearityCalibFile, tdcCalibSet
   );
 }
 
 bool JPetUnpackTask::run(const JPetDataInterface&)
 {
-  int refChannelOffset = 65;
-  fUnpacker2 = new Unpacker2();
+  if (DetectorTypeChecker::getDetectorType(fOptions) == DetectorTypeChecker::DetectorType::kBarrel) {
 
-  INFO(Form("Using Unpacker2 to process first %i events", fEventsToProcess));
-  fUnpacker2->UnpackSingleStep(
-    fInputFile, fInputFilePath, fOutputFilePath,
-    fXMLConfFile, fEventsToProcess, refChannelOffset,
-    fTOTOffsetCalibFile, fTDCnonlinearityCalibFile
-  );
+    int refChannelOffset = 65;
+    fUnpacker2 = new Unpacker2();
+
+    INFO(Form("Using Unpacker2 to process first %i events", fEventsToProcess));
+
+    fUnpacker2->UnpackSingleStep(
+      fInputFile, fInputFilePath, fOutputFilePath,
+      fXMLConfFile, fEventsToProcess, refChannelOffset,
+      fTOTOffsetCalibFile, fTDCnonlinearityCalibFile
+    );
+
+  } else if (DetectorTypeChecker::getDetectorType(fOptions) == DetectorTypeChecker::DetectorType::kModular) {
+
+    int refChannelOffset = 105;
+    fUnpacker2D = new Unpacker2D();
+
+    INFO(Form("Using Unpacker2D to process first %i events", fEventsToProcess));
+
+    fUnpacker2D->UnpackSingleStep(
+      fInputFile, fInputFilePath, fOutputFilePath,
+      fXMLConfFile, fEventsToProcess, refChannelOffset,
+      fTDCnonlinearityCalibFile
+    );
+
+  } else {
+    return false;
+  }
   return true;
 }
 
@@ -87,6 +104,10 @@ bool JPetUnpackTask::terminate(JPetParams& outParams)
   if (fUnpacker2) {
     delete fUnpacker2;
     fUnpacker2 = 0;
+  }
+  if (fUnpacker2D) {
+    delete fUnpacker2D;
+    fUnpacker2D = 0;
   }
 
   OptsStrAny new_opts;

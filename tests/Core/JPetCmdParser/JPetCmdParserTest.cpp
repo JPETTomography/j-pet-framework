@@ -28,7 +28,7 @@ using namespace std;
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE(testCmd)
 {
-  auto cmdLine = "main.x -t hld -f unitTestData/JPetCmdParserTest/testfile.hld -i 10";
+  auto cmdLine = "main.x -t hld -f unitTestData/JPetCmdParserTest/testfile.hld -i 10 -k barrel";
   auto args_char = JPetCommonTools::createArgs(cmdLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
@@ -36,17 +36,19 @@ BOOST_AUTO_TEST_CASE(testCmd)
   auto result = parser.parseCmdLineArgs(argc, const_cast<const char**>(argv));
   BOOST_REQUIRE(result.find("type") != result.end());
   BOOST_REQUIRE_EQUAL(any_cast<std::string>(result.at("type").value()), "hld");
-  BOOST_REQUIRE(result.find("runId") != result.end());
-  BOOST_REQUIRE_EQUAL(any_cast<int>(result.at("runId").value()), 10);
+  BOOST_REQUIRE(result.find("runID") != result.end());
+  BOOST_REQUIRE_EQUAL(any_cast<int>(result.at("runID").value()), 10);
+  BOOST_REQUIRE(result.find("detector") != result.end());
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(result.at("detector").value()), "barrel");
   BOOST_REQUIRE(result.find("file") != result.end());
-  auto vectOfFiles = any_cast<std::vector<std::string>>(result.at("file").value());
+  auto vectOfFiles =  any_cast<std::vector<std::string>>(result.at("file").value());
   BOOST_REQUIRE_EQUAL(vectOfFiles.size(), 1u);
   BOOST_REQUIRE_EQUAL(vectOfFiles.at(0), "unitTestData/JPetCmdParserTest/testfile.hld");
 }
 
 BOOST_AUTO_TEST_CASE(testCmd2)
 {
-  auto cmdLine = "main.x -t hld -f unitTestData/JPetCmdParserTest/testfile.hld unitTestData/JPetCmdParserTest/testfile2.hld -i 10";
+  auto cmdLine = "main.x -t hld -f unitTestData/JPetCmdParserTest/testfile.hld unitTestData/JPetCmdParserTest/testfile2.hld -i 10 -k modular";
   auto args_char = JPetCommonTools::createArgs(cmdLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
@@ -54,10 +56,12 @@ BOOST_AUTO_TEST_CASE(testCmd2)
   auto result = parser.parseCmdLineArgs(argc, const_cast<const char**>(argv));
   BOOST_REQUIRE(result.find("type") != result.end());
   BOOST_REQUIRE_EQUAL(any_cast<std::string>(result.at("type").value()), "hld");
-  BOOST_REQUIRE(result.find("runId") != result.end());
-  BOOST_REQUIRE_EQUAL(any_cast<int>(result.at("runId").value()), 10);
+  BOOST_REQUIRE(result.find("runID") != result.end());
+  BOOST_REQUIRE_EQUAL(any_cast<int>(result.at("runID").value()), 10);
+  BOOST_REQUIRE(result.find("detector") != result.end());
+  BOOST_REQUIRE_EQUAL(any_cast<std::string>(result.at("detector").value()), "modular");
   BOOST_REQUIRE(result.find("file") != result.end());
-  auto vectOfFiles = any_cast<std::vector<std::string>>(result.at("file").value());
+  auto vectOfFiles =  any_cast<std::vector<std::string>>(result.at("file").value());
   BOOST_REQUIRE_EQUAL(vectOfFiles.size(), 2u);
   BOOST_REQUIRE_EQUAL(vectOfFiles.at(0), "unitTestData/JPetCmdParserTest/testfile.hld");
   BOOST_REQUIRE_EQUAL(vectOfFiles.at(1), "unitTestData/JPetCmdParserTest/testfile2.hld");
@@ -110,7 +114,7 @@ BOOST_AUTO_TEST_CASE(testCmd4)
   BOOST_REQUIRE(result.find("unpackerCalibFile") != result.end());
   BOOST_REQUIRE_EQUAL(any_cast<std::string>(result.at("unpackerCalibFile").value()), "unitTestData/JPetUnpackerTest/calib.root");
 
-  BOOST_REQUIRE_EQUAL(any_cast<int>(result.at("runId").value()), 231);
+  BOOST_REQUIRE_EQUAL(any_cast<int>(result.at("runID").value()), 231);
   BOOST_REQUIRE(result.find("file") != result.end());
 
   BOOST_REQUIRE(result.find("localDBCreate") != result.end());

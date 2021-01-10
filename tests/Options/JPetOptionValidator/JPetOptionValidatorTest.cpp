@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -36,12 +36,12 @@ BOOST_AUTO_TEST_CASE(correctOptions)
       {"type_std::string, file_std::vector<std::string>", JPetOptionValidator::ManyOptionsWrapper({std::string("hld"), files})},
       {"localDB_std::string", std::string("unitTestData/JPetCmdParserTest/data.hld")},
       {"outputPath_std::string", std::string("unitTestData/JPetCmdParserTest")},
-      {"runId_int", 3},
+      {"runID_int", 3},
   };
 
   BOOST_REQUIRE(JPetOptionValidator::isOutputDirectoryValid(std::make_pair("outputPath_std::string", options.at("outputPath_std::string"))));
   BOOST_REQUIRE(JPetOptionValidator::isLocalDBValid(std::make_pair("localDB_std::string", options.at("localDB_std::string"))));
-  BOOST_REQUIRE(JPetOptionValidator::isRunIdValid(std::make_pair("runId_int", options.at("runId_int"))));
+  BOOST_REQUIRE(JPetOptionValidator::isRunIDValid(std::make_pair("runID_int", options.at("runID_int"))));
   BOOST_REQUIRE(JPetOptionValidator::areFilesValid(std::make_pair("file_std::vector<std::string>", options.at("file_std::vector<std::string>"))));
   BOOST_REQUIRE(JPetOptionValidator::isCorrectFileType(std::make_pair("type_std::string", options.at("type_std::string"))));
   BOOST_REQUIRE(JPetOptionValidator::isFileTypeMatchingExtensions(
@@ -61,7 +61,8 @@ BOOST_AUTO_TEST_CASE(wrongOptions)
       {"type_std::string, file_std::vector<std::string>", JPetOptionValidator::ManyOptionsWrapper({std::string("tdt"), wrongFiles})},
       {"localDB_std::string", std::string("ble/ble/ble.hld")},
       {"outputPath_std::string", std::string("ble/ble/ble")},
-      {"runId_int", -1},
+      {"runID_int", -1},
+      {"detectorType_std::string", std::string("squirrel")}
   };
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRangeOfEventsValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
                       false);
@@ -70,7 +71,8 @@ BOOST_AUTO_TEST_CASE(wrongOptions)
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isOutputDirectoryValid(std::make_pair("outputPath_std::string", options.at("outputPath_std::string"))),
                       false);
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isLocalDBValid(std::make_pair("localDB_std::string", options.at("localDB_std::string"))), false);
-  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRunIdValid(std::make_pair("runId_int", options.at("runId_int"))), false);
+  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRunIDValid(std::make_pair("runID_int", options.at("runID_int"))), false);
+  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isDetectorValid(std::make_pair("detectorType_std::string", options.at("detectorType_std::string"))), false);
   BOOST_REQUIRE_EQUAL(
       JPetOptionValidator::areFilesValid(std::make_pair("file_std::vector<std::string>", options.at("file_std::vector<std::string>"))), false);
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isCorrectFileType(std::make_pair("type_std::string", options.at("type_std::string"))), false);
@@ -93,7 +95,8 @@ BOOST_AUTO_TEST_CASE(areCorrectAllOptionsWork)
       {"file_std::vector<std::string>", files},
       {"localDB_std::string", std::string("unitTestData/JPetCmdParserTest/data.hld")},
       {"outputPath_std::string", std::string("unitTestData/JPetCmdParserTest")},
-      {"runId_int", 3},
+      {"runID_int", 3},
+      {"detectorType_std::string", std::string("barrel")}
   };
   JPetOptionValidator validator;
   std::vector<std::string> v;
@@ -113,7 +116,7 @@ BOOST_AUTO_TEST_CASE(areCorrectSomeOptionsWork)
       {"range_std::vector<int>", range},
       {"type_std::string", std::string("hld")},
       {"localDB_std::string", std::string("unitTestData/JPetCmdParserTest/data.hld")},
-      {"runId_int", 3},
+      {"runID_int", 3},
   };
 
   JPetOptionValidator validator;

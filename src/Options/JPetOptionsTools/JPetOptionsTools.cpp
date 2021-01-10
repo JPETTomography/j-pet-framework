@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -201,7 +201,7 @@ long long getTotalEvents(const std::map<std::string, boost::any>& opts)
   return diff;
 }
 
-int getRunNumber(const std::map<std::string, boost::any>& opts) { return any_cast<int>(opts.at("runId_int")); }
+int getRunNumber(const std::map<std::string, boost::any>& opts) { return any_cast<int>(opts.at("runID_int")); }
 
 bool isProgressBar(const std::map<std::string, boost::any>& opts) {
   if (opts.find("progressBar_bool") != opts.end())
@@ -423,6 +423,36 @@ FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::strin
     handleErrorMessage(errorMessage, outOfRangeOptionException);
   }
   return FileType::kUndefinedFileType;
+}
+
+/**
+ * Map contains allowed strings for "-k" command line option and indicates what type
+ * of detector is to be used.
+ */
+std::map<std::string, DetectorTypeChecker::DetectorType> DetectorTypeChecker::fStringToDetectorType =
+{
+  {"bar", kBarrel}, {"barrel", kBarrel}, {"mod", kModular}, {"modular", kModular}
+};
+
+/**
+ * Method returns the detector type based on the provided options:
+ * if the "-k" option for the is worng or not used, then by default
+ * the detector type is the Big Barrel - kBarrel.
+ */
+DetectorTypeChecker::DetectorType DetectorTypeChecker::getDetectorType(
+  const std::map<std::string, boost::any>& opts
+) {
+  try {
+    auto option = any_cast<std::string>(opts.at("detectorType_std::string"));
+    try {
+      return fStringToDetectorType.at(option);
+    } catch (const std::out_of_range& outOfRangeDetectorTypeException) { }
+  } catch (const std::out_of_range& outOfRangeOptionException) {
+    std::string errorMessage = "Out of range error in DetectorTypeChecker container ";
+    std::cerr << errorMessage << outOfRangeOptionException.what() << '\n';
+    ERROR(errorMessage);
+  }
+  return DetectorType::kBarrel;
 }
 
 } // namespace jpet_options_tools

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -17,9 +17,11 @@
 #define JPETUNPACKTASK_H
 
 #include "JPetTask/JPetTask.h"
-#include <boost/any.hpp>
+#include "Unpacker2D.h"
 #include "Unpacker2.h"
-#include <map>
+
+class Unpacker2D;
+class Unpacker2;
 
 class JPetUnpackTask: public JPetTask
 {
@@ -38,15 +40,21 @@ public:
 protected:
   const std::string kTDCnonlinearityCalibKey = "Unpacker_TDCnonlinearityCalib_std::string";
   const std::string kTOTOffsetCalibKey = "Unpacker_TOToffsetCalib_std::string";
-  std::string fOutputFilePath = std::string("");
-  std::string fInputFilePath = std::string("");
+  const std::string kEndpointsParamKey = "Unpacker_EndpointsNumber_int";
+  std::string fTDCnonlinearityCalibFile;
+  std::string fTOTOffsetCalibFile;
+  std::string fXMLConfFile;
+
   std::string fInputFile = std::string("");
-  std::string fTDCnonlinearityCalibFile = std::string("");
-  std::string fTOTOffsetCalibFile = std::string("") = std::string("");
-  std::string fXMLConfFile = std::string("");
-  int fEventsToProcess = 1000000000;
+  std::string fInputFilePath = std::string("");
+  std::string fOutputFilePath = std::string("");
+
+  int fEventsToProcess = 100000000;
+
+  Unpacker2D* fUnpacker2D = nullptr;
   Unpacker2* fUnpacker2 = nullptr;
   OptsStrAny fOptions;
+
 };
 
 #endif /* !JPETUNPACKTASK_H */
