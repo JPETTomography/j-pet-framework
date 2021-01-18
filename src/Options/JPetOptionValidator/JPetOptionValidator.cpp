@@ -14,26 +14,26 @@
  */
 
 #include "JPetOptionValidator/JPetOptionValidator.h"
-#include "JPetOptionsTools/JPetOptionsTools.h"
 #include "JPetCommonTools/JPetCommonTools.h"
 #include "JPetLoggerInclude.h"
+#include "JPetOptionsTools/JPetOptionsTools.h"
 
 using boost::any_cast;
 
-JPetOptionValidator::JPetOptionValidator()
-{
-  fValidatorMap = generateValidationMap();
-}
+JPetOptionValidator::JPetOptionValidator() { fValidatorMap = generateValidationMap(); }
 
-bool JPetOptionValidator::areCorrectOptions(
-  const std::map<std::string, boost::any>& optionsMap,
-  std::vector<std::string>& namesOfOptionsToBeValidated
-) {
+bool JPetOptionValidator::areCorrectOptions(const std::map<std::string, boost::any>& optionsMap,
+                                            std::vector<std::string>& namesOfOptionsToBeValidated)
+{
   auto newOptionsMap = addNonStandardValidators(optionsMap);
-  for (auto& checkGroup : fValidatorMap) {
-    if (std::find(namesOfOptionsToBeValidated.begin(), namesOfOptionsToBeValidated.end(), checkGroup.first ) != namesOfOptionsToBeValidated.end()) {
-      for (auto& checkFunc : checkGroup.second) {
-        if ((!checkFunc(std::make_pair(checkGroup.first, newOptionsMap.at(checkGroup.first))))) {
+  for (auto& checkGroup : fValidatorMap)
+  {
+    if (std::find(namesOfOptionsToBeValidated.begin(), namesOfOptionsToBeValidated.end(), checkGroup.first) != namesOfOptionsToBeValidated.end())
+    {
+      for (auto& checkFunc : checkGroup.second)
+      {
+        if ((!checkFunc(std::make_pair(checkGroup.first, newOptionsMap.at(checkGroup.first)))))
+        {
           ERROR("VALIDATION ERROR FOR " + checkGroup.first);
           return false;
         }
@@ -55,19 +55,18 @@ void JPetOptionValidator::addFileTypeAndNameValidator(std::map<std::string, boos
   using namespace jpet_options_tools;
   std::string type_key = "type_std::string";
   std::string filename_key = "file_std::vector<std::string>";
-  if (!isOptionSet(optionsMap,  type_key) || !isOptionSet(optionsMap,  filename_key)) {
+  if (!isOptionSet(optionsMap, type_key) || !isOptionSet(optionsMap, filename_key))
+  {
     WARNING("file type or file name option not present! No validator added!");
     return;
   }
-  optionsMap["type_std::string, file_std::vector<std::string>"]
-    = JPetOptionValidator::ManyOptionsWrapper(
-      {getOptionAsString(optionsMap, type_key), getOptionAsVectorOfStrings(optionsMap, filename_key)}
-    );
+  optionsMap["type_std::string, file_std::vector<std::string>"] =
+      JPetOptionValidator::ManyOptionsWrapper({getOptionAsString(optionsMap, type_key), getOptionAsVectorOfStrings(optionsMap, filename_key)});
 }
 
-std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)>> JPetOptionValidator::generateValidationMap()
+std::map<std::string, std::vector<bool (*)(std::pair<std::string, boost::any>)>> JPetOptionValidator::generateValidationMap()
 {
-  std::map<std::string, std::vector<bool(*)(std::pair <std::string, boost::any>)>> validationMap;
+  std::map<std::string, std::vector<bool (*)(std::pair<std::string, boost::any>)>> validationMap;
   validationMap["range_std::vector<int>"].push_back(&isNumberBoundsInRangeValid);
   validationMap["range_std::vector<int>"].push_back(&isRangeOfEventsValid);
   validationMap["type_std::string"].push_back(&isCorrectFileType);
@@ -87,7 +86,8 @@ void JPetOptionValidator::addValidatorFunction(const std::string& name, bool (*v
 
 bool JPetOptionValidator::isNumberBoundsInRangeValid(std::pair<std::string, boost::any> option)
 {
-  if (any_cast<std::vector<int>>(option.second).size() != 2) {
+  if (any_cast<std::vector<int>>(option.second).size() != 2)
+  {
     ERROR("Wrong number of bounds in range: " + std::to_string(any_cast<std::vector<int>>(option.second).size()));
     return false;
   }
@@ -96,7 +96,8 @@ bool JPetOptionValidator::isNumberBoundsInRangeValid(std::pair<std::string, boos
 
 bool JPetOptionValidator::isRangeOfEventsValid(std::pair<std::string, boost::any> option)
 {
-  if (any_cast<std::vector<int>>(option.second).at(0) > any_cast<std::vector<int>>(option.second).at(1)) {
+  if (any_cast<std::vector<int>>(option.second).at(0) > any_cast<std::vector<int>>(option.second).at(1))
+  {
     ERROR("Wrong number of bounds in range: " + std::to_string(any_cast<std::vector<int>>(option.second).size()));
     return false;
   }
@@ -106,9 +107,12 @@ bool JPetOptionValidator::isRangeOfEventsValid(std::pair<std::string, boost::any
 bool JPetOptionValidator::isCorrectFileType(std::pair<std::string, boost::any> option)
 {
   std::string type = any_cast<std::string>(option.second);
-  if (type == "hld" || type == "root" || type == "scope" || type == "zip" || type == "mcGeant") {
+  if (type == "hld" || type == "root" || type == "scope" || type == "zip" || type == "mcGeant")
+  {
     return true;
-  } else {
+  }
+  else
+  {
     ERROR("Wrong type of file:" + type);
     return false;
   }
@@ -121,12 +125,11 @@ bool JPetOptionValidator::isFileTypeMatchingExtensions(std::pair<std::string, bo
   std::string fileType = any_cast<std::string>(optionsVector[0]);
   std::vector<std::string> fileNames = any_cast<std::vector<std::string>>(optionsVector[1]);
   std::vector<std::string> correctFileExtensions = getCorrectExtensionsForTheType(fileType);
-  for (const std::string& fileName : fileNames) {
-    if (std::find(
-        correctFileExtensions.begin(),
-        correctFileExtensions.end(),
-        JPetCommonTools::exctractFileNameSuffix(fileName)
-      ) == correctFileExtensions.end()) {
+  for (const std::string& fileName : fileNames)
+  {
+    if (std::find(correctFileExtensions.begin(), correctFileExtensions.end(), JPetCommonTools::exctractFileNameSuffix(fileName)) ==
+        correctFileExtensions.end())
+    {
       ERROR("Wrong extension of file: " + fileName);
       return false;
     }
@@ -136,44 +139,52 @@ bool JPetOptionValidator::isFileTypeMatchingExtensions(std::pair<std::string, bo
 
 std::vector<std::string> JPetOptionValidator::getCorrectExtensionsForTheType(std::string fileType)
 {
-  if (fileType == "scope") {
+  if (fileType == "scope")
+  {
     return {".json"};
-  } else if (fileType == "zip") {
+  }
+  else if (fileType == "zip")
+  {
     return {".gz", ".xz", ".bz2", ".zip"};
-  } else if (fileType == "mcGeant") {
+  }
+  else if (fileType == "mcGeant")
+  {
     return {".root"};
-  } else {
+  }
+  else
+  {
     return {"." + fileType};
   }
 }
 
 bool JPetOptionValidator::isRunIDValid(std::pair<std::string, boost::any> option)
 {
-  if (any_cast<int>(option.second) <= 0) {
+  if (any_cast<int>(option.second) <= 0)
+  {
     ERROR("Run id must be a number larger than 0.");
     return false;
   }
   return true;
 }
 
-bool JPetOptionValidator::isDetectorValid(std::pair <std::string, boost::any> option)
+bool JPetOptionValidator::isDetectorValid(std::pair<std::string, boost::any> option)
 {
-  if (
-    any_cast<std::string>(option.second) == "bar"
-    || any_cast<std::string>(option.second) == "barrel"
-    || any_cast<std::string>(option.second) == "mod"
-    || any_cast<std::string>(option.second) == "modular"
-  ) {
+  if (any_cast<std::string>(option.second) == "bar" || any_cast<std::string>(option.second) == "barrel" ||
+      any_cast<std::string>(option.second) == "mod" || any_cast<std::string>(option.second) == "modular")
+  {
     return true;
-  } else {
+  }
+  else
+  {
     ERROR("Provided detector type not found. Use '-k barrel' or '-k modular'");
     return false;
   }
 }
 
-bool JPetOptionValidator::isLocalDBValid(std::pair <std::string, boost::any> option)
+bool JPetOptionValidator::isLocalDBValid(std::pair<std::string, boost::any> option)
 {
-  if ( !JPetCommonTools::ifFileExisting(any_cast<std::string>(option.second)) ) {
+  if (!JPetCommonTools::ifFileExisting(any_cast<std::string>(option.second)))
+  {
     ERROR("File doed not exist.");
     return false;
   }
@@ -204,12 +215,6 @@ bool JPetOptionValidator::isOutputDirectoryValid(std::pair<std::string, boost::a
   return true;
 }
 
-JPetOptionValidator::ManyOptionsWrapper::ManyOptionsWrapper(std::initializer_list<boost::any> options)
-{
-  optionsVector = options;
-}
+JPetOptionValidator::ManyOptionsWrapper::ManyOptionsWrapper(std::initializer_list<boost::any> options) { optionsVector = options; }
 
-std::vector<boost::any> JPetOptionValidator::ManyOptionsWrapper::getOptionsVector()
-{
-  return optionsVector;
-}
+std::vector<boost::any> JPetOptionValidator::ManyOptionsWrapper::getOptionsVector() { return optionsVector; }

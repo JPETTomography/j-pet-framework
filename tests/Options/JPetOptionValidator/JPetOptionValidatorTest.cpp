@@ -62,8 +62,7 @@ BOOST_AUTO_TEST_CASE(wrongOptions)
       {"localDB_std::string", std::string("ble/ble/ble.hld")},
       {"outputPath_std::string", std::string("ble/ble/ble")},
       {"runID_int", -1},
-      {"detectorType_std::string", std::string("squirrel")}
-  };
+      {"detectorType_std::string", std::string("squirrel")}};
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRangeOfEventsValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
                       false);
   BOOST_REQUIRE_EQUAL(
@@ -72,7 +71,8 @@ BOOST_AUTO_TEST_CASE(wrongOptions)
                       false);
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isLocalDBValid(std::make_pair("localDB_std::string", options.at("localDB_std::string"))), false);
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRunIDValid(std::make_pair("runID_int", options.at("runID_int"))), false);
-  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isDetectorValid(std::make_pair("detectorType_std::string", options.at("detectorType_std::string"))), false);
+  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isDetectorValid(std::make_pair("detectorType_std::string", options.at("detectorType_std::string"))),
+                      false);
   BOOST_REQUIRE_EQUAL(
       JPetOptionValidator::areFilesValid(std::make_pair("file_std::vector<std::string>", options.at("file_std::vector<std::string>"))), false);
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isCorrectFileType(std::make_pair("type_std::string", options.at("type_std::string"))), false);
@@ -89,15 +89,13 @@ BOOST_AUTO_TEST_CASE(areCorrectAllOptionsWork)
 {
   std::vector<int> range = {1, 2};
   std::vector<std::string> files = {"unitTestData/JPetCmdParserTest/data.hld", "unitTestData/JPetCmdParserTest/data.hld"};
-  std::map<std::string, boost::any> options = {
-      {"range_std::vector<int>", range},
-      {"type_std::string", std::string("hld")},
-      {"file_std::vector<std::string>", files},
-      {"localDB_std::string", std::string("unitTestData/JPetCmdParserTest/data.hld")},
-      {"outputPath_std::string", std::string("unitTestData/JPetCmdParserTest")},
-      {"runID_int", 3},
-      {"detectorType_std::string", std::string("barrel")}
-  };
+  std::map<std::string, boost::any> options = {{"range_std::vector<int>", range},
+                                               {"type_std::string", std::string("hld")},
+                                               {"file_std::vector<std::string>", files},
+                                               {"localDB_std::string", std::string("unitTestData/JPetCmdParserTest/data.hld")},
+                                               {"outputPath_std::string", std::string("unitTestData/JPetCmdParserTest")},
+                                               {"runID_int", 3},
+                                               {"detectorType_std::string", std::string("barrel")}};
   JPetOptionValidator validator;
   std::vector<std::string> v;
   for (auto& opt : options)

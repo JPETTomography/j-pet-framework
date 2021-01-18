@@ -149,14 +149,12 @@ BOOST_AUTO_TEST_CASE(createOptionsFromConfigFileThatHasWrongFormat)
 
 BOOST_AUTO_TEST_CASE(checkIfGetOptionAndIsOptionWork)
 {
-  std::map<std::string, boost::any> options = {
-    {"firstEvent_int", -1},
-    {"lastEvent_int", -1},
-    {"progressBar_bool", false},
-    {"runID_int", -1},
-    {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
-    {"unpackerCalibFile_std::string", std::string("")}
-  };
+  std::map<std::string, boost::any> options = {{"firstEvent_int", -1},
+                                               {"lastEvent_int", -1},
+                                               {"progressBar_bool", false},
+                                               {"runID_int", -1},
+                                               {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
+                                               {"unpackerCalibFile_std::string", std::string("")}};
 
   BOOST_REQUIRE(isOptionSet(options, "firstEvent_int"));
   BOOST_REQUIRE(isOptionSet(options, "lastEvent_int"));
@@ -167,20 +165,18 @@ BOOST_AUTO_TEST_CASE(checkIfGetOptionAndIsOptionWork)
 
 BOOST_AUTO_TEST_CASE(getTotalEventsTest)
 {
-  OptsStrAny options = {
-    {"inputFile_std::string", std::string("input")},
-    {"scopeConfigFile_std::string", std::string("test.json")},
-    {"scopeInputDirectory_std::string", std::string("scopeData")},
-    {"outputFile_std::string", std::string("output")},
-    {"firstEvent_int", -1},
-    {"lastEvent_int", -1},
-    {"runID_int", 2001},
-    {"progressBar_bool", true},
-    {"inputFileType_std::string", std::string("root")},
-    {"outputFileType_std::string", std::string("scope")},
-    {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
-    {"unpackerCalibFile_std::string", std::string("")}
-  };
+  OptsStrAny options = {{"inputFile_std::string", std::string("input")},
+                        {"scopeConfigFile_std::string", std::string("test.json")},
+                        {"scopeInputDirectory_std::string", std::string("scopeData")},
+                        {"outputFile_std::string", std::string("output")},
+                        {"firstEvent_int", -1},
+                        {"lastEvent_int", -1},
+                        {"runID_int", 2001},
+                        {"progressBar_bool", true},
+                        {"inputFileType_std::string", std::string("root")},
+                        {"outputFileType_std::string", std::string("scope")},
+                        {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
+                        {"unpackerCalibFile_std::string", std::string("")}};
 
   BOOST_REQUIRE_EQUAL(getTotalEvents(options), -1);
 

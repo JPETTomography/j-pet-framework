@@ -18,8 +18,8 @@
 
 #include "JPetOptionsTools/JPetOptionsTransformators.h"
 #include <boost/any.hpp>
-#include <vector>
 #include <map>
+#include <vector>
 
 /**
  * @brief Set of helper methods to operate on options.
@@ -29,78 +29,78 @@
  */
 namespace jpet_options_tools
 {
-  using OptsStrAny = std::map<std::string, boost::any>;
-  using OptsStrStr = std::map<std::string, std::string>;
-  bool isOptionSet(const OptsStrAny& opts, const std::string& optionName);
-  boost::any getOptionValue(const OptsStrAny& opts, const std::string& optionName);
-  bool getOptionAsBool(const OptsStrAny& opts, const std::string& optionName);
-  int getOptionAsInt(const OptsStrAny& opts, const std::string& optionName);
-  float getOptionAsFloat(const OptsStrAny& opts, const std::string& optionName);
-  double getOptionAsDouble(const OptsStrAny& opts, const std::string& optionName);
-  std::string getOptionAsString(const OptsStrAny& opts, const std::string& optionName);
-  std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, const std::string& optionName);
-  std::vector<int> getOptionAsVectorOfInts(const OptsStrAny& opts, const std::string& optionName);
-  std::vector<double> getOptionAsVectorOfDoubles(const OptsStrAny& opts, const std::string& optionName);
-  std::vector<std::string> getInputFiles(const OptsStrAny& opts);
-  std::string getInputFile(const OptsStrAny& opts);
-  std::string getScopeConfigFile(const OptsStrAny& opts);
-  std::string getScopeInputDirectory(const OptsStrAny& opts);
-  std::string getOutputFile(const OptsStrAny& opts);
-  std::string getOutputPath(const OptsStrAny& opts);
-  long long getFirstEvent(const OptsStrAny& opts);
-  long long getLastEvent(const OptsStrAny& opts);
-  long long getTotalEvents(const OptsStrAny& opts);
-  int getRunNumber(const OptsStrAny& opts);
-  bool isProgressBar(const OptsStrAny& opts);
-  bool isDirectProcessing(const OptsStrAny& opts);
-  bool isLocalDB(const OptsStrAny& opts);
-  std::string getLocalDB(const OptsStrAny& opts);
-  bool isLocalDBCreate(const OptsStrAny& opts);
-  std::string getLocalDBCreate(const OptsStrAny& opts);
-  std::string getUnpackerConfigFile(const OptsStrAny& opts);
-  std::string getConfigFileName(const OptsStrAny& optsMap);
-  void printOptions(const OptsStrAny& opts);
-  void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine);
-  bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile = "");
-  OptsStrAny createOptionsFromConfigFile(const std::string& inFile);
+using OptsStrAny = std::map<std::string, boost::any>;
+using OptsStrStr = std::map<std::string, std::string>;
+bool isOptionSet(const OptsStrAny& opts, const std::string& optionName);
+boost::any getOptionValue(const OptsStrAny& opts, const std::string& optionName);
+bool getOptionAsBool(const OptsStrAny& opts, const std::string& optionName);
+int getOptionAsInt(const OptsStrAny& opts, const std::string& optionName);
+float getOptionAsFloat(const OptsStrAny& opts, const std::string& optionName);
+double getOptionAsDouble(const OptsStrAny& opts, const std::string& optionName);
+std::string getOptionAsString(const OptsStrAny& opts, const std::string& optionName);
+std::vector<std::string> getOptionAsVectorOfStrings(const OptsStrAny& opts, const std::string& optionName);
+std::vector<int> getOptionAsVectorOfInts(const OptsStrAny& opts, const std::string& optionName);
+std::vector<double> getOptionAsVectorOfDoubles(const OptsStrAny& opts, const std::string& optionName);
+std::vector<std::string> getInputFiles(const OptsStrAny& opts);
+std::string getInputFile(const OptsStrAny& opts);
+std::string getScopeConfigFile(const OptsStrAny& opts);
+std::string getScopeInputDirectory(const OptsStrAny& opts);
+std::string getOutputFile(const OptsStrAny& opts);
+std::string getOutputPath(const OptsStrAny& opts);
+long long getFirstEvent(const OptsStrAny& opts);
+long long getLastEvent(const OptsStrAny& opts);
+long long getTotalEvents(const OptsStrAny& opts);
+int getRunNumber(const OptsStrAny& opts);
+bool isProgressBar(const OptsStrAny& opts);
+bool isDirectProcessing(const OptsStrAny& opts);
+bool isLocalDB(const OptsStrAny& opts);
+std::string getLocalDB(const OptsStrAny& opts);
+bool isLocalDBCreate(const OptsStrAny& opts);
+std::string getLocalDBCreate(const OptsStrAny& opts);
+std::string getUnpackerConfigFile(const OptsStrAny& opts);
+std::string getConfigFileName(const OptsStrAny& optsMap);
+void printOptions(const OptsStrAny& opts);
+void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine);
+bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile = "");
+OptsStrAny createOptionsFromConfigFile(const std::string& inFile);
 
-  class FileTypeChecker
+class FileTypeChecker
+{
+public:
+  enum FileType
   {
-  public:
-    enum FileType
-    {
-      kNoType,
-      kRoot,
-      kScope,
-      kHld,
-      kHldRoot,
-      kZip,
-      kMCGeant,
-      kUndefinedFileType
-    };
-    static FileType getInputFileType(const OptsStrAny& opts);
-    static FileType getOutputFileType(const OptsStrAny& opts);
-
-  private:
-    static void handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException);
-    static FileType getFileType(const OptsStrAny& opts, const std::string& fileType);
-    FileTypeChecker();
-    FileTypeChecker(const FileTypeChecker&);
-    void operator=(const FileTypeChecker&);
-    static std::map<std::string, FileType> fStringToFileType;
+    kNoType,
+    kRoot,
+    kScope,
+    kHld,
+    kHldRoot,
+    kZip,
+    kMCGeant,
+    kUndefinedFileType
   };
+  static FileType getInputFileType(const OptsStrAny& opts);
+  static FileType getOutputFileType(const OptsStrAny& opts);
 
-  class DetectorTypeChecker
+private:
+  static void handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException);
+  static FileType getFileType(const OptsStrAny& opts, const std::string& fileType);
+  FileTypeChecker();
+  FileTypeChecker(const FileTypeChecker&);
+  void operator=(const FileTypeChecker&);
+  static std::map<std::string, FileType> fStringToFileType;
+};
+
+class DetectorTypeChecker
+{
+public:
+  enum DetectorType
   {
-  public:
-    enum DetectorType
-    {
-      kBarrel,
-      kModular
-    };
-    static DetectorType getDetectorType(const OptsStrAny& opts);
-    static std::map<std::string, DetectorType> fStringToDetectorType;
+    kBarrel,
+    kModular
   };
+  static DetectorType getDetectorType(const OptsStrAny& opts);
+  static std::map<std::string, DetectorType> fStringToDetectorType;
+};
 
-}; // namespace jpet_options_tools
+};     // namespace jpet_options_tools
 #endif /* !JPETOPTIONSTOOLS_H */

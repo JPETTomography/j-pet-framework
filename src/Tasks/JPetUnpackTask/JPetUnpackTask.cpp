@@ -13,10 +13,10 @@
  *  @file JPetUnpackTask.cpp
  */
 
+#include "JPetUnpackTask/JPetUnpackTask.h"
+#include "JPetCommonTools/JPetCommonTools.h"
 #include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include "JPetOptionsTools/JPetOptionsTools.h"
-#include "JPetCommonTools/JPetCommonTools.h"
-#include "JPetUnpackTask/JPetUnpackTask.h"
 #include "JPetParams/JPetParams.h"
 #include <fstream>
 
@@ -31,69 +31,71 @@ bool JPetUnpackTask::init(const JPetParams& inParams)
   fOptions = inParams.getOptions();
 
   fInputFile = JPetCommonTools::extractFileNameFromFullPath(getInputFile(fOptions));
-  fInputFilePath = JPetCommonTools::appendSlashToPathIfAbsent(
-    JPetCommonTools::extractPathFromFile(getInputFile(fOptions))
-  );
+  fInputFilePath = JPetCommonTools::appendSlashToPathIfAbsent(JPetCommonTools::extractPathFromFile(getInputFile(fOptions)));
 
-  if (getOutputPath(fOptions) != "") {
+  if (getOutputPath(fOptions) != "")
+  {
     fOutputFilePath = JPetCommonTools::appendSlashToPathIfAbsent(getOutputPath(fOptions));
-  } else {
+  }
+  else
+  {
     fOutputFilePath = fInputFilePath;
   }
 
   fXMLConfFile = getUnpackerConfigFile(fOptions);
 
-  if (getTotalEvents(fOptions) > 0) {
+  if (getTotalEvents(fOptions) > 0)
+  {
     fEventsToProcess = getTotalEvents(fOptions);
   }
 
   bool totCalibSet = false, tdcCalibSet = false;
-  if (totCalibSet = isOptionSet(fOptions, kTOTOffsetCalibKey)) {
+  if (totCalibSet = isOptionSet(fOptions, kTOTOffsetCalibKey))
+  {
     fTOTOffsetCalibFile = getOptionAsString(fOptions, kTOTOffsetCalibKey);
-  } else {
+  }
+  else
+  {
     WARNING("No TOT offset calibration file set int the user options!");
   }
-  if (tdcCalibSet = isOptionSet(fOptions, kTDCnonlinearityCalibKey)) {
+  if (tdcCalibSet = isOptionSet(fOptions, kTDCnonlinearityCalibKey))
+  {
     fTDCnonlinearityCalibFile = getOptionAsString(fOptions, kTDCnonlinearityCalibKey);
-  } else {
+  }
+  else
+  {
     WARNING("No TDC nonlinearity file set int the user options!");
   }
 
-  return validateFiles(
-    fInputFilePath+fInputFile, fXMLConfFile, 
-    fTOTOffsetCalibFile, totCalibSet, fTDCnonlinearityCalibFile, tdcCalibSet
-  );
+  return validateFiles(fInputFilePath + fInputFile, fXMLConfFile, fTOTOffsetCalibFile, totCalibSet, fTDCnonlinearityCalibFile, tdcCalibSet);
 }
 
 bool JPetUnpackTask::run(const JPetDataInterface&)
 {
-  if (DetectorTypeChecker::getDetectorType(fOptions) == DetectorTypeChecker::DetectorType::kBarrel) {
+  if (DetectorTypeChecker::getDetectorType(fOptions) == DetectorTypeChecker::DetectorType::kBarrel)
+  {
 
     int refChannelOffset = 65;
     fUnpacker2 = new Unpacker2();
 
     INFO(Form("Using Unpacker2 to process first %i events", fEventsToProcess));
 
-    fUnpacker2->UnpackSingleStep(
-      fInputFile, fInputFilePath, fOutputFilePath,
-      fXMLConfFile, fEventsToProcess, refChannelOffset,
-      fTOTOffsetCalibFile, fTDCnonlinearityCalibFile
-    );
-
-  } else if (DetectorTypeChecker::getDetectorType(fOptions) == DetectorTypeChecker::DetectorType::kModular) {
+    fUnpacker2->UnpackSingleStep(fInputFile, fInputFilePath, fOutputFilePath, fXMLConfFile, fEventsToProcess, refChannelOffset, fTOTOffsetCalibFile,
+                                 fTDCnonlinearityCalibFile);
+  }
+  else if (DetectorTypeChecker::getDetectorType(fOptions) == DetectorTypeChecker::DetectorType::kModular)
+  {
 
     int refChannelOffset = 105;
     fUnpacker2D = new Unpacker2D();
 
     INFO(Form("Using Unpacker2D to process first %i events", fEventsToProcess));
 
-    fUnpacker2D->UnpackSingleStep(
-      fInputFile, fInputFilePath, fOutputFilePath,
-      fXMLConfFile, fEventsToProcess, refChannelOffset,
-      fTDCnonlinearityCalibFile
-    );
-
-  } else {
+    fUnpacker2D->UnpackSingleStep(fInputFile, fInputFilePath, fOutputFilePath, fXMLConfFile, fEventsToProcess, refChannelOffset,
+                                  fTDCnonlinearityCalibFile);
+  }
+  else
+  {
     return false;
   }
   return true;
@@ -101,21 +103,20 @@ bool JPetUnpackTask::run(const JPetDataInterface&)
 
 bool JPetUnpackTask::terminate(JPetParams& outParams)
 {
-  if (fUnpacker2) {
+  if (fUnpacker2)
+  {
     delete fUnpacker2;
     fUnpacker2 = 0;
   }
-  if (fUnpacker2D) {
+  if (fUnpacker2D)
+  {
     delete fUnpacker2D;
     fUnpacker2D = 0;
   }
 
   OptsStrAny new_opts;
   jpet_options_generator_tools::setOutputFileType(new_opts, "hldRoot");
-  jpet_options_generator_tools::setOutputFile(
-    new_opts,
-    JPetCommonTools::replaceDataTypeInFileName(getInputFile(fOptions), "hld")
-  );
+  jpet_options_generator_tools::setOutputFile(new_opts, JPetCommonTools::replaceDataTypeInFileName(getInputFile(fOptions), "hld"));
   jpet_options_generator_tools::setOutputPath(new_opts, getOutputPath(fOptions));
   outParams = JPetParams(new_opts, outParams.getParamManagerAsShared());
   INFO("UnpackTask finished.");
@@ -123,29 +124,33 @@ bool JPetUnpackTask::terminate(JPetParams& outParams)
   return true;
 }
 
-bool JPetUnpackTask::validateFiles(
-  string fileNameWithPath, string xmlConfig,
-  string totCalib, bool totCalibSet, string tdcCalib, bool tdcCalibSet
-){
-  if(!boost::filesystem::exists(fileNameWithPath)) {
+bool JPetUnpackTask::validateFiles(string fileNameWithPath, string xmlConfig, string totCalib, bool totCalibSet, string tdcCalib, bool tdcCalibSet)
+{
+  if (!boost::filesystem::exists(fileNameWithPath))
+  {
     ERROR(Form("No input HLD file found: %s", fileNameWithPath.c_str()));
     return false;
   }
 
-  if (!boost::filesystem::exists(xmlConfig)) {
+  if (!boost::filesystem::exists(xmlConfig))
+  {
     ERROR(Form("No XML configuration file found: %s", xmlConfig.c_str()));
     return false;
   }
 
-  if(totCalibSet) {
-    if(!boost::filesystem::exists(totCalib)){
+  if (totCalibSet)
+  {
+    if (!boost::filesystem::exists(totCalib))
+    {
       ERROR(Form("No TOT offset calibration file found: %s", totCalib.c_str()));
       return false;
     }
   }
 
-  if(tdcCalibSet){
-    if(!boost::filesystem::exists(tdcCalib)){
+  if (tdcCalibSet)
+  {
+    if (!boost::filesystem::exists(tdcCalib))
+    {
       ERROR(Form("No TDC nonlinearity file found: %s", tdcCalib.c_str()));
       return false;
     }
