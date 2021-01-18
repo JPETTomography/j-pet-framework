@@ -203,7 +203,8 @@ long long getTotalEvents(const std::map<std::string, boost::any>& opts)
 
 int getRunNumber(const std::map<std::string, boost::any>& opts) { return any_cast<int>(opts.at("runID_int")); }
 
-bool isProgressBar(const std::map<std::string, boost::any>& opts) {
+bool isProgressBar(const std::map<std::string, boost::any>& opts)
+{
   if (opts.find("progressBar_bool") != opts.end())
   {
     return any_cast<bool>(opts.at("progressBar_bool"));
@@ -211,7 +212,8 @@ bool isProgressBar(const std::map<std::string, boost::any>& opts) {
   return false;
 }
 
-bool isDirectProcessing(const std::map<std::string, boost::any>& opts){
+bool isDirectProcessing(const std::map<std::string, boost::any>& opts)
+{
   if (opts.find("directProcessing_bool") != opts.end())
   {
     return any_cast<bool>(opts.at("directProcessing_bool"));
@@ -415,11 +417,13 @@ FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::strin
     }
     catch (const std::out_of_range& outOfRangeFileTypeException)
     {
+      std::string errorMessage = "Provided file type option was not found - out of range in getFileType() ";
+      handleErrorMessage(errorMessage, outOfRangeOptionException);
     }
   }
   catch (const std::out_of_range& outOfRangeOptionException)
   {
-    std::string errorMessage = "Out of range error in Options container ";
+    std::string errorMessage = "Provided option was not found - out of range error in options container ";
     handleErrorMessage(errorMessage, outOfRangeOptionException);
   }
   return FileType::kUndefinedFileType;
@@ -429,28 +433,33 @@ FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::strin
  * Map contains allowed strings for "-k" command line option and indicates what type
  * of detector is to be used.
  */
-std::map<std::string, DetectorTypeChecker::DetectorType> DetectorTypeChecker::fStringToDetectorType =
-{
-  {"bar", kBarrel}, {"barrel", kBarrel}, {"mod", kModular}, {"modular", kModular}
-};
+std::map<std::string, DetectorTypeChecker::DetectorType> DetectorTypeChecker::fStringToDetectorType = {
+    {"bar", kBarrel}, {"barrel", kBarrel}, {"mod", kModular}, {"modular", kModular}};
 
 /**
  * Method returns the detector type based on the provided options:
  * if the "-k" option for the is worng or not used, then by default
  * the detector type is the Big Barrel - kBarrel.
  */
-DetectorTypeChecker::DetectorType DetectorTypeChecker::getDetectorType(
-  const std::map<std::string, boost::any>& opts
-) {
-  try {
+DetectorTypeChecker::DetectorType DetectorTypeChecker::getDetectorType(const std::map<std::string, boost::any>& opts)
+{
+  try
+  {
     auto option = any_cast<std::string>(opts.at("detectorType_std::string"));
-    try {
+    try
+    {
       return fStringToDetectorType.at(option);
-    } catch (const std::out_of_range& outOfRangeDetectorTypeException) { }
-  } catch (const std::out_of_range& outOfRangeOptionException) {
-    std::string errorMessage = "Out of range error in DetectorTypeChecker container ";
-    std::cerr << errorMessage << outOfRangeOptionException.what() << '\n';
-    ERROR(errorMessage);
+    }
+    catch (const std::out_of_range& outOfRangeDetectorTypeException)
+    {
+      std::string errorMessage = "Provided detector type option was not found - out of range in getDetectorType() ";
+      handleErrorMessage(errorMessage, outOfRangeOptionException);
+    }
+  }
+  catch (const std::out_of_range& outOfRangeOptionException)
+  {
+    std::string errorMessage = "Provided option was not found - out of range error in options container ";
+    handleErrorMessage(errorMessage, outOfRangeOptionException);
   }
   return DetectorType::kBarrel;
 }
