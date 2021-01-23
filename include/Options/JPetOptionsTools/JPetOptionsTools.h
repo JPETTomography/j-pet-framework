@@ -63,6 +63,7 @@ void printOptions(const OptsStrAny& opts);
 void printOptionsToLog(const OptsStrAny& opts, const std::string& firstLine);
 bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& outFile = "");
 OptsStrAny createOptionsFromConfigFile(const std::string& inFile);
+void handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException);
 
 class FileTypeChecker
 {
@@ -82,7 +83,6 @@ public:
   static FileType getOutputFileType(const OptsStrAny& opts);
 
 private:
-  static void handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException);
   static FileType getFileType(const OptsStrAny& opts, const std::string& fileType);
   FileTypeChecker();
   FileTypeChecker(const FileTypeChecker&);

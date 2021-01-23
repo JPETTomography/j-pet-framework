@@ -390,6 +390,12 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
   return mapOptions;
 }
 
+void handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException)
+{
+  std::cerr << errorMessage << outOfRangeException.what() << '\n';
+  ERROR(errorMessage);
+}
+
 FileTypeChecker::FileType FileTypeChecker::getInputFileType(const std::map<std::string, boost::any>& opts)
 {
   return getFileType(opts, "inputFileType_std::string");
@@ -398,12 +404,6 @@ FileTypeChecker::FileType FileTypeChecker::getInputFileType(const std::map<std::
 FileTypeChecker::FileType FileTypeChecker::getOutputFileType(const std::map<std::string, boost::any>& opts)
 {
   return getFileType(opts, "outputFileType_std::string");
-}
-
-void FileTypeChecker::handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException)
-{
-  std::cerr << errorMessage << outOfRangeException.what() << '\n';
-  ERROR(errorMessage);
 }
 
 FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::string, boost::any>& opts, const std::string& fileTypeName)
@@ -418,7 +418,7 @@ FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::strin
     catch (const std::out_of_range& outOfRangeFileTypeException)
     {
       std::string errorMessage = "Provided file type option was not found - out of range in getFileType() ";
-      handleErrorMessage(errorMessage, outOfRangeOptionException);
+      handleErrorMessage(errorMessage, outOfRangeFileTypeException);
     }
   }
   catch (const std::out_of_range& outOfRangeOptionException)
@@ -453,7 +453,7 @@ DetectorTypeChecker::DetectorType DetectorTypeChecker::getDetectorType(const std
     catch (const std::out_of_range& outOfRangeDetectorTypeException)
     {
       std::string errorMessage = "Provided detector type option was not found - out of range in getDetectorType() ";
-      handleErrorMessage(errorMessage, outOfRangeOptionException);
+      handleErrorMessage(errorMessage, outOfRangeDetectorTypeException);
     }
   }
   catch (const std::out_of_range& outOfRangeOptionException)

@@ -49,8 +49,9 @@ bool JPetUnpackTask::init(const JPetParams& inParams)
     fEventsToProcess = getTotalEvents(fOptions);
   }
 
-  bool totCalibSet = false, tdcCalibSet = false;
-  if (totCalibSet = isOptionSet(fOptions, kTOTOffsetCalibKey))
+  bool totCalibSet = isOptionSet(fOptions, kTOTOffsetCalibKey);
+  bool tdcCalibSet = isOptionSet(fOptions, kTDCnonlinearityCalibKey);
+  if (totCalibSet)
   {
     fTOTOffsetCalibFile = getOptionAsString(fOptions, kTOTOffsetCalibKey);
   }
@@ -58,7 +59,7 @@ bool JPetUnpackTask::init(const JPetParams& inParams)
   {
     WARNING("No TOT offset calibration file set int the user options!");
   }
-  if (tdcCalibSet = isOptionSet(fOptions, kTDCnonlinearityCalibKey))
+  if (tdcCalibSet)
   {
     fTDCnonlinearityCalibFile = getOptionAsString(fOptions, kTDCnonlinearityCalibKey);
   }
