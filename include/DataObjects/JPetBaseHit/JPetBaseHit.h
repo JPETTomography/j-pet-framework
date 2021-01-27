@@ -17,8 +17,10 @@
 #define JPETBASEHIT_H
 
 #include "JPetScin/JPetScin.h"
+
 #include <TObject.h>
 #include <TRef.h>
+#include <TVector3.h>
 
 /**
  * @brief Base class for hit data classes
@@ -44,7 +46,7 @@ public:
   void setPosZ(double z);
   void setPos(double x, double y, double z);
   void setPos(TVector3& position);
-  void setScin(const JPetScin& scin);
+  void setScin(JPetScin& scin);
   void Clear(Option_t* opt = "");
   static JPetBaseHit& getDummyResult();
 

@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(constructor)
   BOOST_REQUIRE_CLOSE(hit.getPosX(), 11.0, epsilon);
   BOOST_REQUIRE_CLOSE(hit.getPosY(), 22.0, epsilon);
   BOOST_REQUIRE_CLOSE(hit.getPosZ(), 33.0, epsilon);
-  BOOST_REQUIRE_EQUAL(hit.getScin(), scin);
+  BOOST_REQUIRE_EQUAL(hit.getScin().getID(), scin.getID());
 }
 
 BOOST_AUTO_TEST_CASE(SetAndGetTest)
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(SetAndGetTest)
 
   JPetScin scin(456, 1.0, 2.0, 3.0, 4.0);
   hit.setScin(scin);
-  BOOST_REQUIRE_EQUAL(hit.getScin(), scin);
+  BOOST_REQUIRE_EQUAL(hit.getScin().getID(), scin.getID());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

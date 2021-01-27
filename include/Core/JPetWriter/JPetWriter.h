@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -23,23 +23,29 @@ namespace boost;
 class boost::noncopyable;
 #endif /* __CINT __ */
 
-#include "./JPetBarrelSlot/JPetBarrelSlot.h"
-#include "./JPetPhysSignal/JPetPhysSignal.h"
-#include "./JPetTimeWindow/JPetTimeWindow.h"
-#include "./JPetSigCh/JPetSigCh.h"
-#include "./JPetEvent/JPetEvent.h"
-#include "./JPetLoggerInclude.h"
-#include "./JPetScin/JPetScin.h"
-#include "./JPetHit/JPetHit.h"
-#include "./JPetLOR/JPetLOR.h"
-#include "./JPetFEB/JPetFEB.h"
-#include "./JPetTRB/JPetTRB.h"
-#include "./JPetPM/JPetPM.h"
+#include "JPetBarrelSlot/JPetBarrelSlot.h"
+#include "JPetBaseHit/JPetBaseHit.h"
+#include "JPetBaseMCHit/JPetBaseMCHit.h"
+#include "JPetEvent/JPetEvent.h"
+#include "JPetFEB/JPetFEB.h"
+#include "JPetHit/JPetHit.h"
+#include "JPetLOR/JPetLOR.h"
+#include "JPetLoggerInclude.h"
+#include "JPetMCRecoHit/JPetMCRecoHit.h"
+#include "JPetPM/JPetPM.h"
+#include "JPetPhysRecoHit/JPetPhysRecoHit.h"
+#include "JPetPhysSignal/JPetPhysSignal.h"
+#include "JPetRecoHit/JPetRecoHit.h"
+#include "JPetScin/JPetScin.h"
+#include "JPetSigCh/JPetSigCh.h"
+#include "JPetTRB/JPetTRB.h"
+#include "JPetTimeWindow/JPetTimeWindow.h"
+
 #include <TFile.h>
 #include <TList.h>
 #include <TTree.h>
-#include <vector>
 #include <string>
+#include <vector>
 
 /**
  * @brief A class responsible for writing any data to ROOT trees.
@@ -64,18 +70,17 @@ public:
   JPetWriter(const char* p_fileName);
   virtual ~JPetWriter(void);
   void closeFile();
-  template <class T> bool write(const T& obj);
+  template <class T>
+  bool write(const T& obj);
   void writeHeader(TObject* header);
-  void writeCollection(const TCollection* hash, const char* dirname,
-    const char* subdirname = "");
-  int writeObject(const TObject* obj, const char* name)
-  {
-    return fFile->WriteTObject(obj, name);
-  }
+  void writeCollection(const TCollection* hash, const char* dirname, const char* subdirname = "");
+  int writeObject(const TObject* obj, const char* name) { return fFile->WriteTObject(obj, name); }
   virtual bool isOpen() const
   {
-    if (fFile) return (fFile->IsOpen() && !fFile->IsZombie());
-    else return false;
+    if (fFile)
+      return (fFile->IsOpen() && !fFile->IsZombie());
+    else
+      return false;
   }
 
 protected:
@@ -90,7 +95,8 @@ template <class T>
 bool JPetWriter::write(const T& obj)
 {
   DEBUG("JPetWriter");
-  if ( !fFile->IsOpen() ) {
+  if (!fFile->IsOpen())
+  {
     ERROR("Could not write to file. Have you closed it already?");
     return false;
   }
@@ -101,7 +107,8 @@ bool JPetWriter::write(const T& obj)
   DEBUG("filler");
   T* filler = const_cast<T*>(&obj);
   assert(filler);
-  if (!fIsBranchCreated) {
+  if (!fIsBranchCreated)
+  {
     DEBUG("Branch name:" + std::string(filler->GetName()));
     assert(fTree);
     fTree->Branch(filler->GetName(), filler->GetName(), &filler);
