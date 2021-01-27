@@ -38,17 +38,13 @@ protected:
   const std::string kTDCnonlinearityCalibKey = "Unpacker_TDCnonlinearityCalib_std::string";
   const std::string kTOTOffsetCalibKey = "Unpacker_TOToffsetCalib_std::string";
   const std::string kEndpointsParamKey = "Unpacker_EndpointsNumber_int";
-  std::string fTDCnonlinearityCalibFile = std::string("");
-  std::string fTOTOffsetCalibFile = std::string("");
-  std::string fXMLConfFile = std::string("");
-  std::string fInputFile = std::string("");
-  std::string fInputFilePath = std::string("");
-  std::string fOutputFilePath = std::string("");
-
+  std::string fTDCnonlinearityCalibFile;
+  std::string fTOTOffsetCalibFile;
+  std::string fXMLConfFile;
+  std::string fInputFile;
+  std::string fInputFilePath;
+  std::string fOutputFilePath;
   int fEventsToProcess = 100000000;
-
-  Unpacker2D* fUnpacker2D = nullptr;
-  Unpacker2* fUnpacker2 = nullptr;
   OptsStrAny fOptions;
 };
 

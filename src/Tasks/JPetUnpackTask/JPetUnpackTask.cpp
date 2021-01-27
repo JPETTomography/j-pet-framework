@@ -77,23 +77,23 @@ bool JPetUnpackTask::run(const JPetDataInterface&)
   {
 
     int refChannelOffset = 65;
-    fUnpacker2 = new Unpacker2();
+    Unpacker2 unpacker2;
 
     INFO(Form("Using Unpacker2 to process first %i events", fEventsToProcess));
 
-    fUnpacker2->UnpackSingleStep(fInputFile, fInputFilePath, fOutputFilePath, fXMLConfFile, fEventsToProcess, refChannelOffset, fTOTOffsetCalibFile,
-                                 fTDCnonlinearityCalibFile);
+    unpacker2.UnpackSingleStep(fInputFile, fInputFilePath, fOutputFilePath, fXMLConfFile, fEventsToProcess, refChannelOffset, fTOTOffsetCalibFile,
+                               fTDCnonlinearityCalibFile);
   }
   else if (DetectorTypeChecker::getDetectorType(fOptions) == DetectorTypeChecker::DetectorType::kModular)
   {
 
     int refChannelOffset = 105;
-    fUnpacker2D = new Unpacker2D();
+    Unpacker2D unpacker2D;
 
     INFO(Form("Using Unpacker2D to process first %i events", fEventsToProcess));
 
-    fUnpacker2D->UnpackSingleStep(fInputFile, fInputFilePath, fOutputFilePath, fXMLConfFile, fEventsToProcess, refChannelOffset,
-                                  fTDCnonlinearityCalibFile);
+    unpacker2D.UnpackSingleStep(fInputFile, fInputFilePath, fOutputFilePath, fXMLConfFile, fEventsToProcess, refChannelOffset,
+                                fTDCnonlinearityCalibFile);
   }
   else
   {
@@ -104,17 +104,6 @@ bool JPetUnpackTask::run(const JPetDataInterface&)
 
 bool JPetUnpackTask::terminate(JPetParams& outParams)
 {
-  if (fUnpacker2)
-  {
-    delete fUnpacker2;
-    fUnpacker2 = 0;
-  }
-  if (fUnpacker2D)
-  {
-    delete fUnpacker2D;
-    fUnpacker2D = 0;
-  }
-
   OptsStrAny new_opts;
   jpet_options_generator_tools::setOutputFileType(new_opts, "hldRoot");
   jpet_options_generator_tools::setOutputFile(new_opts, JPetCommonTools::replaceDataTypeInFileName(getInputFile(fOptions), "hld"));
