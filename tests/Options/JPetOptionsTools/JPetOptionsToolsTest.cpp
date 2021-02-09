@@ -245,18 +245,20 @@ BOOST_AUTO_TEST_CASE(getOptionBy)
 
 BOOST_AUTO_TEST_CASE(getDetectorTypeTest)
 {
+  using namespace detector_type_checker;
+
   OptsStrAny opt1 = {{"detectorType_std::string", std::string("bar")}};
   OptsStrAny opt2 = {{"detectorType_std::string", std::string("barrel")}};
   OptsStrAny opt3 = {{"detectorType_std::string", std::string("mod")}};
   OptsStrAny opt4 = {{"detectorType_std::string", std::string("modular")}};
   OptsStrAny opt5 = {{"detectorType_std::string", std::string("kloe")}};
   OptsStrAny opt6 = {{"detectorType_std::string", std::string("lhcb")}};
-  BOOST_REQUIRE_EQUAL(DetectorTypeChecker::getDetectorType(opt1), DetectorTypeChecker::DetectorType::kBarrel);
-  BOOST_REQUIRE_EQUAL(DetectorTypeChecker::getDetectorType(opt2), DetectorTypeChecker::DetectorType::kBarrel);
-  BOOST_REQUIRE_EQUAL(DetectorTypeChecker::getDetectorType(opt3), DetectorTypeChecker::DetectorType::kModular);
-  BOOST_REQUIRE_EQUAL(DetectorTypeChecker::getDetectorType(opt4), DetectorTypeChecker::DetectorType::kModular);
-  BOOST_REQUIRE_EQUAL(DetectorTypeChecker::getDetectorType(opt5), DetectorTypeChecker::DetectorType::kBarrel);
-  BOOST_REQUIRE_EQUAL(DetectorTypeChecker::getDetectorType(opt6), DetectorTypeChecker::DetectorType::kBarrel);
+  BOOST_REQUIRE_EQUAL(getDetectorType(opt1), DetectorType::kBarrel);
+  BOOST_REQUIRE_EQUAL(getDetectorType(opt2), DetectorType::kBarrel);
+  BOOST_REQUIRE_EQUAL(getDetectorType(opt3), DetectorType::kModular);
+  BOOST_REQUIRE_EQUAL(getDetectorType(opt4), DetectorType::kModular);
+  BOOST_REQUIRE_EQUAL(getDetectorType(opt5), DetectorType::kBarrel);
+  BOOST_REQUIRE_EQUAL(getDetectorType(opt6), DetectorType::kBarrel);
 }
 
 BOOST_AUTO_TEST_CASE(testBooleanOptions)

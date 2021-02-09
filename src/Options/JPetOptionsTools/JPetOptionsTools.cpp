@@ -27,10 +27,6 @@ using boost::any_cast;
 
 namespace jpet_options_tools
 {
-
-std::map<std::string, FileTypeChecker::FileType> FileTypeChecker::fStringToFileType = {
-    {"", kNoType}, {"root", kRoot}, {"mcGeant", kMCGeant}, {"scope", kScope}, {"hld", kHld}, {"hldRoot", kHldRoot}, {"zip", kZip}};
-
 bool isOptionSet(const OptsStrAny& opts, const std::string& optionName) { return static_cast<bool>(opts.count(optionName)); }
 
 boost::any getOptionValue(const OptsStrAny& opts, const std::string& optionName) { return opts.at(optionName); }
@@ -396,24 +392,17 @@ void handleErrorMessage(const std::string& errorMessage, const std::out_of_range
   ERROR(errorMessage);
 }
 
-FileTypeChecker::FileType FileTypeChecker::getInputFileType(const std::map<std::string, boost::any>& opts)
+file_type_checker::FileType file_type_checker::getFileType(const std::map<std::string, boost::any>& opts, const std::string& fileTypeName)
 {
-  return getFileType(opts, "inputFileType_std::string");
-}
+  std::map<std::string, file_type_checker::FileType> fileTypeMap = {{"", kNoType}, {"root", kRoot},       {"mcGeant", kMCGeant}, {"scope", kScope},
+                                                                    {"hld", kHld}, {"hldRoot", kHldRoot}, {"zip", kZip}};
 
-FileTypeChecker::FileType FileTypeChecker::getOutputFileType(const std::map<std::string, boost::any>& opts)
-{
-  return getFileType(opts, "outputFileType_std::string");
-}
-
-FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::string, boost::any>& opts, const std::string& fileTypeName)
-{
   try
   {
     auto option = any_cast<std::string>(opts.at(fileTypeName));
     try
     {
-      return fStringToFileType.at(option);
+      return fileTypeMap.at(option);
     }
     catch (const std::out_of_range& outOfRangeFileTypeException)
     {
@@ -426,29 +415,35 @@ FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::strin
     std::string errorMessage = "Provided option was not found - out of range error in options container ";
     handleErrorMessage(errorMessage, outOfRangeOptionException);
   }
-  return FileType::kUndefinedFileType;
+  return file_type_checker::FileType::kUndefinedFileType;
 }
 
-/**
- * Map contains allowed strings for "-k" command line option and indicates what type
- * of detector is to be used.
- */
-std::map<std::string, DetectorTypeChecker::DetectorType> DetectorTypeChecker::fStringToDetectorType = {
-    {"bar", kBarrel}, {"barrel", kBarrel}, {"mod", kModular}, {"modular", kModular}};
+file_type_checker::FileType file_type_checker::getInputFileType(const std::map<std::string, boost::any>& opts)
+{
+  return file_type_checker::getFileType(opts, "inputFileType_std::string");
+}
+
+file_type_checker::FileType file_type_checker::getOutputFileType(const std::map<std::string, boost::any>& opts)
+{
+  return file_type_checker::getFileType(opts, "outputFileType_std::string");
+}
 
 /**
  * Method returns the detector type based on the provided options:
  * if the "-k" option for the is worng or not used, then by default
  * the detector type is the Big Barrel - kBarrel.
  */
-DetectorTypeChecker::DetectorType DetectorTypeChecker::getDetectorType(const std::map<std::string, boost::any>& opts)
+detector_type_checker::DetectorType detector_type_checker::getDetectorType(const std::map<std::string, boost::any>& opts)
 {
+  std::map<std::string, detector_type_checker::DetectorType> detectorTypeMap = {
+      {"bar", kBarrel}, {"barrel", kBarrel}, {"mod", kModular}, {"modular", kModular}};
+
   try
   {
     auto option = any_cast<std::string>(opts.at("detectorType_std::string"));
     try
     {
-      return fStringToDetectorType.at(option);
+      return detectorTypeMap.at(option);
     }
     catch (const std::out_of_range& outOfRangeDetectorTypeException)
     {
@@ -461,7 +456,7 @@ DetectorTypeChecker::DetectorType DetectorTypeChecker::getDetectorType(const std
     std::string errorMessage = "Provided option was not found - out of range error in options container ";
     handleErrorMessage(errorMessage, outOfRangeOptionException);
   }
-  return DetectorType::kBarrel;
+  return detector_type_checker::DetectorType::kBarrel;
 }
 
 } // namespace jpet_options_tools

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -198,8 +198,8 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
   using namespace jpet_options_tools;
   auto options = fParams.getOptions();
 
-  if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ||
-      FileTypeChecker::getInputFileType(options) == FileTypeChecker::kMCGeant)
+  if (file_type_checker::getInputFileType(options) == file_type_checker::kHldRoot ||
+      file_type_checker::getInputFileType(options) == file_type_checker::kMCGeant)
   {
 
     fHeader = new JPetTreeHeader(getRunNumber(options));

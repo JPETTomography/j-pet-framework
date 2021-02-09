@@ -65,42 +65,35 @@ bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& o
 OptsStrAny createOptionsFromConfigFile(const std::string& inFile);
 void handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException);
 
-class FileTypeChecker
+namespace file_type_checker
 {
-public:
-  enum FileType
-  {
-    kNoType,
-    kRoot,
-    kScope,
-    kHld,
-    kHldRoot,
-    kZip,
-    kMCGeant,
-    kUndefinedFileType
-  };
-  static FileType getInputFileType(const OptsStrAny& opts);
-  static FileType getOutputFileType(const OptsStrAny& opts);
-
-private:
-  static FileType getFileType(const OptsStrAny& opts, const std::string& fileType);
-  FileTypeChecker();
-  FileTypeChecker(const FileTypeChecker&);
-  void operator=(const FileTypeChecker&);
-  static std::map<std::string, FileType> fStringToFileType;
-};
-
-class DetectorTypeChecker
+enum FileType
 {
-public:
-  enum DetectorType
-  {
-    kBarrel,
-    kModular
-  };
-  static DetectorType getDetectorType(const OptsStrAny& opts);
-  static std::map<std::string, DetectorType> fStringToDetectorType;
+  kNoType,
+  kRoot,
+  kScope,
+  kHld,
+  kHldRoot,
+  kZip,
+  kMCGeant,
+  kUndefinedFileType
 };
+FileType getFileType(const OptsStrAny& opts, const std::string& fileType);
+FileType getInputFileType(const OptsStrAny& opts);
+FileType getOutputFileType(const OptsStrAny& opts);
+} // namespace file_type_checker
 
-};     // namespace jpet_options_tools
+namespace detector_type_checker
+{
+enum DetectorType
+{
+  kBarrel,
+  kModular
+};
+DetectorType getDetectorType(const OptsStrAny& opts);
+
+} // namespace detector_type_checker
+
+}; // namespace jpet_options_tools
+
 #endif /* !JPETOPTIONSTOOLS_H */

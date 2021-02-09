@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsForTask_hldRoot_after_hld)
   std::map<std::string, boost::any> controlSettings = {{"outputFileType_std::string", std::string("hldRoot")}};
   auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
   BOOST_REQUIRE(isOptionSet(resultsOpt, "inputFileType_std::string"));
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(resultsOpt), FileTypeChecker::kHldRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(resultsOpt), file_type_checker::FileType::kHldRoot);
 }
 
 BOOST_AUTO_TEST_CASE(generateOptionsForTask_root_after_hldRoot)
@@ -179,7 +179,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsForTask_root_after_hldRoot)
   std::map<std::string, boost::any> controlSettings = {{"outputFileType_std::string", std::string("root")}};
   auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
   BOOST_REQUIRE(isOptionSet(resultsOpt, "inputFileType_std::string"));
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(resultsOpt), FileTypeChecker::kRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(resultsOpt), file_type_checker::FileType::kRoot);
   BOOST_REQUIRE(isOptionSet(resultsOpt, "firstEvent_int"));
   BOOST_REQUIRE(isOptionSet(resultsOpt, "lastEvent_int"));
   BOOST_REQUIRE_EQUAL(getOptionAsInt(resultsOpt, "firstEvent_int"), 2);
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsForTask_root_after_Root)
   std::map<std::string, boost::any> controlSettings = {{"outputFileType_std::string", std::string("root")}};
   auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
   BOOST_REQUIRE(isOptionSet(resultsOpt, "inputFileType_std::string"));
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(resultsOpt), FileTypeChecker::kRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(resultsOpt), file_type_checker::FileType::kRoot);
   BOOST_REQUIRE(isOptionSet(resultsOpt, "firstEvent_int"));
   BOOST_REQUIRE(isOptionSet(resultsOpt, "lastEvent_int"));
   BOOST_REQUIRE_EQUAL(getOptionAsInt(resultsOpt, "firstEvent_int"), 2);
