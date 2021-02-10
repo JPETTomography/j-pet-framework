@@ -373,6 +373,15 @@ void JPetHit::setSignalB(const JPetMatrixSignal& sig)
 }
 
 /**
+ * Get the index to MC hit structure
+ */
+unsigned int JPetHit::getMCindex() const { return fMCindex; }
+
+/**
+ * Set index to MC hit structure
+ */                                                                                                                    void JPetHit::setMCindex(unsigned int i) { fMCindex = i; }    
+
+/**
  * Set fields of the hit to zero/false/null
  */
 void JPetHit::Clear(Option_t*)
