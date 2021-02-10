@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -18,6 +18,6 @@
 #include <boost/any.hpp>
 #include <string>
 
-bool additionalCheckIfRunIdIsOk(std::pair<std::string, boost::any> option);
+bool additionalCheckIfRunIDIsOk(std::pair<std::string, boost::any> option);
 
 #endif /* J_PET_ADDITIONAL_VALIDATORS_H */

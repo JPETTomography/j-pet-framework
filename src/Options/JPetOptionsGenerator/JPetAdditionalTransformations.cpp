@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -20,7 +20,7 @@
 using boost::any_cast;
 
 // cppcheck-suppress unusedFunction
-std::pair<std::string, boost::any> setAdditionalRunIdInTheMap(boost::any option)
+std::pair<std::string, boost::any> setAdditionalRunIDInTheMap(boost::any option)
 {
   int run = any_cast<int>(option);
   return std::make_pair("additionalRunID_int", run);

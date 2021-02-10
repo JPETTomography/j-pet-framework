@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -14,8 +14,8 @@
  */
 
 #include "JPetOptionValidator/JPetOptionValidator.h"
-#include "./JPetLoggerInclude.h"
 #include "JPetCommonTools/JPetCommonTools.h"
+#include "JPetLoggerInclude.h"
 #include "JPetOptionsTools/JPetOptionsTools.h"
 
 using boost::any_cast;
@@ -72,7 +72,8 @@ std::map<std::string, std::vector<bool (*)(std::pair<std::string, boost::any>)>>
   validationMap["type_std::string"].push_back(&isCorrectFileType);
   validationMap["file_std::vector<std::string>"].push_back(&areFilesValid);
   validationMap["type_std::string, file_std::vector<std::string>"].push_back(&isFileTypeMatchingExtensions);
-  validationMap["runId_int"].push_back(&isRunIdValid);
+  validationMap["runID_int"].push_back(&isRunIDValid);
+  validationMap["detectorType_std::string"].push_back(&isDetectorValid);
   validationMap["localDB_std::string"].push_back(&isLocalDBValid);
   validationMap["outputPath_std::string"].push_back(&isOutputDirectoryValid);
   return validationMap;
@@ -156,7 +157,7 @@ std::vector<std::string> JPetOptionValidator::getCorrectExtensionsForTheType(std
   }
 }
 
-bool JPetOptionValidator::isRunIdValid(std::pair<std::string, boost::any> option)
+bool JPetOptionValidator::isRunIDValid(std::pair<std::string, boost::any> option)
 {
   if (any_cast<int>(option.second) <= 0)
   {
@@ -164,6 +165,20 @@ bool JPetOptionValidator::isRunIdValid(std::pair<std::string, boost::any> option
     return false;
   }
   return true;
+}
+
+bool JPetOptionValidator::isDetectorValid(std::pair<std::string, boost::any> option)
+{
+  if (any_cast<std::string>(option.second) == "bar" || any_cast<std::string>(option.second) == "barrel" ||
+      any_cast<std::string>(option.second) == "mod" || any_cast<std::string>(option.second) == "modular")
+  {
+    return true;
+  }
+  else
+  {
+    ERROR("Provided detector type not found. Use '-k barrel' or '-k modular'");
+    return false;
+  }
 }
 
 bool JPetOptionValidator::isLocalDBValid(std::pair<std::string, boost::any> option)
