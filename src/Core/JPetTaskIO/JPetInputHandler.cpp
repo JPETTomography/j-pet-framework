@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -28,8 +28,8 @@ bool JPetInputHandler::openInput(const char* inputFilename, const JPetParams& pa
   {
     /// For all types of files which has not hld format we assume
     /// that we can read paramBank from the file.
-    if (FileTypeChecker::getInputFileType(options) != FileTypeChecker::kHldRoot &&
-        FileTypeChecker::getInputFileType(options) != FileTypeChecker::kMCGeant)
+    if (file_type_checker::getInputFileType(options) != file_type_checker::kHldRoot &&
+        file_type_checker::getInputFileType(options) != file_type_checker::kMCGeant)
     {
       auto paramManager = params.getParamManager();
       assert(paramManager);

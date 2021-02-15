@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -23,9 +23,11 @@
 std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const std::map<std::string, boost::any>& options)
 {
   using namespace jpet_options_tools;
-  if (isLocalDB(options)) {
+  if (isLocalDB(options))
+  {
     std::set<ParamObjectType> expectMissing;
-    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kScope) {
+    if (file_type_checker::getInputFileType(options) == file_type_checker::kScope)
+    {
       expectMissing.insert(ParamObjectType::kTRB);
       expectMissing.insert(ParamObjectType::kFEB);
       expectMissing.insert(ParamObjectType::kFrame);
@@ -34,7 +36,8 @@ std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const s
       expectMissing.insert(ParamObjectType::kDataSource);
       expectMissing.insert(ParamObjectType::kDataModule);
     }
-    if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kMCGeant) {
+    if (file_type_checker::getInputFileType(options) == file_type_checker::kMCGeant)
+    {
       expectMissing.insert(ParamObjectType::kPM);
       expectMissing.insert(ParamObjectType::kPMCalib);
       expectMissing.insert(ParamObjectType::kFEB);
@@ -43,10 +46,10 @@ std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const s
       expectMissing.insert(ParamObjectType::kDataSource);
       expectMissing.insert(ParamObjectType::kDataModule);
     }
-    return std::make_shared<JPetParamManager>(
-      new JPetParamGetterAscii(getLocalDB(options)), expectMissing
-    );
-  } else {
+    return std::make_shared<JPetParamManager>(new JPetParamGetterAscii(getLocalDB(options)), expectMissing);
+  }
+  else
+  {
     ERROR("No local database file found.");
     return std::make_shared<JPetParamManager>();
   }
@@ -160,32 +163,25 @@ JPetTOMBChannelFactory& JPetParamManager::getTOMBChannelFactory(const int runID)
   return fTOMBChannelFactories.at(runID);
 }
 
-std::map<int, JPetDataSource*>& JPetParamManager::getDataSources(const int runID) {
-  return getDataSourceFactory(runID).getDataSources();
-}
+std::map<int, JPetDataSource*>& JPetParamManager::getDataSources(const int runID) { return getDataSourceFactory(runID).getDataSources(); }
 
 JPetDataSourceFactory& JPetParamManager::getDataSourceFactory(const int runID)
 {
-  if (fDataSourceFactories.count(runID) == 0) {
-    fDataSourceFactories.emplace(
-      std::piecewise_construct, std::forward_as_tuple(runID),
-      std::forward_as_tuple(*fParamGetter, runID)
-    );
+  if (fDataSourceFactories.count(runID) == 0)
+  {
+    fDataSourceFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runID), std::forward_as_tuple(*fParamGetter, runID));
   }
   return fDataSourceFactories.at(runID);
 }
 
-std::map<int, JPetDataModule*>& JPetParamManager::getDataModules(const int runID) {
-  return getDataModuleFactory(runID).getDataModules();
-}
+std::map<int, JPetDataModule*>& JPetParamManager::getDataModules(const int runID) { return getDataModuleFactory(runID).getDataModules(); }
 
 JPetDataModuleFactory& JPetParamManager::getDataModuleFactory(const int runID)
 {
-  if (fDataModuleFactories.count(runID) == 0) {
-    fDataModuleFactories.emplace(
-      std::piecewise_construct, std::forward_as_tuple(runID),
-      std::forward_as_tuple(*fParamGetter, runID, getDataSourceFactory(runID))
-    );
+  if (fDataModuleFactories.count(runID) == 0)
+  {
+    fDataModuleFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runID),
+                                 std::forward_as_tuple(*fParamGetter, runID, getDataSourceFactory(runID)));
   }
   return fDataModuleFactories.at(runID);
 }
@@ -279,21 +275,22 @@ void JPetParamManager::fillParameterBank(const int run)
     }
   }
 
-
-  if (!fExpectMissing.count(ParamObjectType::kDataSource)) {
-    for (auto& dataSourceElement : getDataSources(run)) {
+  if (!fExpectMissing.count(ParamObjectType::kDataSource))
+  {
+    for (auto& dataSourceElement : getDataSources(run))
+    {
       auto& dataSource = *dataSourceElement.second;
       fBank->addDataSource(dataSource);
     }
   }
 
-  if (!fExpectMissing.count(ParamObjectType::kDataModule)) {
-    for (auto& dataModuleElement : getDataModules(run)) {
+  if (!fExpectMissing.count(ParamObjectType::kDataModule))
+  {
+    for (auto& dataModuleElement : getDataModules(run))
+    {
       auto& dataModule = *dataModuleElement.second;
       fBank->addDataModule(dataModule);
-      fBank->getDataModule(dataModule.getID()).setDataSource(
-        fBank->getDataSource(dataModule.getDataSource().getID())
-      );
+      fBank->getDataModule(dataModule.getID()).setDataSource(fBank->getDataSource(dataModule.getDataSource().getID()));
     }
   }
 }

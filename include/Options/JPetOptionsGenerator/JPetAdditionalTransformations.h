@@ -18,4 +18,4 @@
 
 using boost::any_cast;
 
-std::pair<std::string, boost::any> setAdditionalRunIdInTheMap(boost::any option);
+std::pair<std::string, boost::any> setAdditionalRunIDInTheMap(boost::any option);
