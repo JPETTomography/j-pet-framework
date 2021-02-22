@@ -25,4 +25,9 @@ enum class JPetEventType
   kScattered = 16,
   kCosmic = 32
 };
+
+inline JPetEventType operator|(JPetEventType a, JPetEventType b) { return static_cast<JPetEventType>(static_cast<int>(a) | static_cast<int>(b)); }
+inline JPetEventType operator&(JPetEventType a, JPetEventType b) { return static_cast<JPetEventType>(static_cast<int>(a) & static_cast<int>(b)); }
+inline JPetEventType operator~(JPetEventType a) { return static_cast<JPetEventType>(~static_cast<int>(a)); }
+
 #endif /* !JPETEVENTTYPE_H */
