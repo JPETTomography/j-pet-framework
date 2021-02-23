@@ -14,6 +14,7 @@
  */
 
 #include "JPetTaskFactory/JPetTaskFactory.h"
+#include "JPetGateParser/JPetGateParser.h"
 #include "JPetGeantParser/JPetGeantParser.h"
 #include "JPetOptionsTools/JPetOptionsTools.h"
 #include "JPetParamBankHandlerTask/JPetParamBankHandlerTask.h"
@@ -138,6 +139,12 @@ void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options
     if (fileType == file_type_checker::kMCGeant)
     {
       auto mcInfo = TaskInfo("JPetGeantParser", "mcGeant", "hits", 1);
+      addTaskToChain(generatorsMap, mcInfo, outChain);
+    }
+
+    // Create Geant Parser task if indicated by filetype
+    if (fileType == file_type_checker::kMCGate) {
+      auto mcInfo = TaskInfo("JPetGateParser", "mcGate", "hits", 1);
       addTaskToChain(generatorsMap, mcInfo, outChain);
     }
 

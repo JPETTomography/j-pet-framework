@@ -58,6 +58,7 @@
 #pragma link C++ class JPetLayer + ;
 #pragma link C++ class JPetGeantEventInformation + ;
 #pragma link C++ class JPetMCHit + ;
+#pragma link C++ class GateHit + ;
 
 #pragma link C++ enum JPetBaseSignal::RecoFlag;
 #pragma link C++ enum JPetSigCh::RecoFlag;

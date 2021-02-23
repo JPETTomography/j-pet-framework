@@ -199,7 +199,8 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
   auto options = fParams.getOptions();
 
   if (file_type_checker::getInputFileType(options) == file_type_checker::kHldRoot ||
-      file_type_checker::getInputFileType(options) == file_type_checker::kMCGeant)
+      file_type_checker::getInputFileType(options) == file_type_checker::kMCGeant ||
+      file_type_checker::getInputFileType(options) == file_type_checker::kMCGate)
   {
 
     fHeader = new JPetTreeHeader(getRunNumber(options));
