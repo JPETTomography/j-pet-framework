@@ -146,6 +146,7 @@ set(FOLDERS_WITH_SOURCE
   ParametersTools
   MC
   GeantParser
+  GateParser
   )
 
 ## Point sources
@@ -194,6 +195,7 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/GeantParser/JPetGeantParser/JPetGeantParserTools.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/GeantParser/JPetGeantScinHits/JPetGeantScinHits.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/GeantParser/JPetSmearingFunctions/JPetSmearingFunctions.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/GateParser/JPetGateParser/JPetGateParser.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetMCDecayTree/JPetMCDecayTree.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetMCHit/JPetMCHit.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetTimeWindowMC/JPetTimeWindowMC.cpp
@@ -282,6 +284,7 @@ set(HEADERS_WITH_DICTIONARY_REQUIRED
   JPetGeantDecayTree/JPetGeantDecayTree.h
   JPetGeantEventPack/JPetGeantEventPack.h
   JPetGeantEventInformation/JPetGeantEventInformation.h
+  GateHit/GateHit.h
   )
 
 set(LINKDEF_NAME JPetFramework_LinkDef.h)
