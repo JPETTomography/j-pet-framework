@@ -101,63 +101,6 @@ bool JPetGateTransformer::transformTree(const std::string& inFile, const std::st
   return true;
 }
 
-//
-// bool JPetGateTransformer::read()
-//{
-// if (entry_index < entries)
-// p_tree->GetEntry(entry_index);
-// else
-// return false;
-//++entry_index;
-// return true;
-//}
-
-// GateHit* JPetGateTransformer::get()
-//{
-// bool is_ok = parent_id == 0;
-// is_ok = is_ok && pdg == 22;
-// is_ok = is_ok && std::string(process_name) == "compt";
-// if (!is_ok)
-// return nullptr;
-//++counter;
-// gate_hit.track_id = track_id;
-// gate_hit.event_id = event_id;
-// gate_hit.edep = edep;
-// gate_hit.time = time;
-// gate_hit.posx = posx / 10.0; // mm --> cm
-// gate_hit.posy = posy / 10.0;
-// gate_hit.posz = posz / 10.0;
-// gate_hit.sourcex = sourcex;
-// gate_hit.sourcey = sourcey;
-// gate_hit.sourcez = sourcez;
-// gate_hit.sci_id = get_scintillator_id();
-// return &gate_hit;
-//}
-
-// void JPetGateTransformer::close()
-//{
-// p_file->Close();
-// delete p_file;
-// std::cout << counter << std::endl;
-//}
-
-// void JPetGateTransformer::set_geometry(DetectorGeometry dg) { detector_geometry = dg; }
-
-// int JPetGateTransformer::get_scintillator_id()
-//{
-// switch (detector_geometry)
-//{
-// case DetectorGeometry::kThreeLayers:
-// return 1 + volID[1];
-// case DetectorGeometry::kTwentyFourModules:
-// return 201 + volID[1] * 13 + volID[2];
-// default:
-// return 0;
-//};
-//}
-
-// void JPetGateTransformer::set_input_file_path(std::string path) { input_file_path = path; }
-
 void JPetGateTreeWriter::init()
 {
   p_file = new TFile(output_file_path.c_str() /*"data.mcGate.root"*/, "RECREATE");
@@ -243,7 +186,7 @@ GateHit* JPetGateTreeReader::get()
   gate_hit.sourcex = sourcex;
   gate_hit.sourcey = sourcey;
   gate_hit.sourcez = sourcez;
-  gate_hit.sci_id = get_scintillator_id();
+  gate_hit.sci_id = getScintillatorId(volID[1], volID[2]);
   return &gate_hit;
 }
 
@@ -256,14 +199,14 @@ void JPetGateTreeReader::close()
 
 void JPetGateTreeReader::set_geometry(DetectorGeometry dg) { detector_geometry = dg; }
 
-int JPetGateTreeReader::get_scintillator_id()
+int JPetGateTreeReader::getScintillatorId(int volID1, int volID2) const
 {
   switch (detector_geometry)
   {
   case DetectorGeometry::ThreeLayers:
-    return 1 + volID[1];
+    return 1 + volID1;
   case DetectorGeometry::TwentyFourModules:
-    return 201 + volID[1] * 13 + volID[2];
+    return 201 + volID1 * 13 + volID2;
   default:
     return 0;
   };

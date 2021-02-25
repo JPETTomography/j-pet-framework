@@ -52,7 +52,7 @@ public:
   void close();
 
   void set_geometry(DetectorGeometry dg);
-  int get_scintillator_id();
+  int getScintillatorId(int volID1, int volID2) const;
   void set_input_file_path(std::string path);
 
   std::string input_file_path = "";
