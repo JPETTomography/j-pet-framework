@@ -42,22 +42,21 @@ public:
     TwentyFourModules = 2
   };
 
-  JPetGateTreeReader() {}
-  void init();
+  JPetGateTreeReader(const std::string& inFile, DetectorGeometry geom);
+
   bool read();
   GateHit* get();
   void close();
 
-  void set_geometry(DetectorGeometry dg);
   int getScintillatorId(int volID1, int volID2) const;
-  void set_input_file_path(std::string path);
 
-  std::string input_file_path = "";
-  TFile* p_file = nullptr;
-  TTree* p_tree = nullptr;
+  std::string fInputFileName;
+  TFile* fFile = nullptr;
+  TTree* fTree = nullptr;
+
   int entries = 0;
   int entry_index = 0;
-  DetectorGeometry detector_geometry = DetectorGeometry::Unknown;
+  DetectorGeometry fDetectorGeometry = DetectorGeometry::Unknown;
 
   GateHit gate_hit;
   // Zmienne branchów

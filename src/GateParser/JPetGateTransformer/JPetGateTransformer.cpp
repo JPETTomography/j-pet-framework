@@ -65,10 +65,7 @@ bool JPetGateTransformer::terminate(JPetParams& outParams)
 bool JPetGateTransformer::transformTree(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom)
 {
   JPetGateTreeWriter w(outFile);
-  JPetGateTreeReader r;
-  r.set_geometry(geom);
-  r.set_input_file_path(inFile);
-  r.init();
+  JPetGateTreeReader r(inFile, geom);
   while (r.read())
   {
     GateHit* p_gh = r.get();
@@ -99,33 +96,32 @@ void JPetGateTreeWriter::close()
   fFile->Close();
 }
 
-void JPetGateTreeReader::init()
+JPetGateTreeReader::JPetGateTreeReader(const std::string& inFile, JPetGateTreeReader::DetectorGeometry geom)
+    : fInputFileName(inFile), fDetectorGeometry(geom)
 {
-
-  p_file = new TFile(input_file_path.c_str(), "READ");
-  p_tree = dynamic_cast<TTree*>(p_file->Get("Hits"));
-  entries = p_tree->GetEntries();
-
-  p_tree->SetBranchAddress("PDGEncoding", &pdg, &b_pdg);
-  p_tree->SetBranchAddress("trackID", &track_id, &b_track_id);
-  p_tree->SetBranchAddress("parentID", &parent_id, &b_parent_id);
-  p_tree->SetBranchAddress("time", &time, &b_time);
-  p_tree->SetBranchAddress("eventID", &event_id, &b_event_id);
-  p_tree->SetBranchAddress("posX", &posx, &b_posx);
-  p_tree->SetBranchAddress("posY", &posy, &b_posy);
-  p_tree->SetBranchAddress("posZ", &posz, &b_posz);
-  p_tree->SetBranchAddress("edep", &edep, &b_edep);
-  p_tree->SetBranchAddress("processName", process_name, &b_process_name);
-  p_tree->SetBranchAddress("sourcePosX", &sourcex, &b_sourcex);
-  p_tree->SetBranchAddress("sourcePosY", &sourcey, &b_sourcey);
-  p_tree->SetBranchAddress("sourcePosZ", &sourcez, &b_sourcez);
-  p_tree->SetBranchAddress("volumeID", &volID, &b_volID);
+  fFile = new TFile(fInputFileName.c_str(), "READ");
+  fTree = dynamic_cast<TTree*>(fFile->Get("Hits"));
+  entries = fTree->GetEntries();
+  fTree->SetBranchAddress("PDGEncoding", &pdg, &b_pdg);
+  fTree->SetBranchAddress("trackID", &track_id, &b_track_id);
+  fTree->SetBranchAddress("parentID", &parent_id, &b_parent_id);
+  fTree->SetBranchAddress("time", &time, &b_time);
+  fTree->SetBranchAddress("eventID", &event_id, &b_event_id);
+  fTree->SetBranchAddress("posX", &posx, &b_posx);
+  fTree->SetBranchAddress("posY", &posy, &b_posy);
+  fTree->SetBranchAddress("posZ", &posz, &b_posz);
+  fTree->SetBranchAddress("edep", &edep, &b_edep);
+  fTree->SetBranchAddress("processName", process_name, &b_process_name);
+  fTree->SetBranchAddress("sourcePosX", &sourcex, &b_sourcex);
+  fTree->SetBranchAddress("sourcePosY", &sourcey, &b_sourcey);
+  fTree->SetBranchAddress("sourcePosZ", &sourcez, &b_sourcez);
+  fTree->SetBranchAddress("volumeID", &volID, &b_volID);
 }
 
 bool JPetGateTreeReader::read()
 {
   if (entry_index < entries)
-    p_tree->GetEntry(entry_index);
+    fTree->GetEntry(entry_index);
   else
     return false;
   ++entry_index;
@@ -156,16 +152,15 @@ GateHit* JPetGateTreeReader::get()
 
 void JPetGateTreeReader::close()
 {
-  p_file->Close();
-  delete p_file;
+  fFile->Close();
+  delete fFile;
   std::cout << counter << std::endl;
 }
 
-void JPetGateTreeReader::set_geometry(DetectorGeometry dg) { detector_geometry = dg; }
 
 int JPetGateTreeReader::getScintillatorId(int volID1, int volID2) const
 {
-  switch (detector_geometry)
+  switch (fDetectorGeometry)
   {
   case DetectorGeometry::ThreeLayers:
     return 1 + volID1;
@@ -175,5 +170,3 @@ int JPetGateTreeReader::getScintillatorId(int volID1, int volID2) const
     return 0;
   };
 }
-
-void JPetGateTreeReader::set_input_file_path(std::string path) { input_file_path = path; }
