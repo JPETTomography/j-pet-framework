@@ -24,25 +24,6 @@ bool JPetGateTransformer::init(const JPetParams& inParams)
   INFO("GateTransformer started.");
   fOptions = inParams.getOptions();
 
-  // p_file = new TFile(input_file_path.c_str(), "READ");
-  // p_tree = dynamic_cast<TTree*>(p_file->Get("Hits"));
-  // entries = p_tree->GetEntries();
-
-  // p_tree->SetBranchAddress("PDGEncoding", &pdg, &b_pdg);
-  // p_tree->SetBranchAddress("trackID", &track_id, &b_track_id);
-  // p_tree->SetBranchAddress("parentID", &parent_id, &b_parent_id);
-  // p_tree->SetBranchAddress("time", &time, &b_time);
-  // p_tree->SetBranchAddress("eventID", &event_id, &b_event_id);
-  // p_tree->SetBranchAddress("posX", &posx, &b_posx);
-  // p_tree->SetBranchAddress("posY", &posy, &b_posy);
-  // p_tree->SetBranchAddress("posZ", &posz, &b_posz);
-  // p_tree->SetBranchAddress("edep", &edep, &b_edep);
-  // p_tree->SetBranchAddress("processName", process_name, &b_process_name);
-  // p_tree->SetBranchAddress("sourcePosX", &sourcex, &b_sourcex);
-  // p_tree->SetBranchAddress("sourcePosY", &sourcey, &b_sourcey);
-  // p_tree->SetBranchAddress("sourcePosZ", &sourcez, &b_sourcez);
-  // p_tree->SetBranchAddress("volumeID", &volID, &b_volID);
-
   return true;
 }
 
@@ -83,9 +64,7 @@ bool JPetGateTransformer::terminate(JPetParams& outParams)
 
 bool JPetGateTransformer::transformTree(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom)
 {
-  JPetGateTreeWriter w;
-  w.set_output_file_path(outFile);
-  w.init();
+  JPetGateTreeWriter w(outFile);
   JPetGateTreeReader r;
   r.set_geometry(geom);
   r.set_input_file_path(inFile);
@@ -101,39 +80,24 @@ bool JPetGateTransformer::transformTree(const std::string& inFile, const std::st
   return true;
 }
 
-void JPetGateTreeWriter::init()
+JPetGateTreeWriter::JPetGateTreeWriter(const std::string& outFileName) : fOutputFileName(outFileName)
 {
-  p_file = new TFile(output_file_path.c_str() /*"data.mcGate.root"*/, "RECREATE");
-  p_tree = new TTree("T", "T");
-  p_gate_hit = new GateHit();
-  p_tree->Branch("GHit", &p_gate_hit);
+  fFile = new TFile(fOutputFileName.c_str() /*"data.mcGate.root"*/, "RECREATE");
+  fTree = new TTree("T", "T");
+  fTree->Branch("GHit", &fGateHit);
 }
 
 void JPetGateTreeWriter::write(GateHit gh)
 {
-  p_gate_hit->copy(gh);
-  p_tree->Fill();
+  fGateHit->copy(gh);
+  fTree->Fill();
 }
 
 void JPetGateTreeWriter::close()
 {
-  p_file->Write();
-  p_file->Close();
+  fFile->Write();
+  fFile->Close();
 }
-
-void JPetGateTreeWriter::test()
-{
-  init();
-  for (int i = 1; i < 4; ++i)
-  {
-    GateHit gh;
-    gh.event_id = i;
-    write(gh);
-  }
-  close();
-}
-
-void JPetGateTreeWriter::set_output_file_path(std::string path) { output_file_path = path; }
 
 void JPetGateTreeReader::init()
 {

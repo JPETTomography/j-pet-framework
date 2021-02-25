@@ -22,17 +22,14 @@
 class JPetGateTreeWriter
 {
 public:
-  JPetGateTreeWriter() {}
-  void init();
+  JPetGateTreeWriter(const std::string& outFileName);
   void write(GateHit gh);
   void close();
-  void test();
-  void set_output_file_path(std::string path);
 
-  std::string output_file_path = "";
-  TFile* p_file = nullptr;
-  TTree* p_tree = nullptr;
-  GateHit* p_gate_hit = nullptr;
+  std::string fOutputFileName;
+  TFile* fFile = nullptr;
+  TTree* fTree = nullptr;
+  GateHit* fGateHit = nullptr;
 };
 
 class JPetGateTreeReader
