@@ -216,7 +216,6 @@ void JPetGateParser::processGateHit(GateHit* gate_hit)
 
   JPetHit hit;
 
-  std::string s = std::to_string(gate_hit->sci_id);
   JPetScin& scin = getParamBank().getScintillator(gate_hit->sci_id);
   hit.setScintillator(scin);
   hit.setBarrelSlot(scin.getBarrelSlot());
