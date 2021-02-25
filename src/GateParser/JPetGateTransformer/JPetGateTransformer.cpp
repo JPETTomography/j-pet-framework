@@ -48,25 +48,6 @@ bool JPetGateTransformer::init(const JPetParams& inParams)
 
 bool JPetGateTransformer::run(const JPetDataInterface&)
 {
-  std::string g_output_file_name = "test.out";
-  std::string g_input_file_name = "test.root";
-  Reader::DetectorGeometry g_detector_geometry = Reader::DetectorGeometry::ThreeLayers;
-
-  Writer w;
-  w.set_output_file_path(g_output_file_name);
-  w.init();
-  Reader r;
-  r.set_geometry(g_detector_geometry);
-  r.set_input_file_path(g_input_file_name);
-  r.init();
-  while (r.read())
-  {
-    GateHit* p_gh = r.get();
-    if (p_gh != nullptr)
-      w.write(*p_gh);
-  }
-  r.close();
-  w.close();
   // auto inputFileWithPath = getInputFile(fOptions);
   // auto outputPath = getOutputPath(fOptions);
   // if(outputPath == "") { outputPath = "./"; }
@@ -100,6 +81,27 @@ bool JPetGateTransformer::terminate(JPetParams& outParams)
   return true;
 }
 
+bool JPetGateTransformer::transformTree(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom)
+{
+  JPetGateTreeWriter w;
+  w.set_output_file_path(outFile);
+  w.init();
+  JPetGateTreeReader r;
+  r.set_geometry(geom);
+  r.set_input_file_path(inFile);
+  r.init();
+  while (r.read())
+  {
+    GateHit* p_gh = r.get();
+    if (p_gh != nullptr)
+      w.write(*p_gh);
+  }
+  r.close();
+  w.close();
+  return true;
+}
+
+//
 // bool JPetGateTransformer::read()
 //{
 // if (entry_index < entries)
@@ -156,7 +158,7 @@ bool JPetGateTransformer::terminate(JPetParams& outParams)
 
 // void JPetGateTransformer::set_input_file_path(std::string path) { input_file_path = path; }
 
-void Writer::init()
+void JPetGateTreeWriter::init()
 {
   p_file = new TFile(output_file_path.c_str() /*"data.mcGate.root"*/, "RECREATE");
   p_tree = new TTree("T", "T");
@@ -164,19 +166,19 @@ void Writer::init()
   p_tree->Branch("GHit", &p_gate_hit);
 }
 
-void Writer::write(GateHit gh)
+void JPetGateTreeWriter::write(GateHit gh)
 {
   p_gate_hit->copy(gh);
   p_tree->Fill();
 }
 
-void Writer::close()
+void JPetGateTreeWriter::close()
 {
   p_file->Write();
   p_file->Close();
 }
 
-void Writer::test()
+void JPetGateTreeWriter::test()
 {
   init();
   for (int i = 1; i < 4; ++i)
@@ -188,9 +190,9 @@ void Writer::test()
   close();
 }
 
-void Writer::set_output_file_path(std::string path) { output_file_path = path; }
+void JPetGateTreeWriter::set_output_file_path(std::string path) { output_file_path = path; }
 
-void Reader::init()
+void JPetGateTreeReader::init()
 {
 
   p_file = new TFile(input_file_path.c_str(), "READ");
@@ -213,7 +215,7 @@ void Reader::init()
   p_tree->SetBranchAddress("volumeID", &volID, &b_volID);
 }
 
-bool Reader::read()
+bool JPetGateTreeReader::read()
 {
   if (entry_index < entries)
     p_tree->GetEntry(entry_index);
@@ -223,7 +225,7 @@ bool Reader::read()
   return true;
 }
 
-GateHit* Reader::get()
+GateHit* JPetGateTreeReader::get()
 {
   bool is_ok = parent_id == 0;
   is_ok = is_ok && pdg == 22;
@@ -245,16 +247,16 @@ GateHit* Reader::get()
   return &gate_hit;
 }
 
-void Reader::close()
+void JPetGateTreeReader::close()
 {
   p_file->Close();
   delete p_file;
   std::cout << counter << std::endl;
 }
 
-void Reader::set_geometry(DetectorGeometry dg) { detector_geometry = dg; }
+void JPetGateTreeReader::set_geometry(DetectorGeometry dg) { detector_geometry = dg; }
 
-int Reader::get_scintillator_id()
+int JPetGateTreeReader::get_scintillator_id()
 {
   switch (detector_geometry)
   {
@@ -267,4 +269,4 @@ int Reader::get_scintillator_id()
   };
 }
 
-void Reader::set_input_file_path(std::string path) { input_file_path = path; }
+void JPetGateTreeReader::set_input_file_path(std::string path) { input_file_path = path; }

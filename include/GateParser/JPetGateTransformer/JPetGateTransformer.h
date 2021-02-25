@@ -19,10 +19,10 @@
 #include "JPetTask/JPetTask.h"
 #include <GateHit/GateHit.h>
 
-class Writer
+class JPetGateTreeWriter
 {
 public:
-  Writer() {}
+  JPetGateTreeWriter() {}
   void init();
   void write(GateHit gh);
   void close();
@@ -35,7 +35,7 @@ public:
   GateHit* p_gate_hit = nullptr;
 };
 
-class Reader
+class JPetGateTreeReader
 {
 public:
   enum class DetectorGeometry
@@ -45,7 +45,7 @@ public:
     TwentyFourModules = 2
   };
 
-  Reader() {}
+  JPetGateTreeReader() {}
   void init();
   bool read();
   GateHit* get();
@@ -107,79 +107,20 @@ public:
 class JPetGateTransformer : public JPetTask
 {
 public:
+  using OptsStrAny = std::map<std::string, boost::any>;
   enum class DetectorGeometry
   {
     kUnknown = 0,
     kThreeLayers = 1,
     kTwentyFourModules = 2
   };
-  using OptsStrAny = std::map<std::string, boost::any>;
+  static bool transformTree(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom);
   explicit JPetGateTransformer(const char* name = "");
   bool init(const JPetParams& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParams& outOptions) override;
 
-private:
-  ////void init();
-  // bool read();
-  // GateHit* get();
-  // void close();
-
-  // void set_geometry(DetectorGeometry dg);
-  // int get_scintillator_id();
-  // void set_input_file_path(std::string path);
-
-  // std::string input_file_path = "";
-  // TFile* p_file = nullptr;
-  // TTree* p_tree = nullptr;
-  // int entries = 0;
-  // int entry_index = 0;
-  // DetectorGeometry detector_geometry = DetectorGeometry::kUnknown;
-
-  // GateHit gate_hit;
-
-  //// Zmienne branchów
-  // int event_id = -1;
-  // int track_id = -1;
-  // int parent_id = -1;
-  // int pdg = 0;
-  // int volID[10];
-
-  // float edep = 0.0;
-  // double time = 0.0;
-  // float posx = 0.0;
-  // float posy = 0.0;
-  // float posz = 0.0;
-  // float sourcex = 0.0;
-  // float sourcey = 0.0;
-  // float sourcez = 0.0;
-
-  // Char_t process_name[20];
-
-  // int level1ID = 0;
-  // int baseID = 0;
-
-  // unsigned int counter = 0;
-
-  //// Branche
-  // TBranch* b_event_id = nullptr;
-  // TBranch* b_track_id = nullptr;
-  // TBranch* b_parent_id = nullptr;
-  // TBranch* b_pdg = nullptr;
-
-  // TBranch* b_edep = nullptr;
-  // TBranch* b_time = nullptr;
-  // TBranch* b_posx = nullptr;
-  // TBranch* b_posy = nullptr;
-  // TBranch* b_posz = nullptr;
-  // TBranch* b_sourcex = nullptr;
-  // TBranch* b_sourcey = nullptr;
-  // TBranch* b_sourcez = nullptr;
-  // TBranch* b_process_name = nullptr;
-  // TBranch* b_volID = nullptr;
-
 protected:
   OptsStrAny fOptions;
 };
-
 #endif /*  !JPETGATETRANSFORMER_H */
