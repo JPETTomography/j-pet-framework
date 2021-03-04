@@ -65,7 +65,8 @@ public:
   const JPetMatrixSignal& getSignalA() const;
   const JPetMatrixSignal& getSignalB() const;
   const JPetScin& getScin() const;
-
+  unsigned int getMCindex() const;
+  
   void setRecoFlag(JPetHit::RecoFlag flag);
   void setEnergy(float energy);
   void setQualityOfEnergy(float qualityOfEnergy);
@@ -81,12 +82,15 @@ public:
   void setSignalA(const JPetMatrixSignal& sig);
   void setSignalB(const JPetMatrixSignal& sig);
   void setScin(JPetScin& scin);
-
+  void setMCindex(unsigned int i);
+  
   bool isSignalASet()const;
   bool isSignalBSet()const;
   bool checkConsistency() const;
   void Clear(Option_t* opt  = "");
 
+ static const unsigned int kMCindexError = 888888;
+  
 private:
   RecoFlag fFlag = JPetHit::Unknown;
   float fEnergy = 0.0f;
@@ -101,7 +105,8 @@ private:
   JPetMatrixSignal fSignalA;
   JPetMatrixSignal fSignalB;
   TRef fScin = NULL;
-
+  unsigned int fMCindex = kMCindexError;
+  
   ClassDef(JPetHit, 12);
 };
 
