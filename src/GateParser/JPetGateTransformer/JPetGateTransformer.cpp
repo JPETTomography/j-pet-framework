@@ -29,15 +29,82 @@ bool JPetGateTransformer::init(const JPetParams& inParams)
 
 bool JPetGateTransformer::run(const JPetDataInterface&)
 {
-  // auto inputFileWithPath = getInputFile(fOptions);
-  // auto outputPath = getOutputPath(fOptions);
-  // if(outputPath == "") { outputPath = "./"; }
-  // INFO(Form("Unzipping file: %s into %s", inputFileWithPath.c_str(), outputPath.c_str()));
-  // if (!unzipFile(inputFileWithPath, outputPath)) {
-  // ERROR(Form("Problem with unzipping file: %s", inputFileWithPath.c_str()));
+  auto inFile = getInputFile(fOptions);
+  JPetGateTreeReader::DetectorGeometry geom = JPetGateTreeReader::DetectorGeometry::ThreeLayers;
+  auto outputPath = getOutputPath(fOptions);
+  if (outputPath == "")
+  {
+    outputPath = "./";
+  }
+
+  return transformTree(inFile, outputPath, geom);
+}
+
+void JPetGateTransformer::clearTimeDistoOfDecays()
+{
+  // fCurrentIndexTimeShift = 0;
+  // fTimeDiffDistro.clear();
+  // fTimeDistroOfDecays.clear();
+}
+
+void JPetGateTransformer::saveHits()
+{
+  // INFO("[#]  JPetGateParser::saveHits");
+  // for (const auto& hit : fStoredHits)
+  //{
+  // fOutputEvents->add<JPetHit>(hit);
+  //}
+
+  // fStoredHits.clear();
+}
+
+bool JPetGateTransformer::isTimeWindowFull() const
+{
+  // if (fCurrentIndexTimeShift >= getNumberOfDecaysInWindow())
+  //{
+  // return true;
+  //}
+  // else
+  //{
   // return false;
   //}
   return true;
+}
+
+void JPetGateTransformer::processGateHit(GateHit* gate_hit)
+{
+  // if (fLastEventID != gate_hit->event_id)
+  //{
+  // fTimeShift = getNextTimeShift();
+  // fLastEventID = gate_hit->event_id;
+  //}
+
+  // JPetHit hit;
+
+  // JPetScin& scin = getParamBank().getScintillator(gate_hit->sci_id);
+  // hit.setScintillator(scin);
+  // hit.setBarrelSlot(scin.getBarrelSlot());
+
+  ///// Nonsmeared values
+  // auto scinID = gate_hit->sci_id;
+  // auto posZ = gate_hit->posz;
+  // auto energy = gate_hit->edep * 1000.0;
+  // auto time = gate_hit->time * 1e6 + fTimeShift;
+
+  ///// Smeared values
+  // hit.setEnergy(fExperimentalParametrizer.addEnergySmearing(scinID, posZ, energy, time));
+  //// adjust to time window and smear
+  // hit.setTime(fExperimentalParametrizer.addTimeSmearing(scinID, posZ, energy, time));
+  // auto radius = getParamBank().getScintillator(scinID).getBarrelSlot().getLayer().getRadius();
+  // auto theta = TMath::DegToRad() * getParamBank().getScintillator(hit.getScintillator().getID()).getBarrelSlot().getTheta();
+  // hit.setPosX(radius * std::cos(theta));
+  // hit.setPosY(radius * std::sin(theta));
+  // hit.setPosZ(fExperimentalParametrizer.addZHitSmearing(scinID, posZ, energy, time));
+
+  // if (JPetGeantParserTools::isHitReconstructed(hit, fExperimentalThreshold))
+  //{
+  // saveReconstructedHit(hit);
+  //}
 }
 
 bool JPetGateTransformer::terminate(JPetParams& outParams)
@@ -74,6 +141,39 @@ bool JPetGateTransformer::transformTree(const std::string& inFile, const std::st
   }
   r.close();
   w.close();
+  return true;
+}
+
+bool JPetGateTransformer::transformTree2(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom)
+{
+
+  // JPetGateTreeWriter w(outFile);
+  JPetGateTreeReader r(inFile, geom);
+  while (r.read())
+  {
+    GateHit* p_gh = r.get();
+    if (!p_gh)
+      continue;
+    processGateHit(p_gh);
+    if (isTimeWindowFull())
+    {
+      saveHits();
+      clearTimeDistoOfDecays();
+      // std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
+    }
+  }
+  r.close();
+  // w.close();
+  // JPetGateTreeWriter w(outFile);
+  // JPetGateTreeReader r(inFile, geom);
+  // while (r.read())
+  //{
+  // GateHit* p_gh = r.get();
+  // if (p_gh != nullptr)
+  // w.write(*p_gh);
+  //}
+  // r.close();
+  // w.close();
   return true;
 }
 

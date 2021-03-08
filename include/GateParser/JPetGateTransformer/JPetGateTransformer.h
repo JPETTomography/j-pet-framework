@@ -59,7 +59,6 @@ public:
   DetectorGeometry fDetectorGeometry = DetectorGeometry::Unknown;
 
   GateHit gate_hit;
-  // Zmienne branchów
   int event_id = -1;
   int track_id = -1;
   int parent_id = -1;
@@ -82,7 +81,6 @@ public:
 
   unsigned int counter = 0;
 
-  // Branche
   TBranch* b_event_id = nullptr;
   TBranch* b_track_id = nullptr;
   TBranch* b_parent_id = nullptr;
@@ -100,6 +98,10 @@ public:
   TBranch* b_volID = nullptr;
 };
 
+/**
+ * @brief Transforming the Gate root file into a file with hits.
+ *
+ */
 class JPetGateTransformer : public JPetTask
 {
 public:
@@ -111,10 +113,16 @@ public:
     kTwentyFourModules = 2
   };
   static bool transformTree(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom);
+  bool transformTree2(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom);
   explicit JPetGateTransformer(const char* name = "");
   bool init(const JPetParams& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParams& outOptions) override;
+
+  void processGateHit(GateHit* gate_hit);
+  bool isTimeWindowFull() const;
+  void saveHits();
+  void clearTimeDistoOfDecays();
 
 protected:
   OptsStrAny fOptions;
