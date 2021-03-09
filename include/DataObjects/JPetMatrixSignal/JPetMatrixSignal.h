@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -24,34 +24,28 @@
  * in a matrix of SiPMs on a one side of a scintillator in a modular layer
  *
  */
-class JPetMatrixSignal: public JPetBaseSignal
+class JPetMatrixSignal : public JPetBaseSignal
 {
 public:
   JPetMatrixSignal();
-  explicit JPetMatrixSignal(float time);
   virtual ~JPetMatrixSignal();
   bool isNullObject() const;
   explicit JPetMatrixSignal(bool isNull);
 
-  float getTime() const;
-  void setTime(float time);
-  float getTOT() const;
   bool addRawSignal(const JPetRawSignal& rawSignal);
   std::map<int, JPetRawSignal> getRawSignals() const;
-  void Clear(Option_t * opt = "");
+  void Clear(Option_t* opt = "");
 
 private:
-  float fTime;
   std::map<int, JPetRawSignal> fRawSignalsMap;
 
 protected:
-  #ifndef __CINT__
+#ifndef __CINT__
   bool fIsNullObject = false;
-  #else
+#else
   bool fIsNullObject;
-  #endif
+#endif
 
-  ClassDef(JPetMatrixSignal, 4);
-
+  ClassDef(JPetMatrixSignal, 5);
 };
 #endif /* !JPETMATRIXSIGNAL_H */

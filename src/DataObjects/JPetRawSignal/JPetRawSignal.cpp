@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -40,9 +40,12 @@ JPetRawSignal::~JPetRawSignal() {}
  */
 int JPetRawSignal::getNumberOfPoints(JPetSigCh::EdgeType edge) const
 {
-  if (edge == JPetSigCh::Trailing) {
+  if (edge == JPetSigCh::Trailing)
+  {
     return fTrailingPoints.size();
-  } else if (edge == JPetSigCh::Leading) {
+  }
+  else if (edge == JPetSigCh::Leading)
+  {
     return fLeadingPoints.size();
   }
   return 0;
@@ -56,9 +59,12 @@ int JPetRawSignal::getNumberOfPoints(JPetSigCh::EdgeType edge) const
  */
 void JPetRawSignal::addPoint(const JPetSigCh& sigch)
 {
-  if (sigch.getType() == JPetSigCh::Trailing) {
+  if (sigch.getType() == JPetSigCh::Trailing)
+  {
     fTrailingPoints.push_back(sigch);
-  } else if (sigch.getType() == JPetSigCh::Leading) {
+  }
+  else if (sigch.getType() == JPetSigCh::Leading)
+  {
     fLeadingPoints.push_back(sigch);
   }
 }
@@ -76,13 +82,15 @@ void JPetRawSignal::addPoint(const JPetSigCh& sigch)
  * @param Edge enum: JPetSigCh::Leading or JPetSigCh::Trailing
  * @param Sort method: JPetRawSignal::byThrValue or JPetRawSignal::byThrNum
  */
-std::vector<JPetSigCh> JPetRawSignal::getPoints(
-    JPetSigCh::EdgeType edge, JPetRawSignal::PointsSortOrder order
-) const {
-  std::vector<JPetSigCh> sorted = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
-  if (order == JPetRawSignal::ByThrNum){
+std::vector<JPetSigCh> JPetRawSignal::getPoints(JPetSigCh::EdgeType edge, JPetRawSignal::PointsSortOrder order) const
+{
+  std::vector<JPetSigCh> sorted = (edge == JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
+  if (order == JPetRawSignal::ByThrNum)
+  {
     std::sort(sorted.begin(), sorted.end(), JPetSigCh::compareByThresholdNumber);
-  } else {
+  }
+  else
+  {
     std::sort(sorted.begin(), sorted.end(), JPetSigCh::compareByThresholdValue);
   }
   return sorted;
@@ -91,16 +99,20 @@ std::vector<JPetSigCh> JPetRawSignal::getPoints(
 /**
  * @brief Get a map with (threshold number, time [ps]) pairs.
  */
-std::map<int, float> JPetRawSignal::getTimesVsThresholdNumber(JPetSigCh::EdgeType edge) const
+std::map<int, double> JPetRawSignal::getTimesVsThresholdNumber(JPetSigCh::EdgeType edge) const
 {
-  std::map<int, float> thrToTime;
-  const std::vector<JPetSigCh> & vec = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
-  for(std::vector<JPetSigCh>::const_iterator it = vec.begin(); it!=vec.end(); ++it) {
-    if (thrToTime.find(it->getChannel().getThresholdNumber()) == thrToTime.end()) {
+  std::map<int, double> thrToTime;
+  const std::vector<JPetSigCh>& vec = (edge == JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
+  for (std::vector<JPetSigCh>::const_iterator it = vec.begin(); it != vec.end(); ++it)
+  {
+    if (thrToTime.find(it->getChannel().getThresholdNumber()) == thrToTime.end())
+    {
       thrToTime[it->getChannel().getThresholdNumber()] = it->getTime();
-    } else {
+    }
+    else
+    {
       WARNING("Doube threshold in edge signal channels, returning empty map.");
-      std::map<int, float> empty;
+      std::map<int, double> empty;
       return empty;
     }
   }
@@ -110,18 +122,20 @@ std::map<int, float> JPetRawSignal::getTimesVsThresholdNumber(JPetSigCh::EdgeTyp
 /**
  * @brief Get a map with (threshold value [mV], time [ps]) pairs.
  */
-std::map<int, std::pair<float, float>> JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const
+std::map<int, std::pair<double, double>> JPetRawSignal::getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const
 {
-  std::map<int, std::pair<float, float>> thrToTime;
-  const std::vector<JPetSigCh> & vec = (edge==JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
-  for(std::vector<JPetSigCh>::const_iterator it = vec.begin(); it!=vec.end(); ++it) {
-    if (thrToTime.find(it->getChannel().getThresholdNumber()) == thrToTime.end()) {
-      thrToTime[it->getChannel().getThresholdNumber()] = std::make_pair(
-        it->getChannel().getThresholdValue(), it->getTime()
-      );
-    } else {
+  std::map<int, std::pair<double, double>> thrToTime;
+  const std::vector<JPetSigCh>& vec = (edge == JPetSigCh::Trailing ? fTrailingPoints : fLeadingPoints);
+  for (std::vector<JPetSigCh>::const_iterator it = vec.begin(); it != vec.end(); ++it)
+  {
+    if (thrToTime.find(it->getChannel().getThresholdNumber()) == thrToTime.end())
+    {
+      thrToTime[it->getChannel().getThresholdNumber()] = std::make_pair(it->getChannel().getThresholdValue(), it->getTime());
+    }
+    else
+    {
       WARNING("Doube threshold in edge signal channels, returning empty map.");
-      std::map<int, std::pair<float, float>> empty;
+      std::map<int, std::pair<double, double>> empty;
       return empty;
     }
   }
@@ -131,12 +145,15 @@ std::map<int, std::pair<float, float>> JPetRawSignal::getTimesVsThresholdValue(J
 /**
  * @brief Get a map with (threshold value [mV], TOT [ps]) pairs.
  */
-std::map<int, float> JPetRawSignal::getTOTsVsThresholdNumber() const
+std::map<int, double> JPetRawSignal::getTOTsVsThresholdNumber() const
 {
-  std::map<int, float> thrToTOT;
-  for(auto leading : fLeadingPoints){
-    for(auto trailing : fTrailingPoints){
-      if(leading.getChannel().getThresholdNumber() == trailing.getChannel().getThresholdNumber()) {
+  std::map<int, double> thrToTOT;
+  for (auto leading : fLeadingPoints)
+  {
+    for (auto trailing : fTrailingPoints)
+    {
+      if (leading.getChannel().getThresholdNumber() == trailing.getChannel().getThresholdNumber())
+      {
         thrToTOT[leading.getChannel().getThresholdNumber()] = trailing.getTime() - leading.getTime();
         break;
       }
@@ -148,12 +165,15 @@ std::map<int, float> JPetRawSignal::getTOTsVsThresholdNumber() const
 /**
  * @brief Get a map with (threshold number, TOT [ps]) pairs.
  */
-std::map<int, float> JPetRawSignal::getTOTsVsThresholdValue() const
+std::map<int, double> JPetRawSignal::getTOTsVsThresholdValue() const
 {
-  std::map<int, float> thrToTOT;
-  for(auto leading : fLeadingPoints){
-    for(auto trailing : fTrailingPoints){
-      if(leading.getChannel().getThresholdValue() == trailing.getChannel().getThresholdValue()) {
+  std::map<int, double> thrToTOT;
+  for (auto leading : fLeadingPoints)
+  {
+    for (auto trailing : fTrailingPoints)
+    {
+      if (leading.getChannel().getThresholdValue() == trailing.getChannel().getThresholdValue())
+      {
         thrToTOT[leading.getChannel().getThresholdValue()] = trailing.getTime() - leading.getTime();
         break;
       }
@@ -162,7 +182,7 @@ std::map<int, float> JPetRawSignal::getTOTsVsThresholdValue() const
   return thrToTOT;
 }
 
-void JPetRawSignal::Clear(Option_t *)
+void JPetRawSignal::Clear(Option_t*)
 {
   fLeadingPoints.clear();
   fTrailingPoints.clear();

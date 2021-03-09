@@ -18,70 +18,41 @@
 
 ClassImp(JPetMatrixSignal);
 
-JPetMatrixSignal::JPetMatrixSignal(): fTime(0) {}
-
-JPetMatrixSignal::JPetMatrixSignal(float time): fTime(time) {}
+JPetMatrixSignal::JPetMatrixSignal() {}
 
 JPetMatrixSignal::~JPetMatrixSignal() {}
 
 /**
  * Constructor with is null setting
  */
-JPetMatrixSignal::JPetMatrixSignal(bool isNull): fIsNullObject(isNull) {}
+JPetMatrixSignal::JPetMatrixSignal(bool isNull) : fIsNullObject(isNull) {}
 
-bool JPetMatrixSignal::isNullObject() const
-{
-  return fIsNullObject;
-}
-
-float JPetMatrixSignal::getTime() const
-{
-  return fTime;
-}
-
-void JPetMatrixSignal::setTime(float time)
-{
-  fTime = time;
-}
-
-float JPetMatrixSignal::getTOT() const
-{
-  double tot = 0.0;
-  for(auto element : fRawSignalsMap){
-    auto leads = element.second.getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrValue);
-    auto trails = element.second.getPoints(JPetSigCh::Trailing, JPetRawSignal::ByThrValue);
-    if(leads.size()==trails.size()){
-      for(uint i = 0; i<leads.size(); i++){
-        tot += trails.at(i).getTime()-leads.at(i).getTime();
-      }
-    }
-  }
-  return tot;
-}
+bool JPetMatrixSignal::isNullObject() const { return fIsNullObject; }
 
 bool JPetMatrixSignal::addRawSignal(const JPetRawSignal& rawSignal)
 {
 
   int mtxPos = rawSignal.getPM().getMatrixPosition();
   auto search = fRawSignalsMap.find(mtxPos);
-  if(search == fRawSignalsMap.end()){
+  if (search == fRawSignalsMap.end())
+  {
     fRawSignalsMap[mtxPos] = rawSignal;
     return true;
-  } else {
+  }
+  else
+  {
     // There is already a signal from this SiPM in this matrix, not adding
     return false;
   }
 }
 
-std::map<int, JPetRawSignal> JPetMatrixSignal::getRawSignals() const
-{
-  return fRawSignalsMap;
-}
+std::map<int, JPetRawSignal> JPetMatrixSignal::getRawSignals() const { return fRawSignalsMap; }
 
 /**
  * Clear the signals values (set all to zero/null)
  */
-void JPetMatrixSignal::Clear(Option_t *)
+void JPetMatrixSignal::Clear(Option_t*)
 {
-  fTime = 0.0;
+  fIsNullObject = false;
+  fRawSignalsMap.clear();
 }
