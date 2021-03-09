@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,42 +13,53 @@
  *  @file JPetGeantParserTools.cpp
  */
 
-#include "JPetSmearingFunctions/JPetSmearingFunctions.h"
 #include "JPetGeantParser/JPetGeantParserTools.h"
+#include "JPetSmearingFunctions/JPetSmearingFunctions.h"
+
 #include <TMath.h>
 
 JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank)
 {
-  JPetMCHit mcHit = JPetMCHit(
-    0, 0, geantHit->GetEneDepos(), geantHit->GetTime(),
-    geantHit->GetHitPosition(), geantHit->GetPolarizationIn(), geantHit->GetMomentumIn()
-  );
+  JPetMCHit mcHit = JPetMCHit(0,                       // UInt_t MCDecayTreeIndex,
+                              geantHit->GetEvtID(),    // UInt_t MCVtxIndex,
+                              geantHit->GetEneDepos(), //  keV
+                              geantHit->GetTime(),     //  ps
+                              geantHit->GetHitPosition(), geantHit->GetPolarizationIn(), geantHit->GetMomentumIn());
+
   JPetScin& scin = paramBank.getScin(geantHit->GetScinID());
   mcHit.setScin(scin);
   mcHit.setGenGammaMultiplicity(geantHit->GetGenGammaMultiplicity());
   return mcHit;
 }
 
-JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBank& paramBank, const float timeShift)
+JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBank& paramBank, const float timeShift,
+                                             JPetHitExperimentalParametrizer& parametrizer)
 {
   JPetHit hit = dynamic_cast<JPetHit&>(mcHit);
+  /// Nonsmeared values
   auto scinID = mcHit.getScin().getID();
-  hit.setEnergy(JPetSmearingFunctions::addEnergySmearing(scinID, mcHit.getPosZ(), mcHit.getEnergy()));
+  auto posZ = mcHit.getPosZ();
+  auto energy = mcHit.getEnergy();
+  auto time = mcHit.getTime() + timeShift;
+
+  hit.setEnergy(parametrizer.addEnergySmearing(scinID, posZ, energy, time));
   // adjust to time window and smear
-  hit.setTime(JPetSmearingFunctions::addTimeSmearing(scinID, mcHit.getPosZ(), mcHit.getEnergy(), -(mcHit.getTime() - timeShift) ));
+  hit.setTime(parametrizer.addTimeSmearing(scinID, posZ, energy, time));
+
   hit.setPosX(paramBank.getScin(mcHit.getScin().getID()).getCenterX());
   hit.setPosY(paramBank.getScin(mcHit.getScin().getID()).getCenterY());
-  hit.setPosZ( JPetSmearingFunctions::addZHitSmearing(scinID, hit.getPosZ(), mcHit.getEnergy()) );
+  hit.setPosZ(parametrizer.addZHitSmearing(scinID, posZ, energy, time));
+
   return hit;
 }
 
 bool JPetGeantParserTools::isHitReconstructed(JPetHit& hit, const float th) { return hit.getEnergy() >= th; }
 
-void JPetGeantParserTools::identifyRecoHits(
-  JPetGeantScinHits* geantHit, const JPetHit& recHit, bool& isRecPrompt,
-  std::array<bool, 2>& isSaved2g, std::array<bool, 3>& isSaved3g,
-  float& enePrompt, std::array<float, 2>& ene2g, std::array<float, 3>& ene3g
-) {
+void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit, const JPetHit& recHit, bool& isRecPrompt, std::array<bool, 2>& isSaved2g,
+                                            std::array<bool, 3>& isSaved3g, float& enePrompt, std::array<float, 2>& ene2g,
+                                            std::array<float, 3>& ene3g)
+{
+
   // identify generated hits
   if (geantHit->GetGenGammaMultiplicity() == 1)
   {
@@ -69,21 +80,19 @@ void JPetGeantParserTools::identifyRecoHits(
   }
 }
 
-float JPetGeantParserTools::estimateNextDecayTimeExp(float activityMBq)
-{
-  return gRandom->Exp((pow(10, 6) / activityMBq));
-}
+float JPetGeantParserTools::estimateNextDecayTimeExp(float activityMBq) { return gRandom->Exp((pow(10, 6) / activityMBq)); }
 
-std::tuple<std::vector<float>, std::vector<float>> JPetGeantParserTools::getTimeDistoOfDecays(
-  float activityMBq, float timeWindowMin, float timeWindowMax
-){
+std::tuple<std::vector<float>, std::vector<float>> JPetGeantParserTools::getTimeDistoOfDecays(float activityMBq, float timeWindowMin,
+                                                                                              float timeWindowMax)
+{
   std::vector<float> fTimeDistroOfDecays;
   std::vector<float> fTimeDiffOfDecays;
 
   float timeShift = estimateNextDecayTimeExp(activityMBq);
   float nextTime = timeWindowMin + timeShift;
 
-  while (nextTime < timeWindowMax) {
+  while (nextTime < timeWindowMax)
+  {
     fTimeDistroOfDecays.push_back(nextTime);
     fTimeDiffOfDecays.push_back(timeShift);
     timeShift = estimateNextDecayTimeExp(activityMBq);
@@ -94,11 +103,26 @@ std::tuple<std::vector<float>, std::vector<float>> JPetGeantParserTools::getTime
 
 std::pair<float, float> JPetGeantParserTools::calculateEfficiency(ulong n, ulong k)
 {
-  if (n != 0) {
+  if (n != 0)
+  {
     float effi = float(k) / float(n);
     float err_effi = sqrt(float(k) * (1. - effi)) / float(n);
     return std::make_pair(effi, err_effi);
-  } else {
+  }
+  else
+  {
     return std::make_pair(0, 0);
+  }
+}
+
+void JPetGeantParserTools::setSeedTogRandom(unsigned long seed)
+{
+  if (!gRandom)
+  {
+    ERROR("gRandom is not set and we cannot set the seed");
+  }
+  else
+  {
+    gRandom->SetSeed(seed);
   }
 }

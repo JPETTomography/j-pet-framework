@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,23 +16,24 @@
 #ifndef JPETGEANTPARSERTOOLS_H
 #define JPETGEANTPARSERTOOLS_H
 
+#include "JPetParamBank/JPetParamBank.h"
+#include "JPetSmearingFunctions/JPetSmearingFunctions.h"
 #include <JPetGeantEventPack/JPetGeantEventPack.h>
 #include <JPetGeantScinHits/JPetGeantScinHits.h>
-#include <JPetMCDecayTree/JPetMCDecayTree.h>
-#include <JPetParamBank/JPetParamBank.h>
-#include <JPetMCHit/JPetMCHit.h>
 #include <JPetHit/JPetHit.h>
+#include <JPetMCDecayTree/JPetMCDecayTree.h>
+#include <JPetMCHit/JPetMCHit.h>
 #include <TRandom3.h>
-#include <functional>
 #include <array>
+#include <functional>
+#include <map>
 #include <tuple>
 #include <vector>
-#include <map>
 
 #ifdef __CINT__
-//when cint is used instead of compiler, override word is not recognized
-//nevertheless it's needed for checking if the structure of project is correct
-#   define override
+// when cint is used instead of compiler, override word is not recognized
+// nevertheless it's needed for checking if the structure of project is correct
+#define override
 #endif
 
 class JPetGeantParserTools
@@ -40,20 +41,18 @@ class JPetGeantParserTools
 public:
   static JPetMCHit createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank);
 
-  static JPetHit reconstructHit(JPetMCHit& hit, const JPetParamBank& paramBank, const float timeShift);
+  static JPetHit reconstructHit(JPetMCHit& hit, const JPetParamBank& paramBank, const float timeShift, JPetHitExperimentalParametrizer& parametrizer);
 
   static bool isHitReconstructed(JPetHit& hit, const float th);
 
-  static void identifyRecoHits(JPetGeantScinHits* geantHit, const JPetHit& hit,
-                               bool& isRecPrompt, std::array<bool, 2>& isSaved2g,
-                               std::array<bool, 3>& isSaved3g,
-                               float& enePrompt, std::array<float, 2>& ene2g,
-                               std::array<float, 3>& ene3g );
+  static void identifyRecoHits(JPetGeantScinHits* geantHit, const JPetHit& hit, bool& isRecPrompt, std::array<bool, 2>& isSaved2g,
+                               std::array<bool, 3>& isSaved3g, float& enePrompt, std::array<float, 2>& ene2g, std::array<float, 3>& ene3g);
 
   static float estimateNextDecayTimeExp(float activityMBq);
-  static std::tuple<std::vector<float>,std::vector<float>> getTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax);
+  static std::tuple<std::vector<float>, std::vector<float>> getTimeDistoOfDecays(float activityMBq, float timeWindowMin, float timeWindowMax);
   static std::pair<float, float> calculateEfficiency(ulong, ulong);
 
+  static void setSeedTogRandom(unsigned long seed);
 };
 
 #endif
