@@ -15,6 +15,7 @@
 
 #include "JPetOptionsTools/JPetOptionsTools.h"
 #include <JPetGateTransformer/JPetGateTransformer.h>
+#include <JPetGeantParser/JPetGeantParserTools.h>
 using namespace jpet_options_tools;
 
 JPetGateTransformer::JPetGateTransformer(const char* name) : JPetTask(name) {}
@@ -40,72 +41,55 @@ bool JPetGateTransformer::run(const JPetDataInterface&)
   return transformTree(inFile, outputPath, geom);
 }
 
-void JPetGateTransformer::clearTimeDistoOfDecays()
-{
-  // fCurrentIndexTimeShift = 0;
-  // fTimeDiffDistro.clear();
-  // fTimeDistroOfDecays.clear();
-}
 
 void JPetGateTransformer::saveHits()
 {
-  // INFO("[#]  JPetGateParser::saveHits");
-  // for (const auto& hit : fStoredHits)
-  //{
-  // fOutputEvents->add<JPetHit>(hit);
-  //}
+  INFO("[#]  JPetGateParser::saveHits");
+  for (const auto& hit : fStoredHits)
+  {
+    fOutputEvents->add<JPetHit>(hit);
+  }
 
-  // fStoredHits.clear();
-}
-
-bool JPetGateTransformer::isTimeWindowFull() const
-{
-  // if (fCurrentIndexTimeShift >= getNumberOfDecaysInWindow())
-  //{
-  // return true;
-  //}
-  // else
-  //{
-  // return false;
-  //}
-  return true;
+  fStoredHits.clear();
 }
 
 void JPetGateTransformer::processGateHit(GateHit* gate_hit)
 {
-  // if (fLastEventID != gate_hit->event_id)
-  //{
-  // fTimeShift = getNextTimeShift();
-  // fLastEventID = gate_hit->event_id;
-  //}
+  if (fLastEventID != gate_hit->event_id)
+  {
+    fTimeShift = getNextTimeShift();
+    fLastEventID = gate_hit->event_id;
+  }
 
-  // JPetHit hit;
+  JPetHit hit;
 
-  // JPetScin& scin = getParamBank().getScintillator(gate_hit->sci_id);
-  // hit.setScintillator(scin);
-  // hit.setBarrelSlot(scin.getBarrelSlot());
+  JPetScin& scin = getParamBank().getScintillator(gate_hit->sci_id);
+  hit.setScintillator(scin);
+  hit.setBarrelSlot(scin.getBarrelSlot());
 
-  ///// Nonsmeared values
-  // auto scinID = gate_hit->sci_id;
-  // auto posZ = gate_hit->posz;
-  // auto energy = gate_hit->edep * 1000.0;
-  // auto time = gate_hit->time * 1e6 + fTimeShift;
+  /// Nonsmeared values
+  auto scinID = gate_hit->sci_id;
+  auto posZ = gate_hit->posz;
+  auto energy = gate_hit->edep * 1000.0;
+  auto time = gate_hit->time * 1e6 + fTimeShift;
 
-  ///// Smeared values
-  // hit.setEnergy(fExperimentalParametrizer.addEnergySmearing(scinID, posZ, energy, time));
-  //// adjust to time window and smear
-  // hit.setTime(fExperimentalParametrizer.addTimeSmearing(scinID, posZ, energy, time));
-  // auto radius = getParamBank().getScintillator(scinID).getBarrelSlot().getLayer().getRadius();
-  // auto theta = TMath::DegToRad() * getParamBank().getScintillator(hit.getScintillator().getID()).getBarrelSlot().getTheta();
-  // hit.setPosX(radius * std::cos(theta));
-  // hit.setPosY(radius * std::sin(theta));
-  // hit.setPosZ(fExperimentalParametrizer.addZHitSmearing(scinID, posZ, energy, time));
+  /// Smeared values
+  hit.setEnergy(fExperimentalParametrizer.addEnergySmearing(scinID, posZ, energy, time));
+  // adjust to time window and smear
+  hit.setTime(fExperimentalParametrizer.addTimeSmearing(scinID, posZ, energy, time));
+  auto radius = getParamBank().getScintillator(scinID).getBarrelSlot().getLayer().getRadius();
+  auto theta = TMath::DegToRad() * getParamBank().getScintillator(hit.getScintillator().getID()).getBarrelSlot().getTheta();
+  hit.setPosX(radius * std::cos(theta));
+  hit.setPosY(radius * std::sin(theta));
+  hit.setPosZ(fExperimentalParametrizer.addZHitSmearing(scinID, posZ, energy, time));
 
-  // if (JPetGeantParserTools::isHitReconstructed(hit, fExperimentalThreshold))
-  //{
-  // saveReconstructedHit(hit);
-  //}
+  if (JPetGeantParserTools::isHitReconstructed(hit, fExperimentalThreshold))
+  {
+    saveReconstructedHit(hit);
+  }
 }
+
+void JPetGateTransformer::saveReconstructedHit(JPetHit recHit) { fStoredHits.push_back(recHit); }
 
 bool JPetGateTransformer::terminate(JPetParams& outParams)
 {
@@ -269,4 +253,42 @@ int JPetGateTreeReader::getScintillatorId(int volID1, int volID2) const
   default:
     return 0;
   };
+}
+
+unsigned int JPetGateTransformer::getNumberOfDecaysInWindow() const { return fTimeDistroOfDecays.size(); }
+
+float JPetGateTransformer::getNextTimeShift()
+{
+  float t = fTimeDistroOfDecays[fCurrentIndexTimeShift];
+  fCurrentIndexTimeShift++;
+  return t;
+}
+
+void JPetGateTransformer::clearTimeDistoOfDecays()
+{
+  fCurrentIndexTimeShift = 0;
+  fTimeDiffDistro.clear();
+  fTimeDistroOfDecays.clear();
+}
+
+bool JPetGateTransformer::isTimeWindowFull() const
+{
+  if (fCurrentIndexTimeShift >= getNumberOfDecaysInWindow())
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+unsigned long JPetGateTransformer::getOriginalSeed() const { return fSeed; }
+
+const JPetParamBank& JPetGateTransformer::getParamBank()
+{
+  DEBUG("JPetUserTask");
+  auto paramManager = fParams.getParamManager();
+  assert(paramManager);
+  return paramManager->getParamBank();
 }

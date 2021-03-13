@@ -18,6 +18,8 @@
 
 #include "JPetTask/JPetTask.h"
 #include <GateHit/GateHit.h>
+#include <JPetGeomMapping/JPetGeomMapping.h>
+#include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 
 class JPetGateTreeWriter
 {
@@ -119,12 +121,35 @@ public:
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParams& outOptions) override;
 
-  void processGateHit(GateHit* gate_hit);
-  bool isTimeWindowFull() const;
-  void saveHits();
-  void clearTimeDistoOfDecays();
+  unsigned long getOriginalSeed() const;
 
 protected:
   OptsStrAny fOptions;
+  JPetParams fParams;
+
+  std::vector<JPetHit> fStoredHits; ///< save RECONSTRUCTED MC hits into single time window when it contains enough hits
+
+  int fLastEventID = -1;
+  JPetGeomMapping* fDetectorMap = nullptr;
+  double fMaxTime = 0.;
+  double fMinTime = -50.e6;           // electronic time window 50 micro seconds - true for run 3
+  double fSimulatedActivity = 4.7;    // 4.7; //< in MBq; value for run3
+  double fExperimentalThreshold = 10; //< in keV
+  JPetHitExperimentalParametrizer fExperimentalParametrizer;
+  double fTimeShift = fMinTime;
+  unsigned long fSeed = 0.;
+
+  const JPetParamBank& getParamBank(); // from JPetUserTask
+  void processGateHit(GateHit* gate_hit);
+  void saveHits();
+  void saveReconstructedHit(JPetHit recHit);
+  unsigned int getNumberOfDecaysInWindow() const;
+  float getNextTimeShift();
+  void clearTimeDistoOfDecays();
+  bool isTimeWindowFull() const;
+  JPetTimeWindow* fOutputEvents = 0; // from JPetUserTask
+  std::vector<float> fTimeDistroOfDecays = {};
+  std::vector<float> fTimeDiffDistro = {};
+  unsigned int fCurrentIndexTimeShift = 0;
 };
 #endif /*  !JPETGATETRANSFORMER_H */
