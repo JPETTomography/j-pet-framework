@@ -30,25 +30,86 @@
 
 class JPetWriter;
 
-#ifdef __CINT__
-// when cint is used instead of compiler, override word is not recognized
-// nevertheless it's needed for checking if the structure of project is correct
-#define override
-#endif
+class JPetGateTreeReader
+{
+public:
+  enum class DetectorGeometry
+  {
+    Unknown = 0,
+    ThreeLayers = 1,
+    TwentyFourModules = 2
+  };
+
+  JPetGateTreeReader(const std::string& inFile, DetectorGeometry geom);
+
+  bool read();
+  GateHit* get();
+  void close();
+
+  int getScintillatorId(int volID1, int volID2) const;
+
+  std::string fInputFileName;
+  TFile* fFile = nullptr;
+  TTree* fTree = nullptr;
+
+  int entries = 0;
+  int entry_index = 0;
+  DetectorGeometry fDetectorGeometry = DetectorGeometry::Unknown;
+
+  GateHit gate_hit;
+  int event_id = -1;
+  int track_id = -1;
+  int parent_id = -1;
+  int pdg = 0;
+  int volID[10];
+
+  float edep = 0.0;
+  double time = 0.0;
+  float posx = 0.0;
+  float posy = 0.0;
+  float posz = 0.0;
+  float sourcex = 0.0;
+  float sourcey = 0.0;
+  float sourcez = 0.0;
+
+  Char_t process_name[20];
+
+  int level1ID = 0;
+  int baseID = 0;
+
+  unsigned int counter = 0;
+
+  TBranch* b_event_id = nullptr;
+  TBranch* b_track_id = nullptr;
+  TBranch* b_parent_id = nullptr;
+  TBranch* b_pdg = nullptr;
+
+  TBranch* b_edep = nullptr;
+  TBranch* b_time = nullptr;
+  TBranch* b_posx = nullptr;
+  TBranch* b_posy = nullptr;
+  TBranch* b_posz = nullptr;
+  TBranch* b_sourcex = nullptr;
+  TBranch* b_sourcey = nullptr;
+  TBranch* b_sourcez = nullptr;
+  TBranch* b_process_name = nullptr;
+  TBranch* b_volID = nullptr;
+};
 
 /**
  * @brief      Module responsible for creating JPetMCHit from GATE MC simulations
  *
  */
-class JPetGateParser : public JPetUserTask
+class JPetGateParser : public JPetTask
 {
 
 public:
   JPetGateParser(const char* name);
   virtual ~JPetGateParser();
-  virtual bool init() override;
-  virtual bool exec() override;
-  virtual bool terminate() override;
+  bool init(const JPetParams& inOptions) override;
+  bool run(const JPetDataInterface& inData) override;
+  bool terminate(JPetParams& outOptions) override;
+  bool transformTree2(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom);
 
   void saveHits();
   void saveReconstructedHit(JPetHit recHit);
@@ -99,6 +160,14 @@ protected:
   float getNextTimeShift();
   void clearTimeDistoOfDecays();
   bool isTimeWindowFull() const;
+
+  /// from JPetGateTransformer
+
+  using OptsStrAny = std::map<std::string, boost::any>;
+  JPetTimeWindow* fOutputEvents = 0;   // from JPetUserTask
+  const JPetParamBank& getParamBank(); // from JPetUserTask
+  OptsStrAny fOptions;
+  JPetParams fParams;
 };
 
 #endif

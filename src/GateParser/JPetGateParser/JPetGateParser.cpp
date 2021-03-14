@@ -31,17 +31,20 @@
 
 using namespace jpet_options_tools;
 
-JPetGateParser::JPetGateParser(const char* name) : JPetUserTask(name) {}
+JPetGateParser::JPetGateParser(const char* name) : JPetTask(name) {}
 
 JPetGateParser::~JPetGateParser() {}
 
-bool JPetGateParser::init()
+bool JPetGateParser::init(const JPetParams& inParams)
 {
+  INFO("GateTransformer started.");
+  fOptions = inParams.getOptions();
+
   std::unique_ptr<JPetGeomMapping> fDetectorMap(new JPetGeomMapping(getParamBank()));
   fOutputEvents = new JPetTimeWindow("JPetHit");
 
   // Cmds handling
-  auto opts = getOptions();
+  auto opts = fParams.getOptions();
 
   if (isOptionSet(fParams.getOptions(), kMaxTimeWindowParamKey))
   {
@@ -169,27 +172,89 @@ void JPetGateParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
   fExperimentalParametrizer.printAllParameters();
 }
 
-bool JPetGateParser::exec()
+bool JPetGateParser::run(const JPetDataInterface&)
 {
-  if (auto& gate_hit = dynamic_cast<GateHit* const>(fEvent))
+  auto inFile = getInputFile(fOptions);
+  JPetGateTreeReader::DetectorGeometry geom = JPetGateTreeReader::DetectorGeometry::ThreeLayers;
+  auto outputPath = getOutputPath(fOptions);
+  if (outputPath == "")
   {
-    processGateHit(gate_hit);
+    outputPath = "./";
+  }
+
+  return transformTree2(inFile, outputPath, geom);
+}
+
+bool JPetGateParser::transformTree2(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom)
+{
+
+  // JPetGateTreeWriter w(outFile);
+  JPetGateTreeReader r(inFile, geom);
+  while (r.read())
+  {
+    GateHit* p_gh = r.get();
+    if (!p_gh)
+      continue;
+    processGateHit(p_gh);
     if (isTimeWindowFull())
     {
       saveHits();
       clearTimeDistoOfDecays();
-      std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
+      // std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
     }
   }
-  else
-    return false;
+  r.close();
+  // w.close();
+  // JPetGateTreeWriter w(outFile);
+  // JPetGateTreeReader r(inFile, geom);
+  // while (r.read())
+  //{
+  // GateHit* p_gh = r.get();
+  // if (p_gh != nullptr)
+  // w.write(*p_gh);
+  //}
+  // r.close();
+  // w.close();
   return true;
 }
 
-bool JPetGateParser::terminate()
+// bool JPetGateParser::exec()
+//{
+// if (auto& gate_hit = dynamic_cast<GateHit* const>(fEvent))
+//{
+// processGateHit(gate_hit);
+// if (isTimeWindowFull())
+//{
+// saveHits();
+// clearTimeDistoOfDecays();
+// std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
+//}
+//}
+// else
+// return false;
+// return true;
+//}
+
+bool JPetGateParser::terminate(JPetParams& outParams)
 {
   INFO("[#]  JPetGateParser::terminate()");
+  OptsStrAny new_opts;
+  // setOutputFileType(new_opts, "hld");
+  // auto outputFile =
+  // getOutputPath(fOptions)
+  //+ JPetCommonTools::stripFileNameSuffix(getInputFile(fOptions));
+  // setOutputFile(new_opts, outputFile);
 
+  // if (isOptionSet(fOptions, "firstEvent_int") && isOptionSet(fOptions, "lastEvent_int")) {
+  // if (getOptionAsInt(fOptions, "firstEvent_int") != -1 && getOptionAsInt(fOptions, "lastEvent_int") != -1) {
+  // setResetEventRangeOption(new_opts, true);
+  //}
+  //}
+
+  // outParams = JPetParams(new_opts, outParams.getParamManagerAsShared());
+  // INFO(Form(
+  //"GateTransformer finished, unzipped file name: %s", outputFile.c_str()
+  //));
   return true;
 }
 
@@ -271,3 +336,11 @@ bool JPetGateParser::isTimeWindowFull() const
 }
 
 unsigned long JPetGateParser::getOriginalSeed() const { return fSeed; }
+
+const JPetParamBank& JPetGateParser::getParamBank()
+{
+  DEBUG("JPetUserTask");
+  auto paramManager = fParams.getParamManager();
+  assert(paramManager);
+  return paramManager->getParamBank();
+}
