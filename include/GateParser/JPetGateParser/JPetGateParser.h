@@ -109,7 +109,8 @@ public:
   bool init(const JPetParams& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParams& outOptions) override;
-  bool transformTree2(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom);
+  bool transformTree2(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom, double simulatedActivity,
+                      double minTime, double maxTime);
 
   void saveHits();
   void saveReconstructedHit(JPetHit recHit);
@@ -152,8 +153,8 @@ protected:
 
   int fLastEventID = -1;
 
-  std::vector<float> fTimeDistroOfDecays = {};
-  std::vector<float> fTimeDiffDistro = {};
+  std::vector<float> fTimeDistroOfDecays;
+  std::vector<float> fTimeDiffDistro;
   unsigned int fCurrentIndexTimeShift = 0;
 
   unsigned int getNumberOfDecaysInWindow() const;

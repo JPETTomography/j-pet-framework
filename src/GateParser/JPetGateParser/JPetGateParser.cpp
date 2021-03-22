@@ -38,6 +38,7 @@ JPetGateParser::~JPetGateParser() {}
 bool JPetGateParser::init(const JPetParams& inParams)
 {
   INFO("GateTransformer started.");
+  fParams = inParams;
   fOptions = inParams.getOptions();
 
   std::unique_ptr<JPetGeomMapping> fDetectorMap(new JPetGeomMapping(getParamBank()));
@@ -182,11 +183,13 @@ bool JPetGateParser::run(const JPetDataInterface&)
     outputPath = "./";
   }
 
-  return transformTree2(inFile, outputPath, geom);
+  return transformTree2(inFile, outputPath, geom, fSimulatedActivity, fMinTime, fMaxTime);
 }
 
-bool JPetGateParser::transformTree2(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom)
+bool JPetGateParser::transformTree2(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom,
+                                    double simulatedActivity, double minTime, double maxTime)
 {
+  std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(simulatedActivity, minTime, maxTime);
 
   // JPetGateTreeWriter w(outFile);
   JPetGateTreeReader r(inFile, geom);
@@ -200,7 +203,7 @@ bool JPetGateParser::transformTree2(const std::string& inFile, const std::string
     {
       saveHits();
       clearTimeDistoOfDecays();
-      // std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
+      std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(simulatedActivity, minTime, maxTime);
     }
   }
   r.close();
@@ -217,23 +220,6 @@ bool JPetGateParser::transformTree2(const std::string& inFile, const std::string
   // w.close();
   return true;
 }
-
-// bool JPetGateParser::exec()
-//{
-// if (auto& gate_hit = dynamic_cast<GateHit* const>(fEvent))
-//{
-// processGateHit(gate_hit);
-// if (isTimeWindowFull())
-//{
-// saveHits();
-// clearTimeDistoOfDecays();
-// std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
-//}
-//}
-// else
-// return false;
-// return true;
-//}
 
 bool JPetGateParser::terminate(JPetParams& outParams)
 {
@@ -273,6 +259,7 @@ void JPetGateParser::saveReconstructedHit(JPetHit recHit) { fStoredHits.push_bac
 
 void JPetGateParser::processGateHit(GateHit* gate_hit)
 {
+  assert(gate_hit);
   if (fLastEventID != gate_hit->event_id)
   {
     fTimeShift = getNextTimeShift();
@@ -280,7 +267,7 @@ void JPetGateParser::processGateHit(GateHit* gate_hit)
   }
 
   JPetHit hit;
-
+  assert(!getParamBank().isDummy());
   JPetScin& scin = getParamBank().getScintillator(gate_hit->sci_id);
   hit.setScintillator(scin);
   hit.setBarrelSlot(scin.getBarrelSlot());
@@ -311,6 +298,7 @@ unsigned int JPetGateParser::getNumberOfDecaysInWindow() const { return fTimeDis
 
 float JPetGateParser::getNextTimeShift()
 {
+  assert(fTimeDistroOfDecays.size() > fCurrentIndexTimeShift);
   float t = fTimeDistroOfDecays[fCurrentIndexTimeShift];
   fCurrentIndexTimeShift++;
   return t;
