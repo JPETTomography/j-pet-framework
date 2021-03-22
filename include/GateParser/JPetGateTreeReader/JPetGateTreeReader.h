@@ -36,10 +36,10 @@ public:
   };
 
   JPetGateTreeReader(const std::string& inFile, DetectorGeometry geom);
+  ~JPetGateTreeReader();
 
   bool read();
   GateHit* get();
-  void close();
 
   int getScintillatorId(int volID1, int volID2) const;
 

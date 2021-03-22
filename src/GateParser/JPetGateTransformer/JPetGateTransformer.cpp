@@ -41,7 +41,6 @@ bool JPetGateTransformer::run(const JPetDataInterface&)
   return transformTree(inFile, outputPath, geom);
 }
 
-
 void JPetGateTransformer::saveHits()
 {
   INFO("[#]  JPetGateParser::saveHits");
@@ -123,7 +122,6 @@ bool JPetGateTransformer::transformTree(const std::string& inFile, const std::st
     if (p_gh != nullptr)
       w.write(*p_gh);
   }
-  r.close();
   w.close();
   return true;
 }
@@ -146,7 +144,6 @@ bool JPetGateTransformer::transformTree2(const std::string& inFile, const std::s
       // std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(fSimulatedActivity, fMinTime, fMaxTime);
     }
   }
-  r.close();
   // w.close();
   // JPetGateTreeWriter w(outFile);
   // JPetGateTreeReader r(inFile, geom);
@@ -179,7 +176,6 @@ void JPetGateTreeWriter::close()
   fFile->Write();
   fFile->Close();
 }
-
 
 unsigned int JPetGateTransformer::getNumberOfDecaysInWindow() const { return fTimeDistroOfDecays.size(); }
 

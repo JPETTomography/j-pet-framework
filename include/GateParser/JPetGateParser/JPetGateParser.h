@@ -25,8 +25,8 @@
 #include <tuple>
 #include <vector>
 
-#include <JPetGateTreeReader/JPetGateTreeReader.h>
 #include <GateHit/GateHit.h>
+#include <JPetGateTreeReader/JPetGateTreeReader.h>
 #include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 
 /**
@@ -101,7 +101,6 @@ protected:
   using OptsStrAny = std::map<std::string, boost::any>;
   JPetTimeWindow* fOutputEvents = 0;   // from JPetUserTask
   const JPetParamBank& getParamBank(); // from JPetUserTask
-  OptsStrAny fOptions;
   JPetParams fParams;
 };
 

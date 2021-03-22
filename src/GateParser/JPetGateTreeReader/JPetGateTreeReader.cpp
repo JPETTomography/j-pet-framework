@@ -38,6 +38,16 @@ JPetGateTreeReader::JPetGateTreeReader(const std::string& inFile, JPetGateTreeRe
   fTree->SetBranchAddress("volumeID", &volID, &b_volID);
 }
 
+JPetGateTreeReader::~JPetGateTreeReader()
+{
+  if (fFile)
+  {
+    fFile->Close();
+    delete fFile;
+  }
+  std::cout << counter << std::endl;
+}
+
 bool JPetGateTreeReader::read()
 {
   if (entry_index < entries)
@@ -68,13 +78,6 @@ GateHit* JPetGateTreeReader::get()
   gate_hit.sourcez = sourcez;
   gate_hit.sci_id = getScintillatorId(volID[1], volID[2]);
   return &gate_hit;
-}
-
-void JPetGateTreeReader::close()
-{
-  fFile->Close();
-  delete fFile;
-  std::cout << counter << std::endl;
 }
 
 int JPetGateTreeReader::getScintillatorId(int volID1, int volID2) const

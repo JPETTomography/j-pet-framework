@@ -39,7 +39,6 @@ bool JPetGateParser::init(const JPetParams& inParams)
 {
   INFO("GateTransformer started.");
   fParams = inParams;
-  fOptions = inParams.getOptions();
 
   std::unique_ptr<JPetGeomMapping> fDetectorMap(new JPetGeomMapping(getParamBank()));
   fOutputEvents = new JPetTimeWindow("JPetHit");
@@ -47,25 +46,25 @@ bool JPetGateParser::init(const JPetParams& inParams)
   // Cmds handling
   auto opts = fParams.getOptions();
 
-  if (isOptionSet(fParams.getOptions(), kMaxTimeWindowParamKey))
+  if (isOptionSet(opts, kMaxTimeWindowParamKey))
   {
-    fMaxTime = getOptionAsDouble(fParams.getOptions(), kMaxTimeWindowParamKey);
+    fMaxTime = getOptionAsDouble(opts, kMaxTimeWindowParamKey);
   }
-  if (isOptionSet(fParams.getOptions(), kMinTimeWindowParamKey))
+  if (isOptionSet(opts, kMinTimeWindowParamKey))
   {
-    fMinTime = getOptionAsDouble(fParams.getOptions(), kMinTimeWindowParamKey);
+    fMinTime = getOptionAsDouble(opts, kMinTimeWindowParamKey);
   }
-  if (isOptionSet(fParams.getOptions(), kSourceActivityParamKey))
+  if (isOptionSet(opts, kSourceActivityParamKey))
   {
-    fSimulatedActivity = getOptionAsDouble(fParams.getOptions(), kSourceActivityParamKey);
+    fSimulatedActivity = getOptionAsDouble(opts, kSourceActivityParamKey);
   }
-  if (isOptionSet(fParams.getOptions(), kEnergyThresholdParamKey))
+  if (isOptionSet(opts, kEnergyThresholdParamKey))
   {
-    fExperimentalThreshold = getOptionAsDouble(fParams.getOptions(), kEnergyThresholdParamKey);
+    fExperimentalThreshold = getOptionAsDouble(opts, kEnergyThresholdParamKey);
   }
-  if (isOptionSet(fParams.getOptions(), kSeedParamKey))
+  if (isOptionSet(opts, kSeedParamKey))
   {
-    fSeed = getOptionAsInt(fParams.getOptions(), kSeedParamKey);
+    fSeed = getOptionAsInt(opts, kSeedParamKey);
   }
 
   JPetGeantParserTools::setSeedTogRandom(getOriginalSeed());
@@ -81,58 +80,59 @@ bool JPetGateParser::init(const JPetParams& inParams)
 
 void JPetGateParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
 {
+  auto opts = fParams.getOptions();
   std::vector<double> timeSmearingParameters;
-  if (isOptionSet(fParams.getOptions(), kTimeSmearingParametersParamKey))
+  if (isOptionSet(opts, kTimeSmearingParametersParamKey))
   {
-    timeSmearingParameters = getOptionAsVectorOfDoubles(fParams.getOptions(), kTimeSmearingParametersParamKey);
+    timeSmearingParameters = getOptionAsVectorOfDoubles(opts, kTimeSmearingParametersParamKey);
   }
 
   std::string timeSmearingFormula;
-  if (isOptionSet(fParams.getOptions(), kTimeSmearingFunctionParamKey))
+  if (isOptionSet(opts, kTimeSmearingFunctionParamKey))
   {
-    timeSmearingFormula = getOptionAsString(fParams.getOptions(), kTimeSmearingFunctionParamKey);
+    timeSmearingFormula = getOptionAsString(opts, kTimeSmearingFunctionParamKey);
   }
 
   std::vector<double> timeSmearingLimits;
-  if (isOptionSet(fParams.getOptions(), kTimeSmearingFunctionLimitsParamKey))
+  if (isOptionSet(opts, kTimeSmearingFunctionLimitsParamKey))
   {
-    timeSmearingLimits = getOptionAsVectorOfDoubles(fParams.getOptions(), kTimeSmearingFunctionLimitsParamKey);
+    timeSmearingLimits = getOptionAsVectorOfDoubles(opts, kTimeSmearingFunctionLimitsParamKey);
   }
 
   std::vector<double> energySmearingParameters;
-  if (isOptionSet(fParams.getOptions(), kEnergySmearingParametersParamKey))
+  if (isOptionSet(opts, kEnergySmearingParametersParamKey))
   {
-    energySmearingParameters = getOptionAsVectorOfDoubles(fParams.getOptions(), kEnergySmearingParametersParamKey);
+    energySmearingParameters = getOptionAsVectorOfDoubles(opts, kEnergySmearingParametersParamKey);
   }
 
   std::string energySmearingFormula;
-  if (isOptionSet(fParams.getOptions(), kEnergySmearingFunctionParamKey))
+  if (isOptionSet(opts, kEnergySmearingFunctionParamKey))
   {
-    energySmearingFormula = getOptionAsString(fParams.getOptions(), kEnergySmearingFunctionParamKey);
+    energySmearingFormula = getOptionAsString(opts, kEnergySmearingFunctionParamKey);
   }
 
   std::vector<double> energySmearingLimits;
-  if (isOptionSet(fParams.getOptions(), kEnergySmearingFunctionLimitsParamKey))
+  if (isOptionSet(opts, kEnergySmearingFunctionLimitsParamKey))
   {
-    energySmearingLimits = getOptionAsVectorOfDoubles(fParams.getOptions(), kEnergySmearingFunctionLimitsParamKey);
+    energySmearingLimits = getOptionAsVectorOfDoubles(opts, kEnergySmearingFunctionLimitsParamKey);
   }
 
   std::vector<double> zPositionSmearingParameters;
-  if (isOptionSet(fParams.getOptions(), kZPositionSmearingParametersParamKey))
+  if (isOptionSet(opts, kZPositionSmearingParametersParamKey))
   {
-    zPositionSmearingParameters = getOptionAsVectorOfDoubles(fParams.getOptions(), kZPositionSmearingParametersParamKey);
+    zPositionSmearingParameters = getOptionAsVectorOfDoubles(opts, kZPositionSmearingParametersParamKey);
   }
 
   std::string zPositionSmearingFormula;
-  if (isOptionSet(fParams.getOptions(), kZPositionSmearingFunctionParamKey))
+  if (isOptionSet(opts, kZPositionSmearingFunctionParamKey))
   {
-    zPositionSmearingFormula = getOptionAsString(fParams.getOptions(), kZPositionSmearingFunctionParamKey);
+    zPositionSmearingFormula = getOptionAsString(opts, kZPositionSmearingFunctionParamKey);
   }
 
   std::vector<double> zPositionSmearingLimits;
-  if (isOptionSet(fParams.getOptions(), kZPositionSmearingFunctionLimitsParamKey))
+  if (isOptionSet(opts, kZPositionSmearingFunctionLimitsParamKey))
   {
-    zPositionSmearingLimits = getOptionAsVectorOfDoubles(fParams.getOptions(), kZPositionSmearingFunctionLimitsParamKey);
+    zPositionSmearingLimits = getOptionAsVectorOfDoubles(opts, kZPositionSmearingFunctionLimitsParamKey);
   }
 
   fExperimentalParametrizer.setSmearingFunctions({{timeSmearingFormula, timeSmearingParameters},
@@ -175,9 +175,9 @@ void JPetGateParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
 
 bool JPetGateParser::run(const JPetDataInterface&)
 {
-  auto inFile = getInputFile(fOptions);
+  auto inFile = getInputFile(fParams.getOptions());
   JPetGateTreeReader::DetectorGeometry geom = JPetGateTreeReader::DetectorGeometry::ThreeLayers;
-  auto outputPath = getOutputPath(fOptions);
+  auto outputPath = getOutputPath(fParams.getOptions());
   if (outputPath == "")
   {
     outputPath = "./";
@@ -191,7 +191,6 @@ bool JPetGateParser::transformTree(const std::string& inFile, const std::string&
 {
   std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(simulatedActivity, minTime, maxTime);
 
-  // JPetGateTreeWriter w(outFile);
   JPetGateTreeReader r(inFile, geom);
   while (r.read())
   {
@@ -206,24 +205,12 @@ bool JPetGateParser::transformTree(const std::string& inFile, const std::string&
       std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(simulatedActivity, minTime, maxTime);
     }
   }
-  r.close();
-  // w.close();
-  // JPetGateTreeWriter w(outFile);
-  // JPetGateTreeReader r(inFile, geom);
-  // while (r.read())
-  //{
-  // GateHit* p_gh = r.get();
-  // if (p_gh != nullptr)
-  // w.write(*p_gh);
-  //}
-  // r.close();
-  // w.close();
   return true;
 }
 
 bool JPetGateParser::terminate(JPetParams& outParams)
 {
-  INFO("[#]  JPetGateParser::terminate()");
+  DEBUG("[#]  JPetGateParser::terminate()");
   OptsStrAny new_opts;
   // setOutputFileType(new_opts, "hld");
   // auto outputFile =
@@ -246,7 +233,7 @@ bool JPetGateParser::terminate(JPetParams& outParams)
 
 void JPetGateParser::saveHits()
 {
-  // INFO("[#]  JPetGateParser::saveHits");
+  DEBUG("[#]  JPetGateParser::saveHits");
   for (const auto& hit : fStoredHits)
   {
     fOutputEvents->add<JPetHit>(hit);
@@ -327,7 +314,7 @@ unsigned long JPetGateParser::getOriginalSeed() const { return fSeed; }
 
 const JPetParamBank& JPetGateParser::getParamBank()
 {
-  DEBUG("JPetUserTask");
+  DEBUG("JPetGateParser");
   auto paramManager = fParams.getParamManager();
   assert(paramManager);
   return paramManager->getParamBank();
