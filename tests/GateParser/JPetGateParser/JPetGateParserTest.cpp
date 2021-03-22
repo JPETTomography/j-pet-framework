@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(sucessGz)
   JPetGateParser parser("parser");
   parser.init(params);
   boost::filesystem::remove("unitTestData/JPetTaskChainExecutorUtilsTest/goodGZ");
-  BOOST_REQUIRE(parser.transformTree2("output_gate.root", "bla.root", JPetGateTreeReader::DetectorGeometry::ThreeLayers, 4.7, -50000000.0, 0.0));
+  BOOST_REQUIRE(parser.transformTree("output_gate.root", "bla.root", JPetGateTreeReader::DetectorGeometry::ThreeLayers, 4.7, -50000000.0, 0.0));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

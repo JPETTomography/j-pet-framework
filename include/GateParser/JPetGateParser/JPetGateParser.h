@@ -109,8 +109,8 @@ public:
   bool init(const JPetParams& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParams& outOptions) override;
-  bool transformTree2(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom, double simulatedActivity,
-                      double minTime, double maxTime);
+  bool transformTree(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom, double simulatedActivity,
+                     double minTime, double maxTime);
 
   void saveHits();
   void saveReconstructedHit(JPetHit recHit);

@@ -183,10 +183,10 @@ bool JPetGateParser::run(const JPetDataInterface&)
     outputPath = "./";
   }
 
-  return transformTree2(inFile, outputPath, geom, fSimulatedActivity, fMinTime, fMaxTime);
+  return transformTree(inFile, outputPath, geom, fSimulatedActivity, fMinTime, fMaxTime);
 }
 
-bool JPetGateParser::transformTree2(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom,
+bool JPetGateParser::transformTree(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom,
                                     double simulatedActivity, double minTime, double maxTime)
 {
   std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(simulatedActivity, minTime, maxTime);
