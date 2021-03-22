@@ -187,7 +187,7 @@ bool JPetGateParser::run(const JPetDataInterface&)
 }
 
 bool JPetGateParser::transformTree(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom,
-                                    double simulatedActivity, double minTime, double maxTime)
+                                   double simulatedActivity, double minTime, double maxTime)
 {
   std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(simulatedActivity, minTime, maxTime);
 
