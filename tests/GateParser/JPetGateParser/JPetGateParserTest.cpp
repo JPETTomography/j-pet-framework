@@ -42,11 +42,4 @@ BOOST_AUTO_TEST_CASE(sucessGz)
   BOOST_REQUIRE(parser.transformTree2("output_gate.root", "bla.root", JPetGateTreeReader::DetectorGeometry::ThreeLayers, 4.7, -50000000.0, 0.0));
 }
 
-// BOOST_AUTO_TEST_CASE(wrongGz)
-//{
-// BOOST_REQUIRE(!JPetUnzipTask::unzipFile(
-//"unitTestData/JPetTaskChainExecutorUtilsTest/wrongGZ.gz", "./"
-//));
-//}
-
 BOOST_AUTO_TEST_SUITE_END()
