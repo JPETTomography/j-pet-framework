@@ -18,11 +18,11 @@
 
 #include "JPetMatrixSignal/JPetMatrixSignal.h"
 #include "JPetScin/JPetScin.h"
-#include "TVector3.h"
 #include "TObject.h"
+#include "TVector3.h"
+#include <TRef.h>
 #include <cstddef>
 #include <utility>
-#include <TRef.h>
 
 class JPetMatrixSignal;
 
@@ -36,17 +36,23 @@ class JPetMatrixSignal;
  * User can describe quality of energy, hit time and time difference
  * between the two signals in the hit.
  */
-class JPetHit: public TObject
+class JPetHit : public TObject
 {
 public:
-  enum Signal { SideA, SideB };
-  enum RecoFlag { Good, Corrupted, Unknown };
+  enum Signal
+  {
+    SideA,
+    SideB
+  };
+  enum RecoFlag
+  {
+    Good,
+    Corrupted,
+    Unknown
+  };
   JPetHit();
-  JPetHit(
-    float energy, float qualityOfEnergy, float time, float qualityOfTime,
-    TVector3& position, JPetMatrixSignal& signalA, JPetMatrixSignal& signalB,
-    JPetScin& scin
-  );
+  JPetHit(float energy, float qualityOfEnergy, float time, float qualityOfTime, TVector3& position, JPetMatrixSignal& signalA,
+          JPetMatrixSignal& signalB, JPetScin& scin);
   virtual ~JPetHit();
 
   JPetHit::RecoFlag getRecoFlag() const;
@@ -66,7 +72,7 @@ public:
   const JPetMatrixSignal& getSignalB() const;
   const JPetScin& getScin() const;
   unsigned int getMCindex() const;
-  
+
   void setRecoFlag(JPetHit::RecoFlag flag);
   void setEnergy(float energy);
   void setQualityOfEnergy(float qualityOfEnergy);
@@ -83,14 +89,14 @@ public:
   void setSignalB(const JPetMatrixSignal& sig);
   void setScin(JPetScin& scin);
   void setMCindex(unsigned int i);
-  
-  bool isSignalASet()const;
-  bool isSignalBSet()const;
-  bool checkConsistency() const;
-  void Clear(Option_t* opt  = "");
 
- static const unsigned int kMCindexError = 888888;
-  
+  bool isSignalASet() const;
+  bool isSignalBSet() const;
+  bool checkConsistency() const;
+  void Clear(Option_t* opt = "");
+
+  static const unsigned int kMCindexError = 888888;
+
 private:
   RecoFlag fFlag = JPetHit::Unknown;
   float fEnergy = 0.0f;
@@ -106,8 +112,8 @@ private:
   JPetMatrixSignal fSignalB;
   TRef fScin = NULL;
   unsigned int fMCindex = kMCindexError;
-  
-  ClassDef(JPetHit, 12);
+
+  ClassDef(JPetHit, 13);
 };
 
 #endif /* !JPETHIT_H */
