@@ -189,9 +189,10 @@ bool JPetGateParser::run(const JPetDataInterface&)
 bool JPetGateParser::transformTree(const std::string& inFile, const std::string& outFile, JPetGateTreeReader::DetectorGeometry geom,
                                    double simulatedActivity, double minTime, double maxTime)
 {
+  std::cout << "transformTree" << std::endl;
   std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(simulatedActivity, minTime, maxTime);
 
-  JPetGateTreeReader r(inFile, geom);
+  JPetGateTreeReader r(inFile, geom, -1);
   while (r.read())
   {
     GateHit* p_gh = r.get();
@@ -205,6 +206,7 @@ bool JPetGateParser::transformTree(const std::string& inFile, const std::string&
       std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(simulatedActivity, minTime, maxTime);
     }
   }
+  std::cout << "done transformTree" << std::endl;
   return true;
 }
 

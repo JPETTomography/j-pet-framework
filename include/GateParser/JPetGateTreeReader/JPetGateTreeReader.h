@@ -35,7 +35,7 @@ public:
     TwentyFourModules = 2
   };
 
-  JPetGateTreeReader(const std::string& inFile, DetectorGeometry geom);
+  JPetGateTreeReader(const std::string& inFile, DetectorGeometry geom, int nMaxEvents);
   ~JPetGateTreeReader();
 
   bool read();
@@ -47,8 +47,6 @@ public:
   TFile* fFile = nullptr;
   TTree* fTree = nullptr;
 
-  int entries = 0;
-  int entry_index = 0;
   DetectorGeometry fDetectorGeometry = DetectorGeometry::Unknown;
 
   GateHit gate_hit;
@@ -72,8 +70,6 @@ public:
   int level1ID = 0;
   int baseID = 0;
 
-  unsigned int counter = 0;
-
   TBranch* b_event_id = nullptr;
   TBranch* b_track_id = nullptr;
   TBranch* b_parent_id = nullptr;
@@ -89,6 +85,13 @@ public:
   TBranch* b_sourcez = nullptr;
   TBranch* b_process_name = nullptr;
   TBranch* b_volID = nullptr;
+
+private:
+  int fEntries = 0;
+  int entry_index = 0;
+
+  int fNMaxEntries = -1;
+  unsigned int fProcessedEntries = 0;
 };
 
 #endif /*  !JPETGATETREEREADER_H */

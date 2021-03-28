@@ -14,14 +14,20 @@
  */
 
 #include <JPetGateTreeReader/JPetGateTreeReader.h>
+#include "JPetLoggerInclude.h"
+
 #include <iostream>
 
-JPetGateTreeReader::JPetGateTreeReader(const std::string& inFile, JPetGateTreeReader::DetectorGeometry geom)
-    : fInputFileName(inFile), fDetectorGeometry(geom)
+JPetGateTreeReader::JPetGateTreeReader(const std::string& inFile, JPetGateTreeReader::DetectorGeometry geom, int nMaxEntries)
+    : fInputFileName(inFile), fDetectorGeometry(geom), fNMaxEntries(nMaxEntries)
 {
   fFile = new TFile(fInputFileName.c_str(), "READ");
   fTree = dynamic_cast<TTree*>(fFile->Get("Hits"));
-  entries = fTree->GetEntries();
+  fEntries = fTree->GetEntries();
+  if ((fNMaxEntries == -1) || (fNMaxEntries > fEntries))
+  {
+    fNMaxEntries = fEntries;
+  }
   fTree->SetBranchAddress("PDGEncoding", &pdg, &b_pdg);
   fTree->SetBranchAddress("trackID", &track_id, &b_track_id);
   fTree->SetBranchAddress("parentID", &parent_id, &b_parent_id);
@@ -45,15 +51,15 @@ JPetGateTreeReader::~JPetGateTreeReader()
     fFile->Close();
     delete fFile;
   }
-  std::cout << counter << std::endl;
+  INFO("Number of entries in input GATE tree : " + std::to_string(fEntries));
+  INFO("Number of gate hits processed: " + std::to_string(fProcessedEntries));
 }
 
 bool JPetGateTreeReader::read()
 {
-  if (entry_index < entries)
-    fTree->GetEntry(entry_index);
-  else
+  if (entry_index >= fNMaxEntries)
     return false;
+  fTree->GetEntry(entry_index);
   ++entry_index;
   return true;
 }
@@ -65,7 +71,7 @@ GateHit* JPetGateTreeReader::get()
   is_ok = is_ok && std::string(process_name) == "compt";
   if (!is_ok)
     return nullptr;
-  ++counter;
+  ++fProcessedEntries;
   gate_hit.track_id = track_id;
   gate_hit.event_id = event_id;
   gate_hit.edep = edep;
