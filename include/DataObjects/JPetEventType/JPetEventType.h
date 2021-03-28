@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,7 +16,8 @@
 #ifndef JPETEVENTTYPE_H
 #define JPETEVENTTYPE_H
 
-enum JPetEventType {
+enum class JPetEventType
+{
   kUnknown = 1,
   k2Gamma = 2,
   k3Gamma = 4,
@@ -24,4 +25,9 @@ enum JPetEventType {
   kScattered = 16,
   kCosmic = 32
 };
+
+inline JPetEventType operator|(JPetEventType a, JPetEventType b) { return static_cast<JPetEventType>(static_cast<int>(a) | static_cast<int>(b)); }
+inline JPetEventType operator&(JPetEventType a, JPetEventType b) { return static_cast<JPetEventType>(static_cast<int>(a) & static_cast<int>(b)); }
+inline JPetEventType operator~(JPetEventType a) { return static_cast<JPetEventType>(~static_cast<int>(a)); }
+
 #endif /* !JPETEVENTTYPE_H */
