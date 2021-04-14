@@ -74,30 +74,21 @@ void JPetPhysRecoHit::setSignals(const JPetPhysSignal& signalA, const JPetPhysSi
   fIsSignalAset = true;
   fSignalB = signalB;
   fIsSignalBset = true;
-  if (!checkConsistency())
-  {
-    return;
-  }
+  checkConsistency();
 }
 
 void JPetPhysRecoHit::setSignalA(const JPetPhysSignal& signalA)
 {
   fSignalA = signalA;
   fIsSignalAset = true;
-  if (!checkConsistency())
-  {
-    return;
-  }
+  checkConsistency();
 }
 
 void JPetPhysRecoHit::setSignalB(const JPetPhysSignal& signalB)
 {
   fSignalB = signalB;
   fIsSignalBset = true;
-  if (!checkConsistency())
-  {
-    return;
-  }
+  checkConsistency();
 }
 
 bool JPetPhysRecoHit::isSignalASet() const { return fIsSignalAset; }
@@ -108,43 +99,37 @@ bool JPetPhysRecoHit::isSignalBSet() const { return fIsSignalBset; }
  * @brief Checks consistency of the hit object
  *
  * Method check whether information contained in the hit and logs
- * an error message if the construction makes no physical sense, that is:
+ * a warning message if the construction makes no physical sense, that is:
  * - if signals come from the different scintillator
  * - if the two signals come from opposite-sided PMTs
  * - if both signals belong to the different time window
- * Successful check returns true value. If any condition is violated,
- * false is returned and an appropriate message is written to the log file.
- * If signals are not set (or one of them is not set), returns true.
+ * If signals are not set, then check is stopped.
  */
-bool JPetPhysRecoHit::checkConsistency() const
+void JPetPhysRecoHit::checkConsistency() const
 {
   if (!fIsSignalAset || !fIsSignalBset)
   {
-    return true;
+    return;
   }
 
   if (getSignalA().isNullObject())
   {
-    ERROR("Signal A is a Null Object");
-    return false;
+    WARNING("Inconsistent hit construction: Signal A is a Null Object");
   }
 
   if (getSignalB().isNullObject())
   {
-    ERROR("Signal B is a Null Object");
-    return false;
+    WARNING("Inconsistent hit construction: Signal B is a Null Object");
   }
 
   if (getSignalA().getPM().isNullObject())
   {
-    ERROR("PM from Signal A is a Null Object");
-    return false;
+    WARNING("Inconsistent hit construction: PM from Signal A is a Null Object");
   }
 
   if (getSignalB().getPM().isNullObject())
   {
-    ERROR("PM from Signal B is a Null Object");
-    return false;
+    WARNING("Inconsistent hit construction: PM from Signal A is a Null Object");
   }
 
   auto scinA = getSignalA().getPM().getScin().getID();
@@ -152,23 +137,18 @@ bool JPetPhysRecoHit::checkConsistency() const
 
   if (scinA != scinB)
   {
-    ERROR(Form("Signals added to Hit come from different scintillators: %d and %d.", scinA, scinB));
-    return false;
+    WARNING(Form("Inconsistent hit construction: Signals added to Hit come from different scintillators: %d and %d.", scinA, scinB));
   }
 
   if (getSignalA().getPM().getSide() == getSignalB().getPM().getSide())
   {
-    ERROR(Form("Signals added to Hit come from PMTs at the same side. PMTs: %d and %d.", getSignalA().getPM().getID(), getSignalB().getPM().getID()));
-    return false;
+    WARNING(Form("Inconsistent hit construction: Signals added to Hit come from PMTs at the same side. PMTs: %d and %d.", scinA, scinB));
   }
-  return true;
 }
 
-/**
- * Set values of the hit to zero/false/null
- */
 void JPetPhysRecoHit::Clear(Option_t*)
 {
+  JPetRecoHit::Clear("");
   fTimeDiff = 0.0;
   fToT = 0.0;
   fQualityOfTime = 0.0;

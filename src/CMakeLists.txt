@@ -200,7 +200,7 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/GeantParser/JPetSmearingFunctions/JPetSmearingFunctions.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetMCDecayTree/JPetMCDecayTree.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetMCHit/JPetMCHit.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetBaseMCHit/JPetBaseMCHit.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetRawMCHit/JPetRawMCHit.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetTimeWindowMC/JPetTimeWindowMC.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionValidator/JPetAdditionalValidators.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionValidator/JPetOptionValidator.cpp
@@ -285,7 +285,7 @@ set(HEADERS_WITH_DICTIONARY_REQUIRED
   JPetFEB/JPetFEB.h
   JPetParamBank/JPetParamBank.h
   JPetMCHit/JPetMCHit.h
-  JPetBaseMCHit/JPetBaseMCHit.h
+  JPetRawMCHit/JPetRawMCHit.h
   JPetTimeWindowMC/JPetTimeWindowMC.h
   JPetMCDecayTree/JPetMCDecayTree.h
   JPetGeantScinHits/JPetGeantScinHits.h

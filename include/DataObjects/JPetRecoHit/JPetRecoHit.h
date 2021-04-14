@@ -38,7 +38,7 @@ public:
   virtual ~JPetRecoHit();
   JPetRecoHit::RecoFlag getRecoFlag() const;
   void setRecoFlag(JPetRecoHit::RecoFlag flag);
-  void Clear(Option_t* opt = "");
+  void Clear(Option_t*) override;
 
 private:
   RecoFlag fFlag = JPetRecoHit::Unknown;

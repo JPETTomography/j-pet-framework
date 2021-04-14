@@ -36,43 +36,6 @@ BOOST_AUTO_TEST_CASE(default_constructor)
   BOOST_REQUIRE_EQUAL(hit.isSignalBSet(), false);
 }
 
-BOOST_AUTO_TEST_CASE(consistency_check_test)
-{
-  JPetScin scin1(1, 2.0, 50.0, 1.9, 0.7);
-  JPetScin scin2(2, 2.0, 50.0, 1.9, 0.7);
-
-  JPetPM pm1(JPetPM::SideA, 101, 0, 0, std::pair<float, float>(0, 0), "");
-  JPetPM pm2(JPetPM::SideB, 102, 0, 0, std::pair<float, float>(0, 0), "");
-  JPetPM pm3(JPetPM::SideB, 103, 0, 0, std::pair<float, float>(0, 0), "");
-  pm1.setScin(scin1);
-  pm2.setScin(scin1);
-  pm3.setScin(scin2);
-
-  JPetPhysSignal signal1;
-  JPetPhysSignal signal2;
-  JPetPhysSignal signal3;
-  signal1.setPM(pm1);
-  signal2.setPM(pm2);
-  signal3.setPM(pm3);
-
-  JPetPhysRecoHit hit;
-  // Hit with unset signals checks true
-  BOOST_REQUIRE_EQUAL(hit.checkConsistency(), true);
-  hit.setSignalA(signal1);
-  BOOST_REQUIRE_EQUAL(hit.checkConsistency(), true);
-  hit.setSignalB(signal2);
-  BOOST_REQUIRE_EQUAL(hit.checkConsistency(), true);
-
-  // Unconsistent settings
-  hit.setSignalA(signal1);
-  hit.setSignalB(signal3);
-  BOOST_REQUIRE_EQUAL(hit.checkConsistency(), false);
-
-  hit.setSignalA(signal2);
-  hit.setSignalB(signal3);
-  BOOST_REQUIRE_EQUAL(hit.checkConsistency(), false);
-}
-
 BOOST_AUTO_TEST_CASE(set_get_test)
 {
   JPetPhysRecoHit hit;
@@ -97,6 +60,53 @@ BOOST_AUTO_TEST_CASE(set_get_test)
   BOOST_REQUIRE_CLOSE(hit.getQualityOfTimeDiff(), qtd, epsilon);
   BOOST_REQUIRE_CLOSE(hit.getQualityOfEnergy(), qe, epsilon);
   BOOST_REQUIRE_CLOSE(hit.getQualityOfToT(), qtot, epsilon);
+}
+
+BOOST_AUTO_TEST_CASE(ClearTest)
+{
+  double epsilon = 0.0001;
+
+  JPetBarrelSlot slot(99, true, "stefan", 90.1, 1);
+  JPetScin scin(88, 11.1, 22.2, 33.3, 44.4);
+  scin.setBarrelSlot(slot);
+
+  JPetPM pm1(77, "green");
+  JPetPM pm2(66, "red");
+  pm1.setScin(scin);
+  pm2.setScin(scin);
+  pm1.setBarrelSlot(slot);
+  pm2.setBarrelSlot(slot);
+
+  JPetPhysRecoHit hit;
+  hit.setTime(11.1);
+  hit.setEnergy(22.2);
+  hit.setTimeDiff(33.3);
+  hit.setToT(44.4);
+  hit.setQualityOfTime(0.1);
+  hit.setQualityOfTimeDiff(0.2);
+  hit.setQualityOfEnergy(0.3);
+  hit.setQualityOfToT(0.4);
+
+  JPetPhysSignal signalA;
+  JPetPhysSignal signalB;
+  signalA.setPM(pm1);
+  signalB.setPM(pm2);
+  signalA.setBarrelSlot(slot);
+  signalB.setBarrelSlot(slot);
+
+  hit.setSignals(signalA, signalB);
+
+  hit.Clear("");
+  BOOST_REQUIRE_CLOSE(hit.getTime(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.getEnergy(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.getTimeDiff(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.getToT(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.getQualityOfTime(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.getQualityOfTimeDiff(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.getQualityOfEnergy(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.getQualityOfToT(), 0.0, epsilon);
+  BOOST_REQUIRE(!hit.isSignalASet());
+  BOOST_REQUIRE(!hit.isSignalBSet());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

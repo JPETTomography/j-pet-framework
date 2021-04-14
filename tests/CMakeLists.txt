@@ -43,7 +43,7 @@ set(UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAna
                       ${CMAKE_CURRENT_SOURCE_DIR}/GeantParser/JPetSmearingFunctions/JPetSmearingFunctionsTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/GeantParser/JPetGeantDecayTree/JPetGeantDecayTreeTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetMCHit/JPetMCHitTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetBaseMCHit/JPetBaseMCHitTest.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetRawMCHit/JPetRawMCHitTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionValidator/JPetOptionValidatorTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionsGenerator/JPetOptionsGeneratorTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionsGenerator/JPetOptionsGeneratorToolsTest.cpp

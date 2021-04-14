@@ -22,7 +22,8 @@
 class JPetRecoHit;
 
 /**
- * @brief JPetPhysRecoHit
+ * @brief JPetPhysRecoHit is extending reco hit class to contain inrfomation
+ * about result of reconstruction of measurement data.
  */
 class JPetPhysRecoHit : public JPetRecoHit
 {
@@ -61,8 +62,8 @@ public:
 
   bool isSignalASet() const;
   bool isSignalBSet() const;
-  bool checkConsistency() const;
-  void Clear(Option_t* opt = "");
+  void checkConsistency() const;
+  void Clear(Option_t*) override;
 
 private:
   double fTimeDiff = 0.0;

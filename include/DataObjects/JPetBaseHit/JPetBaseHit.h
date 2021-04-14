@@ -47,19 +47,14 @@ public:
   void setPos(double x, double y, double z);
   void setPos(TVector3& position);
   void setScin(JPetScin& scin);
-  void Clear(Option_t* opt = "");
+  void Clear(Option_t*) override;
   static JPetBaseHit& getDummyResult();
 
 protected:
-#ifndef __CINT__
   double fTime = 0.0;
   double fEnergy = 0.0;
-#else
-  double fTime;
-  double fEnergy;
-#endif
   TVector3 fPos;
-  TRef fScin = NULL;
+  TRef fScin = nullptr;
 
   ClassDef(JPetBaseHit, 1);
 };

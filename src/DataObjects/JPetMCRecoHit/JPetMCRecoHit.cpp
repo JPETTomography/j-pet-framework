@@ -19,10 +19,16 @@ ClassImp(JPetMCRecoHit);
 
 JPetMCRecoHit::JPetMCRecoHit() : JPetRecoHit() {}
 
+JPetMCRecoHit::JPetMCRecoHit(int mcIndex) : JPetRecoHit(), fMCindex(mcIndex) {}
+
 JPetMCRecoHit::~JPetMCRecoHit() {}
 
 unsigned int JPetMCRecoHit::getMCindex() const { return fMCindex; }
 
 void JPetMCRecoHit::setMCindex(unsigned int i) { fMCindex = i; }
 
-void JPetMCRecoHit::Clear(Option_t*) { fMCindex = kMCindexError; }
+void JPetMCRecoHit::Clear(Option_t*)
+{
+  JPetRecoHit::Clear("");
+  fMCindex = kMCindexError;
+}

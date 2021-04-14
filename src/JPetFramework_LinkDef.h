@@ -14,8 +14,8 @@
 #pragma link C++ function JPetWriter::Write(vector <JPetHit>&);
 #pragma link C++ function JPetWriter::Write(JPetBaseHit&);
 #pragma link C++ function JPetWriter::Write(vector <JPetBaseHit>&);
-#pragma link C++ function JPetWriter::Write(JPetBaseMCHit&);
-#pragma link C++ function JPetWriter::Write(vector <JPetBaseMCHit>&);
+#pragma link C++ function JPetWriter::Write(JPetRawMCHit&);
+#pragma link C++ function JPetWriter::Write(vector <JPetRawMCHit>&);
 #pragma link C++ function JPetWriter::Write(JPetRecoHit&);
 #pragma link C++ function JPetWriter::Write(vector <JPetRecoHit>&);
 #pragma link C++ function JPetWriter::Write(JPetPhysRecoHit&);
@@ -50,7 +50,7 @@
 #pragma link C++ class JPetTreeHeader + ;
 #pragma link C++ class JPetHit + ;
 #pragma link C++ class JPetBaseHit + ;
-#pragma link C++ class JPetBaseMCHit + ;
+#pragma link C++ class JPetRawMCHit + ;
 #pragma link C++ class JPetRecoHit + ;
 #pragma link C++ class JPetPhysRecoHit + ;
 #pragma link C++ class JPetMCRecoHit + ;

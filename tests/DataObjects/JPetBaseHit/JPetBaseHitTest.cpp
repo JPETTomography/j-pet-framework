@@ -78,4 +78,19 @@ BOOST_AUTO_TEST_CASE(SetAndGetTest)
   BOOST_REQUIRE_EQUAL(hit.getScin().getID(), scin.getID());
 }
 
+BOOST_AUTO_TEST_CASE(ClearTest)
+{
+  double epsilon = 0.0001;
+  JPetScin scin(1, 100.0, 5.5, 6.6, 7.7);
+  TVector3 position(1.1, 2.2, 3.3);
+  JPetBaseHit hit(11.1, 22.2, position, scin);
+
+  BOOST_REQUIRE_CLOSE(hit.getTime(), 11.1, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.getEnergy(), 22.2, epsilon);
+
+  hit.Clear("");
+  BOOST_REQUIRE_CLOSE(hit.getTime(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.getEnergy(), 0.0, epsilon);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

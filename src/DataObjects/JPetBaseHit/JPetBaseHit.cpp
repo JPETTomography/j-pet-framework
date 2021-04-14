@@ -78,5 +78,5 @@ void JPetBaseHit::Clear(Option_t*)
   fTime = 0.0f;
   fEnergy = 0.0f;
   fPos = TVector3();
-  fScin = NULL;
+  fScin = nullptr;
 }

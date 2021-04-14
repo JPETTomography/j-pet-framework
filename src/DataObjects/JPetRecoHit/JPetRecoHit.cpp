@@ -23,14 +23,12 @@ JPetRecoHit::JPetRecoHit(JPetRecoHit::RecoFlag flag) : JPetBaseHit(), fFlag(flag
 
 JPetRecoHit::~JPetRecoHit() {}
 
-/**
- * Get the reconstruction flag
- */
 JPetRecoHit::RecoFlag JPetRecoHit::getRecoFlag() const { return fFlag; }
 
-/**
- * Set the reconstruction flag with enum
- */
 void JPetRecoHit::setRecoFlag(JPetRecoHit::RecoFlag flag) { fFlag = flag; }
 
-void JPetRecoHit::Clear(Option_t*) { fFlag = JPetRecoHit::Unknown; }
+void JPetRecoHit::Clear(Option_t*)
+{
+  JPetBaseHit::Clear("");
+  fFlag = JPetRecoHit::Unknown;
+}

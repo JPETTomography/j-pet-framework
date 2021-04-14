@@ -21,16 +21,18 @@
 class JPetRecoHit;
 
 /**
- * @brief JPetMCRecoHit
+ * @brief JPetMCRecoHit is a hit class representing reconstructed raw Monte Carlo
+ * hit with index, that links original JPetRawMCHit and JPetMCRecoHit
  */
 class JPetMCRecoHit : public JPetRecoHit
 {
 public:
   JPetMCRecoHit();
+  explicit JPetMCRecoHit(int mcIndex);
   virtual ~JPetMCRecoHit();
   unsigned int getMCindex() const;
   void setMCindex(unsigned int i);
-  void Clear(Option_t* opt = "");
+  void Clear(Option_t*) override;
   static const unsigned int kMCindexError = 888888;
 
 private:

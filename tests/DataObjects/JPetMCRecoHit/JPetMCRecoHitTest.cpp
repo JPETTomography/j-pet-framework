@@ -30,4 +30,18 @@ BOOST_AUTO_TEST_CASE(test_one)
   BOOST_REQUIRE_EQUAL(hit.getMCindex(), 1234);
 }
 
+BOOST_AUTO_TEST_CASE(ClearTest)
+{
+  double epsilon = 0.0001;
+  JPetMCRecoHit hit(1234);
+  hit.setTime(11.1);
+  hit.setEnergy(22.2);
+  hit.setRecoFlag(JPetRecoHit::MC);
+  hit.Clear("");
+  BOOST_REQUIRE_CLOSE(hit.getTime(), 0.0, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.getEnergy(), 0.0, epsilon);
+  BOOST_REQUIRE_EQUAL(hit.getRecoFlag(), JPetRecoHit::Unknown);
+  BOOST_REQUIRE_EQUAL(hit.getMCindex(), 888888);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
