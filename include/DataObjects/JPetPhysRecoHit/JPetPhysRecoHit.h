@@ -24,6 +24,11 @@ class JPetRecoHit;
 /**
  * @brief JPetPhysRecoHit is extending reco hit class to contain inrfomation
  * about result of reconstruction of measurement data.
+ *
+ * Physical hit contains additional to basic hit reconstruction specific information,
+ * like A-B sides signals time difference, ToT calculation, quality quantifiers for all fields
+ * and references to signal objects. Method for checking consistency of a constructed hit
+ * prints out warnings to log file.
  */
 class JPetPhysRecoHit : public JPetRecoHit
 {

@@ -46,7 +46,7 @@ private:
   int fMCVtxIndex = 0;
   /**
    * Gamma tag is a number with encoded information about generated photon,
-   * convention is described in the manual in j-pet-genat4 project
+   * the convention is described in the manual of j-pet-genat4 project
    * in section 3. results of simulation, available i.e. here
    * https://github.com/JPETTomography/J-PET-geant4/blob/master/docs/
    */

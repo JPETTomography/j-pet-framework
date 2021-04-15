@@ -24,6 +24,10 @@
 
 /**
  * @brief Base class for hit data classes
+ *
+ * This is the base class of a scintillator hit represenatation, that all other hits
+ * should inherit from. It contains minimal required information about physical interaction
+ * of a gamma quanta with the material and a reference to Scin object.
  */
 class JPetBaseHit : public TObject
 {

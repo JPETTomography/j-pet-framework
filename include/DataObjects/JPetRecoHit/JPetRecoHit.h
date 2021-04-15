@@ -21,7 +21,12 @@
 class JPetBaseHit;
 
 /**
- * @brief JPetBaseHit
+ * @brief Representation of a hit expanded from basic hit class with reconstruciton
+ * flags.
+ *
+ * Reconstruction flag is indicative of the result of either low-level data selection in case
+ * of experimental mesurement (good/corrupted) or smearing/efficiency procedures on raw
+ * Monte Carlo hit (MC).
  */
 class JPetRecoHit : public JPetBaseHit
 {
