@@ -48,6 +48,7 @@ bool JPetParamBankHandlerTask::init(const JPetParams& params)
     return generateParamBankFromConfig(params);
     break;
   case FileType::kMCGeant:
+  case FileType::kMCGate:
     return generateParamBankFromConfig(params);
     break;
   default:
