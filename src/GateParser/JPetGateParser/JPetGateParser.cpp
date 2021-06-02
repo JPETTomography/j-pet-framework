@@ -13,20 +13,22 @@
  *  @file JPetGateParser.cpp
  */
 
+#include "JPetCommonTools/JPetCommonTools.h"
+#include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include <GateHit/GateHit.h>
 #include <JPetAnalysisTools/JPetAnalysisTools.h>
 #include <JPetGateParser/JPetGateParser.h>
 #include <JPetGeantParser/JPetGeantParserTools.h>
 #include <JPetOptionsTools/JPetOptionsTools.h>
+#include <JPetScin/JPetScin.h>
 #include <JPetTimeWindow/JPetTimeWindow.h>
 #include <JPetWriter/JPetWriter.h>
-#include <iostream>
 
-#include <GateHit/GateHit.h>
-#include <JPetScin/JPetScin.h>
-#include <JPetScin/JPetScin.h>
 #include <TMath.h>
+
 #include <array>
 #include <cmath>
+#include <iostream>
 #include <string>
 
 using namespace jpet_options_tools;
@@ -192,7 +194,7 @@ bool JPetGateParser::transformTree(const std::string& inFile, const std::string&
   std::cout << "transformTree" << std::endl;
   std::tie(fTimeDistroOfDecays, fTimeDiffDistro) = JPetGeantParserTools::getTimeDistoOfDecays(simulatedActivity, minTime, maxTime);
 
-  JPetGateTreeReader r(inFile, geom, -1);
+  JPetGateTreeReader r(inFile, geom, 100);
   while (r.read())
   {
     GateHit* p_gh = r.get();
@@ -213,23 +215,22 @@ bool JPetGateParser::transformTree(const std::string& inFile, const std::string&
 bool JPetGateParser::terminate(JPetParams& outParams)
 {
   DEBUG("[#]  JPetGateParser::terminate()");
-  OptsStrAny new_opts;
-  // setOutputFileType(new_opts, "hld");
-  // auto outputFile =
-  // getOutputPath(fOptions)
-  //+ JPetCommonTools::stripFileNameSuffix(getInputFile(fOptions));
-  // setOutputFile(new_opts, outputFile);
+  auto oldOpts = fParams.getOptions();
+  OptsStrAny newOpts;
+  jpet_options_generator_tools::setOutputFileType(newOpts, "root");
+  // auto outputFile = getOutputPath(oldOpts) + JPetCommonTools::stripFileNameSuffix(getInputFile(oldOpts));
+  jpet_options_generator_tools::setOutputFile(newOpts, JPetCommonTools::replaceDataTypeInFileName(getInputFile(oldOpts), "hits"));
+  jpet_options_generator_tools::setOutputPath(newOpts, getOutputPath(oldOpts));
+  if (isOptionSet(oldOpts, "firstEvent_int") && isOptionSet(oldOpts, "lastEvent_int"))
+  {
+    if (getOptionAsInt(oldOpts, "firstEvent_int") != -1 && getOptionAsInt(oldOpts, "lastEvent_int") != -1)
+    {
+      jpet_options_generator_tools::setResetEventRangeOption(newOpts, true);
+    }
+  }
 
-  // if (isOptionSet(fOptions, "firstEvent_int") && isOptionSet(fOptions, "lastEvent_int")) {
-  // if (getOptionAsInt(fOptions, "firstEvent_int") != -1 && getOptionAsInt(fOptions, "lastEvent_int") != -1) {
-  // setResetEventRangeOption(new_opts, true);
-  //}
-  //}
-
-  // outParams = JPetParams(new_opts, outParams.getParamManagerAsShared());
-  // INFO(Form(
-  //"GateTransformer finished, unzipped file name: %s", outputFile.c_str()
-  //));
+  outParams = JPetParams(newOpts, outParams.getParamManagerAsShared());
+  INFO(Form("GateTransformer finished processing file : %s", getInputFile(oldOpts).c_str()));
   return true;
 }
 
@@ -321,3 +322,55 @@ const JPetParamBank& JPetGateParser::getParamBank()
   assert(paramManager);
   return paramManager->getParamBank();
 }
+
+// bool JPetGateParser::writeEventToFile()
+//{
+
+// auto pOutputEntry = pUserTask->getOutputEvents();
+// if (pOutputEntry != nullptr)
+//{
+// auto pInputEvent = dynamic_cast<JPetTimeWindowMC*>(pUserTask->getInputEvents());
+// if ((pInputEvent != nullptr))
+//{
+// fWriter.write(JPetTimeWindowMC(*pInputEvent, *pOutputEntry));
+//}
+// else
+//{
+// if(pOutputEntry->getNumberOfEvents() > 0){
+// fWriter.write(*pOutputEntry);
+//}
+//}
+//}
+// else
+//{
+// ERROR("No proper timeWindow object returned to save to file, returning from subtask " + task->getName());
+// return false;
+//}
+// return true;
+//}
+// bool JPetOutputHandler::writeEventToFile(JPetTaskInterface* task)
+//{
+// assert(task);
+// auto pUserTask = (dynamic_cast<JPetUserTask*>(task));
+// auto pOutputEntry = pUserTask->getOutputEvents();
+// if (pOutputEntry != nullptr)
+//{
+// auto pInputEvent = dynamic_cast<JPetTimeWindowMC*>(pUserTask->getInputEvents());
+// if ((pInputEvent != nullptr))
+//{
+// fWriter.write(JPetTimeWindowMC(*pInputEvent, *pOutputEntry));
+//}
+// else
+//{
+// if(pOutputEntry->getNumberOfEvents() > 0){
+// fWriter.write(*pOutputEntry);
+//}
+//}
+//}
+// else
+//{
+// ERROR("No proper timeWindow object returned to save to file, returning from subtask " + task->getName());
+// return false;
+//}
+// return true;
+//}

@@ -13,8 +13,8 @@
  *  @file JPetGateTreeReader.cpp
  */
 
-#include <JPetGateTreeReader/JPetGateTreeReader.h>
 #include "JPetLoggerInclude.h"
+#include <JPetGateTreeReader/JPetGateTreeReader.h>
 
 #include <iostream>
 

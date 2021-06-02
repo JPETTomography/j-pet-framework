@@ -146,6 +146,8 @@ void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options
     if (fileType == file_type_checker::kMCGate) {
       auto mcInfo = TaskInfo("JPetGateParser", "mcGate", "hits", 1);
       addTaskToChain(generatorsMap, mcInfo, outChain);
+      // auto mcGateParser = []() { return std::make_unique<JPetGateParser>("JPetGateParserTask"); };
+      // outChain.insert(outChain.end(), mcGateParser);
     }
 
     // Create task to unzip file if indicated by the filetype
