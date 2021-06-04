@@ -49,10 +49,34 @@ BOOST_AUTO_TEST_CASE(generateParamManagerForScopeCase)
   BOOST_REQUIRE(!paramMgr->getExpectMissing().empty());
   paramMgr->fillParameterBank(1);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().isDummy(), false);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getSlotsSize(), 2);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getScinsSize(), 2);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getPMsSize(), 4);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getSlotsSize(), 2);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getChannelsSize(), 0);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getDataSourcesSize(), 0);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getDataModulesSize(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(generateParamManagerForMCGeantCase)
+{
+  std::map<std::string, boost::any> opts;
+  opts["inputFileType_std::string"] = std::string("mcGeant");
+  opts["localDB_std::string"] = std::string("unitTestData/JPetParamManagerTest/test_mcGeant_setup.json");
+  opts["runId_int"] = int(95);
+  std::shared_ptr<JPetParamManager> paramMgr = JPetParamManager::generateParamManager(opts);
+  BOOST_REQUIRE(paramMgr);
+  BOOST_REQUIRE(!paramMgr->isNullObject());
+  BOOST_REQUIRE(!paramMgr->getExpectMissing().empty());
+  paramMgr->fillParameterBank(95);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().isDummy(), false);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getSetupsSize(), 1);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getLayersSize(), 4);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getSlotsSize(), 504);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getScinsSize(), 504);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getPMsSize(), 0);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getChannelsSize(), 0);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getDataSourcesSize(), 0);
+  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getDataModulesSize(), 0);
 }
 
 void checkContainersSize(const JPetParamBank& bank)

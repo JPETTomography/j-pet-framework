@@ -22,6 +22,7 @@
 // TODO create new test files and use combined_jpet_test.json
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
+
 BOOST_AUTO_TEST_CASE(create_unique_manager)
 {
   JPetManager& manager = JPetManager::getManager();
@@ -68,32 +69,64 @@ BOOST_AUTO_TEST_CASE(goodZipRun)
   std::remove("unitTestData/JPetManagerTest/xx14099113231.hld");
   JPetManager& manager = JPetManager::getManager();
   const char* args[14] = {
-    "test/Path", "--file",
-    "unitTestData/JPetManagerTest/xx14099113231.hld.xz",
-    "--type", "zip", "-p",
-    "unitTestData/JPetManagerTest/conf_trb3.xml",
-    "-r", "0", "10",
-    "-l", "unitTestData/JPetManagerTest/combined_jpet_test.json",
-    "-i", "57"
+    "test/Path", "--file", "unitTestData/JPetManagerTest/xx14099113231.hld.xz",
+    "--type", "zip", "-p", "unitTestData/JPetManagerTest/conf_trb3.xml",
+    "-r", "0", "10", "-l", "unitTestData/JPetManagerTest/large_barrel.json",
+    "-i", "44"
   };
   BOOST_REQUIRE_NO_THROW(manager.run(14, args));
 }
 
 BOOST_AUTO_TEST_CASE(goodMCRun)
 {
-  JPetManager &manager = JPetManager::getManager();
+  JPetManager& manager = JPetManager::getManager();
   const char* args[11] = {
-    "test/Path",
-    "--file",
+    "test/Path", "--file",
     "unitTestData/JPetManagerTest/goodMCFile.mcGeant.root",
-    "--type",
-    "mcGeant",
-    "-p",
-    "conf_trb3.xml",
-    "-l",
-    "unitTestData/JPetManagerTest/combined_jpet_test.json",
-    "-i",
-    "57"
+    "--type", "mcGeant", "-p", "conf_trb3.xml", "-l",
+    "unitTestData/JPetManagerTest/large_barrel.json",
+    "-i", "44"
+  };
+  BOOST_REQUIRE_NO_THROW(manager.run(11, args));
+}
+
+BOOST_AUTO_TEST_CASE(goodControlTasks)
+{
+  JPetManager& manager = JPetManager::getManager();
+  std::vector<const char*> args = {
+      "test/Path",
+      "--file",
+      "unitTestData/JPetManagerTest/goodRootFile.root",
+      "--type",
+      "root",
+      "-u",
+      "unitTestData/JPetManagerTest/userParamsControlTasksGood.json",
+  };
+  manager.registerTask<TestTask>("TestTask");
+  BOOST_REQUIRE_NO_THROW(manager.run(args.size(), args.data()));
+}
+
+BOOST_AUTO_TEST_CASE(notRegisteredTask)
+{
+  JPetManager& manager = JPetManager::getManager();
+  std::vector<const char*> args = {
+      "test/Path",
+      "--file",
+      "unitTestData/JPetManagerTest/goodRootFile.root",
+      "--type",
+      "root",
+      "-u",
+      "unitTestData/JPetManagerTest/userParamsUnregisteredTask.json",
+  };
+  BOOST_CHECK_THROW(manager.run(args.size(), args.data()), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(badOptionsTask)
+{
+  JPetManager& manager = JPetManager::getManager();
+  std::vector<const char*> args = {
+      "test/Path", "--file", "unitTestData/JPetManagerTest/goodRootFile.root",         "--type",
+      "root",      "-u",     "unitTestData/JPetManagerTest/userParamsBadOptions.json",
   };
   BOOST_REQUIRE_NO_THROW(manager.run(11, args));
 }

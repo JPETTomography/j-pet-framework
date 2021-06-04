@@ -24,18 +24,22 @@ if(ROOT_FOUND)
   message(STATUS "ROOT (version ${ROOT_VERSION}) was found using ROOTConfig")
 endif()
 
-if(EXISTS "${ROOT_DIR}/modules/RootNewMacros.cmake")
-  include("${ROOT_DIR}/modules/RootNewMacros.cmake")
-  message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/modules!")
-elseif(EXISTS "${ROOT_DIR}/cmake/modules/RootNewMacros.cmake")
-  include("${ROOT_DIR}/cmake/modules/RootNewMacros.cmake")
-  message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/cmake/modules!")
-elseif(EXISTS "${ROOT_DIR}/../cmake/modules/RootNewMacros.cmake")
-  include("${ROOT_DIR}/../cmake/modules/RootNewMacros.cmake")
-  message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/../cmake/modules!")
-else()
-  message("ERROR! Could not find RootNewMacros.cmake file! Aborting..")
-  return(1)
+# the RootNewMacros.cmake file has to be found and included manually
+# only for ROOT versions prior to 6.20
+if(ROOT_VERSION VERSION_LESS "6.20")
+  if(EXISTS "${ROOT_DIR}/modules/RootNewMacros.cmake")
+    include("${ROOT_DIR}/modules/RootNewMacros.cmake")
+    message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/modules!")
+  elseif(EXISTS "${ROOT_DIR}/cmake/modules/RootNewMacros.cmake")
+    include("${ROOT_DIR}/cmake/modules/RootNewMacros.cmake")
+    message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/cmake/modules!")
+  elseif(EXISTS "${ROOT_DIR}/../cmake/modules/RootNewMacros.cmake")
+    include("${ROOT_DIR}/../cmake/modules/RootNewMacros.cmake")
+    message(STATUS "Found RootNewMacros.cmake in: ${ROOT_DIR}/../cmake/modules!")
+  else()
+    message("ERROR! Could not find RootNewMacros.cmake file! Aborting..")
+    return(1)
+  endif()
 endif()
 # fix missing include directories property in versions < ROOT 6.12
 set_target_properties(ROOT::Core PROPERTIES
@@ -98,10 +102,20 @@ if(Unpacker2_FOUND)
 else()
   include(ExternalProject)
   message(STATUS "Unpacker2 was not found..")
-  #set(GITHUB_URL "https://github.com/JPETTomography/Unpacker2.git")
-  #set(GIT_TAG "master")
-  set(GITHUB_URL "https://github.com/kkacprzak/Unpacker2.git")
-  set(GIT_TAG "modular")
+  set(GITHUB_URL "https://github.com/JPETTomography/Unpacker2.git")
+
+  execute_process(
+    COMMAND git rev-parse --abbrev-ref HEAD
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE framework_branchname
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+  if( ${framework_branchname} STREQUAL "master")
+    set(GIT_TAG "master")
+  else()
+    set(GIT_TAG "develop")
+  endif()
 
   message(STATUS "Adding external project to download and compile Unpacker2 from: ${GITHUB_URL} with tag: ${GIT_TAG}")
 
@@ -134,13 +148,14 @@ set(FOLDERS_WITH_SOURCE
   GeantParser
   )
 
-## Point sources and headers
+## Point sources
 set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetCmdParser/JPetCmdParser.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetCommonTools/JPetCommonTools.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetData/JPetData.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetDataInterface/JPetDataInterface.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetLogger/JPetLogger.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetLogger/JPetTMessageHandler.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetManager/JPetManager.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetProgressBarManager/JPetProgressBarManager.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetReader/JPetReader.cpp
@@ -151,6 +166,8 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskFactory/JPetTaskFactory.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetInputHandler.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetOutputHandler.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskStreamIO/JPetTaskStreamIO.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIOLoopPerSubTask/JPetTaskIOLoopPerSubTask.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetTaskIO.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetTaskIOTools.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskLooper/JPetTaskLooper.cpp
@@ -163,6 +180,10 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetEvent/JPetEvent.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetHit/JPetHit.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetHitUtils/JPetHitUtils.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetBaseHit/JPetBaseHit.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetMCRecoHit/JPetMCRecoHit.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetPhysRecoHit/JPetPhysRecoHit.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetRecoHit/JPetRecoHit.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetLOR/JPetLOR.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetPhysSignal/JPetPhysSignal.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetMatrixSignal/JPetMatrixSignal.cpp
@@ -179,6 +200,7 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/GeantParser/JPetSmearingFunctions/JPetSmearingFunctions.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetMCDecayTree/JPetMCDecayTree.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetMCHit/JPetMCHit.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetRawMCHit/JPetRawMCHit.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetTimeWindowMC/JPetTimeWindowMC.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionValidator/JPetAdditionalValidators.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionValidator/JPetOptionValidator.cpp
@@ -200,6 +222,10 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetLayer/JPetLayerFactory.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetSetup/JPetSetup.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetSetup/JPetSetupFactory.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetDataSource/JPetDataSource.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetDataSource/JPetDataSourceFactory.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetDataModule/JPetDataModule.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/ParamObjects/JPetDataModule/JPetDataModuleFactory.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamBank/JPetParamBank.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamGetter/JPetParamGetter.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/ParametersTools/JPetParamGetterAscii/JPetParamGetterAscii.cpp
@@ -234,6 +260,10 @@ set(HEADERS_WITH_DICTIONARY_REQUIRED
   JPetPhysSignal/JPetPhysSignal.h
   JPetMatrixSignal/JPetMatrixSignal.h
   JPetHit/JPetHit.h
+  JPetBaseHit/JPetBaseHit.h
+  JPetRecoHit/JPetRecoHit.h
+  JPetPhysRecoHit/JPetPhysRecoHit.h
+  JPetMCRecoHit/JPetMCRecoHit.h
   JPetLOR/JPetLOR.h
   JPetEvent/JPetEvent.h
   JPetStatistics/JPetStatistics.h
@@ -241,11 +271,14 @@ set(HEADERS_WITH_DICTIONARY_REQUIRED
   JPetChannel/JPetChannel.h
   JPetPM/JPetPM.h
   JPetScin/JPetScin.h
+  JPetDataSource/JPetDataSource.h
+  JPetDataModule/JPetDataModule.h
   JPetLayer/JPetLayer.h
   JPetSlot/JPetSlot.h
   JPetSetup/JPetSetup.h
   JPetParamBank/JPetParamBank.h
   JPetMCHit/JPetMCHit.h
+  JPetRawMCHit/JPetRawMCHit.h
   JPetTimeWindowMC/JPetTimeWindowMC.h
   JPetMCDecayTree/JPetMCDecayTree.h
   JPetGeantScinHits/JPetGeantScinHits.h

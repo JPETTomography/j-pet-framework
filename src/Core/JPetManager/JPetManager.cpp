@@ -13,40 +13,44 @@
  *  @file JPetManager.cpp
  */
 
-#include "JPetTaskChainExecutor/JPetTaskChainExecutor.h"
-#include "JPetOptionsGenerator/JPetOptionsGenerator.h"
-#include "JPetGeantParser/JPetGeantParser.h"
-#include "JPetGeantParser/JPetGeantParser.h"
-#include "JPetCommonTools/JPetCommonTools.h"
-#include "JPetCmdParser/JPetCmdParser.h"
 #include "JPetManager/JPetManager.h"
+#include "JPetCmdParser/JPetCmdParser.h"
+#include "JPetCommonTools/JPetCommonTools.h"
+#include "JPetGeantParser/JPetGeantParser.h"
 #include "JPetLoggerInclude.h"
+#include "JPetOptionsGenerator/JPetOptionsGenerator.h"
+#include "JPetTaskChainExecutor/JPetTaskChainExecutor.h"
 #include <TThread.h>
-#include <exception>
 #include <cassert>
+#include <exception>
 #include <string>
 
 using namespace jpet_options_tools;
 
 JPetManager::JPetManager() {}
 
-JPetManager& JPetManager::getManager() {
+JPetManager& JPetManager::getManager()
+{
   static JPetManager instance;
   return instance;
 }
 
-void JPetManager::run(int argc, const char** argv) {
+void JPetManager::run(int argc, const char** argv)
+{
   bool isOk = true;
 
   std::map<std::string, boost::any> allValidatedOptions;
   std::tie(isOk, allValidatedOptions) = parseCmdLine(argc, argv);
 
-  if (!isOk) {
+  if (!isOk)
+  {
     ERROR("While parsing command line arguments");
     std::cerr << "Error has occurred while parsing command line! Check the log!" << std::endl;
     throw std::invalid_argument("Error in parsing command line arguments"); /// temporary change to check if the examples are working
   }
-
+  JPetManager::registerDefaultTasks();
+  useTasksFromUserParams(allValidatedOptions);  // add userTasks registered in userParams to run
+  checkDisableLogRotation(allValidatedOptions); // disable log rotation if enabled
   auto chainOfTasks = fTaskFactory.createTaskGeneratorChain(allValidatedOptions);
   JPetOptionsGenerator optionsGenerator;
   auto options = optionsGenerator.generateOptionsForTasks(allValidatedOptions, chainOfTasks.size());
@@ -58,17 +62,25 @@ void JPetManager::run(int argc, const char** argv) {
   /// For every input option, new TaskChainExecutor is created,
   /// which creates the chain of previously registered tasks.
   /// The inputDataSeq is the identifier of given chain.
-  for (auto opt : options) {
+  for (auto opt : options)
+  {
     auto executor = jpet_common_tools::make_unique<JPetTaskChainExecutor>(chainOfTasks, inputDataSeq, opt.second);
-    if (areThreadsEnabled()) {
+    if (areThreadsEnabled())
+    {
       auto thr = executor->run();
-      if (thr) {
+      if (thr)
+      {
         threads.push_back(thr);
-      } else {
+      }
+      else
+      {
         ERROR("thread pointer is null");
       }
-    } else {
-      if (!executor->process()) {
+    }
+    else
+    {
+      if (!executor->process())
+      {
         ERROR("While running process");
         std::cerr << "Stopping program, error has occurred while calling executor->process! Check the log!" << std::endl;
         throw std::runtime_error("Error in executor->process");
@@ -76,8 +88,10 @@ void JPetManager::run(int argc, const char** argv) {
     }
     inputDataSeq++;
   }
-  if (areThreadsEnabled()) {
-    for (auto thread : threads) {
+  if (areThreadsEnabled())
+  {
+    for (auto thread : threads)
+    {
       assert(thread);
       thread->Join();
     }
@@ -85,14 +99,18 @@ void JPetManager::run(int argc, const char** argv) {
   INFO("======== Finished processing all tasks: " + JPetCommonTools::getTimeString() + " ========\n");
 }
 
-std::pair<bool, std::map<std::string, boost::any>> JPetManager::parseCmdLine(int argc, const char** argv) {
+std::pair<bool, std::map<std::string, boost::any>> JPetManager::parseCmdLine(int argc, const char** argv)
+{
   std::map<std::string, boost::any> allValidatedOptions;
-  try {
+  try
+  {
     JPetOptionsGenerator optionsGenerator;
     JPetCmdParser parser;
     auto optionsFromCmdLine = parser.parseCmdLineArgs(argc, argv);
     allValidatedOptions = optionsGenerator.generateAndValidateOptions(optionsFromCmdLine);
-  } catch (std::exception& e) {
+  }
+  catch (std::exception& e)
+  {
     ERROR(e.what());
     return std::make_pair(false, std::map<std::string, boost::any>{});
   }
@@ -100,8 +118,10 @@ std::pair<bool, std::map<std::string, boost::any>> JPetManager::parseCmdLine(int
 }
 
 // cppcheck-suppress unusedFunction
-void JPetManager::useTask(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numTimes) {
-  if (!fTaskFactory.addTaskInfo(name, inputFileType, outputFileType, numTimes)) {
+void JPetManager::useTask(const std::string& name, const std::string& inputFileType, const std::string& outputFileType, int numTimes)
+{
+  if (!fTaskFactory.addTaskInfo(name, inputFileType, outputFileType, numTimes))
+  {
     std::cerr << "Error has occurred while calling useTask! Check the log!" << std::endl;
     throw std::runtime_error("error in addTaskInfo");
   }
@@ -109,7 +129,43 @@ void JPetManager::useTask(const std::string& name, const std::string& inputFileT
 
 bool JPetManager::areThreadsEnabled() const { return fThreadsEnabled; }
 
-void JPetManager::setThreadsEnabled(bool enable) {
+void JPetManager::setThreadsEnabled(bool enable)
+{
   fThreadsEnabled = enable;
   ENABLE_THREADS_INFO(enable);
+}
+
+void JPetManager::registerDefaultTasks() { JPetManager::getManager().registerTask<JPetGeantParser>("JPetGeantParser"); }
+
+void JPetManager::useTasksFromUserParams(const std::map<std::string, boost::any>& opts)
+{
+  using namespace jpet_options_tools;
+  std::vector<std::string> useTasksValue;
+  if (isOptionSet(opts, kUseTasksFromParamsKey))
+  {
+    useTasksValue = getOptionAsVectorOfStrings(opts, kUseTasksFromParamsKey);
+  }
+  if (useTasksValue.size() % 3 != 0)
+  {
+    ERROR("WRONG number of parameters in " + kUseTasksFromParamsKey + " userparam, do not adding any tasks from userParams");
+    return;
+  }
+  for (unsigned int i = 0; i < useTasksValue.size(); i += 3)
+  {
+    useTask(useTasksValue[i], useTasksValue[i + 1], useTasksValue[i + 2]);
+  }
+}
+
+void JPetManager::checkDisableLogRotation(const std::map<std::string, boost::any>& opts)
+{
+  using namespace jpet_options_tools;
+  if (isOptionSet(opts, kDisableLogRotation))
+  {
+    bool fDisableLogRotation = getOptionAsBool(opts, kDisableLogRotation);
+    if (fDisableLogRotation)
+    {
+      INFO("Disabling log rotation size!");
+      JPetLogger::setRotationSize(UINT_MAX);
+    }
+  }
 }

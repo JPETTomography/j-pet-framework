@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -15,19 +15,22 @@
 
 #include "JPetParamBank/JPetParamBank.h"
 
-ClassImp (JPetParamBank);
+ClassImp(JPetParamBank);
 
-JPetParamBank::JPetParamBank(): fDummy(false) {}
+JPetParamBank::JPetParamBank() : fDummy(false) {}
 
-JPetParamBank::JPetParamBank(const bool d): fDummy(d) {}
+JPetParamBank::JPetParamBank(const bool d) : fDummy(d) {}
 
-JPetParamBank::JPetParamBank(const JPetParamBank& paramBank):fDummy(false){
+JPetParamBank::JPetParamBank(const JPetParamBank& paramBank) : fDummy(false)
+{
   copyMapValues(fSetups, paramBank.fSetups);
   copyMapValues(fLayers, paramBank.fLayers);
   copyMapValues(fSlots, paramBank.fSlots);
   copyMapValues(fScins, paramBank.fScins);
   copyMapValues(fPMs, paramBank.fPMs);
   copyMapValues(fChannels, paramBank.fChannels);
+  copyMapValues(fDataSources, paramBank.fDataSources);
+  copyMapValues(fDataModules, paramBank.fDataModules);
 }
 
 JPetParamBank::~JPetParamBank() {}
@@ -42,33 +45,42 @@ void JPetParamBank::clear()
   fScins.clear();
   fPMs.clear();
   fChannels.clear();
+  fDataSources.clear();
+  fDataModules.clear();
 }
 
 int JPetParamBank::getSize(ParamObjectType type) const
 {
   int size = -1;
-  switch (type) {
-    case kSetup:
-      size = getSetupsSize();
-      break;
-    case kLayer:
-      size = getLayersSize();
-      break;
-    case kSlot:
-      size = getSlotsSize();
-      break;
-    case kScin:
-      size = getScinsSize();
-      break;
-    case kPM:
-      size = getPMsSize();
-      break;
-    case kChannel:
-      size = getChannelsSize();
-      break;
-    default:
-      ERROR("Bad ParamObject type");
-      break;
+  switch (type)
+  {
+  case kSetup:
+    size = getSetupsSize();
+    break;
+  case kLayer:
+    size = getLayersSize();
+    break;
+  case kSlot:
+    size = getSlotsSize();
+    break;
+  case kScin:
+    size = getScinsSize();
+    break;
+  case kPM:
+    size = getPMsSize();
+    break;
+  case kChannel:
+    size = getChannelsSize();
+    break;
+  case kDataSource:
+    size = getDataSourcesSize();
+    break;
+  case kDataModule:
+    size = getDataModulesSize();
+    break;
+  default:
+    ERROR("Bad ParamObject type");
+    break;
   }
   return size;
 }

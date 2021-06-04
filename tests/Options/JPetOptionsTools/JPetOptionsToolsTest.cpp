@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,14 +16,14 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetOptionsTest
 
-#include "JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 #include "JPetOptionsTools/JPetOptionsTools.h"
-#include <boost/test/unit_test.hpp>
-#include <boost/filesystem.hpp>
+#include "JPetOptionsGenerator/JPetOptionsTypeHandler.h"
 #include <boost/any.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/test/unit_test.hpp>
 #include <iostream>
-#include <typeinfo>
 #include <string>
+#include <typeinfo>
 
 using boost::any_cast;
 const std::string dataDir = "unitTestData/JPetOptionsToolsTest/";
@@ -100,8 +100,7 @@ BOOST_AUTO_TEST_CASE(createOptionsFromConfigFile)
 BOOST_AUTO_TEST_CASE(createConfigFileFromOptionsAndReadItBack)
 {
   std::map<std::string, std::string> options = {
-    {"TimeWindow_std::string", "11"}, {"SomeOption_std::string", "false"}, {"AnotherOption_std::string", "4.5"}
-  };
+      {"TimeWindow_std::string", "11"}, {"SomeOption_std::string", "false"}, {"AnotherOption_std::string", "4.5"}};
   std::string cfgFile = "test_cfg2.json";
   BOOST_REQUIRE(jpet_options_tools::createConfigFileFromOptions(options, cfgFile));
   auto loadedOptions = jpet_options_tools::createOptionsFromConfigFile(cfgFile);
@@ -110,11 +109,13 @@ BOOST_AUTO_TEST_CASE(createConfigFileFromOptionsAndReadItBack)
   std::vector<std::string> values_expected;
   std::vector<std::string> keys;
   std::vector<std::string> values;
-  for (const auto& el : loadedOptions) {
+  for (const auto& el : loadedOptions)
+  {
     keys_expected.push_back(el.first);
     values_expected.push_back(any_cast<std::string>(el.second));
   }
-  for (const auto& el : options) {
+  for (const auto& el : options)
+  {
     keys.push_back(el.first);
     values.push_back(el.second);
   }
@@ -130,8 +131,7 @@ BOOST_AUTO_TEST_CASE(createConfigFileFromOptionsAndReadItBack)
 BOOST_AUTO_TEST_CASE(createOptionsFromConfigFileThatDoesNotExist)
 {
   auto inFile = "nonExistingTestCfg.json";
-  auto options = jpet_options_tools::createOptionsFromConfigFile(inFile);
-  BOOST_REQUIRE(options.empty());
+  BOOST_REQUIRE_THROW(jpet_options_tools::createOptionsFromConfigFile(inFile), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(createConfigFileFromEmptyMap)
@@ -145,20 +145,17 @@ BOOST_AUTO_TEST_CASE(createConfigFileFromEmptyMap)
 BOOST_AUTO_TEST_CASE(createOptionsFromConfigFileThatHasWrongFormat)
 {
   auto inFile = "unitTestData/JPetOptionsToolsTest/wrongInputFile.json";
-  auto options = jpet_options_tools::createOptionsFromConfigFile(inFile);
-  BOOST_REQUIRE_EQUAL(options.size(), 0);
+  BOOST_REQUIRE_THROW(jpet_options_tools::createOptionsFromConfigFile(inFile), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(checkIfGetOptionAndIsOptionWork)
 {
-  std::map<std::string, boost::any> options = {
-    {"firstEvent_int", -1},
-    {"lastEvent_int", -1},
-    {"progressBar_bool", false},
-    {"runID_int", -1},
-    {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
-    {"unpackerCalibFile_std::string", std::string("")}
-  };
+  std::map<std::string, boost::any> options = {{"firstEvent_int", -1},
+                                               {"lastEvent_int", -1},
+                                               {"progressBar_bool", false},
+                                               {"runID_int", -1},
+                                               {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
+                                               {"unpackerCalibFile_std::string", std::string("")}};
 
   BOOST_REQUIRE(isOptionSet(options, "firstEvent_int"));
   BOOST_REQUIRE(isOptionSet(options, "lastEvent_int"));
@@ -169,20 +166,18 @@ BOOST_AUTO_TEST_CASE(checkIfGetOptionAndIsOptionWork)
 
 BOOST_AUTO_TEST_CASE(getTotalEventsTest)
 {
-  OptsStrAny options = {
-    {"inputFile_std::string", std::string("input")},
-    {"scopeConfigFile_std::string", std::string("test.json")},
-    {"scopeInputDirectory_std::string", std::string("scopeData")},
-    {"outputFile_std::string", std::string("output")},
-    {"firstEvent_int", -1},
-    {"lastEvent_int", -1},
-    {"runID_int", 2001},
-    {"progressBar_bool", true},
-    {"inputFileType_std::string", std::string("root")},
-    {"outputFileType_std::string", std::string("scope")},
-    {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
-    {"unpackerCalibFile_std::string", std::string("")}
-  };
+  OptsStrAny options = {{"inputFile_std::string", std::string("input")},
+                        {"scopeConfigFile_std::string", std::string("test.json")},
+                        {"scopeInputDirectory_std::string", std::string("scopeData")},
+                        {"outputFile_std::string", std::string("output")},
+                        {"firstEvent_int", -1},
+                        {"lastEvent_int", -1},
+                        {"runID_int", 2001},
+                        {"progressBar_bool", true},
+                        {"inputFileType_std::string", std::string("root")},
+                        {"outputFileType_std::string", std::string("scope")},
+                        {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
+                        {"unpackerCalibFile_std::string", std::string("")}};
 
   BOOST_REQUIRE_EQUAL(getTotalEvents(options), -1);
 
@@ -220,15 +215,15 @@ BOOST_AUTO_TEST_CASE(getOptionBy)
 {
   std::vector<std::string> tmp = {"aa", "bb"};
   std::vector<int> intVector = {1, 2, 3};
-  std::map<std::string, boost::any> opts = {
-    {"my_string", std::string("my_value")},
-    {"my_int", int(12)},
-    {"my_float", float(12.5)},
-    {"my_double", double(14.6)},
-    {"my_bool", false},
-    {"my_vectS", tmp},
-    {"my_intV", intVector}
-  };
+  std::vector<double> doubleVector = {1.5, 2.1, 0.8, 0.2};
+  std::map<std::string, boost::any> opts = {{"my_string", std::string("my_value")},
+                                            {"my_int", int(12)},
+                                            {"my_float", float(12.5)},
+                                            {"my_double", double(14.6)},
+                                            {"my_bool", false},
+                                            {"my_vectS", tmp},
+                                            {"my_intV", intVector},
+                                            {"my_vectD", doubleVector}};
   BOOST_REQUIRE_EQUAL(getOptionAsString(opts, "my_string"), std::string("my_value"));
   BOOST_REQUIRE_EQUAL(getOptionAsInt(opts, "my_int"), 12);
   BOOST_REQUIRE_EQUAL(getOptionAsFloat(opts, "my_float"), 12.5);
@@ -236,23 +231,52 @@ BOOST_AUTO_TEST_CASE(getOptionBy)
   BOOST_REQUIRE(!getOptionAsVectorOfStrings(opts, "my_vectS").empty());
   BOOST_REQUIRE_EQUAL(getOptionAsVectorOfStrings(opts, "my_vectS").size(), 2u);
   BOOST_REQUIRE_EQUAL(getOptionAsVectorOfInts(opts, "my_intV").size(), 3u);
+
+  double epsilon = 0.001;
+  auto res = getOptionAsVectorOfDoubles(opts, "my_vectD");
+  BOOST_REQUIRE(!res.empty());
+  BOOST_REQUIRE_CLOSE(res[0], 1.5, epsilon);
+  BOOST_REQUIRE_CLOSE(res[1], 2.1, epsilon);
+  BOOST_REQUIRE_CLOSE(res[2], 0.8, epsilon);
+  BOOST_REQUIRE_CLOSE(res[3], 0.2, epsilon);
+
+  BOOST_REQUIRE_EQUAL(getOptionAsVectorOfDoubles(opts, "my_vectD").size(), 4u);
   BOOST_REQUIRE_EQUAL(getOptionAsBool(opts, "my_bool"), false);
 }
 
 BOOST_AUTO_TEST_CASE(getDetectorTypeTest)
 {
+  using namespace detector_type_checker;
   OptsStrAny opt1 = {{"detectorType_std::string", std::string("bar")}};
   OptsStrAny opt2 = {{"detectorType_std::string", std::string("barrel")}};
   OptsStrAny opt3 = {{"detectorType_std::string", std::string("mod")}};
   OptsStrAny opt4 = {{"detectorType_std::string", std::string("modular")}};
   OptsStrAny opt5 = {{"detectorType_std::string", std::string("kloe")}};
   OptsStrAny opt6 = {{"detectorType_std::string", std::string("lhcb")}};
-  BOOST_REQUIRE_EQUAL(DetectorTypeChecker::getDetectorType(opt1), DetectorTypeChecker::DetectorType::kBarrel);
-  BOOST_REQUIRE_EQUAL(DetectorTypeChecker::getDetectorType(opt2), DetectorTypeChecker::DetectorType::kBarrel);
-  BOOST_REQUIRE_EQUAL(DetectorTypeChecker::getDetectorType(opt3), DetectorTypeChecker::DetectorType::kModular);
-  BOOST_REQUIRE_EQUAL(DetectorTypeChecker::getDetectorType(opt4), DetectorTypeChecker::DetectorType::kModular);
-  BOOST_REQUIRE_EQUAL(DetectorTypeChecker::getDetectorType(opt5), DetectorTypeChecker::DetectorType::kBarrel);
-  BOOST_REQUIRE_EQUAL(DetectorTypeChecker::getDetectorType(opt6), DetectorTypeChecker::DetectorType::kBarrel);
+  BOOST_REQUIRE_EQUAL(getDetectorType(opt1), DetectorType::kBarrel);
+  BOOST_REQUIRE_EQUAL(getDetectorType(opt2), DetectorType::kBarrel);
+  BOOST_REQUIRE_EQUAL(getDetectorType(opt3), DetectorType::kModular);
+  BOOST_REQUIRE_EQUAL(getDetectorType(opt4), DetectorType::kModular);
+  BOOST_REQUIRE_EQUAL(getDetectorType(opt5), DetectorType::kBarrel);
+  BOOST_REQUIRE_EQUAL(getDetectorType(opt6), DetectorType::kBarrel);
+}
+
+BOOST_AUTO_TEST_CASE(testBooleanOptions)
+{
+  OptsStrAny options1 = {};
+
+  BOOST_REQUIRE_EQUAL(isProgressBar(options1), false);
+  BOOST_REQUIRE_EQUAL(isDirectProcessing(options1), false);
+
+  OptsStrAny options2 = {{"progressBar_bool", false}, {"directProcessing_bool", false}};
+
+  BOOST_REQUIRE_EQUAL(isProgressBar(options2), false);
+  BOOST_REQUIRE_EQUAL(isDirectProcessing(options2), false);
+
+  OptsStrAny options3 = {{"progressBar_bool", true}, {"directProcessing_bool", true}};
+
+  BOOST_REQUIRE_EQUAL(isProgressBar(options3), true);
+  BOOST_REQUIRE_EQUAL(isDirectProcessing(options3), true);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

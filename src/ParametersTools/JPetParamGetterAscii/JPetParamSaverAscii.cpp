@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,15 +13,14 @@
  *  @file JPetParamSaverAscii.cpp
  */
 
-#include <boost/property_tree/json_parser.hpp>
-#include "JPetParamGetterAscii/JPetParamAsciiConstants.h"
 #include "JPetParamGetterAscii/JPetParamSaverAscii.h"
 #include "JPetParamBank/JPetParamBank.h"
-#include <boost/lexical_cast.hpp>
+#include "JPetParamGetterAscii/JPetParamAsciiConstants.h"
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
-void JPetParamSaverAscii::saveParamBank(
-  const JPetParamBank& bank, const int runNumber, const std::string& filename)
+void JPetParamSaverAscii::saveParamBank(const JPetParamBank& bank, const int runNumber, const std::string& filename)
 {
   std::string runNumberS = boost::lexical_cast<std::string>(runNumber);
   auto fileTree = getTreeFromFile(filename);
@@ -32,16 +31,17 @@ void JPetParamSaverAscii::saveParamBank(
 boost::property_tree::ptree JPetParamSaverAscii::getTreeFromFile(const std::string& filename)
 {
   boost::property_tree::ptree result;
-  if (boost::filesystem::exists(filename)) {
+  if (boost::filesystem::exists(filename))
+  {
     boost::property_tree::read_json(filename, result);
   }
   return result;
 }
 
-void JPetParamSaverAscii::addToTree(
-  boost::property_tree::ptree& tree, const JPetParamBank& bank, const std::string& runNumber
-) {
-  if (tree.count(runNumber) != 0) {
+void JPetParamSaverAscii::addToTree(boost::property_tree::ptree& tree, const JPetParamBank& bank, const std::string& runNumber)
+{
+  if (tree.count(runNumber) != 0)
+  {
     WARNING("Overwriting parameters in run number " + runNumber + ". I hope you wanted to do that.");
     tree.erase(runNumber);
   }
@@ -52,64 +52,66 @@ void JPetParamSaverAscii::addToTree(
   fillScins(runContents, bank);
   fillPMs(runContents, bank);
   fillChannels(runContents, bank);
+  fillDataSources(runContents, bank);
+  fillDataModules(runContents, bank);
   tree.add_child(runNumber, runContents);
 }
 
-void JPetParamSaverAscii::fillSetups(
-  boost::property_tree::ptree& runContents, const JPetParamBank& bank
-) {
+void JPetParamSaverAscii::fillSetups(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
+{
   boost::property_tree::ptree infos;
-  for (auto setup : bank.getSetups()) {
+  for (auto setup : bank.getSetups())
+  {
     infos.push_back(std::make_pair("", setupToInfo(*setup.second)));
   }
   runContents.add_child(objectsNames.at(ParamObjectType::kSetup), infos);
 }
 
-void JPetParamSaverAscii::fillLayers(
-  boost::property_tree::ptree& runContents, const JPetParamBank& bank
-) {
+void JPetParamSaverAscii::fillLayers(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
+{
   boost::property_tree::ptree infos;
-  for (auto layer : bank.getLayers()) {
+  for (auto layer : bank.getLayers())
+  {
     infos.push_back(std::make_pair("", layerToInfo(*layer.second)));
   }
   runContents.add_child(objectsNames.at(ParamObjectType::kLayer), infos);
 }
 
-void JPetParamSaverAscii::fillSlots(
-  boost::property_tree::ptree& runContents, const JPetParamBank& bank
-) {
+void JPetParamSaverAscii::fillSlots(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
+{
   boost::property_tree::ptree infos;
-  for (auto slot : bank.getSlots()) {
+  for (auto slot : bank.getSlots())
+  {
     infos.push_back(std::make_pair("", slotToInfo(*slot.second)));
   }
   runContents.add_child(objectsNames.at(ParamObjectType::kSlot), infos);
 }
 
-void JPetParamSaverAscii::fillScins(
-  boost::property_tree::ptree& runContents, const JPetParamBank& bank
-) {
+void JPetParamSaverAscii::fillScins(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
+{
   boost::property_tree::ptree infos;
-  for (auto scin : bank.getScins()) {
+  for (auto scin : bank.getScins())
+  {
     infos.push_back(std::make_pair("", scinToInfo(*scin.second)));
   }
   runContents.add_child(objectsNames.at(ParamObjectType::kScin), infos);
 }
 
-void JPetParamSaverAscii::fillPMs(
-  boost::property_tree::ptree& runContents, const JPetParamBank& bank
-) {
+void JPetParamSaverAscii::fillPMs(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
+{
   boost::property_tree::ptree infos;
-  for (auto pm : bank.getPMs()) {
+  for (auto pm : bank.getPMs())
+  {
     infos.push_back(std::make_pair("", pmToInfo(*pm.second)));
   }
   runContents.add_child(objectsNames.at(ParamObjectType::kPM), infos);
 }
 
-void JPetParamSaverAscii::fillChannels(
-  boost::property_tree::ptree& runContents, const JPetParamBank& bank
-) {
+void JPetParamSaverAscii::fillChannels(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
+{
   boost::property_tree::ptree infos;
-  for (auto channel : bank.getChannels()) {
+  for (auto channel : bank.getChannels())
+  {
     infos.push_back(std::make_pair("", channelToInfo(*channel.second)));
   }
   runContents.add_child(objectsNames.at(ParamObjectType::kChannel), infos);
@@ -138,9 +140,12 @@ boost::property_tree::ptree JPetParamSaverAscii::slotToInfo(const JPetSlot& slot
   boost::property_tree::ptree info;
   info.put("id", slot.getID());
   info.put("theta", slot.getTheta());
-  if(slot.getType() == JPetSlot::Barrel) {
+  if (slot.getType() == JPetSlot::Barrel)
+  {
     info.put("type", "barrel");
-  } else if(slot.getType() == JPetSlot::Module){
+  }
+  else if (slot.getType() == JPetSlot::Module)
+  {
     info.put("type", "module");
   }
   info.put(objectsNames.at(ParamObjectType::kLayer) + "_id", slot.getLayer().getID());
@@ -165,9 +170,12 @@ boost::property_tree::ptree JPetParamSaverAscii::pmToInfo(const JPetPM& pm)
 {
   boost::property_tree::ptree info;
   info.put("id", pm.getID());
-  if(pm.getSide() == JPetPM::Side::SideA) {
+  if (pm.getSide() == JPetPM::Side::SideA)
+  {
     info.put("side", "A");
-  } else if(pm.getSide() == JPetPM::Side::SideB) {
+  }
+  else if (pm.getSide() == JPetPM::Side::SideB)
+  {
     info.put("side", "B");
   }
   info.put("description", pm.getDesc());
@@ -183,5 +191,57 @@ boost::property_tree::ptree JPetParamSaverAscii::channelToInfo(const JPetChannel
   info.put("thr_num", channel.getThresholdNumber());
   info.put("thr_val", channel.getThresholdValue());
   info.put(objectsNames.at(ParamObjectType::kPM) + "_id", channel.getPM().getID());
+  return info;
+}
+
+void JPetParamSaverAscii::fillDataSources(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
+{
+  boost::property_tree::ptree infos;
+  for (auto dataSource : bank.getDataSources())
+  {
+    infos.push_back(std::make_pair("", dataSourceToInfo(*dataSource.second)));
+  }
+  runContents.add_child(objectsNames.at(ParamObjectType::kDataSource), infos);
+}
+
+boost::property_tree::ptree JPetParamSaverAscii::dataSourceToInfo(const JPetDataSource& dataSource)
+{
+  // Converting TRB and HUB addresses from decimal to hex and to string
+  std::stringstream trb2stringStream;
+  std::stringstream hub2stringStream;
+  trb2stringStream << std::hex << dataSource.getTBRNetAddress();
+  hub2stringStream << std::hex << dataSource.getHubAddress();
+
+  boost::property_tree::ptree info;
+  info.put("id", dataSource.getID());
+  info.put("type", dataSource.getType());
+  info.put("trbnet_address", trb2stringStream.str());
+  info.put("hub_address", hub2stringStream.str());
+  return info;
+}
+
+void JPetParamSaverAscii::fillDataModules(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
+{
+  boost::property_tree::ptree infos;
+  for (auto dataModule : bank.getDataModules())
+  {
+    infos.push_back(std::make_pair("", dataModuleToInfo(*dataModule.second)));
+  }
+  runContents.add_child(objectsNames.at(ParamObjectType::kDataModule), infos);
+}
+
+boost::property_tree::ptree JPetParamSaverAscii::dataModuleToInfo(const JPetDataModule& dataModule)
+{
+  // Converting TRB address from decimal to hex and to string
+  std::stringstream trb2stringStream;
+  trb2stringStream << std::hex << dataModule.getTBRNetAddress();
+
+  boost::property_tree::ptree info;
+  info.put("id", dataModule.getID());
+  info.put("type", dataModule.getType());
+  info.put("trbnet_address", trb2stringStream.str());
+  info.put("channels_number", dataModule.getChannelsNumber());
+  info.put("channels_offset", dataModule.getChannelsOffset());
+  info.put(objectsNames.at(ParamObjectType::kDataSource) + "_id", dataModule.getDataSource().getID());
   return info;
 }

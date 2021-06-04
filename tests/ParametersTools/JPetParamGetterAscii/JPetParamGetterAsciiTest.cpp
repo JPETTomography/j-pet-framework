@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(empty_file_read)
 
 BOOST_AUTO_TEST_CASE(minimal_basic_data_read)
 {
-  JPetParamGetterAscii getter(dataDir + "DB1.json");
+  JPetParamGetterAscii getter(dataDir + "DB2.json");
   ParamObjectsDescriptions descriptions = getter.getAllBasicData(ParamObjectType::kPM, 1);
   BOOST_REQUIRE_EQUAL(descriptions.size(), 1u);
   ParamObjectDescription& description = descriptions[1];
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(minimal_basic_data_read)
 
 BOOST_AUTO_TEST_CASE(minimal_relational_data_read)
 {
-  JPetParamGetterAscii getter(dataDir + "DB1.json");
+  JPetParamGetterAscii getter(dataDir + "DB3.json");
   ParamRelationalData relations = getter.getAllRelationalData(ParamObjectType::kPM, ParamObjectType::kScin, 1);
   BOOST_REQUIRE_EQUAL(relations.size(), 1u);
   BOOST_REQUIRE_EQUAL(relations[1], 1);
@@ -60,14 +60,17 @@ BOOST_AUTO_TEST_CASE(minimal_relational_data_read)
 
 BOOST_AUTO_TEST_CASE(minimal_example_write)
 {
-  JPetParamManager paramManager(new JPetParamGetterAscii(dataDir + "DB1.json"));
+  JPetParamManager paramManager(new JPetParamGetterAscii(dataDir + "DB2.json"));
   paramManager.fillParameterBank(1);
+
   const JPetParamBank& paramBank = paramManager.getParamBank();
   JPetParamSaverAscii saver;
-  std::string writtenFileName(dataDir + "writtenDB1.json");
+  std::string writtenFileName(dataDir + "writtenDB2.json");
   saver.saveParamBank(paramBank, 1, writtenFileName);
+
   JPetParamManager reparamManager(new JPetParamGetterAscii(writtenFileName.c_str()));
   reparamManager.fillParameterBank(1);
+
   const JPetParamBank& reparamBank = reparamManager.getParamBank();
   BOOST_REQUIRE(paramBank.getScinsSize() == reparamBank.getScinsSize());
   BOOST_REQUIRE(paramBank.getSlotsSize() == reparamBank.getSlotsSize());
@@ -75,6 +78,9 @@ BOOST_AUTO_TEST_CASE(minimal_example_write)
   BOOST_REQUIRE(paramBank.getLayersSize() == reparamBank.getLayersSize());
   BOOST_REQUIRE(paramBank.getSetupsSize() == reparamBank.getSetupsSize());
   BOOST_REQUIRE(paramBank.getChannelsSize() == reparamBank.getChannelsSize());
+  BOOST_REQUIRE(paramBank.getDataSourcesSize() == reparamBank.getDataSourcesSize());
+  BOOST_REQUIRE(paramBank.getDataModulesSize() == reparamBank.getDataModulesSize());
+
   JPetScin& scintillator = paramBank.getScin(1);
   JPetScin& rescintillator = reparamBank.getScin(1);
   BOOST_REQUIRE(scintillator.getID() == rescintillator.getID());
@@ -96,6 +102,7 @@ BOOST_AUTO_TEST_CASE(minimal_example_write)
   BOOST_REQUIRE(layer.getIsActive() == relayer.getIsActive());
   BOOST_REQUIRE(layer.getName() == relayer.getName());
   BOOST_REQUIRE(layer.getRadius() == relayer.getRadius());
+
   JPetFrame& frame = paramBank.getFrame(1);
   JPetFrame& reframe = reparamBank.getFrame(1);
   BOOST_REQUIRE(frame.getID() == reframe.getID());
@@ -104,14 +111,20 @@ BOOST_AUTO_TEST_CASE(minimal_example_write)
   BOOST_REQUIRE(frame.getDescription() == reframe.getDescription());
   BOOST_REQUIRE(frame.getVersion() == reframe.getVersion());
   BOOST_REQUIRE(frame.getCreator() == reframe.getCreator());
+
   JPetTOMBChannel& tomb = paramBank.getTOMBChannel(1);
   JPetTOMBChannel& retomb = reparamBank.getTOMBChannel(1);
   BOOST_REQUIRE(tomb.getThreshold() == retomb.getThreshold());
+
   JPetTRB& trb = paramBank.getTRB(1);
   JPetTRB& retrb = reparamBank.getTRB(1);
   BOOST_REQUIRE(trb.getID() == retrb.getID());
   BOOST_REQUIRE(trb.getType() == retrb.getType());
   BOOST_REQUIRE(trb.getChannel() == retrb.getChannel());
+
+  BOOST_REQUIRE(paramBank.getDataSource(1) == reparamBank.getDataSource(1));
+  BOOST_REQUIRE(paramBank.getDataModule(1) == reparamBank.getDataModule(1));
+
   BOOST_REQUIRE(barrelSlot == scintillator.getBarrelSlot());
   BOOST_REQUIRE(barrelSlot == pm.getBarrelSlot());
   BOOST_REQUIRE(scintillator == pm.getScin());

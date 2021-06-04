@@ -16,12 +16,15 @@
 #ifndef JPETLOGGER_H
 #define JPETLOGGER_H
 
+#include "JPetTMessageHandler.h"
+#include "JPetTextFileBackend.h"
 #include <fstream>
 #include <iostream>
 #include <ostream>
 #include <string>
 
 #ifndef __CINT__
+#include <boost/log/attributes/attribute_cast.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/sinks/text_ostream_backend.hpp>
 #include <boost/log/trivial.hpp>
@@ -42,13 +45,16 @@ class JPetLogger {
 public:
 #ifndef __CINT__
 
-  static boost::log::sources::severity_logger<boost::log::trivial::severity_level>& getSeverity() {
+  static boost::log::sources::severity_logger<boost::log::trivial::severity_level>& getSeverity()
+  {
     static bool isInitialized = false;
     if (!isInitialized) {
-      JPetLogger::getInstance(); // if JPetLogger is not initialized, get instance to call constructor
+      JPetLogger::getInstance(); // if JPetLogger is not initialized, get
+                                 // instance to call constructor
       isInitialized = true;
     }
     static boost::log::sources::severity_logger<boost::log::trivial::severity_level> sev;
+    static JPetTMessageHandler rootHandler;
     return sev;
   }
 
@@ -58,12 +64,15 @@ public:
     JPetLogger::getInstance().sink->set_filter(boost::log::trivial::severity >= level);
   }
 
-  static JPetLogger& getInstance() {
+  static JPetLogger& getInstance()
+  {
     static JPetLogger logger;
     return logger;
   }
 
   static void setThreadsEnabled(bool value) { JPetLogger::getInstance().isThreadsEnabled = value; }
+
+  static void setRotationSize(unsigned int value) { JPetLogger::getInstance().backend->set_rotation_size(value); }
 #else
   void getSeverity();
   void formatter();
@@ -75,10 +84,12 @@ private:
   JPetLogger(const JPetLogger&);
   JPetLogger& operator=(const JPetLogger&);
 
+  const int kRotationSize = 10 * 1024 * 1024; // 10 * MiB, log will rotate after 10MiB
+
 #ifndef __CINT__
   void init();
-
-  typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_file_backend> sink_t;
+  boost::shared_ptr<JPetTextFileBackend> backend;
+  typedef boost::log::sinks::synchronous_sink<JPetTextFileBackend> sink_t;
   boost::shared_ptr<sink_t> sink;
 
   bool isThreadsEnabled = false;

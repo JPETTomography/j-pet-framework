@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -32,35 +32,37 @@ JPetParamBankHandlerTask::JPetParamBankHandlerTask(const char* name) : JPetTask(
 bool JPetParamBankHandlerTask::init(const JPetParams& params)
 {
   using namespace jpet_options_tools;
+  using namespace file_type_checker;
+
   auto options = params.getOptions();
-  switch (FileTypeChecker::getInputFileType(options))
+  switch (file_type_checker::getInputFileType(options))
   {
-  case FileTypeChecker::FileType::kHld:
-  case FileTypeChecker::FileType::kHldRoot:
+  case FileType::kHld:
+  case FileType::kHldRoot:
     return generateParamBankFromConfig(params);
     break;
-  case FileTypeChecker::FileType::kRoot:
+  case FileType::kRoot:
     return generateParamBankFromRootFile(params);
     break;
-  case FileTypeChecker::FileType::kScope:
+  case FileType::kScope:
     return generateParamBankFromConfig(params);
     break;
-  case FileTypeChecker::FileType::kMCGeant:
+  case FileType::kMCGeant:
     return generateParamBankFromConfig(params);
     break;
   default:
-    std::map<FileTypeChecker::FileType, std::string> fileTypeToString = {{FileTypeChecker::kNoType, ""},         {FileTypeChecker::kRoot, "root"},
-                                                                         {FileTypeChecker::kScope, "scope"},     {FileTypeChecker::kHld, "hld"},
-                                                                         {FileTypeChecker::kHldRoot, "hldRoot"}, {FileTypeChecker::kZip, "zip"}};
-    WARNING("Unrecognized file format: " + fileTypeToString[FileTypeChecker::getInputFileType(options)] +
-            " but trying to generate ParamBank from file...");
+    std::map<FileType, std::string> fileTypeToString = {{kNoType, ""}, {kRoot, "root"},       {kScope, "scope"},
+                                                        {kHld, "hld"}, {kHldRoot, "hldRoot"}, {kZip, "zip"}};
+    WARNING("Unrecognized file format: " + fileTypeToString[getInputFileType(options)] + " but trying to generate ParamBank from file...");
     if (generateParamBankFromRootFile(params))
+    {
       return true;
+    }
     else
     {
       if (getRunNumber(options) != -1 && isLocalDB(options))
       {
-        WARNING("Error while tring generate ParamBank from file: " + fileTypeToString[FileTypeChecker::getInputFileType(options)] +
+        WARNING("Error while tring generate ParamBank from file: " + fileTypeToString[getInputFileType(options)] +
                 " but run number and localDB is set, trying to generate ParamBank from it...");
         return generateParamBankFromConfig(params);
       }

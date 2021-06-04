@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(generateOptions_oneFileOneTask)
   auto opts = it->second;
   BOOST_REQUIRE_EQUAL(getRunNumber(opts), 231);
   BOOST_REQUIRE_EQUAL(getInputFile(opts), "unitTestData/JPetOptionsGeneratorTest/infile.root");
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts), FileTypeChecker::kRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(opts), file_type_checker::FileType::kRoot);
 }
 
 BOOST_AUTO_TEST_CASE(generateOptions_oneFileTwoTasks)
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(generateOptions_TwoFilesOneTasks)
   auto opts = it->second;
   BOOST_REQUIRE_EQUAL(getRunNumber(opts), 231);
   BOOST_REQUIRE_EQUAL(getInputFile(opts), "unitTestData/JPetOptionsGeneratorTest/infile.root");
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts), FileTypeChecker::kRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(opts), file_type_checker::FileType::kRoot);
   BOOST_REQUIRE_EQUAL(getFirstEvent(opts), -1);
   BOOST_REQUIRE_EQUAL(getLastEvent(opts), -1);
   BOOST_REQUIRE(!isProgressBar(opts));
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(generateOptions_TwoFilesOneTasks)
   opts = it->second;
   BOOST_REQUIRE_EQUAL(getRunNumber(opts), 231);
   BOOST_REQUIRE_EQUAL(getInputFile(opts), "unitTestData/JPetOptionsGeneratorTest/infile2.root");
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts), FileTypeChecker::kRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(opts), file_type_checker::FileType::kRoot);
   BOOST_REQUIRE_EQUAL(getFirstEvent(opts), -1);
   BOOST_REQUIRE_EQUAL(getLastEvent(opts), -1);
   BOOST_REQUIRE(!isProgressBar(opts));
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(generateOptions_oneFileTwoTasksWithOutput)
   auto opts = it->second;
   BOOST_REQUIRE_EQUAL(getRunNumber(opts), 231);
   BOOST_REQUIRE_EQUAL(getInputFile(opts), "unitTestData/JPetOptionsGeneratorTest/infile.root");
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts), FileTypeChecker::kRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(opts), file_type_checker::FileType::kRoot);
   BOOST_REQUIRE_EQUAL(getOutputPath(opts), "unitTestData/JPetCmdParserTest/");
   BOOST_REQUIRE_EQUAL(getFirstEvent(opts), 2);
   BOOST_REQUIRE_EQUAL(getLastEvent(opts), 100);
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE(generateOptions_TestWithUserOptions)
   BOOST_REQUIRE_EQUAL(getRunNumber(opts), 231);
   BOOST_REQUIRE_EQUAL(getInputFiles(opts).size(), 1);
   BOOST_REQUIRE_EQUAL(getInputFiles(opts).at(0), "unitTestData/JPetOptionsGeneratorTest/infile.root");
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts), FileTypeChecker::kRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(opts), file_type_checker::FileType::kRoot);
   BOOST_REQUIRE_EQUAL(getFirstEvent(opts), -1);
   BOOST_REQUIRE_EQUAL(getLastEvent(opts), -1);
   BOOST_REQUIRE(!isProgressBar(opts));
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE(ScopeOptions)
   BOOST_REQUIRE_EQUAL(getInputFile(opts), "unitTestData/JPetScopeLoaderTest/test_file_test_0");
   BOOST_REQUIRE_EQUAL(getScopeConfigFile(opts), "unitTestData/JPetScopeLoaderTest/test_file.json");
   BOOST_REQUIRE_EQUAL(getScopeInputDirectory(opts), "unitTestData/JPetScopeLoaderTest/scope_files/0");
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(opts), FileTypeChecker::kScope);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(opts), file_type_checker::FileType::kScope);
   BOOST_REQUIRE_EQUAL(getFirstEvent(opts), -1);
   BOOST_REQUIRE_EQUAL(getLastEvent(opts), -1);
   BOOST_REQUIRE(!isProgressBar(opts));
@@ -214,7 +214,7 @@ BOOST_AUTO_TEST_CASE(generateAndValidateOptions_Test)
   BOOST_REQUIRE_EQUAL(getRunNumber(result), 231);
   BOOST_REQUIRE_EQUAL(getInputFiles(result).size(), 1);
   BOOST_REQUIRE_EQUAL(getInputFiles(result).at(0), "unitTestData/JPetOptionsGeneratorTest/infile.root");
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(result), FileTypeChecker::kRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(result), file_type_checker::FileType::kRoot);
   BOOST_REQUIRE_EQUAL(getFirstEvent(result), -1);
   BOOST_REQUIRE_EQUAL(getLastEvent(result), -1);
   BOOST_REQUIRE(!isProgressBar(result));
@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE(generateAndValidateOptions_TestWithUserOptions)
   BOOST_REQUIRE_EQUAL(getRunNumber(result), 231);
   BOOST_REQUIRE_EQUAL(getInputFiles(result).size(), 1);
   BOOST_REQUIRE_EQUAL(getInputFiles(result).at(0), "unitTestData/JPetOptionsGeneratorTest/infile.root");
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(result), FileTypeChecker::kRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(result), file_type_checker::FileType::kRoot);
   BOOST_REQUIRE_EQUAL(getFirstEvent(result), -1);
   BOOST_REQUIRE_EQUAL(getLastEvent(result), -1);
   BOOST_REQUIRE(!isProgressBar(result));
@@ -246,6 +246,28 @@ BOOST_AUTO_TEST_CASE(generateAndValidateOptions_TestWithUserOptions)
   BOOST_REQUIRE(isOptionSet(result, "intOption_int"));
   BOOST_REQUIRE_EQUAL(getOptionAsInt(result, "intOption_int"), 123);
   BOOST_REQUIRE(isOptionSet(result, "boolOption_bool"));
+}
+
+BOOST_AUTO_TEST_CASE(generateAndValidateOptions_TestBooleanOptions_Unset)
+{
+  JPetOptionsGenerator generator;
+  auto commandLine = "main.x -i 231 -f unitTestData/JPetOptionsGeneratorTest/infile.root -t root";
+  auto inArgs = getCmdLineArgs(commandLine);
+  auto result = generator.generateAndValidateOptions(inArgs);
+  BOOST_REQUIRE(!result.empty());
+  BOOST_REQUIRE_EQUAL(isProgressBar(result), false);
+  BOOST_REQUIRE_EQUAL(isDirectProcessing(result), false);
+}
+
+BOOST_AUTO_TEST_CASE(generateAndValidateOptions_TestBooleanOptions_Set)
+{
+  JPetOptionsGenerator generator;
+  auto commandLine = "main.x -i 231 -f unitTestData/JPetOptionsGeneratorTest/infile.root -t root -b -d";
+  auto inArgs = getCmdLineArgs(commandLine);
+  auto result = generator.generateAndValidateOptions(inArgs);
+  BOOST_REQUIRE(!result.empty());
+  BOOST_REQUIRE_EQUAL(isProgressBar(result), true);
+  BOOST_REQUIRE_EQUAL(isDirectProcessing(result), true);
 }
 
 struct MyFixture
@@ -268,7 +290,7 @@ BOOST_FIXTURE_TEST_CASE(generateAndValidateOptions_roothld, MyFixture)
   BOOST_REQUIRE_EQUAL(getRunNumber(result), -1);
   BOOST_REQUIRE_EQUAL(getInputFiles(result).size(), 1);
   BOOST_REQUIRE_EQUAL(getInputFiles(result).at(0), "dabc_17025151847.hld.root");
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(result), FileTypeChecker::kHldRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(result), file_type_checker::FileType::kHldRoot);
   BOOST_REQUIRE_EQUAL(getFirstEvent(result), -1);
   BOOST_REQUIRE_EQUAL(getLastEvent(result), -1);
   BOOST_REQUIRE(!isProgressBar(result));

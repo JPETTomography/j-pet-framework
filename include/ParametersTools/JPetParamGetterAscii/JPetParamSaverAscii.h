@@ -18,19 +18,19 @@
 
 #include "JPetParamBank/JPetParamBank.h"
 #include <boost/property_tree/ptree.hpp>
-#include <string>
 #include <map>
+#include <string>
 
 class JPetParamSaverAscii
 {
 public:
   JPetParamSaverAscii() {}
-  void saveParamBank(const JPetParamBank & bank, const int runNumber, const std::string & filename);
+  void saveParamBank(const JPetParamBank& bank, const int runNumber, const std::string& filename);
 
 private:
-  JPetParamSaverAscii(const JPetParamSaverAscii &paramSaver);
-  JPetParamSaverAscii& operator=(const JPetParamSaverAscii &paramSaver);
-  boost::property_tree::ptree getTreeFromFile(const std::string & filename);
+  JPetParamSaverAscii(const JPetParamSaverAscii& paramSaver);
+  JPetParamSaverAscii& operator=(const JPetParamSaverAscii& paramSaver);
+  boost::property_tree::ptree getTreeFromFile(const std::string& filename);
   void addToTree(boost::property_tree::ptree& tree, const JPetParamBank& bank, const std::string& runNumber);
 
   void fillSetups(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
@@ -39,13 +39,17 @@ private:
   void fillScins(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
   void fillPMs(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
   void fillChannels(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
+  void fillDataSources(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
+  void fillDataModules(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
 
   boost::property_tree::ptree setupToInfo(const JPetSetup& setup);
   boost::property_tree::ptree layerToInfo(const JPetLayer& layer);
   boost::property_tree::ptree slotToInfo(const JPetSlot& slot);
   boost::property_tree::ptree scinToInfo(const JPetScin& scin);
   boost::property_tree::ptree pmToInfo(const JPetPM& pm);
-  boost::property_tree::ptree channelToInfo(const JPetChannel& tomb);
+  boost::property_tree::ptree channelToInfo(const JPetChannel& channel);
+  boost::property_tree::ptree dataSourceToInfo(const JPetDataSource& dataSource);
+  boost::property_tree::ptree dataModuleToInfo(const JPetDataModule& dataModule);
 };
 
 #endif /* !JPETPARAMSAVERASCII_H */

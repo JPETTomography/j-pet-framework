@@ -16,12 +16,54 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetUnpackTaskTest
 
+<<<<<<< HEAD
+=======
+#include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+>>>>>>> 56ecc9907baf828606cf681a0a662bc016ab577a
 #include "JPetUnpackTask/JPetUnpackTask.h"
 #include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
 
 BOOST_AUTO_TEST_SUITE(UnpackTaskSuite)
 
+<<<<<<< HEAD
 // TODO
+=======
+BOOST_AUTO_TEST_CASE(wrong_init_test)
+{
+  std::string fileNameWithPath = "bla.hld";
+  std::string xmlConfig = "bli.xml";
+  std::string totCalib = "blu.root";
+  std::string tdcCalib = "blo.root";
+
+  BOOST_REQUIRE(!JPetUnpackTask::validateFiles(
+    fileNameWithPath,  xmlConfig, totCalib, true, tdcCalib, true
+  ));
+}
+
+BOOST_AUTO_TEST_CASE(no_calib_init_test)
+{
+  std::string fileNameWithPath = "unitTestData/JPetUnpackerTest/xx14099113231.hld";
+  std::string xmlConfig = "unitTestData/JPetUnpackerTest/conf_trb3.xml";
+  std::string totCalib = "blu.root";
+  std::string tdcCalib = "blo.root";
+
+  BOOST_REQUIRE(JPetUnpackTask::validateFiles(
+    fileNameWithPath,  xmlConfig, totCalib, false, tdcCalib, false
+  ));
+}
+
+BOOST_AUTO_TEST_CASE(good_init_test)
+{
+  std::string fileNameWithPath = "unitTestData/JPetUnpackerTest/xx14099113231.hld";
+  std::string xmlConfig = "unitTestData/JPetUnpackerTest/conf_trb3.xml";
+  std::string totCalib = "unitTestData/JPetUnpackerTest/calib.root";
+  std::string tdcCalib = "unitTestData/JPetUnpackerTest/tdccalib.root";
+
+  BOOST_REQUIRE(JPetUnpackTask::validateFiles(
+    fileNameWithPath,  xmlConfig, totCalib, true, tdcCalib, true
+  ));
+}
+>>>>>>> 56ecc9907baf828606cf681a0a662bc016ab577a
 
 BOOST_AUTO_TEST_SUITE_END()

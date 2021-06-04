@@ -17,26 +17,26 @@
 #define BOOST_TEST_MODULE JPetTaskFactoryTest
 
 #include "JPetTaskFactory/JPetTaskFactory.h"
-#include <boost/test/unit_test.hpp>
-#include "JPetTaskIO/JPetTaskIO.h"
 #include "JPetTask/JPetTask.h"
+#include "JPetTaskIO/JPetTaskIO.h"
 #include <boost/any.hpp>
+#include <boost/test/unit_test.hpp>
 #include <cstdio>
 
 using namespace jpet_task_factory;
 
-class TestClass: public JPetTask
+class TestClass : public JPetTask
 {
-  public:
-  explicit TestClass(const char* name):JPetTask(name) {;}
-  virtual bool init(const JPetParams&) override {return true;}
-  virtual bool run(const JPetDataInterface&)  override {return true;}
-  virtual bool terminate(JPetParams&)  override {return true;}
+public:
+  explicit TestClass(const char* name) : JPetTask(name) { ; }
+  virtual bool init(const JPetParams&) override { return true; }
+  virtual bool run(const JPetDataInterface&) override { return true; }
+  virtual bool terminate(JPetParams&) override { return true; }
 };
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-BOOST_AUTO_TEST_CASE( factory )
+BOOST_AUTO_TEST_CASE(factory_default)
 {
   JPetTaskFactory factory;
   BOOST_REQUIRE(factory.getTasksDictionary().empty());
@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE( factory )
   BOOST_REQUIRE(factory.getTasksToUse().empty());
 }
 
-BOOST_AUTO_TEST_CASE( factory2 )
+BOOST_AUTO_TEST_CASE(factory_scope)
 {
   JPetTaskFactory factory;
   std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("scope")}};
@@ -57,38 +57,62 @@ BOOST_AUTO_TEST_CASE( factory2 )
   BOOST_REQUIRE_EQUAL(chain.size(), 2); // ScopeLoader + ParamBankHandler
 }
 
-BOOST_AUTO_TEST_CASE( factory_registerTask )
+BOOST_AUTO_TEST_CASE(factory_hld)
+{
+  JPetTaskFactory factory;
+  std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("hld")}};
+  auto chain = factory.createTaskGeneratorChain(opts);
+  BOOST_REQUIRE_EQUAL(chain.size(), 2); // UnpackTask + ParamBankHandler
+}
+
+BOOST_AUTO_TEST_CASE(factory_zip)
+{
+  JPetTaskFactory factory;
+  std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("zip")}};
+  auto chain = factory.createTaskGeneratorChain(opts);
+  BOOST_REQUIRE_EQUAL(chain.size(), 3); // UnzipTask + UnpackTask + ParamBankHandler
+}
+
+BOOST_AUTO_TEST_CASE(factory_mcGeant)
+{
+  JPetTaskFactory factory;
+  std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("mcGeant")}};
+  auto chain = factory.createTaskGeneratorChain(opts);
+  BOOST_REQUIRE_EQUAL(chain.size(), 1); // ParamBankHandler, GeantParser is added in another way
+}
+
+BOOST_AUTO_TEST_CASE(factory_registerTask)
 {
   JPetTaskFactory factory;
   factory.registerTask<TestClass>("TestClass");
   factory.registerTask<TestClass>("task2");
   BOOST_REQUIRE_EQUAL(factory.getTasksDictionary().size(), 2);
-  BOOST_REQUIRE(factory.getTasksToUse().empty());  // Task was registered but not added to be used
+  BOOST_REQUIRE(factory.getTasksToUse().empty()); // Task was registered but not added to be used
 
   std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("root")}};
   auto chain = factory.createTaskGeneratorChain(opts);
   BOOST_REQUIRE_EQUAL(chain.size(), 1); // ParamBankHandler
 }
 
-BOOST_AUTO_TEST_CASE( factory_addTaskInfo_wrong )
+BOOST_AUTO_TEST_CASE(factory_addTaskInfo_wrong)
 {
   JPetTaskFactory factory;
   std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("root")}};
-  BOOST_REQUIRE(!factory.addTaskInfo("fakeName","raw","calib", 1)); ///Because fakeName task is not registered!
+  BOOST_REQUIRE(!factory.addTaskInfo("fakeName", "raw", "calib", 1)); /// Because fakeName task is not registered!
   BOOST_REQUIRE_EQUAL(factory.getTasksToUse().size(), 0);
-  BOOST_REQUIRE(factory.getTasksDictionary().empty());  /// Task was not registered.
+  BOOST_REQUIRE(factory.getTasksDictionary().empty()); /// Task was not registered.
   auto chain = factory.createTaskGeneratorChain(opts); /// Because task was not registered, so it will return chain with just default task generators.
-  BOOST_REQUIRE_EQUAL(chain.size(), 1); /// ParamBankHandler
+  BOOST_REQUIRE_EQUAL(chain.size(), 1);                /// ParamBankHandler
 }
 
-BOOST_AUTO_TEST_CASE( factory_addAndRegisterTask )
+BOOST_AUTO_TEST_CASE(factory_addAndRegisterTask)
 {
   JPetTaskFactory factory;
   factory.registerTask<TestClass>("task1");
   factory.registerTask<TestClass>("task2");
   BOOST_REQUIRE_EQUAL(factory.getTasksDictionary().size(), 2);
-  BOOST_REQUIRE(factory.addTaskInfo("task1","raw","calib", 1));
-  BOOST_REQUIRE(factory.addTaskInfo("task2","calib","sig", 1));
+  BOOST_REQUIRE(factory.addTaskInfo("task1", "raw", "calib", 1));
+  BOOST_REQUIRE(factory.addTaskInfo("task2", "calib", "sig", 1));
   BOOST_REQUIRE_EQUAL(factory.getTasksToUse().size(), 2);
 
   std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("root")}};
@@ -100,14 +124,14 @@ BOOST_AUTO_TEST_CASE( factory_addAndRegisterTask )
   BOOST_REQUIRE_EQUAL(task4->getName(), std::string("task2"));
 }
 
-BOOST_AUTO_TEST_CASE( factory_addAndRegisterTaskWithIteration )
+BOOST_AUTO_TEST_CASE(factory_addAndRegisterTaskWithIteration)
 {
   JPetTaskFactory factory;
   factory.registerTask<TestClass>("task1");
   factory.registerTask<TestClass>("task2");
   BOOST_REQUIRE_EQUAL(factory.getTasksDictionary().size(), 2);
-  BOOST_REQUIRE(factory.addTaskInfo("task1","raw","calib", 1));
-  BOOST_REQUIRE(factory.addTaskInfo("task2","calib","sig", 2));  /// iterative, the task will be packed in the Looper Class
+  BOOST_REQUIRE(factory.addTaskInfo("task1", "raw", "calib", 1));
+  BOOST_REQUIRE(factory.addTaskInfo("task2", "calib", "sig", 2)); /// iterative, the task will be packed in the Looper Class
   BOOST_REQUIRE_EQUAL(factory.getTasksToUse().size(), 2);
 
   std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("root")}};
@@ -121,14 +145,14 @@ BOOST_AUTO_TEST_CASE( factory_addAndRegisterTaskWithIteration )
   BOOST_REQUIRE(subTask);
 }
 
-BOOST_AUTO_TEST_CASE( factory_addAndRegisterTaskWithStop )
+BOOST_AUTO_TEST_CASE(factory_addAndRegisterTaskWithStop)
 {
   JPetTaskFactory factory;
   factory.registerTask<TestClass>("task1");
   factory.registerTask<TestClass>("task2");
   BOOST_REQUIRE_EQUAL(factory.getTasksDictionary().size(), 2);
-  BOOST_REQUIRE(factory.addTaskInfo("task1","raw","calib", 1));
-  BOOST_REQUIRE(factory.addTaskInfo("task2","calib","sig", -1));  /// iterative with stop condition the task will be packed in the Looper Class
+  BOOST_REQUIRE(factory.addTaskInfo("task1", "raw", "calib", 1));
+  BOOST_REQUIRE(factory.addTaskInfo("task2", "calib", "sig", -1)); /// iterative with stop condition the task will be packed in the Looper Class
   BOOST_REQUIRE_EQUAL(factory.getTasksToUse().size(), 2);
 
   std::map<std::string, boost::any> opts = {{"inputFileType_std::string", std::string("root")}};
@@ -142,13 +166,13 @@ BOOST_AUTO_TEST_CASE( factory_addAndRegisterTaskWithStop )
   BOOST_REQUIRE(subTask);
 }
 
-BOOST_AUTO_TEST_CASE( factory_clear )
+BOOST_AUTO_TEST_CASE(factory_clear)
 {
   JPetTaskFactory factory;
   factory.registerTask<TestClass>("task1");
   factory.registerTask<TestClass>("task2");
-  factory.addTaskInfo("task1","raw","calib", 1);
-  factory.addTaskInfo("task2","calib","sig", 1);
+  factory.addTaskInfo("task1", "raw", "calib", 1);
+  factory.addTaskInfo("task2", "calib", "sig", 1);
 
   factory.clear();
   BOOST_REQUIRE(factory.getTasksDictionary().empty());

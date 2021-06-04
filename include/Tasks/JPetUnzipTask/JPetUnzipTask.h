@@ -20,7 +20,7 @@
 #include <boost/any.hpp>
 #include <map>
 
-class JPetUnzipTask: public JPetTask
+class JPetUnzipTask : public JPetTask
 {
 public:
   using OptsStrAny = std::map<std::string, boost::any>;
@@ -28,7 +28,7 @@ public:
   bool init(const JPetParams& inOptions) override;
   bool run(const JPetDataInterface& inData) override;
   bool terminate(JPetParams& outOptions) override;
-  static bool unzipFile(const std::string& filename);
+  static bool unzipFile(std::string fileNameWithPath, std::string outputPath);
 
 protected:
   OptsStrAny fOptions;

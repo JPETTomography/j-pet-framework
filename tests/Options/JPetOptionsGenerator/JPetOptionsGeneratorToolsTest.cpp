@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -17,11 +17,11 @@
 #define BOOST_TEST_MODULE JPetOptionsGeneratorToolsTest
 
 #include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
-#include "JPetCommonTools/JPetCommonTools.h"
 #include "JPetCmdParser/JPetCmdParser.h"
+#include "JPetCommonTools/JPetCommonTools.h"
 #include <boost/test/unit_test.hpp>
-#include <iostream>
 #include <cstdlib>
+#include <iostream>
 
 using boost::any_cast;
 using namespace std;
@@ -34,20 +34,19 @@ OptsStrAny getOptions(const std::string& commandLine)
   auto argc = args_char.size();
   auto argv = args_char.data();
   po::options_description description("Allowed options");
-  description.add_options()
-  ("help,h", "Displays this help message.")
-  ("type,t", po::value<std::string>()->required(), "Type of file: hld, zip, root or scope.")
-  ("file,f", po::value< std::vector<std::string> >()->required()->multitoken(), "File(s) to open.")
-  ("outputPath,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")
-  ("range,r", po::value< std::vector<int> >()->multitoken()->default_value({ -1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")
-  ("unpackerConfigFile,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")
-  ("unpackerCalibFile,c", po::value<std::string>(), "ROOT file with TRB calibration used by the unpacker program.")
-  ("runID,i", po::value<int>(), "Run ID.")
-  ("detector,k", po::value<std::string>()->default_value("barrel"), "Detector type: barrel (default) ot modular")
-  ("progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")
-  ("localDB,l", po::value<std::string>(), "The file to use as the parameter database.")
-  ("localDBCreate,L", po::value<std::string>(), "File name to which the parameter database will be saved.")
-  ("userCfg,u", po::value<std::string>(), "Json file with optional user parameters.");
+  description.add_options()("help,h", "Displays this help message.")("type,t", po::value<std::string>()->required(),
+                                                                     "Type of file: hld, zip, root or scope.")(
+      "file,f", po::value<std::vector<std::string>>()->required()->multitoken(),
+      "File(s) to open.")("outputPath,o", po::value<std::string>(), "Location to which the outputFiles will be saved.")(
+      "range,r", po::value<std::vector<int>>()->multitoken()->default_value({-1, -1}, ""), "Range of events to process e.g. -r 1 1000 .")(
+      "unpackerConfigFile,p", po::value<std::string>(), "xml file with TRB settings used by the unpacker program.")(
+      "unpackerCalibFile,c", po::value<std::string>(), "ROOT file with TRB calibration used by the unpacker program.")(
+      "runID,i", po::value<int>(), "Run ID.")("detector,k", po::value<std::string>()->default_value("barrel"),
+                                              "Detector type: barrel (default) ot modular")(
+      "progressBar,b", po::bool_switch()->default_value(false), "Progress bar.")("localDB,l", po::value<std::string>(),
+                                                                                 "The file to use as the parameter database.")(
+      "localDBCreate,L", po::value<std::string>(),
+      "File name to which the parameter database will be saved.")("userCfg,u", po::value<std::string>(), "Json file with optional user parameters.");
   po::variables_map variablesMap;
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
@@ -96,7 +95,12 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionGetConfigFileNameWork)
   auto argc = args_char.size();
   auto argv = args_char.data();
   po::options_description description("Allowed options");
-  description.add_options()("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");;
+<<<<<<< HEAD
+  description.add_options()("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
+  ;
+=======
+  description.add_options()("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
+>>>>>>> 56ecc9907baf828606cf681a0a662bc016ab577a
   po::variables_map variablesMap;
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
@@ -106,7 +110,12 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionGetConfigFileNameWork)
   auto argc2 = args_char2.size();
   auto argv2 = args_char2.data();
   po::options_description description2("Allowed options");
-  description2.add_options()("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");;
+<<<<<<< HEAD
+  description2.add_options()("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
+  ;
+=======
+  description2.add_options()("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
+>>>>>>> 56ecc9907baf828606cf681a0a662bc016ab577a
   po::variables_map variablesMap2;
   po::store(po::parse_command_line(argc2, argv2, description2), variablesMap2);
   po::notify(variablesMap2);
@@ -115,28 +124,40 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionGetConfigFileNameWork)
 
 BOOST_AUTO_TEST_CASE(checkIfFunctionToAddOptionsFromCfgFileWork)
 {
-  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -b 1 -l unitTestData/JPetCmdParserTest/input.json -L output.json -u unitTestData/JPetOptionsToolsTest/newInputTestCfg.json";
+  auto commandLine = "main.x -f unitTestData/JPetCmdParserTest/data.hld -t hld -r 2 -r 4 -p unitTestData/JPetCmdParserTest/data.hld -i 231 -b 1 -l "
+                     "unitTestData/JPetCmdParserTest/input.json -L output.json -u unitTestData/JPetOptionsToolsTest/newInputTestCfg.json";
   auto args_char = JPetCommonTools::createArgs(commandLine);
   auto argc = args_char.size();
   auto argv = args_char.data();
   po::options_description description("Allowed options");
-  description.add_options()
-  ("file_std::vector<std::string>,f", po::value<std::vector<std::string>>(), "File(s) to open")
-  ("type_std::string,t", po::value<std::string>(), "type of file: hld, zip, root or scope")
-  ("range_std::vector<int>,r", po::value<std::vector<int>>(), "Range of events to process.")
-  ("param_std::string,p", po::value<std::string>(), "File with TRB numbers.")
-  ("runID_int,i", po::value<int>(), "Run id.")
-  ("detector,k", po::value<std::string>()->default_value("barrel"), "Detector type: barrel (default) ot modular")
-  ("progressBar_bool,b", po::bool_switch()->default_value(false), "Progress bar.")
-  ("localDB_std::string,l", po::value<std::string>(), "The file to use as the parameter database.")
-  ("localDBCreate_std::string,L", po::value<std::string>(), "Where to save the parameter database.")
-  ("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
+<<<<<<< HEAD
+  description.add_options()("file_std::vector<std::string>,f", po::value<std::vector<std::string>>(),
+                            "File(s) to open")("type_std::string,t", po::value<std::string>(), "type of file: hld, zip, root or scope")(
+      "range_std::vector<int>,r", po::value<std::vector<int>>(), "Range of events to process.")(
+      "param_std::string,p", po::value<std::string>(), "File with TRB numbers.")("runID_int,i", po::value<int>(), "Run id.")(
+      "detector,k", po::value<std::string>()->default_value("barrel"),
+      "Detector type: barrel (default) ot modular")("progressBar_bool,b", po::bool_switch()->default_value(false), "Progress bar.")(
+      "localDB_std::string,l", po::value<std::string>(),
+      "The file to use as the parameter database.")("localDBCreate_std::string,L", po::value<std::string>(), "Where to save the parameter database.")(
+      "userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
+=======
+  description.add_options()("file_std::vector<std::string>,f", po::value<std::vector<std::string>>(),
+                            "File(s) to open")("type_std::string,t", po::value<std::string>(), "type of file: hld, zip, root or scope")(
+      "range_std::vector<int>,r", po::value<std::vector<int>>(), "Range of events to process.")(
+      "param_std::string,p", po::value<std::string>(), "File with TRB numbers.")("runID_int,i", po::value<int>(), "Run id.")(
+      "detector,k", po::value<std::string>()->default_value("barrel"),
+      "Detector type: barrel (default) ot modular")("progressBar_bool,b", po::bool_switch()->default_value(false), "Progress bar.")(
+      "localDB_std::string,l", po::value<std::string>(),
+      "The file to use as the parameter database.")("localDBCreate_std::string,L", po::value<std::string>(), "Where to save the parameter database.")(
+      "userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
+>>>>>>> 56ecc9907baf828606cf681a0a662bc016ab577a
   po::variables_map variablesMap;
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
   auto options = transformToStrAnyMap(variablesMap);
   auto cfgFileName = getConfigFileName(options);
-  if (!cfgFileName.empty()) {
+  if (!cfgFileName.empty())
+  {
     addNewOptionsFromCfgFile(cfgFileName, options);
   }
   BOOST_REQUIRE(options.count("myOption_std::string"));
@@ -151,10 +172,9 @@ BOOST_AUTO_TEST_CASE(generateOptionsForTask_emptyControlSettings)
   };
   std::map<std::string, boost::any> controlSettings;
   auto result = generateOptionsForTask(inOpts, controlSettings);
-  for (
-    auto it_r = result.cbegin(), end_r = result.cend(), it_inOpts = inOpts.cbegin(), end_inOpts = inOpts.cend();
-    it_r != end_r || it_inOpts != end_inOpts;
-  ) {
+  for (auto it_r = result.cbegin(), end_r = result.cend(), it_inOpts = inOpts.cbegin(), end_inOpts = inOpts.cend();
+       it_r != end_r || it_inOpts != end_inOpts;)
+  {
     BOOST_REQUIRE_EQUAL(it_r->first, it_inOpts->first);
     ++it_r;
     ++it_inOpts;
@@ -170,7 +190,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsForTask_hldRoot_after_hld)
   std::map<std::string, boost::any> controlSettings = {{"outputFileType_std::string", std::string("hldRoot")}};
   auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
   BOOST_REQUIRE(isOptionSet(resultsOpt, "inputFileType_std::string"));
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(resultsOpt), FileTypeChecker::kHldRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(resultsOpt), file_type_checker::FileType::kHldRoot);
 }
 
 BOOST_AUTO_TEST_CASE(generateOptionsForTask_root_after_hldRoot)
@@ -180,7 +200,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsForTask_root_after_hldRoot)
   std::map<std::string, boost::any> controlSettings = {{"outputFileType_std::string", std::string("root")}};
   auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
   BOOST_REQUIRE(isOptionSet(resultsOpt, "inputFileType_std::string"));
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(resultsOpt), FileTypeChecker::kRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(resultsOpt), file_type_checker::FileType::kRoot);
   BOOST_REQUIRE(isOptionSet(resultsOpt, "firstEvent_int"));
   BOOST_REQUIRE(isOptionSet(resultsOpt, "lastEvent_int"));
   BOOST_REQUIRE_EQUAL(getOptionAsInt(resultsOpt, "firstEvent_int"), 2);
@@ -194,7 +214,7 @@ BOOST_AUTO_TEST_CASE(generateOptionsForTask_root_after_Root)
   std::map<std::string, boost::any> controlSettings = {{"outputFileType_std::string", std::string("root")}};
   auto resultsOpt = generateOptionsForTask(inOpts, controlSettings);
   BOOST_REQUIRE(isOptionSet(resultsOpt, "inputFileType_std::string"));
-  BOOST_REQUIRE_EQUAL(FileTypeChecker::getInputFileType(resultsOpt), FileTypeChecker::kRoot);
+  BOOST_REQUIRE_EQUAL(file_type_checker::getInputFileType(resultsOpt), file_type_checker::FileType::kRoot);
   BOOST_REQUIRE(isOptionSet(resultsOpt, "firstEvent_int"));
   BOOST_REQUIRE(isOptionSet(resultsOpt, "lastEvent_int"));
   BOOST_REQUIRE_EQUAL(getOptionAsInt(resultsOpt, "firstEvent_int"), 2);

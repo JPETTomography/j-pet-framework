@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -61,55 +61,46 @@ BOOST_AUTO_TEST_CASE(wrongOptions)
       {"localDB_std::string", std::string("ble/ble/ble.hld")},
       {"outputPath_std::string", std::string("ble/ble/ble")},
       {"runID_int", -1},
-      {"detectorType_std::string", std::string("squirrel")}
-  };
+      {"detectorType_std::string", std::string("squirrel")}};
+  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRangeOfEventsValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
+                      false);
+  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRangeOfEventsValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
+                      false);
   BOOST_REQUIRE_EQUAL(
-    JPetOptionValidator::isRangeOfEventsValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))), false
-  );
-  BOOST_REQUIRE_EQUAL(
-      JPetOptionValidator::areFilesValid(std::make_pair("file_std::vector<std::string>", options.at("file_std::vector<std::string>"))), false
-    );
-  BOOST_REQUIRE_EQUAL(
-    JPetOptionValidator::isOutputDirectoryValid(std::make_pair("outputPath_std::string", options.at("outputPath_std::string"))), false
-  );
+      JPetOptionValidator::areFilesValid(std::make_pair("file_std::vector<std::string>", options.at("file_std::vector<std::string>"))), false);
+  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isOutputDirectoryValid(std::make_pair("outputPath_std::string", options.at("outputPath_std::string"))),
+                      false);
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isLocalDBValid(std::make_pair("localDB_std::string", options.at("localDB_std::string"))), false);
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRunIDValid(std::make_pair("runID_int", options.at("runID_int"))), false);
-  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isDetectorValid(std::make_pair("detectorType_std::string", options.at("detectorType_std::string"))), false);
+  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isDetectorValid(std::make_pair("detectorType_std::string", options.at("detectorType_std::string"))),
+                      false);
   BOOST_REQUIRE_EQUAL(
-    JPetOptionValidator::areFilesValid(std::make_pair("file_std::vector<std::string>", options.at("file_std::vector<std::string>"))), false
-  );
+      JPetOptionValidator::areFilesValid(std::make_pair("file_std::vector<std::string>", options.at("file_std::vector<std::string>"))), false);
   BOOST_REQUIRE_EQUAL(JPetOptionValidator::isCorrectFileType(std::make_pair("type_std::string", options.at("type_std::string"))), false);
-  BOOST_REQUIRE_EQUAL(
-    JPetOptionValidator::isFileTypeMatchingExtensions(
-      std::make_pair("type_std::string, file_std::vector<std::string>", options.at("type_std::string, file_std::vector<std::string>"))
-    ), false
-  );
-  BOOST_REQUIRE_EQUAL(
-    JPetOptionValidator::isRangeOfEventsValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
-    false
-  );
-  BOOST_REQUIRE_EQUAL(
-    JPetOptionValidator::isNumberBoundsInRangeValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
-    false
-  );
+  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isFileTypeMatchingExtensions(std::make_pair(
+                          "type_std::string, file_std::vector<std::string>", options.at("type_std::string, file_std::vector<std::string>"))),
+                      false);
+  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isRangeOfEventsValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
+                      false);
+  BOOST_REQUIRE_EQUAL(JPetOptionValidator::isNumberBoundsInRangeValid(std::make_pair("range_std::vector<int>", options.at("range_std::vector<int>"))),
+                      false);
 }
 
 BOOST_AUTO_TEST_CASE(areCorrectAllOptionsWork)
 {
   std::vector<int> range = {1, 2};
   std::vector<std::string> files = {"unitTestData/JPetCmdParserTest/data.hld", "unitTestData/JPetCmdParserTest/data.hld"};
-  std::map<std::string, boost::any> options = {
-      {"range_std::vector<int>", range},
-      {"type_std::string", std::string("hld")},
-      {"file_std::vector<std::string>", files},
-      {"localDB_std::string", std::string("unitTestData/JPetCmdParserTest/data.hld")},
-      {"outputPath_std::string", std::string("unitTestData/JPetCmdParserTest")},
-      {"runID_int", 3},
-      {"detectorType_std::string", std::string("barrel")}
-  };
+  std::map<std::string, boost::any> options = {{"range_std::vector<int>", range},
+                                               {"type_std::string", std::string("hld")},
+                                               {"file_std::vector<std::string>", files},
+                                               {"localDB_std::string", std::string("unitTestData/JPetCmdParserTest/data.hld")},
+                                               {"outputPath_std::string", std::string("unitTestData/JPetCmdParserTest")},
+                                               {"runID_int", 3},
+                                               {"detectorType_std::string", std::string("barrel")}};
   JPetOptionValidator validator;
   std::vector<std::string> v;
-  for (auto& opt : options) {
+  for (auto& opt : options)
+  {
     v.push_back(opt.first);
   }
   v.push_back("type_std::string, file_std::vector<std::string>");
@@ -128,7 +119,8 @@ BOOST_AUTO_TEST_CASE(areCorrectSomeOptionsWork)
   };
   JPetOptionValidator validator;
   std::vector<std::string> v;
-  for (auto& opt : options) {
+  for (auto& opt : options)
+  {
     v.push_back(opt.first);
   }
   options["ble"] = range;
