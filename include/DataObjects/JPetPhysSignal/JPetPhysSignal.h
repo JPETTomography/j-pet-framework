@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -29,7 +29,7 @@
  * User can set reconstructed values and qualities of signal time and number of
  * photoelectrons.
  */
-class JPetPhysSignal: public JPetBaseSignal
+class JPetPhysSignal : public JPetBaseSignal
 {
 public:
   JPetPhysSignal();
@@ -40,70 +40,51 @@ public:
   /**
    * Returns the reconstructed time of this signal in [ps].
    */
-  inline float getTime() const {
-    return fTime;
-  }
+  inline float getTime() const { return fTime; }
 
   /**
    * Get the value, that describes the quality of reconstructed signal time
    */
-  inline float getQualityOfTime() const {
-    return fQualityOfTime;
-  }
-
+  inline float getQualityOfTime() const { return fQualityOfTime; }
 
   /**
    * Sets the reconstructed time of this signal in [ps].
    */
-  inline void setTime(float time) {
-    fTime = time;
-  }
+  inline void setTime(float time) { fTime = time; }
 
   /**
    * Set the value, that describes the quality of reconstructed signal time
    */
-  inline void setQualityOfTime(float qualityOfTime){
-    fQualityOfTime = qualityOfTime;
-  }
+  inline void setQualityOfTime(float qualityOfTime) { fQualityOfTime = qualityOfTime; }
 
   /**
    * Get the number of photoelectrons
    */
-  float getPhe() const {
-    return fPhe;
-  }
+  float getPhe() const { return fPhe; }
 
   /**
    * Set the number of photoelectrons
    */
-  void setPhe(float phe) {
-    fPhe = phe;
-  }
+  void setPhe(float phe) { fPhe = phe; }
 
   /**
    * Get the value, that describes the quality of reconstruction of number of photoelectrons
    */
-  float getQualityOfPhe() const {
-    return fQualityOfPhe;
-  }
+  float getQualityOfPhe() const { return fQualityOfPhe; }
 
   /**
    * Set the value, that describes the quality of reconstruction of number of photoelectrons
    */
-  void setQualityOfPhe(float qualityOfPhe) {
-    fQualityOfPhe = qualityOfPhe;
-  }
+  void setQualityOfPhe(float qualityOfPhe) { fQualityOfPhe = qualityOfPhe; }
 
   /**
    * Get the Reconstructed Signal object, that this Physical Signal is based on
    */
-  const JPetRecoSignal& getRecoSignal() const {
-    return fRecoSignal;
-  }
+  const JPetRecoSignal& getRecoSignal() const { return fRecoSignal; }
 
   void setRecoSignal(const JPetRecoSignal& recoSignal);
 
-  void Clear(Option_t * opt = "");
+  void Clear(Option_t* opt = "");
 
 private:
   float fTime;
@@ -113,13 +94,12 @@ private:
   JPetRecoSignal fRecoSignal;
 
 protected:
-  #ifndef __CINT__
+#ifndef __CINT__
   bool fIsNullObject = false;
-  #else
+#else
   bool fIsNullObject;
-  #endif
+#endif
 
   ClassDef(JPetPhysSignal, 4);
-
 };
 #endif /* !JPETPHYSSIGNAL_H */

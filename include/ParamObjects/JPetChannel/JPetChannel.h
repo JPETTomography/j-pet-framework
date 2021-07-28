@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -27,17 +27,17 @@ class JPetChannel : public TNamed
 {
 public:
   JPetChannel();
-  JPetChannel(int id, int thrNum, float thrVal);
-  JPetChannel(const JPetChannel &channel);
+  JPetChannel(int id, int thrNum, double thrVal);
+  JPetChannel(const JPetChannel& channel);
   explicit JPetChannel(bool isNull);
   virtual ~JPetChannel();
   void setID(int id);
   void setThresholdNumber(int thrNum);
-  void setThresholdValue(float trhVal);
+  void setThresholdValue(double trhVal);
   void setPM(JPetPM& pm);
   const int getID() const;
   int getThresholdNumber() const;
-  float getThresholdValue() const;
+  double getThresholdValue() const;
   const JPetPM& getPM() const;
   bool operator==(const JPetChannel& channel);
   bool operator!=(const JPetChannel& channel);
@@ -45,18 +45,12 @@ public:
   static JPetChannel& getDummyResult();
 
 protected:
-#ifndef __CINT__
   int fID = -1;
   int fThresholdNumber = 0;
-  float fThresholdValue = 0.0;
+  double fThresholdValue = 0.0;
   bool fIsNullObject = false;
-#else
-  int fID;
-  int fThresholdNumber;
-  float fThresholdValue;
-  bool fIsNullObject;
-#endif
-  TRef fTRefPM;
+  TRef fTRefPM = nullptr;
+  void clearTRefPM();
 
   friend class JPetParamManager;
 

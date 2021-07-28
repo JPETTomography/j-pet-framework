@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,8 +16,8 @@
 #ifndef JPET_DATA_MODULE_FACTORY_H
 #define JPET_DATA_MODULE_FACTORY_H
 
-#include "JPetDataSource/JPetDataSourceFactory.h"
 #include "JPetDataModule.h"
+#include "JPetDataSource/JPetDataSourceFactory.h"
 #include <map>
 
 /**
@@ -28,16 +28,16 @@
 class JPetDataModuleFactory
 {
 public:
-  JPetDataModuleFactory(
-    JPetParamGetter& paramGetter, int runID, JPetDataSourceFactory& dataSourceFactory
-  ): fParamGetter(paramGetter), fRunID(runID),
-  fDataSourceFactory(dataSourceFactory), fInitialized(false) {}
-  std::map<int, JPetDataModule *> & getDataModules();
+  JPetDataModuleFactory(JPetParamGetter& paramGetter, int runID, JPetDataSourceFactory& dataSourceFactory)
+      : fParamGetter(paramGetter), fRunID(runID), fDataSourceFactory(dataSourceFactory), fInitialized(false)
+  {
+  }
+  std::map<int, JPetDataModule*>& getDataModules();
 
 private:
-  JPetParamGetter &fParamGetter;
+  JPetParamGetter& fParamGetter;
   int fRunID;
-  JPetDataSourceFactory &fDataSourceFactory;
+  JPetDataSourceFactory& fDataSourceFactory;
   bool fInitialized;
   std::map<int, JPetDataModule*> fDataModules;
   void initialize();

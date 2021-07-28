@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -25,12 +25,12 @@
  * structure frame of the J-PET setup. The frame consists of one or more layers
  * represented by JPetLayer objects.
  */
-class JPetSetup: public TNamed
+class JPetSetup : public TNamed
 {
 public:
   JPetSetup();
   JPetSetup(int id, std::string description);
-  JPetSetup(const JPetSetup &setup);
+  JPetSetup(const JPetSetup& setup);
   explicit JPetSetup(bool isNull);
   virtual ~JPetSetup();
   void setID(int id);
@@ -43,15 +43,9 @@ public:
   static JPetSetup& getDummyResult();
 
 protected:
-#ifndef __CINT__
   int fID = -1;
   std::string fDescription = "";
   bool fIsNullObject = false;
-#else
-  int fID;
-  std::string fDescription;
-  bool fIsNullObject;
-#endif
 
   ClassDef(JPetSetup, 1);
 };

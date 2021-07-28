@@ -10,39 +10,39 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetPMFactory.h
+ *  @file JPetMatrixFactory.h
  */
 
-#ifndef JPET_PM_FACTORY_H
-#define JPET_PM_FACTORY_H
+#ifndef JPET_MATRIX_FACTORY_H
+#define JPET_MATRIX_FACTORY_H
 
-#include "JPetMartix/JPetMartixFactory.h"
-#include "JPetPM/JPetPM.h"
+// #include "JPetPM/JPetPM.h"
 #include "JPetParamGetter/JPetParamGetter.h"
+#include "JPetScin/JPetScinFactory.h"
 #include <map>
 
 /**
- * @brief A factory of JPetPM objects.
+ * @brief A factory of JPetMatrix objects.
  *
  * This class is able to create those objects using data from the database.
  */
-class JPetPMFactory
+class JPetMatrixFactory
 {
 public:
-  JPetPMFactory(JPetParamGetter& paramGetter, int runID, JPetMartixFactory& martixFactory)
-      : fParamGetter(paramGetter), fRunID(runID), fMartixFactory(martixFactory), fInitialized(false)
+  JPetMatrixFactory(JPetParamGetter& paramGetter, int runID, JPetScinFactory& scinFactory)
+      : fParamGetter(paramGetter), fRunID(runID), fScinFactory(scinFactory), fInitialized(false)
   {
   }
-  std::map<int, JPetPM*>& getPMs();
+  std::map<int, JPetMartix*>& getMatrices();
 
 private:
   JPetParamGetter& fParamGetter;
   const int fRunID;
-  JPetMartixFactory& fMartixFactory;
+  JPetScinFactory& fScinFactory;
   bool fInitialized;
-  std::map<int, JPetPM*> fPMs;
+  std::map<int, JPetMartix*> fMatrices;
   void initialize();
-  JPetPM* build(ParamObjectDescription data);
+  JPetMartix* build(ParamObjectDescription data);
 };
 
 #endif /* !JPET_PM_FACTORY_H */

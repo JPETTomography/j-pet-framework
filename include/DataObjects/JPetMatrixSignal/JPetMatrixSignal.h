@@ -16,36 +16,28 @@
 #ifndef JPETMATRIXSIGNAL_H
 #define JPETMATRIXSIGNAL_H
 
-#include "JPetRawSignal/JPetRawSignal.h"
+#include "JPetPMSignal/JPetPMSignal.h"
 #include "JPetScin/JPetScin.h"
 
 /**
  * @brief Data class representing a physical signal reconstructed
  * in a matrix of SiPMs on a one side of a scintillator in a modular layer
- *
  */
 class JPetMatrixSignal : public JPetBaseSignal
 {
 public:
   JPetMatrixSignal();
   virtual ~JPetMatrixSignal();
-  bool isNullObject() const;
-  explicit JPetMatrixSignal(bool isNull);
-
-  bool addRawSignal(const JPetRawSignal& rawSignal);
-  std::map<int, JPetRawSignal> getRawSignals() const;
-  void Clear(Option_t* opt = "");
+  double getToT() const;
+  void setToT(double tot);
+  bool addPMSignal(const JPetPMSignal& pmSignal);
+  std::map<int, JPetPMSignal> getPMSignals() const;
+  void Clear(Option_t*) override;
 
 private:
-  std::map<int, JPetRawSignal> fRawSignalsMap;
+  std::map<int, JPetPMSignal> fPMSignalsMap;
+  double fToT = 0.0;
 
-protected:
-#ifndef __CINT__
-  bool fIsNullObject = false;
-#else
-  bool fIsNullObject;
-#endif
-
-  ClassDef(JPetMatrixSignal, 5);
+  ClassDef(JPetMatrixSignal, 1);
 };
 #endif /* !JPETMATRIXSIGNAL_H */

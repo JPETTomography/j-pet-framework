@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -22,7 +22,7 @@
  * @brief Representation of a data source, as encoded in xml files used with Unpacker2
  *
  */
-class JPetDataSource: public TNamed
+class JPetDataSource : public TNamed
 {
 public:
   JPetDataSource();
@@ -37,19 +37,11 @@ public:
   bool isNullObject() const;
   static JPetDataSource& getDummyResult();
 
-  #ifndef __CINT__
-    int fID = -1;
-    std::string fType = "";
-    unsigned long fTRBNetAddress = 0;
-    unsigned long fHubAddress = 0;
-    bool fIsNullObject = true;
-  #else
-    int fID;
-    std::string fType;
-    unsigned long fTRBNetAddress;
-    unsigned long fHubAddress;
-    bool fIsNullObject;
-  #endif
+  int fID = -1;
+  std::string fType = "";
+  unsigned long fTRBNetAddress = 0;
+  unsigned long fHubAddress = 0;
+  bool fIsNullObject = true;
 
   friend class JPetParamManager;
 

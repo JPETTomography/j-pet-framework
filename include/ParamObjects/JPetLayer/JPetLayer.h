@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -27,21 +27,21 @@
  * layer of a JPetSetup. The layer consists of slots represented by JPetSlot
  * objects.
  */
-class JPetLayer: public TNamed
+class JPetLayer : public TNamed
 {
 public:
   JPetLayer();
-  JPetLayer(int id, std::string name, float radius);
-  JPetLayer(const JPetLayer &layer);
+  JPetLayer(int id, std::string name, double radius);
+  JPetLayer(const JPetLayer& layer);
   explicit JPetLayer(bool isNull);
   virtual ~JPetLayer();
   void setID(int id);
   void setName(std::string name);
-  void setRaduis(float radius);
+  void setRaduis(double radius);
   void setSetup(JPetSetup& setup);
   int getID() const;
   std::string getName() const;
-  float getRadius() const;
+  double getRadius() const;
   const JPetSetup& getSetup() const;
   bool operator==(const JPetLayer& layer) const;
   bool operator!=(const JPetLayer& layer) const;
@@ -54,15 +54,11 @@ protected:
 #ifndef __CINT__
   int fID = -1;
   std::string fName = "";
-  float fRadius = -1.f;
+  double fRadius = -1.0;
   bool fIsNullObject = false;
-#else
-  int fID;
-  std::string fName;
-  float fRadius;
-  bool fIsNullObject;
-#endif
-  TRef fTRefSetup;
+  TRef fTRefSetup = nullptr;
+
+  friend class JPetParamManager;
 
   ClassDef(JPetLayer, 6);
 };

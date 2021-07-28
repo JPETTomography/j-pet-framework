@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,9 +16,9 @@
 #ifndef JPETCHANNELFACTORY_H
 #define JPETCHANNELFACTORY_H
 
-#include "JPetParamGetter/JPetParamGetter.h"
 #include "JPetChannel/JPetChannel.h"
 #include "JPetPM/JPetPMFactory.h"
+#include "JPetParamGetter/JPetParamGetter.h"
 #include <map>
 
 /**
@@ -30,10 +30,10 @@ class JPetChannelFactory
 {
 public:
   JPetChannelFactory();
-  JPetChannelFactory(
-    JPetParamGetter& paramGetter, const int runID, JPetPMFactory& pmFactory) :
-    fParamGetter(paramGetter), fRunID(runID), fPMFactory(pmFactory),
-    fInitialized(false) {}
+  JPetChannelFactory(JPetParamGetter& paramGetter, const int runID, JPetPMFactory& pmFactory)
+      : fParamGetter(paramGetter), fRunID(runID), fPMFactory(pmFactory), fInitialized(false)
+  {
+  }
   std::map<int, JPetChannel*>& getChannels();
 
 private:

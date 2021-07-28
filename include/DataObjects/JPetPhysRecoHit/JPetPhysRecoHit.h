@@ -16,7 +16,7 @@
 #ifndef JPETPHYSRECOHIT_H
 #define JPETPHYSRECOHIT_H
 
-#include "JPetPhysSignal/JPetPhysSignal.h"
+#include "JPetBaseSignal/JPetBaseSignal.h"
 #include "JPetRecoHit/JPetRecoHit.h"
 
 class JPetRecoHit;
@@ -49,9 +49,9 @@ public:
   double getQualityOfEnergy() const;
   double getQualityOfToT() const;
 
-  const JPetPhysSignal& getSignal(Signal side) const;
-  const JPetPhysSignal& getSignalA() const;
-  const JPetPhysSignal& getSignalB() const;
+  const JPetBaseSignal& getSignal(Signal side) const;
+  const JPetBaseSignal& getSignalA() const;
+  const JPetBaseSignal& getSignalB() const;
 
   void setTimeDiff(double timeDiff);
   void setToT(double tot);
@@ -61,9 +61,9 @@ public:
   void setQualityOfEnergy(double qualityOfEnergy);
   void setQualityOfToT(double qualityOfToT);
 
-  void setSignals(const JPetPhysSignal& sigA, const JPetPhysSignal& sigB);
-  void setSignalA(const JPetPhysSignal& sigA);
-  void setSignalB(const JPetPhysSignal& sigB);
+  void setSignals(const JPetBaseSignal& sigA, const JPetBaseSignal& sigB);
+  void setSignalA(const JPetBaseSignal& sigA);
+  void setSignalB(const JPetBaseSignal& sigB);
 
   bool isSignalASet() const;
   bool isSignalBSet() const;
@@ -79,10 +79,10 @@ private:
   double fQualityOfToT = 0.0;
   bool fIsSignalAset = false;
   bool fIsSignalBset = false;
-  JPetPhysSignal fSignalA;
-  JPetPhysSignal fSignalB;
+  JPetBaseSignal* fSignalA;
+  JPetBaseSignal* fSignalB;
 
-  ClassDef(JPetPhysRecoHit, 1);
+  ClassDef(JPetPhysRecoHit, 2);
 };
 
 #endif /* !JPETPHYSRECOHIT_H */

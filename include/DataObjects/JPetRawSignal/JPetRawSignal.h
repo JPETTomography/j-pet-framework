@@ -16,12 +16,12 @@
 #ifndef JPETRAWSIGNAL_H
 #define JPETRAWSIGNAL_H
 
-#include "JPetBaseSignal/JPetBaseSignal.h"
-#include "JPetSigCh/JPetSigCh.h"
-#include <algorithm>
+#include "JPetChannelSignal/JPetChannelSignal.h"
+#include "JPetRecoSignal/JPetRecoSignal.h"
 #include <map>
-#include <utility>
 #include <vector>
+// #include <utility>
+// #include <algorithm>
 
 /**
  * @brief Data class representing a raw signal from a single photomultiplier
@@ -29,7 +29,7 @@
  * The signal consists of two arrays of JPetSigCh objects - time value points
  * probed on the leading and trailing edge.
  */
-class JPetRawSignal : public JPetBaseSignal
+class JPetRawSignal : public JPetRecoSignal
 {
 public:
   enum PointsSortOrder
@@ -40,21 +40,20 @@ public:
 
   JPetRawSignal(const int points = 4);
   virtual ~JPetRawSignal();
-  int getNumberOfPoints(JPetSigCh::EdgeType edge) const;
-  void addPoint(const JPetSigCh& sigch);
-  std::vector<JPetSigCh> getPoints(JPetSigCh::EdgeType edge, JPetRawSignal::PointsSortOrder order = JPetRawSignal::ByThrValue) const;
-  std::map<int, double> getTimesVsThresholdNumber(JPetSigCh::EdgeType edge) const;
+  int getNumberOfPoints(JPetChannelSignal::EdgeType edge) const;
+  void addPoint(const JPetChannelSignal& channelSignal);
+  std::vector<JPetChannelSignal> getPoints(JPetSigCh::EdgeType edge, JPetRawSignal::PointsSortOrder order = JPetRawSignal::ByThrValue) const;
+  std::map<int, double> getTimesVsThresholdNumber(JPetChannelSignal::EdgeType edge) const;
   std::map<int, std::pair<double, double>> getTimesVsThresholdValue(JPetSigCh::EdgeType edge) const;
   std::map<int, double> getTOTsVsThresholdValue() const;
   std::map<int, double> getTOTsVsThresholdNumber() const;
-
-  void Clear(Option_t* opt = "");
+  void Clear(Option_t*) override;
 
 private:
-  std::vector<JPetSigCh> fLeadingPoints;
-  std::vector<JPetSigCh> fTrailingPoints;
+  std::vector<JPetChannelSignal> fLeadingPoints;
+  std::vector<JPetChannelSignal> fTrailingPoints;
 
-  ClassDef(JPetRawSignal, 9);
+  ClassDef(JPetRawSignal, 8);
 };
 
 #endif /* !JPETRAWSIGNAL_H */
