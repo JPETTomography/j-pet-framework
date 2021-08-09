@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,7 +16,7 @@
 #ifndef JPETANALYSISTOOLS_H
 #define JPETANALYSISTOOLS_H
 
-#include "./JPetHit/JPetHit.h"
+#include "Hits/JPetBaseHit/JPetBaseHit.h"
 #include <vector>
 
 /**
@@ -25,6 +25,6 @@
 class JPetAnalysisTools
 {
 public:
-  static std::vector<JPetHit> getHitsOrderedByTime(const std::vector<JPetHit>& hits);
+  static std::vector<JPetBaseHit*> getHitsOrderedByTime(const std::vector<JPetBaseHit*>& hits);
 };
 #endif /* !JPETANALYSISTOOLS_H */

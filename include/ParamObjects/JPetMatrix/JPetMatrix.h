@@ -10,7 +10,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetMartix.h
+ *  @file JPetMatrix.h
  */
 
 #ifndef JPET_MATRIX
@@ -30,7 +30,7 @@ class JPetScin;
  * indentified by position index. Such matrices are attached to scintillating strips
  * to one of the edges, as indicated by SideA or SideB.
  */
-class JPetMartix : public TNamed
+class JPetMatrix : public TNamed
 {
 public:
   enum Side
@@ -39,21 +39,21 @@ public:
     SideB
   };
 
-  JPetMartix();
-  JPetMartix(int id, Side side);
-  JPetMartix(const JPetMartix& mtx);
-  explicit JPetMartix(bool isNull);
-  virtual ~JPetMartix();
+  JPetMatrix();
+  JPetMatrix(int id, Side side);
+  JPetMatrix(const JPetMatrix& mtx);
+  explicit JPetMatrix(bool isNull);
+  virtual ~JPetMatrix();
   void setID(int id);
   void setSide(Side side);
   void setScin(JPetScin& scin);
   int getID() const;
   Side getSide() const;
   JPetScin& getScin() const;
-  bool operator==(const JPetScin& scin) const;
-  bool operator!=(const JPetScin& scin) const;
+  bool operator==(const JPetMatrix& scin) const;
+  bool operator!=(const JPetMatrix& scin) const;
   bool isNullObject() const;
-  static JPetMartix& getDummyResult();
+  static JPetMatrix& getDummyResult();
 
 protected:
   int fID = -1;
@@ -64,7 +64,7 @@ protected:
 
   friend class JPetParamManager;
 
-  ClassDef(JPetMartix, 1);
+  ClassDef(JPetMatrix, 1);
 };
 
 #endif /* !JPET_MATRIX */

@@ -111,13 +111,26 @@ JPetScinFactory& JPetParamManager::getScinFactory(const int runID)
   return fScinFactories.at(runID);
 }
 
+std::map<int, JPetMatrix*>& JPetParamManager::getMatrices(const int runID) { return getMatrixFactory(runID).getMatrices(); }
+
+JPetMatrixFactory& JPetParamManager::getMatrixFactory(const int runID)
+{
+  if (fMatrixFactories.count(runID) == 0)
+  {
+    fMatrixFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runID),
+                             std::forward_as_tuple(*fParamGetter, runID, getScinFactory(runID)));
+  }
+  return fMatrixFactories.at(runID);
+}
+
 std::map<int, JPetPM*>& JPetParamManager::getPMs(const int runID) { return getPMFactory(runID).getPMs(); }
 
 JPetPMFactory& JPetParamManager::getPMFactory(const int runID)
 {
   if (fPMFactories.count(runID) == 0)
   {
-    fPMFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runID), std::forward_as_tuple(*fParamGetter, runID, getScinFactory(runID)));
+    fPMFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runID),
+                         std::forward_as_tuple(*fParamGetter, runID, getMatrixFactory(runID)));
   }
   return fPMFactories.at(runID);
 }
@@ -199,13 +212,22 @@ void JPetParamManager::fillParameterBank(const int runID)
       fBank->getScin(scin.getID()).setSlot(fBank->getSlot(scin.getSlot().getID()));
     }
   }
+  if (!fExpectMissing.count(ParamObjectType::kMatrix))
+  {
+    for (auto& mtx_p : getMatrices(runID))
+    {
+      auto& mtx = *mtx_p.second;
+      fBank->addMatrix(mtx);
+      fBank->getMatrix(mtx.getID()).setScin(fBank->getScin(mtx.getScin().getID()));
+    }
+  }
   if (!fExpectMissing.count(ParamObjectType::kPM))
   {
     for (auto& pm_p : getPMs(runID))
     {
       auto& pm = *pm_p.second;
       fBank->addPM(pm);
-      fBank->getPM(pm.getID()).setScin(fBank->getScin(pm.getScin().getID()));
+      fBank->getPM(pm.getID()).setMatrix(fBank->getMatrix(pm.getMatrix().getID()));
     }
   }
   if (!fExpectMissing.count(ParamObjectType::kChannel))

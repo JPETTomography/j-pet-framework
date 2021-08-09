@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -22,21 +22,24 @@
 double JPetParamUtils::distanceXY(const JPetSlot& slot1, const JPetSlot& slot2)
 {
   double angle = TMath::Abs(slot2.getTheta() - slot1.getTheta());
-  double radius1= slot1.getLayer().getRadius();
-  double radius2= slot2.getLayer().getRadius();
+  double radius1 = slot1.getLayer().getRadius();
+  double radius2 = slot2.getLayer().getRadius();
   double radiusDiff = TMath::Abs(radius1 - radius2);
-  if(radiusDiff < 0.01){
-    double dist = 2*radius1*TMath::Sin(0.5*angle*TMath::DegToRad());
+  if (radiusDiff < 0.01)
+  {
+    double dist = 2 * radius1 * TMath::Sin(0.5 * angle * TMath::DegToRad());
     return dist;
-  } else {
+  }
+  else
+  {
     WARNING(Form("For PMTs with different radius distanceXY() never tested"));
-    double dist1 = radius1*TMath::Sin(0.5*angle*TMath::DegToRad());
-    double dist2 = radius2*TMath::Sin(0.5*angle*TMath::DegToRad());
-    double xDist = dist1+dist2;
-    double y1 = radius1*TMath::Cos(0.5*angle*TMath::DegToRad());
-    double y2 = radius2*TMath::Cos(0.5*angle*TMath::DegToRad());
+    double dist1 = radius1 * TMath::Sin(0.5 * angle * TMath::DegToRad());
+    double dist2 = radius2 * TMath::Sin(0.5 * angle * TMath::DegToRad());
+    double xDist = dist1 + dist2;
+    double y1 = radius1 * TMath::Cos(0.5 * angle * TMath::DegToRad());
+    double y2 = radius2 * TMath::Cos(0.5 * angle * TMath::DegToRad());
     double deltaY = TMath::Abs(y2 - y1);
-    double dist = TMath::Sqrt(xDist*xDist + deltaY*deltaY);
+    double dist = TMath::Sqrt(xDist * xDist + deltaY * deltaY);
     return dist;
   }
 }
@@ -47,7 +50,7 @@ double JPetParamUtils::distanceXY(const JPetSlot& slot1, const JPetSlot& slot2)
  */
 double JPetParamUtils::distanceXY(const JPetPM& pm1, const JPetPM& pm2)
 {
-  const JPetSlot& slot1 = pm1.getScin().getSlot();
-  const JPetSlot& slot2 = pm2.getScin().getSlot();
+  const JPetSlot& slot1 = pm1.getMatrix().getScin().getSlot();
+  const JPetSlot& slot2 = pm2.getMatrix().getScin().getSlot();
   return distanceXY(slot1, slot2);
 }

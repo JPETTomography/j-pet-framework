@@ -20,7 +20,7 @@ ClassImp(JPetEvent);
 
 JPetEvent::JPetEvent() : TObject(), fFlag(JPetEvent::Unknown) {}
 
-JPetEvent::JPetEvent(const std::vector<JPetHit>& hits, JPetEventType eventType, bool orderedByTime) : TObject(), fType(eventType)
+JPetEvent::JPetEvent(const std::vector<JPetBaseHit*>& hits, JPetEventType eventType, bool orderedByTime) : TObject(), fType(eventType)
 {
   setHits(hits, orderedByTime);
 }
@@ -33,7 +33,7 @@ JPetEvent::RecoFlag JPetEvent::getRecoFlag() const { return fFlag; }
  * Set the whole vector of hits to this event, with boolean argument
  * to decide if hits should additionally be ordered by time.
  */
-void JPetEvent::setHits(const std::vector<JPetHit>& hits, bool orderedByTime)
+void JPetEvent::setHits(const std::vector<JPetBaseHit*>& hits, bool orderedByTime)
 {
   if (orderedByTime)
   {
@@ -48,12 +48,12 @@ void JPetEvent::setHits(const std::vector<JPetHit>& hits, bool orderedByTime)
 /**
  * Adding hit to the event, this method does not sort nor order added hits by time.
  */
-void JPetEvent::addHit(const JPetHit& hit) { fHits.push_back(hit); }
+void JPetEvent::addHit(JPetBaseHit& hit) { fHits.push_back(&hit); }
 
 /**
  * Get vector of hits from this event.
  */
-const std::vector<JPetHit>& JPetEvent::getHits() const { return fHits; }
+const std::vector<JPetBaseHit*>& JPetEvent::getHits() const { return fHits; }
 
 /**
  * Get all the event types.

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -37,6 +37,7 @@ private:
   void fillLayers(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
   void fillSlots(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
   void fillScins(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
+  void fillMatrices(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
   void fillPMs(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
   void fillChannels(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
   void fillDataSources(boost::property_tree::ptree& runContents, const JPetParamBank& bank);
@@ -46,6 +47,7 @@ private:
   boost::property_tree::ptree layerToInfo(const JPetLayer& layer);
   boost::property_tree::ptree slotToInfo(const JPetSlot& slot);
   boost::property_tree::ptree scinToInfo(const JPetScin& scin);
+  boost::property_tree::ptree matrixToInfo(const JPetMatrix& mtx);
   boost::property_tree::ptree pmToInfo(const JPetPM& pm);
   boost::property_tree::ptree channelToInfo(const JPetChannel& channel);
   boost::property_tree::ptree dataSourceToInfo(const JPetDataSource& dataSource);

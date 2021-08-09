@@ -49,14 +49,12 @@ public:
   static JPetLayer& getDummyResult();
 
 protected:
-  void clearTRefSetup();
-
-#ifndef __CINT__
   int fID = -1;
   std::string fName = "";
   double fRadius = -1.0;
   bool fIsNullObject = false;
   TRef fTRefSetup = nullptr;
+  void clearTRefSetup();
 
   friend class JPetParamManager;
 

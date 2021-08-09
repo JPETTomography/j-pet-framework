@@ -16,7 +16,7 @@
 #ifndef JPET_MATRIX_FACTORY_H
 #define JPET_MATRIX_FACTORY_H
 
-// #include "JPetPM/JPetPM.h"
+#include "JPetMatrix/JPetMatrix.h"
 #include "JPetParamGetter/JPetParamGetter.h"
 #include "JPetScin/JPetScinFactory.h"
 #include <map>
@@ -33,16 +33,16 @@ public:
       : fParamGetter(paramGetter), fRunID(runID), fScinFactory(scinFactory), fInitialized(false)
   {
   }
-  std::map<int, JPetMartix*>& getMatrices();
+  std::map<int, JPetMatrix*>& getMatrices();
 
 private:
   JPetParamGetter& fParamGetter;
   const int fRunID;
   JPetScinFactory& fScinFactory;
   bool fInitialized;
-  std::map<int, JPetMartix*> fMatrices;
+  std::map<int, JPetMatrix*> fMatrices;
   void initialize();
-  JPetMartix* build(ParamObjectDescription data);
+  JPetMatrix* build(ParamObjectDescription data);
 };
 
 #endif /* !JPET_PM_FACTORY_H */

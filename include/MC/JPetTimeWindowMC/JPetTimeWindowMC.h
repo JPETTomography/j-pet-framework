@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2016 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,11 +13,11 @@
  *  @file JPetTimeWindowMC.h
  */
 
-#ifndef _JPETTIMEWINDOWMC_H_
-#define _JPETTIMEWINDOWMC_H_
+#ifndef JPETTIMEWINDOWMC_H
+#define JPETTIMEWINDOWMC_H
 
 #include "JPetData/JPetData.h"
-#include <JPetTimeWindow/JPetTimeWindow.h>
+#include "JPetTimeWindow/JPetTimeWindow.h"
 #include <TClonesArray.h>
 #include <TNamed.h>
 #include <iostream>
@@ -29,25 +29,17 @@
  *
  * A single TimeWindow contains many objects (referred to as "events") representing events which happened during one time window of the DAQ system.
  */
-class JPetTimeWindowMC: public JPetTimeWindow
+class JPetTimeWindowMC : public JPetTimeWindow
 {
 public:
+  JPetTimeWindowMC() : JPetTimeWindow(), fMCHits(), fDecayTrees() {}
 
-  JPetTimeWindowMC() : JPetTimeWindow(),
-    fMCHits(),
-    fDecayTrees()
-  {}
+  JPetTimeWindowMC(const char* event_type) : JPetTimeWindow(event_type), fMCHits("TObject", 1), fDecayTrees("TObject", 1) {}
 
-  JPetTimeWindowMC(const char* event_type) : JPetTimeWindow(event_type),
-    fMCHits("TObject", 1),
-    fDecayTrees("TObject", 1)
-  {}
-
-  JPetTimeWindowMC(const char* event_type, const char* mcHit_type, const char* decayTree_type) :
-    JPetTimeWindow(event_type),
-    fMCHits(mcHit_type, 2000),
-    fDecayTrees(decayTree_type, 2000)
-  {}
+  JPetTimeWindowMC(const char* event_type, const char* mcHit_type, const char* decayTree_type)
+      : JPetTimeWindow(event_type), fMCHits(mcHit_type, 2000), fDecayTrees(decayTree_type, 2000)
+  {
+  }
 
   JPetTimeWindowMC(JPetTimeWindowMC const& other, JPetTimeWindow const& inner)
       : JPetTimeWindow(inner), fMCHits(other.fMCHits), fDecayTrees(other.fDecayTrees), fMCHitsCount(other.fMCHitsCount),
@@ -55,40 +47,33 @@ public:
   {
   }
 
-  template<typename T>
+  template <typename T>
   void addMCHit(const T& evt)
   {
     dynamic_cast<T&>(*(fMCHits.ConstructedAt(fMCHitsCount++))) = evt;
   }
 
-  template<typename T>
+  template <typename T>
   void addDecayTree(const T& evt)
   {
     dynamic_cast<T&>(*(fDecayTrees.ConstructedAt(fDecayTreesCount++))) = evt;
   }
 
-  inline size_t getNumberOfMCHits() const
-  {
-    return fMCHitsCount;
-  }
+  inline size_t getNumberOfMCHits() const { return fMCHitsCount; }
 
-  inline size_t getNumberOfDecayTrees() const
-  {
-    return fDecayTreesCount;
-  }
+  inline size_t getNumberOfDecayTrees() const { return fDecayTreesCount; }
 
-  template<typename T>
+  template <typename T>
   inline const T& getMCHit(int i) const
   {
     return *(dynamic_cast<T*>(fMCHits[i]));
   }
 
-  template<typename T>
+  template <typename T>
   inline const T& getDecayTrees(int i) const
   {
     return *(dynamic_cast<T*>(fDecayTrees[i]));
   }
-
 
   virtual ~JPetTimeWindowMC()
   {
@@ -116,4 +101,4 @@ private:
   unsigned int fDecayTreesCount = 0;
 };
 
-#endif
+#endif /* !JPETTIMEWINDOWMC_H */

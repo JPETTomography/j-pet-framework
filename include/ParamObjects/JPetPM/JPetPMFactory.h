@@ -16,7 +16,7 @@
 #ifndef JPET_PM_FACTORY_H
 #define JPET_PM_FACTORY_H
 
-#include "JPetMartix/JPetMartixFactory.h"
+#include "JPetMatrix/JPetMatrixFactory.h"
 #include "JPetPM/JPetPM.h"
 #include "JPetParamGetter/JPetParamGetter.h"
 #include <map>
@@ -29,7 +29,7 @@
 class JPetPMFactory
 {
 public:
-  JPetPMFactory(JPetParamGetter& paramGetter, int runID, JPetMartixFactory& martixFactory)
+  JPetPMFactory(JPetParamGetter& paramGetter, int runID, JPetMatrixFactory& martixFactory)
       : fParamGetter(paramGetter), fRunID(runID), fMartixFactory(martixFactory), fInitialized(false)
   {
   }
@@ -38,7 +38,7 @@ public:
 private:
   JPetParamGetter& fParamGetter;
   const int fRunID;
-  JPetMartixFactory& fMartixFactory;
+  JPetMatrixFactory& fMartixFactory;
   bool fInitialized;
   std::map<int, JPetPM*> fPMs;
   void initialize();

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,32 +13,31 @@
  *  @file JPetSimplePhysSignalReco.h
  */
 
-#ifndef _JPETSIMPLEPHYSSIGNALRECO_H_
-#define _JPETSIMPLEPHYSSIGNALRECO_H_
+#ifndef JPETSIMPLEPHYSSIGNALRECO_H
+#define JPETSIMPLEPHYSSIGNALRECO_H
 
-#include "./JPetPhysSignal/JPetPhysSignal.h"
-#include "./JPetRecoSignal/JPetRecoSignal.h"
-#include "./JPetUserTask/JPetUserTask.h"
+#include "JPetUserTask/JPetUserTask.h"
+#include "Signals/JPetPhysSignal/JPetPhysSignal.h"
 
 class JPetWriter;
 
-class JPetSimplePhysSignalReco: public JPetUserTask
+class JPetSimplePhysSignalReco : public JPetUserTask
 {
 public:
   JPetSimplePhysSignalReco();
   virtual ~JPetSimplePhysSignalReco();
   virtual bool exec() override;
   inline int getAlpha() const { return fAlpha; }
-  inline float getThresholdSel() const { return fThresholdSel; }
+  inline double getThresholdSel() const { return fThresholdSel; }
   inline void setAlpha(int val) { fAlpha = val; }
-  inline void setThresholdSel(float val) { fThresholdSel = val; }
+  inline void setThresholdSel(double val) { fThresholdSel = val; }
   void readConfigFileAndSetAlphaAndThreshParams(const char* filename);
 
 private:
-  JPetPhysSignal createPhysSignal(JPetRecoSignal& signals);
-  void savePhysSignal( JPetPhysSignal signal);
+  JPetPhysSignal createPhysSignal(const JPetPMSignal& signal);
+  void savePhysSignal(JPetPhysSignal signal);
   int fAlpha;
-  float fThresholdSel;
+  double fThresholdSel;
 };
 
-#endif /* !_JPETSIMPLEPHYSSIGNALRECO_H_ */
+#endif /* !JPETSIMPLEPHYSSIGNALRECO_H */

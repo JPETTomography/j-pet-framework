@@ -16,11 +16,11 @@
 #ifndef JPET_PM
 #define JPET_PM
 
-#include "JPetMartix/JPetMartix.h"
+#include "JPetMatrix/JPetMatrix.h"
 #include <TNamed.h>
 #include <TRef.h>
 
-class JPetMartix;
+class JPetMatrix;
 
 /**
  * @brief Representation of a photomultiplier.
@@ -38,11 +38,11 @@ public:
   void setID(int id);
   void setDesc(std::string desc);
   void setMatrixPosition(int position);
-  void setMatrix(JPetMartix& matrix);
+  void setMatrix(JPetMatrix& matrix);
   int getID() const;
   std::string getDesc() const;
   int getMatrixPosition() const;
-  JPetMartix& getMatrix() const;
+  JPetMatrix& getMatrix() const;
   bool operator==(const JPetPM& pm) const;
   bool operator!=(const JPetPM& pm) const;
   bool isNullObject() const;

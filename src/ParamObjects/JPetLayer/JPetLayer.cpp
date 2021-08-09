@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -18,70 +18,38 @@
 
 ClassImp(JPetLayer);
 
-JPetLayer::JPetLayer()
-{
-  SetName("JPetLayer");
-}
+JPetLayer::JPetLayer() { SetName("JPetLayer"); }
 
-JPetLayer::JPetLayer(int id, std::string name, float radius):
-  fID(id), fName(name), fRadius(radius)
-{
-  SetName("JPetLayer");
-}
+JPetLayer::JPetLayer(int id, std::string name, double radius) : fID(id), fName(name), fRadius(radius) { SetName("JPetLayer"); }
 
-JPetLayer::JPetLayer(const JPetLayer &layer):
-  fID(layer.getID()), fName(layer.getName()), fRadius(layer.getRadius())
-{
-  SetName("JPetLayer");
-}
+JPetLayer::JPetLayer(const JPetLayer& layer) : fID(layer.getID()), fName(layer.getName()), fRadius(layer.getRadius()) { SetName("JPetLayer"); }
 
-JPetLayer::JPetLayer(bool isNull): fIsNullObject(isNull)
-{
-  SetName("JPetLayer");
-}
+JPetLayer::JPetLayer(bool isNull) : fIsNullObject(isNull) { SetName("JPetLayer"); }
 
 JPetLayer::~JPetLayer() {}
 
-void JPetLayer::setID(int id)
-{
-  fID = id;
-}
+void JPetLayer::setID(int id) { fID = id; }
 
-void JPetLayer::setName(std::string name)
-{
-  fName = name;
-}
+void JPetLayer::setName(std::string name) { fName = name; }
 
-void JPetLayer::setRaduis(float radius)
-{
-  fRadius = radius;
-}
+void JPetLayer::setRaduis(double radius) { fRadius = radius; }
 
-void JPetLayer::setSetup(JPetSetup& setup)
-{
-  fTRefSetup = &setup;
-}
+void JPetLayer::setSetup(JPetSetup& setup) { fTRefSetup = &setup; }
 
-int JPetLayer::getID() const
-{
-  return fID;
-}
+int JPetLayer::getID() const { return fID; }
 
-std::string JPetLayer::getName() const
-{
-  return fName;
-}
+std::string JPetLayer::getName() const { return fName; }
 
-float JPetLayer::getRadius() const
-{
-  return fRadius;
-}
+double JPetLayer::getRadius() const { return fRadius; }
 
 const JPetSetup& JPetLayer::getSetup() const
 {
-  if (fTRefSetup.GetObject()) {
+  if (fTRefSetup.GetObject())
+  {
     return static_cast<JPetSetup&>(*(fTRefSetup.GetObject()));
-  } else {
+  }
+  else
+  {
     ERROR("No JPetSetup set, Null object will be returned");
     return JPetSetup::getDummyResult();
   }
@@ -89,29 +57,18 @@ const JPetSetup& JPetLayer::getSetup() const
 
 bool JPetLayer::operator==(const JPetLayer& layer) const
 {
-  return this->getID() == layer.getID()
-    && this->getName() == layer.getName()
-    && this->getRadius() == layer.getRadius()
-    && this->getSetup() == layer.getSetup();
+  return this->getID() == layer.getID() && this->getName() == layer.getName() && this->getRadius() == layer.getRadius() &&
+         this->getSetup() == layer.getSetup();
 }
 
-bool JPetLayer::operator!=(const JPetLayer& layer) const
-{
-  return !(*this == layer);
-}
+bool JPetLayer::operator!=(const JPetLayer& layer) const { return !(*this == layer); }
 
-bool JPetLayer::isNullObject() const
-{
-  return fIsNullObject;
-}
+bool JPetLayer::isNullObject() const { return fIsNullObject; }
 
 JPetLayer& JPetLayer::getDummyResult()
 {
-  static JPetLayer DummyResult(true);
-  return DummyResult;
+  static JPetLayer dummyResult(true);
+  return dummyResult;
 }
 
-void JPetLayer::clearTRefSetup()
-{
-  fTRefSetup = NULL;
-}
+void JPetLayer::clearTRefSetup() { fTRefSetup = nullptr; }

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,8 +16,8 @@
 #ifndef JPET_SLOT_FACTORY_H
 #define JPET_SLOT_FACTORY_H
 
-#include "JPetParamGetter/JPetParamGetter.h"
 #include "JPetLayer/JPetLayerFactory.h"
+#include "JPetParamGetter/JPetParamGetter.h"
 #include "JPetSlot/JPetSlot.h"
 #include <map>
 
@@ -29,8 +29,10 @@
 class JPetSlotFactory
 {
 public:
-  JPetSlotFactory(JPetParamGetter& paramGetter, int runID, JPetLayerFactory& layerFactory):
-    fParamGetter(paramGetter), fRunID(runID), fLayerFactory(layerFactory), fInitialized(false) {}
+  JPetSlotFactory(JPetParamGetter& paramGetter, int runID, JPetLayerFactory& layerFactory)
+      : fParamGetter(paramGetter), fRunID(runID), fLayerFactory(layerFactory), fInitialized(false)
+  {
+  }
   std::map<int, JPetSlot*>& getSlots();
 
 private:

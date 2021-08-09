@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,29 +13,28 @@
  *  @file JPetMCDecayTree.h
  */
 
-#ifndef _JPETMCDECAYTREE_H_
-#define _JPETMCDECAYTREE_H_
+#ifndef JPETMCDECAYTREE_H
+#define JPETMCDECAYTREE_H
 
-#include "./JPetHit/JPetHit.h"
+#include <TObject.h>
 
 /**
  * @brief Data class representing a hit of a photon in the scintillator strip based on Monte Carlo simulation.
- *
  */
-class JPetMCDecayTree : public TObject {
+class JPetMCDecayTree : public TObject
+{
 
 public:
   JPetMCDecayTree();
 
 private:
-  UInt_t fMCMCDecayTreeIndex = 0u;
-  UInt_t fMCVtxIndex = 0u;
-
-  UInt_t fnVertices = 0u;
-  UInt_t fnTracks = 0u;
+  int fMCMCDecayTreeIndex = 0;
+  int fMCVtxIndex = 0;
+  int fnVertices = 0;
+  int fnTracks = 0;
   // add also track and vertices structures
 
   ClassDef(JPetMCDecayTree, 2);
 };
 
-#endif
+#endif /* !JPETMCDECAYTREE_H*/

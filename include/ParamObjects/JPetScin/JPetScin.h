@@ -69,8 +69,6 @@ public:
   bool isNullObject() const;
 
 protected:
-  void clearTRefSlot();
-
   int fID = -1;
   double fLength = 0.0;
   double fHeight = 0.0;
@@ -79,6 +77,7 @@ protected:
   TVector3 fScinCenter;
   TVector3 fScinRotation;
   TRef fTRefSlot = nullptr;
+  void clearTRefSlot();
 
   friend class JPetParamManager;
 

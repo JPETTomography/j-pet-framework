@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -17,17 +17,17 @@
 #define JPETSCOPETASK_H
 
 #include "JPetUserTask/JPetUserTask.h"
-#include <string>
 #include <map>
+#include <string>
 
 /**
  * @brief Module for oscilloscope data
  */
-class JPetScopeTask: public JPetUserTask
+class JPetScopeTask : public JPetUserTask
 {
 public:
   JPetScopeTask(const char* name);
-  virtual ~JPetScopeTask() {};
+  virtual ~JPetScopeTask(){};
   bool run(const JPetDataInterface& inData) override;
 
 protected:

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,8 +16,8 @@
 #ifndef JPETEVENT_H
 #define JPETEVENT_H
 
+#include "Hits/JPetBaseHit/JPetBaseHit.h"
 #include "JPetEventType/JPetEventType.h"
-#include "JPetHit/JPetHit.h"
 #include <TObject.h>
 #include <vector>
 
@@ -39,39 +39,39 @@
  * from several separate physical events.
  */
 
-class JPetEvent: public TObject
+class JPetEvent : public TObject
 {
 
 public:
-  enum RecoFlag { Good, Corrupted, Unknown };
+  enum RecoFlag
+  {
+    Good,
+    Corrupted,
+    MC,
+    Unknown
+  };
 
   JPetEvent();
-  JPetEvent(const std::vector<JPetHit>& hits,
-            JPetEventType eventType = JPetEventType::kUnknown,
-            bool orderedByTime = true);
+  JPetEvent(const std::vector<JPetBaseHit*>& hits, JPetEventType eventType = JPetEventType::kUnknown, bool orderedByTime = true);
   JPetEvent::RecoFlag getRecoFlag() const;
-  const std::vector<JPetHit>& getHits() const;
+  const std::vector<JPetBaseHit*>& getHits() const;
   void setRecoFlag(JPetEvent::RecoFlag flag);
-  void setHits(const std::vector<JPetHit>& hits, bool orderedByTime = true);
-  void addHit(const JPetHit& hit);
+  void setHits(const std::vector<JPetBaseHit*>& hits, bool orderedByTime = true);
+  void addHit(JPetBaseHit& hit);
   JPetEventType getEventType() const;
   void setEventType(JPetEventType type);
   void addEventType(JPetEventType type);
   bool isTypeOf(JPetEventType type) const;
   bool isOnlyTypeOf(JPetEventType type) const;
-  void Clear(Option_t* opt = "");
+  void Clear(Option_t*) override;
 
 protected:
-  std::vector<JPetHit> fHits;
-#ifndef __CINT__
+  std::vector<JPetBaseHit*> fHits;
   JPetEventType fType = JPetEventType::kUnknown;
-#else
-  JPetEventType fType;
-#endif
 
 private:
   RecoFlag fFlag = JPetEvent::Unknown;
 
-  ClassDef(JPetEvent, 6);
+  ClassDef(JPetEvent, 7);
 };
 #endif /* !JPETEVENT_H */
