@@ -53,7 +53,7 @@ JPetChannel* JPetChannelFactory::build(ParamObjectDescription data)
   {
     int id = boost::lexical_cast<int>(data.at("id"));
     int thrNum = boost::lexical_cast<int>(data.at("thr_num"));
-    int thrVal = boost::lexical_cast<float>(data.at("thr_val"));
+    double thrVal = boost::lexical_cast<double>(data.at("thr_val"));
     return new JPetChannel(id, thrNum, thrVal);
   }
   catch (const std::exception& e)

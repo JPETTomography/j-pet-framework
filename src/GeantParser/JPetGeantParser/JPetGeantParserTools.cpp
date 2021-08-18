@@ -50,7 +50,7 @@ JPetMCRecoHit JPetGeantParserTools::reconstructHit(JPetRawMCHit& mcHit, const do
 
 bool JPetGeantParserTools::isHitReconstructed(JPetMCRecoHit& recoHit, const double energyThreshold) { return recoHit.getEnergy() >= energyThreshold; }
 
-void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit, const JPetMCRecoHit& recoHit, bool isRecPrompt, array<bool, 2>& isSaved2g,
+void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit, const JPetMCRecoHit& recoHit, bool& isRecPrompt, array<bool, 2>& isSaved2g,
                                             array<bool, 3>& isSaved3g, double& enePrompt, array<double, 2>& ene2g, array<double, 3>& ene3g)
 {
   if (geantHit->getGenGammaMultiplicity() == 1)

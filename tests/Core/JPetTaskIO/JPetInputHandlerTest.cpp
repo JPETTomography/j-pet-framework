@@ -1,8 +1,10 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetInputHandlerTest
+
 #include "JPetTaskIO/JPetInputHandler.h"
 #include "JPetParamGetterAscii/JPetParamGetterAscii.h"
 #include "JPetParamManager/JPetParamManager.h"
+#include "JPetTimeWindow/JPetTimeWindow.h"
 
 #include <boost/test/unit_test.hpp>
 

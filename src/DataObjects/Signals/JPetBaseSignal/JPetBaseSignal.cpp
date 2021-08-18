@@ -25,6 +25,10 @@ JPetBaseSignal::JPetBaseSignal(double time) : TObject(), fTime(time) {}
 
 JPetBaseSignal::~JPetBaseSignal() {}
 
+void JPetBaseSignal::setTime(double time) { fTime = time; }
+
+const double JPetBaseSignal::getTime() const { return fTime; }
+
 bool JPetBaseSignal::isNullObject() const { return fIsNullObject; }
 
 JPetBaseSignal& JPetBaseSignal::getDummyResult()

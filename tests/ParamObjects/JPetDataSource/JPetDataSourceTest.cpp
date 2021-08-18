@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -45,47 +45,38 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FactorySuite)
 
-class TestParamGetter : public JPetParamGetter {
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType, const int runID) {
+class TestParamGetter : public JPetParamGetter
+{
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType, const int runID)
+  {
     ParamObjectsDescriptions result;
-    switch (runID) {
-      // No setups
-      case 0:
-        break;
-      // Single object
-      case 1:
-        result = { { 1, {
-          {"id", "1" }, {"type", "TRB3_S"},
-          {"trbnet_address", "8040"}, {"hub_address", "8040"}
-        } } };
-        break;
-      // Two objects
-      case 2:
-        result = {
-          { 1, { {"id", "1" }, {"type", "TRB3_S"}, {"trbnet_address", "8040"}, {"hub_address", "8040"} } },
-          { 5, { {"id", "5" }, {"type", "TRB3_M"}, {"trbnet_address", "8090"}, {"hub_address", "8090"} } }
-        };
-        break;
-      // Missing field
-      case 3:
-        result = { { 1, {
-          {"id", "1" }, {"type", "TRB3_S"}, {"hub_address", "8040"}
-        } } };
-        break;
-      // Wrong field
-      case 4:
-        result = { { 1, {
-          {"id", "one" }, {"type", "TRB3_S"},
-          {"trbnet_address", "8040"}, {"hub_address", "8040"}
-        } } };
-        break;
+    switch (runID)
+    {
+    // No setups
+    case 0:
+      break;
+    // Single object
+    case 1:
+      result = {{1, {{"id", "1"}, {"type", "TRB3_S"}, {"trbnet_address", "8040"}, {"hub_address", "8040"}}}};
+      break;
+    // Two objects
+    case 2:
+      result = {{1, {{"id", "1"}, {"type", "TRB3_S"}, {"trbnet_address", "8040"}, {"hub_address", "8040"}}},
+                {5, {{"id", "5"}, {"type", "TRB3_M"}, {"trbnet_address", "8090"}, {"hub_address", "8090"}}}};
+      break;
+    // Missing field
+    case 3:
+      result = {{1, {{"id", "1"}, {"type", "TRB3_S"}, {"hub_address", "8040"}}}};
+      break;
+    // Wrong field
+    case 4:
+      result = {{1, {{"id", "one"}, {"type", "TRB3_S"}, {"trbnet_address", "8040"}, {"hub_address", "8040"}}}};
+      break;
     }
     return result;
   }
   // Irrelevant for this test
-  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int) {
-    return ParamRelationalData();
-  }
+  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int) { return ParamRelationalData(); }
 };
 
 TestParamGetter paramGetter;

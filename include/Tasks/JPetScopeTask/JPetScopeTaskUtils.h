@@ -19,7 +19,7 @@ const double ks2ps = 1.0e+12;
 const double kV2mV = 1.0e+3;
 const int kbuflen = 256;
 
-namespace RecoSignalUtils
+namespace ShapedSignalUtils
 {
 
 JPetShapedSignal generateSignal(const char* filename)
@@ -67,4 +67,4 @@ JPetShapedSignal generateSignal(const char* filename)
   fclose(input_file);
   return shapedSignal;
 }
-} // namespace RecoSignalUtils
+} // namespace ShapedSignalUtils

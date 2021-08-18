@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -12,17 +12,17 @@
  *
  *  @file JPetScopeLoader.cpp
  *  @brief Module for oscilloscope data
- *  Reads oscilloscope ASCII data and procudes JPetRecoSignal structures.
+ *  Reads oscilloscope ASCII data and procudes JPetShapedSignal structures.
  */
 
-#include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
-#include "JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include "JPetScopeLoader/JPetScopeLoader.h"
 #include "JPetCommonTools/JPetCommonTools.h"
+#include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "JPetScopeConfigParser/JPetScopeConfigParser.h"
 #include "JPetScopeData/JPetScopeData.h"
+#include <TSystem.h>
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
-#include <TSystem.h>
 
 using namespace std;
 using namespace boost::filesystem;

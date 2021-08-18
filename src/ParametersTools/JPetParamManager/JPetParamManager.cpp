@@ -35,6 +35,7 @@ std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const s
     }
     if (file_type_checker::getInputFileType(options) == file_type_checker::kMCGeant)
     {
+      expectMissing.insert(ParamObjectType::kMatrix);
       expectMissing.insert(ParamObjectType::kPM);
       expectMissing.insert(ParamObjectType::kChannel);
       expectMissing.insert(ParamObjectType::kDataSource);
@@ -44,7 +45,7 @@ std::shared_ptr<JPetParamManager> JPetParamManager::generateParamManager(const s
   }
   else
   {
-    ERROR("No local database file found.");
+    ERROR(Form("No local database file found: %s", getLocalDB(options).c_str()));
     return std::make_shared<JPetParamManager>();
   }
 }
@@ -191,7 +192,10 @@ void JPetParamManager::fillParameterBank(const int runID)
     {
       auto& layer = *layer_p.second;
       fBank->addLayer(layer);
-      fBank->getLayer(layer.getID()).setSetup(fBank->getSetup(layer.getSetup().getID()));
+      if (!fExpectMissing.count(ParamObjectType::kSetup))
+      {
+        fBank->getLayer(layer.getID()).setSetup(fBank->getSetup(layer.getSetup().getID()));
+      }
     }
   }
   if (!fExpectMissing.count(ParamObjectType::kSlot))
@@ -200,7 +204,10 @@ void JPetParamManager::fillParameterBank(const int runID)
     {
       auto& slot = *slot_p.second;
       fBank->addSlot(slot);
-      fBank->getSlot(slot.getID()).setLayer(fBank->getLayer(slot.getLayer().getID()));
+      if (!fExpectMissing.count(ParamObjectType::kLayer))
+      {
+        fBank->getSlot(slot.getID()).setLayer(fBank->getLayer(slot.getLayer().getID()));
+      }
     }
   }
   if (!fExpectMissing.count(ParamObjectType::kScin))
@@ -209,7 +216,10 @@ void JPetParamManager::fillParameterBank(const int runID)
     {
       auto& scin = *scin_p.second;
       fBank->addScin(scin);
-      fBank->getScin(scin.getID()).setSlot(fBank->getSlot(scin.getSlot().getID()));
+      if (!fExpectMissing.count(ParamObjectType::kSlot))
+      {
+        fBank->getScin(scin.getID()).setSlot(fBank->getSlot(scin.getSlot().getID()));
+      }
     }
   }
   if (!fExpectMissing.count(ParamObjectType::kMatrix))
@@ -218,7 +228,10 @@ void JPetParamManager::fillParameterBank(const int runID)
     {
       auto& mtx = *mtx_p.second;
       fBank->addMatrix(mtx);
-      fBank->getMatrix(mtx.getID()).setScin(fBank->getScin(mtx.getScin().getID()));
+      if (!fExpectMissing.count(ParamObjectType::kScin))
+      {
+        fBank->getMatrix(mtx.getID()).setScin(fBank->getScin(mtx.getScin().getID()));
+      }
     }
   }
   if (!fExpectMissing.count(ParamObjectType::kPM))
@@ -227,7 +240,10 @@ void JPetParamManager::fillParameterBank(const int runID)
     {
       auto& pm = *pm_p.second;
       fBank->addPM(pm);
-      fBank->getPM(pm.getID()).setMatrix(fBank->getMatrix(pm.getMatrix().getID()));
+      if (!fExpectMissing.count(ParamObjectType::kMatrix))
+      {
+        fBank->getPM(pm.getID()).setMatrix(fBank->getMatrix(pm.getMatrix().getID()));
+      }
     }
   }
   if (!fExpectMissing.count(ParamObjectType::kChannel))
@@ -236,7 +252,10 @@ void JPetParamManager::fillParameterBank(const int runID)
     {
       auto& channel = *channel_p.second;
       fBank->addChannel(channel);
-      fBank->getChannel(channel.getID()).setPM(fBank->getPM(channel.getPM().getID()));
+      if (!fExpectMissing.count(ParamObjectType::kPM))
+      {
+        fBank->getChannel(channel.getID()).setPM(fBank->getPM(channel.getPM().getID()));
+      }
     }
   }
   if (!fExpectMissing.count(ParamObjectType::kDataSource))
@@ -253,7 +272,10 @@ void JPetParamManager::fillParameterBank(const int runID)
     {
       auto& dataModule = *dataModuleElement.second;
       fBank->addDataModule(dataModule);
-      fBank->getDataModule(dataModule.getID()).setDataSource(fBank->getDataSource(dataModule.getDataSource().getID()));
+      if (!fExpectMissing.count(ParamObjectType::kDataSource))
+      {
+        fBank->getDataModule(dataModule.getID()).setDataSource(fBank->getDataSource(dataModule.getDataSource().getID()));
+      }
     }
   }
 }

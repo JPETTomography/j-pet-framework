@@ -48,7 +48,7 @@ void JPetEvent::setHits(const std::vector<JPetBaseHit*>& hits, bool orderedByTim
 /**
  * Adding hit to the event, this method does not sort nor order added hits by time.
  */
-void JPetEvent::addHit(JPetBaseHit& hit) { fHits.push_back(&hit); }
+void JPetEvent::addHit(JPetBaseHit* hit) { fHits.push_back(hit); }
 
 /**
  * Get vector of hits from this event.

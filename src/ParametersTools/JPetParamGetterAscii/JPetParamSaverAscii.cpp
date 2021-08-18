@@ -193,9 +193,9 @@ boost::property_tree::ptree JPetParamSaverAscii::scinToInfo(const JPetScin& scin
   info.put("xcenter", scin.getCenterX());
   info.put("ycenter", scin.getCenterY());
   info.put("zcenter", scin.getCenterZ());
-  info.put("xrot", scin.getRotationX());
-  info.put("yrot", scin.getRotationY());
-  info.put("zrot", scin.getRotationZ());
+  info.put("rot_x", scin.getRotationX());
+  info.put("rot_y", scin.getRotationY());
+  info.put("rot_z", scin.getRotationZ());
   info.put(objectsNames.at(ParamObjectType::kSlot) + "_id", scin.getSlot().getID());
   return info;
 }

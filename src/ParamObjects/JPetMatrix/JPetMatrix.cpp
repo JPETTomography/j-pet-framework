@@ -30,9 +30,13 @@ JPetMatrix::~JPetMatrix() {}
 
 void JPetMatrix::setID(int id) { fID = id; }
 
+void JPetMatrix::setSide(Side side) { fSide = side; }
+
 void JPetMatrix::setScin(JPetScin& scin) { fTRefScin = &scin; }
 
 int JPetMatrix::getID() const { return fID; }
+
+JPetMatrix::Side JPetMatrix::getSide() const { return fSide; }
 
 JPetScin& JPetMatrix::getScin() const
 {

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,12 +16,12 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetLayerTest
 
+#include "JPetLayer/JPetLayerFactory.h"
 #include <boost/test/unit_test.hpp>
-#include "JPetLayerFactory.h"
 
-const double epsilon = 0.00001;
+double epsilon = 0.00001;
 
-BOOST_AUTO_TEST_SUITE(FirstSuite)
+BOOST_AUTO_TEST_SUITE(LayerTestSuite)
 
 BOOST_AUTO_TEST_CASE(default_constructor)
 {
@@ -35,79 +35,81 @@ BOOST_AUTO_TEST_CASE(second_constructor)
 {
   JPetLayer layer(1, "sorbet", 10.5);
   BOOST_REQUIRE_EQUAL(layer.getID(), 1);
-  BOOST_REQUIRE(layer.getName() == "sorbet");
+  BOOST_REQUIRE_EQUAL(layer.getName(), "sorbet");
   BOOST_REQUIRE_CLOSE(layer.getRadius(), 10.5, epsilon);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(FactorySuite)
+BOOST_AUTO_TEST_SUITE(LayerFactorySuite)
 
-class TestParamGetter: public JPetParamGetter {
+class TestParamGetter : public JPetParamGetter
+{
 
-ParamObjectsDescriptions getAllBasicData(
-  ParamObjectType type, const int runID) {
-  ParamObjectsDescriptions result;
-  switch (type) {
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runID)
+  {
+    ParamObjectsDescriptions result;
+    switch (type)
+    {
     case ParamObjectType::kLayer:
-      switch (runID) {
-        // No layers
-        case 0:
-          break;
-        // Single object
-        case 1:
-          result = { { 1, { {"id", "1"}, {"name", "sorbet"}, {"radius", "10.5"}, {"setup_id", "1"} } } };
-          break;
-        // Two objects
-        case 2:
-          result = {
-            { 1, { {"id", "1"}, {"name", "sorbet"}, {"radius", "10.5"}, {"setup_id", "1"} } },
-            { 5, { {"id", "5"}, {"name", "frosting"}, {"radius", "15.5"}, {"setup_id", "1"} } }
-          };
-          break;
-        // Missing field
-        case 3:
-          result = { { 1, { {"id", "1"}, {"name", "sorbet"}, {"setup_id", "1"} } } };
-          break;
-        // Wrong field
-        case 4:
-          result = { { 1, { {"id", "1"}, {"name", "sorbet"}, {"radius", "ice cream"}, {"setup_id", "1"} } } };
-          break;
-        // Wrong relation
-        case 5:
-          result = { { 1, { {"id", "1"}, {"name", "sorbet"}, {"radius", "10.5"}, {"setup_id", "4"} } } };
-          break;
-        default:
-          break;
+      switch (runID)
+      {
+      // No layers
+      case 0:
+        break;
+      // Single object
+      case 1:
+        result = {{1, {{"id", "1"}, {"name", "sorbet"}, {"radius", "10.5"}, {"setup_id", "1"}}}};
+        break;
+      // Two objects
+      case 2:
+        result = {{1, {{"id", "1"}, {"name", "sorbet"}, {"radius", "10.5"}, {"setup_id", "1"}}},
+                  {5, {{"id", "5"}, {"name", "frosting"}, {"radius", "15.5"}, {"setup_id", "1"}}}};
+        break;
+      // Missing field
+      case 3:
+        result = {{1, {{"id", "1"}, {"name", "sorbet"}, {"setup_id", "1"}}}};
+        break;
+      // Wrong field
+      case 4:
+        result = {{1, {{"id", "1"}, {"name", "sorbet"}, {"radius", "ice cream"}, {"setup_id", "1"}}}};
+        break;
+      // Wrong relation
+      case 5:
+        result = {{1, {{"id", "1"}, {"name", "sorbet"}, {"radius", "10.5"}, {"setup_id", "4"}}}};
+        break;
+      default:
+        break;
       }
       break;
     case ParamObjectType::kSetup:
-      result = { { 1, { {"id", "1" }, {"description", "jpet"} } } };
+      result = {{1, {{"id", "1"}, {"description", "jpet"}}}};
       break;
     default:
       break;
+    }
+    return result;
   }
-  return result;
-}
 
-ParamRelationalData getAllRelationalData(
-  ParamObjectType, ParamObjectType, const int runID) {
-  ParamRelationalData result;
-  switch (runID) {
+  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int runID)
+  {
+    ParamRelationalData result;
+    switch (runID)
+    {
     // No relations
     case 0:
       break;
     // Single object
     case 1:
-      result = { { 1, 1 } };
+      result = {{1, 1}};
       break;
     // Two objects
     case 2:
-      result = { { 1, 1 }, { 5, 1 } };
+      result = {{1, 1}, {5, 1}};
       break;
     // Wrong relation
     case 5:
-      result = { { 1, 43 } };
+      result = {{1, 43}};
       break;
     }
     return result;

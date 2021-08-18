@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,13 +16,13 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetSlotTest
 
+#include "JPetSlot/JPetSlot.h"
+#include "JPetSlot/JPetSlotFactory.h"
 #include <boost/test/unit_test.hpp>
-#include "JPetSlotFactory.h"
-#include "JPetSlot.h"
 
-const float epsilon = 0.0001;
+double epsilon = 0.0001;
 
-BOOST_AUTO_TEST_SUITE(FirstSuite)
+BOOST_AUTO_TEST_SUITE(SlotTestSuite)
 
 BOOST_AUTO_TEST_CASE(default_constructor)
 {
@@ -42,79 +42,81 @@ BOOST_AUTO_TEST_CASE(constructor)
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_AUTO_TEST_SUITE(FactorySuite)
+BOOST_AUTO_TEST_SUITE(SlotFactorySuite)
 
-class TestParamGetter: public JPetParamGetter {
+class TestParamGetter : public JPetParamGetter
+{
 
-ParamObjectsDescriptions getAllBasicData(
-  ParamObjectType type, const int runID
-) {
-  ParamObjectsDescriptions result;
-  switch (type) {
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runID)
+  {
+    ParamObjectsDescriptions result;
+    switch (type)
+    {
     case ParamObjectType::kSlot:
-      switch (runID) {
-        // No layers
-        case 0:
-          break;
-        // Single object
-        case 1:
-          result = { { 1, { {"id", "1"}, {"theta", "5.5"}, {"type", "module"}, {"layer_id", "1"} } } };
-          break;
-        // Two objects
-        case 2:
-          result = {
-            { 1, { {"id", "1"}, {"theta", "5.5"}, {"type", "module"}, {"layer_id", "1"} } },
-            { 5, { {"id", "5"}, {"theta", "15.5"}, {"type", "barrel"}, {"layer_id", "1"} } }
-          };
-          break;
-        // Missing field
-        case 3:
-          result = { { 1, { {"id", "1"}, {"theta", "5.5"}, {"layer_id", "1"} } } };
-          break;
-        // Wrong field
-        case 4:
-          result = { { 1, { {"id", "1"}, {"theta", "too big"}, {"type", "module"}, {"layer_id", "1"} } } };
-          break;
-        // Wrong relation
-        case 5:
-          result = { { 1, { {"id", "1"}, {"theta", "5.5"}, {"type", "module"}, {"layer_id", "57"} } } };
-          break;
+      switch (runID)
+      {
+      // No layers
+      case 0:
+        break;
+      // Single object
+      case 1:
+        result = {{1, {{"id", "1"}, {"theta", "5.5"}, {"type", "module"}, {"layer_id", "1"}}}};
+        break;
+      // Two objects
+      case 2:
+        result = {{1, {{"id", "1"}, {"theta", "5.5"}, {"type", "module"}, {"layer_id", "1"}}},
+                  {5, {{"id", "5"}, {"theta", "15.5"}, {"type", "barrel"}, {"layer_id", "1"}}}};
+        break;
+      // Missing field
+      case 3:
+        result = {{1, {{"id", "1"}, {"theta", "5.5"}, {"layer_id", "1"}}}};
+        break;
+      // Wrong field
+      case 4:
+        result = {{1, {{"id", "1"}, {"theta", "too big"}, {"type", "module"}, {"layer_id", "1"}}}};
+        break;
+      // Wrong relation
+      case 5:
+        result = {{1, {{"id", "1"}, {"theta", "5.5"}, {"type", "module"}, {"layer_id", "57"}}}};
+        break;
       }
       break;
     case ParamObjectType::kLayer:
-      result = { { 1, { {"id", "1"}, {"name", "sorbet"}, {"radius", "10.5"}, {"setup_id", "1"} } } };
+      result = {{1, {{"id", "1"}, {"name", "sorbet"}, {"radius", "10.5"}, {"setup_id", "1"}}}};
       break;
     case ParamObjectType::kSetup:
-      result = { { 1, { {"id", "1"}, {"description", "jpet"} } } };
+      result = {{1, {{"id", "1"}, {"description", "jpet"}}}};
       break;
     default:
       break;
+    }
+    return result;
   }
-  return result;
-}
 
-ParamRelationalData getAllRelationalData(
-  ParamObjectType type, ParamObjectType, const int runID) {
+  ParamRelationalData getAllRelationalData(ParamObjectType type, ParamObjectType, const int runID)
+  {
     ParamRelationalData result;
-    switch (type) {
-      case ParamObjectType::kSlot:
-      switch (runID) {
-        case 0:
-          break;
-        case 1:
-          result = { {1, 1} };
-          break;
-        case 2:
-          result = { {1, 1}, {5, 1} };
-          break;
-        case 5:
-          result = { {1, 43} };
-          break;
+    switch (type)
+    {
+    case ParamObjectType::kSlot:
+      switch (runID)
+      {
+      case 0:
+        break;
+      case 1:
+        result = {{1, 1}};
+        break;
+      case 2:
+        result = {{1, 1}, {5, 1}};
+        break;
+      case 5:
+        result = {{1, 43}};
+        break;
       }
       break;
-      default:
-        result = { {1, 1 } };
-        break;
+    default:
+      result = {{1, 1}};
+      break;
     }
     return result;
   }

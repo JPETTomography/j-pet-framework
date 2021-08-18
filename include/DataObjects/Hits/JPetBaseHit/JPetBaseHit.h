@@ -17,7 +17,6 @@
 #define JPETBASEHIT_H
 
 #include "JPetScin/JPetScin.h"
-
 #include <TObject.h>
 #include <TRef.h>
 #include <TVector3.h>
@@ -33,6 +32,7 @@ class JPetBaseHit : public TObject
 {
 public:
   JPetBaseHit();
+  JPetBaseHit(double time, double energy, TVector3& position);
   JPetBaseHit(double time, double energy, TVector3& position, JPetScin& scin);
   virtual ~JPetBaseHit();
   double getTime() const;

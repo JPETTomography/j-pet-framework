@@ -35,7 +35,7 @@ bool JPetScopeTask::run(const JPetDataInterface& inData)
 bool JPetScopeTask::init()
 {
   INFO("Scope Task started");
-  fOutputEvents = new JPetTimeWindow("JPetRecoSignal");
+  fOutputEvents = new JPetTimeWindow("JPetShapedSignal");
   return true;
 }
 
@@ -54,7 +54,7 @@ bool JPetScopeTask::exec()
     for (const auto& file : files)
     {
       DEBUG(std::string("file to open:") + file.first);
-      auto sig = RecoSignalUtils::generateSignal(file.first.c_str());
+      auto sig = ShapedSignalUtils::generateSignal(file.first.c_str());
       DEBUG("before setPM");
       const JPetPM& pm = bank.getPM(file.second);
       sig.setPM(pm);

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -15,18 +15,18 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetGeantEventPackTest
-#include <boost/test/unit_test.hpp>
 
 #include "JPetGeantEventPack/JPetGeantEventPack.h"
+#include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetGeantEventPack pack;
-  BOOST_REQUIRE_EQUAL(pack.GetNumberOfHits(), 0);
-  BOOST_REQUIRE_EQUAL(pack.GetNumberOfDecayTrees(), 0);
-  BOOST_REQUIRE_EQUAL(pack.GetEventNumber(), 0);
+  BOOST_REQUIRE_EQUAL(pack.getNumberOfHits(), 0);
+  BOOST_REQUIRE_EQUAL(pack.getNumberOfDecayTrees(), 0);
+  BOOST_REQUIRE_EQUAL(pack.getEventNumber(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(setter)
@@ -34,24 +34,24 @@ BOOST_AUTO_TEST_CASE(setter)
   JPetGeantEventPack pack;
   int evtNr = 944;
 
-  pack.SetEventNumber(evtNr);
-  BOOST_REQUIRE_EQUAL(pack.GetEventNumber(), evtNr);
+  pack.setEventNumber(evtNr);
+  BOOST_REQUIRE_EQUAL(pack.getEventNumber(), evtNr);
 }
 
 BOOST_AUTO_TEST_CASE(fillingStructues)
 {
   JPetGeantEventPack pack;
-  pack.ConstructNextHit();
-  BOOST_REQUIRE_EQUAL(pack.GetNumberOfHits(), 1);
+  pack.constructNextHit();
+  BOOST_REQUIRE_EQUAL(pack.getNumberOfHits(), 1);
 
-  pack.ConstructNextDecayTree();
-  BOOST_REQUIRE_EQUAL(pack.GetNumberOfDecayTrees(), 1);
+  pack.constructNextDecayTree();
+  BOOST_REQUIRE_EQUAL(pack.getNumberOfDecayTrees(), 1);
 
   pack.Clear();
 
-  BOOST_REQUIRE_EQUAL(pack.GetNumberOfHits(), 0);
-  BOOST_REQUIRE_EQUAL(pack.GetNumberOfDecayTrees(), 0);
-  BOOST_REQUIRE_EQUAL(pack.GetEventNumber(), 0);
+  BOOST_REQUIRE_EQUAL(pack.getNumberOfHits(), 0);
+  BOOST_REQUIRE_EQUAL(pack.getNumberOfDecayTrees(), 0);
+  BOOST_REQUIRE_EQUAL(pack.getEventNumber(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

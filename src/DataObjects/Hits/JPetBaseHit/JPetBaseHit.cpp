@@ -20,6 +20,8 @@ ClassImp(JPetBaseHit);
 
 JPetBaseHit::JPetBaseHit() : TObject() {}
 
+JPetBaseHit::JPetBaseHit(double time, double energy, TVector3& position) : TObject(), fTime(time), fEnergy(energy), fPos(position) {}
+
 JPetBaseHit::JPetBaseHit(double time, double energy, TVector3& position, JPetScin& scin)
     : TObject(), fTime(time), fEnergy(energy), fPos(position), fScin(&scin)
 {

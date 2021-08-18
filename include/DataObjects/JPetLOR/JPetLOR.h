@@ -20,8 +20,6 @@
 #include <cstddef>
 #include <utility>
 
-class JPetBaseHit;
-
 /**
  * @brief Line of Response data class is a representation of an event
  * with two photon hits recorded in the barrel.
@@ -44,7 +42,6 @@ public:
   };
 
   JPetLOR();
-  JPetLOR(double time, double qualityOfTime, JPetBaseHit* firstHit, JPetBaseHit* secondHit);
   JPetLOR(double time, double qualityOfTime, double timeDiff, double qualityOfTimeDiff, JPetBaseHit* firstHit, JPetBaseHit* secondHit,
           JPetLOR::RecoFlag flag);
   virtual ~JPetLOR();
@@ -75,8 +72,8 @@ private:
   double fTimeDiff;
   double fQualityOfTimeDiff;
   bool fIsHitSet[2];
-  JPetBaseHit* fFirstHit;
-  JPetBaseHit* fSecondHit;
+  JPetBaseHit fFirstHit;
+  JPetBaseHit fSecondHit;
 
   ClassDef(JPetLOR, 7);
 };

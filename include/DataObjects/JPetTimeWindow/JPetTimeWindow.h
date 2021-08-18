@@ -19,8 +19,8 @@
 #include <TClonesArray.h>
 #include <TNamed.h>
 #include <iostream>
-#include <vector>
 #include <map>
+#include <vector>
 
 /**
  * @brief Container class representing a time window of the DAQ system
@@ -28,30 +28,23 @@
  * A single TimeWindow contains many objects (referred to as "events")
  * representing events which happened during one time window of the DAQ system.
  */
-class JPetTimeWindow: public TObject
+class JPetTimeWindow : public TObject
 {
 public:
-
   JPetTimeWindow() : fEvents() {}
   JPetTimeWindow(const char* event_type) : fEvents(event_type, 2000) {}
 
-  template<typename T>
+  template <typename T>
   void add(const T& evt)
   {
     dynamic_cast<T&>(*(fEvents.ConstructedAt(fEventCount++))) = evt;
   }
 
-  inline size_t getNumberOfEvents() const
-  {
-    return fEventCount;
-  }
+  inline size_t getNumberOfEvents() const { return fEventCount; }
 
-  inline const TObject& operator[](int i) const
-  {
-    return *fEvents[i];
-  }
+  inline const TObject& operator[](int i) const { return *fEvents[i]; }
 
-  template<typename T>
+  template <typename T>
   inline const T& getEvent(int i) const
   {
     return *(dynamic_cast<T*>(fEvents[i]));

@@ -20,6 +20,15 @@ ClassImp(JPetScin);
 
 JPetScin::JPetScin() { SetName("JPetScin"); }
 
+/**
+ * Constructor of a Scin object without defined rotation vector, which in this case is initialized to be (0,0,0) (no rotation)
+ */
+JPetScin::JPetScin(int id, double length, double height, double width, double center_x, double center_y, double center_z)
+    : fID(id), fLength(length), fHeight(height), fWidth(width), fScinCenter(center_x, center_y, center_z), fScinRotation(0.0, 0.0, 0.0)
+{
+  SetName("JPetScin");
+}
+
 JPetScin::JPetScin(int id, double length, double height, double width, double center_x, double center_y, double center_z, double rotX, double rotY,
                    double rotZ)
     : fID(id), fLength(length), fHeight(height), fWidth(width), fScinCenter(center_x, center_y, center_z), fScinRotation(rotX, rotY, rotZ)
@@ -40,6 +49,13 @@ JPetScin::JPetScin(bool isNull) : fIsNullObject(isNull) { SetName("JPetScin"); }
 JPetScin::~JPetScin() {}
 
 void JPetScin::setID(int id) { fID = id; }
+
+void JPetScin::setDimensions(double length, double height, double width)
+{
+  fLength = length;
+  fHeight = height;
+  fWidth = width;
+}
 
 void JPetScin::setLength(double length) { fLength = length; }
 

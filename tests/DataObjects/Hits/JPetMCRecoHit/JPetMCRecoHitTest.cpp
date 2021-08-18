@@ -16,8 +16,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetMCRecoHitTest
 
-#include "JPetMCRecoHit/JPetMCRecoHit.h"
-
+#include "Hits/JPetMCRecoHit/JPetMCRecoHit.h"
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(MCRecoHitTestSuite)

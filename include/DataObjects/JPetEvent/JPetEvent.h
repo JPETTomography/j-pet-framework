@@ -57,7 +57,7 @@ public:
   const std::vector<JPetBaseHit*>& getHits() const;
   void setRecoFlag(JPetEvent::RecoFlag flag);
   void setHits(const std::vector<JPetBaseHit*>& hits, bool orderedByTime = true);
-  void addHit(JPetBaseHit& hit);
+  void addHit(JPetBaseHit* hit);
   JPetEventType getEventType() const;
   void setEventType(JPetEventType type);
   void addEventType(JPetEventType type);

@@ -166,10 +166,10 @@ private:
   std::map<double, double> fRecoTimesAtThreshold;
   std::vector<shapePoint> fShape;
   TRef fPM = nullptr;
-  double fDelay;
-  double fAmplitude;
-  double fOffset;
-  double fCharge;
+  double fDelay = 0.0;
+  double fAmplitude = 0.0;
+  double fOffset = 0.0;
+  double fCharge = 0.0;
 
   ClassDef(JPetShapedSignal, 1);
 };

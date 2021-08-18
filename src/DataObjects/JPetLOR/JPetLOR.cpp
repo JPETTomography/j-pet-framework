@@ -24,18 +24,10 @@ JPetLOR::JPetLOR() : TObject(), fFlag(JPetLOR::Unknown), fTime(0.0f), fQualityOf
   fIsHitSet[1] = false;
 }
 
-JPetLOR::JPetLOR(double time, double qualityOfTime, JPetBaseHit* firstHit, JPetBaseHit* secondHit)
-    : TObject(), fFlag(JPetLOR::Unknown), fTime(time), fQualityOfTime(qualityOfTime), fTimeDiff(0.0), fQualityOfTimeDiff(0.0), fFirstHit(firstHit),
-      fSecondHit(secondHit)
-{
-  fIsHitSet[0] = true;
-  fIsHitSet[1] = true;
-}
-
 JPetLOR::JPetLOR(double time, double qualityOfTime, double timeDiff, double qualityOfTimeDiff, JPetBaseHit* firstHit, JPetBaseHit* secondHit,
                  JPetLOR::RecoFlag flag)
     : TObject(), fFlag(flag), fTime(time), fQualityOfTime(qualityOfTime), fTimeDiff(timeDiff), fQualityOfTimeDiff(qualityOfTimeDiff),
-      fFirstHit(firstHit), fSecondHit(secondHit)
+      fFirstHit(*firstHit), fSecondHit(*secondHit)
 {
   fIsHitSet[0] = true;
   fIsHitSet[1] = true;
@@ -70,8 +62,8 @@ void JPetLOR::setQualityOfTimeDiff(const double qtd) { fQualityOfTimeDiff = qtd;
  */
 void JPetLOR::setHits(JPetBaseHit* firstHit, JPetBaseHit* secondHit)
 {
-  fFirstHit = firstHit;
-  fSecondHit = secondHit;
+  fFirstHit = *firstHit;
+  fSecondHit = *secondHit;
   fIsHitSet[0] = true;
   fIsHitSet[1] = true;
 }
@@ -81,7 +73,7 @@ void JPetLOR::setHits(JPetBaseHit* firstHit, JPetBaseHit* secondHit)
  */
 void JPetLOR::setFirstHit(JPetBaseHit* firstHit)
 {
-  fFirstHit = firstHit;
+  fFirstHit = *firstHit;
   fIsHitSet[0] = true;
 }
 
@@ -90,7 +82,7 @@ void JPetLOR::setFirstHit(JPetBaseHit* firstHit)
  */
 void JPetLOR::setSecondHit(JPetBaseHit* secondHit)
 {
-  fSecondHit = secondHit;
+  fSecondHit = *secondHit;
   fIsHitSet[1] = true;
 }
 
@@ -119,12 +111,12 @@ double JPetLOR::getQualityOfTimeDiff() const { return fQualityOfTimeDiff; }
 /**
  * Get the hit, that is first in time.
  */
-const JPetBaseHit* JPetLOR::getFirstHit() const { return fFirstHit; }
+const JPetBaseHit* JPetLOR::getFirstHit() const { return &fFirstHit; }
 
 /**
  * Get the hit, that is second in time
  */
-const JPetBaseHit* JPetLOR::getSecondHit() const { return fSecondHit; }
+const JPetBaseHit* JPetLOR::getSecondHit() const { return &fSecondHit; }
 
 /**
  * Check if one of two hits, as indicated by index, is set or not.

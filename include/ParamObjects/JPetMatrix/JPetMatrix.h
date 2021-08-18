@@ -36,7 +36,8 @@ public:
   enum Side
   {
     SideA,
-    SideB
+    SideB,
+    WLS
   };
 
   JPetMatrix();

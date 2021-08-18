@@ -31,6 +31,7 @@ class JPetScin : public TNamed
 {
 public:
   JPetScin();
+  JPetScin(int id, double length, double height, double width, double center_x, double center_y, double center_z);
   JPetScin(int id, double length, double height, double width, double center_x, double center_y, double center_z, double rotX, double rotY,
            double rotZ);
   JPetScin(const JPetScin& scin);
@@ -38,6 +39,7 @@ public:
   virtual ~JPetScin();
 
   void setID(int id);
+  void setDimensions(double length, double height, double width);
   void setLength(double length);
   void setHeight(double height);
   void setWidth(double width);

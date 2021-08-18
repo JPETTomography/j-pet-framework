@@ -39,17 +39,17 @@ bool JPetPMSignal::addLeadTrailPair(const JPetChannelSignal& lead, const JPetCha
     return false;
   }
 
-  // Validating same thresholds
-  if (lead.getChannel().getThresholdNumber() != trail.getChannel().getThresholdNumber())
+  // Validating same channels
+  if (lead.getChannel().getID() != trail.getChannel().getID())
   {
-    ERROR("Cannot add a pair of Channel signals from different threholds.");
+    ERROR("Cannot add a pair of signals from different Channels.");
     return false;
   }
 
   // Validating time ordering
-  if (lead.getTime() < trail.getTime())
+  if (lead.getTime() > trail.getTime())
   {
-    ERROR("Failed attemp of adding to a PM signal a pair of Channel signals where Lead edge comes after Trail edge.");
+    ERROR("Cannot add to a PM signal a pair of Channel signals where Lead edge comes after Trail edge.");
     return false;
   }
 
