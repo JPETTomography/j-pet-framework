@@ -67,11 +67,11 @@ BOOST_AUTO_TEST_CASE(tryToUnzipSomethingNotExistingFileWithBz2)
   BOOST_REQUIRE(!JPetUnzipTask::unzipFile("unitTestData/JPetTaskChainExecutorUtilsTest/wrongBZ2.bz2", "./"));
 }
 
-// BOOST_AUTO_TEST_CASE(sucessZip)
-// {
-//   boost::filesystem::remove("unitTestData/JPetTaskChainExecutorUtilsTest/goodZIP");
-//   BOOST_REQUIRE(JPetUnzipTask::unzipFile("unitTestData/JPetTaskChainExecutorUtilsTest/goodZIP.zip", "./"));
-// }
+BOOST_AUTO_TEST_CASE(sucessZip)
+{
+  boost::filesystem::remove("unitTestData/JPetTaskChainExecutorUtilsTest/goodZIP");
+  BOOST_REQUIRE(JPetUnzipTask::unzipFile("unitTestData/JPetTaskChainExecutorUtilsTest/goodZIP.zip", "./"));
+}
 
 BOOST_AUTO_TEST_CASE(tryToUnzipSomethingNotExistingFileWithZip)
 {
