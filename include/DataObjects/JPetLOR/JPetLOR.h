@@ -59,8 +59,7 @@ public:
   double getQualityOfTime() const;
   double getTimeDiff() const;
   double getQualityOfTimeDiff() const;
-  const JPetBaseHit* getFirstHit() const;
-  const JPetBaseHit* getSecondHit() const;
+  const std::pair<JPetBaseHit*, JPetBaseHit*> getHits() const;
   bool isHitSet(const unsigned int index);
   bool checkConsistency() const;
   void Clear(Option_t*) override;
@@ -71,9 +70,8 @@ private:
   double fQualityOfTime;
   double fTimeDiff;
   double fQualityOfTimeDiff;
-  bool fIsHitSet[2];
-  JPetBaseHit fFirstHit;
-  JPetBaseHit fSecondHit;
+  std::pair<bool, bool> fIsHitSet;
+  std::pair<JPetBaseHit*, JPetBaseHit*> fHits;
 
   ClassDef(JPetLOR, 7);
 };

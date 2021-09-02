@@ -17,6 +17,10 @@
 #define BOOST_TEST_MODULE JPetLORTest
 
 #include "JPetLOR/JPetLOR.h"
+#include "Hits/JPetMCRecoHit/JPetMCRecoHit.h"
+#include "Hits/JPetPhysRecoHit/JPetPhysRecoHit.h"
+#include "Hits/JPetRecoHit/JPetRecoHit.h"
+#include "JPetRawMCHit/JPetRawMCHit.h"
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
@@ -41,15 +45,15 @@ BOOST_AUTO_TEST_CASE(constructor)
   firstHit.setScin(scin1);
   secondHit.setScin(scin2);
 
-  JPetLOR lor2(11.1, 22.2, 33.3, 44.4, &firstHit, &secondHit, JPetLOR::Good);
-  BOOST_REQUIRE_CLOSE(lor2.getTime(), 11.1, epsilon);
-  BOOST_REQUIRE_CLOSE(lor2.getQualityOfTime(), 22.2, epsilon);
-  BOOST_REQUIRE_CLOSE(lor2.getTimeDiff(), 33.3, epsilon);
-  BOOST_REQUIRE_CLOSE(lor2.getQualityOfTimeDiff(), 44.4, epsilon);
-  BOOST_REQUIRE_EQUAL(lor2.getRecoFlag(), JPetLOR::Good);
-  BOOST_REQUIRE(lor2.checkConsistency());
-  BOOST_REQUIRE(lor2.isHitSet(0));
-  BOOST_REQUIRE(lor2.isHitSet(1));
+  JPetLOR lor(11.1, 22.2, 33.3, 44.4, &firstHit, &secondHit, JPetLOR::Good);
+  BOOST_REQUIRE_CLOSE(lor.getTime(), 11.1, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getQualityOfTime(), 22.2, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getTimeDiff(), 33.3, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getQualityOfTimeDiff(), 44.4, epsilon);
+  BOOST_REQUIRE_EQUAL(lor.getRecoFlag(), JPetLOR::Good);
+  BOOST_REQUIRE(lor.checkConsistency());
+  BOOST_REQUIRE(lor.isHitSet(0));
+  BOOST_REQUIRE(lor.isHitSet(1));
 }
 
 BOOST_AUTO_TEST_CASE(recoFlagSetterTest)
@@ -95,15 +99,15 @@ BOOST_AUTO_TEST_CASE(settersTest)
   lor.setHits(&firstHit1, &secondHit1);
   BOOST_REQUIRE(lor.isHitSet(0));
   BOOST_REQUIRE(lor.isHitSet(1));
-  BOOST_REQUIRE_CLOSE(lor.getFirstHit()->getTime(), 111.1, epsilon);
-  BOOST_REQUIRE_CLOSE(lor.getSecondHit()->getTime(), 222.2, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getHits().first->getTime(), 111.1, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getHits().second->getTime(), 222.2, epsilon);
 
   lor.setFirstHit(&firstHit2);
   lor.setSecondHit(&secondHit2);
   BOOST_REQUIRE(lor.isHitSet(0));
   BOOST_REQUIRE(lor.isHitSet(1));
-  BOOST_REQUIRE_CLOSE(lor.getFirstHit()->getTime(), 333.3, epsilon);
-  BOOST_REQUIRE_CLOSE(lor.getSecondHit()->getTime(), 444.4, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getHits().first->getTime(), 333.3, epsilon);
+  BOOST_REQUIRE_CLOSE(lor.getHits().second->getTime(), 444.4, epsilon);
 }
 
 BOOST_AUTO_TEST_CASE(consistency_check_test_1)
@@ -187,6 +191,50 @@ BOOST_AUTO_TEST_CASE(clear_test)
   BOOST_REQUIRE(lor.checkConsistency());
   BOOST_REQUIRE(!lor.isHitSet(0));
   BOOST_REQUIRE(!lor.isHitSet(1));
+}
+
+BOOST_AUTO_TEST_CASE(test_cast_hit_types)
+{
+  JPetRecoHit recoHit(JPetRecoHit::Good);
+  JPetMCRecoHit mcRecoHit(123);
+  JPetPhysRecoHit physHit;
+  JPetRawMCHit rawMCHit;
+
+  recoHit.setTime(1.0);
+  mcRecoHit.setTime(2.0);
+  physHit.setTime(3.0);
+  rawMCHit.setTime(4.0);
+
+  JPetScin scin1(1, 30.0, 15.0, 7.0, 1.0, -1.0, 1.0);
+  JPetScin scin2(2, 30.0, 15.0, 7.0, 2.0, -2.0, 2.0);
+
+  recoHit.setScin(scin1);
+  mcRecoHit.setScin(scin2);
+  physHit.setScin(scin1);
+  rawMCHit.setScin(scin2);
+
+  JPetLOR lor1(111.1, 11.1, 123.1, 12.3, &recoHit, &mcRecoHit, JPetLOR::Good);
+  JPetLOR lor2(111.1, 11.1, 123.1, 12.3, &physHit, &rawMCHit, JPetLOR::Corrupted);
+
+  BOOST_REQUIRE(dynamic_cast<JPetRecoHit*>(lor1.getHits().first));
+  BOOST_REQUIRE(dynamic_cast<JPetRecoHit*>(lor1.getHits().second));
+  BOOST_REQUIRE(dynamic_cast<JPetRecoHit*>(lor2.getHits().first));
+  BOOST_REQUIRE(!dynamic_cast<JPetRecoHit*>(lor2.getHits().second));
+
+  BOOST_REQUIRE(!dynamic_cast<JPetMCRecoHit*>(lor1.getHits().first));
+  BOOST_REQUIRE(dynamic_cast<JPetMCRecoHit*>(lor1.getHits().second));
+  BOOST_REQUIRE(!dynamic_cast<JPetMCRecoHit*>(lor2.getHits().first));
+  BOOST_REQUIRE(!dynamic_cast<JPetMCRecoHit*>(lor2.getHits().second));
+
+  BOOST_REQUIRE(!dynamic_cast<JPetPhysRecoHit*>(lor1.getHits().first));
+  BOOST_REQUIRE(!dynamic_cast<JPetPhysRecoHit*>(lor1.getHits().second));
+  BOOST_REQUIRE(dynamic_cast<JPetPhysRecoHit*>(lor2.getHits().first));
+  BOOST_REQUIRE(!dynamic_cast<JPetPhysRecoHit*>(lor2.getHits().second));
+
+  BOOST_REQUIRE(!dynamic_cast<JPetRawMCHit*>(lor1.getHits().first));
+  BOOST_REQUIRE(!dynamic_cast<JPetRawMCHit*>(lor1.getHits().second));
+  BOOST_REQUIRE(!dynamic_cast<JPetRawMCHit*>(lor2.getHits().first));
+  BOOST_REQUIRE(dynamic_cast<JPetRawMCHit*>(lor2.getHits().second));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
