@@ -303,10 +303,10 @@ BOOST_AUTO_TEST_CASE(test_cast_hit_types)
   rawMCHit.setTime(4.0);
 
   JPetEvent event;
-  event.addHit(dynamic_cast<JPetBaseHit*>(&recoHit));
-  event.addHit(dynamic_cast<JPetBaseHit*>(&mcRecoHit));
-  event.addHit(dynamic_cast<JPetBaseHit*>(&physHit));
-  event.addHit(dynamic_cast<JPetBaseHit*>(&rawMCHit));
+  event.addHit(&recoHit);
+  event.addHit(&mcRecoHit);
+  event.addHit(&physHit);
+  event.addHit(&rawMCHit);
 
   BOOST_REQUIRE_CLOSE(event.getHits().at(0)->getTime(), 1.0, epsilon);
   BOOST_REQUIRE_CLOSE(event.getHits().at(1)->getTime(), 2.0, epsilon);
