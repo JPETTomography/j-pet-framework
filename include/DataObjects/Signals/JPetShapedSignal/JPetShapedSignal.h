@@ -35,7 +35,7 @@ struct shapePoint
  * JPetShapedSignal is one level higher than JPetPMSignal. It represents the signal
  * during physical reconstruction of its shape and properties.
  * This class contains fields intended to store the complete shape of the signal
- * as well as properties such as amplitude, charge (from TOT), delay, etc.
+ * as well as properties such as amplitude, charge (from ToT), delay, etc.
  * Note that the amplitude and other parameters are not calculated automatically.
  * Processing of data from the Scope should start with this class rather than JPetPMSignal.
  * Reconstructed signal properties stored in this class should be used to produce a JPetPhysSignal.

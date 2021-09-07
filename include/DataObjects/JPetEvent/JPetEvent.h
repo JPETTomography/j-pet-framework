@@ -52,12 +52,12 @@ public:
   };
 
   JPetEvent();
-  JPetEvent(const std::vector<JPetBaseHit*>& hits, JPetEventType eventType = JPetEventType::kUnknown, bool orderedByTime = true);
+  JPetEvent(const std::vector<const JPetBaseHit*>& hits, JPetEventType eventType = JPetEventType::kUnknown, bool orderedByTime = true);
   JPetEvent::RecoFlag getRecoFlag() const;
-  const std::vector<JPetBaseHit*>& getHits() const;
+  const std::vector<const JPetBaseHit*>& getHits() const;
   void setRecoFlag(JPetEvent::RecoFlag flag);
-  void setHits(const std::vector<JPetBaseHit*>& hits, bool orderedByTime = true);
-  void addHit(JPetBaseHit* hit);
+  void setHits(const std::vector<const JPetBaseHit*>& hits, bool orderedByTime = true);
+  void addHit(const JPetBaseHit* hit);
   JPetEventType getEventType() const;
   void setEventType(JPetEventType type);
   void addEventType(JPetEventType type);
@@ -66,7 +66,7 @@ public:
   void Clear(Option_t*) override;
 
 protected:
-  std::vector<JPetBaseHit*> fHits;
+  std::vector<const JPetBaseHit*> fHits;
   JPetEventType fType = JPetEventType::kUnknown;
 
 private:

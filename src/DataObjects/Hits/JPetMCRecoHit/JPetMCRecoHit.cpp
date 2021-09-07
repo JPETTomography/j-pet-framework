@@ -17,9 +17,9 @@
 
 ClassImp(JPetMCRecoHit);
 
-JPetMCRecoHit::JPetMCRecoHit() : JPetRecoHit() {}
+JPetMCRecoHit::JPetMCRecoHit() : JPetRecoHit(JPetRecoHit::MC) {}
 
-JPetMCRecoHit::JPetMCRecoHit(int mcIndex) : JPetRecoHit(), fMCindex(mcIndex) {}
+JPetMCRecoHit::JPetMCRecoHit(int mcIndex) : JPetRecoHit(JPetRecoHit::MC), fMCindex(mcIndex) {}
 
 JPetMCRecoHit::~JPetMCRecoHit() {}
 
@@ -31,4 +31,5 @@ void JPetMCRecoHit::Clear(Option_t*)
 {
   JPetRecoHit::Clear("");
   fMCindex = kMCindexError;
+  this->setRecoFlag(JPetRecoHit::MC);
 }

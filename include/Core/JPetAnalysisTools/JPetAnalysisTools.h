@@ -25,6 +25,6 @@
 class JPetAnalysisTools
 {
 public:
-  static std::vector<JPetBaseHit*> getHitsOrderedByTime(const std::vector<JPetBaseHit*>& hits);
+  static std::vector<const JPetBaseHit*> getHitsOrderedByTime(const std::vector<const JPetBaseHit*>& hits);
 };
 #endif /* !JPETANALYSISTOOLS_H */
