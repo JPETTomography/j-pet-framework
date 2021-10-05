@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(ClearTest)
   hit.Clear("");
   BOOST_REQUIRE_CLOSE(hit.getTime(), 0.0, epsilon);
   BOOST_REQUIRE_CLOSE(hit.getEnergy(), 0.0, epsilon);
-  BOOST_REQUIRE_EQUAL(hit.getRecoFlag(), JPetRecoHit::Unknown);
+  BOOST_REQUIRE_EQUAL(hit.getRecoFlag(), JPetRecoHit::MC);
   BOOST_REQUIRE_EQUAL(hit.getMCindex(), 888888);
 }
 
