@@ -60,16 +60,12 @@ BOOST_AUTO_TEST_CASE(constructor)
 BOOST_AUTO_TEST_CASE(constructor_orderedHits)
 {
   TVector3 position(1.0, 1.0, 1.0);
-  std::vector<JPetBaseHit*> hits;
-  JPetBaseHit hit1(2.2, 511.0, position);
-  JPetBaseHit hit2(1.1, 511.0, position);
-  JPetBaseHit hit3(4.4, 511.0, position);
-  JPetBaseHit hit4(3.3, 511.0, position);
-  hits.push_back(&hit1);
-  hits.push_back(&hit2);
-  hits.push_back(&hit3);
-  hits.push_back(&hit4);
-  JPetEvent event(hits, JPetEventType::kUnknown);
+  const JPetBaseHit hit1(2.2, 511.0, position);
+  const JPetBaseHit hit2(1.1, 511.0, position);
+  const JPetBaseHit hit3(4.4, 511.0, position);
+  const JPetBaseHit hit4(3.3, 511.0, position);
+  const std::vector<const JPetBaseHit*> hits = {&hit1, &hit2, &hit3, &hit4};
+  JPetEvent event(hits, JPetEventType::kUnknown, true);
   auto results = event.getHits();
   double epsilon = 0.00001;
   BOOST_REQUIRE_CLOSE(results[0]->getTime(), 1.1, epsilon);
@@ -81,15 +77,11 @@ BOOST_AUTO_TEST_CASE(constructor_orderedHits)
 BOOST_AUTO_TEST_CASE(constructor_unorderedHits)
 {
   TVector3 position(1.0, 1.0, 1.0);
-  std::vector<JPetBaseHit*> hits;
-  JPetBaseHit hit1(2.2, 511.0, position);
-  JPetBaseHit hit2(1.1, 511.0, position);
-  JPetBaseHit hit3(4.4, 511.0, position);
-  JPetBaseHit hit4(3.3, 511.0, position);
-  hits.push_back(&hit1);
-  hits.push_back(&hit2);
-  hits.push_back(&hit3);
-  hits.push_back(&hit4);
+  const JPetBaseHit hit1(2.2, 511.0, position);
+  const JPetBaseHit hit2(1.1, 511.0, position);
+  const JPetBaseHit hit3(4.4, 511.0, position);
+  const JPetBaseHit hit4(3.3, 511.0, position);
+  const std::vector<const JPetBaseHit*> hits = {&hit1, &hit2, &hit3, &hit4};
   JPetEvent event(hits, JPetEventType::kUnknown, false);
   auto results = event.getHits();
   BOOST_REQUIRE_CLOSE(results[0]->getTime(), 2.2, epsilon);
@@ -101,15 +93,11 @@ BOOST_AUTO_TEST_CASE(constructor_unorderedHits)
 BOOST_AUTO_TEST_CASE(set_unorderedHits)
 {
   TVector3 position(1.0, 1.0, 1.0);
-  std::vector<JPetBaseHit*> hits;
-  JPetBaseHit hit1(2.2, 511.0, position);
-  JPetBaseHit hit2(1.1, 511.0, position);
-  JPetBaseHit hit3(4.4, 511.0, position);
-  JPetBaseHit hit4(3.3, 511.0, position);
-  hits.push_back(&hit1);
-  hits.push_back(&hit2);
-  hits.push_back(&hit3);
-  hits.push_back(&hit4);
+  const JPetBaseHit hit1(2.2, 511.0, position);
+  const JPetBaseHit hit2(1.1, 511.0, position);
+  const JPetBaseHit hit3(4.4, 511.0, position);
+  const JPetBaseHit hit4(3.3, 511.0, position);
+  const std::vector<const JPetBaseHit*> hits = {&hit1, &hit2, &hit3, &hit4};
 
   JPetEvent event;
   event.setHits(hits, false);
@@ -123,15 +111,11 @@ BOOST_AUTO_TEST_CASE(set_unorderedHits)
 BOOST_AUTO_TEST_CASE(set_orderedHits)
 {
   TVector3 position(1.0, 1.0, 1.0);
-  std::vector<JPetBaseHit*> hits;
-  JPetBaseHit hit1(2.2, 511.0, position);
-  JPetBaseHit hit2(1.1, 511.0, position);
-  JPetBaseHit hit3(4.4, 511.0, position);
-  JPetBaseHit hit4(3.3, 511.0, position);
-  hits.push_back(&hit1);
-  hits.push_back(&hit2);
-  hits.push_back(&hit3);
-  hits.push_back(&hit4);
+  const JPetBaseHit hit1(2.2, 511.0, position);
+  const JPetBaseHit hit2(1.1, 511.0, position);
+  const JPetBaseHit hit3(4.4, 511.0, position);
+  const JPetBaseHit hit4(3.3, 511.0, position);
+  const std::vector<const JPetBaseHit*> hits = {&hit1, &hit2, &hit3, &hit4};
 
   JPetEvent event;
   event.setHits(hits);
@@ -314,25 +298,25 @@ BOOST_AUTO_TEST_CASE(test_cast_hit_types)
   BOOST_REQUIRE_CLOSE(event.getHits().at(3)->getTime(), 4.0, epsilon);
 
   // Testing casts
-  BOOST_REQUIRE(dynamic_cast<JPetRecoHit*>(event.getHits().at(0)));
-  BOOST_REQUIRE(dynamic_cast<JPetRecoHit*>(event.getHits().at(1)));
-  BOOST_REQUIRE(dynamic_cast<JPetRecoHit*>(event.getHits().at(2)));
-  BOOST_REQUIRE(!dynamic_cast<JPetRecoHit*>(event.getHits().at(3)));
+  BOOST_REQUIRE(dynamic_cast<const JPetRecoHit*>(event.getHits().at(0)));
+  BOOST_REQUIRE(dynamic_cast<const JPetRecoHit*>(event.getHits().at(1)));
+  BOOST_REQUIRE(dynamic_cast<const JPetRecoHit*>(event.getHits().at(2)));
+  BOOST_REQUIRE(!dynamic_cast<const JPetRecoHit*>(event.getHits().at(3)));
 
-  BOOST_REQUIRE(!dynamic_cast<JPetMCRecoHit*>(event.getHits().at(0)));
-  BOOST_REQUIRE(dynamic_cast<JPetMCRecoHit*>(event.getHits().at(1)));
-  BOOST_REQUIRE(!dynamic_cast<JPetMCRecoHit*>(event.getHits().at(2)));
-  BOOST_REQUIRE(!dynamic_cast<JPetMCRecoHit*>(event.getHits().at(3)));
+  BOOST_REQUIRE(!dynamic_cast<const JPetMCRecoHit*>(event.getHits().at(0)));
+  BOOST_REQUIRE(dynamic_cast<const JPetMCRecoHit*>(event.getHits().at(1)));
+  BOOST_REQUIRE(!dynamic_cast<const JPetMCRecoHit*>(event.getHits().at(2)));
+  BOOST_REQUIRE(!dynamic_cast<const JPetMCRecoHit*>(event.getHits().at(3)));
 
-  BOOST_REQUIRE(!dynamic_cast<JPetPhysRecoHit*>(event.getHits().at(0)));
-  BOOST_REQUIRE(!dynamic_cast<JPetPhysRecoHit*>(event.getHits().at(1)));
-  BOOST_REQUIRE(dynamic_cast<JPetPhysRecoHit*>(event.getHits().at(2)));
-  BOOST_REQUIRE(!dynamic_cast<JPetPhysRecoHit*>(event.getHits().at(3)));
+  BOOST_REQUIRE(!dynamic_cast<const JPetPhysRecoHit*>(event.getHits().at(0)));
+  BOOST_REQUIRE(!dynamic_cast<const JPetPhysRecoHit*>(event.getHits().at(1)));
+  BOOST_REQUIRE(dynamic_cast<const JPetPhysRecoHit*>(event.getHits().at(2)));
+  BOOST_REQUIRE(!dynamic_cast<const JPetPhysRecoHit*>(event.getHits().at(3)));
 
-  BOOST_REQUIRE(!dynamic_cast<JPetRawMCHit*>(event.getHits().at(0)));
-  BOOST_REQUIRE(!dynamic_cast<JPetRawMCHit*>(event.getHits().at(1)));
-  BOOST_REQUIRE(!dynamic_cast<JPetRawMCHit*>(event.getHits().at(2)));
-  BOOST_REQUIRE(dynamic_cast<JPetRawMCHit*>(event.getHits().at(3)));
+  BOOST_REQUIRE(!dynamic_cast<const JPetRawMCHit*>(event.getHits().at(0)));
+  BOOST_REQUIRE(!dynamic_cast<const JPetRawMCHit*>(event.getHits().at(1)));
+  BOOST_REQUIRE(!dynamic_cast<const JPetRawMCHit*>(event.getHits().at(2)));
+  BOOST_REQUIRE(dynamic_cast<const JPetRawMCHit*>(event.getHits().at(3)));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
