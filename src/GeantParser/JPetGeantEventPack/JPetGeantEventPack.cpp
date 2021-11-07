@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -23,17 +23,19 @@ JPetGeantEventPack::JPetGeantEventPack()
   fGenInfo = new JPetGeantEventInformation();
 }
 
-JPetGeantScinHits* JPetGeantEventPack::constructNextHit() { return (JPetGeantScinHits*)fMCHits.ConstructedAt(fHitIndex++); }
+JPetGeantScinHits* JPetGeantEventPack::ConstructNextHit() { return (JPetGeantScinHits*)fMCHits.ConstructedAt(fHitIndex++); }
 
-JPetGeantDecayTree* JPetGeantEventPack::constructNextDecayTree() { return (JPetGeantDecayTree*)fMCDecayTrees.ConstructedAt(fMCDecayTreesIndex++); }
+JPetGeantDecayTree* JPetGeantEventPack::ConstructNextDecayTree() { return (JPetGeantDecayTree*)fMCDecayTrees.ConstructedAt(fMCDecayTreesIndex++); }
 
 JPetGeantEventPack::~JPetGeantEventPack()
 {
   fMCHits.Clear("C");
   fMCDecayTrees.Clear("C");
+
   fEvtIndex = 0;
   fHitIndex = 0;
   fMCDecayTreesIndex = 0;
+
   fGenInfo->Clear();
 }
 
@@ -41,8 +43,10 @@ void JPetGeantEventPack::Clear()
 {
   fMCHits.Clear("C");
   fMCDecayTrees.Clear("C");
+
   fEvtIndex = 0;
   fHitIndex = 0;
   fMCDecayTreesIndex = 0;
+
   fGenInfo->Clear();
 }

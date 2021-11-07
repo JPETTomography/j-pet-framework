@@ -250,15 +250,15 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
   std::array<double, 2> ene2g{0., 0.};
   std::array<double, 3> ene3g{0., 0., 0.};
 
-  bool isGenPrompt = evPack->getEventInformation()->getPromptGammaGen();
-  bool isGen2g = evPack->getEventInformation()->getTwoGammaGen();
-  bool isGen3g = evPack->getEventInformation()->getThreeGammaGen();
+  bool isGenPrompt = evPack->GetEventInformation()->GetPromptGammaGen();
+  bool isGen2g = evPack->GetEventInformation()->GetTwoGammaGen();
+  bool isGen3g = evPack->GetEventInformation()->GetThreeGammaGen();
 
   double timeShift = getNextTimeShift();
-  for (unsigned int i = 0; i < evPack->getNumberOfHits(); i++)
+  for (unsigned int i = 0; i < evPack->GetNumberOfHits(); i++)
   {
     // translate geantHit -> JPetRawMCHit
-    JPetRawMCHit mcHit = JPetGeantParserTools::createJPetRawMCHit(evPack->getHit(i), getParamBank());
+    JPetRawMCHit mcHit = JPetGeantParserTools::createJPetRawMCHit(evPack->GetHit(i), getParamBank());
 
     if (fMakeHisto)
     {
@@ -271,7 +271,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     if (JPetGeantParserTools::isHitReconstructed(recoHit, fExperimentalThreshold))
     {
       saveReconstructedHit(recoHit);
-      JPetGeantParserTools::identifyRecoHits(evPack->getHit(i), recoHit, isRecPrompt, isSaved2g, isSaved3g, enePrompt, ene2g, ene3g);
+      JPetGeantParserTools::identifyRecoHits(evPack->GetHit(i), recoHit, isRecPrompt, isSaved2g, isSaved3g, enePrompt, ene2g, ene3g);
 
       if (fMakeHisto)
       {
@@ -286,31 +286,31 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
 
   if (fMakeHisto)
   {
-    fillHistoGenInfo(evPack->getEventInformation());
+    fillHistoGenInfo(evPack->GetEventInformation());
   }
 
   // fill efficiency histograms
   if (isGenPrompt && fMakeEffiHisto)
   {
-    double x = evPack->getEventInformation()->getVtxPromptPositionX();
-    double y = evPack->getEventInformation()->getVtxPromptPositionY();
-    double z = evPack->getEventInformation()->getVtxPromptPositionZ();
+    double x = evPack->GetEventInformation()->GetVtxPromptPositionX();
+    double y = evPack->GetEventInformation()->GetVtxPromptPositionY();
+    double z = evPack->GetEventInformation()->GetVtxPromptPositionZ();
     getStatistics().getEffiHisto("effi_prompt_in_rho_z")->Fill(isRecPrompt, sqrt(pow(x, 2) + pow(y, 2)), z);
   }
 
   if (isGen2g && fMakeEffiHisto)
   {
-    double x = evPack->getEventInformation()->getVtxPositionX();
-    double y = evPack->getEventInformation()->getVtxPositionY();
-    double z = evPack->getEventInformation()->getVtxPositionZ();
+    double x = evPack->GetEventInformation()->GetVtxPositionX();
+    double y = evPack->GetEventInformation()->GetVtxPositionY();
+    double z = evPack->GetEventInformation()->GetVtxPositionZ();
     getStatistics().getEffiHisto("effi_2g_in_rho_z")->Fill(isRec2g, sqrt(pow(x, 2) + pow(y, 2)), z);
   }
 
   if (isGen3g && fMakeEffiHisto)
   {
-    double x = evPack->getEventInformation()->getVtxPositionX();
-    double y = evPack->getEventInformation()->getVtxPositionY();
-    double z = evPack->getEventInformation()->getVtxPositionZ();
+    double x = evPack->GetEventInformation()->GetVtxPositionX();
+    double y = evPack->GetEventInformation()->GetVtxPositionY();
+    double z = evPack->GetEventInformation()->GetVtxPositionZ();
     getStatistics().getEffiHisto("effi_3g_in_rho_z")->Fill(isRec3g, sqrt(pow(x, 2) + pow(y, 2)), z);
   }
 
@@ -351,20 +351,20 @@ void JPetGeantParser::saveReconstructedHit(JPetMCRecoHit recoHit)
 
 void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo)
 {
-  bool isGenPrompt = evInfo->getPromptGammaGen();
-  bool isGen2g = evInfo->getTwoGammaGen();
-  bool isGen3g = evInfo->getThreeGammaGen();
+  bool isGenPrompt = evInfo->GetPromptGammaGen();
+  bool isGen2g = evInfo->GetTwoGammaGen();
+  bool isGen3g = evInfo->GetThreeGammaGen();
 
   // general histograms
-  getStatistics().getHisto1D("gen_lifetime")->Fill(evInfo->getLifetime());
+  getStatistics().getHisto1D("gen_lifetime")->Fill(evInfo->GetLifetime());
 
   // histograms for prompt gamma
   if (isGenPrompt)
   {
     getStatistics().getHisto1D("gen_hit_multiplicity")->Fill(1);
-    getStatistics().getHisto2D("gen_prompt_XY")->Fill(evInfo->getVtxPromptPositionX(), evInfo->getVtxPromptPositionY());
-    getStatistics().getHisto2D("gen_prompt_XZ")->Fill(evInfo->getVtxPromptPositionX(), evInfo->getVtxPromptPositionZ());
-    getStatistics().getHisto2D("gen_prompt_YZ")->Fill(evInfo->getVtxPromptPositionY(), evInfo->getVtxPromptPositionZ());
+    getStatistics().getHisto2D("gen_prompt_XY")->Fill(evInfo->GetVtxPromptPositionX(), evInfo->GetVtxPromptPositionY());
+    getStatistics().getHisto2D("gen_prompt_XZ")->Fill(evInfo->GetVtxPromptPositionX(), evInfo->GetVtxPromptPositionZ());
+    getStatistics().getHisto2D("gen_prompt_YZ")->Fill(evInfo->GetVtxPromptPositionY(), evInfo->GetVtxPromptPositionZ());
   }
 
   // histograms for annihilation 2g 3g
@@ -380,9 +380,9 @@ void JPetGeantParser::fillHistoGenInfo(JPetGeantEventInformation* evInfo)
 
   if (isGen2g || isGen3g)
   {
-    getStatistics().getHisto2D("gen_XY")->Fill(evInfo->getVtxPositionX(), evInfo->getVtxPositionY());
-    getStatistics().getHisto2D("gen_XZ")->Fill(evInfo->getVtxPositionX(), evInfo->getVtxPositionZ());
-    getStatistics().getHisto2D("gen_YZ")->Fill(evInfo->getVtxPositionY(), evInfo->getVtxPositionZ());
+    getStatistics().getHisto2D("gen_XY")->Fill(evInfo->GetVtxPositionX(), evInfo->GetVtxPositionY());
+    getStatistics().getHisto2D("gen_XZ")->Fill(evInfo->GetVtxPositionX(), evInfo->GetVtxPositionZ());
+    getStatistics().getHisto2D("gen_YZ")->Fill(evInfo->GetVtxPositionY(), evInfo->GetVtxPositionZ());
   }
 }
 

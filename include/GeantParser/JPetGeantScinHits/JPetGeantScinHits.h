@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,9 +16,12 @@
 #ifndef JPETGEANTSCINHITS_H
 #define JPETGEANTSCINHITS_H
 
-#include <TObject.h>
-#include <TVector3.h>
+#include "TObject.h"
 #include <vector>
+#include "TVector3.h"
+
+
+
 
 /**
  * \class JPetGeantScinHits
@@ -29,79 +32,192 @@ class JPetGeantScinHits : public TObject
 {
 public:
   JPetGeantScinHits();
-  JPetGeantScinHits(int evID, int scinID, int trkID, int trkPDG, int nInter, double ene, double time, const TVector3& position);
-  JPetGeantScinHits(int evID, int scinID, int trkID, int trkPDG, int nInter, double ene, double time, const TVector3& position, const TVector3& polIn,
-                    const TVector3& polOut, const TVector3& momIn, const TVector3& momOut);
+
+  JPetGeantScinHits(int evID, int scinID, int trkID, int trkPDG,
+                    int nInter, float ene, float time, TVector3 hit);
+
+  JPetGeantScinHits(int evID, int scinID, int trkID, int trkPDG,
+                    int nInter, float ene, float time, TVector3 hit,
+                    TVector3 polIn, TVector3 polOut,
+                    TVector3 momeIn, TVector3 momeOut);
+
+  void Fill(int evID, int scinID, int trkID, int trkPDG,
+            int nInter, float ene, float time);
+
+
+  void Fill(int evID, int scinID, int trkID, int trkPDG,
+            int nInter, float ene, float time, TVector3 hit,
+            TVector3 polIn, TVector3 polOut,
+            TVector3 momeIn, TVector3 momeOut);
+
+
   ~JPetGeantScinHits();
-  void Clear(Option_t*) override;
 
-  int getEvtID() const { return fEvtID; };
-  int getScinID() const { return fScinID; };
-  int getTrackID() const { return fTrackID; };
-  int getTrackPDG() const { return fTrackPDGencoding; };
-  int getNumOfInteractions() const { return fNumOfInteractions; };
-  double getEneDepos() const { return fEneDep; };
-  double getTime() const { return fTime; };
+  void Clean();
 
-  const TVector3& getHitPosition() const { return fPosition; };
-  const TVector3& getPolarizationIn() const { return fPolarizationIn; };
-  const TVector3& getPolarizationOut() const { return fPolarizationOut; };
-  const TVector3& getMomentumIn() const { return fMomentumIn; };
-  const TVector3& getMomentumOut() const { return fMomentumOut; };
+  // setters
+  void SetEvtID(int x)
+  {
+    fEvtID = x;
+  };
+  void SetScinID(int x)
+  {
+    fScinID = x;
+  };
+  void SetTrackID(int x)
+  {
+    fTrackID = x;
+  };
+  void SetTrackPDG(int x)
+  {
+    fTrackPDGencoding = x;
+  };
+  void SetNumOfInteractions(int x)
+  {
+    fNumOfInteractions = x;
+  };
+  void SetEneDepos(float x)
+  {
+    fEneDep = x;
+  };
+  void SetTime(float x)
+  {
+    fTime = x;
+  };
 
-  int getGenGammaMultiplicity() const { return fGenGammaMultiplicity; }
-  int getGenGammaIndex() const { return fGenGammaIndex; }
+  void SetHitPosition(TVector3 x)
+  {
+    fPosition = x;
+  };
+  void SetHitPosition(float x, float y, float z)
+  {
+    fPosition.SetXYZ(x, y, z);
+  };
 
-  void set(int evtID, int scinID, int trkID, int trkPDG, int nInter, double ene, double time);
-  void set(int evtID, int scinID, int trkID, int trkPDG, int nInter, double ene, double time, const TVector3& position, const TVector3& polIn,
-           const TVector3& polOut, const TVector3& momIn, const TVector3& momOut);
+  void SetPolarizationIn(TVector3 x)
+  {
+    fPolarizationIn = x;
+  };
+  void SetPolarizationIn(float x, float y, float z)
+  {
+    fPolarizationIn.SetXYZ(x, y, z);
+  };
 
-  void setEvtID(int evtID) { fEvtID = evtID; };
-  void setScinID(int scinID) { fScinID = scinID; };
-  void setTrackID(int trkID) { fTrackID = trkID; };
-  void setTrackPDG(int trkPDG) { fTrackPDGencoding = trkPDG; };
-  void setNumOfInteractions(int nInter) { fNumOfInteractions = nInter; };
-  void setEneDepos(double ene) { fEneDep = ene; };
-  void setTime(double time) { fTime = time; };
-  void setHitPosition(const TVector3& position) { fPosition = position; };
-  void setHitPosition(double x, double y, double z) { fPosition.SetXYZ(x, y, z); };
-  void setPolarizationIn(const TVector3& polIn) { fPolarizationIn = polIn; };
-  void setPolarizationIn(double x, double y, double z) { fPolarizationIn.SetXYZ(x, y, z); };
-  void setPolarizationOut(const TVector3& polOut) { fPolarizationOut = polOut; };
-  void setPolarizationOut(double x, double y, double z) { fPolarizationOut.SetXYZ(x, y, z); };
-  void setMomentumIn(const TVector3& momIn) { fMomentumIn = momIn; };
-  void setMomentumIn(double x, double y, double z) { fMomentumIn.SetXYZ(x, y, z); };
-  void setMomentumOut(const TVector3& momOut) { fMomentumOut = momOut; };
-  void setMomentumOut(double x, double y, double z) { fMomentumOut.SetXYZ(x, y, z); };
+  void SetPolarizationOut(TVector3 x)
+  {
+    fPolarizationOut = x;
+  };
+  void SetPolarizationOut(float x, float y, float z)
+  {
+    fPolarizationOut.SetXYZ(x, y, z);
+  };
 
-  void setGenGammaMultiplicity(int i) { fGenGammaMultiplicity = i; }
-  void setGenGammaIndex(int i) { fGenGammaIndex = i; }
+  void SetMomentumIn(TVector3 x)
+  {
+    fMomentumIn = x;
+  };
+  void SetMomentumIn(float x, float y, float z)
+  {
+    fMomentumIn.SetXYZ(x, y, z);
+  };
+
+  void SetMomentumOut(TVector3 x)
+  {
+    fMomentumOut = x;
+  };
+  void SetMomentumOut(float x, float y, float z)
+  {
+    fMomentumOut.SetXYZ(x, y, z);
+  };
+
+  // getters
+  int GetEvtID()
+  {
+    return fEvtID;
+  };
+  int GetScinID()
+  {
+    return fScinID;
+  };
+  int GetTrackID()
+  {
+    return fTrackID;
+  };
+  int GetTrackPDG()
+  {
+    return fTrackPDGencoding;
+  };
+  int GetNumOfInteractions()
+  {
+    return fNumOfInteractions;
+  };
+  float GetEneDepos()
+  {
+    return fEneDep;
+  };
+  float GetTime()
+  {
+    return fTime;
+  };
+  TVector3 GetHitPosition()
+  {
+    return fPosition;
+  };
+  TVector3 GetPolarizationIn()
+  {
+    return fPolarizationIn;
+  };
+  TVector3 GetPolarizationOut()
+  {
+    return fPolarizationOut;
+  };
+  TVector3 GetMomentumIn()
+  {
+    return fMomentumIn;
+  };
+  TVector3 GetMomentumOut()
+  {
+    return fMomentumOut;
+  };
+
+  //  generated cheatsheet
+  void SetGenGammaMultiplicity(int i)
+  {
+    fGenGammaMultiplicity = i;
+  }
+  void SetGenGammaIndex(int i)
+  {
+    fGenGammaIndex = i;
+  }
+
+  int GetGenGammaMultiplicity()
+  {
+    return fGenGammaMultiplicity;
+  }
+  int GetGenGammaIndex()
+  {
+    return fGenGammaIndex;
+  }
+
 
 private:
-  int fEvtID = 0;
-  int fScinID = 0;
-  int fTrackID = 0;
-  int fTrackPDGencoding = 0;
-  //! Number of interaction taking place in single scintillator,
-  //! which were classified as a single hit;
-  //! it may be a big number since electron deposits energy in many steps
-  int fNumOfInteractions = 0;
-  //! unequivocal number identifying gamma quanta
-  int fGenGammaIndex = 0;
-  //! 2 - back-to-back; 3 - 3gamma annihilation
-  int fGenGammaMultiplicity = 0;
-  //! deposited energy (a sum if more than one gamma quanta interacted)
-  double fEneDep = 0.0;
-  //! Time of interaction in the scintillator with respect to the beta+ decay (start of simulation)
-  double fTime = 0.0;
-
+  int fEvtID;
+  int fScinID;
+  int fTrackID;
+  int fTrackPDGencoding;
+  int fNumOfInteractions; ///< number of interaction taking place in single scintillator whish was classified as single hit; it may be a big number since electron deposits energy in many steps
+  int fGenGammaIndex;
+  int fGenGammaMultiplicity;
+  float fEneDep;
+  float fTime;
   TVector3 fPosition;
   TVector3 fPolarizationIn;
   TVector3 fPolarizationOut;
   TVector3 fMomentumIn;
   TVector3 fMomentumOut;
 
-  ClassDef(JPetGeantScinHits, 4)
+  ClassDef(JPetGeantScinHits, 3)
 };
+
 
 #endif

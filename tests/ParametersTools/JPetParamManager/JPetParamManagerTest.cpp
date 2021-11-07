@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(generateParamManagerForScopeCase)
   using namespace jpet_options_tools;
   std::map<std::string, boost::any> opts;
   opts["inputFileType_std::string"] = std::string("scope");
-  opts["localDB_std::string"] = std::string("unitTestData/JPetScopeLoaderTest/test_params.json");
+  opts["localDB_std::string"] = std::string("unitTestData/JPetScopeLoaderTest/test_params_v10.json");
   opts["runID_int"] = int(1);
   std::shared_ptr<JPetParamManager> paramMgr = JPetParamManager::generateParamManager(opts);
   BOOST_REQUIRE(paramMgr);
@@ -57,8 +57,6 @@ BOOST_AUTO_TEST_CASE(generateParamManagerForScopeCase)
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getMatricesSize(), 2);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getScinsSize(), 2);
   BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getSlotsSize(), 2);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getLayersSize(), 0);
-  BOOST_REQUIRE_EQUAL(paramMgr->getParamBank().getSetupsSize(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(generateParamManagerForMCGeantCase)
@@ -145,7 +143,7 @@ BOOST_AUTO_TEST_CASE(getParamBankTestWithScopeSettings)
   expectMissing.insert(ParamObjectType::kSetup);
   expectMissing.insert(ParamObjectType::kLayer);
   expectMissing.insert(ParamObjectType::kChannel);
-  const std::string dataFileNameWithScope("unitTestData/JPetScopeLoaderTest/test_params.json");
+  const std::string dataFileNameWithScope("unitTestData/JPetScopeLoaderTest/test_params_v10.json");
   JPetParamManager l_paramManagerInstance(new JPetParamGetterAscii(dataFileNameWithScope), expectMissing);
   l_paramManagerInstance.fillParameterBank(1);
   BOOST_REQUIRE_EQUAL(l_paramManagerInstance.getParamBank().isDummy(), false);

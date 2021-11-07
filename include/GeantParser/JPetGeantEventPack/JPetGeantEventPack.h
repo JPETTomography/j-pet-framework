@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,13 +16,14 @@
 #ifndef JPETGEANTEVENTPACK_H
 #define JPETGEANTEVENTPACK_H
 
-#include <JPetGeantDecayTree/JPetGeantDecayTree.h>
-#include <JPetGeantEventInformation/JPetGeantEventInformation.h>
-#include <JPetGeantScinHits/JPetGeantScinHits.h>
-#include <TBits.h>
-#include <TClonesArray.h>
 #include <TObject.h>
 #include <TVector3.h>
+#include <TClonesArray.h>
+#include <TBits.h>
+#include <JPetGeantScinHits/JPetGeantScinHits.h>
+#include <JPetGeantDecayTree/JPetGeantDecayTree.h>
+#include <JPetGeantEventInformation/JPetGeantEventInformation.h>
+
 
 class JPetGeantEventPack : public TObject
 {
@@ -31,19 +32,41 @@ public:
   ~JPetGeantEventPack();
   void Clear();
 
-  JPetGeantScinHits* constructNextHit();
-  JPetGeantDecayTree* constructNextDecayTree();
 
-  JPetGeantScinHits* getHit(int i) { return dynamic_cast<JPetGeantScinHits*>(fMCHits[i]); }
-  JPetGeantDecayTree* getDecayTree(int i) { return dynamic_cast<JPetGeantDecayTree*>(fMCDecayTrees[i]); }
+  JPetGeantScinHits* ConstructNextHit();
+  JPetGeantDecayTree* ConstructNextDecayTree();
 
-  JPetGeantEventInformation* getEventInformation() { return fGenInfo; }
+  JPetGeantScinHits* GetHit(int i)
+  {
+    return dynamic_cast<JPetGeantScinHits*>(fMCHits[i]);
+  }
+  JPetGeantDecayTree* GetDecayTree(int i)
+  {
+    return dynamic_cast<JPetGeantDecayTree*>(fMCDecayTrees[i]);
+  }
 
-  unsigned int getNumberOfHits() const { return fHitIndex; }
-  unsigned int getNumberOfDecayTrees() const { return fMCDecayTreesIndex; }
-  unsigned int getEventNumber() const { return fEvtIndex; }
+  JPetGeantEventInformation* GetEventInformation()
+  {
+    return fGenInfo;
+  }
 
-  void setEventNumber(int x) { fEvtIndex = x; }
+  unsigned int GetNumberOfHits() const
+  {
+    return fHitIndex;
+  }
+  unsigned int GetNumberOfDecayTrees() const
+  {
+    return fMCDecayTreesIndex;
+  }
+  unsigned int GetEventNumber() const
+  {
+    return fEvtIndex;
+  }
+
+  void SetEventNumber(int x)
+  {
+    fEvtIndex = x;
+  }
 
 private:
   TClonesArray fMCHits;

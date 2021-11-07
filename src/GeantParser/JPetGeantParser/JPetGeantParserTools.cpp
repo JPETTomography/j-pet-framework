@@ -23,14 +23,14 @@ JPetRawMCHit JPetGeantParserTools::createJPetRawMCHit(JPetGeantScinHits* geantHi
 {
   JPetRawMCHit mcHit;
   mcHit.setMCDecayTreeIndex(0);
-  mcHit.setMCVtxIndex(geantHit->getEvtID());
-  mcHit.setTime(geantHit->getTime());
-  mcHit.setEnergy(geantHit->getEneDepos());
-  mcHit.setPos(geantHit->getHitPosition());
-  mcHit.setPolarization(geantHit->getPolarizationIn());
-  mcHit.setMomentum(geantHit->getMomentumIn());
-  mcHit.setGammaTag(geantHit->getGenGammaMultiplicity());
-  mcHit.setScin(paramBank.getScin(geantHit->getScinID()));
+  mcHit.setMCVtxIndex(geantHit->GetEvtID());
+  mcHit.setTime(geantHit->GetTime());
+  mcHit.setEnergy(geantHit->GetEneDepos());
+  mcHit.setPos(geantHit->GetHitPosition());
+  mcHit.setPolarization(geantHit->GetPolarizationIn());
+  mcHit.setMomentum(geantHit->GetMomentumIn());
+  mcHit.setGammaTag(geantHit->GetGenGammaMultiplicity());
+  mcHit.setScin(paramBank.getScin(geantHit->GetScinID()));
   return mcHit;
 }
 
@@ -53,22 +53,22 @@ bool JPetGeantParserTools::isHitReconstructed(JPetMCRecoHit& recoHit, const doub
 void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit, const JPetMCRecoHit& recoHit, bool& isRecPrompt, array<bool, 2>& isSaved2g,
                                             array<bool, 3>& isSaved3g, double& enePrompt, array<double, 2>& ene2g, array<double, 3>& ene3g)
 {
-  if (geantHit->getGenGammaMultiplicity() == 1)
+  if (geantHit->GetGenGammaMultiplicity() == 1)
   {
     isRecPrompt = true;
     enePrompt = recoHit.getEnergy();
   }
 
-  if (geantHit->getGenGammaMultiplicity() == 2)
+  if (geantHit->GetGenGammaMultiplicity() == 2)
   {
-    isSaved2g[geantHit->getGenGammaIndex() - 1] = true;
-    ene2g[geantHit->getGenGammaIndex() - 1] = recoHit.getEnergy();
+    isSaved2g[geantHit->GetGenGammaIndex() - 1] = true;
+    ene2g[geantHit->GetGenGammaIndex() - 1] = recoHit.getEnergy();
   }
 
-  if (geantHit->getGenGammaMultiplicity() == 3)
+  if (geantHit->GetGenGammaMultiplicity() == 3)
   {
-    isSaved3g[geantHit->getGenGammaIndex() - 1] = true;
-    ene3g[geantHit->getGenGammaIndex() - 1] = recoHit.getEnergy();
+    isSaved3g[geantHit->GetGenGammaIndex() - 1] = true;
+    ene3g[geantHit->GetGenGammaIndex() - 1] = recoHit.getEnergy();
   }
 }
 
