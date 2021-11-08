@@ -24,9 +24,9 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetGeantEventPack pack;
-  BOOST_REQUIRE_EQUAL(pack.getNumberOfHits(), 0);
-  BOOST_REQUIRE_EQUAL(pack.getNumberOfDecayTrees(), 0);
-  BOOST_REQUIRE_EQUAL(pack.getEventNumber(), 0);
+  BOOST_REQUIRE_EQUAL(pack.GetNumberOfHits(), 0);
+  BOOST_REQUIRE_EQUAL(pack.GetNumberOfDecayTrees(), 0);
+  BOOST_REQUIRE_EQUAL(pack.GetEventNumber(), 0);
 }
 
 BOOST_AUTO_TEST_CASE(setter)
@@ -34,24 +34,24 @@ BOOST_AUTO_TEST_CASE(setter)
   JPetGeantEventPack pack;
   int evtNr = 944;
 
-  pack.setEventNumber(evtNr);
-  BOOST_REQUIRE_EQUAL(pack.getEventNumber(), evtNr);
+  pack.SetEventNumber(evtNr);
+  BOOST_REQUIRE_EQUAL(pack.GetEventNumber(), evtNr);
 }
 
 BOOST_AUTO_TEST_CASE(fillingStructues)
 {
   JPetGeantEventPack pack;
-  pack.constructNextHit();
-  BOOST_REQUIRE_EQUAL(pack.getNumberOfHits(), 1);
+  pack.ConstructNextHit();
+  BOOST_REQUIRE_EQUAL(pack.GetNumberOfHits(), 1);
 
-  pack.constructNextDecayTree();
-  BOOST_REQUIRE_EQUAL(pack.getNumberOfDecayTrees(), 1);
+  pack.ConstructNextDecayTree();
+  BOOST_REQUIRE_EQUAL(pack.GetNumberOfDecayTrees(), 1);
 
   pack.Clear();
 
-  BOOST_REQUIRE_EQUAL(pack.getNumberOfHits(), 0);
-  BOOST_REQUIRE_EQUAL(pack.getNumberOfDecayTrees(), 0);
-  BOOST_REQUIRE_EQUAL(pack.getEventNumber(), 0);
+  BOOST_REQUIRE_EQUAL(pack.GetNumberOfHits(), 0);
+  BOOST_REQUIRE_EQUAL(pack.GetNumberOfDecayTrees(), 0);
+  BOOST_REQUIRE_EQUAL(pack.GetEventNumber(), 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
