@@ -21,10 +21,11 @@
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
+double epsilon = 0.0001;
+
 BOOST_AUTO_TEST_CASE(default_constructor)
 {
   JPetGeantScinHits hit;
-  double epsilon = 0.0001;
   BOOST_REQUIRE_CLOSE(hit.GetEneDepos(), 0.0f, epsilon);
   BOOST_REQUIRE_CLOSE(hit.GetEvtID(), 0.0f, epsilon);
   BOOST_REQUIRE_CLOSE(hit.GetScinID(), 0.0f, epsilon);
@@ -101,26 +102,25 @@ BOOST_AUTO_TEST_CASE(check_setters)
   hit.SetMomentumIn(mIn_x, mIn_y, mIn_z);
   hit.SetMomentumOut(mOut_x, mOut_y, mOut_z);
 
-  BOOST_REQUIRE_EQUAL(hit.GetHitPosition().X(), hit_x);
-  BOOST_REQUIRE_EQUAL(hit.GetHitPosition().Y(), hit_y);
-  BOOST_REQUIRE_EQUAL(hit.GetHitPosition().Z(), hit_z);
-  BOOST_REQUIRE_EQUAL(hit.GetPolarizationIn().X(), pIn_x);
-  BOOST_REQUIRE_EQUAL(hit.GetPolarizationIn().Y(), pIn_y);
-  BOOST_REQUIRE_EQUAL(hit.GetPolarizationIn().Z(), pIn_z);
-  BOOST_REQUIRE_EQUAL(hit.GetPolarizationOut().X(), pOut_x);
-  BOOST_REQUIRE_EQUAL(hit.GetPolarizationOut().Y(), pOut_y);
-  BOOST_REQUIRE_EQUAL(hit.GetPolarizationOut().Z(), pOut_z);
-  BOOST_REQUIRE_EQUAL(hit.GetMomentumIn().X(), mIn_x);
-  BOOST_REQUIRE_EQUAL(hit.GetMomentumIn().Y(), mIn_y);
-  BOOST_REQUIRE_EQUAL(hit.GetMomentumIn().Z(), mIn_z);
-  BOOST_REQUIRE_EQUAL(hit.GetMomentumOut().X(), mOut_x);
-  BOOST_REQUIRE_EQUAL(hit.GetMomentumOut().Y(), mOut_y);
-  BOOST_REQUIRE_EQUAL(hit.GetMomentumOut().Z(), mOut_z);
+  BOOST_REQUIRE_CLOSE(hit.GetHitPosition().X(), hit_x, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetHitPosition().Y(), hit_y, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetHitPosition().Z(), hit_z, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetPolarizationIn().X(), pIn_x, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetPolarizationIn().Y(), pIn_y, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetPolarizationIn().Z(), pIn_z, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetPolarizationOut().X(), pOut_x, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetPolarizationOut().Y(), pOut_y, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetPolarizationOut().Z(), pOut_z, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetMomentumIn().X(), mIn_x, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetMomentumIn().Y(), mIn_y, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetMomentumIn().Z(), mIn_z, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetMomentumOut().X(), mOut_x, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetMomentumOut().Y(), mOut_y, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetMomentumOut().Z(), mOut_z, epsilon);
 }
 
 BOOST_AUTO_TEST_CASE(check_nonstandard_constructor)
 {
-
   int evtID = 67;
   int scinID = 34;
   int trkID = 34;
@@ -131,7 +131,6 @@ BOOST_AUTO_TEST_CASE(check_nonstandard_constructor)
   double hit_x = 5.6;
   double hit_y = 4.36;
   double hit_z = 35.6;
-  double epsilon = 0.0001;
 
   TVector3 hitPos(hit_x, hit_y, hit_z);
 
@@ -144,9 +143,9 @@ BOOST_AUTO_TEST_CASE(check_nonstandard_constructor)
   BOOST_REQUIRE_EQUAL(hit.GetTrackPDG(), trkPDG);
   BOOST_REQUIRE_EQUAL(hit.GetTime(), t);
 
-  BOOST_REQUIRE_EQUAL(hit.GetHitPosition().X(), hit_x);
-  BOOST_REQUIRE_EQUAL(hit.GetHitPosition().Y(), hit_y);
-  BOOST_REQUIRE_EQUAL(hit.GetHitPosition().Z(), hit_z);
+  BOOST_REQUIRE_CLOSE(hit.GetHitPosition().X(), hit_x, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetHitPosition().Y(), hit_y, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetHitPosition().Z(), hit_z, epsilon);
 
   BOOST_REQUIRE_CLOSE(hit.GetPolarizationIn().X(), 0.0f, epsilon);
   BOOST_REQUIRE_CLOSE(hit.GetPolarizationIn().Y(), 0.0f, epsilon);
@@ -205,20 +204,20 @@ BOOST_AUTO_TEST_CASE(check_nonstandard_constructor_2)
   BOOST_REQUIRE_EQUAL(hit.GetTrackPDG(), trkPDG);
   BOOST_REQUIRE_EQUAL(hit.GetTime(), t);
 
-  BOOST_REQUIRE_EQUAL(hit.GetHitPosition().X(), hit_x);
-  BOOST_REQUIRE_EQUAL(hit.GetHitPosition().Y(), hit_y);
-  BOOST_REQUIRE_EQUAL(hit.GetHitPosition().Z(), hit_z);
-  BOOST_REQUIRE_EQUAL(hit.GetPolarizationIn().X(), pIn_x);
-  BOOST_REQUIRE_EQUAL(hit.GetPolarizationIn().Y(), pIn_y);
-  BOOST_REQUIRE_EQUAL(hit.GetPolarizationIn().Z(), pIn_z);
-  BOOST_REQUIRE_EQUAL(hit.GetPolarizationOut().X(), pOut_x);
-  BOOST_REQUIRE_EQUAL(hit.GetPolarizationOut().Y(), pOut_y);
-  BOOST_REQUIRE_EQUAL(hit.GetPolarizationOut().Z(), pOut_z);
-  BOOST_REQUIRE_EQUAL(hit.GetMomentumIn().X(), mIn_x);
-  BOOST_REQUIRE_EQUAL(hit.GetMomentumIn().Y(), mIn_y);
-  BOOST_REQUIRE_EQUAL(hit.GetMomentumIn().Z(), mIn_z);
-  BOOST_REQUIRE_EQUAL(hit.GetMomentumOut().X(), mOut_x);
-  BOOST_REQUIRE_EQUAL(hit.GetMomentumOut().Y(), mOut_y);
-  BOOST_REQUIRE_EQUAL(hit.GetMomentumOut().Z(), mOut_z);
+  BOOST_REQUIRE_CLOSE(hit.GetHitPosition().X(), hit_x, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetHitPosition().Y(), hit_y, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetHitPosition().Z(), hit_z, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetPolarizationIn().X(), pIn_x, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetPolarizationIn().Y(), pIn_y, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetPolarizationIn().Z(), pIn_z, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetPolarizationOut().X(), pOut_x, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetPolarizationOut().Y(), pOut_y, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetPolarizationOut().Z(), pOut_z, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetMomentumIn().X(), mIn_x, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetMomentumIn().Y(), mIn_y, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetMomentumIn().Z(), mIn_z, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetMomentumOut().X(), mOut_x, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetMomentumOut().Y(), mOut_y, epsilon);
+  BOOST_REQUIRE_CLOSE(hit.GetMomentumOut().Z(), mOut_z, epsilon);
 }
 BOOST_AUTO_TEST_SUITE_END()
