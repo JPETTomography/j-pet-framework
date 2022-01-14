@@ -16,13 +16,14 @@
 #ifndef JPETINPUTHANDLER_H
 #define JPETINPUTHANDLER_H
 
-#include <memory.h>
-#include "./JPetReader/JPetReader.h"
-#include "./JPetParams/JPetParams.h"
 #include "./JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
+#include "./JPetParams/JPetParams.h"
+#include "./JPetReader/JPetReader.h"
 #include "./JPetTreeHeader/JPetTreeHeader.h"
+#include <memory.h>
 
-struct EntryRange {
+struct EntryRange
+{
   long long firstEntry = 0ll;
   long long lastEntry = 0ll;
   long long currentEntry = -1ll;
@@ -33,28 +34,25 @@ class JPetInputHandler
 
 public:
   JPetInputHandler();
+  JPetInputHandler(const JPetInputHandler&) = delete;
+  void operator=(const JPetInputHandler&) = delete;
 
-  bool openInput(const char* inputFileName, const JPetParams& params);
-  void closeInput();
-  bool setEntryRange(const jpet_options_tools::OptsStrAny& options);
+  virtual bool openInput(const char* inputFileName, const JPetParams& params) = 0;
+  virtual void closeInput() = 0;
+  virtual bool setEntryRange(const jpet_options_tools::OptsStrAny& options) = 0;
+  virtual TObject& getEntry() = 0;
+  virtual bool nextEntry() = 0;
+  /// Function calculates the correct entry range [first, last] based on the options provided and the internal reader state
+  virtual std::tuple<bool, long long, long long> calculateEntryRange(const jpet_options_tools::OptsStrAny& options) const = 0;
+
   EntryRange getEntryRange() const;
   long long getFirstEntryNumber() const;
   long long getLastEntryNumber() const;
   long long getCurrentEntryNumber() const;
-  TObject& getEntry();
-  bool nextEntry();
 
-  /// Function calculates the correct entry range [first, last] based on the options provided and the internal reader state
-  std::tuple<bool, long long, long long> calculateEntryRange(const jpet_options_tools::OptsStrAny& options) const;
+  virtual JPetTreeHeader* getHeaderClone();
 
-  JPetTreeHeader* getHeaderClone(); /// @todo what to do with this function?
 protected:
-  std::unique_ptr<JPetReaderInterface> fReader{nullptr};
-
-private:
-  JPetInputHandler(const JPetInputHandler&);
-  void operator=(const JPetInputHandler&);
   EntryRange fEntryRange;
-
 };
 #endif /*  !JPETINPUTHANDLER_H */

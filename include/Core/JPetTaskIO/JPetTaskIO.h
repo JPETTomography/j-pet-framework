@@ -22,6 +22,7 @@
 #include "./JPetStatistics/JPetStatistics.h"
 #include "./JPetTask/JPetTask.h"
 #include "./JPetTaskIO/JPetInputHandler.h"
+#include "./JPetTaskIO/JPetInputHandlerROOT.h"
 #include "./JPetTaskIO/JPetOutputHandler.h"
 #include "./JPetTaskInterface/JPetTaskInterface.h"
 #include <memory>

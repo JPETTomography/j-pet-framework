@@ -178,7 +178,7 @@ std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFi
 
 bool JPetTaskIO::createInputObjects(const char* inputFilename)
 {
-  fInputHandler = jpet_common_tools::make_unique<JPetInputHandler>();
+  fInputHandler = jpet_common_tools::make_unique<JPetInputHandlerROOT>();
   return fInputHandler->openInput(inputFilename, fParams);
 }
 
