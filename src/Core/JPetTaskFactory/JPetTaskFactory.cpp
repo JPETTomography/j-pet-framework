@@ -149,13 +149,6 @@ void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options
       outChain.insert(outChain.end(), unzip);
     }
 
-    // Create Unpack task if indicated by the filetype
-    if (fileType == file_type_checker::kHld || fileType == file_type_checker::kZip)
-    {
-      auto unpack = []() { return std::make_unique<JPetUnpackTask>("JPetUnpackTask"); };
-      outChain.insert(outChain.end(), unpack);
-    }
-
     // Create task for Param Bank
     auto paramBankTask = []() { return std::make_unique<JPetParamBankHandlerTask>("ParamBank Filling"); };
     outChain.insert(outChain.begin(), paramBankTask);
