@@ -18,7 +18,9 @@
 #include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include "JPetTaskIO/JPetTaskIOTools.h"
 
-JPetInputHandlerHLD::JPetInputHandlerHLD() {  }
+#include "unpacker.hpp"
+
+JPetInputHandlerHLD::JPetInputHandlerHLD() {}
 
 bool JPetInputHandlerHLD::openInput(const char* inputFilename, const JPetParams& params)
 {
@@ -27,23 +29,18 @@ bool JPetInputHandlerHLD::openInput(const char* inputFilename, const JPetParams&
 
   fFile.open(inputFilename, std::ios::in | std::ios::binary);
 
-  if(!fFile){
+  if (!fFile)
+  {
     ERROR(Form("Failed to open input file: %s", inputFilename));
     return false;
   }
-  
+
   return true;
 }
 
-void JPetInputHandlerHLD::closeInput()
-{
-  fFile.close();
-}
+void JPetInputHandlerHLD::closeInput() { fFile.close(); }
 
-TObject& JPetInputHandlerHLD::getEntry()
-{
-  return fEntryData;
-}
+TObject& JPetInputHandlerHLD::getEntry() { return fEntryData; }
 
 bool JPetInputHandlerHLD::nextEntry()
 {
@@ -53,14 +50,10 @@ bool JPetInputHandlerHLD::nextEntry()
   }
   fEntryRange.currentEntry++;
 
-  int success = unpacker::get_time_window(fEntryData.fMetaData,
-                                          fEntryData.fOriginalData,
-                                          fEntryData.fFilteredData,
-                                          fEntryData.fPreprocData,
-                                          fPathsToTdcCalib,
-                                          fFile);
-  
-  if(success == 0){
+  int success = unpacker::get_time_window(fEntryData.fMetaData, fEntryData.fOriginalData, fEntryData.fFilteredData, fEntryData.fPreprocData, fFile);
+
+  if (success == 0)
+  {
     return false;
   }
 

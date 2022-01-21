@@ -22,7 +22,7 @@
 
 #include "JPetTaskIO/JPetInputHandler.h"
 
-#include "../../external/Unpacker_v2/unpacker.hpp"
+#include "unpacker_types.hpp"
 
 using ENDPData = std::vector<unpacker::hit_t>;
 
@@ -53,7 +53,6 @@ class JPetInputHandlerHLD : public JPetInputHandler {
 
  private:
   std::ifstream fFile;
-  std::unordered_map<unsigned int, std::string> fPathsToTdcCalib;
   JPetHLDdata fEntryData;
 };
 
