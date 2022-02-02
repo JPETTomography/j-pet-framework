@@ -184,6 +184,9 @@ bool JPetTaskIO::createInputObjects(const char* inputFilename)
   if (file_type_checker::getInputFileType(fParams.getOptions()) == file_type_checker::kHld)
   {
     fInputHandler = jpet_common_tools::make_unique<JPetInputHandlerHLD>();
+    // @todo: pass in the params to HLD handler in a nicer way to avoid the line below
+    // @todo: add error handling (loadTDCcalib returns bool)
+    dynamic_cast<JPetInputHandlerHLD*>(fInputHandler.get())->loadTDCCalib(getParams());
   }
   else
   {
