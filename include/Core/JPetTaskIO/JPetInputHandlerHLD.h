@@ -28,17 +28,18 @@
 
 using ENDPData = std::vector<unpacker::hit_t>;
 
-class JPetHLDdata: public TObject
+class JPetHLDdata : public TObject
 {
 public:
   unpacker::meta_t fMetaData;
   std::unordered_map<unsigned int, ENDPData> fOriginalData;
   std::unordered_map<unsigned int, std::vector<unpacker::hit_t>> fFilteredData;
-  std::unordered_map<unsigned int, std::vector<unpacker::sigmat_t>> fPreprocData;  
+  std::unordered_map<unsigned int, std::vector<unpacker::sigmat_t>> fPreprocData;
 };
 
-class JPetInputHandlerHLD : public JPetInputHandler {
- public:
+class JPetInputHandlerHLD : public JPetInputHandler
+{
+public:
   JPetInputHandlerHLD();
   JPetInputHandlerHLD(const JPetInputHandlerHLD&) = delete;
   void operator=(const JPetInputHandlerHLD&) = delete;
@@ -50,12 +51,11 @@ class JPetInputHandlerHLD : public JPetInputHandler {
   TObject& getEntry() override;
 
   bool setEntryRange(const jpet_options_tools::OptsStrAny& options) override;
-  std::tuple<bool, long long, long long> calculateEntryRange(
-      const jpet_options_tools::OptsStrAny& options) const override;
+  std::tuple<bool, long long, long long> calculateEntryRange(const jpet_options_tools::OptsStrAny& options) const override;
 
   bool loadTDCCalib(const JPetParams& params);
-  
- private:
+
+private:
   std::ifstream fFile;
   JPetHLDdata fEntryData;
   unpacker::tdc_calib_t fTDCCalib;

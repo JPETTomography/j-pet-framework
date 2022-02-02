@@ -22,11 +22,12 @@
 #include <string>
 #include <vector>
 
+#include "JPetCommonTools/JPetCommonTools.h"
+#include "JPetLoggerInclude.h"
+#include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include "JPetOptionsTools/JPetOptionsTools.h"
 #include "JPetParamBank/JPetParamBank.h"
 #include "JPetTaskIO/JPetInputHandlerHLD.h"
-#include "JPetCommonTools/JPetCommonTools.h"
-#include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include "JPetTaskIO/JPetTaskIOTools.h"
 
 #include "unpacker.hpp"
@@ -46,10 +47,18 @@ bool JPetInputHandlerHLD::openInput(const char* inputFilename, const JPetParams&
     return false;
   }
 
-  if(!fTDCCalib.empty()){
-    unpacker::set_tdc_calib(fTDCCalib);
+  if (loadTDCCalib(params))
+  {
+    WARNING("Failed to load TDC nonlinearity calibration. Unpacker will proceed without calibration.");
   }
-  
+  else
+  {
+    if (!fTDCCalib.empty())
+    {
+      unpacker::set_tdc_calib(fTDCCalib);
+    }
+  }
+
   return nextEntry(); /// load first entry ready for `get_entry`
 }
 
@@ -104,58 +113,67 @@ bool JPetInputHandlerHLD::loadTDCCalib(const JPetParams& params)
   using namespace jpet_options_tools;
 
   std::string pathToRootFile = "";
-  if(isOptionSet(params.getOptions(), kTOTOffsetCalibKey)){
+  if (isOptionSet(params.getOptions(), kTOTOffsetCalibKey))
+  {
     pathToRootFile = getOptionAsString(params.getOptions(), kTOTOffsetCalibKey);
-  }else{
+  }
+  else
+  {
     WARNING("Path to file with TDC nonlinearity calibrations was not set. Skipping TDC calibration.");
     return false;
   }
-  
+
   TFile* calib_rootfile = new TFile(pathToRootFile.c_str(), "READ");
-  if(!calib_rootfile->IsOpen()){
+  if (!calib_rootfile->IsOpen())
+  {
     WARNING(TString::Format("Unable to open file: %s. Skipping TDC calibration.", pathToRootFile.c_str()));
     return false;
   }
-  
+
   int run_id = getRunNumber(params.getOptions());
-  for(auto& channel: params.getParamManager()->getChannels(run_id)){
+  for (auto& channel : params.getParamManager()->getChannels(run_id))
+  {
 
     uint32_t channel_no = channel.second->getID();
     uint32_t address = channel.second->getDataModule().getTBRNetAddress();
     uint32_t local_channel_no = channel_no - channel.second->getDataModule().getChannelsOffset();
-    
+
     TH1F* corr_histo = dynamic_cast<TH1F*>(calib_rootfile->FindObjectAny(TString::Format("correction%d", channel_no)));
-    if(corr_histo == nullptr){
+    if (corr_histo == nullptr)
+    {
       WARNING(TString::Format("Missing TDC correction for channel %d", channel_no));
       continue;
     }
-    
-    std::vector<uint32_t> corr_vec(128);    
-    for(int i=1; i < corr_histo->GetNbinsX(); ++i){
-      corr_vec[i-1] = corr_histo->GetBinContent(i) * 1000.;
-      }
-    
+
+    std::vector<uint32_t> corr_vec(128);
+    for (int i = 1; i < corr_histo->GetNbinsX(); ++i)
+    {
+      corr_vec[i - 1] = corr_histo->GetBinContent(i) * 1000.;
+    }
+
     fTDCCalib[address][local_channel_no] = corr_vec;
-    
   }
 
   // separately handle reference channels
-  for(auto& dm: params.getParamManager()->getDataModules(run_id)){
+  for (auto& dm : params.getParamManager()->getDataModules(run_id))
+  {
     uint32_t address = dm.second->getTBRNetAddress();
     uint32_t local_channel_no = dm.second->getChannelsNumber() - 1;
     uint32_t channel_no = dm.second->getChannelsOffset() + local_channel_no;
-    
+
     TH1F* corr_histo = dynamic_cast<TH1F*>(calib_rootfile->FindObjectAny(TString::Format("correction%d", channel_no)));
-    if(corr_histo == nullptr){
+    if (corr_histo == nullptr)
+    {
       WARNING(TString::Format("Missing TDC correction for channel %d", channel_no));
       continue;
     }
-    
-    std::vector<uint32_t> corr_vec(128);    
-    for(int i=1; i < corr_histo->GetNbinsX(); ++i){
-      corr_vec[i-1] = corr_histo->GetBinContent(i) * 1000.;
-      }
-    
+
+    std::vector<uint32_t> corr_vec(128);
+    for (int i = 1; i < corr_histo->GetNbinsX(); ++i)
+    {
+      corr_vec[i - 1] = corr_histo->GetBinContent(i) * 1000.;
+    }
+
     fTDCCalib[address][local_channel_no] = corr_vec;
   }
 
