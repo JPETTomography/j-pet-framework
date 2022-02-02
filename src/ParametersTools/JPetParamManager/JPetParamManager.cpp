@@ -143,7 +143,7 @@ JPetChannelFactory& JPetParamManager::getChannelFactory(const int runID)
   if (fChannelFactories.count(runID) == 0)
   {
     fChannelFactories.emplace(std::piecewise_construct, std::forward_as_tuple(runID),
-                              std::forward_as_tuple(*fParamGetter, runID, getPMFactory(runID)));
+                              std::forward_as_tuple(*fParamGetter, runID, getPMFactory(runID), getDataModuleFactory(runID)));
   }
   return fChannelFactories.at(runID);
 }

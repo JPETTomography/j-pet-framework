@@ -14,6 +14,7 @@
  */
 
 #include "JPetChannel/JPetChannel.h"
+#include "JPetDataModule/JPetDataModule.h"
 #include "JPetLoggerInclude.h"
 
 ClassImp(JPetChannel);
@@ -51,6 +52,8 @@ void JPetChannel::setThresholdValue(double thrVal) { fThresholdValue = thrVal; }
 
 void JPetChannel::setPM(JPetPM& pm) { fTRefPM = &pm; }
 
+void JPetChannel::setDataModule(JPetDataModule& dm) { fTrefDataModule = &dm; }
+
 const int JPetChannel::getID() const { return fID; }
 
 int JPetChannel::getThresholdNumber() const { return fThresholdNumber; }
@@ -67,6 +70,19 @@ const JPetPM& JPetChannel::getPM() const
   {
     ERROR("No JPetPM set, Null object will be returned");
     return JPetPM::getDummyResult();
+  }
+}
+
+const JPetDataModule& JPetChannel::getDataModule() const
+{
+  if (fTrefDataModule.GetObject())
+  {
+    return static_cast<JPetDataModule&>(*(fTrefDataModule.GetObject()));
+  }
+  else
+  {
+    ERROR("No JPetDataModule set, Null object will be returned");
+    return JPetDataModule::getDummyResult();
   }
 }
 
@@ -87,3 +103,4 @@ JPetChannel& JPetChannel::getDummyResult()
 }
 
 void JPetChannel::clearTRefPM() { fTRefPM = nullptr; }
+void JPetChannel::clearTRefDataModule() { fTrefDataModule = nullptr; }

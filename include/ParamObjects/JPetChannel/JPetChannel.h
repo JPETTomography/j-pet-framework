@@ -16,6 +16,7 @@
 #ifndef JPETCHANNEL_H
 #define JPETCHANNEL_H
 
+#include "JPetDataModule/JPetDataModule.h"
 #include "JPetPM/JPetPM.h"
 #include <TNamed.h>
 #include <TRef.h>
@@ -35,10 +36,12 @@ public:
   void setThresholdNumber(int thrNum);
   void setThresholdValue(double trhVal);
   void setPM(JPetPM& pm);
+  void setDataModule(JPetDataModule& dm);
   const int getID() const;
   int getThresholdNumber() const;
   double getThresholdValue() const;
   const JPetPM& getPM() const;
+  const JPetDataModule& getDataModule() const;
   bool operator==(const JPetChannel& channel);
   bool operator!=(const JPetChannel& channel);
   bool isNullObject() const;
@@ -50,8 +53,10 @@ protected:
   double fThresholdValue = 0.0;
   bool fIsNullObject = false;
   TRef fTRefPM = nullptr;
+  TRef fTrefDataModule = nullptr;
   void clearTRefPM();
-
+  void clearTRefDataModule();
+  
   friend class JPetParamManager;
 
   ClassDef(JPetChannel, 1);
