@@ -17,9 +17,11 @@
 #define JPETINPUTHANDLERHLD_H
 
 #include <fstream>
+#include <string>
 
 #include <TObject.h>
 
+#include "JPetParamBank/JPetParamBank.h"
 #include "JPetTaskIO/JPetInputHandler.h"
 
 #include "unpacker_types.hpp"
@@ -51,9 +53,13 @@ class JPetInputHandlerHLD : public JPetInputHandler {
   std::tuple<bool, long long, long long> calculateEntryRange(
       const jpet_options_tools::OptsStrAny& options) const override;
 
+  bool loadTDCCalib(const JPetParams& params);
+  
  private:
   std::ifstream fFile;
   JPetHLDdata fEntryData;
+  unpacker::tdc_calib_t fTDCCalib;
+  const std::string kTOTOffsetCalibKey = "Unpacker_TDCnonlinearityCalib_std::string";
 };
 
 #endif /*  !JPETINPUTHANDLERHLD_H */
