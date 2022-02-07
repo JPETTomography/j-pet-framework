@@ -17,7 +17,6 @@
 #include <TFile.h>
 #include <TH1F.h>
 #include <TString.h>
-#include <bits/stdint-uintn.h>
 #include <iostream>
 #include <string>
 #include <vector>
