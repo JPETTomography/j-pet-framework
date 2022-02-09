@@ -22,7 +22,6 @@
 #include "JPetTaskIOLoopPerSubTask/JPetTaskIOLoopPerSubTask.h"
 #include "JPetTaskLooper/JPetTaskLooper.h"
 #include "JPetTaskStreamIO/JPetTaskStreamIO.h"
-#include "JPetUnpackTask/JPetUnpackTask.h"
 #include "JPetUnzipTask/JPetUnzipTask.h"
 
 using TaskGenerator = std::function<std::unique_ptr<JPetTaskInterface>()>;

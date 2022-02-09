@@ -1,10 +1,7 @@
 include(CMakeFindDependencyMacro)
 
-set(Unpacker2_DIR @Unpacker2_DIR@)
-
 # Same syntax as find_package
 find_dependency(ROOT)
-find_dependency(Unpacker2)
 find_dependency(Boost)
 
 # Add the targets file
