@@ -37,8 +37,8 @@ public:
   };
 
   JPetChannelSignal();
-  JPetChannelSignal(EdgeType edge, double time);
-  JPetChannelSignal(JPetRecoSignal::RecoFlag flag, EdgeType edge, double time);
+  JPetChannelSignal(EdgeType edge, float time);
+  JPetChannelSignal(JPetRecoSignal::RecoFlag flag, EdgeType edge, float time);
   ~JPetChannelSignal();
   void setEdgeType(JPetChannelSignal::EdgeType edge);
   void setChannel(const JPetChannel& channel);

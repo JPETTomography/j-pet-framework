@@ -24,7 +24,7 @@
  * in a single photomultiplier.
  *
  * This class contains the reconstructed physical quantities that characterize
- * the signal and are needed for further reconstruction of hits. One JPetPhysRignal
+ * the signal and are needed for further reconstruction of hits. One JPetPhysSignal
  * object should be created based on the information from one JPetRecoSignal object.
  * User can set reconstructed values and qualities of signal time and number of
  * photoelectrons.
@@ -33,21 +33,21 @@ class JPetPhysSignal : public JPetRecoSignal
 {
 public:
   JPetPhysSignal();
-  JPetPhysSignal(double time, double qTime, double phe, double qPhe);
+  JPetPhysSignal(float time, float qTime, float phe, float qPhe);
   virtual ~JPetPhysSignal();
 
-  void setQualityOfTime(double qualityOfTime);
-  void setPhe(double phe);
-  void setQualityOfPhe(double qualityOfPhe);
-  double getQualityOfTime() const;
-  double getPhe() const;
-  double getQualityOfPhe() const;
+  void setQualityOfTime(float qualityOfTime);
+  void setPhe(float phe);
+  void setQualityOfPhe(float qualityOfPhe);
+  float getQualityOfTime() const;
+  float getPhe() const;
+  float getQualityOfPhe() const;
   void Clear(Option_t* opt = "");
 
 private:
-  double fQualityOfTime;
-  double fPhe;
-  double fQualityOfPhe;
+  float fQualityOfTime;
+  float fPhe;
+  float fQualityOfPhe;
 
   ClassDef(JPetPhysSignal, 5);
 };

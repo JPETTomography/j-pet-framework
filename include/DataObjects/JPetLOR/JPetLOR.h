@@ -42,23 +42,23 @@ public:
   };
 
   JPetLOR();
-  JPetLOR(double time, double qualityOfTime, double timeDiff, double qualityOfTimeDiff, JPetBaseHit* firstHit, JPetBaseHit* secondHit,
+  JPetLOR(float time, float qualityOfTime, float timeDiff, float qualityOfTimeDiff, JPetBaseHit* firstHit, JPetBaseHit* secondHit,
           JPetLOR::RecoFlag flag);
   virtual ~JPetLOR();
 
   void setRecoFlag(JPetLOR::RecoFlag flag);
-  void setTime(const double time);
-  void setQualityOfTime(const double qualityOfTime);
-  void setTimeDiff(const double td);
-  void setQualityOfTimeDiff(const double qtd);
+  void setTime(const float time);
+  void setQualityOfTime(const float qualityOfTime);
+  void setTimeDiff(const float td);
+  void setQualityOfTimeDiff(const float qtd);
   void setHits(JPetBaseHit* firstHit, JPetBaseHit* secondHit);
   void setFirstHit(JPetBaseHit* firstHit);
   void setSecondHit(JPetBaseHit* secondHit);
   JPetLOR::RecoFlag getRecoFlag() const;
-  double getTime() const;
-  double getQualityOfTime() const;
-  double getTimeDiff() const;
-  double getQualityOfTimeDiff() const;
+  float getTime() const;
+  float getQualityOfTime() const;
+  float getTimeDiff() const;
+  float getQualityOfTimeDiff() const;
   const std::pair<JPetBaseHit*, JPetBaseHit*> getHits() const;
   bool isHitSet(const unsigned int index);
   bool checkConsistency() const;
@@ -66,10 +66,10 @@ public:
 
 private:
   RecoFlag fFlag = JPetLOR::Unknown;
-  double fTime;
-  double fQualityOfTime;
-  double fTimeDiff;
-  double fQualityOfTimeDiff;
+  float fTime;
+  float fQualityOfTime;
+  float fTimeDiff;
+  float fQualityOfTimeDiff;
   std::pair<bool, bool> fIsHitSet;
   std::pair<JPetBaseHit*, JPetBaseHit*> fHits;
 

@@ -20,7 +20,7 @@ ClassImp(JPetSlot);
 
 JPetSlot::JPetSlot() { SetName("JPetSlot"); }
 
-JPetSlot::JPetSlot(int id, double theta, JPetSlot::Type type) : fID(id), fTheta(theta), fType(type) { SetName("JPetSlot"); }
+JPetSlot::JPetSlot(int id, float theta, JPetSlot::Type type) : fID(id), fTheta(theta), fType(type) { SetName("JPetSlot"); }
 
 JPetSlot::JPetSlot(const JPetSlot& slot) : fID(slot.getID()), fTheta(slot.getTheta()), fType(slot.getType()) { SetName("JPetSlot"); }
 
@@ -30,7 +30,7 @@ JPetSlot::~JPetSlot() {}
 
 void JPetSlot::setID(int id) { fID = id; }
 
-void JPetSlot::setTheta(double theta) { fTheta = theta; }
+void JPetSlot::setTheta(float theta) { fTheta = theta; }
 
 void JPetSlot::setType(JPetSlot::Type type) { fType = type; }
 
@@ -38,7 +38,7 @@ void JPetSlot::setLayer(JPetLayer& layer) { fTRefLayer = &layer; }
 
 int JPetSlot::getID() const { return fID; }
 
-double JPetSlot::getTheta() const { return fTheta; }
+float JPetSlot::getTheta() const { return fTheta; }
 
 JPetSlot::Type JPetSlot::getType() const { return fType; }
 

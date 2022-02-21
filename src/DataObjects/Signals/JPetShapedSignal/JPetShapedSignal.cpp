@@ -40,7 +40,7 @@ JPetShapedSignal::~JPetShapedSignal() {}
  * @param time time in [ps]
  * @param ampl aplitude in [mV]
  */
-void JPetShapedSignal::setShapePoint(double time, double ampl) { fShape.push_back(shapePoint(time, ampl)); }
+void JPetShapedSignal::setShapePoint(float time, float ampl) { fShape.push_back(shapePoint(time, ampl)); }
 
 /**
  * Sort the vector of shapePoint-s by time (default) or amplitude (always ascending).

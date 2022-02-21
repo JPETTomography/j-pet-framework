@@ -31,39 +31,39 @@ class JPetScin : public TNamed
 {
 public:
   JPetScin();
-  JPetScin(int id, double length, double height, double width, double center_x, double center_y, double center_z);
-  JPetScin(int id, double length, double height, double width, double center_x, double center_y, double center_z, double rotX, double rotY,
-           double rotZ);
+  JPetScin(int id, float length, float height, float width, float center_x, float center_y, float center_z);
+  JPetScin(int id, float length, float height, float width, float center_x, float center_y, float center_z, float rotX, float rotY,
+           float rotZ);
   JPetScin(const JPetScin& scin);
   explicit JPetScin(bool isNull);
   virtual ~JPetScin();
 
   void setID(int id);
-  void setDimensions(double length, double height, double width);
-  void setLength(double length);
-  void setHeight(double height);
-  void setWidth(double width);
+  void setDimensions(float length, float height, float width);
+  void setLength(float length);
+  void setHeight(float height);
+  void setWidth(float width);
   void setCenter(TVector3 center);
-  void setCenterX(double centerX);
-  void setCenterY(double centerY);
-  void setCenterZ(double centerZ);
+  void setCenterX(float centerX);
+  void setCenterY(float centerY);
+  void setCenterZ(float centerZ);
   void setRotation(TVector3 rotation);
-  void setRotationX(double rotationX);
-  void setRotationY(double rotationY);
-  void setRotationZ(double rotationZ);
+  void setRotationX(float rotationX);
+  void setRotationY(float rotationY);
+  void setRotationZ(float rotationZ);
   void setSlot(JPetSlot& slot);
   int getID() const;
-  double getLength() const;
-  double getHeight() const;
-  double getWidth() const;
+  float getLength() const;
+  float getHeight() const;
+  float getWidth() const;
   TVector3 getCenter() const;
-  double getCenterX() const;
-  double getCenterY() const;
-  double getCenterZ() const;
+  float getCenterX() const;
+  float getCenterY() const;
+  float getCenterZ() const;
   TVector3 getRotation() const;
-  double getRotationX() const;
-  double getRotationY() const;
-  double getRotationZ() const;
+  float getRotationX() const;
+  float getRotationY() const;
+  float getRotationZ() const;
   const JPetSlot& getSlot() const;
   bool operator==(const JPetScin& scin) const;
   bool operator!=(const JPetScin& scin) const;
@@ -72,9 +72,9 @@ public:
 
 protected:
   int fID = -1;
-  double fLength = 0.0;
-  double fHeight = 0.0;
-  double fWidth = 0.0;
+  float fLength = 0.0;
+  float fHeight = 0.0;
+  float fWidth = 0.0;
   bool fIsNullObject = false;
   TVector3 fScinCenter;
   TVector3 fScinRotation;

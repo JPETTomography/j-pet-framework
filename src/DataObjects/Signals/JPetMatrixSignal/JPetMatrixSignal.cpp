@@ -54,7 +54,7 @@ bool JPetMatrixSignal::addPMSignal(const JPetPMSignal& pmSignal)
   }
   else
   {
-    ERROR("Cannot add PM sigal with same matrix position as an existing one.");
+    ERROR("Cannot add PM signal with same matrix position as an existing one.");
     return false;
   }
 }
@@ -76,9 +76,9 @@ const JPetMatrix& JPetMatrixSignal::getMatrix() const
   }
 }
 
-double JPetMatrixSignal::getToT() const
+float JPetMatrixSignal::getToT() const
 {
-  double tot = 0.0;
+  float tot = 0.0;
   for (auto pS : fPMSignalsMap)
   {
     tot += pS.second.getToT();
@@ -89,7 +89,7 @@ double JPetMatrixSignal::getToT() const
   }
   else
   {
-    return tot / ((double)fPMSignalsMap.size());
+    return tot / ((float)fPMSignalsMap.size());
   }
 }
 

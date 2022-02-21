@@ -21,9 +21,9 @@ JPetRecoSignal::JPetRecoSignal() : JPetBaseSignal(), fFlag(JPetRecoSignal::Unkno
 
 JPetRecoSignal::JPetRecoSignal(JPetRecoSignal::RecoFlag flag) : JPetBaseSignal(), fFlag(flag) {}
 
-JPetRecoSignal::JPetRecoSignal(double time) : JPetBaseSignal(time), fFlag(JPetRecoSignal::Unknown) {}
+JPetRecoSignal::JPetRecoSignal(float time) : JPetBaseSignal(time), fFlag(JPetRecoSignal::Unknown) {}
 
-JPetRecoSignal::JPetRecoSignal(JPetRecoSignal::RecoFlag flag, double time) : JPetBaseSignal(time), fFlag(flag) {}
+JPetRecoSignal::JPetRecoSignal(JPetRecoSignal::RecoFlag flag, float time) : JPetBaseSignal(time), fFlag(flag) {}
 
 JPetRecoSignal::~JPetRecoSignal() {}
 

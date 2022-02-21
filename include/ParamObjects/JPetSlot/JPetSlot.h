@@ -36,16 +36,16 @@ public:
     Module
   };
   JPetSlot();
-  JPetSlot(int id, double theta, JPetSlot::Type type);
+  JPetSlot(int id, float theta, JPetSlot::Type type);
   JPetSlot(const JPetSlot& slot);
   explicit JPetSlot(bool isNull);
   virtual ~JPetSlot();
   void setID(int id);
-  void setTheta(double theta);
+  void setTheta(float theta);
   void setType(JPetSlot::Type type);
   void setLayer(JPetLayer& layer);
   int getID() const;
-  double getTheta() const;
+  float getTheta() const;
   JPetSlot::Type getType() const;
   const JPetLayer& getLayer() const;
   bool operator==(const JPetSlot& slot) const;
@@ -57,7 +57,7 @@ protected:
   void clearTRefLayer();
 
   int fID = -1;
-  double fTheta = -1.0;
+  float fTheta = -1.0;
   Type fType = Barrel;
   bool fIsNullObject = false;
   TRef fTRefLayer;

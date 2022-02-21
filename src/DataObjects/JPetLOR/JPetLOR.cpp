@@ -24,7 +24,7 @@ JPetLOR::JPetLOR() : TObject(), fFlag(JPetLOR::Unknown), fTime(0.0), fQualityOfT
   fIsHitSet.second = false;
 }
 
-JPetLOR::JPetLOR(double time, double qualityOfTime, double timeDiff, double qualityOfTimeDiff, JPetBaseHit* firstHit, JPetBaseHit* secondHit,
+JPetLOR::JPetLOR(float time, float qualityOfTime, float timeDiff, float qualityOfTimeDiff, JPetBaseHit* firstHit, JPetBaseHit* secondHit,
                  JPetLOR::RecoFlag flag)
     : TObject(), fFlag(flag), fTime(time), fQualityOfTime(qualityOfTime), fTimeDiff(timeDiff), fQualityOfTimeDiff(qualityOfTimeDiff)
 {
@@ -41,22 +41,22 @@ void JPetLOR::setRecoFlag(JPetLOR::RecoFlag flag) { fFlag = flag; }
 /**
  * Set LOR time in [ps]
  */
-void JPetLOR::setTime(const double time) { fTime = time; }
+void JPetLOR::setTime(const float time) { fTime = time; }
 
 /**
  * Set the value, that describes quality of reconstructed LOR time
  */
-void JPetLOR::setQualityOfTime(const double qualityOfTime) { fQualityOfTime = qualityOfTime; }
+void JPetLOR::setQualityOfTime(const float qualityOfTime) { fQualityOfTime = qualityOfTime; }
 
 /**
  * Set LOR time difference [ps]
  */
-void JPetLOR::setTimeDiff(const double td) { fTimeDiff = td; }
+void JPetLOR::setTimeDiff(const float td) { fTimeDiff = td; }
 
 /**
  * Set the value, that describes quality of LOR time difference.
  */
-void JPetLOR::setQualityOfTimeDiff(const double qtd) { fQualityOfTimeDiff = qtd; }
+void JPetLOR::setQualityOfTimeDiff(const float qtd) { fQualityOfTimeDiff = qtd; }
 
 /**
  * Set both hits of this event at once.
@@ -92,22 +92,22 @@ JPetLOR::RecoFlag JPetLOR::getRecoFlag() const { return fFlag; }
 /**
  * Get LOR time in [ps].
  */
-double JPetLOR::getTime() const { return fTime; }
+float JPetLOR::getTime() const { return fTime; }
 
 /**
  * Get the value, that describes time reconstruction quality.
  */
-double JPetLOR::getQualityOfTime() const { return fQualityOfTime; }
+float JPetLOR::getQualityOfTime() const { return fQualityOfTime; }
 
 /**
  * Get LOR time difference.
  */
-double JPetLOR::getTimeDiff() const { return fTimeDiff; }
+float JPetLOR::getTimeDiff() const { return fTimeDiff; }
 
 /**
  * Get the value, that describes quality of LOR time difference.
  */
-double JPetLOR::getQualityOfTimeDiff() const { return fQualityOfTimeDiff; }
+float JPetLOR::getQualityOfTimeDiff() const { return fQualityOfTimeDiff; }
 
 /**
  * Get the hits pair
@@ -126,6 +126,7 @@ bool JPetLOR::isHitSet(const unsigned int index)
   case 1:
     return fIsHitSet.second;
   default:
+    ERROR("Bad index for hitSet is provided " + std::to_string(index));
     return false;
   };
 }

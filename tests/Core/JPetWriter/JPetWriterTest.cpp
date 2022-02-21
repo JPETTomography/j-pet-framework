@@ -69,19 +69,13 @@ BOOST_AUTO_TEST_CASE(my_helperTest_for_test3)
   tree.SetAutoSave(1000);
   TNamed* filler = 0;
   tree.Branch("TNamed", "TNamed", &filler);
-  std::cout << "Write Tree " << std::flush;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
-    if (i % 1000 == 0)
-    {
-      std::cout << "*" << std::flush;
-    }
     TNamed obj("TNamed", Form("Title of this testObj%d", i));
     filler = &obj;
     tree.Fill();
     tree.FlushBaskets();
   }
-  std::cout << std::endl;
   file.Close();
 }
 
@@ -89,17 +83,11 @@ BOOST_AUTO_TEST_CASE(my_test3)
 {
   std::string fileName = "test3.root";
   JPetWriter writer(fileName.c_str());
-  std::cout << "Write TNamed " << std::flush;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
     TNamed obj("TNamed", Form("Title of this testObj%d", i));
-    if (i % 1000 == 0)
-    {
-      std::cout << "*" << std::flush;
-    }
     writer.write(obj);
   }
-  std::cout << std::endl;
   writer.closeFile();
 
   JPetReader reader(fileName.c_str());
@@ -117,17 +105,11 @@ BOOST_AUTO_TEST_CASE(saving_different_objects1)
 {
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
-  std::cout << "Write JPetChannelSignal " << std::flush;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
-    if (i % 1000 == 0)
-    {
-      std::cout << "*" << std::flush;
-    }
     JPetChannelSignal testChannelSignal;
     writer.write(testChannelSignal);
   }
-  std::cout << std::endl;
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
@@ -143,17 +125,11 @@ BOOST_AUTO_TEST_CASE(saving_different_objects2)
 {
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
-  std::cout << "Write JPetTimeWindow " << std::flush;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
-    if (i % 1000 == 0)
-    {
-      std::cout << "*" << std::flush;
-    }
     JPetTimeWindow testJPetTimeWindow("JPetChannelSignal");
     writer.write(testJPetTimeWindow);
   }
-  std::cout << std::endl;
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
@@ -169,17 +145,11 @@ BOOST_AUTO_TEST_CASE(saving_different_objects3)
 {
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
-  std::cout << "Write JPetBaseSignal " << std::flush;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
-    if (i % 1000 == 0)
-    {
-      std::cout << "*" << std::flush;
-    }
     JPetBaseSignal testJPetBaseSignal;
     writer.write(testJPetBaseSignal);
   }
-  std::cout << std::endl;
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
@@ -195,17 +165,11 @@ BOOST_AUTO_TEST_CASE(saving_different_objects4)
 {
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
-  std::cout << "Write JPetPMSignal " << std::flush;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
-    if (i % 1000 == 0)
-    {
-      std::cout << "*" << std::flush;
-    }
     JPetPMSignal testPMSignal;
     writer.write(testPMSignal);
   }
-  std::cout << std::endl;
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
@@ -221,17 +185,11 @@ BOOST_AUTO_TEST_CASE(saving_different_objects5)
 {
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
-  std::cout << "Write JPetRecoSignal " << std::flush;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
-    if (i % 1000 == 0)
-    {
-      std::cout << "*" << std::flush;
-    }
     JPetRecoSignal testJPetRecoSignal;
     writer.write(testJPetRecoSignal);
   }
-  std::cout << std::endl;
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
@@ -247,17 +205,11 @@ BOOST_AUTO_TEST_CASE(saving_different_objects6)
 {
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
-  std::cout << "Write JPetPhysSignal " << std::flush;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
-    if (i % 1000 == 0)
-    {
-      std::cout << "*" << std::flush;
-    }
     JPetPhysSignal testJPetPhysSignal;
     writer.write(testJPetPhysSignal);
   }
-  std::cout << std::endl;
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
@@ -273,17 +225,11 @@ BOOST_AUTO_TEST_CASE(saving_different_objects7)
 {
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
-  std::cout << "Write JPetMatrixSignal " << std::flush;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
-    if (i % 1000 == 0)
-    {
-      std::cout << "*" << std::flush;
-    }
     JPetMatrixSignal testMatrixSignal;
     writer.write(testMatrixSignal);
   }
-  std::cout << std::endl;
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
@@ -299,17 +245,11 @@ BOOST_AUTO_TEST_CASE(saving_different_objects8)
 {
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
-  std::cout << "Write JPetBaseHit " << std::flush;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
-    if (i % 1000 == 0)
-    {
-      std::cout << "*" << std::flush;
-    }
     JPetBaseHit testBaseHit;
     writer.write(testBaseHit);
   }
-  std::cout << std::endl;
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
@@ -325,17 +265,11 @@ BOOST_AUTO_TEST_CASE(saving_different_objects9)
 {
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
-  std::cout << "Write JPetLOR " << std::flush;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
-    if (i % 1000 == 0)
-    {
-      std::cout << "*" << std::flush;
-    }
     JPetLOR testLOR;
     writer.write(testLOR);
   }
-  std::cout << std::endl;
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);
@@ -351,17 +285,11 @@ BOOST_AUTO_TEST_CASE(saving_different_objects10)
 {
   auto fileTest = "saving_different_objectsTest.root";
   JPetWriter writer(fileTest);
-  std::cout << "Write JPetEvent " << std::flush;
   for (int i = 0; i < kHugeNumberOfObjects; i++)
   {
-    if (i % 1000 == 0)
-    {
-      std::cout << "*" << std::flush;
-    }
     JPetEvent testEvent;
     writer.write(testEvent);
   }
-  std::cout << std::endl;
   writer.closeFile();
   BOOST_REQUIRE(boost::filesystem::exists(fileTest));
   JPetReader reader(fileTest);

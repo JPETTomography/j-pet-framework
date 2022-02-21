@@ -27,17 +27,17 @@ class JPetChannel : public TNamed
 {
 public:
   JPetChannel();
-  JPetChannel(int id, int thrNum, double thrVal);
+  JPetChannel(int id, int thrNum, float thrVal);
   JPetChannel(const JPetChannel& channel);
   explicit JPetChannel(bool isNull);
   virtual ~JPetChannel();
   void setID(int id);
   void setThresholdNumber(int thrNum);
-  void setThresholdValue(double trhVal);
+  void setThresholdValue(float trhVal);
   void setPM(JPetPM& pm);
   const int getID() const;
   int getThresholdNumber() const;
-  double getThresholdValue() const;
+  float getThresholdValue() const;
   const JPetPM& getPM() const;
   bool operator==(const JPetChannel& channel);
   bool operator!=(const JPetChannel& channel);
@@ -47,7 +47,7 @@ public:
 protected:
   int fID = -1;
   int fThresholdNumber = 0;
-  double fThresholdValue = 0.0;
+  float fThresholdValue = 0.0;
   bool fIsNullObject = false;
   TRef fTRefPM = nullptr;
   void clearTRefPM();

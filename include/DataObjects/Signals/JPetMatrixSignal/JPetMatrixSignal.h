@@ -33,7 +33,7 @@ public:
   virtual ~JPetMatrixSignal();
   bool addPMSignal(const JPetPMSignal& pmSignal);
   std::map<int, JPetPMSignal> getPMSignals() const;
-  double getToT() const;
+  float getToT() const;
   void setMatrix(const JPetMatrix& mtx);
   const JPetMatrix& getMatrix() const;
   void Clear(Option_t*) override;

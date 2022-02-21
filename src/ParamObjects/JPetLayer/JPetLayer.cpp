@@ -20,7 +20,7 @@ ClassImp(JPetLayer);
 
 JPetLayer::JPetLayer() { SetName("JPetLayer"); }
 
-JPetLayer::JPetLayer(int id, std::string name, double radius) : fID(id), fName(name), fRadius(radius) { SetName("JPetLayer"); }
+JPetLayer::JPetLayer(int id, std::string name, float radius) : fID(id), fName(name), fRadius(radius) { SetName("JPetLayer"); }
 
 JPetLayer::JPetLayer(const JPetLayer& layer) : fID(layer.getID()), fName(layer.getName()), fRadius(layer.getRadius()) { SetName("JPetLayer"); }
 
@@ -32,7 +32,7 @@ void JPetLayer::setID(int id) { fID = id; }
 
 void JPetLayer::setName(std::string name) { fName = name; }
 
-void JPetLayer::setRaduis(double radius) { fRadius = radius; }
+void JPetLayer::setRaduis(float radius) { fRadius = radius; }
 
 void JPetLayer::setSetup(JPetSetup& setup) { fTRefSetup = &setup; }
 
@@ -40,7 +40,7 @@ int JPetLayer::getID() const { return fID; }
 
 std::string JPetLayer::getName() const { return fName; }
 
-double JPetLayer::getRadius() const { return fRadius; }
+float JPetLayer::getRadius() const { return fRadius; }
 
 const JPetSetup& JPetLayer::getSetup() const
 {

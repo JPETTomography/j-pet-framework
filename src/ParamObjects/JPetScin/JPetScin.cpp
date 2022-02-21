@@ -23,14 +23,14 @@ JPetScin::JPetScin() { SetName("JPetScin"); }
 /**
  * Constructor of a Scin object without defined rotation vector, which in this case is initialized to be (0,0,0) (no rotation)
  */
-JPetScin::JPetScin(int id, double length, double height, double width, double center_x, double center_y, double center_z)
+JPetScin::JPetScin(int id, float length, float height, float width, float center_x, float center_y, float center_z)
     : fID(id), fLength(length), fHeight(height), fWidth(width), fScinCenter(center_x, center_y, center_z), fScinRotation(0.0, 0.0, 0.0)
 {
   SetName("JPetScin");
 }
 
-JPetScin::JPetScin(int id, double length, double height, double width, double center_x, double center_y, double center_z, double rotX, double rotY,
-                   double rotZ)
+JPetScin::JPetScin(int id, float length, float height, float width, float center_x, float center_y, float center_z, float rotX, float rotY,
+                   float rotZ)
     : fID(id), fLength(length), fHeight(height), fWidth(width), fScinCenter(center_x, center_y, center_z), fScinRotation(rotX, rotY, rotZ)
 {
   SetName("JPetScin");
@@ -50,60 +50,60 @@ JPetScin::~JPetScin() {}
 
 void JPetScin::setID(int id) { fID = id; }
 
-void JPetScin::setDimensions(double length, double height, double width)
+void JPetScin::setDimensions(float length, float height, float width)
 {
   fLength = length;
   fHeight = height;
   fWidth = width;
 }
 
-void JPetScin::setLength(double length) { fLength = length; }
+void JPetScin::setLength(float length) { fLength = length; }
 
-void JPetScin::setHeight(double height) { fHeight = height; }
+void JPetScin::setHeight(float height) { fHeight = height; }
 
-void JPetScin::setWidth(double width) { fWidth = width; }
+void JPetScin::setWidth(float width) { fWidth = width; }
 
 void JPetScin::setCenter(TVector3 center) { fScinCenter = center; }
 
-void JPetScin::setCenterX(double centerX) { fScinCenter[0] = centerX; }
+void JPetScin::setCenterX(float centerX) { fScinCenter[0] = centerX; }
 
-void JPetScin::setCenterY(double centerY) { fScinCenter[1] = centerY; }
+void JPetScin::setCenterY(float centerY) { fScinCenter[1] = centerY; }
 
-void JPetScin::setCenterZ(double centerZ) { fScinCenter[2] = centerZ; }
+void JPetScin::setCenterZ(float centerZ) { fScinCenter[2] = centerZ; }
 
 void JPetScin::setRotation(TVector3 rotation) { fScinRotation = rotation; }
 
-void JPetScin::setRotationX(double rotationX) { fScinCenter[0] = rotationX; }
+void JPetScin::setRotationX(float rotationX) { fScinCenter[0] = rotationX; }
 
-void JPetScin::setRotationY(double rotationY) { fScinCenter[1] = rotationY; }
+void JPetScin::setRotationY(float rotationY) { fScinCenter[1] = rotationY; }
 
-void JPetScin::setRotationZ(double rotationZ) { fScinCenter[2] = rotationZ; }
+void JPetScin::setRotationZ(float rotationZ) { fScinCenter[2] = rotationZ; }
 
 void JPetScin::setSlot(JPetSlot& slot) { fTRefSlot = &slot; }
 
 int JPetScin::getID() const { return fID; }
 
-double JPetScin::getLength() const { return fLength; }
+float JPetScin::getLength() const { return fLength; }
 
-double JPetScin::getHeight() const { return fHeight; }
+float JPetScin::getHeight() const { return fHeight; }
 
-double JPetScin::getWidth() const { return fWidth; }
+float JPetScin::getWidth() const { return fWidth; }
 
 TVector3 JPetScin::getCenter() const { return fScinCenter; }
 
-double JPetScin::getCenterX() const { return fScinCenter.X(); }
+float JPetScin::getCenterX() const { return fScinCenter.X(); }
 
-double JPetScin::getCenterY() const { return fScinCenter.Y(); }
+float JPetScin::getCenterY() const { return fScinCenter.Y(); }
 
-double JPetScin::getCenterZ() const { return fScinCenter.Z(); }
+float JPetScin::getCenterZ() const { return fScinCenter.Z(); }
 
 TVector3 JPetScin::getRotation() const { return fScinRotation; }
 
-double JPetScin::getRotationX() const { return fScinRotation.X(); }
+float JPetScin::getRotationX() const { return fScinRotation.X(); }
 
-double JPetScin::getRotationY() const { return fScinRotation.Y(); }
+float JPetScin::getRotationY() const { return fScinRotation.Y(); }
 
-double JPetScin::getRotationZ() const { return fScinRotation.Z(); }
+float JPetScin::getRotationZ() const { return fScinRotation.Z(); }
 
 const JPetSlot& JPetScin::getSlot() const
 {

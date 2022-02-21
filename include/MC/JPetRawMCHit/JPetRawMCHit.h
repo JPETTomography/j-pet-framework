@@ -34,9 +34,9 @@ public:
   int getGammaTag() const;
   void setMCDecayTreeIndex(int decayTreeIndex);
   void setMCVtxIndex(int vertexIndex);
-  void setPolarization(double polX, double polY, double polZ);
+  void setPolarization(float polX, float polY, float polZ);
   void setPolarization(const TVector3& polarization);
-  void setMomentum(double momX, double momY, double momZ);
+  void setMomentum(float momX, float momY, float momZ);
   void setMomentum(const TVector3& momentum);
   void setGammaTag(int i);
   void Clear(Option_t*) override;

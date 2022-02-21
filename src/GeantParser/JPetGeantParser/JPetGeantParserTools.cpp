@@ -19,7 +19,7 @@
 
 using namespace std;
 
-JPetRawMCHit JPetGeantParserTools::createJPetRawMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank)
+JPetRawMCHit JPetGeantParserTools::createJPetRawMCHit(const JPetGeantScinHits* geantHit, const JPetParamBank& paramBank)
 {
   JPetRawMCHit mcHit;
   mcHit.setMCDecayTreeIndex(0);
@@ -34,7 +34,7 @@ JPetRawMCHit JPetGeantParserTools::createJPetRawMCHit(JPetGeantScinHits* geantHi
   return mcHit;
 }
 
-JPetMCRecoHit JPetGeantParserTools::reconstructHit(JPetRawMCHit& mcHit, const double timeShift, JPetHitExperimentalParametrizer& parametrizer)
+JPetMCRecoHit JPetGeantParserTools::reconstructHit(const JPetRawMCHit& mcHit, const double timeShift, JPetHitExperimentalParametrizer& parametrizer)
 {
   auto time = mcHit.getTime() + timeShift;
 
@@ -48,10 +48,14 @@ JPetMCRecoHit JPetGeantParserTools::reconstructHit(JPetRawMCHit& mcHit, const do
   return recoHit;
 }
 
-bool JPetGeantParserTools::isHitReconstructed(JPetMCRecoHit& recoHit, const double energyThreshold) { return recoHit.getEnergy() >= energyThreshold; }
+bool JPetGeantParserTools::isHitReconstructed(const JPetMCRecoHit& recoHit, const double energyThreshold)
+{
+  return recoHit.getEnergy() >= energyThreshold;
+}
 
-void JPetGeantParserTools::identifyRecoHits(JPetGeantScinHits* geantHit, const JPetMCRecoHit& recoHit, bool& isRecPrompt, array<bool, 2>& isSaved2g,
-                                            array<bool, 3>& isSaved3g, double& enePrompt, array<double, 2>& ene2g, array<double, 3>& ene3g)
+void JPetGeantParserTools::identifyRecoHits(const JPetGeantScinHits* geantHit, const JPetMCRecoHit& recoHit, bool& isRecPrompt,
+                                            array<bool, 2>& isSaved2g, array<bool, 3>& isSaved3g, double& enePrompt, array<double, 2>& ene2g,
+                                            array<double, 3>& ene3g)
 {
   if (geantHit->GetGenGammaMultiplicity() == 1)
   {

@@ -40,17 +40,17 @@ public:
   JPetPMSignal(const int points = 4);
   virtual ~JPetPMSignal();
   bool addLeadTrailPair(const JPetChannelSignal& lead, const JPetChannelSignal& trail);
-  void setToT(double tot);
+  void setToT(float tot);
   void setPM(const JPetPM& pm);
   std::vector<std::pair<JPetChannelSignal, JPetChannelSignal>>
   getLeadTrailPairs(JPetPMSignal::PointsSortOrder order = JPetPMSignal::ByThrValue) const;
-  double getToT() const;
+  float getToT() const;
   const JPetPM& getPM() const;
   void Clear(Option_t*) override;
 
 private:
   std::vector<std::pair<JPetChannelSignal, JPetChannelSignal>> fLeadTrailPairs;
-  double fToT = 0.0;
+  float fToT = 0.0;
   TRef fPM = nullptr;
 
   ClassDef(JPetPMSignal, 1);

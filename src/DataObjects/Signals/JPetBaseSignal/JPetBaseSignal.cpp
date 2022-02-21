@@ -21,13 +21,13 @@ JPetBaseSignal::JPetBaseSignal() : TObject(), fTime(0.0) {}
 
 JPetBaseSignal::JPetBaseSignal(bool isNull) : fIsNullObject(isNull) {}
 
-JPetBaseSignal::JPetBaseSignal(double time) : TObject(), fTime(time) {}
+JPetBaseSignal::JPetBaseSignal(float time) : TObject(), fTime(time) {}
 
 JPetBaseSignal::~JPetBaseSignal() {}
 
-void JPetBaseSignal::setTime(double time) { fTime = time; }
+void JPetBaseSignal::setTime(float time) { fTime = time; }
 
-const double JPetBaseSignal::getTime() const { return fTime; }
+const float JPetBaseSignal::getTime() const { return fTime; }
 
 bool JPetBaseSignal::isNullObject() const { return fIsNullObject; }
 

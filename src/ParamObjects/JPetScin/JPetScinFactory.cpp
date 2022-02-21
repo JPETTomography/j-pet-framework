@@ -52,15 +52,15 @@ JPetScin* JPetScinFactory::build(ParamObjectDescription data)
   try
   {
     int id = boost::lexical_cast<int>(data.at("id"));
-    double length = boost::lexical_cast<double>(data.at("length"));
-    double height = boost::lexical_cast<double>(data.at("height"));
-    double width = boost::lexical_cast<double>(data.at("width"));
-    double centerX = boost::lexical_cast<double>(data.at("xcenter"));
-    double centerY = boost::lexical_cast<double>(data.at("ycenter"));
-    double centerZ = boost::lexical_cast<double>(data.at("zcenter"));
-    double rotX = boost::lexical_cast<double>(data.at("rot_x"));
-    double rotY = boost::lexical_cast<double>(data.at("rot_y"));
-    double rotZ = boost::lexical_cast<double>(data.at("rot_z"));
+    float length = boost::lexical_cast<float>(data.at("length"));
+    float height = boost::lexical_cast<float>(data.at("height"));
+    float width = boost::lexical_cast<float>(data.at("width"));
+    float centerX = boost::lexical_cast<float>(data.at("xcenter"));
+    float centerY = boost::lexical_cast<float>(data.at("ycenter"));
+    float centerZ = boost::lexical_cast<float>(data.at("zcenter"));
+    float rotX = boost::lexical_cast<float>(data.at("rot_x"));
+    float rotY = boost::lexical_cast<float>(data.at("rot_y"));
+    float rotZ = boost::lexical_cast<float>(data.at("rot_z"));
     return new JPetScin(id, length, height, width, centerX, centerY, centerZ, rotX, rotY, rotZ);
   }
   catch (const std::exception& e)

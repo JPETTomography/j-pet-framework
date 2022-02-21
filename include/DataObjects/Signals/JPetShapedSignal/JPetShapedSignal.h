@@ -24,9 +24,9 @@
 struct shapePoint
 {
   shapePoint() : time(0), amplitude(0){};
-  shapePoint(double t, double a) : time(t), amplitude(a){};
-  double time;
-  double amplitude;
+  shapePoint(float t, float a) : time(t), amplitude(a){};
+  float time;
+  float amplitude;
 };
 
 /**
@@ -56,7 +56,7 @@ public:
    */
   const std::vector<shapePoint>& getShape() const { return fShape; };
 
-  void setShapePoint(double time, double ampl);
+  void setShapePoint(float time, float ampl);
   void sortShapePoints(PointsSortOrder order = ByTime);
 
   /**
@@ -64,7 +64,7 @@ public:
    *
    * @return signal amplitude in [mV]
    */
-  double getAmplitude() const { return fAmplitude; }
+  float getAmplitude() const { return fAmplitude; }
 
   /**
    * @brief Get calculated amplitude of the signal
@@ -73,37 +73,37 @@ public:
    *
 
    */
-  void setAmplitude(double amplitude) { fAmplitude = amplitude; }
+  void setAmplitude(float amplitude) { fAmplitude = amplitude; }
 
   /**
    * Get the calculated charge of the singal
    */
-  double getCharge() const { return fCharge; }
+  float getCharge() const { return fCharge; }
 
   /**
    * Set the calculated charge of the singal
    */
-  void setCharge(double charge) { fCharge = charge; }
+  void setCharge(float charge) { fCharge = charge; }
 
   /**
    * Get the signal delay in [ps]
    */
-  double getDelay() const { return fDelay; }
+  float getDelay() const { return fDelay; }
 
   /**
    * Set the signal delay in [ps]
    */
-  void setDelay(double delay) { fDelay = delay; }
+  void setDelay(float delay) { fDelay = delay; }
 
   /**
    * Get the signal offset in [mV]
    */
-  double getOffset() const { return fOffset; }
+  float getOffset() const { return fOffset; }
 
   /**
    * Set the signal offset in [mV]
    */
-  void setOffset(double offset) { fOffset = offset; }
+  void setOffset(float offset) { fOffset = offset; }
 
   const JPetPM& getPM() const;
   void setPM(const JPetPM& pm);
@@ -125,7 +125,7 @@ public:
    *
    * @return map of (threshold[mV], time[ps]) pairs for reconstructed times at arbitrary thresholds
    */
-  std::map<double, double>& getRecoTimesAtThreshold() { return fRecoTimesAtThreshold; }
+  std::map<float, float>& getRecoTimesAtThreshold() { return fRecoTimesAtThreshold; }
 
   /**
    * @brief Set the reconstructed time at an arbitrary threshold
@@ -142,7 +142,7 @@ public:
    * if threshold < 1, it means a fraction of the signal (in the constant-fraction sense)
    * if threshold > 1, it means an absolute value of the threshold in miliVolts
    */
-  void setRecoTimeAtThreshold(double threshold, double time) { fRecoTimesAtThreshold[threshold] = time; }
+  void setRecoTimeAtThreshold(float threshold, float time) { fRecoTimesAtThreshold[threshold] = time; }
 
   /**
    * @brief Get the reconstructed time at an arbitrary threshold
@@ -156,20 +156,20 @@ public:
    *
    * @return time at threshold in [ps], or 0 if time for the given threshold was not set.
    */
-  double getRecoTimeAtThreshold(double threshold) const { return const_cast<std::map<double, double>&>(fRecoTimesAtThreshold)[threshold]; }
+  float getRecoTimeAtThreshold(float threshold) const { return const_cast<std::map<float, float>&>(fRecoTimesAtThreshold)[threshold]; }
 
   void Clear(Option_t*) override;
 
 private:
   static bool compareShapePointsTime(const shapePoint& a, const shapePoint& b);
   static bool compareShapePointsAmpl(const shapePoint& a, const shapePoint& b);
-  std::map<double, double> fRecoTimesAtThreshold;
+  std::map<float, float> fRecoTimesAtThreshold;
   std::vector<shapePoint> fShape;
   TRef fPM = nullptr;
-  double fDelay = 0.0;
-  double fAmplitude = 0.0;
-  double fOffset = 0.0;
-  double fCharge = 0.0;
+  float fDelay = 0.0;
+  float fAmplitude = 0.0;
+  float fOffset = 0.0;
+  float fCharge = 0.0;
 
   ClassDef(JPetShapedSignal, 1);
 };

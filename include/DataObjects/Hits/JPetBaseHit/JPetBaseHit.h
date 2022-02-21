@@ -32,31 +32,31 @@ class JPetBaseHit : public TObject
 {
 public:
   JPetBaseHit();
-  JPetBaseHit(double time, double energy, TVector3& position);
-  JPetBaseHit(double time, double energy, TVector3& position, JPetScin& scin);
+  JPetBaseHit(float time, float energy, const TVector3& position);
+  JPetBaseHit(float time, float energy, const TVector3& position, JPetScin& scin);
   virtual ~JPetBaseHit();
-  double getTime() const;
-  double getEnergy() const;
-  double getPosX() const;
-  double getPosY() const;
-  double getPosZ() const;
-  double getPos(int index) const;
+  float getTime() const;
+  float getEnergy() const;
+  float getPosX() const;
+  float getPosY() const;
+  float getPosZ() const;
+  float getPos(int index) const;
   const TVector3& getPos() const;
   const JPetScin& getScin() const;
-  void setTime(double time);
-  void setEnergy(double energy);
-  void setPosX(double x);
-  void setPosY(double y);
-  void setPosZ(double z);
-  void setPos(double x, double y, double z);
+  void setTime(float time);
+  void setEnergy(float energy);
+  void setPosX(float x);
+  void setPosY(float y);
+  void setPosZ(float z);
+  void setPos(float x, float y, float z);
   void setPos(const TVector3& position);
   void setScin(JPetScin& scin);
   void Clear(Option_t*) override;
   static JPetBaseHit& getDummyResult();
 
 protected:
-  double fTime = 0.0;
-  double fEnergy = 0.0;
+  float fTime = 0.0;
+  float fEnergy = 0.0;
   TVector3 fPos;
   TRef fScin = nullptr;
 

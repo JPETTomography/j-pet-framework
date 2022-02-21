@@ -20,7 +20,7 @@ ClassImp(JPetChannel);
 
 JPetChannel::JPetChannel() { SetName("JPetChannel"); }
 
-JPetChannel::JPetChannel(int id, int thrNum, double thrVal) : fID(id), fThresholdNumber(thrNum), fThresholdValue(thrVal)
+JPetChannel::JPetChannel(int id, int thrNum, float thrVal) : fID(id), fThresholdNumber(thrNum), fThresholdValue(thrVal)
 {
   if (id < 0)
   {
@@ -47,7 +47,7 @@ void JPetChannel::setID(int id) { fID = id; }
 
 void JPetChannel::setThresholdNumber(int thrNum) { fThresholdNumber = thrNum; }
 
-void JPetChannel::setThresholdValue(double thrVal) { fThresholdValue = thrVal; }
+void JPetChannel::setThresholdValue(float thrVal) { fThresholdValue = thrVal; }
 
 void JPetChannel::setPM(JPetPM& pm) { fTRefPM = &pm; }
 
@@ -55,7 +55,7 @@ const int JPetChannel::getID() const { return fID; }
 
 int JPetChannel::getThresholdNumber() const { return fThresholdNumber; }
 
-double JPetChannel::getThresholdValue() const { return fThresholdValue; }
+float JPetChannel::getThresholdValue() const { return fThresholdValue; }
 
 const JPetPM& JPetChannel::getPM() const
 {

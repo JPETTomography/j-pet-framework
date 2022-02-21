@@ -41,25 +41,25 @@ public:
   JPetPhysRecoHit();
   virtual ~JPetPhysRecoHit();
 
-  void setTimeDiff(double timeDiff);
-  void setToT(double tot);
+  void setTimeDiff(float timeDiff);
+  void setToT(float tot);
 
-  void setQualityOfTime(double qualityOfTime);
-  void setQualityOfTimeDiff(double qualityOfTimeDiff);
-  void setQualityOfEnergy(double qualityOfEnergy);
-  void setQualityOfToT(double qualityOfToT);
+  void setQualityOfTime(float qualityOfTime);
+  void setQualityOfTimeDiff(float qualityOfTimeDiff);
+  void setQualityOfEnergy(float qualityOfEnergy);
+  void setQualityOfToT(float qualityOfToT);
 
   void setSignals(const JPetMatrixSignal& sigA, const JPetMatrixSignal& sigB);
   void setSignalA(const JPetMatrixSignal& sig);
   void setSignalB(const JPetMatrixSignal& sig);
 
-  double getTimeDiff() const;
-  double getToT() const;
+  float getTimeDiff() const;
+  float getToT() const;
 
-  double getQualityOfTime() const;
-  double getQualityOfTimeDiff() const;
-  double getQualityOfEnergy() const;
-  double getQualityOfToT() const;
+  float getQualityOfTime() const;
+  float getQualityOfTimeDiff() const;
+  float getQualityOfEnergy() const;
+  float getQualityOfToT() const;
 
   const JPetMatrixSignal& getSignal(Signal signal) const;
   const JPetMatrixSignal& getSignalA() const;
@@ -71,12 +71,12 @@ public:
   void Clear(Option_t*) override;
 
 private:
-  double fTimeDiff = 0.0;
-  double fToT = 0.0;
-  double fQualityOfTime = 0.0;
-  double fQualityOfTimeDiff = 0.0;
-  double fQualityOfEnergy = 0.0;
-  double fQualityOfToT = 0.0;
+  float fTimeDiff = 0.0;
+  float fToT = 0.0;
+  float fQualityOfTime = 0.0;
+  float fQualityOfTimeDiff = 0.0;
+  float fQualityOfEnergy = 0.0;
+  float fQualityOfToT = 0.0;
   bool fIsSignalAset = false;
   bool fIsSignalBset = false;
   JPetMatrixSignal fSignalA;

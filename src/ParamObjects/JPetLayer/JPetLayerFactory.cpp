@@ -54,7 +54,7 @@ JPetLayer* JPetLayerFactory::build(ParamObjectDescription data)
   {
     int id = boost::lexical_cast<int>(data.at("id"));
     std::string name = data.at("name");
-    double radius = boost::lexical_cast<double>(data.at("radius"));
+    float radius = boost::lexical_cast<float>(data.at("radius"));
     return new JPetLayer(id, name, radius);
   }
   catch (const std::exception& e)

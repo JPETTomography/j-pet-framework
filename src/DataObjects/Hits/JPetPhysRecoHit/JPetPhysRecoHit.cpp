@@ -22,17 +22,17 @@ JPetPhysRecoHit::JPetPhysRecoHit() : JPetRecoHit() {}
 
 JPetPhysRecoHit::~JPetPhysRecoHit() {}
 
-void JPetPhysRecoHit::setTimeDiff(double timeDiff) { fTimeDiff = timeDiff; }
+void JPetPhysRecoHit::setTimeDiff(float timeDiff) { fTimeDiff = timeDiff; }
 
-void JPetPhysRecoHit::setToT(double tot) { fToT = tot; }
+void JPetPhysRecoHit::setToT(float tot) { fToT = tot; }
 
-void JPetPhysRecoHit::setQualityOfTime(double qualityOfTime) { fQualityOfTime = qualityOfTime; }
+void JPetPhysRecoHit::setQualityOfTime(float qualityOfTime) { fQualityOfTime = qualityOfTime; }
 
-void JPetPhysRecoHit::setQualityOfTimeDiff(double qualityOfTimeDiff) { fQualityOfTimeDiff = qualityOfTimeDiff; }
+void JPetPhysRecoHit::setQualityOfTimeDiff(float qualityOfTimeDiff) { fQualityOfTimeDiff = qualityOfTimeDiff; }
 
-void JPetPhysRecoHit::setQualityOfEnergy(double qualityOfEnergy) { fQualityOfEnergy = qualityOfEnergy; }
+void JPetPhysRecoHit::setQualityOfEnergy(float qualityOfEnergy) { fQualityOfEnergy = qualityOfEnergy; }
 
-void JPetPhysRecoHit::setQualityOfToT(double qualityOfToT) { fQualityOfToT = qualityOfToT; }
+void JPetPhysRecoHit::setQualityOfToT(float qualityOfToT) { fQualityOfToT = qualityOfToT; }
 
 /**
  * Set both signals for this hit
@@ -60,17 +60,17 @@ void JPetPhysRecoHit::setSignalB(const JPetMatrixSignal& sig)
   checkConsistency();
 }
 
-double JPetPhysRecoHit::getTimeDiff() const { return fTimeDiff; }
+float JPetPhysRecoHit::getTimeDiff() const { return fTimeDiff; }
 
-double JPetPhysRecoHit::getToT() const { return fToT; }
+float JPetPhysRecoHit::getToT() const { return fToT; }
 
-double JPetPhysRecoHit::getQualityOfTime() const { return fQualityOfTime; }
+float JPetPhysRecoHit::getQualityOfTime() const { return fQualityOfTime; }
 
-double JPetPhysRecoHit::getQualityOfTimeDiff() const { return fQualityOfTimeDiff; }
+float JPetPhysRecoHit::getQualityOfTimeDiff() const { return fQualityOfTimeDiff; }
 
-double JPetPhysRecoHit::getQualityOfEnergy() const { return fQualityOfEnergy; }
+float JPetPhysRecoHit::getQualityOfEnergy() const { return fQualityOfEnergy; }
 
-double JPetPhysRecoHit::getQualityOfToT() const { return fQualityOfToT; }
+float JPetPhysRecoHit::getQualityOfToT() const { return fQualityOfToT; }
 
 /**
  * Get one of the signals, that construct this hit, from the side A or B

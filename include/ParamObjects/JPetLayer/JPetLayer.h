@@ -31,17 +31,17 @@ class JPetLayer : public TNamed
 {
 public:
   JPetLayer();
-  JPetLayer(int id, std::string name, double radius);
+  JPetLayer(int id, std::string name, float radius);
   JPetLayer(const JPetLayer& layer);
   explicit JPetLayer(bool isNull);
   virtual ~JPetLayer();
   void setID(int id);
   void setName(std::string name);
-  void setRaduis(double radius);
+  void setRaduis(float radius);
   void setSetup(JPetSetup& setup);
   int getID() const;
   std::string getName() const;
-  double getRadius() const;
+  float getRadius() const;
   const JPetSetup& getSetup() const;
   bool operator==(const JPetLayer& layer) const;
   bool operator!=(const JPetLayer& layer) const;
@@ -51,7 +51,7 @@ public:
 protected:
   int fID = -1;
   std::string fName = "";
-  double fRadius = -1.0;
+  float fRadius = -1.0;
   bool fIsNullObject = false;
   TRef fTRefSetup = nullptr;
   void clearTRefSetup();

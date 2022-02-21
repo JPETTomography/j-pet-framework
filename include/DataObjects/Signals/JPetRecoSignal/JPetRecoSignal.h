@@ -34,8 +34,8 @@ public:
 
   JPetRecoSignal();
   explicit JPetRecoSignal(JPetRecoSignal::RecoFlag flag);
-  explicit JPetRecoSignal(double time);
-  JPetRecoSignal(JPetRecoSignal::RecoFlag flag, double time);
+  explicit JPetRecoSignal(float time);
+  JPetRecoSignal(JPetRecoSignal::RecoFlag flag, float time);
   virtual ~JPetRecoSignal();
   void setRecoFlag(JPetRecoSignal::RecoFlag flag);
   JPetRecoSignal::RecoFlag getRecoFlag() const;

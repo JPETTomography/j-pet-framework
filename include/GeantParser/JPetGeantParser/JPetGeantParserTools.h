@@ -33,13 +33,13 @@
 class JPetGeantParserTools
 {
 public:
-  static JPetRawMCHit createJPetRawMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank);
+  static JPetRawMCHit createJPetRawMCHit(const JPetGeantScinHits* geantHit, const JPetParamBank& paramBank);
 
-  static JPetMCRecoHit reconstructHit(JPetRawMCHit& hit, const double timeShift, JPetHitExperimentalParametrizer& parametrizer);
+  static JPetMCRecoHit reconstructHit(const JPetRawMCHit& hit, const double timeShift, JPetHitExperimentalParametrizer& parametrizer);
 
-  static bool isHitReconstructed(JPetMCRecoHit& hit, const double th);
+  static bool isHitReconstructed(const JPetMCRecoHit& hit, const double th);
 
-  static void identifyRecoHits(JPetGeantScinHits* geantHit, const JPetMCRecoHit& recoHit, bool& isRecPrompt, std::array<bool, 2>& isSaved2g,
+  static void identifyRecoHits(const JPetGeantScinHits* geantHit, const JPetMCRecoHit& recoHit, bool& isRecPrompt, std::array<bool, 2>& isSaved2g,
                                std::array<bool, 3>& isSaved3g, double& enePrompt, std::array<double, 2>& ene2g, std::array<double, 3>& ene3g);
   static double estimateNextDecayTimeExp(double activityMBq);
   static std::tuple<std::vector<double>, std::vector<double>> getTimeDistoOfDecays(double activityMBq, double timeWindowMin, double timeWindowMax);

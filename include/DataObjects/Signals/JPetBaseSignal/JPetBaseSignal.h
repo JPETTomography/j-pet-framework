@@ -28,17 +28,17 @@ class JPetBaseSignal : public TObject
 public:
   JPetBaseSignal();
   explicit JPetBaseSignal(bool isNull);
-  explicit JPetBaseSignal(double time);
+  explicit JPetBaseSignal(float time);
   virtual ~JPetBaseSignal();
-  void setTime(double time);
-  const double getTime() const;
+  void setTime(float time);
+  const float getTime() const;
   bool isNullObject() const;
   static JPetBaseSignal& getDummyResult();
   void Clear(Option_t*) override;
 
 protected:
   bool fIsNullObject = false;
-  double fTime = 0.0;
+  float fTime = 0.0;
 
   ClassDef(JPetBaseSignal, 6);
 };

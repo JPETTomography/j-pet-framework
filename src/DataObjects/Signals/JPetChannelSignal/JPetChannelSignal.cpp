@@ -20,9 +20,9 @@ ClassImp(JPetChannelSignal);
 
 JPetChannelSignal::JPetChannelSignal() : JPetRecoSignal(), fEdge(JPetChannelSignal::Leading) {}
 
-JPetChannelSignal::JPetChannelSignal(EdgeType edge, double time) : JPetRecoSignal(JPetRecoSignal::Unknown, time), fEdge(edge) {}
+JPetChannelSignal::JPetChannelSignal(EdgeType edge, float time) : JPetRecoSignal(JPetRecoSignal::Unknown, time), fEdge(edge) {}
 
-JPetChannelSignal::JPetChannelSignal(JPetRecoSignal::RecoFlag flag, EdgeType edge, double time) : JPetRecoSignal(flag, time), fEdge(edge) {}
+JPetChannelSignal::JPetChannelSignal(JPetRecoSignal::RecoFlag flag, EdgeType edge, float time) : JPetRecoSignal(flag, time), fEdge(edge) {}
 
 JPetChannelSignal::~JPetChannelSignal() {}
 

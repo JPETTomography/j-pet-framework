@@ -19,24 +19,24 @@ ClassImp(JPetPhysSignal);
 
 JPetPhysSignal::JPetPhysSignal() : JPetRecoSignal(), fQualityOfTime(0.0), fPhe(0.0), fQualityOfPhe(0.0) {}
 
-JPetPhysSignal::JPetPhysSignal(double time, double qTime, double phe, double qPhe)
+JPetPhysSignal::JPetPhysSignal(float time, float qTime, float phe, float qPhe)
     : JPetRecoSignal(time), fQualityOfTime(qTime), fPhe(phe), fQualityOfPhe(qPhe)
 {
 }
 
 JPetPhysSignal::~JPetPhysSignal() {}
 
-void JPetPhysSignal::setQualityOfTime(double qualityOfTime) { fQualityOfTime = qualityOfTime; }
+void JPetPhysSignal::setQualityOfTime(float qualityOfTime) { fQualityOfTime = qualityOfTime; }
 
-void JPetPhysSignal::setPhe(double phe) { fPhe = phe; }
+void JPetPhysSignal::setPhe(float phe) { fPhe = phe; }
 
-void JPetPhysSignal::setQualityOfPhe(double qualityOfPhe) { fQualityOfPhe = qualityOfPhe; }
+void JPetPhysSignal::setQualityOfPhe(float qualityOfPhe) { fQualityOfPhe = qualityOfPhe; }
 
-double JPetPhysSignal::getQualityOfTime() const { return fQualityOfTime; }
+float JPetPhysSignal::getQualityOfTime() const { return fQualityOfTime; }
 
-double JPetPhysSignal::getPhe() const { return fPhe; }
+float JPetPhysSignal::getPhe() const { return fPhe; }
 
-double JPetPhysSignal::getQualityOfPhe() const { return fQualityOfPhe; }
+float JPetPhysSignal::getQualityOfPhe() const { return fQualityOfPhe; }
 
 void JPetPhysSignal::Clear(Option_t*)
 {

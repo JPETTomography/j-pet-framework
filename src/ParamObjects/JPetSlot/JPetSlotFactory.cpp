@@ -53,7 +53,7 @@ JPetSlot* JPetSlotFactory::build(ParamObjectDescription data)
   try
   {
     int id = boost::lexical_cast<int>(data.at("id"));
-    double theta = boost::lexical_cast<double>(data.at("theta"));
+    float theta = boost::lexical_cast<float>(data.at("theta"));
     std::string typeStr = boost::lexical_cast<std::string>(data.at("type"));
     JPetSlot::Type type = JPetSlot::Barrel;
     if (typeStr == "module")

@@ -57,7 +57,7 @@ bool JPetPMSignal::addLeadTrailPair(const JPetChannelSignal& lead, const JPetCha
   return true;
 }
 
-void JPetPMSignal::setToT(double tot) { fToT = tot; }
+void JPetPMSignal::setToT(float tot) { fToT = tot; }
 
 void JPetPMSignal::setPM(const JPetPM& pm) { fPM = const_cast<JPetPM*>(&pm); }
 
@@ -75,7 +75,7 @@ vector<pair<JPetChannelSignal, JPetChannelSignal>> JPetPMSignal::getLeadTrailPai
   return sorted;
 }
 
-double JPetPMSignal::getToT() const { return fToT; }
+float JPetPMSignal::getToT() const { return fToT; }
 
 const JPetPM& JPetPMSignal::getPM() const
 {

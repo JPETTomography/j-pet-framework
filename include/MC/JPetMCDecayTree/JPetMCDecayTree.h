@@ -28,10 +28,10 @@ public:
   JPetMCDecayTree();
 
 private:
-  int fMCMCDecayTreeIndex = 0;
-  int fMCVtxIndex = 0;
-  int fnVertices = 0;
-  int fnTracks = 0;
+  UInt_t fMCMCDecayTreeIndex = 0;
+  UInt_t fMCVtxIndex = 0;
+  UInt_t fnVertices = 0;
+  UInt_t fnTracks = 0;
   // add also track and vertices structures
 
   ClassDef(JPetMCDecayTree, 2);
