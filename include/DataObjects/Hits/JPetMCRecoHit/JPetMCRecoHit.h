@@ -30,6 +30,7 @@ public:
   JPetMCRecoHit();
   explicit JPetMCRecoHit(int mcIndex);
   virtual ~JPetMCRecoHit();
+  virtual JPetMCRecoHit* clone() const override;
   unsigned int getMCindex() const;
   void setMCindex(unsigned int i);
   void Clear(Option_t*) override;

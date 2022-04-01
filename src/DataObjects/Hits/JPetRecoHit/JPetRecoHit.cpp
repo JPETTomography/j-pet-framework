@@ -23,6 +23,8 @@ JPetRecoHit::JPetRecoHit(JPetRecoHit::RecoFlag flag) : JPetBaseHit(), fFlag(flag
 
 JPetRecoHit::~JPetRecoHit() {}
 
+JPetRecoHit* JPetRecoHit::clone() const { return new JPetRecoHit(*this); }
+
 JPetRecoHit::RecoFlag JPetRecoHit::getRecoFlag() const { return fFlag; }
 
 void JPetRecoHit::setRecoFlag(JPetRecoHit::RecoFlag flag) { fFlag = flag; }
