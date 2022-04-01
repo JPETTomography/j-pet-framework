@@ -41,6 +41,7 @@ public:
   JPetRecoHit();
   explicit JPetRecoHit(JPetRecoHit::RecoFlag flag);
   virtual ~JPetRecoHit();
+  virtual JPetRecoHit* clone() const override;
   JPetRecoHit::RecoFlag getRecoFlag() const;
   void setRecoFlag(JPetRecoHit::RecoFlag flag);
   void Clear(Option_t*) override;

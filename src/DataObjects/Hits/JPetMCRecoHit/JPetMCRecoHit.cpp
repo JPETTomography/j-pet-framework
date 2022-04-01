@@ -23,6 +23,8 @@ JPetMCRecoHit::JPetMCRecoHit(int mcIndex) : JPetRecoHit(JPetRecoHit::MC), fMCind
 
 JPetMCRecoHit::~JPetMCRecoHit() {}
 
+JPetMCRecoHit* JPetMCRecoHit::clone() const { return new JPetMCRecoHit(*this); }
+
 unsigned int JPetMCRecoHit::getMCindex() const { return fMCindex; }
 
 void JPetMCRecoHit::setMCindex(unsigned int i) { fMCindex = i; }

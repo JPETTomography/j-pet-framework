@@ -27,6 +27,8 @@ JPetBaseHit::JPetBaseHit(double time, double energy, TVector3& position, JPetSci
 {
 }
 
+JPetBaseHit* JPetBaseHit::clone() const { return new JPetBaseHit(*this); }
+
 JPetBaseHit::~JPetBaseHit() {}
 
 /**

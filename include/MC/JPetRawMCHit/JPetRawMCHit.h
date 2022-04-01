@@ -27,6 +27,7 @@ class JPetRawMCHit : public JPetBaseHit
 {
 public:
   JPetRawMCHit();
+  virtual JPetRawMCHit* clone() const override;
   int getMCDecayTreeIndex() const;
   int getMCVtxIndex() const;
   const TVector3& getPolarization() const;

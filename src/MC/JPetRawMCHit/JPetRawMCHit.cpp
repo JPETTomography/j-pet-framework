@@ -20,6 +20,8 @@ ClassImp(JPetRawMCHit);
 
 JPetRawMCHit::JPetRawMCHit() : JPetBaseHit() {}
 
+JPetRawMCHit* JPetRawMCHit::clone() const { return new JPetRawMCHit(*this); }
+
 int JPetRawMCHit::getMCDecayTreeIndex() const { return fMCDecayTreeIndex; }
 
 int JPetRawMCHit::getMCVtxIndex() const { return fMCVtxIndex; }
