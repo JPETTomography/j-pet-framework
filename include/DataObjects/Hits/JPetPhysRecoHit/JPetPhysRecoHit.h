@@ -40,6 +40,7 @@ public:
   };
   JPetPhysRecoHit();
   virtual ~JPetPhysRecoHit();
+  virtual JPetPhysRecoHit* clone() const override;
 
   void setTimeDiff(double timeDiff);
   void setToT(double tot);

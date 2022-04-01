@@ -37,22 +37,25 @@ void JPetEvent::setHits(const std::vector<const JPetBaseHit*>& hits, bool ordere
 {
   if (orderedByTime)
   {
+    ///@TODO add unique_ptrs and move in JPetAnalysisTools or normal vectors
     fHits = JPetAnalysisTools::getHitsOrderedByTime(hits);
   }
   else
   {
-    fHits = hits;
+    std::transform(hits.begin(), hits.end(), std::back_inserter(fHits), [](auto& item) { return item->clone(); });
   }
 }
 
 /**
  * Adding hit to the event, this method does not sort nor order added hits by time.
+ * The hit object is actually copied.
  */
-void JPetEvent::addHit(const JPetBaseHit* hit) { fHits.push_back(hit); }
+void JPetEvent::addHit(const JPetBaseHit* hit) { fHits.push_back(hit->clone()); }
 
 /**
  * Get vector of hits from this event.
  */
+/// WK: is it event save?
 const std::vector<const JPetBaseHit*>& JPetEvent::getHits() const { return fHits; }
 
 /**

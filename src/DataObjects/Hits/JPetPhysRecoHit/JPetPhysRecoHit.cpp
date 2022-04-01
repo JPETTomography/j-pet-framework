@@ -22,6 +22,8 @@ JPetPhysRecoHit::JPetPhysRecoHit() : JPetRecoHit() {}
 
 JPetPhysRecoHit::~JPetPhysRecoHit() {}
 
+JPetPhysRecoHit* JPetPhysRecoHit::clone() const { return new JPetPhysRecoHit(*this); }
+
 void JPetPhysRecoHit::setTimeDiff(double timeDiff) { fTimeDiff = timeDiff; }
 
 void JPetPhysRecoHit::setToT(double tot) { fToT = tot; }
