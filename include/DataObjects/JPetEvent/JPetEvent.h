@@ -53,6 +53,8 @@ public:
 
   JPetEvent();
   JPetEvent(const std::vector<const JPetBaseHit*>& hits, JPetEventType eventType = JPetEventType::kUnknown, bool orderedByTime = true);
+  ///@TODO add move and = operators and virtual disestructor (rule of five!)
+  JPetEvent(const JPetEvent& other);
   JPetEvent::RecoFlag getRecoFlag() const;
   const std::vector<const JPetBaseHit*>& getHits() const;
   void setRecoFlag(JPetEvent::RecoFlag flag);
