@@ -18,7 +18,7 @@ endif()
 # MAJOR version when you make incompatible API changes,
 # MINOR version when you add functionality in a backwards-compatible manner, and
 # PATCH version when you make backwards-compatible bug fixes.
-project(JPetFramework VERSION 9.0.0 LANGUAGES CXX)
+project(JPetFramework VERSION 10.0.0 LANGUAGES CXX)
 set(PROJECT_DESCRIPTION "JPetFramework module")
 
 message(STATUS "")

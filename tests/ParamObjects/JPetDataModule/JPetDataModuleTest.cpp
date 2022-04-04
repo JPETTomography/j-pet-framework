@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -47,92 +47,103 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(FactorySuite)
 
-class TestParamGetter : public JPetParamGetter {
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runID) {
+class TestParamGetter : public JPetParamGetter
+{
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runID)
+  {
     ParamObjectsDescriptions result;
-    switch (type) {
-      case ParamObjectType::kDataModule:
-        switch (runID) {
-          // No layers
-          case 0:
-            break;
-          // Single object
-          case 1:
-            result = { { 1, {
-              {"id", "1"}, {"type", "LATTICE_TDC"}, {"trbnet_address", "e044"},
-              {"channels_number", "65"}, {"channels_offset", "2080"}, {"data_source_id", "1"}
-            } } };
-            break;
-            // Two objects
-            case 2:
-              result = {
-                { 1, {
-                  {"id", "1"}, {"type", "LATTE_TDC"}, {"trbnet_address", "e044"},
-                  {"channels_number", "66"}, {"channels_offset", "1000"},
-                  {"data_source_id", "1"}
-                } },
-                { 5, {
-                  {"id", "5"}, {"type", "ICE_TDC"}, {"trbnet_address", "e051"},
-                  {"channels_number", "77"}, {"channels_offset", "2000"},
-                  {"data_source_id", "1"}
-                } }
-              };
-              break;
-              // Missing field
-              case 3:
-                result = { { 1, {
-                  {"id", "1"}, {"type", "LATTICE_TDC"}, {"trbnet_address", "e044"},
-                  {"channels_number", "65"}, {"data_source_id", "1"}
-                } } };
-                break;
-              // Wrong field
-              case 4:
-                result = { { 1, {
-                  {"id", "1"}, {"type", "LATTICE_TDC"}, {"trbnet_address", "e044"},
-                  {"channels_number", "wrong"}, {"channels_offset", "2080"}, {"data_source_id", "1"}
-                } } };
-                break;
-              // Wrong relation
-              case 5:
-                result = { { 1, {
-                  {"id", "1"}, {"type", "LATTICE_TDC"}, {"trbnet_address", "e044"},
-                  {"channels_number", "65"}, {"channels_offset", "2080"}, {"data_source_id", "14"}
-                } } };
-                break;
-          default:
-            break;
-        }
-        break;
-      case ParamObjectType::kDataSource:
-        result = { { 1, {
-          {"id", "1" }, {"type", "TRB3_S"},
-          {"trbnet_address", "8040"}, {"hub_address", "8040"}
-        } } };
-        break;
-      default:
-        break;
-    }
-    return result;
-  }
-
-  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int runID) {
-    ParamRelationalData result;
-    switch (runID) {
-      // No relations
+    switch (type)
+    {
+    case ParamObjectType::kDataModule:
+      switch (runID)
+      {
+      // No layers
       case 0:
         break;
       // Single object
       case 1:
-        result = { { 1, 1 } };
+        result = {{1,
+                   {{"id", "1"},
+                    {"type", "LATTICE_TDC"},
+                    {"trbnet_address", "e044"},
+                    {"channels_number", "65"},
+                    {"channels_offset", "2080"},
+                    {"data_source_id", "1"}}}};
         break;
       // Two objects
       case 2:
-        result = { { 1, 1 }, { 5, 1 } };
+        result = {{1,
+                   {{"id", "1"},
+                    {"type", "LATTE_TDC"},
+                    {"trbnet_address", "e044"},
+                    {"channels_number", "66"},
+                    {"channels_offset", "1000"},
+                    {"data_source_id", "1"}}},
+                  {5,
+                   {{"id", "5"},
+                    {"type", "ICE_TDC"},
+                    {"trbnet_address", "e051"},
+                    {"channels_number", "77"},
+                    {"channels_offset", "2000"},
+                    {"data_source_id", "1"}}}};
+        break;
+      // Missing field
+      case 3:
+        result = {{1, {{"id", "1"}, {"type", "LATTICE_TDC"}, {"trbnet_address", "e044"}, {"channels_number", "65"}, {"data_source_id", "1"}}}};
+        break;
+      // Wrong field
+      case 4:
+        result = {{1,
+                   {{"id", "1"},
+                    {"type", "LATTICE_TDC"},
+                    {"trbnet_address", "e044"},
+                    {"channels_number", "wrong"},
+                    {"channels_offset", "2080"},
+                    {"data_source_id", "1"}}}};
         break;
       // Wrong relation
       case 5:
-        result = { { 1, 14 } };
+        result = {{1,
+                   {{"id", "1"},
+                    {"type", "LATTICE_TDC"},
+                    {"trbnet_address", "e044"},
+                    {"channels_number", "65"},
+                    {"channels_offset", "2080"},
+                    {"data_source_id", "14"}}}};
         break;
+      default:
+        break;
+      }
+      break;
+    case ParamObjectType::kDataSource:
+      result = {{1, {{"id", "1"}, {"type", "TRB3_S"}, {"trbnet_address", "8040"}, {"hub_address", "8040"}}}};
+      break;
+    default:
+      break;
+    }
+    return result;
+  }
+
+  ParamRelationalData getAllRelationalData(ParamObjectType, ParamObjectType, const int runID)
+  {
+    ParamRelationalData result;
+    switch (runID)
+    {
+    // No relations
+    case 0:
+      break;
+    // Single object
+    case 1:
+      result = {{1, 1}};
+      break;
+    // Two objects
+    case 2:
+      result = {{1, 1}, {5, 1}};
+      break;
+    // Wrong relation
+    case 5:
+      result = {{1, 14}};
+      break;
     }
     return result;
   }

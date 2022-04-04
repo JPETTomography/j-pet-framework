@@ -13,70 +13,103 @@
  *  @file JPetParamGetterAscii.cpp
  */
 
-#include "JPetParamGetterAscii/JPetParamAsciiConstants.h"
 #include "JPetParamGetterAscii/JPetParamGetterAscii.h"
-#include <boost/property_tree/json_parser.hpp>
 #include "JPetParamBank/JPetParamBank.h"
-#include <boost/lexical_cast.hpp>
+#include "JPetParamGetterAscii/JPetParamAsciiConstants.h"
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 ParamObjectsDescriptions JPetParamGetterAscii::getAllBasicData(ParamObjectType type, const int runID)
 {
   std::string runNumberS = boost::lexical_cast<std::string>(runID);
   std::string objectsName = objectsNames.at(type);
   ParamObjectsDescriptions result;
-  if (boost::filesystem::exists(fFilename)) {
+  if (boost::filesystem::exists(fFilename))
+  {
     boost::property_tree::ptree dataFromFile;
     boost::property_tree::read_json(fFilename, dataFromFile);
-    if (auto possibleRunContents = dataFromFile.get_child_optional(runNumberS)) {
+    if (auto possibleRunContents = dataFromFile.get_child_optional(runNumberS))
+    {
       auto runContents = *possibleRunContents;
-      if (auto possibleInfos = runContents.get_child_optional(objectsName)) {
-        auto infos = * possibleInfos;
-        for (auto infoRaw : infos) {
+      if (auto possibleInfos = runContents.get_child_optional(objectsName))
+      {
+        auto infos = *possibleInfos;
+        for (auto infoRaw : infos)
+        {
           auto info = infoRaw.second;
           ParamObjectDescription description = toDescription(info);
           int id = boost::lexical_cast<int>(description["id"]);
           result[id] = description;
         }
-      } else { ERROR(Form("No %s in the specified run.", objectsName.c_str())); }
-    } else { ERROR(Form("No run with such id: %i", runID)); }
-  } else { ERROR(Form("Input file does not exist: %s", fFilename.c_str())); }
+      }
+      else
+      {
+        ERROR(Form("No %s in the specified run.", objectsName.c_str()));
+      }
+    }
+    else
+    {
+      ERROR(Form("No run with such id: %i", runID));
+    }
+  }
+  else
+  {
+    ERROR(Form("Input file does not exist: %s", fFilename.c_str()));
+  }
   return result;
 }
 
-ParamRelationalData JPetParamGetterAscii::getAllRelationalData(
-  ParamObjectType type1, ParamObjectType type2, const int runID
-) {
+ParamRelationalData JPetParamGetterAscii::getAllRelationalData(ParamObjectType type1, ParamObjectType type2, const int runID)
+{
   std::string runNumberS = boost::lexical_cast<std::string>(runID);
   std::string objectsName = objectsNames.at(type1);
   std::string fieldName = objectsNames.at(type2) + "_id";
   ParamRelationalData result;
-  if (boost::filesystem::exists(fFilename)) {
+  if (boost::filesystem::exists(fFilename))
+  {
     boost::property_tree::ptree dataFromFile;
     boost::property_tree::read_json(fFilename, dataFromFile);
-    if (auto possibleRunContents = dataFromFile.get_child_optional(runNumberS)) {
+    if (auto possibleRunContents = dataFromFile.get_child_optional(runNumberS))
+    {
       auto runContents = *possibleRunContents;
-      if (auto possibleInfos = runContents.get_child_optional(objectsName)) {
-        auto infos = * possibleInfos;
-        for (auto infoRaw : infos) {
+      if (auto possibleInfos = runContents.get_child_optional(objectsName))
+      {
+        auto infos = *possibleInfos;
+        for (auto infoRaw : infos)
+        {
           auto info = infoRaw.second;
           ParamObjectDescription description = toDescription(info);
-          if (description.count(fieldName)) {
+          if (description.count(fieldName))
+          {
             int id = boost::lexical_cast<int>(description["id"]);
             int otherID = boost::lexical_cast<int>(description[fieldName]);
             result[id] = otherID;
           }
         }
-      } else { ERROR(Form("No %s in the specified run.", objectsName.c_str())); }
-    } else { ERROR(Form("No run with such id: %i", runID)); }
-  } else { ERROR(Form("Input file does not exist: %s", fFilename.c_str())); }
+      }
+      else
+      {
+        ERROR(Form("No %s in the specified run.", objectsName.c_str()));
+      }
+    }
+    else
+    {
+      ERROR(Form("No run with such id: %i", runID));
+    }
+  }
+  else
+  {
+    ERROR(Form("Input file does not exist: %s", fFilename.c_str()));
+  }
   return result;
 }
 
 ParamObjectDescription JPetParamGetterAscii::toDescription(boost::property_tree::ptree& info)
 {
   ParamObjectDescription description;
-  for (auto value : info) {
+  for (auto value : info)
+  {
     std::string val = value.second.get_value<std::string>();
     description[value.first] = val;
   }

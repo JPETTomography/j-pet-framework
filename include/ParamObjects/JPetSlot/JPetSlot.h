@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -14,7 +14,7 @@
  */
 
 #ifndef JPETSLOT_H
-#define	JPETSLOT_H
+#define JPETSLOT_H
 
 #include "JPetLayer/JPetLayer.h"
 #include <TNamed.h>
@@ -27,13 +27,17 @@
  * of the J-PET Detector. A Slot consists of one scintillator strip
  * and photomultipliers at the scintillator's ends.
  */
-class JPetSlot: public TNamed
+class JPetSlot : public TNamed
 {
 public:
-  enum Type {Barrel, Module};
+  enum Type
+  {
+    Barrel,
+    Module
+  };
   JPetSlot();
   JPetSlot(int id, float theta, JPetSlot::Type type);
-  JPetSlot(const JPetSlot &slot);
+  JPetSlot(const JPetSlot& slot);
   explicit JPetSlot(bool isNull);
   virtual ~JPetSlot();
   void setID(int id);
@@ -52,17 +56,10 @@ public:
 protected:
   void clearTRefLayer();
 
-#ifndef __CINT__
   int fID = -1;
-  float fTheta = -1.f;
+  float fTheta = -1.0;
   Type fType = Barrel;
   bool fIsNullObject = false;
-#else
-  int fID;
-  float fTheta;
-  Type fType;
-  bool fIsNullObject;
-#endif
   TRef fTRefLayer;
 
   ClassDef(JPetSlot, 1);

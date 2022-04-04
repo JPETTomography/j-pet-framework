@@ -15,8 +15,8 @@
 
 #include "JPetSimplePhysSignalReco/JPetSimplePhysSignalReco.h"
 #include "JPetSimplePhysSignalReco/HelperMathFunctions.h"
-#include <boost/property_tree/json_parser.hpp>
 #include "JPetWriter/JPetWriter.h"
+#include <boost/property_tree/json_parser.hpp>
 #include <cassert>
 #include <math.h>
 
@@ -31,36 +31,37 @@ bool JPetSimplePhysSignalReco::exec() { return true; }
 void JPetSimplePhysSignalReco::savePhysSignal(JPetPhysSignal) {}
 
 /**
- * Simple example of creating JPetPhysSignal from JPetRecoSignal
+ * Simple example of creating JPetPhysSignal from JPetPMSignal
  */
-JPetPhysSignal JPetSimplePhysSignalReco::createPhysSignal(JPetRecoSignal& recoSignal)
+JPetPhysSignal JPetSimplePhysSignalReco::createPhysSignal(const JPetPMSignal& pmSignal)
 {
   JPetPhysSignal physSignal;
-  physSignal.setPhe(recoSignal.getCharge() * 1.0 + 0.0);
+  physSignal.setPhe(1.0);
   physSignal.setQualityOfPhe(1.0);
-  double time = recoSignal.getRecoTimesAtThreshold().begin()->second;
-  JPetRawSignal rawSignal = recoSignal.getRawSignal();
 
-  if (rawSignal.getNumberOfPoints(JPetSigCh::Leading) >= 2 && rawSignal.getNumberOfPoints(JPetSigCh::Trailing) >= 2)
+  auto points = pmSignal.getLeadTrailPairs(JPetPMSignal::ByThrValue);
+  if (points.size() >= 2)
   {
-    int iNumPoints = rawSignal.getNumberOfPoints(JPetSigCh::Leading);
-    std::vector<JPetSigCh> leadingPoints = rawSignal.getPoints(JPetSigCh::Leading, JPetRawSignal::ByThrValue);
-    vector<float> vecTime(iNumPoints);
-    vector<float> vecVolt(iNumPoints);
-    for (int j = 0; j < iNumPoints; j++)
+    vector<double> vecTime(points.size());
+    vector<double> vecVolt(points.size());
+    for (unsigned int j = 0; j < points.size(); j++)
     {
-      vecTime(j) = leadingPoints.at(j).getTime();
-      vecVolt(j) = leadingPoints.at(j).getChannel().getThresholdValue();
+      vecTime(j) = points.at(j).first.getTime();
+      vecVolt(j) = points.at(j).first.getChannel().getThresholdValue();
     }
     int alfa = getAlpha();
-    float thr_sel = getThresholdSel();
+    double thr_sel = getThresholdSel();
     assert(thr_sel < 0);
     assert(alfa > 0);
-    time = static_cast<double>(polynomialFit(vecTime, vecVolt, alfa, thr_sel));
+    double time = static_cast<double>(polynomialFit(vecTime, vecVolt, alfa, thr_sel));
+    physSignal.setTime(time);
+    physSignal.setQualityOfTime(1.0);
   }
-  physSignal.setTime(time);
-  physSignal.setQualityOfTime(1.0);
-  physSignal.setRecoSignal(recoSignal);
+  else
+  {
+    physSignal.setTime(0.0);
+    physSignal.setQualityOfTime(1.0);
+  }
   return physSignal;
 }
 
@@ -71,7 +72,7 @@ void JPetSimplePhysSignalReco::readConfigFileAndSetAlphaAndThreshParams(const ch
   {
     read_json(filename, content);
     int alpha = content.get<int>("alpha");
-    float thresholdSel = content.get<float>("thresholdSel");
+    double thresholdSel = content.get<double>("thresholdSel");
     setAlpha(alpha);
     setThresholdSel(thresholdSel);
   }

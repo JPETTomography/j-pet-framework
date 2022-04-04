@@ -16,7 +16,7 @@
 #ifndef JPETRAWMCHIT_H
 #define JPETRAWMCHIT_H
 
-#include "JPetBaseHit/JPetBaseHit.h"
+#include "Hits/JPetBaseHit/JPetBaseHit.h"
 
 /**
  * @brief Representation of a Monte Carlo simulation of a interaction of a photon
@@ -34,8 +34,10 @@ public:
   int getGammaTag() const;
   void setMCDecayTreeIndex(int decayTreeIndex);
   void setMCVtxIndex(int vertexIndex);
-  void setPolarization(double polX, double polY, double polZ);
-  void setMomentum(double momX, double momY, double momZ);
+  void setPolarization(float polX, float polY, float polZ);
+  void setPolarization(const TVector3& polarization);
+  void setMomentum(float momX, float momY, float momZ);
+  void setMomentum(const TVector3& momentum);
   void setGammaTag(int i);
   void Clear(Option_t*) override;
 

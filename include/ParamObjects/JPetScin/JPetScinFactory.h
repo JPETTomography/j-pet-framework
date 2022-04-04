@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,9 +16,9 @@
 #ifndef JPET_SCIN_FACTORY_H
 #define JPET_SCIN_FACTORY_H
 
-#include "./JPetParamGetter/JPetParamGetter.h"
-#include "./JPetSlot/JPetSlotFactory.h"
+#include "JPetParamGetter/JPetParamGetter.h"
 #include "JPetScin.h"
+#include "JPetSlot/JPetSlotFactory.h"
 #include <map>
 
 /**
@@ -29,8 +29,10 @@
 class JPetScinFactory
 {
 public:
-  JPetScinFactory(JPetParamGetter& paramGetter, int runID, JPetSlotFactory& slotFactory):
-    fParamGetter(paramGetter), fRunID(runID), fSlotFactory(slotFactory), fInitialized(false) {}
+  JPetScinFactory(JPetParamGetter& paramGetter, int runID, JPetSlotFactory& slotFactory)
+      : fParamGetter(paramGetter), fRunID(runID), fSlotFactory(slotFactory), fInitialized(false)
+  {
+  }
   std::map<int, JPetScin*>& getScins();
 
 private:
@@ -38,7 +40,7 @@ private:
   const int fRunID;
   JPetSlotFactory& fSlotFactory;
   bool fInitialized;
-  std::map <int, JPetScin*> fScins;
+  std::map<int, JPetScin*> fScins;
   void initialize();
   JPetScin* build(ParamObjectDescription data);
 };

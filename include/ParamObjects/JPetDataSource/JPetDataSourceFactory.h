@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,8 +16,8 @@
 #ifndef JPET_DATA_SOURCE_FACTORY_H
 #define JPET_DATA_SOURCE_FACTORY_H
 
-#include "JPetParamGetter/JPetParamGetter.h"
 #include "JPetDataSource.h"
+#include "JPetParamGetter/JPetParamGetter.h"
 #include <map>
 
 /**
@@ -28,8 +28,7 @@
 class JPetDataSourceFactory
 {
 public:
-  JPetDataSourceFactory(JPetParamGetter& paramGetter, int runID):
-    fParamGetter(paramGetter), fRunID(runID), fInitialized(false) {}
+  JPetDataSourceFactory(JPetParamGetter& paramGetter, int runID) : fParamGetter(paramGetter), fRunID(runID), fInitialized(false) {}
   std::map<int, JPetDataSource*>& getDataSources();
 
 private:

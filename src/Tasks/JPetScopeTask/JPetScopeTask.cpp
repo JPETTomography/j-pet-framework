@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,10 +13,10 @@
  *  @file JPetScopeTask.cpp
  */
 
-#include "JPetScopeTask/JPetScopeTaskUtils.h"
-#include "JPetCommonTools/JPetCommonTools.h"
 #include "JPetScopeTask/JPetScopeTask.h"
+#include "JPetCommonTools/JPetCommonTools.h"
 #include "JPetScopeData/JPetScopeData.h"
+#include "JPetScopeTask/JPetScopeTaskUtils.h"
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <memory>
@@ -35,7 +35,7 @@ bool JPetScopeTask::run(const JPetDataInterface& inData)
 bool JPetScopeTask::init()
 {
   INFO("Scope Task started");
-  fOutputEvents = new JPetTimeWindow("JPetRecoSignal");
+  fOutputEvents = new JPetTimeWindow("JPetShapedSignal");
   return true;
 }
 
@@ -45,7 +45,7 @@ bool JPetScopeTask::exec()
   auto& bank = getParamBank();
   if (bank.isDummy())
   {
-    ERROR("bank is Dummy");
+    ERROR("Param Bank is Dummy");
   }
   else
   {
@@ -54,12 +54,12 @@ bool JPetScopeTask::exec()
     for (const auto& file : files)
     {
       DEBUG(std::string("file to open:") + file.first);
-      JPetRecoSignal sig = RecoSignalUtils::generateSignal(file.first.c_str());
+      auto sig = ShapedSignalUtils::generateSignal(file.first.c_str());
       DEBUG("before setPM");
       const JPetPM& pm = bank.getPM(file.second);
       sig.setPM(pm);
       DEBUG("after setPM");
-      fOutputEvents->add<JPetRecoSignal>(sig);
+      fOutputEvents->add<JPetShapedSignal>(sig);
     }
   }
   return true;

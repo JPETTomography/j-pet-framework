@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,29 +16,20 @@
 #ifndef JPETGEANTPARSER_H
 #define JPETGEANTPARSER_H
 
-#include <JPetGeantEventPack/JPetGeantEventPack.h>
-#include <JPetGeantScinHits/JPetGeantScinHits.h>
-#include <JPetHit/JPetHit.h>
-#include <JPetMCDecayTree/JPetMCDecayTree.h>
-#include <JPetMCHit/JPetMCHit.h>
-#include <JPetSmearingFunctions/JPetSmearingFunctions.h>
-#include <JPetUserTask/JPetUserTask.h>
+#include "Hits/JPetMCRecoHit/JPetMCRecoHit.h"
+#include "JPetGeantEventPack/JPetGeantEventPack.h"
+#include "JPetGeantScinHits/JPetGeantScinHits.h"
+#include "JPetMCDecayTree/JPetMCDecayTree.h"
+#include "JPetRawMCHit/JPetRawMCHit.h"
+#include "JPetSmearingFunctions/JPetSmearingFunctions.h"
+#include "JPetUserTask/JPetUserTask.h"
 #include <functional>
-#include <map>
-#include <tuple>
 #include <vector>
 
 class JPetWriter;
 
-#ifdef __CINT__
-// when cint is used instead of compiler, override word is not recognized
-// nevertheless it's needed for checking if the structure of project is correct
-#define override
-#endif
-
 /**
- * @brief      Module responsible for creating JPetMCHit from GEANT MC simulations
- *
+ * @brief Module responsible for creating JPetMCHit from GEANT MC simulations
  */
 class JPetGeantParser : public JPetUserTask
 {
@@ -57,14 +48,16 @@ protected:
   bool fMakeEffiHisto = true;
   bool fMakeHisto = true;
   double fMaxTime = 0.;
-  double fMinTime = -50.e6;           // electronic time window 50 micro seconds - true for run 3
-  double fSimulatedActivity = 4.7;    //< in MBq; value for run3
-  double fExperimentalThreshold = 10; //< in keV
-  unsigned long fSeed = 0.;
+  double fMinTime = -50.e6;
+  ///< Source activity in MBq
+  double fSimulatedActivity = 4.7;
+  ///< Lowest deposited energy value in keV, that can be reconstructed
+  double fExperimentalThreshold = 10.0;
+  unsigned long fSeed = 0.0;
 
   JPetHitExperimentalParametrizer fExperimentalParametrizer;
 
-  // internal variables
+  ///< internal variables
   const std::string kMaxTimeWindowParamKey = "GeantParser_MaxTimeWindow_double";
   const std::string kMinTimeWindowParamKey = "GeantParser_MinTimeWindow_double";
   const std::string kSourceActivityParamKey = "GeantParser_SourceActivity_double";
@@ -88,23 +81,25 @@ protected:
   const std::string kSeedParamKey = "GeantParser_Seed_int";
 
   long fExpectedNumberOfEvents = 0;
-  float fTimeShift = fMinTime;
+  double fTimeShift = fMinTime;
 
-  std::vector<JPetMCHit> fStoredMCHits; ///< save MC hits into single time window when it contains enough hits
-  std::vector<JPetHit> fStoredHits;     ///< save RECONSTRUCTED MC hits into single time window when it contains enough hits
+  ///< save MC hits into single time window when it contains enough hits
+  std::vector<JPetRawMCHit> fStoredMCHits;
+  ///< save RECONSTRUCTED MC hits into single time window when it contains enough hits
+  std::vector<JPetMCRecoHit> fStoredRecoHits;
 
   void loadSmearingOptionsAndSetupExperimentalParametrizer();
 
   void processMCEvent(JPetGeantEventPack*);
   void saveHits();
-  void saveReconstructedHit(JPetHit recHit);
+  void saveReconstructedHit(JPetMCRecoHit recHit);
 
   void bookEfficiencyHistograms();
   void bookBasicHistograms();
 
   void fillHistoGenInfo(JPetGeantEventInformation*);
-  void fillHistoMCGen(JPetMCHit&);
-  void fillHistoMCRec(JPetHit&);
+  void fillHistoMCGen(JPetRawMCHit&);
+  void fillHistoMCRec(JPetMCRecoHit&);
 
   unsigned long nPromptGen = 0u;
   unsigned long nPromptRec = 0u;
@@ -113,14 +108,14 @@ protected:
   unsigned long n3gGen = 0u;
   unsigned long n3gRec = 0u;
 
-  std::vector<float> fTimeDistroOfDecays = {};
-  std::vector<float> fTimeDiffDistro = {};
+  std::vector<double> fTimeDistroOfDecays = {};
+  std::vector<double> fTimeDiffDistro = {};
   unsigned int fCurrentIndexTimeShift = 0;
 
   unsigned int getNumberOfDecaysInWindow() const;
-  float getNextTimeShift();
+  double getNextTimeShift();
   void clearTimeDistoOfDecays();
   bool isTimeWindowFull() const;
 };
 
-#endif
+#endif /* !JPETGEANTPARSER_H */

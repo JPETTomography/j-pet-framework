@@ -50,6 +50,7 @@ void JPetParamSaverAscii::addToTree(boost::property_tree::ptree& tree, const JPe
   fillLayers(runContents, bank);
   fillSlots(runContents, bank);
   fillScins(runContents, bank);
+  fillMatrices(runContents, bank);
   fillPMs(runContents, bank);
   fillChannels(runContents, bank);
   fillDataSources(runContents, bank);
@@ -97,6 +98,16 @@ void JPetParamSaverAscii::fillScins(boost::property_tree::ptree& runContents, co
   runContents.add_child(objectsNames.at(ParamObjectType::kScin), infos);
 }
 
+void JPetParamSaverAscii::fillMatrices(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
+{
+  boost::property_tree::ptree infos;
+  for (auto mtx : bank.getMatrices())
+  {
+    infos.push_back(std::make_pair("", matrixToInfo(*mtx.second)));
+  }
+  runContents.add_child(objectsNames.at(ParamObjectType::kMatrix), infos);
+}
+
 void JPetParamSaverAscii::fillPMs(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
 {
   boost::property_tree::ptree infos;
@@ -115,6 +126,26 @@ void JPetParamSaverAscii::fillChannels(boost::property_tree::ptree& runContents,
     infos.push_back(std::make_pair("", channelToInfo(*channel.second)));
   }
   runContents.add_child(objectsNames.at(ParamObjectType::kChannel), infos);
+}
+
+void JPetParamSaverAscii::fillDataSources(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
+{
+  boost::property_tree::ptree infos;
+  for (auto dataSource : bank.getDataSources())
+  {
+    infos.push_back(std::make_pair("", dataSourceToInfo(*dataSource.second)));
+  }
+  runContents.add_child(objectsNames.at(ParamObjectType::kDataSource), infos);
+}
+
+void JPetParamSaverAscii::fillDataModules(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
+{
+  boost::property_tree::ptree infos;
+  for (auto dataModule : bank.getDataModules())
+  {
+    infos.push_back(std::make_pair("", dataModuleToInfo(*dataModule.second)));
+  }
+  runContents.add_child(objectsNames.at(ParamObjectType::kDataModule), infos);
 }
 
 boost::property_tree::ptree JPetParamSaverAscii::setupToInfo(const JPetSetup& setup)
@@ -162,7 +193,26 @@ boost::property_tree::ptree JPetParamSaverAscii::scinToInfo(const JPetScin& scin
   info.put("xcenter", scin.getCenterX());
   info.put("ycenter", scin.getCenterY());
   info.put("zcenter", scin.getCenterZ());
+  info.put("rot_x", scin.getRotationX());
+  info.put("rot_y", scin.getRotationY());
+  info.put("rot_z", scin.getRotationZ());
   info.put(objectsNames.at(ParamObjectType::kSlot) + "_id", scin.getSlot().getID());
+  return info;
+}
+
+boost::property_tree::ptree JPetParamSaverAscii::matrixToInfo(const JPetMatrix& mtx)
+{
+  boost::property_tree::ptree info;
+  info.put("id", mtx.getID());
+  if (mtx.getSide() == JPetMatrix::SideA)
+  {
+    info.put("side", "A");
+  }
+  else if (mtx.getSide() == JPetMatrix::SideB)
+  {
+    info.put("side", "B");
+  }
+  info.put(objectsNames.at(ParamObjectType::kScin) + "_id", mtx.getScin().getID());
   return info;
 }
 
@@ -170,17 +220,9 @@ boost::property_tree::ptree JPetParamSaverAscii::pmToInfo(const JPetPM& pm)
 {
   boost::property_tree::ptree info;
   info.put("id", pm.getID());
-  if (pm.getSide() == JPetPM::Side::SideA)
-  {
-    info.put("side", "A");
-  }
-  else if (pm.getSide() == JPetPM::Side::SideB)
-  {
-    info.put("side", "B");
-  }
   info.put("description", pm.getDesc());
   info.put("pos_in_matrix", pm.getMatrixPosition());
-  info.put(objectsNames.at(ParamObjectType::kScin) + "_id", pm.getScin().getID());
+  info.put(objectsNames.at(ParamObjectType::kMatrix) + "_id", pm.getMatrix().getID());
   return info;
 }
 
@@ -192,16 +234,6 @@ boost::property_tree::ptree JPetParamSaverAscii::channelToInfo(const JPetChannel
   info.put("thr_val", channel.getThresholdValue());
   info.put(objectsNames.at(ParamObjectType::kPM) + "_id", channel.getPM().getID());
   return info;
-}
-
-void JPetParamSaverAscii::fillDataSources(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
-{
-  boost::property_tree::ptree infos;
-  for (auto dataSource : bank.getDataSources())
-  {
-    infos.push_back(std::make_pair("", dataSourceToInfo(*dataSource.second)));
-  }
-  runContents.add_child(objectsNames.at(ParamObjectType::kDataSource), infos);
 }
 
 boost::property_tree::ptree JPetParamSaverAscii::dataSourceToInfo(const JPetDataSource& dataSource)
@@ -218,16 +250,6 @@ boost::property_tree::ptree JPetParamSaverAscii::dataSourceToInfo(const JPetData
   info.put("trbnet_address", trb2stringStream.str());
   info.put("hub_address", hub2stringStream.str());
   return info;
-}
-
-void JPetParamSaverAscii::fillDataModules(boost::property_tree::ptree& runContents, const JPetParamBank& bank)
-{
-  boost::property_tree::ptree infos;
-  for (auto dataModule : bank.getDataModules())
-  {
-    infos.push_back(std::make_pair("", dataModuleToInfo(*dataModule.second)));
-  }
-  runContents.add_child(objectsNames.at(ParamObjectType::kDataModule), infos);
 }
 
 boost::property_tree::ptree JPetParamSaverAscii::dataModuleToInfo(const JPetDataModule& dataModule)

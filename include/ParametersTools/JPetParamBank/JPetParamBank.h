@@ -21,6 +21,7 @@
 #include "JPetDataSource/JPetDataSource.h"
 #include "JPetLayer/JPetLayer.h"
 #include "JPetLoggerInclude.h"
+#include "JPetMatrix/JPetMatrix.h"
 #include "JPetPM/JPetPM.h"
 #include "JPetParamGetter/JPetParamConstants.h"
 #include "JPetScin/JPetScin.h"
@@ -101,6 +102,21 @@ public:
   inline int getScinsSize() const { return fScins.size(); }
 
   /**
+   * Adds a Matrix of photomultipiers to Param Bank. If a Matrix with the same ID
+   * already exists in the Param Bank, the new element will not be added.
+   */
+  inline void addMatrix(JPetMatrix mtx)
+  {
+    if (!fMatrices.insert(std::make_pair(mtx.getID(), new JPetMatrix(mtx))).second)
+    {
+      WARNING("A Matrix with this ID already exists in the ParamBank. It will not be added.");
+    }
+  }
+  inline const std::map<int, JPetMatrix*>& getMatrices() const { return fMatrices; }
+  inline JPetMatrix& getMatrix(int id) const { return *(fMatrices.at(id)); }
+  int getMatricesSize() const { return fMatrices.size(); }
+
+  /**
    * Adds a PM to Param Bank. If a PM with the same ID
    * already exists in the Param Bank, the new element will not be added.
    */
@@ -170,6 +186,7 @@ private:
   std::map<int, JPetLayer*> fLayers;
   std::map<int, JPetSlot*> fSlots;
   std::map<int, JPetScin*> fScins;
+  std::map<int, JPetMatrix*> fMatrices;
   std::map<int, JPetPM*> fPMs;
   std::map<int, JPetChannel*> fChannels;
   std::map<int, JPetDataSource*> fDataSources;
@@ -184,7 +201,7 @@ private:
     }
   }
 
-  ClassDef(JPetParamBank, 7);
+  ClassDef(JPetParamBank, 8);
 };
 
 #endif /* !JPETPARAMBANK_H */

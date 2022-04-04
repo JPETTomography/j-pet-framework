@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,59 +16,45 @@
 #ifndef JPET_PM
 #define JPET_PM
 
-#include "JPetScin/JPetScin.h"
+#include "JPetMatrix/JPetMatrix.h"
 #include <TNamed.h>
 #include <TRef.h>
 
-class JPetScin;
+class JPetMatrix;
 
 /**
  * @brief Representation of a photomultiplier.
  *
  * Parametric class representing database information of a single photomultiplier.
  */
-class JPetPM: public TNamed
+class JPetPM : public TNamed
 {
 public:
-  enum Side {SideA, SideB};
-
   JPetPM();
-  JPetPM(int id, Side side, std::string desc, int matrixPosition);
-  JPetPM(const JPetPM &pm);
+  JPetPM(int id, std::string desc, int matrixPosition);
+  JPetPM(const JPetPM& pm);
   explicit JPetPM(bool isNull);
   virtual ~JPetPM();
   void setID(int id);
-  void setSide(Side side);
   void setDesc(std::string desc);
   void setMatrixPosition(int position);
-  void setScin(JPetScin& scin);
+  void setMatrix(JPetMatrix& matrix);
   int getID() const;
-  Side getSide() const;
   std::string getDesc() const;
   int getMatrixPosition() const;
-  JPetScin& getScin() const;
+  JPetMatrix& getMatrix() const;
   bool operator==(const JPetPM& pm) const;
   bool operator!=(const JPetPM& pm) const;
   bool isNullObject() const;
   static JPetPM& getDummyResult();
 
 protected:
-  void clearTRefScin();
-
-#ifndef __CINT__
   int fID = -1;
-  Side fSide = SideA;
   std::string fDesc = "";
   int fMatrixPosition = -1;
   bool fIsNullObject = false;
-#else
-  int fID;
-  Side fSide;
-  std::string fDesc;
-  int fMatrixPosition;
-  bool fIsNullObject;
-#endif
-  TRef fTRefScin;
+  TRef fTRefMatrix = nullptr;
+  void clearTRefMatrix();
 
   friend class JPetParamManager;
 

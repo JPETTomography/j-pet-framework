@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,11 +16,9 @@
 #ifndef JPETLOR_H
 #define JPETLOR_H
 
-#include "JPetHit/JPetHit.h"
+#include "Hits/JPetBaseHit/JPetBaseHit.h"
 #include <cstddef>
 #include <utility>
-
-class JPetHit;
 
 /**
  * @brief Line of Response data class is a representation of an event
@@ -32,19 +30,20 @@ class JPetHit;
  * in the appropriate order. The LOR reconstructed absolute time is to be set
  * with respect to beginning of the run in [ps].
  */
-class JPetLOR: public TObject
+class JPetLOR : public TObject
 {
 public:
-  enum RecoFlag { Good, Corrupted, Unknown };
+  enum RecoFlag
+  {
+    Good,
+    Corrupted,
+    MC,
+    Unknown
+  };
 
   JPetLOR();
-  JPetLOR(
-    float time, float qualityOfTime, JPetHit& firstHit, JPetHit& secondHit
-  );
-  JPetLOR(
-    float time, float qualityOfTime, float timeDiff, float qualityOfTimeDiff,
-    JPetHit& firstHit, JPetHit& secondHit, JPetLOR::RecoFlag flag
-  );
+  JPetLOR(float time, float qualityOfTime, float timeDiff, float qualityOfTimeDiff, JPetBaseHit* firstHit, JPetBaseHit* secondHit,
+          JPetLOR::RecoFlag flag);
   virtual ~JPetLOR();
 
   void setRecoFlag(JPetLOR::RecoFlag flag);
@@ -52,21 +51,18 @@ public:
   void setQualityOfTime(const float qualityOfTime);
   void setTimeDiff(const float td);
   void setQualityOfTimeDiff(const float qtd);
-  void setHits(const JPetHit& firstHit, const JPetHit& secondHit);
-  void setFirstHit(const JPetHit& firstHit);
-  void setSecondHit(const JPetHit& secondHit);
-
+  void setHits(JPetBaseHit* firstHit, JPetBaseHit* secondHit);
+  void setFirstHit(JPetBaseHit* firstHit);
+  void setSecondHit(JPetBaseHit* secondHit);
   JPetLOR::RecoFlag getRecoFlag() const;
   float getTime() const;
   float getQualityOfTime() const;
   float getTimeDiff() const;
   float getQualityOfTimeDiff() const;
-  const JPetHit& getFirstHit() const;
-  const JPetHit& getSecondHit() const;
-
+  const std::pair<JPetBaseHit*, JPetBaseHit*> getHits() const;
   bool isHitSet(const unsigned int index);
   bool checkConsistency() const;
-  void Clear(Option_t* opt = "");
+  void Clear(Option_t*) override;
 
 private:
   RecoFlag fFlag = JPetLOR::Unknown;
@@ -74,11 +70,10 @@ private:
   float fQualityOfTime;
   float fTimeDiff;
   float fQualityOfTimeDiff;
-  bool fIsHitSet[2];
-  JPetHit fFirstHit;
-  JPetHit fSecondHit;
+  std::pair<bool, bool> fIsHitSet;
+  std::pair<JPetBaseHit*, JPetBaseHit*> fHits;
 
-  ClassDef(JPetLOR, 6);
+  ClassDef(JPetLOR, 7);
 };
 
 #endif /* !JPETLOR_H */

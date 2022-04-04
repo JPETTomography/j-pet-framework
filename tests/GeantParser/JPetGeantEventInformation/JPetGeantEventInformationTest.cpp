@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -15,9 +15,9 @@
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetGeantEventInformationTest
-#include <boost/test/unit_test.hpp>
 
 #include "JPetGeantEventInformation/JPetGeantEventInformation.h"
+#include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
@@ -62,17 +62,17 @@ BOOST_AUTO_TEST_CASE(check_setters)
   BOOST_REQUIRE_EQUAL(info.GetPromptGammaGen(), gammaGen);
   BOOST_REQUIRE_EQUAL(info.GetRunNr(), runNR);
 
-  float vtx_x = 35;
-  float vtx_y = 25;
-  float vtx_z = 33;
-  float lifetime = 432;
+  double vtx_x = 35;
+  double vtx_y = 25;
+  double vtx_z = 33;
+  double lifetime = 432;
   info.SetVtxPosition(vtx_x, vtx_y, vtx_z);
   info.SetLifetime(lifetime);
 
-  float prompt_vtx_x = 335;
-  float prompt_vtx_y = 325;
-  float prompt_vtx_z = 333;
-  float prompt_lifetime = 43.342;
+  double prompt_vtx_x = 335;
+  double prompt_vtx_y = 325;
+  double prompt_vtx_z = 333;
+  double prompt_lifetime = 43.342;
   info.SetVtxPromptPosition(prompt_vtx_x, prompt_vtx_y, prompt_vtx_z);
   info.SetPromptLifetime(prompt_lifetime);
 

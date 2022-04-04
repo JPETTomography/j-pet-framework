@@ -34,9 +34,13 @@ void JPetRawMCHit::setMCDecayTreeIndex(int decayTreeIndex) { fMCDecayTreeIndex =
 
 void JPetRawMCHit::setMCVtxIndex(int vertexIndex) { fMCVtxIndex = vertexIndex; }
 
-void JPetRawMCHit::setPolarization(double polX, double polY, double polZ) { fPolarization.SetXYZ(polX, polY, polZ); }
+void JPetRawMCHit::setPolarization(float polX, float polY, float polZ) { fPolarization.SetXYZ(polX, polY, polZ); }
 
-void JPetRawMCHit::setMomentum(double momX, double momY, double momZ) { fMomentum.SetXYZ(momX, momY, momZ); }
+void JPetRawMCHit::setPolarization(const TVector3& polarization) { fPolarization = polarization; }
+
+void JPetRawMCHit::setMomentum(float momX, float momY, float momZ) { fMomentum.SetXYZ(momX, momY, momZ); }
+
+void JPetRawMCHit::setMomentum(const TVector3& momentum) { fMomentum = momentum; }
 
 void JPetRawMCHit::setGammaTag(int i) { fGammaTag = i; }
 
@@ -46,4 +50,6 @@ void JPetRawMCHit::Clear(Option_t*)
   fMCDecayTreeIndex = 0;
   fMCVtxIndex = 0;
   fGammaTag = 0;
+  fPolarization = TVector3();
+  fMomentum = TVector3();
 }

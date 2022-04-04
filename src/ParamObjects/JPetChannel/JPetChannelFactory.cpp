@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -20,7 +20,8 @@
 
 std::map<int, JPetChannel*>& JPetChannelFactory::getChannels()
 {
-  if (!fInitialized) {
+  if (!fInitialized)
+  {
     initialize();
   }
   return fChannels;
@@ -28,33 +29,35 @@ std::map<int, JPetChannel*>& JPetChannelFactory::getChannels()
 
 void JPetChannelFactory::initialize()
 {
-  ParamObjectsDescriptions descriptions = fParamGetter.getAllBasicData(
-    ParamObjectType::kChannel, fRunID
-  );
-  if (descriptions.size() == 0) {
+  ParamObjectsDescriptions descriptions = fParamGetter.getAllBasicData(ParamObjectType::kChannel, fRunID);
+  if (descriptions.size() == 0)
+  {
     ERROR(Form("No Channels in run %i", fRunID));
     return;
   }
-  for (auto description : descriptions) {
+  for (auto description : descriptions)
+  {
     fChannels[description.first] = build(description.second);
   }
   fInitialized = true;
-  ParamRelationalData relations = fParamGetter.getAllRelationalData(
-    ParamObjectType::kChannel, ParamObjectType::kPM, fRunID
-  );
-  for (auto relation : relations) {
+  ParamRelationalData relations = fParamGetter.getAllRelationalData(ParamObjectType::kChannel, ParamObjectType::kPM, fRunID);
+  for (auto relation : relations)
+  {
     fChannels[relation.first]->setPM(*fPMFactory.getPMs().at(relation.second));
   }
 }
 
 JPetChannel* JPetChannelFactory::build(ParamObjectDescription data)
 {
-  try {
+  try
+  {
     int id = boost::lexical_cast<int>(data.at("id"));
     int thrNum = boost::lexical_cast<int>(data.at("thr_num"));
-    int thrVal = boost::lexical_cast<float>(data.at("thr_val"));
+    float thrVal = boost::lexical_cast<float>(data.at("thr_val"));
     return new JPetChannel(id, thrNum, thrVal);
-  } catch (const std::exception& e) {
+  }
+  catch (const std::exception& e)
+  {
     ERROR(Form("Failed to build Channel with error: %s", e.what()));
     throw;
   }

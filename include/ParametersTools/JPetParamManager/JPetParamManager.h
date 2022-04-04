@@ -13,12 +13,12 @@
  *  @file JPetParamManager.h
  */
 
-#ifndef J_PET_PARAM_MANAGER
-#define J_PET_PARAM_MANAGER
+#ifndef JPET_PARAM_MANAGER
+#define JPET_PARAM_MANAGER
 
-#include "./JPetDataModule/JPetDataModuleFactory.h"
-#include "./JPetDataSource/JPetDataSourceFactory.h"
 #include "JPetChannel/JPetChannelFactory.h"
+#include "JPetDataModule/JPetDataModuleFactory.h"
+#include "JPetDataSource/JPetDataSourceFactory.h"
 #include "JPetLayer/JPetLayerFactory.h"
 #include "JPetLoggerInclude.h"
 #include "JPetPM/JPetPMFactory.h"
@@ -61,6 +61,7 @@ public:
   std::map<int, JPetLayer*>& getLayers(const int runID);
   std::map<int, JPetSlot*>& getSlots(const int runID);
   std::map<int, JPetScin*>& getScins(const int runID);
+  std::map<int, JPetMatrix*>& getMatrices(const int runID);
   std::map<int, JPetPM*>& getPMs(const int runID);
   std::map<int, JPetChannel*>& getChannels(const int runID);
   std::map<int, JPetDataSource*>& getDataSources(const int runID);
@@ -86,6 +87,7 @@ private:
   std::map<int, JPetLayerFactory> fLayerFactories;
   std::map<int, JPetSlotFactory> fSlotFactories;
   std::map<int, JPetScinFactory> fScinFactories;
+  std::map<int, JPetMatrixFactory> fMatrixFactories;
   std::map<int, JPetPMFactory> fPMFactories;
   std::map<int, JPetDataSourceFactory> fDataSourceFactories;
   std::map<int, JPetDataModuleFactory> fDataModuleFactories;
@@ -94,10 +96,11 @@ private:
   JPetLayerFactory& getLayerFactory(const int runID);
   JPetSlotFactory& getSlotFactory(const int runID);
   JPetScinFactory& getScinFactory(const int runID);
+  JPetMatrixFactory& getMatrixFactory(const int runID);
   JPetPMFactory& getPMFactory(const int runID);
   JPetChannelFactory& getChannelFactory(const int runID);
   JPetDataSourceFactory& getDataSourceFactory(const int runID);
   JPetDataModuleFactory& getDataModuleFactory(const int runID);
 };
 
-#endif /* !J_PET_PARAM_MANAGER */
+#endif /* !JPET_PARAM_MANAGER */

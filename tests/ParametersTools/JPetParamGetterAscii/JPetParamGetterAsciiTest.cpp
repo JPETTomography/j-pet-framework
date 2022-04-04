@@ -19,7 +19,6 @@
 #include "JPetParamGetterAscii/JPetParamGetterAscii.h"
 #include "JPetParamGetterAscii/JPetParamSaverAscii.h"
 #include "JPetParamManager/JPetParamManager.h"
-
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -41,111 +40,56 @@ BOOST_AUTO_TEST_CASE(empty_file_read)
 
 BOOST_AUTO_TEST_CASE(minimal_basic_data_read)
 {
-  JPetParamGetterAscii getter(dataDir + "DB2.json");
+  JPetParamGetterAscii getter(dataDir + "DBv10.json");
   ParamObjectsDescriptions descriptions = getter.getAllBasicData(ParamObjectType::kPM, 1);
   BOOST_REQUIRE_EQUAL(descriptions.size(), 1u);
   ParamObjectDescription& description = descriptions[1];
   BOOST_REQUIRE_EQUAL(description["id"], "1");
-  BOOST_REQUIRE_EQUAL(description["is_right_side"], "1");
-  BOOST_REQUIRE_EQUAL(description["description"], "no writing");
+  BOOST_REQUIRE_EQUAL(description["pos_in_matrix"], "1");
+  BOOST_REQUIRE_EQUAL(description["description"], "no description");
 }
 
 BOOST_AUTO_TEST_CASE(minimal_relational_data_read)
 {
-  JPetParamGetterAscii getter(dataDir + "DB3.json");
-  ParamRelationalData relations = getter.getAllRelationalData(ParamObjectType::kPM, ParamObjectType::kScin, 1);
+  JPetParamGetterAscii getter(dataDir + "DBv10.json");
+  ParamRelationalData relations = getter.getAllRelationalData(ParamObjectType::kPM, ParamObjectType::kMatrix, 1);
   BOOST_REQUIRE_EQUAL(relations.size(), 1u);
   BOOST_REQUIRE_EQUAL(relations[1], 1);
 }
 
 BOOST_AUTO_TEST_CASE(minimal_example_write)
 {
-  JPetParamManager paramManager(new JPetParamGetterAscii(dataDir + "DB2.json"));
+  JPetParamManager paramManager(new JPetParamGetterAscii(dataDir + "DBv10.json"));
   paramManager.fillParameterBank(1);
 
   const JPetParamBank& paramBank = paramManager.getParamBank();
   JPetParamSaverAscii saver;
-  std::string writtenFileName(dataDir + "writtenDB2.json");
+  std::string writtenFileName(dataDir + "writtenDBv10.json");
   saver.saveParamBank(paramBank, 1, writtenFileName);
 
   JPetParamManager reparamManager(new JPetParamGetterAscii(writtenFileName.c_str()));
   reparamManager.fillParameterBank(1);
 
   const JPetParamBank& reparamBank = reparamManager.getParamBank();
-  BOOST_REQUIRE(paramBank.getScinsSize() == reparamBank.getScinsSize());
-  BOOST_REQUIRE(paramBank.getSlotsSize() == reparamBank.getSlotsSize());
-  BOOST_REQUIRE(paramBank.getPMsSize() == reparamBank.getPMsSize());
-  BOOST_REQUIRE(paramBank.getLayersSize() == reparamBank.getLayersSize());
-  BOOST_REQUIRE(paramBank.getSetupsSize() == reparamBank.getSetupsSize());
-  BOOST_REQUIRE(paramBank.getChannelsSize() == reparamBank.getChannelsSize());
-  BOOST_REQUIRE(paramBank.getDataSourcesSize() == reparamBank.getDataSourcesSize());
-  BOOST_REQUIRE(paramBank.getDataModulesSize() == reparamBank.getDataModulesSize());
+  BOOST_REQUIRE_EQUAL(paramBank.getDataModulesSize(), reparamBank.getDataModulesSize());
+  BOOST_REQUIRE_EQUAL(paramBank.getDataSourcesSize(), reparamBank.getDataSourcesSize());
+  BOOST_REQUIRE_EQUAL(paramBank.getChannelsSize(), reparamBank.getChannelsSize());
+  BOOST_REQUIRE_EQUAL(paramBank.getPMsSize(), reparamBank.getPMsSize());
+  BOOST_REQUIRE_EQUAL(paramBank.getMatricesSize(), reparamBank.getMatricesSize());
+  BOOST_REQUIRE_EQUAL(paramBank.getScinsSize(), reparamBank.getScinsSize());
+  BOOST_REQUIRE_EQUAL(paramBank.getSlotsSize(), reparamBank.getSlotsSize());
+  BOOST_REQUIRE_EQUAL(paramBank.getLayersSize(), reparamBank.getLayersSize());
+  BOOST_REQUIRE_EQUAL(paramBank.getSetupsSize(), reparamBank.getSetupsSize());
 
-  JPetScin& scintillator = paramBank.getScin(1);
-  JPetScin& rescintillator = reparamBank.getScin(1);
-  BOOST_REQUIRE(scintillator.getID() == rescintillator.getID());
-  BOOST_REQUIRE(scintillator.getLength() == rescintillator.getLength());
-  BOOST_REQUIRE(scintillator.getHeight() == rescintillator.getHeight());
-  BOOST_REQUIRE(scintillator.getWidth() == rescintillator.getWidth());
-  JPetSlot& slot = paramBank.getSlot(1);
-  JPetSlot& rebarrelSlot = reparamBank.getBarrelSlot(1);
-  BOOST_REQUIRE(slot.getID() == rebarrelSlot.getID());
-  BOOST_REQUIRE(slot.getTheta() == rebarrelSlot.getTheta());
-  JPetPM& pm = paramBank.getPM(1);
-  JPetPM& repm = reparamBank.getPM(1);
-  BOOST_REQUIRE(pm.getID() == repm.getID());
-  BOOST_REQUIRE(pm.getSide() == repm.getSide());
-  BOOST_REQUIRE(pm.getDescription() == repm.getDescription());
-  JPetLayer& layer = paramBank.getLayer(1);
-  JPetLayer& relayer = reparamBank.getLayer(1);
-  BOOST_REQUIRE(layer.getID() == relayer.getID());
-  BOOST_REQUIRE(layer.getIsActive() == relayer.getIsActive());
-  BOOST_REQUIRE(layer.getName() == relayer.getName());
-  BOOST_REQUIRE(layer.getRadius() == relayer.getRadius());
-
-  JPetFrame& frame = paramBank.getFrame(1);
-  JPetFrame& reframe = reparamBank.getFrame(1);
-  BOOST_REQUIRE(frame.getID() == reframe.getID());
-  BOOST_REQUIRE(frame.getIsActive() == reframe.getIsActive());
-  BOOST_REQUIRE(frame.getStatus() == reframe.getStatus());
-  BOOST_REQUIRE(frame.getDescription() == reframe.getDescription());
-  BOOST_REQUIRE(frame.getVersion() == reframe.getVersion());
-  BOOST_REQUIRE(frame.getCreator() == reframe.getCreator());
-
-  JPetTOMBChannel& tomb = paramBank.getTOMBChannel(1);
-  JPetTOMBChannel& retomb = reparamBank.getTOMBChannel(1);
-  BOOST_REQUIRE(tomb.getThreshold() == retomb.getThreshold());
-
-  JPetTRB& trb = paramBank.getTRB(1);
-  JPetTRB& retrb = reparamBank.getTRB(1);
-  BOOST_REQUIRE(trb.getID() == retrb.getID());
-  BOOST_REQUIRE(trb.getType() == retrb.getType());
-  BOOST_REQUIRE(trb.getChannel() == retrb.getChannel());
-
-  BOOST_REQUIRE(paramBank.getDataSource(1) == reparamBank.getDataSource(1));
   BOOST_REQUIRE(paramBank.getDataModule(1) == reparamBank.getDataModule(1));
-
-  BOOST_REQUIRE(barrelSlot == scintillator.getBarrelSlot());
-  BOOST_REQUIRE(barrelSlot == pm.getBarrelSlot());
-  BOOST_REQUIRE(scintillator == pm.getScin());
-  BOOST_REQUIRE(feb == pm.getFEB());
-  BOOST_REQUIRE(layer == barrelSlot.getLayer());
-  BOOST_REQUIRE(frame == layer.getFrame());
-  BOOST_REQUIRE(trb == feb.getTRB());
-  BOOST_REQUIRE(trb == tomb.getTRB());
-  BOOST_REQUIRE(feb == tomb.getFEB());
-  BOOST_REQUIRE(pm == tomb.getPM());
-  BOOST_REQUIRE(rebarrelSlot == rescintillator.getBarrelSlot());
-  BOOST_REQUIRE(rebarrelSlot == repm.getBarrelSlot());
-  BOOST_REQUIRE(rescintillator == repm.getScin());
-  BOOST_REQUIRE(refeb == repm.getFEB());
-  BOOST_REQUIRE(relayer == rebarrelSlot.getLayer());
-  BOOST_REQUIRE(reframe == relayer.getFrame());
-  BOOST_REQUIRE(retrb == refeb.getTRB());
-  BOOST_REQUIRE(retrb == retomb.getTRB());
-  BOOST_REQUIRE(refeb == retomb.getFEB());
-  BOOST_REQUIRE(repm == retomb.getPM());
-  boost::filesystem::remove(writtenFileName);
+  BOOST_REQUIRE(paramBank.getDataSource(1) == reparamBank.getDataSource(1));
+  BOOST_REQUIRE(paramBank.getChannel(1) == reparamBank.getChannel(1));
+  BOOST_REQUIRE(paramBank.getPM(1) == reparamBank.getPM(1));
+  BOOST_REQUIRE(paramBank.getMatrix(1) == reparamBank.getMatrix(1));
+  BOOST_REQUIRE(paramBank.getScin(1) == reparamBank.getScin(1));
+  BOOST_REQUIRE(paramBank.getSlot(1) == reparamBank.getSlot(1));
+  BOOST_REQUIRE(paramBank.getLayer(1) == reparamBank.getLayer(1));
+  BOOST_REQUIRE(paramBank.getSetup(1) == reparamBank.getSetup(1));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

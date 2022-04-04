@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -67,23 +67,22 @@ BOOST_AUTO_TEST_CASE(testIdentification)
     {
       for (bool gen3g : {false, true})
       {
-
         bool isRecPrompt = false;
         bool isRec2g = false;
         bool isRec3g = false;
         std::array<bool, 2> isSaved2g{false, false};
         std::array<bool, 3> isSaved3g{false, false};
 
-        float enePrompt = 0.;
-        std::array<float, 2> ene2g{0., 0.};
-        std::array<float, 3> ene3g{0., 0., 0.};
+        double enePrompt = 0.;
+        std::array<double, 2> ene2g{0., 0.};
+        std::array<double, 3> ene3g{0., 0., 0.};
 
         // generate only prompt
         JPetGeantEventPack* pack = createPack(genPrompt, gen2g, gen3g);
 
         for (unsigned int i = 0; i < pack->GetNumberOfHits(); i++)
         {
-          JPetHit recHit; // does not matter if empty
+          JPetMCRecoHit recHit; // does not matter if empty
           JPetGeantParserTools::identifyRecoHits(pack->GetHit(i), recHit, isRecPrompt, isSaved2g, isSaved3g, enePrompt, ene2g, ene3g);
         }
 

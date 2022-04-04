@@ -22,6 +22,7 @@ enum ParamObjectType
   kLayer,
   kSlot,
   kScin,
+  kMatrix,
   kPM,
   kChannel,
   kDataSource,

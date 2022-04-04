@@ -26,6 +26,7 @@ const std::map<ParamObjectType, std::string> objectsNames{{ParamObjectType::kSet
                                                           {ParamObjectType::kLayer, "layer"},
                                                           {ParamObjectType::kSlot, "slot"},
                                                           {ParamObjectType::kScin, "scin"},
+                                                          {ParamObjectType::kMatrix, "matrix"},
                                                           {ParamObjectType::kPM, "pm"},
                                                           {ParamObjectType::kChannel, "channel"},
                                                           {ParamObjectType::kDataSource, "data_source"},

@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -18,9 +18,9 @@
 /**
  * Sorting the input vector of JPetHits by ascending time
  */
-std::vector<JPetHit> JPetAnalysisTools::getHitsOrderedByTime(const std::vector<JPetHit>& oldHits)
+std::vector<const JPetBaseHit*> JPetAnalysisTools::getHitsOrderedByTime(const std::vector<const JPetBaseHit*>& oldHits)
 {
   auto hits(oldHits);
-  std::sort(hits.begin(), hits.end(), [](const JPetHit& h1, const JPetHit& h2) { return h1.getTime() < h2.getTime(); });
+  std::sort(hits.begin(), hits.end(), [](const JPetBaseHit* h1, const JPetBaseHit* h2) { return h1->getTime() < h2->getTime(); });
   return hits;
 }

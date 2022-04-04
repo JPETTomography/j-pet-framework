@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -13,115 +13,61 @@
  *  @file JPetPM.cpp
  */
 
-#include "JPetLoggerInclude.h"
 #include "JPetPM/JPetPM.h"
+#include "JPetLoggerInclude.h"
 
 ClassImp(JPetPM);
 
-JPetPM::JPetPM()
-{
-  SetName("JPetPM");
-}
+JPetPM::JPetPM() { SetName("JPetPM"); }
 
-JPetPM::JPetPM(int id, Side side, std::string desc, int matrixPosition):
-  fID(id), fSide(side), fDesc(desc), fMatrixPosition(matrixPosition)
-{
-  SetName("JPetPM");
-}
+JPetPM::JPetPM(int id, std::string desc, int matrixPosition) : fID(id), fDesc(desc), fMatrixPosition(matrixPosition) { SetName("JPetPM"); }
 
-JPetPM::JPetPM(const JPetPM &pm):
-  fID(pm.getID()), fSide(pm.getSide()), fDesc(pm.getDesc()), fMatrixPosition(pm.getMatrixPosition())
-{
-  SetName("JPetPM");
-}
+JPetPM::JPetPM(const JPetPM& pm) : fID(pm.getID()), fDesc(pm.getDesc()), fMatrixPosition(pm.getMatrixPosition()) { SetName("JPetPM"); }
 
-JPetPM::JPetPM(bool isNull): fIsNullObject(isNull)
-{
-  SetName("JPetPM");
-}
+JPetPM::JPetPM(bool isNull) : fIsNullObject(isNull) { SetName("JPetPM"); }
 
-JPetPM::~JPetPM(){}
+JPetPM::~JPetPM() {}
 
-void JPetPM::setID(int id)
-{
-  fID = id;
-}
+void JPetPM::setID(int id) { fID = id; }
 
-void JPetPM::setSide(JPetPM::Side side)
-{
-  fSide = side;
-}
+void JPetPM::setDesc(std::string desc) { fDesc = desc; }
 
-void JPetPM::setDesc(std::string desc)
-{
-  fDesc = desc;
-}
+void JPetPM::setMatrixPosition(int position) { fMatrixPosition = position; }
 
-void JPetPM::setMatrixPosition(int position)
-{
-  fMatrixPosition = position;
-}
+void JPetPM::setMatrix(JPetMatrix& matrix) { fTRefMatrix = &matrix; }
 
-void JPetPM::setScin(JPetScin& scin)
-{
-  fTRefScin = &scin;
-}
+int JPetPM::getID() const { return fID; }
 
-int JPetPM::getID() const
-{
-  return fID;
-}
+std::string JPetPM::getDesc() const { return fDesc; }
 
-JPetPM::Side JPetPM::getSide() const
-{
-  return fSide;
-}
+int JPetPM::getMatrixPosition() const { return fMatrixPosition; }
 
-std::string JPetPM::getDesc() const
+JPetMatrix& JPetPM::getMatrix() const
 {
-  return fDesc;
-}
-
-int JPetPM::getMatrixPosition() const
-{
-  return fMatrixPosition;
-}
-
-JPetScin& JPetPM::getScin() const
-{
-  if (fTRefScin.GetObject()) {
-    return static_cast<JPetScin&>(*(fTRefScin.GetObject()));
-  } else {
-    ERROR("No JPetScin set, Null object will be returned");
-    return JPetScin::getDummyResult();
+  if (fTRefMatrix.GetObject())
+  {
+    return static_cast<JPetMatrix&>(*(fTRefMatrix.GetObject()));
+  }
+  else
+  {
+    ERROR("No JPetMatrix set, Null object will be returned");
+    return JPetMatrix::getDummyResult();
   }
 }
 
 bool JPetPM::operator==(const JPetPM& pm) const
 {
-  return this->getID() == pm.getID()
-    && this->getSide() == pm.getSide()
-    && this->getMatrixPosition() == pm.getMatrixPosition()
-    && this->getScin() == pm.getScin();
+  return this->getID() == pm.getID() && this->getMatrixPosition() == pm.getMatrixPosition() && this->getMatrix() == pm.getMatrix();
 }
 
-bool JPetPM::operator!=(const JPetPM& pm) const
-{
-  return !(*this == pm);
-}
+bool JPetPM::operator!=(const JPetPM& pm) const { return !(*this == pm); }
 
-bool JPetPM::isNullObject() const
-{
-  return fIsNullObject;
-}
+bool JPetPM::isNullObject() const { return fIsNullObject; }
 
 JPetPM& JPetPM::getDummyResult()
 {
-  static JPetPM DummyResult(true);
-  return DummyResult;
+  static JPetPM dummyResult(true);
+  return dummyResult;
 }
 
-void JPetPM::clearTRefScin()
-{
-  fTRefScin = NULL;
-}
+void JPetPM::clearTRefMatrix() { fTRefMatrix = nullptr; }

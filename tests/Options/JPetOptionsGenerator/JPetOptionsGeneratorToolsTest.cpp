@@ -95,12 +95,7 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionGetConfigFileNameWork)
   auto argc = args_char.size();
   auto argv = args_char.data();
   po::options_description description("Allowed options");
-<<<<<<< HEAD
   description.add_options()("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
-  ;
-=======
-  description.add_options()("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
->>>>>>> 56ecc9907baf828606cf681a0a662bc016ab577a
   po::variables_map variablesMap;
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);
@@ -110,12 +105,7 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionGetConfigFileNameWork)
   auto argc2 = args_char2.size();
   auto argv2 = args_char2.data();
   po::options_description description2("Allowed options");
-<<<<<<< HEAD
   description2.add_options()("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
-  ;
-=======
-  description2.add_options()("userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
->>>>>>> 56ecc9907baf828606cf681a0a662bc016ab577a
   po::variables_map variablesMap2;
   po::store(po::parse_command_line(argc2, argv2, description2), variablesMap2);
   po::notify(variablesMap2);
@@ -130,7 +120,6 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionToAddOptionsFromCfgFileWork)
   auto argc = args_char.size();
   auto argv = args_char.data();
   po::options_description description("Allowed options");
-<<<<<<< HEAD
   description.add_options()("file_std::vector<std::string>,f", po::value<std::vector<std::string>>(),
                             "File(s) to open")("type_std::string,t", po::value<std::string>(), "type of file: hld, zip, root or scope")(
       "range_std::vector<int>,r", po::value<std::vector<int>>(), "Range of events to process.")(
@@ -140,17 +129,6 @@ BOOST_AUTO_TEST_CASE(checkIfFunctionToAddOptionsFromCfgFileWork)
       "localDB_std::string,l", po::value<std::string>(),
       "The file to use as the parameter database.")("localDBCreate_std::string,L", po::value<std::string>(), "Where to save the parameter database.")(
       "userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
-=======
-  description.add_options()("file_std::vector<std::string>,f", po::value<std::vector<std::string>>(),
-                            "File(s) to open")("type_std::string,t", po::value<std::string>(), "type of file: hld, zip, root or scope")(
-      "range_std::vector<int>,r", po::value<std::vector<int>>(), "Range of events to process.")(
-      "param_std::string,p", po::value<std::string>(), "File with TRB numbers.")("runID_int,i", po::value<int>(), "Run id.")(
-      "detector,k", po::value<std::string>()->default_value("barrel"),
-      "Detector type: barrel (default) ot modular")("progressBar_bool,b", po::bool_switch()->default_value(false), "Progress bar.")(
-      "localDB_std::string,l", po::value<std::string>(),
-      "The file to use as the parameter database.")("localDBCreate_std::string,L", po::value<std::string>(), "Where to save the parameter database.")(
-      "userCfg_std::string,u", po::value<std::string>(), "Json file with optional user parameters.");
->>>>>>> 56ecc9907baf828606cf681a0a662bc016ab577a
   po::variables_map variablesMap;
   po::store(po::parse_command_line(argc, argv, description), variablesMap);
   po::notify(variablesMap);

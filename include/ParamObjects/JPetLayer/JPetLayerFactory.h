@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,9 +16,9 @@
 #ifndef JPET_LAYER_FACTORY_H
 #define JPET_LAYER_FACTORY_H
 
+#include "JPetLayer/JPetLayer.h"
 #include "JPetParamGetter/JPetParamGetter.h"
 #include "JPetSetup/JPetSetupFactory.h"
-#include "JPetLayer/JPetLayer.h"
 #include <map>
 
 /**
@@ -29,8 +29,10 @@
 class JPetLayerFactory
 {
 public:
-  JPetLayerFactory(JPetParamGetter& paramGetter, int runID, JPetSetupFactory& setupFactory):
-    fParamGetter(paramGetter), fRunID(runID), fSetupFactory(setupFactory), fInitialized(false) {}
+  JPetLayerFactory(JPetParamGetter& paramGetter, int runID, JPetSetupFactory& setupFactory)
+      : fParamGetter(paramGetter), fRunID(runID), fSetupFactory(setupFactory), fInitialized(false)
+  {
+  }
   std::map<int, JPetLayer*>& getLayers();
 
 private:

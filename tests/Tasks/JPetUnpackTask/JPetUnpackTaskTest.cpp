@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2019 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -16,19 +16,13 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetUnpackTaskTest
 
-<<<<<<< HEAD
-=======
-#include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
->>>>>>> 56ecc9907baf828606cf681a0a662bc016ab577a
 #include "JPetUnpackTask/JPetUnpackTask.h"
-#include <boost/test/unit_test.hpp>
+#include "JPetOptionsGenerator/JPetOptionsGeneratorTools.h"
 #include <boost/filesystem.hpp>
+#include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(UnpackTaskSuite)
 
-<<<<<<< HEAD
-// TODO
-=======
 BOOST_AUTO_TEST_CASE(wrong_init_test)
 {
   std::string fileNameWithPath = "bla.hld";
@@ -36,9 +30,7 @@ BOOST_AUTO_TEST_CASE(wrong_init_test)
   std::string totCalib = "blu.root";
   std::string tdcCalib = "blo.root";
 
-  BOOST_REQUIRE(!JPetUnpackTask::validateFiles(
-    fileNameWithPath,  xmlConfig, totCalib, true, tdcCalib, true
-  ));
+  BOOST_REQUIRE(!JPetUnpackTask::validateFiles(fileNameWithPath, xmlConfig, totCalib, true, tdcCalib, true));
 }
 
 BOOST_AUTO_TEST_CASE(no_calib_init_test)
@@ -48,9 +40,7 @@ BOOST_AUTO_TEST_CASE(no_calib_init_test)
   std::string totCalib = "blu.root";
   std::string tdcCalib = "blo.root";
 
-  BOOST_REQUIRE(JPetUnpackTask::validateFiles(
-    fileNameWithPath,  xmlConfig, totCalib, false, tdcCalib, false
-  ));
+  BOOST_REQUIRE(JPetUnpackTask::validateFiles(fileNameWithPath, xmlConfig, totCalib, false, tdcCalib, false));
 }
 
 BOOST_AUTO_TEST_CASE(good_init_test)
@@ -60,10 +50,7 @@ BOOST_AUTO_TEST_CASE(good_init_test)
   std::string totCalib = "unitTestData/JPetUnpackerTest/calib.root";
   std::string tdcCalib = "unitTestData/JPetUnpackerTest/tdccalib.root";
 
-  BOOST_REQUIRE(JPetUnpackTask::validateFiles(
-    fileNameWithPath,  xmlConfig, totCalib, true, tdcCalib, true
-  ));
+  BOOST_REQUIRE(JPetUnpackTask::validateFiles(fileNameWithPath, xmlConfig, totCalib, true, tdcCalib, true));
 }
->>>>>>> 56ecc9907baf828606cf681a0a662bc016ab577a
 
 BOOST_AUTO_TEST_SUITE_END()
