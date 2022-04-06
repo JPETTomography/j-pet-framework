@@ -15,6 +15,7 @@
 
 #include "JPetEvent/JPetEvent.h"
 #include "JPetAnalysisTools/JPetAnalysisTools.h"
+#include <iostream>
 
 ClassImp(JPetEvent);
 
@@ -25,24 +26,45 @@ JPetEvent::JPetEvent(const std::vector<const JPetBaseHit*>& hits, JPetEventType 
   setHits(hits, orderedByTime);
 }
 
+JPetEvent::JPetEvent(const JPetEvent& other)
+{
+  if (&other != this)
+  {
+    auto hits = other.getHits();
+    fHits.clear();
+    setHits(hits, false);
+    setEventType(other.getEventType());
+    setRecoFlag(other.getRecoFlag());
+  }
+}
+
+JPetEvent& JPetEvent::operator=(const JPetEvent& other)
+{
+  if (&other != this)
+  {
+    auto hits = other.getHits();
+    fHits.clear();
+    setHits(hits, false);
+    setEventType(other.getEventType());
+    setRecoFlag(other.getRecoFlag());
+  }
+  return *this;
+}
+
 void JPetEvent::setRecoFlag(JPetEvent::RecoFlag flag) { fFlag = flag; }
 
 JPetEvent::RecoFlag JPetEvent::getRecoFlag() const { return fFlag; }
 
 /**
- * Set the whole vector of hits to this event, with boolean argument
+ * Set the whole vector of hit copies to this event, with boolean argument
  * to decide if hits should additionally be ordered by time.
  */
 void JPetEvent::setHits(const std::vector<const JPetBaseHit*>& hits, bool orderedByTime)
 {
+  std::transform(hits.begin(), hits.end(), std::back_inserter(fHits), [](auto& item) { return std::unique_ptr<JPetBaseHit>(item->clone()); });
   if (orderedByTime)
   {
-    ///@TODO add unique_ptrs and move in JPetAnalysisTools or normal vectors
-    fHits = JPetAnalysisTools::getHitsOrderedByTime(hits);
-  }
-  else
-  {
-    std::transform(hits.begin(), hits.end(), std::back_inserter(fHits), [](auto& item) { return item->clone(); });
+    jpet_analysis_tools::orderHitsByTime(fHits);
   }
 }
 
@@ -50,13 +72,33 @@ void JPetEvent::setHits(const std::vector<const JPetBaseHit*>& hits, bool ordere
  * Adding hit to the event, this method does not sort nor order added hits by time.
  * The hit object is actually copied.
  */
-void JPetEvent::addHit(const JPetBaseHit* hit) { fHits.push_back(hit->clone()); }
+void JPetEvent::addHit(const JPetBaseHit* hit) { fHits.emplace_back(hit->clone()); }
 
 /**
- * Get vector of hits from this event.
+ * Get vector of raw hits to this event. The event remains the owner of the hits.
  */
-/// WK: is it event save?
-const std::vector<const JPetBaseHit*>& JPetEvent::getHits() const { return fHits; }
+const std::vector<const JPetBaseHit*> JPetEvent::getHits() const
+{
+  std::vector<const JPetBaseHit*> vect;
+  std::transform(fHits.begin(), fHits.end(), std::back_inserter(vect), [](auto& item) { return item.get(); });
+  return vect;
+}
+
+/**
+ * Get vector of hits being the copies of the hits from that event.
+ */
+std::vector<JPetBaseHit*> JPetEvent::getHitsCopy() const
+{
+  std::vector<JPetBaseHit*> vect;
+  std::transform(fHits.begin(), fHits.end(), std::back_inserter(vect), [](auto& item) { return item.get()->clone(); });
+  return vect;
+}
+
+/**
+ * Get access to the vector of unique pointers to hits from this event.
+ * !Watch out cause it may destroy the hits stored in the event.
+ */
+std::vector<std::unique_ptr<JPetBaseHit>>& JPetEvent::getHits2() { return fHits; }
 
 /**
  * Get all the event types.
