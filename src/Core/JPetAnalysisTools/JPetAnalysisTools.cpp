@@ -18,9 +18,13 @@
 /**
  * Sorting the input vector of JPetHits by ascending time
  */
-std::vector<const JPetBaseHit*> JPetAnalysisTools::getHitsOrderedByTime(const std::vector<const JPetBaseHit*>& oldHits)
+namespace jpet_analysis_tools
 {
-  auto hits(oldHits);
-  std::sort(hits.begin(), hits.end(), [](const JPetBaseHit* h1, const JPetBaseHit* h2) { return h1->getTime() < h2->getTime(); });
-  return hits;
+
+void orderHitsByTime(std::vector<std::unique_ptr<JPetBaseHit>>& hits)
+{
+  std::sort(hits.begin(), hits.end(),
+            [](const std::unique_ptr<JPetBaseHit>& h1, const std::unique_ptr<JPetBaseHit>& h2) -> bool { return h1->getTime() < h2->getTime(); });
 }
+
+} // namespace jpet_analysis_tools

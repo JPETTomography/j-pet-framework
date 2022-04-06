@@ -19,10 +19,11 @@
 #include "JPetAnalysisTools/JPetAnalysisTools.h"
 #include "JPetEvent/JPetEvent.h"
 #include <boost/test/unit_test.hpp>
+using namespace jpet_analysis_tools;
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
 
-BOOST_AUTO_TEST_CASE(constructor_getHitsOrderedByTime)
+BOOST_AUTO_TEST_CASE(constructor_orderHitsByTime)
 {
   TVector3 position(1.0, 1.0, 1.0);
   JPetBaseHit hit1(2.2, 511.0, position);
@@ -35,12 +36,13 @@ BOOST_AUTO_TEST_CASE(constructor_getHitsOrderedByTime)
   event.addHit(&hit2);
   event.addHit(&hit3);
   event.addHit(&hit4);
-  auto results = JPetAnalysisTools::getHitsOrderedByTime(event.getHits());
+  auto& hits = event.getHits2();
+  orderHitsByTime(hits);
   double epsilon = 0.0001;
-  BOOST_REQUIRE_CLOSE(results[0]->getTime(), 1.1, epsilon);
-  BOOST_REQUIRE_CLOSE(results[1]->getTime(), 2.2, epsilon);
-  BOOST_REQUIRE_CLOSE(results[2]->getTime(), 3.3, epsilon);
-  BOOST_REQUIRE_CLOSE(results[3]->getTime(), 4.4, epsilon);
+  BOOST_REQUIRE_CLOSE(hits[0]->getTime(), 1.1, epsilon);
+  BOOST_REQUIRE_CLOSE(hits[1]->getTime(), 2.2, epsilon);
+  BOOST_REQUIRE_CLOSE(hits[2]->getTime(), 3.3, epsilon);
+  BOOST_REQUIRE_CLOSE(hits[3]->getTime(), 4.4, epsilon);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

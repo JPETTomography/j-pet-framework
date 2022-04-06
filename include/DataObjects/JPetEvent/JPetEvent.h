@@ -55,8 +55,11 @@ public:
   JPetEvent(const std::vector<const JPetBaseHit*>& hits, JPetEventType eventType = JPetEventType::kUnknown, bool orderedByTime = true);
   ///@TODO add move and = operators and virtual disestructor (rule of five!)
   JPetEvent(const JPetEvent& other);
+  JPetEvent& operator=(const JPetEvent& other);
   JPetEvent::RecoFlag getRecoFlag() const;
-  const std::vector<const JPetBaseHit*>& getHits() const;
+  const std::vector<const JPetBaseHit*> getHits() const;
+  std::vector<std::unique_ptr<JPetBaseHit>>& getHits2();
+  std::vector<JPetBaseHit*> getHitsCopy() const;
   void setRecoFlag(JPetEvent::RecoFlag flag);
   void setHits(const std::vector<const JPetBaseHit*>& hits, bool orderedByTime = true);
   void addHit(const JPetBaseHit* hit);
@@ -68,7 +71,7 @@ public:
   void Clear(Option_t*) override;
 
 protected:
-  std::vector<const JPetBaseHit*> fHits;
+  std::vector<std::unique_ptr<JPetBaseHit>> fHits;
   JPetEventType fType = JPetEventType::kUnknown;
 
 private:
