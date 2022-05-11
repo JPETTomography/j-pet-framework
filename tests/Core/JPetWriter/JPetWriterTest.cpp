@@ -29,6 +29,7 @@
 
 #include <TFile.h>
 #include <TList.h>
+#include <THashTable.h>
 #include <TNamed.h>
 #include <iostream>
 
