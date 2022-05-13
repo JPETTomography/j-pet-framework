@@ -79,7 +79,7 @@ public:
    * @return chain of task generators
    */
   TaskGeneratorChain createTaskGeneratorChain(const std::map<std::string, boost::any>& options) const;
-
+  
   /**
    * @brief Method to register the task generator. TDerived corresponds to the task type.
    * The name string is also passed as string parameter to the class constructor.
@@ -145,6 +145,8 @@ TaskGeneratorChain generateTaskGeneratorChain(const std::vector<TaskInfo>& taskI
   const std::map<std::string, boost::any>& options
 );
 
+  TaskGeneratorChain generateDirectTaskGeneratorChain(const std::vector<TaskInfo>& taskInfoVect, const std::map<std::string, TaskGenerator>& generatorsMap, const std::map<std::string, boost::any>& options);
+  
 /**
  * @brief Function adds the set of predefined task generators
  *  to the beginning of outChain based on the provided options.

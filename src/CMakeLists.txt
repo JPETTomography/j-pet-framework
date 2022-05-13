@@ -167,6 +167,8 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskFactory/JPetTaskFactory.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetInputHandler.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetOutputHandler.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskStreamIO/JPetTaskStreamIO.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIOLoopPerSubTask/JPetTaskIOLoopPerSubTask.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetTaskIO.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetTaskIOTools.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskLooper/JPetTaskLooper.cpp
@@ -179,6 +181,10 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetEvent/JPetEvent.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetHit/JPetHit.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetHitUtils/JPetHitUtils.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetBaseHit/JPetBaseHit.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetMCRecoHit/JPetMCRecoHit.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetPhysRecoHit/JPetPhysRecoHit.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetRecoHit/JPetRecoHit.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetLOR/JPetLOR.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetPhysSignal/JPetPhysSignal.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects/JPetRawSignal/JPetRawSignal.cpp
@@ -194,6 +200,7 @@ set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAnalysisTools
             ${CMAKE_CURRENT_SOURCE_DIR}/GeantParser/JPetSmearingFunctions/JPetSmearingFunctions.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetMCDecayTree/JPetMCDecayTree.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetMCHit/JPetMCHit.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetRawMCHit/JPetRawMCHit.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/MC/JPetTimeWindowMC/JPetTimeWindowMC.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionValidator/JPetAdditionalValidators.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/Options/JPetOptionValidator/JPetOptionValidator.cpp
@@ -258,6 +265,10 @@ set(HEADERS_WITH_DICTIONARY_REQUIRED
   JPetRecoSignal/JPetRecoSignal.h
   JPetPhysSignal/JPetPhysSignal.h
   JPetHit/JPetHit.h
+  JPetBaseHit/JPetBaseHit.h
+  JPetRecoHit/JPetRecoHit.h
+  JPetPhysRecoHit/JPetPhysRecoHit.h
+  JPetMCRecoHit/JPetMCRecoHit.h
   JPetLOR/JPetLOR.h
   JPetEvent/JPetEvent.h
   JPetStatistics/JPetStatistics.h
@@ -274,6 +285,7 @@ set(HEADERS_WITH_DICTIONARY_REQUIRED
   JPetFEB/JPetFEB.h
   JPetParamBank/JPetParamBank.h
   JPetMCHit/JPetMCHit.h
+  JPetRawMCHit/JPetRawMCHit.h
   JPetTimeWindowMC/JPetTimeWindowMC.h
   JPetMCDecayTree/JPetMCDecayTree.h
   JPetGeantScinHits/JPetGeantScinHits.h

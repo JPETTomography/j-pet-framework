@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -30,7 +30,9 @@ std::map<std::string, boost::any> kDefaultOptions = {{"inputFile_std::string", s
                                                      {"firstEvent_int", -1},
                                                      {"lastEvent_int", -1},
                                                      {"progressBar_bool", false},
-                                                     {"runId_int", -1},
+                                                     {"directProcessing_bool", false},
+                                                     {"runID_int", -1},
+                                                     {"detectorType_std::string", std::string("barrel")},
                                                      {"unpackerConfigFile_std::string", std::string("conf_trb3.xml")},
                                                      {"unpackerCalibFile_std::string", std::string("")}};
 
@@ -40,7 +42,9 @@ std::map<std::string, std::string> kOptCmdLineNameToExtendedName = {{"type", "ty
                                                                     {"range", "range_std::vector<int>"},
                                                                     {"unpackerConfigFile", "unpackerConfigFile_std::string"},
                                                                     {"unpackerCalibFile", "unpackerCalibFile_std::string"},
-                                                                    {"runId", "runId_int"},
+                                                                    {"runID", "runID_int"},
+                                                                    {"directProcessing", "directProcessing_bool"},
+                                                                    {"detector", "detectorType_std::string"},
                                                                     {"progressBar", "progressBar_bool"},
                                                                     {"localDB", "localDB_std::string"},
                                                                     {"localDBCreate", "localDBCreate_std::string"},
@@ -124,7 +128,7 @@ std::map<std::string, boost::any> addMissingDefaultOptions(const std::map<std::s
 }
 
 /**
- * The keys usedin this method correspond to the keys defined in the CmdArgMap
+ * The keys used in this method correspond to the keys defined in the CmdArgMap
  */
 std::map<std::string, std::vector<Transformer>> generateTransformationMap(OptsStrAny& options)
 {

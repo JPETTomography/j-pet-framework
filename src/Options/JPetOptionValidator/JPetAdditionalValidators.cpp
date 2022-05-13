@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -20,7 +20,7 @@
 using boost::any_cast;
 
 // cppcheck-suppress unusedFunction
-bool additionalCheckIfRunIdIsOk(std::pair<std::string, boost::any> option)
+bool additionalCheckIfRunIDIsOk(std::pair<std::string, boost::any> option)
 {
   if (any_cast<int>(option.second) != 10)
   {

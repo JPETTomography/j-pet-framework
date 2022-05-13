@@ -10,13 +10,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  *
- *  @file JPetTaskIOTest.cpp
+ *  @file JPetTaskIOLoopPerSubTaskTest.cpp
  */
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetTaskIOTest
 
-#include "JPetTaskIO/JPetTaskIO.h"
+#include "JPetTaskIOLoopPerSubTask/JPetTaskIOLoopPerSubTask.h"
 #include "JPetCmdParser/JPetCmdParser.h"
 #include "JPetCommonTools/JPetCommonTools.h"
 #include "JPetDataInterface/JPetDataInterface.h"
@@ -41,20 +41,20 @@ BOOST_AUTO_TEST_SUITE(FirstSuite)
 
 BOOST_AUTO_TEST_CASE(progressBarTest)
 {
-  JPetTaskIO taskIO;
-  taskIO.displayProgressBar("Test task", 5, 100);
+  JPetTaskIOLoopPerSubTask taskIOLoopPerSubTask;
+  taskIOLoopPerSubTask.displayProgressBar("Test task", 5, 100);
 }
 
 BOOST_AUTO_TEST_CASE(No_output_no_input)
 {
   auto opts = jpet_options_generator_tools::getDefaultOptions();
   JPetParams params(opts, nullptr);
-  JPetTaskIO taskIO("myTestIO", "", "");
-  taskIO.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask"));
-  BOOST_REQUIRE(taskIO.init(params));
+  JPetTaskIOLoopPerSubTask taskIOLoopPerSubTask("myTestIOLoopPerSubTask", "", "");
+  taskIOLoopPerSubTask.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask"));
+  BOOST_REQUIRE(taskIOLoopPerSubTask.init(params));
   JPetDataInterface pseudoData;
-  BOOST_REQUIRE(taskIO.run(pseudoData));
-  BOOST_REQUIRE(taskIO.terminate(params));
+  BOOST_REQUIRE(taskIOLoopPerSubTask.run(pseudoData));
+  BOOST_REQUIRE(taskIOLoopPerSubTask.terminate(params));
 }
 
 BOOST_AUTO_TEST_CASE(No_output_bad_input)
@@ -62,13 +62,13 @@ BOOST_AUTO_TEST_CASE(No_output_bad_input)
   gErrorIgnoreLevel = kFatal; /// To turn off ROOT error reporting.
   auto opts = jpet_options_generator_tools::getDefaultOptions();
   JPetParams params(opts, nullptr);
-  JPetTaskIO taskIO("myTestIO", "bla", "");
-  taskIO.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask"));
-  BOOST_REQUIRE(!taskIO.init(params));
+  JPetTaskIOLoopPerSubTask taskIOLoopPerSubTask("myTestIOLoopPerSubTask", "bla", "");
+  taskIOLoopPerSubTask.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask"));
+  BOOST_REQUIRE(!taskIOLoopPerSubTask.init(params));
   JPetDataInterface pseudoData;
-  BOOST_REQUIRE(!taskIO.run(pseudoData));
-  BOOST_REQUIRE(taskIO.terminate(params)); /// terminate returns true!
-  gErrorIgnoreLevel = kPrint;              /// Turning back the ROOT error reporting.
+  BOOST_REQUIRE(!taskIOLoopPerSubTask.run(pseudoData));
+  BOOST_REQUIRE(taskIOLoopPerSubTask.terminate(params)); /// terminate returns true!
+  gErrorIgnoreLevel = kPrint;                            /// Turning back the ROOT error reporting.
 }
 
 BOOST_AUTO_TEST_CASE(No_input_bad_output)
@@ -76,12 +76,12 @@ BOOST_AUTO_TEST_CASE(No_input_bad_output)
   gErrorIgnoreLevel = kFatal; /// To turn off ROOT error reporting.
   auto opts = jpet_options_generator_tools::getDefaultOptions();
   JPetParams params(opts, nullptr);
-  JPetTaskIO taskIO("myTestIO", "", "bla");
-  taskIO.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask"));
-  BOOST_REQUIRE(!taskIO.init(params));
+  JPetTaskIOLoopPerSubTask taskIOLoopPerSubTask("myTestIOLoopPerSubTask", "", "bla");
+  taskIOLoopPerSubTask.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask"));
+  BOOST_REQUIRE(!taskIOLoopPerSubTask.init(params));
   JPetDataInterface pseudoData;
-  BOOST_REQUIRE(taskIO.run(pseudoData)); /// run returns true!
-  BOOST_REQUIRE(!taskIO.terminate(params));
+  BOOST_REQUIRE(taskIOLoopPerSubTask.run(pseudoData)); /// run returns true!
+  BOOST_REQUIRE(!taskIOLoopPerSubTask.terminate(params));
   gErrorIgnoreLevel = kPrint; /// Turning back the ROOT error reporting.
 }
 
@@ -90,12 +90,12 @@ BOOST_AUTO_TEST_CASE(bad_input_bad_output)
   gErrorIgnoreLevel = kFatal; /// To turn off ROOT error reporting.
   auto opts = jpet_options_generator_tools::getDefaultOptions();
   JPetParams params(opts, nullptr);
-  JPetTaskIO taskIO("myTestIO", "", "bla");
-  taskIO.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask"));
-  BOOST_REQUIRE(!taskIO.init(params));
+  JPetTaskIOLoopPerSubTask taskIOLoopPerSubTask("myTestIOLoopPerSubTask", "", "bla");
+  taskIOLoopPerSubTask.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask"));
+  BOOST_REQUIRE(!taskIOLoopPerSubTask.init(params));
   JPetDataInterface pseudoData;
-  BOOST_REQUIRE(taskIO.run(pseudoData)); /// run returns true!
-  BOOST_REQUIRE(!taskIO.terminate(params));
+  BOOST_REQUIRE(taskIOLoopPerSubTask.run(pseudoData)); /// run returns true!
+  BOOST_REQUIRE(!taskIOLoopPerSubTask.terminate(params));
   gErrorIgnoreLevel = kPrint; /// Turning back the ROOT error reporting.
 }
 

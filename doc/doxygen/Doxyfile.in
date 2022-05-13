@@ -11,14 +11,14 @@ QUIET                  = YES
 # Basic settings:
 PROJECT_NAME           = "@CMAKE_PROJECT_NAME@"
 PROJECT_NUMBER         = @PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@@VERSION_TYPE@
-STRIP_FROM_PATH        = @CMAKE_CURRENT_SOURCE_DIR@ \ 
+STRIP_FROM_PATH        = @CMAKE_CURRENT_SOURCE_DIR@ \
                          @PROJECT_SOURCE_DIR@
 INPUT                  = @PROJECT_SOURCE_DIR@/README.md \
                          @PROJECT_SOURCE_DIR@/INSTALL.md \
-                         @CMAKE_CURRENT_SOURCE_DIR@ \ 
+                         @CMAKE_CURRENT_SOURCE_DIR@ \
                          @PROJECT_SOURCE_DIR@/src \
                          @PROJECT_SOURCE_DIR@/include
-                         
+
 FILE_PATTERNS          = *.h \
                          *.hpp \
                          *.hh \
@@ -123,3 +123,7 @@ STRIP_CODE_COMMENTS    = NO
 # Side panel
 # If you enable this, change .container max-width: 960px; to 1240px
 GENERATE_TREEVIEW      = YES
+
+# Draw class inheritance graphs
+CLASS_DIAGRAMS = YES
+CLASS_GRAPH = YES
