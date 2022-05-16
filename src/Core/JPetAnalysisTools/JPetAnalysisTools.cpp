@@ -27,4 +27,11 @@ void orderHitsByTime(std::vector<std::unique_ptr<JPetBaseHit>>& hits)
             [](const std::unique_ptr<JPetBaseHit>& h1, const std::unique_ptr<JPetBaseHit>& h2) -> bool { return h1->getTime() < h2->getTime(); });
 }
 
+std::vector<const JPetBaseHit*> orderHitsByTime(std::vector<const JPetBaseHit*>& oldHits)
+{
+  auto hits(oldHits);
+  std::sort(hits.begin(), hits.end(), [](const JPetBaseHit* h1, const JPetBaseHit* h2) -> bool { return h1->getTime() < h2->getTime(); });
+  return hits;
+}
+
 } // namespace jpet_analysis_tools

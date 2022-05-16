@@ -22,7 +22,6 @@
 using namespace jpet_analysis_tools;
 
 BOOST_AUTO_TEST_SUITE(FirstSuite)
-
 BOOST_AUTO_TEST_CASE(constructor_orderHitsByTime)
 {
   TVector3 position(1.0, 1.0, 1.0);
@@ -36,8 +35,8 @@ BOOST_AUTO_TEST_CASE(constructor_orderHitsByTime)
   event.addHit(&hit2);
   event.addHit(&hit3);
   event.addHit(&hit4);
-  auto& hits = event.getHits2();
-  orderHitsByTime(hits);
+  auto hits = event.getHits();
+  hits = orderHitsByTime(hits);
   double epsilon = 0.0001;
   BOOST_REQUIRE_CLOSE(hits[0]->getTime(), 1.1, epsilon);
   BOOST_REQUIRE_CLOSE(hits[1]->getTime(), 2.2, epsilon);
@@ -45,4 +44,25 @@ BOOST_AUTO_TEST_CASE(constructor_orderHitsByTime)
   BOOST_REQUIRE_CLOSE(hits[3]->getTime(), 4.4, epsilon);
 }
 
+BOOST_AUTO_TEST_CASE(constructor_orderHitsByTimeUnique)
+{
+  TVector3 position(1.0, 1.0, 1.0);
+  JPetBaseHit hit1(2.2, 511.0, position);
+  JPetBaseHit hit2(1.1, 511.0, position);
+  JPetBaseHit hit3(4.4, 511.0, position);
+  JPetBaseHit hit4(3.3, 511.0, position);
+
+  std::vector<std::unique_ptr<JPetBaseHit>> hits;
+  hits.emplace_back(new JPetBaseHit(2.2, 511.0, position));
+  hits.emplace_back(new JPetBaseHit(1.1, 511.0, position));
+  hits.emplace_back(new JPetBaseHit(4.4, 511.0, position));
+  hits.emplace_back(new JPetBaseHit(3.3, 511.0, position));
+
+  orderHitsByTime(hits);
+  double epsilon = 0.0001;
+  BOOST_REQUIRE_CLOSE(hits[0]->getTime(), 1.1, epsilon);
+  BOOST_REQUIRE_CLOSE(hits[1]->getTime(), 2.2, epsilon);
+  BOOST_REQUIRE_CLOSE(hits[2]->getTime(), 3.3, epsilon);
+  BOOST_REQUIRE_CLOSE(hits[3]->getTime(), 4.4, epsilon);
+}
 BOOST_AUTO_TEST_SUITE_END()
