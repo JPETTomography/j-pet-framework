@@ -25,5 +25,6 @@
 namespace jpet_analysis_tools
 {
 void orderHitsByTime(std::vector<std::unique_ptr<JPetBaseHit>>& hits);
+std::vector<const JPetBaseHit*> orderHitsByTime(std::vector<const JPetBaseHit*>& hits);
 };
 #endif /* !JPETANALYSISTOOLS_H */

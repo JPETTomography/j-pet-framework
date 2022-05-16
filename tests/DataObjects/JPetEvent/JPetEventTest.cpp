@@ -50,18 +50,15 @@ BOOST_AUTO_TEST_CASE(recoFlagSetterTest)
 
 BOOST_AUTO_TEST_CASE(constructor)
 {
-  std::cout << "constructor" << std::endl;
   JPetBaseHit firstHit;
   JPetBaseHit secondHit;
   JPetEvent event({&firstHit, &secondHit}, JPetEventType::kUnknown);
   BOOST_REQUIRE(!event.getHits().empty());
   BOOST_REQUIRE_EQUAL(event.getHits().size(), 2);
-  std::cout << "after constructor" << std::endl;
 }
 
 BOOST_AUTO_TEST_CASE(constructor_orderedHits)
 {
-  std::cout << "constructor orderedHits" << std::endl;
   TVector3 position(1.0, 1.0, 1.0);
   const JPetBaseHit hit1(2.2, 511.0, position);
   const JPetBaseHit hit2(1.1, 511.0, position);
@@ -75,7 +72,6 @@ BOOST_AUTO_TEST_CASE(constructor_orderedHits)
   BOOST_REQUIRE_CLOSE(results[1]->getTime(), 2.2, epsilon);
   BOOST_REQUIRE_CLOSE(results[2]->getTime(), 3.3, epsilon);
   BOOST_REQUIRE_CLOSE(results[3]->getTime(), 4.4, epsilon);
-  std::cout << "after constructor orderedHits" << std::endl;
 }
 
 BOOST_AUTO_TEST_CASE(constructor_unorderedHits)
