@@ -58,8 +58,6 @@ public:
   JPetEvent& operator=(const JPetEvent& other);
   JPetEvent::RecoFlag getRecoFlag() const;
   const std::vector<const JPetBaseHit*> getHits() const;
-  std::vector<std::unique_ptr<JPetBaseHit>>& getHits2();
-  std::vector<JPetBaseHit*> getHitsCopy() const;
   void setRecoFlag(JPetEvent::RecoFlag flag);
   void setHits(const std::vector<const JPetBaseHit*>& hits, bool orderedByTime = true);
   void addHit(const JPetBaseHit* hit);

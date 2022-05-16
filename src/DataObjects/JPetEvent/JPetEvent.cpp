@@ -85,22 +85,6 @@ const std::vector<const JPetBaseHit*> JPetEvent::getHits() const
 }
 
 /**
- * Get vector of hits being the copies of the hits from that event.
- */
-std::vector<JPetBaseHit*> JPetEvent::getHitsCopy() const
-{
-  std::vector<JPetBaseHit*> vect;
-  std::transform(fHits.begin(), fHits.end(), std::back_inserter(vect), [](auto& item) { return item.get()->clone(); });
-  return vect;
-}
-
-/**
- * Get access to the vector of unique pointers to hits from this event.
- * !Watch out cause it may destroy the hits stored in the event.
- */
-std::vector<std::unique_ptr<JPetBaseHit>>& JPetEvent::getHits2() { return fHits; }
-
-/**
  * Get all the event types.
  */
 JPetEventType JPetEvent::getEventType() const { return fType; }
