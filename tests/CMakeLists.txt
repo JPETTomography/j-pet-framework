@@ -69,7 +69,6 @@ set(UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAna
                       ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetScopeLoader/JPetScopeLoaderTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetSimplePhysSignalReco/HelperMathFunctionsTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnzipTask/JPetUnzipTaskTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnpackTask/JPetUnpackTaskTest.cpp
 )
 
 #Configure Boost
