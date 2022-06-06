@@ -176,9 +176,9 @@ bool JPetInputHandlerHLD::loadTDCCalib(const JPetParams& params)
 
     fTDCCalib[address][local_channel_no] = corr_vec;
   }
-
-  // calib_rootfile->Close();
-  // delete calib_rootfile;
+  
+  calib_rootfile->Close();
+  delete calib_rootfile;
 
   return true;
 }
