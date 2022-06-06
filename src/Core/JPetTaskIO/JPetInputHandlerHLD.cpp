@@ -17,7 +17,6 @@
 #include <TFile.h>
 #include <TH1F.h>
 #include <TString.h>
-#include <bits/stdint-uintn.h>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -145,7 +144,7 @@ bool JPetInputHandlerHLD::loadTDCCalib(const JPetParams& params)
       continue;
     }
 
-    std::vector<uint32_t> corr_vec(128);
+    std::vector<uint32_t> corr_vec(150);
     for (int i = 1; i < corr_histo->GetNbinsX(); ++i)
     {
       corr_vec[i - 1] = corr_histo->GetBinContent(i) * 1000.;
@@ -168,7 +167,7 @@ bool JPetInputHandlerHLD::loadTDCCalib(const JPetParams& params)
       continue;
     }
 
-    std::vector<uint32_t> corr_vec(128);
+    std::vector<uint32_t> corr_vec(150);
     for (int i = 1; i < corr_histo->GetNbinsX(); ++i)
     {
       corr_vec[i - 1] = corr_histo->GetBinContent(i) * 1000.;
