@@ -47,7 +47,7 @@ bool JPetInputHandlerHLD::openInput(const char* inputFilename, const JPetParams&
     return false;
   }
 
-  if (loadTDCCalib(params))
+  if (!loadTDCCalib(params))
   {
     WARNING("Failed to load TDC nonlinearity calibration. Unpacker will proceed without calibration.");
   }
