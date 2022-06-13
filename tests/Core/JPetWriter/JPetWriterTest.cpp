@@ -30,6 +30,7 @@
 #include "Signals/JPetRecoSignal/JPetRecoSignal.h"
 #include <TFile.h>
 #include <TList.h>
+#include <THashTable.h>
 #include <TNamed.h>
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
