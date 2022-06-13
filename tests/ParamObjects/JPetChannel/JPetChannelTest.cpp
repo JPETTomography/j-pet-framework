@@ -13,6 +13,8 @@
  *  @file JPetChannelTest.cpp
  */
 
+#include "JPetDataModule/JPetDataModuleFactory.h"
+#include "JPetDataSource/JPetDataSourceFactory.h"
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetChannelTest
 
@@ -62,24 +64,24 @@ class TestParamGetter : public JPetParamGetter
         break;
       // Single object
       case 1:
-        result = {{1, {{"id", "1"}, {"thr_num", "1"}, {"thr_val", "80.0"}, {"pm_id", "1"}}}};
+        result = {{1, {{"id", "1"}, {"thr_num", "1"}, {"thr_val", "80.0"}, {"pm_id", "1"}, {"data_module_id", "1"}}}};
         break;
       // Two objects
       case 2:
-        result = {{1, {{"id", "1"}, {"thr_num", "1"}, {"thr_val", "80.0"}, {"pm_id", "1"}}},
-                  {5, {{"id", "5"}, {"thr_num", "2"}, {"thr_val", "110.0"}, {"pm_id", "1"}}}};
+        result = {{1, {{"id", "1"}, {"thr_num", "1"}, {"thr_val", "80.0"}, {"pm_id", "1"}, {"data_module_id", "1"}}},
+                  {5, {{"id", "5"}, {"thr_num", "2"}, {"thr_val", "110.0"}, {"pm_id", "1"}, {"data_module_id", "1"}}}};
         break;
       // Missing field
       case 3:
-        result = {{1, {{"id", "1"}, {"thr_num", "1"}, {"pm_id", "1"}}}};
+        result = {{1, {{"id", "1"}, {"thr_num", "1"}, {"pm_id", "1"}, {"data_module_id", "1"}}}};
         break;
       // Wrong field
       case 4:
-        result = {{1, {{"id", "1"}, {"thr_num", "last"}, {"thr_val", "80.0"}, {"pm_id", "1"}}}};
+        result = {{1, {{"id", "1"}, {"thr_num", "last"}, {"thr_val", "80.0"}, {"pm_id", "1"}, {"data_module_id", "1"}}}};
         break;
       // Wrong relation
       case 5:
-        result = {{1, {{"id", "1"}, {"thr_num", "33"}, {"thr_val", "80.0"}, {"pm_id", "22"}}}};
+        result = {{1, {{"id", "1"}, {"thr_num", "33"}, {"thr_val", "80.0"}, {"pm_id", "22"}, {"data_module_id", "1"}}}};
         break;
       }
       break;
@@ -111,6 +113,28 @@ class TestParamGetter : public JPetParamGetter
       break;
     case ParamObjectType::kSetup:
       result = {{1, {{"id", "1"}, {"description", "jpet"}}}};
+      break;
+    case ParamObjectType::kDataSource:
+      result = {
+        {1,
+         {
+           {"id", "1"},
+           {"type", "DJPET_ENDP"},
+           {"trbnet_address", "0000"},
+           {"hub_address", "0000"}
+         }}};
+      break;
+    case ParamObjectType::kDataModule:
+      result = {
+        {1,
+         {
+           {"id", "1"},
+           {"type", "FTAB_TDC"},
+           {"trbnet_address", "A110"},
+           {"channels_number", "105"},
+           {"channels_offset", "2100"},
+           {"data_source_id", "1"}
+         }}};
       break;
     default:
       break;
@@ -169,7 +193,9 @@ BOOST_AUTO_TEST_CASE(no_Channels)
   JPetScinFactory scinFactory(paramGetter, 0, slotFactory);
   JPetMatrixFactory matrixFactory(paramGetter, 0, scinFactory);
   JPetPMFactory pmFactory(paramGetter, 0, matrixFactory);
-  JPetChannelFactory channelFactory(paramGetter, 0, pmFactory);
+  JPetDataSourceFactory dataSourceFactory(paramGetter, 0);
+  JPetDataModuleFactory dataModuleFactory(paramGetter, 0, dataSourceFactory);
+  JPetChannelFactory channelFactory(paramGetter, 0, pmFactory, dataModuleFactory);
   auto& channels = channelFactory.getChannels();
   BOOST_REQUIRE_EQUAL(channels.size(), 0);
 }
@@ -182,7 +208,9 @@ BOOST_AUTO_TEST_CASE(single_object)
   JPetScinFactory scinFactory(paramGetter, 1, slotFactory);
   JPetMatrixFactory matrixFactory(paramGetter, 1, scinFactory);
   JPetPMFactory pmFactory(paramGetter, 1, matrixFactory);
-  JPetChannelFactory channelFactory(paramGetter, 1, pmFactory);
+  JPetDataSourceFactory dataSourceFactory(paramGetter, 1);
+  JPetDataModuleFactory dataModuleFactory(paramGetter, 1, dataSourceFactory);
+  JPetChannelFactory channelFactory(paramGetter, 1, pmFactory, dataModuleFactory);
   auto& channels = channelFactory.getChannels();
   BOOST_REQUIRE_EQUAL(channels.size(), 1);
   auto channel = channels[1];
@@ -200,7 +228,9 @@ BOOST_AUTO_TEST_CASE(two_objects)
   JPetScinFactory scinFactory(paramGetter, 2, slotFactory);
   JPetMatrixFactory matrixFactory(paramGetter, 2, scinFactory);
   JPetPMFactory pmFactory(paramGetter, 2, matrixFactory);
-  JPetChannelFactory channelFactory(paramGetter, 2, pmFactory);
+  JPetDataSourceFactory dataSourceFactory(paramGetter, 2);
+  JPetDataModuleFactory dataModuleFactory(paramGetter, 2, dataSourceFactory);
+  JPetChannelFactory channelFactory(paramGetter, 2, pmFactory, dataModuleFactory);
   auto& channels = channelFactory.getChannels();
   BOOST_REQUIRE_EQUAL(channels.size(), 2);
   auto channel = channels[1];
@@ -223,7 +253,9 @@ BOOST_AUTO_TEST_CASE(missing_field)
   JPetScinFactory scinFactory(paramGetter, 3, slotFactory);
   JPetMatrixFactory matrixFactory(paramGetter, 3, scinFactory);
   JPetPMFactory pmFactory(paramGetter, 3, matrixFactory);
-  JPetChannelFactory channelFactory(paramGetter, 3, pmFactory);
+  JPetDataSourceFactory dataSourceFactory(paramGetter, 3);
+  JPetDataModuleFactory dataModuleFactory(paramGetter, 3, dataSourceFactory);
+  JPetChannelFactory channelFactory(paramGetter, 3, pmFactory, dataModuleFactory);
   BOOST_REQUIRE_THROW(channelFactory.getChannels(), std::out_of_range);
 }
 
@@ -235,7 +267,9 @@ BOOST_AUTO_TEST_CASE(wrong_field)
   JPetScinFactory scinFactory(paramGetter, 4, slotFactory);
   JPetMatrixFactory matrixFactory(paramGetter, 4, scinFactory);
   JPetPMFactory pmFactory(paramGetter, 4, matrixFactory);
-  JPetChannelFactory channelFactory(paramGetter, 4, pmFactory);
+  JPetDataSourceFactory dataSourceFactory(paramGetter, 4);
+  JPetDataModuleFactory dataModuleFactory(paramGetter, 4, dataSourceFactory);
+  JPetChannelFactory channelFactory(paramGetter, 4, pmFactory, dataModuleFactory);
   BOOST_REQUIRE_THROW(channelFactory.getChannels(), std::bad_cast);
 }
 
@@ -247,7 +281,9 @@ BOOST_AUTO_TEST_CASE(wrong_relation)
   JPetScinFactory scinFactory(paramGetter, 5, slotFactory);
   JPetMatrixFactory matrixFactory(paramGetter, 5, scinFactory);
   JPetPMFactory pmFactory(paramGetter, 5, matrixFactory);
-  JPetChannelFactory channelFactory(paramGetter, 5, pmFactory);
+  JPetDataSourceFactory dataSourceFactory(paramGetter, 5);
+  JPetDataModuleFactory dataModuleFactory(paramGetter, 5, dataSourceFactory);
+  JPetChannelFactory channelFactory(paramGetter, 5, pmFactory, dataModuleFactory);
   BOOST_REQUIRE_THROW(channelFactory.getChannels(), std::out_of_range);
 }
 
