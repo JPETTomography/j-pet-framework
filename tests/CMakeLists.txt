@@ -13,7 +13,7 @@ set(UNIT_TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetAnalysisTools/JPetAna
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTask/JPetTaskTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskChainExecutor/JPetTaskChainExecutorTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskFactory/JPetTaskFactoryTest.cpp
-                      ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetInputHandlerTest.cpp
+                      ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetInputHandlerROOTTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetTaskIOToolsTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskStreamIO/JPetTaskStreamIOTest.cpp
                       ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIOLoopPerSubTask/JPetTaskIOLoopPerSubTaskTest.cpp
