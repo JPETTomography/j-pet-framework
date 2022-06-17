@@ -1,5 +1,5 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE JPetInputHandlerTest
+#define BOOST_TEST_MODULE JPetInputHandlerROOTTest
 
 #include "JPetTaskIO/JPetInputHandlerROOT.h"
 #include "JPetParamGetterAscii/JPetParamGetterAscii.h"
