@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(setEntryRange2)
 
   opts["firstEvent_int"] = 1;
   opts["lastEvent_int"] = 1;
-  auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager(new JPetParamGetterAscii(dataFileName)));
+  auto mgr = std::make_shared<JPetParamManager>(new JPetParamGetterAscii(dataFileName));
   JPetParams params(opts, mgr);
 
   JPetInputHandler handler;
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange3)
 
   opts["firstEvent_int"] = 0;
   opts["lastEvent_int"] = 1;
-  auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager(new JPetParamGetterAscii(dataFileName)));
+  auto mgr = std::make_shared<JPetParamManager>(new JPetParamGetterAscii(dataFileName));
   JPetParams params(opts, mgr);
 
   JPetInputHandler handler;
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange4)
 
   opts["firstEvent_int"] = 1;
   opts["lastEvent_int"] = -1;
-  auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager(new JPetParamGetterAscii(dataFileName)));
+  auto mgr = std::make_shared<JPetParamManager>(new JPetParamGetterAscii(dataFileName));
   JPetParams params(opts, mgr);
 
   JPetInputHandler handler;
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange5)
 
   opts["firstEvent_int"] = -1;
   opts["lastEvent_int"] = -1;
-  auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager(new JPetParamGetterAscii(dataFileName)));
+  auto mgr = std::make_shared<JPetParamManager>(new JPetParamGetterAscii(dataFileName));
   JPetParams params(opts, mgr);
 
   JPetInputHandler handler;
@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(calculateEntryRange6)
 
   opts["firstEvent_int"] = -1;
   opts["lastEvent_int"] = 5;
-  auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager(new JPetParamGetterAscii(dataFileName)));
+  auto mgr = std::make_shared<JPetParamManager>(new JPetParamGetterAscii(dataFileName));
   JPetParams params(opts, mgr);
 
   JPetInputHandler handler;
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE(getNextEntry)
 
   opts["firstEvent_int"] = -1;
   opts["lastEvent_int"] = 5;
-  auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager(new JPetParamGetterAscii(dataFileName)));
+  auto mgr = std::make_shared<JPetParamManager>(new JPetParamGetterAscii(dataFileName));
   JPetParams params(opts, mgr);
 
   JPetInputHandler handler;
