@@ -135,6 +135,22 @@ BOOST_AUTO_TEST_CASE(setEntryRange2)
   BOOST_REQUIRE(!handler.nextEntry());
 }
 
+BOOST_AUTO_TEST_CASE(noTDCcalib)
+{
+  using namespace jpet_options_generator_tools;
+  auto opts = getDefaultOptions();
+
+  opts["firstEvent_int"] = -1;
+  opts["lastEvent_int"] = 5;
+  opts["runID_int"] = 1;
+
+  auto mgr = std::make_shared<JPetParamManager>(new JPetParamGetterAscii(dataFileName));
+  JPetParams params(opts, mgr);
+
+  JPetInputHandlerHLD handler;
+  BOOST_REQUIRE(!handler.loadTDCCalib(params));
+}
+
 BOOST_AUTO_TEST_CASE(loadTDCcalib)
 {
   using namespace jpet_options_generator_tools;
@@ -144,15 +160,14 @@ BOOST_AUTO_TEST_CASE(loadTDCcalib)
   opts["lastEvent_int"] = 5;
   opts["runID_int"] = 1;
 
-  auto mgr = std::make_shared<JPetParamManager>(new JPetParamGetterAscii("unitTestData/JPetParamGetterAsciiTest/DBv10.json"));
+  auto mgr = std::make_shared<JPetParamManager>(new JPetParamGetterAscii("unitTestData/JPetParamManagerTest/DBv10.json"));
   mgr->fillParameterBank(1);
-
+  
   opts["Unpacker_TDCnonlinearityCalib_std::string"] = std::string("unitTestData/JPetTaskIOTest/tdc_calib.root");
   JPetParams params(opts, mgr);
 
   JPetInputHandlerHLD handler;
   BOOST_REQUIRE(handler.loadTDCCalib(params));
-
 }
 
 BOOST_AUTO_TEST_SUITE_END()
