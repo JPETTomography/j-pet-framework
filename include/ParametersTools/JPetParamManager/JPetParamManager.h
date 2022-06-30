@@ -77,8 +77,9 @@ public:
   inline std::set<ParamObjectType> getExpectMissing() const { return fExpectMissing; }
 
 private:
-  JPetParamManager(const JPetParamManager&);
-  JPetParamManager& operator=(const JPetParamManager&);
+  JPetParamManager(const JPetParamManager&) = delete;
+  JPetParamManager(const JPetParamManager*) = delete;
+  JPetParamManager& operator=(const JPetParamManager&) = delete;
   JPetParamGetter* fParamGetter = nullptr;
   std::set<ParamObjectType> fExpectMissing;
   JPetParamBank* fBank = nullptr;
