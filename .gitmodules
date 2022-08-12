@@ -1,6 +1,3 @@
-[submodule "external/djpet_software"]
-        path = external/djpet_software
-        url = https://aleksander_gajos@bitbucket.org/fpgafais/djpet_software.git
 [submodule "j-pet-unpacker"]
 	path = j-pet-unpacker
 	url = https://github.com/JPETTomography/j-pet-unpacker.git
