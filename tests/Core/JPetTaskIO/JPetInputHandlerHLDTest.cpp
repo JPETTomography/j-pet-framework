@@ -1,4 +1,3 @@
-#include <boost/test/tools/old/interface.hpp>
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE JPetInputHandlerHLDTest
 
