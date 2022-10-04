@@ -17,6 +17,7 @@
 #define BOOST_TEST_MODULE JPetUnzipTask
 
 #include "JPetUnzipTask/JPetUnzipTask.h"
+#include "JPetCommonTools/JPetCommonTools.h"
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -70,6 +71,7 @@ BOOST_AUTO_TEST_CASE(tryToUnzipSomethingNotExistingFileWithBz2)
 BOOST_AUTO_TEST_CASE(sucessZip)
 {
   boost::filesystem::remove("unitTestData/JPetTaskChainExecutorUtilsTest/goodZIP");
+  boost::filesystem::remove(JPetCommonTools::currentFullPath() + "/goodZIP");
   BOOST_REQUIRE(JPetUnzipTask::unzipFile("unitTestData/JPetTaskChainExecutorUtilsTest/goodZIP.zip", "./"));
 }
 
