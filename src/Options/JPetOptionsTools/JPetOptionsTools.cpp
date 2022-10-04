@@ -240,6 +240,7 @@ std::string getLocalDBCreate(const std::map<std::string, boost::any>& opts)
   return result;
 }
 
+// cppcheck-suppress unusedFunction
 std::string getUnpackerConfigFile(const std::map<std::string, boost::any>& opts)
 {
   return any_cast<std::string>(opts.at("unpackerConfigFile_std::string"));
