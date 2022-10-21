@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2022 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -18,9 +18,9 @@
 
 #include <TMath.h>
 
-JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, UInt_t decayTreeIndex, const JPetParamBank& paramBank)
+JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank)
 {
-  JPetMCHit mcHit = JPetMCHit(decayTreeIndex-1,          // UInt_t MCDecayTreeIndex,
+  JPetMCHit mcHit = JPetMCHit(0,          // UInt_t MCDecayTreeIndex,
                               geantHit->GetEvtID(),    // UInt_t MCVtxIndex,
                               geantHit->GetTrackID(),  // UInt_t MCTrackIndex
                               geantHit->GetEneDepos(), //  keV
