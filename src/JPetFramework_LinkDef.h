@@ -12,6 +12,16 @@
 #pragma link C++ function JPetWriter::Write(vector <JPetLOR>&);
 #pragma link C++ function JPetWriter::Write(JPetHit&);
 #pragma link C++ function JPetWriter::Write(vector <JPetHit>&);
+#pragma link C++ function JPetWriter::Write(JPetBaseHit&);
+#pragma link C++ function JPetWriter::Write(vector <JPetBaseHit>&);
+#pragma link C++ function JPetWriter::Write(JPetRawMCHit&);
+#pragma link C++ function JPetWriter::Write(vector <JPetRawMCHit>&);
+#pragma link C++ function JPetWriter::Write(JPetRecoHit&);
+#pragma link C++ function JPetWriter::Write(vector <JPetRecoHit>&);
+#pragma link C++ function JPetWriter::Write(JPetPhysRecoHit&);
+#pragma link C++ function JPetWriter::Write(vector <JPetPhysRecoHit>&);
+#pragma link C++ function JPetWriter::Write(JPetMCRecoHit&);
+#pragma link C++ function JPetWriter::Write(vector <JPetMCRecoHit>&);
 #pragma link C++ function JPetWriter::Write(JPetPM&);
 #pragma link C++ function JPetWriter::Write(vector <JPetPM>&);
 #pragma link C++ function JPetWriter::Write(JPetScin&);
@@ -22,6 +32,10 @@
 #pragma link C++ function JPetWriter::Write(vector <JPetRawSignal>&);
 #pragma link C++ function JPetWriter::Write(JPetTRB&);
 #pragma link C++ function JPetWriter::Write(vector <JPetTRB>&);
+#pragma link C++ function JPetWriter::Write(JPetDataSource&);
+#pragma link C++ function JPetWriter::Write(vector <JPetDataSource>&);
+#pragma link C++ function JPetWriter::Write(JPetDataModule&);
+#pragma link C++ function JPetWriter::Write(vector <JPetDataModule>&);
 #pragma link C++ function JPetWriter::Write(JPetTimeWindow&);
 #pragma link C++ function JPetWriter::Write(vector <JPetTimeWindow>&);
 
@@ -35,6 +49,11 @@
 #pragma link C++ class JPetSigCh + ;
 #pragma link C++ class JPetTreeHeader + ;
 #pragma link C++ class JPetHit + ;
+#pragma link C++ class JPetBaseHit + ;
+#pragma link C++ class JPetRawMCHit + ;
+#pragma link C++ class JPetRecoHit + ;
+#pragma link C++ class JPetPhysRecoHit + ;
+#pragma link C++ class JPetMCRecoHit + ;
 #pragma link C++ class JPetTimeWindowMC + ;
 #pragma link C++ class JPetFrame + ;
 #pragma link C++ class JPetPM + ;
@@ -47,6 +66,8 @@
 #pragma link C++ class JPetGeantScinHits + ;
 #pragma link C++ class JPetStatistics + ;
 #pragma link C++ class JPetTRB + ;
+#pragma link C++ class JPetDataSource + ;
+#pragma link C++ class JPetDataModule + ;
 #pragma link C++ class JPetBarrelSlot + ;
 #pragma link C++ class JPetGeantDecayTree + ;
 #pragma link C++ class JPetLayer + ;

@@ -34,7 +34,6 @@ JPetGeantParser::~JPetGeantParser() {}
 
 bool JPetGeantParser::init()
 {
-
   // create detector map
   std::unique_ptr<JPetGeomMapping> fDetectorMap(new JPetGeomMapping(getParamBank()));
 
@@ -61,13 +60,25 @@ bool JPetGeantParser::init()
   {
     fMakeEffiHisto = getOptionAsBool(fParams.getOptions(), kMakeEfficienciesParamKey);
   }
-  if (isOptionSet(fParams.getOptions(), kEnergyThresholdParamKey)) {
+  if (isOptionSet(fParams.getOptions(), kEnergyThresholdParamKey))
+  {
     fExperimentalThreshold = getOptionAsDouble(fParams.getOptions(), kEnergyThresholdParamKey);
   }
   if (isOptionSet(fParams.getOptions(), kProcessSingleEventinWindowParamKey))
   {
     fProcessSingleEventinWindow = getOptionAsBool(fParams.getOptions(), kProcessSingleEventinWindowParamKey);
   }
+
+  if (isOptionSet(fParams.getOptions(), kSeedParamKey))
+  {
+    fSeed = getOptionAsInt(fParams.getOptions(), kSeedParamKey);
+  }
+
+  JPetGeantParserTools::setSeedTogRandom(getOriginalSeed());
+  INFO("Seed value used for resolution smearing of MC simulation data: " << boost::lexical_cast<std::string>(getOriginalSeed()));
+
+  loadSmearingOptionsAndSetupExperimentalParametrizer();
+
   if (fMakeHisto)
     bookBasicHistograms();
   if (fMakeEffiHisto)
@@ -80,6 +91,98 @@ bool JPetGeantParser::init()
   INFO("MC Hit wrapper started.");
 
   return true;
+}
+
+void JPetGeantParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
+{
+  std::vector<double> timeSmearingParameters;
+  if (isOptionSet(fParams.getOptions(), kTimeSmearingParametersParamKey))
+  {
+    timeSmearingParameters = getOptionAsVectorOfDoubles(fParams.getOptions(), kTimeSmearingParametersParamKey);
+  }
+
+  std::string timeSmearingFormula;
+  if (isOptionSet(fParams.getOptions(), kTimeSmearingFunctionParamKey))
+  {
+    timeSmearingFormula = getOptionAsString(fParams.getOptions(), kTimeSmearingFunctionParamKey);
+  }
+
+  std::vector<double> timeSmearingLimits;
+  if (isOptionSet(fParams.getOptions(), kTimeSmearingFunctionLimitsParamKey))
+  {
+    timeSmearingLimits = getOptionAsVectorOfDoubles(fParams.getOptions(), kTimeSmearingFunctionLimitsParamKey);
+  }
+
+  std::vector<double> energySmearingParameters;
+  if (isOptionSet(fParams.getOptions(), kEnergySmearingParametersParamKey))
+  {
+    energySmearingParameters = getOptionAsVectorOfDoubles(fParams.getOptions(), kEnergySmearingParametersParamKey);
+  }
+
+  std::string energySmearingFormula;
+  if (isOptionSet(fParams.getOptions(), kEnergySmearingFunctionParamKey))
+  {
+    energySmearingFormula = getOptionAsString(fParams.getOptions(), kEnergySmearingFunctionParamKey);
+  }
+
+  std::vector<double> energySmearingLimits;
+  if (isOptionSet(fParams.getOptions(), kEnergySmearingFunctionLimitsParamKey))
+  {
+    energySmearingLimits = getOptionAsVectorOfDoubles(fParams.getOptions(), kEnergySmearingFunctionLimitsParamKey);
+  }
+
+  std::vector<double> zPositionSmearingParameters;
+  if (isOptionSet(fParams.getOptions(), kZPositionSmearingParametersParamKey))
+  {
+    zPositionSmearingParameters = getOptionAsVectorOfDoubles(fParams.getOptions(), kZPositionSmearingParametersParamKey);
+  }
+
+  std::string zPositionSmearingFormula;
+  if (isOptionSet(fParams.getOptions(), kZPositionSmearingFunctionParamKey))
+  {
+    zPositionSmearingFormula = getOptionAsString(fParams.getOptions(), kZPositionSmearingFunctionParamKey);
+  }
+
+  std::vector<double> zPositionSmearingLimits;
+  if (isOptionSet(fParams.getOptions(), kZPositionSmearingFunctionLimitsParamKey))
+  {
+    zPositionSmearingLimits = getOptionAsVectorOfDoubles(fParams.getOptions(), kZPositionSmearingFunctionLimitsParamKey);
+  }
+
+  fExperimentalParametrizer.setSmearingFunctions({{timeSmearingFormula, timeSmearingParameters},
+                                                  {energySmearingFormula, energySmearingParameters},
+                                                  {zPositionSmearingFormula, zPositionSmearingParameters}});
+
+  std::vector<std::pair<double, double>> limits;
+
+  if (timeSmearingLimits.size() == 2)
+  {
+    limits.push_back({timeSmearingLimits[0], timeSmearingLimits[1]});
+  }
+  else
+  {
+    limits.push_back({-1, -1});
+  }
+
+  if (energySmearingLimits.size() == 2)
+  {
+    limits.push_back({energySmearingLimits[0], energySmearingLimits[1]});
+  }
+  else
+  {
+    limits.push_back({-1, -1});
+  }
+
+  if (zPositionSmearingLimits.size() == 2)
+  {
+    limits.push_back({zPositionSmearingLimits[0], zPositionSmearingLimits[1]});
+  }
+  else
+  {
+    limits.push_back({-1, -1});
+  }
+
+  fExperimentalParametrizer.setSmearingFunctionLimits(limits);
 }
 
 bool JPetGeantParser::exec()
@@ -151,7 +254,6 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
   bool isGen3g = evPack->GetEventInformation()->GetThreeGammaGen();
 
   float timeShift = getNextTimeShift();
-  
   for (unsigned int i = 0; i < evPack->GetNumberOfHits(); i++)
   {
 
@@ -161,7 +263,7 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
     if (fMakeHisto)
       fillHistoMCGen(mcHit);
     // create reconstructed hit and add all smearings
-    JPetHit  recHit =  JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), timeShift);
+    JPetHit recHit = JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), timeShift, fExperimentalParametrizer);
 
     // add criteria for possible rejection of reconstructed events (e.g. E>50 keV)
     if (JPetGeantParserTools::isHitReconstructed(recHit, fExperimentalThreshold))
@@ -173,7 +275,6 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
         fillHistoMCRec(recHit);
     }
     fStoredMCHits.push_back(mcHit);
-
   }
 
   isRec2g = isSaved2g[0] && isSaved2g[1];
@@ -327,145 +428,50 @@ void JPetGeantParser::bookBasicHistograms()
 
   // GENERATED HISTOGRAMS
 
-  getStatistics().createHistogram(
-    new TH1F("gen_hits_z_pos",
-             "Gen hits Z position",
-             100, -60.0, 60.0)
-  );
+  getStatistics().createHistogram(new TH1F("gen_hits_z_pos", "Gen hits Z position", 100, -60.0, 60.0));
 
-  getStatistics().createHistogram(
-    new TH2F("gen_hits_xy_pos",
-             "GEN hits XY pos",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
+  getStatistics().createHistogram(new TH2F("gen_hits_xy_pos", "GEN hits XY pos", 121, -60.5, 60.5, 121, -60.5, 60.5));
 
+  getStatistics().createHistogram(new TH1F("gen_hit_time", "Gen hit time", 100, 0.0, 15000.0));
 
-  getStatistics().createHistogram(
-    new TH1F("gen_hit_time",
-             "Gen hit time",
-             100, 0.0, 15000.0)
-  );
+  getStatistics().createHistogram(new TH1F("gen_hit_eneDepos", "Gen hit ene deposition", 750, 0.0, 1500.0));
 
-  getStatistics().createHistogram(
-    new TH1F("gen_hit_eneDepos",
-             "Gen hit ene deposition",
-             750, 0.0, 1500.0)
-  );
+  getStatistics().createHistogram(new TH2F("gen_XY", "GEN XY coordinates of annihilation point", 121, -60.5, 60.5, 121, -60.5, 60.5));
 
+  getStatistics().createHistogram(new TH2F("gen_XZ", "GEN XZ coordinates of annihilation point", 121, -60.5, 60.5, 121, -60.5, 60.5));
 
-  getStatistics().createHistogram(
-    new TH2F("gen_XY",
-             "GEN XY coordinates of annihilation point",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
+  getStatistics().createHistogram(new TH2F("gen_YZ", "GEN YZ coordinates of annihilation point", 121, -60.5, 60.5, 121, -60.5, 60.5));
 
-  getStatistics().createHistogram(
-    new TH2F("gen_XZ",
-             "GEN XZ coordinates of annihilation point",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
+  getStatistics().createHistogram(new TH2F("gen_prompt_XY", "GEN XY coordinates of prompt emission point", 121, -60.5, 60.5, 121, -60.5, 60.5));
 
-  getStatistics().createHistogram(
-    new TH2F("gen_YZ",
-             "GEN YZ coordinates of annihilation point",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
+  getStatistics().createHistogram(new TH2F("gen_prompt_XZ", "GEN XZ coordinates of prompt emission point", 121, -60.5, 60.5, 121, -60.5, 60.5));
 
-  getStatistics().createHistogram(
-    new TH2F("gen_prompt_XY",
-             "GEN XY coordinates of prompt emission point",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
+  getStatistics().createHistogram(new TH2F("gen_prompt_YZ", "GEN YZ coordinates of prompt emission point", 121, -60.5, 60.5, 121, -60.5, 60.5));
 
-  getStatistics().createHistogram(
-    new TH2F("gen_prompt_XZ",
-             "GEN XZ coordinates of prompt emission point",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
+  getStatistics().createHistogram(new TH1F("gen_hit_multiplicity", "Gen hit multiplicity", 6, 0.0, 5.0));
 
-  getStatistics().createHistogram(
-    new TH2F("gen_prompt_YZ",
-             "GEN YZ coordinates of prompt emission point",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
-
-
-
-  getStatistics().createHistogram(
-    new TH1F("gen_hit_multiplicity",
-             "Gen hit multiplicity",
-             6, 0.0, 5.0)
-  );
-
-  getStatistics().createHistogram(
-    new TH1F("gen_lifetime",
-             "Gen lifetime",
-             100, 0.0, 1500.0)
-  );
-
-
-
+  getStatistics().createHistogram(new TH1F("gen_lifetime", "Gen lifetime", 100, 0.0, 1500.0));
 
   // RECONSTRUCTED HISTOGRAMS
 
-  getStatistics().createHistogram(
-    new TH1F("hits_z_pos",
-             "hits Z position",
-             100, -60.0, 60.0)
-  );
+  getStatistics().createHistogram(new TH1F("hits_z_pos", "hits Z position", 100, -60.0, 60.0));
 
-  getStatistics().createHistogram(
-    new TH2F("hits_xy_pos",
-             "hits XY pos",
-             121, -60.5, 60.5,
-             121, -60.5, 60.5
-            ));
+  getStatistics().createHistogram(new TH2F("hits_xy_pos", "hits XY pos", 121, -60.5, 60.5, 121, -60.5, 60.5));
 
-  getStatistics().createHistogram(
-    new TH1F("rec_hit_time",
-             "hit time",
-             100, 0.0, 15000.0)
-  );
+  getStatistics().createHistogram(new TH1F("rec_hit_time", "hit time", 100, 0.0, 15000.0));
 
-  getStatistics().createHistogram(
-    new TH1F("rec_hit_eneDepos",
-             "hit ene deposition",
-             750, 0.0, 1500.0)
-  );
-
-
+  getStatistics().createHistogram(new TH1F("rec_hit_eneDepos", "hit ene deposition", 750, 0.0, 1500.0));
 }
 
 void JPetGeantParser::bookEfficiencyHistograms()
 {
 
-  getStatistics().createHistogram(
-    new TEfficiency("effi_3g_in_rho_z",
-                    "effi for 1g as function of rho and z of vtx",
-                    100, 0., 50., 100, -25., 25.)
-  );
+  getStatistics().createHistogram(new TEfficiency("effi_3g_in_rho_z", "effi for 1g as function of rho and z of vtx", 100, 0., 50., 100, -25., 25.));
+
+  getStatistics().createHistogram(new TEfficiency("effi_2g_in_rho_z", "effi for 2g as function of rho and z of vtx", 100, 0., 50., 100, -25., 25.));
 
   getStatistics().createHistogram(
-    new TEfficiency("effi_2g_in_rho_z",
-                    "effi for 2g as function of rho and z of vtx",
-                    100, 0., 50., 100, -25., 25.)
-  );
-
-
-  getStatistics().createHistogram(
-    new TEfficiency("effi_prompt_in_rho_z",
-                    "effi for 3g as function of rho and z of vtx",
-                    100, 0., 50., 100, -25., 25.)
-  );
-
-
+      new TEfficiency("effi_prompt_in_rho_z", "effi for 3g as function of rho and z of vtx", 100, 0., 50., 100, -25., 25.));
 }
 
 unsigned int JPetGeantParser::getNumberOfDecaysInWindow() const { return fTimeDistroOfDecays.size(); }
@@ -495,3 +501,5 @@ bool JPetGeantParser::isTimeWindowFull() const
     return false;
   }
 }
+
+unsigned long JPetGeantParser::getOriginalSeed() const { return fSeed; }

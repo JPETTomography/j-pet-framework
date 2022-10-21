@@ -17,60 +17,71 @@
 #define JPETSMEARINGFUNCTIONS_H
 
 #include <TF1.h>
-
-
-#ifdef __CINT__
-//when cint is used instead of compiler, override word is not recognized
-//nevertheless it's needed for checking if the structure of project is correct
-#   define override
-#endif
-
-class JPetHitSmearingFunctions
-{
-  public:
-    double hitEnergySmearing(double *x, double *p);
-    double hitZSmearing(double *x, double *p);
-    double hitTimeSmearing(double *x, double *p);
-};
-
-
-
-class JPetSmearingFunctionsContainer
-{
-  public:
-    JPetSmearingFunctionsContainer();
-    TF1* getFunEnergySmearing();
-    TF1* getFunZHitSmearing();
-    TF1* getFunTimeHitSmearing();
-    void setFunEnergySmearing(TF1* fun);
-    void setFunZHitSmearing(TF1* fun);
-    void setFunTimeHitSmearing(TF1* fun);
-
-  private:
-    JPetHitSmearingFunctions* sf = nullptr;
-    TF1* fFunEnergySmearing;
-    TF1* fFunZHitSmearing;
-    TF1* fFunTimeHitSmearing;
-};
-
+#include <memory>
 
 /**
- * @brief stores smearing functions that should be applied to generated computer simulations in
- * order to reproduce collected data 
+ * @brief Helper class to store and handle functions to smear Hit properties from MC simulations.
+ *
+ * Class API consists of three methods addEnergySmearing(), addZHitSmearing(), addTimeSmearing()
+ * ,which can be used to apply on MC hits the parametrizations of experimental uncertanities of
+ * energy,position along the z strip and time. There are three default parameterization functions
+ * that can be used from the beginnng. In addition, it is possible to redefine the parametrization
+ * functions using the setSmearingFunctions() and their limits. The limit corresponds to the range
+ * for  which the smearing function will be used (effectively it is the range of pdf integral over
+ * which the smearing is done).
+ * e.g. for gaussian smearing with parameters (mean, sigma)  the limit [low,up] would correspond to
+ * randomizing in the range [low + mean, high +mean].
  */
-
-class JPetSmearingFunctions
+class JPetHitExperimentalParametrizer
 {
-  public:
-    static double addEnergySmearing(int scinID, double zIn, double eneIn);
-    static double addZHitSmearing(int scinID, double zIn, double eneIn);
-    static double addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn);
-    static JPetSmearingFunctionsContainer& getSmearingFunctions();
 
-  private:
-    static JPetSmearingFunctionsContainer fSmearingFunctions; 
+public:
+  enum SmearingType
+  {
+    kTime,
+    kEnergy,
+    kZPosition
+  };
+
+  using FuncAndParam = std::pair<std::string, std::vector<double>>;
+  using SmearingFunctionLimits = std::pair<double, double>;
+  using FuncPtr = std::unique_ptr<TF1>;
+
+  JPetHitExperimentalParametrizer();
+  JPetHitExperimentalParametrizer(JPetHitExperimentalParametrizer const&) = delete;
+  JPetHitExperimentalParametrizer& operator=(JPetHitExperimentalParametrizer const&) = delete;
+
+  /// The limit is callculated with respect to the mean value
+  /// e.g. [mean + low , mean + up]
+  double addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn);
+  double addEnergySmearing(int scinID, double zIn, double eneIn, double timeIn);
+  double addZHitSmearing(int scinID, double zIn, double eneIn, double timeIn);
+
+  std::map<SmearingType, SmearingFunctionLimits> getSmearingFunctionLimits() const;
+  void printAllParameters() const;
+  void writeAllParametersToLog() const;
+
+  /// If any of the arguments in params is empty, then the previous value is preserved.
+  /// e.g.
+  /// std::string zSmearing = "[&](double* x, double* p)->double{ return TMath::Landau(x[0],p[1],p[4], false);};";
+  /// parametrizer.setSmearingFunctions({{"", {}}, {"", {}}, {zSmearing, {sigma}}});
+  /// The functions for time and energy smearing will not be changed. The zSmearing will be used
+  /// and the sigma parameter will be applied.
+  /// Please note that since we have 4 default paramteres: scinId, zIn, eneIn, timeIn,  the sigma is assigned to the
+  /// fifth one p[4].
+  void setSmearingFunctions(const std::vector<FuncAndParam>& params);
+
+  /// If the higher limit is equal or smaller than lower one, then it is ignored
+  /// and old values will be preserved.
+  /// e.g.  parametrizer.setSmearingFunctionLimits({{0, 0}, {0, 0}, {-4, 4}});
+  /// The limits for time and energy functions will not be changed, since low == high.
+  /// The limits for the zSmearing function will be changed.
+
+  void setSmearingFunctionLimits(const std::vector<std::pair<double, double>>& limits);
+
+private:
+  std::map<SmearingType, FuncPtr> fSmearingFunctions;
+  std::map<SmearingType, SmearingFunctionLimits> fFunctionLimits{{kTime, {-300, 300}}, {kEnergy, {-100, 100}}, {kZPosition, {-5, 5}}};
 };
-
-
 
 #endif

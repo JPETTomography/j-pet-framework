@@ -27,6 +27,9 @@ BOOST_AUTO_TEST_CASE(getTot_params)
   BOOST_CHECK_EQUAL(func.getParams().fParams[0], -91958.);
   BOOST_CHECK_EQUAL(func.getParams().fParams[1], 19341.);
   BOOST_CHECK_EQUAL(func.getValues().size(), 100);
+  BOOST_CHECK_EQUAL(func.getRange().fBins, 100);
+  BOOST_CHECK_CLOSE(func.getRange().fMin, 0, 0.1);
+  BOOST_CHECK_CLOSE(func.getRange().fMax, 100, 0.1);
   auto vals = func.getValues();
 }
 
@@ -40,6 +43,9 @@ BOOST_AUTO_TEST_CASE(getTot_standardFunc)
   BOOST_CHECK_CLOSE(func(10.), getToT1(10.), 0.1);
   BOOST_CHECK_CLOSE(func(59.5), getToT1(59.5), 0.1);
   BOOST_CHECK_CLOSE(func(99.9), getToT1(99.9), 0.1);
+  BOOST_CHECK_EQUAL(func.getRange().fBins, 10000);
+  BOOST_CHECK_CLOSE(func.getRange().fMin, 0, 0.1);
+  BOOST_CHECK_CLOSE(func.getRange().fMax, 100, 0.1);
 }
 
 BOOST_AUTO_TEST_CASE(getTot_quadratic)
@@ -51,6 +57,9 @@ BOOST_AUTO_TEST_CASE(getTot_quadratic)
   BOOST_CHECK_CLOSE(func(1), 3., 0.1);
   BOOST_CHECK_CLOSE(func(2), 7., 0.1);
   BOOST_CHECK_CLOSE(func(3), 13., 0.1);
+  BOOST_CHECK_EQUAL(func.getRange().fBins, 10000);
+  BOOST_CHECK_CLOSE(func.getRange().fMin, 0, 0.1);
+  BOOST_CHECK_CLOSE(func.getRange().fMax, 100, 0.1);
 }
 
 BOOST_AUTO_TEST_CASE(cached_2D)
@@ -62,6 +71,24 @@ BOOST_AUTO_TEST_CASE(cached_2D)
   BOOST_CHECK_CLOSE(func(1, 1.), 4., 0.1);
   BOOST_CHECK_CLOSE(func(0., 1.), 3., 0.1);
   BOOST_CHECK_CLOSE(func(1., 0.), 2., 0.1);
+  BOOST_CHECK_EQUAL(func.getRange().first.fBins, 100);
+  BOOST_CHECK_CLOSE(func.getRange().first.fMin, 0, 0.1);
+  BOOST_CHECK_CLOSE(func.getRange().first.fMax, 100, 0.1);
+  BOOST_CHECK_EQUAL(func.getRange().second.fBins, 100);
+  BOOST_CHECK_CLOSE(func.getRange().second.fMin, 0, 0.1);
+  BOOST_CHECK_CLOSE(func.getRange().second.fMax, 100, 0.1);
 }
 
+BOOST_AUTO_TEST_CASE(cached_log)
+{
+  JPetCachedFunctionParams params("[0] + [1] * TMath::Log(x)", {1., -2.}); /// 1 + -2 * log(x)
+  JPetCachedFunction1D func(params, Range(10000, 2., 100.));
+  BOOST_CHECK(func.getParams().fValidFunction);
+  BOOST_CHECK_CLOSE(func(2.), -0.386294, 0.1);
+  BOOST_CHECK_CLOSE(func(3.), -1.19696, 0.1);
+  BOOST_CHECK_CLOSE(func(99.), -8.19005, 0.1);
+  BOOST_CHECK_EQUAL(func.getRange().fBins, 10000);
+  BOOST_CHECK_CLOSE(func.getRange().fMin, 2, 0.1);
+  BOOST_CHECK_CLOSE(func.getRange().fMax, 100, 0.1);
+}
 BOOST_AUTO_TEST_SUITE_END()

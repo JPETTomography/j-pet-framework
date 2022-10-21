@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -80,86 +80,6 @@ bool JPetTaskIO::init(const JPetParams& params)
       ERROR("Subtask name:" + subTaskName);
       return false;
     }
-  }
-  return true;
-}
-
-bool JPetTaskIO::run(const JPetDataInterface&)
-{
-  using namespace jpet_options_tools;
-  if (fSubTasks.empty())
-  {
-    ERROR("No subTask set");
-    return false;
-  }
-  if (isInput())
-  {
-    if (!fInputHandler)
-    {
-      ERROR("No inputHandler set");
-      return false;
-    }
-  }
-  for (const auto& pTask : fSubTasks)
-  {
-    auto subTaskName = pTask->getName();
-    bool isOK = pTask->init(fParams);
-
-    if (!isOK)
-    {
-      WARNING("In init() of:" + subTaskName + ". run()  and terminate() of this task will be skipped.");
-      continue;
-    }
-
-    if (isInput())
-    {
-      assert(fInputHandler);
-      bool isProgressBarOn = isProgressBar(fParams.getOptions());
-      isOK = fInputHandler->setEntryRange(fParams.getOptions());
-      if (!isOK)
-      {
-        ERROR("Some error occured in setEntryRange");
-        return false;
-      }
-      auto lastEvent = fInputHandler->getLastEntryNumber();
-      assert(lastEvent >= 0);
-      do
-      {
-        if (isProgressBarOn)
-        {
-          displayProgressBar(subTaskName, fInputHandler->getCurrentEntryNumber(), lastEvent);
-        }
-        JPetData event(fInputHandler->getEntry());
-        isOK = pTask->run(event);
-        if (!isOK)
-        {
-          ERROR("In run() of:" + subTaskName + ". ");
-          return false;
-        }
-        if (isOutput())
-        {
-          if (!fOutputHandler->writeEventToFile(pTask.get()))
-          {
-            ERROR("Some problems occured, while writing the event to file.");
-            return false;
-          }
-        }
-      } while (fInputHandler->nextEntry());
-    }
-    else
-    {
-      JPetDataInterface dummyEvent;
-      pTask->run(dummyEvent);
-    }
-
-    JPetParams subTaskParams;
-    isOK = pTask->terminate(subTaskParams);
-    if (!isOK)
-    {
-      ERROR("In terminate() of:" + subTaskName + ". ");
-      return false;
-    }
-    fParams = mergeWithExtraParams(fParams, subTaskParams);
   }
   return true;
 }
@@ -278,8 +198,8 @@ bool JPetTaskIO::createOutputObjects(const char* outputFilename)
   using namespace jpet_options_tools;
   auto options = fParams.getOptions();
 
-  if (FileTypeChecker::getInputFileType(options) == FileTypeChecker::kHldRoot ||
-      FileTypeChecker::getInputFileType(options) == FileTypeChecker::kMCGeant)
+  if (file_type_checker::getInputFileType(options) == file_type_checker::kHldRoot ||
+      file_type_checker::getInputFileType(options) == file_type_checker::kMCGeant)
   {
 
     fHeader = new JPetTreeHeader(getRunNumber(options));

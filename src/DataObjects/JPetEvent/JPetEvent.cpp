@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -97,6 +97,6 @@ void JPetEvent::addEventType(JPetEventType type)
 
 void JPetEvent::Clear(Option_t*)
 {
-  fType = kUnknown;
+  fType = JPetEventType::kUnknown;
   fHits.clear();
 }

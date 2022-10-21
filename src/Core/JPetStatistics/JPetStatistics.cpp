@@ -33,49 +33,118 @@ void JPetStatistics::createObject(TObject* object) { fStats.Add(object); }
 void JPetStatistics::createHistogramWithAxes(TObject* object, TString xAxisName, TString yAxisName, TString zAxisName) 
 { 
   TClass *cl = object->IsA();
-  if( cl->InheritsFrom("TH1D") )
+  if( cl->InheritsFrom("TH1D") || cl->InheritsFrom("TH1F") )
   {
-    TH1D* tempHisto = dynamic_cast<TH1D*>(object);
+    TH1D* tempHisto = new TH1D();
+    if( cl->InheritsFrom("TH1F") )
+    {
+      INFO("TH1F given, casting to TH1D");
+      TH1F* floatTemp = dynamic_cast<TH1F*>(object);
+      floatTemp->Copy(*tempHisto);
+      tempHisto->SetDirectory(nullptr);
+      delete floatTemp;
+    }
+    else
+      tempHisto = dynamic_cast<TH1D*>(object);
     tempHisto->GetXaxis()->SetTitle(xAxisName);
     tempHisto->GetYaxis()->SetTitle(yAxisName);
+    fStats.Add(tempHisto);
   }
-  else if( cl->InheritsFrom("TH2D") )
+  else if( cl->InheritsFrom("TH2D") || cl->InheritsFrom("TH2F") )
   {
-    TH2D* tempHisto = dynamic_cast<TH2D*>(object);
+    TH2D* tempHisto = new TH2D();
+    if( cl->InheritsFrom("TH2F") )
+    {
+      INFO("TH2F given, casting to TH2D");
+      TH2F* floatTemp = dynamic_cast<TH2F*>(object);
+      floatTemp->Copy(*tempHisto);
+      tempHisto->SetDirectory(nullptr);
+      delete floatTemp;
+    }
+    else
+      tempHisto = dynamic_cast<TH2D*>(object);
     tempHisto->GetXaxis()->SetTitle(xAxisName);
     tempHisto->GetYaxis()->SetTitle(yAxisName);
+    fStats.Add(tempHisto);
   }
-  else if( cl->InheritsFrom("TH3D") )
+  else if( cl->InheritsFrom("TH3D") || cl->InheritsFrom("TH3F") )
   {
-    TH3D* tempHisto = dynamic_cast<TH3D*>(object);
+    TH3D* tempHisto = new TH3D();
+    if( cl->InheritsFrom("TH3F") )
+    {
+      INFO("TH3F given, casting to TH3D");
+      TH3F* floatTemp = dynamic_cast<TH3F*>(object);
+      floatTemp->Copy(*tempHisto);
+      tempHisto->SetDirectory(nullptr);
+      delete floatTemp;
+    }
+    else
+      tempHisto = dynamic_cast<TH3D*>(object);
     tempHisto->GetXaxis()->SetTitle(xAxisName);
     tempHisto->GetYaxis()->SetTitle(yAxisName);
     tempHisto->GetZaxis()->SetTitle(zAxisName);
+    fStats.Add(tempHisto);
   }
-  fStats.Add(object);
 }
 
-void JPetStatistics::createSquareHistogramWithAxes(TObject* object, TString xAxisName, TString yAxisName) 
-{ 
-  TClass *cl = object->IsA();
+void JPetStatistics::setHistogramBinLabel(const char* name, AxisLabel axis, std::vector<std::pair<unsigned, std::string>> binLabels)
+{
+  TAxis *customAxis;
+  TObject *tempObject = getObject<TObject>(name);
+  if( !tempObject )
+  {
+    writeError(name, " does not exist" );
+    return;
+  }
+  TClass *cl = tempObject->IsA();
   if( cl->InheritsFrom("TH1D") )
   {
-    TH1D* tempHisto = dynamic_cast<TH1D*>(object);
-    tempHisto->GetXaxis()->SetTitle(xAxisName);
-    tempHisto->GetYaxis()->SetTitle(yAxisName);
+    TH1D* tempHisto = dynamic_cast<TH1D*>(tempObject);
+    if( binLabels.size() > 0 )
+    {
+      if( axis == AxisLabel::kXaxis )
+      {
+        customAxis = tempHisto->GetXaxis();
+        for( unsigned i=0; i<binLabels.size(); i++ )
+          customAxis->SetBinLabel(binLabels[i].first,(binLabels[i].second).c_str());
+      }
+      else
+        writeError(name, " can not have custom Y or Z axis" );
+    }
+    else
+      writeError(name, " had empty custom labels of bins" );
   }
   else if( cl->InheritsFrom("TH2D") )
   {
-    TH2D* tempHisto = dynamic_cast<TH2D*>(object);
-    tempHisto->GetXaxis()->SetTitle(xAxisName);
-    tempHisto->GetYaxis()->SetTitle(yAxisName);
+    TH2D* tempHisto = dynamic_cast<TH2D*>(tempObject);
+    if( binLabels.size() > 0 )
+    {
+      if( axis != AxisLabel::kZaxis )
+      {
+        customAxis = ( axis == AxisLabel::kXaxis ? tempHisto->GetXaxis() : tempHisto->GetYaxis());
+        for( unsigned i=0; i<binLabels.size(); i++ )
+          customAxis->SetBinLabel(binLabels[i].first,(binLabels[i].second).c_str());
+      }
+      else
+        writeError(name, " can not have custom Z axis" );
+    }
+    else
+      writeError(name, " had empty custom labels of bins" );
   }
-  fStats.Add(object);
-  std::string objName = object->GetName();
-  objName += "_Square";
-  createCanvas( new TCanvas( objName.c_str(), objName.c_str(), 800, 800 ) );
+  else if( cl->InheritsFrom("TH3D") )
+  {
+    TH3D* tempHisto = dynamic_cast<TH3D*>(tempObject);
+    if( binLabels.size() > 0 )
+    {
+      customAxis = ( axis == AxisLabel::kXaxis ? tempHisto->GetXaxis() : 
+                                        ( axis == AxisLabel::kYaxis ? tempHisto->GetYaxis() : tempHisto->GetZaxis()));
+      for( unsigned i=0; i<binLabels.size(); i++ )
+        customAxis->SetBinLabel(binLabels[i].first,(binLabels[i].second).c_str());
+    }
+    else
+      writeError(name, " had empty custom labels of bins" );
+  }  
 }
-
 
 void JPetStatistics::createGraph(TObject* object) { fStats.Add(object); }
 
@@ -115,51 +184,6 @@ void JPetStatistics::fillHistogram(const char* name, double xValue, doubleCheck 
   }  
 }
 
-void JPetStatistics::fillSquareHistogram(const char* name, double xValue, doubleCheck yValue)
-{
-  TObject *tempObject = getObject<TObject>(name);
-  if( !tempObject )
-  {
-    writeError(name, " does not exist" );
-    return;
-  }
-  std::string canvasName = name;
-  canvasName += "_Square";
-  TCanvas *squareCanvas = getCanvas( canvasName.c_str() );
-  if( !squareCanvas )
-  {
-    writeError(name, " has not defined square Canvas for it" );
-    return;
-  }
-  
-  TClass *cl = tempObject->IsA();
-  if( cl->InheritsFrom("TH1D") )
-  {
-    TH1D* tempHisto = dynamic_cast<TH1D*>(tempObject);
-    tempHisto->Fill(xValue);
-    if( squareCanvas )
-    {
-        squareCanvas->cd();
-        tempHisto->Draw("");
-        squareCanvas->Update();
-    }
-  }
-  else if( cl->InheritsFrom("TH2D") )
-  {
-    TH2D* tempHisto = dynamic_cast<TH2D*>(tempObject);
-    if(yValue.isChanged)
-        tempHisto->Fill(xValue, yValue.value);
-    else
-        writeError(name, " does not received argument for Y axis" );
-    if( squareCanvas )
-    {
-        squareCanvas->cd();
-        tempHisto->Draw("colz");
-        squareCanvas->Update();
-    }
-  }
-}
-
 TEfficiency* JPetStatistics::getEffiHisto(const char* name) { return getObject<TEfficiency>(name); }
 
 TH1F* JPetStatistics::getHisto1D(const char* name) { return getObject<TH1F>(name); }
@@ -180,11 +204,5 @@ const THashTable* JPetStatistics::getStatsTable() const { return &fStats; }
 
 void JPetStatistics::writeError(const char* nameOfHistogram, const char* messageEnd )
 {
-  std::set<std::string>::iterator existenceCheck = fErrorCounts.find(std::string(nameOfHistogram));
-  if( existenceCheck == fErrorCounts.end() )
-  {
-    fErrorCounts.insert(std::string(nameOfHistogram));
-    ERROR(std::string("Histogram with name ") + std::string(nameOfHistogram) + std::string(messageEnd) );
-    std::cout << "!!![Error]!!!  -  Histogram with name " << nameOfHistogram  << " " << messageEnd << std::endl;
-  }
+  ERROR(std::string("Histogram with name ") + std::string(nameOfHistogram) + std::string(messageEnd) );
 }

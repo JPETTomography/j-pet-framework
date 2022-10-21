@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -31,6 +31,8 @@ JPetParamBank::JPetParamBank(const JPetParamBank& paramBank) : fDummy(false)
   copyMapValues(fLayers, paramBank.fLayers);
   copyMapValues(fFrames, paramBank.fFrames);
   copyMapValues(fTOMBChannels, paramBank.fTOMBChannels);
+  copyMapValues(fDataSources, paramBank.fDataSources);
+  copyMapValues(fDataModules, paramBank.fDataModules);
 }
 
 JPetParamBank::~JPetParamBank() {}
@@ -47,40 +49,47 @@ void JPetParamBank::clear()
   fLayers.clear();
   fFrames.clear();
   fTOMBChannels.clear();
+  fDataSources.clear();
+  fDataModules.clear();
 }
 
 int JPetParamBank::getSize(ParamObjectType type) const
 {
   int size = -1;
-  switch (type)
-  {
-  case kScintillator:
-    size = getScintillatorsSize();
-    break;
-  case kPM:
-    size = getPMsSize();
-    break;
-  case kBarrelSlot:
-    size = getBarrelSlotsSize();
-    break;
-  case kLayer:
-    size = getLayersSize();
-    break;
-  case kFrame:
-    size = getFramesSize();
-    break;
-  case kFEB:
-    size = getFEBsSize();
-    break;
-  case kTRB:
-    size = getTRBsSize();
-    break;
-  case kTOMBChannel:
-    size = getTOMBChannelsSize();
-    break;
-  default:
-    ERROR("bad type");
-    break;
+  switch (type) {
+    case kScintillator:
+      size = getScintillatorsSize();
+      break;
+    case kPM:
+      size = getPMsSize();
+      break;
+    case kBarrelSlot:
+      size = getBarrelSlotsSize();
+      break;
+    case kLayer:
+      size = getLayersSize();
+      break;
+    case kFrame:
+      size = getFramesSize();
+      break;
+    case kFEB:
+      size = getFEBsSize();
+      break;
+    case kTRB:
+      size = getTRBsSize();
+      break;
+    case kTOMBChannel:
+      size = getTOMBChannelsSize();
+      break;
+    case kDataSource:
+      size = getDataSourcesSize();
+      break;
+    case kDataModule:
+      size = getDataModulesSize();
+      break;
+    default:
+      ERROR("Incorrect type");
+      break;
   }
   return size;
 }

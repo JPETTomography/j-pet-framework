@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2021 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -27,10 +27,6 @@ using boost::any_cast;
 
 namespace jpet_options_tools
 {
-
-std::map<std::string, FileTypeChecker::FileType> FileTypeChecker::fStringToFileType = {
-    {"", kNoType}, {"root", kRoot}, {"mcGeant", kMCGeant}, {"scope", kScope}, {"hld", kHld}, {"hldRoot", kHldRoot}, {"zip", kZip}};
-
 bool isOptionSet(const OptsStrAny& opts, const std::string& optionName) { return static_cast<bool>(opts.count(optionName)); }
 
 boost::any getOptionValue(const OptsStrAny& opts, const std::string& optionName) { return opts.at(optionName); }
@@ -115,6 +111,20 @@ std::vector<int> getOptionAsVectorOfInts(const OptsStrAny& opts, const std::stri
   }
 }
 
+std::vector<double> getOptionAsVectorOfDoubles(const OptsStrAny& opts, const std::string& optionName)
+{
+  try
+  {
+    return any_cast<std::vector<double>>(getOptionValue(opts, optionName));
+  }
+  catch (const std::exception& excep)
+  {
+    std::vector<double> emptyV;
+    ERROR("Bad option type:" + std::string(excep.what()));
+    return emptyV;
+  }
+}
+
 bool getOptionAsBool(const OptsStrAny& opts, const std::string& optionName)
 {
   try
@@ -187,9 +197,25 @@ long long getTotalEvents(const std::map<std::string, boost::any>& opts)
   return diff;
 }
 
-int getRunNumber(const std::map<std::string, boost::any>& opts) { return any_cast<int>(opts.at("runId_int")); }
+int getRunNumber(const std::map<std::string, boost::any>& opts) { return any_cast<int>(opts.at("runID_int")); }
 
-bool isProgressBar(const std::map<std::string, boost::any>& opts) { return any_cast<bool>(opts.at("progressBar_bool")); }
+bool isProgressBar(const std::map<std::string, boost::any>& opts)
+{
+  if (opts.find("progressBar_bool") != opts.end())
+  {
+    return any_cast<bool>(opts.at("progressBar_bool"));
+  }
+  return false;
+}
+
+bool isDirectProcessing(const std::map<std::string, boost::any>& opts)
+{
+  if (opts.find("directProcessing_bool") != opts.end())
+  {
+    return any_cast<bool>(opts.at("directProcessing_bool"));
+  }
+  return false;
+}
 
 bool isLocalDB(const std::map<std::string, boost::any>& opts) { return (bool)opts.count("localDB_std::string"); }
 
@@ -217,11 +243,6 @@ std::string getLocalDBCreate(const std::map<std::string, boost::any>& opts)
 std::string getUnpackerConfigFile(const std::map<std::string, boost::any>& opts)
 {
   return any_cast<std::string>(opts.at("unpackerConfigFile_std::string"));
-}
-
-std::string getUnpackerCalibFile(const std::map<std::string, boost::any>& opts)
-{
-  return any_cast<std::string>(opts.at("unpackerCalibFile_std::string"));
 }
 
 std::string getConfigFileName(const std::map<std::string, boost::any>& optsMap)
@@ -273,7 +294,7 @@ bool createConfigFileFromOptions(const OptsStrStr& options, const std::string& o
   {
     pt::write_json(outFile, optionsTree);
   }
-  catch (pt::json_parser_error)
+  catch (const pt::json_parser_error&)
   {
     ERROR("ERROR IN WRITING OPTIONS TO JSON FILE");
     return false;
@@ -335,13 +356,23 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
             return values;
           }()));
           break;
+        case JPetOptionsTypeHandler::kAllowedTypes::kVectorDouble:
+          mapOptions.insert(std::make_pair(key, [&optionsTree, &key]() -> std::vector<double> {
+            std::vector<double> values;
+            for (pt::ptree::value_type& value : optionsTree.get_child(key))
+            {
+              values.push_back(value.second.get_value<double>());
+            }
+            return values;
+          }()));
+          break;
         default:
           WARNING("Unknow option type: " + typeOfOption + " skipping option: " + key);
           break;
         }
       }
     }
-    catch (pt::json_parser_error)
+    catch (const pt::json_parser_error&)
     {
       ERROR("ERROR IN READINIG OPTIONS FROM JSON FILE! FILENAME:" + filename);
       throw std::invalid_argument("ERROR parsing json user params file! Aborting execution!");
@@ -355,41 +386,77 @@ std::map<std::string, boost::any> createOptionsFromConfigFile(const std::string&
   return mapOptions;
 }
 
-FileTypeChecker::FileType FileTypeChecker::getInputFileType(const std::map<std::string, boost::any>& opts)
-{
-  return getFileType(opts, "inputFileType_std::string");
-}
-
-FileTypeChecker::FileType FileTypeChecker::getOutputFileType(const std::map<std::string, boost::any>& opts)
-{
-  return getFileType(opts, "outputFileType_std::string");
-}
-
-void FileTypeChecker::handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException)
+void handleErrorMessage(const std::string& errorMessage, const std::out_of_range& outOfRangeException)
 {
   std::cerr << errorMessage << outOfRangeException.what() << '\n';
   ERROR(errorMessage);
 }
 
-FileTypeChecker::FileType FileTypeChecker::getFileType(const std::map<std::string, boost::any>& opts, const std::string& fileTypeName)
+file_type_checker::FileType file_type_checker::getFileType(const std::map<std::string, boost::any>& opts, const std::string& fileTypeName)
 {
+  std::map<std::string, file_type_checker::FileType> fileTypeMap = {{"", kNoType}, {"root", kRoot},       {"mcGeant", kMCGeant}, {"scope", kScope},
+                                                                    {"hld", kHld}, {"hldRoot", kHldRoot}, {"zip", kZip}};
+
   try
   {
     auto option = any_cast<std::string>(opts.at(fileTypeName));
     try
     {
-      return fStringToFileType.at(option);
+      return fileTypeMap.at(option);
     }
     catch (const std::out_of_range& outOfRangeFileTypeException)
     {
+      std::string errorMessage = "Provided file type option was not found - out of range in getFileType() ";
+      handleErrorMessage(errorMessage, outOfRangeFileTypeException);
     }
   }
   catch (const std::out_of_range& outOfRangeOptionException)
   {
-    std::string errorMessage = "Out of range error in Options container ";
+    std::string errorMessage = "Provided option was not found - out of range error in options container ";
     handleErrorMessage(errorMessage, outOfRangeOptionException);
   }
-  return FileType::kUndefinedFileType;
+  return file_type_checker::FileType::kUndefinedFileType;
+}
+
+file_type_checker::FileType file_type_checker::getInputFileType(const std::map<std::string, boost::any>& opts)
+{
+  return file_type_checker::getFileType(opts, "inputFileType_std::string");
+}
+
+file_type_checker::FileType file_type_checker::getOutputFileType(const std::map<std::string, boost::any>& opts)
+{
+  return file_type_checker::getFileType(opts, "outputFileType_std::string");
+}
+
+/**
+ * Method returns the detector type based on the provided options:
+ * if the "-k" option for the is worng or not used, then by default
+ * the detector type is the Big Barrel - kBarrel.
+ */
+detector_type_checker::DetectorType detector_type_checker::getDetectorType(const std::map<std::string, boost::any>& opts)
+{
+  std::map<std::string, detector_type_checker::DetectorType> detectorTypeMap = {
+      {"bar", kBarrel}, {"barrel", kBarrel}, {"mod", kModular}, {"modular", kModular}};
+
+  try
+  {
+    auto option = any_cast<std::string>(opts.at("detectorType_std::string"));
+    try
+    {
+      return detectorTypeMap.at(option);
+    }
+    catch (const std::out_of_range& outOfRangeDetectorTypeException)
+    {
+      std::string errorMessage = "Provided detector type option was not found - out of range in getDetectorType() ";
+      handleErrorMessage(errorMessage, outOfRangeDetectorTypeException);
+    }
+  }
+  catch (const std::out_of_range& outOfRangeOptionException)
+  {
+    std::string errorMessage = "Provided option was not found - out of range error in options container ";
+    handleErrorMessage(errorMessage, outOfRangeOptionException);
+  }
+  return detector_type_checker::DetectorType::kBarrel;
 }
 
 } // namespace jpet_options_tools

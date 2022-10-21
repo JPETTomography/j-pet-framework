@@ -1,5 +1,5 @@
 /**
- *  @copyright Copyright 2018 The J-PET Framework Authors. All rights reserved.
+ *  @copyright Copyright 2020 The J-PET Framework Authors. All rights reserved.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may find a copy of the License in the LICENCE file.
@@ -26,9 +26,10 @@ class JPetParamGetterAscii : public JPetParamGetter
 public:
   JPetParamGetterAscii(std::string filename) : filename(filename) {}
   ~JPetParamGetterAscii() {}
-  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runId);
-  ParamRelationalData getAllRelationalData(ParamObjectType type1,
-    ParamObjectType type2, const int runId);
+  ParamObjectsDescriptions getAllBasicData(ParamObjectType type, const int runID);
+  ParamRelationalData getAllRelationalData(
+    ParamObjectType type1, ParamObjectType type2, const int runID
+  );
 
 private:
   JPetParamGetterAscii(const JPetParamGetterAscii &paramGetterAscii);
