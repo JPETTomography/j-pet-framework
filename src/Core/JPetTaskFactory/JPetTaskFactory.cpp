@@ -22,7 +22,6 @@
 #include "JPetTaskIOLoopPerSubTask/JPetTaskIOLoopPerSubTask.h"
 #include "JPetTaskLooper/JPetTaskLooper.h"
 #include "JPetTaskStreamIO/JPetTaskStreamIO.h"
-#include "JPetUnpackTask/JPetUnpackTask.h"
 #include "JPetUnzipTask/JPetUnzipTask.h"
 
 using TaskGenerator = std::function<std::unique_ptr<JPetTaskInterface>()>;
@@ -147,13 +146,6 @@ void addDefaultTasksFromOptions(const std::map<std::string, boost::any>& options
     {
       auto unzip = []() { return std::make_unique<JPetUnzipTask>("JPetUnzipTask"); };
       outChain.insert(outChain.end(), unzip);
-    }
-
-    // Create Unpack task if indicated by the filetype
-    if (fileType == file_type_checker::kHld || fileType == file_type_checker::kZip)
-    {
-      auto unpack = []() { return std::make_unique<JPetUnpackTask>("JPetUnpackTask"); };
-      outChain.insert(outChain.end(), unpack);
     }
 
     // Create task for Param Bank

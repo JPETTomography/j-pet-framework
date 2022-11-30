@@ -14,6 +14,8 @@
  */
 
 #include "JPetTaskIO/JPetTaskIO.h"
+#include "./JPetTaskIO/JPetInputHandlerHLD.h"
+#include "./JPetTaskIO/JPetInputHandlerROOT.h"
 #include "JPetCommonTools/JPetCommonTools.h"
 #include "JPetData/JPetData.h"
 #include "JPetLoggerInclude.h"
@@ -178,7 +180,16 @@ std::tuple<bool, std::string, std::string, bool> JPetTaskIO::setInputAndOutputFi
 
 bool JPetTaskIO::createInputObjects(const char* inputFilename)
 {
-  fInputHandler = jpet_common_tools::make_unique<JPetInputHandler>();
+  using namespace jpet_options_tools;
+  if (file_type_checker::getInputFileType(fParams.getOptions()) == file_type_checker::kHld)
+  {
+    fInputHandler = jpet_common_tools::make_unique<JPetInputHandlerHLD>();
+  }
+  else
+  {
+    fInputHandler = jpet_common_tools::make_unique<JPetInputHandlerROOT>();
+  }
+
   return fInputHandler->openInput(inputFilename, fParams);
 }
 

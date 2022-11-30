@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(nonDefaultConstr)
 {
   jpet_options_tools::OptsStrAny opts;
   opts["blaOption"] = std::string("value");
-  auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager);
+  auto mgr = std::make_shared<JPetParamManager>();
   JPetParams params(opts, mgr);
   BOOST_REQUIRE_EQUAL(params.getParamManager(), mgr.get());
   BOOST_REQUIRE_EQUAL(params.getOptions().size(), 1u);
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(copyCtr)
 {
   jpet_options_tools::OptsStrAny opts;
   opts["blaOption"] = std::string("value");
-  auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager);
+  auto mgr = std::make_shared<JPetParamManager>();
   JPetParams params(opts, mgr);
   auto params2 = params;
   BOOST_REQUIRE_EQUAL(params2.getParamManager(), mgr.get());
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(memoryLeaks)
 {
   jpet_options_tools::OptsStrAny opts;
   opts["blaOption"] = std::string("value");
-  JPetParams* params = new JPetParams(opts, std::make_shared<JPetParamManager>(new JPetParamManager));
+  JPetParams* params = new JPetParams(opts, std::make_shared<JPetParamManager>());
   auto mgr = params->getParamManager();
   delete params;
   BOOST_REQUIRE(mgr != nullptr);

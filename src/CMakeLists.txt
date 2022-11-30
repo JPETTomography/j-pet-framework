@@ -4,7 +4,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    Unpacker2ConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
     COMPATIBILITY AnyNewerVersion
     )
@@ -95,47 +94,6 @@ if(NOT TARGET Boost::filesystem)
 endif()
 
 ################################################################################
-## Find Unpacker2
-find_package(Unpacker2 CONFIG QUIET)
-if(Unpacker2_FOUND)
-  message(STATUS "Unpacker2 (version ${Unpacker2_VERSION}) was found using Unpacker2Config")
-else()
-  include(ExternalProject)
-  message(STATUS "Unpacker2 was not found..")
-  set(GITHUB_URL "https://github.com/JPETTomography/Unpacker2.git")
-
-  execute_process(
-    COMMAND git rev-parse --abbrev-ref HEAD
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    OUTPUT_VARIABLE framework_branchname
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-
-  if( ${framework_branchname} STREQUAL "master")
-    set(GIT_TAG "master")
-  else()
-    set(GIT_TAG "develop")
-  endif()
-
-  message(STATUS "Adding external project to download and compile Unpacker2 from: ${GITHUB_URL} with tag: ${GIT_TAG}")
-
-  configure_file(CMakeListsUnpacker2.txt.in
-       Unpacker2-download/CMakeLists.txt)
-
-  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" -DPACKAGE_TESTS=OFF .
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/Unpacker2-download )
-
-  execute_process(COMMAND ${CMAKE_COMMAND} --build .
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/Unpacker2-download )
-
-  set(Unpacker2_DIR ${CMAKE_BINARY_DIR}/src/Unpacker2-build/cmake)
-  find_package(Unpacker2 CONFIG REQUIRED)
-  if(Unpacker2_FOUND)
-    message(STATUS "Unpacker2 (version ${Unpacker2_VERSION}) was found using Unpacker2Config")
-  endif()
-endif(Unpacker2_FOUND)
-
-################################################################################
 ## Specify source folders
 set(FOLDERS_WITH_SOURCE
   Options
@@ -166,6 +124,8 @@ set(SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskChainExecutor/JPetTaskChainExecutor.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskFactory/JPetTaskFactory.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetInputHandler.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetInputHandlerROOT.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetInputHandlerHLD.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIO/JPetOutputHandler.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskStreamIO/JPetTaskStreamIO.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Core/JPetTaskIOLoopPerSubTask/JPetTaskIOLoopPerSubTask.cpp
@@ -240,10 +200,8 @@ set(SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetScopeTask/JPetScopeTask.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetSimplePhysSignalReco/JPetSimplePhysSignalReco.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnzipTask/JPetUnzipTask.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/Tasks/JPetUnpackTask/JPetUnpackTask.cpp
 )
 
-get_target_property(DICTIONARY_INCLUDE_DIRS Unpacker2::Unpacker2 INTERFACE_INCLUDE_DIRECTORIES)
 foreach(dir ${FOLDERS_WITH_SOURCE})
   list(APPEND DICTIONARY_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include/${dir})
 endforeach()
@@ -312,9 +270,14 @@ foreach(dir ${FOLDERS_WITH_SOURCE})
          $<INSTALL_INTERFACE:include/${dir}>
         )
 endforeach(dir ${FOLDERS_WITH_SOURCE})
+#include header-only j-pet-unpacker library
+target_include_directories(JPetFramework PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/j-pet-unpacker>
+  $<INSTALL_INTERFACE:include/>
+  )
 set_target_properties(JPetFramework PROPERTIES LINKER_LANGUAGE CXX)
 
-target_link_libraries(JPetFramework PUBLIC Unpacker2::Unpacker2
+target_link_libraries(JPetFramework PUBLIC
    Boost::filesystem
    Boost::program_options
    Boost::regex
@@ -372,6 +335,7 @@ install(TARGETS JPetFramework
         )
 
 install(DIRECTORY ../include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES ../j-pet-unpacker/unpacker.hpp ../j-pet-unpacker/unpacker_types.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/)
 
 install(EXPORT JPetFramework
         FILE JPetFrameworkTargets.cmake

@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(Run_ok)
 {
   auto opts = jpet_options_generator_tools::getDefaultOptions();
   opts["inputFile_std::string"] = std::string("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root");
-  auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager);
+  auto mgr = std::make_shared<JPetParamManager>();
   JPetParams params(opts, mgr);
   JPetTaskStreamIO taskStreamIO("myTestIO", "unk.evt", "out");
   taskStreamIO.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask1"));
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(Any_subtask_init_failed)
 {
   auto opts = jpet_options_generator_tools::getDefaultOptions();
   opts["inputFile_std::string"] = std::string("unitTestData/JPetTaskChainExecutorTest/dabc_17025151847.unk.evt.root");
-  auto mgr = std::make_shared<JPetParamManager>(new JPetParamManager);
+  auto mgr = std::make_shared<JPetParamManager>();
   JPetParams params(opts, mgr);
   JPetTaskStreamIO taskStreamIO("myTestIO", "unk.evt", "out");
   taskStreamIO.addSubTask(jpet_common_tools::make_unique<JPetTaskTest>("testTask1"));

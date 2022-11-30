@@ -17,6 +17,7 @@
 #define JPETCHANNELFACTORY_H
 
 #include "JPetChannel/JPetChannel.h"
+#include "JPetDataModule/JPetDataModuleFactory.h"
 #include "JPetPM/JPetPMFactory.h"
 #include "JPetParamGetter/JPetParamGetter.h"
 #include <map>
@@ -30,8 +31,8 @@ class JPetChannelFactory
 {
 public:
   JPetChannelFactory();
-  JPetChannelFactory(JPetParamGetter& paramGetter, const int runID, JPetPMFactory& pmFactory)
-      : fParamGetter(paramGetter), fRunID(runID), fPMFactory(pmFactory), fInitialized(false)
+  JPetChannelFactory(JPetParamGetter& paramGetter, const int runID, JPetPMFactory& pmFactory, JPetDataModuleFactory& dataModuleFactory)
+    : fParamGetter(paramGetter), fRunID(runID), fPMFactory(pmFactory), fDataModuleFactory(dataModuleFactory), fInitialized(false)
   {
   }
   std::map<int, JPetChannel*>& getChannels();
@@ -42,6 +43,7 @@ private:
   JPetParamGetter& fParamGetter;
   const int fRunID;
   JPetPMFactory& fPMFactory;
+  JPetDataModuleFactory& fDataModuleFactory;
   bool fInitialized;
   void initialize();
 };

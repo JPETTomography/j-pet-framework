@@ -45,6 +45,11 @@ void JPetChannelFactory::initialize()
   {
     fChannels[relation.first]->setPM(*fPMFactory.getPMs().at(relation.second));
   }
+  relations = fParamGetter.getAllRelationalData(ParamObjectType::kChannel, ParamObjectType::kDataModule, fRunID);
+  for (auto relation : relations)
+  {
+    fChannels[relation.first]->setDataModule(*fDataModuleFactory.getDataModules().at(relation.second));
+  }
 }
 
 JPetChannel* JPetChannelFactory::build(ParamObjectDescription data)
