@@ -16,6 +16,8 @@
 #include "JPetEvent/JPetEvent.h"
 #include "JPetAnalysisTools/JPetAnalysisTools.h"
 #include <iostream>
+#include <iterator>
+#include <algorithm>
 
 ClassImp(JPetEvent);
 
@@ -45,6 +47,29 @@ JPetEvent& JPetEvent::operator=(const JPetEvent& other)
     auto hits = other.getHits();
     fHits.clear();
     setHits(hits, false);
+    setEventType(other.getEventType());
+    setRecoFlag(other.getRecoFlag());
+  }
+  return *this;
+}
+
+JPetEvent::JPetEvent(JPetEvent&& other)
+{
+  if (&other != this)
+  {
+    fHits.clear();
+    std::move(other.fHits.begin(), other.fHits.end(), std::back_inserter(fHits));
+    setEventType(other.getEventType());
+    setRecoFlag(other.getRecoFlag());
+  }
+}
+
+JPetEvent& JPetEvent::operator=(JPetEvent&& other)
+{
+  if (&other != this)
+  {
+    fHits.clear();
+    std::move(other.fHits.begin(), other.fHits.end(), std::back_inserter(fHits));
     setEventType(other.getEventType());
     setRecoFlag(other.getRecoFlag());
   }
