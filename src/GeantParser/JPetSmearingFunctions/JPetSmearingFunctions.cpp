@@ -17,6 +17,7 @@
 #include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 
 #include <TMath.h>
+#include <TRandom.h>
 
 using SmearingType = JPetHitExperimentalParametrizer::SmearingType;
 using SmearingFunctionLimits = JPetHitExperimentalParametrizer::SmearingFunctionLimits;
@@ -220,6 +221,9 @@ std::map<SmearingType, SmearingFunctionLimits> JPetHitExperimentalParametrizer::
 /// function is randomize in the range [lowLim + timeIn, highLim + timeIn]
 double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn)
 {
+  if(fUseDefaultTimeSmearing) {
+    return defaultTimeSmearing(zIn, eneIn, timeIn);
+  }
   /// We cannot use setParameters(...) cause if there are more then 4 parameters
   /// It would set it all to 0.
   fSmearingFunctions[kTime]->SetParameter(0, double(scinID));
@@ -233,6 +237,10 @@ double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, 
 /// function is randomize in the range [lowLim + eneIn, highLim + eneIn]
 double JPetHitExperimentalParametrizer::addEnergySmearing(int scinID, double zIn, double eneIn, double timeIn)
 {
+  if(fUseDefaultEnergySmearing) {
+    return defaultEnergySmearing(zIn, eneIn, timeIn);
+  }
+
   fSmearingFunctions[kEnergy]->SetParameter(0, double(scinID));
   fSmearingFunctions[kEnergy]->SetParameter(1, zIn);
   fSmearingFunctions[kEnergy]->SetParameter(2, eneIn);
@@ -244,6 +252,10 @@ double JPetHitExperimentalParametrizer::addEnergySmearing(int scinID, double zIn
 /// function is randomize in the range [lowLim + zIn, highLim + zIn]
 double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, double eneIn, double timeIn)
 {
+  if(fUseDefaultZSmearing) {
+    return defaultZHitSmearing(zIn, eneIn, timeIn);
+  }
+
   /// We cannot use setParameters(...) cause if there are more then 4 parameters
   /// It would set it all to 0.
   fSmearingFunctions[kZPosition]->SetParameter(0, double(scinID));

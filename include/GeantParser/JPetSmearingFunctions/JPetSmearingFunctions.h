@@ -79,6 +79,12 @@ public:
 
   void setSmearingFunctionLimits(const std::vector<std::pair<double, double>>& limits);
 
+  void setShouldUseDefaultSmearing(bool defaultZ, bool defaultTime, bool defaultEnergy){
+    fUseDefaultZSmearing = defaultZ;
+    fUseDefaultTimeSmearing = defaultTime;
+    fUseDefaultEnergySmearing = defaultEnergy;
+  }
+
 private:
   double defaultTimeSmearing(double zIn, double eneIn, double timeIn);
   double defaultEnergySmearing(double zIn, double eneIn, double timeIn);
@@ -86,6 +92,10 @@ private:
 
   std::map<SmearingType, FuncPtr> fSmearingFunctions;
   std::map<SmearingType, SmearingFunctionLimits> fFunctionLimits{{kTime, {-300, 300}}, {kEnergy, {-100, 100}}, {kZPosition, {-5, 5}}};
+
+  bool fUseDefaultZSmearing = false;
+  bool fUseDefaultTimeSmearing = false;
+  bool fUseDefaultEnergySmearing = false;
 };
 
 #endif
