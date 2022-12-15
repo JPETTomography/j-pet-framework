@@ -24,7 +24,8 @@ using SmearingFunctionLimits = JPetHitExperimentalParametrizer::SmearingFunction
 JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
 {
 
-  auto timeSmearingF = [&](double* x, double* p) -> double {
+  auto timeSmearingF = [&](double* x, double* p) -> double
+  {
     // p[0] = scinID
     // p[1] = zIn
     // p[2] = eneIn
@@ -57,7 +58,8 @@ JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
   fSmearingFunctions[kTime]->SetParameter(5, kEnergyThreshold);
   fSmearingFunctions[kTime]->SetParameter(6, kReferenceEnergy);
 
-  auto energySmearingF = [&](double* x, double* p) -> double {
+  auto energySmearingF = [&](double* x, double* p) -> double
+  {
     // p[0] = scinID
     // p[1] = zIn
     // p[2] = eneIn
@@ -71,7 +73,8 @@ JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
 
   fSmearingFunctions.emplace(kEnergy, std::make_unique<TF1>("funEnergySmearing", energySmearingF, -200., 200., 4));
 
-  auto zPositionSmearingF = [&](double* x, double* p) -> double {
+  auto zPositionSmearingF = [&](double* x, double* p) -> double
+  {
     // p[0] = scinID
     // p[1] = zIn
     // p[2] = eneIn
@@ -249,4 +252,26 @@ double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, 
   fSmearingFunctions[kZPosition]->SetParameter(3, timeIn);
   fSmearingFunctions[kZPosition]->SetRange(zIn + fFunctionLimits[kZPosition].first, zIn + fFunctionLimits[kZPosition].second);
   return fSmearingFunctions[kZPosition]->GetRandom();
+}
+
+double JPetHitExperimentalParametrizer::defaultTimeSmearing(double zIn, double eneIn, double timeIn)
+{
+  double random_norm_gaus = gRandom->Gaus(0.0, 1.0);
+  double sigma = 220.0;
+  return timeIn + random_norm_gaus * sigma;
+}
+
+double JPetHitExperimentalParametrizer::defaultEnergySmearing(double zIn, double eneIn, double timeIn)
+{
+  double random_norm_gaus = gRandom->Gaus(0.0, 1.0);
+  double sigma = 0.044 * eneIn;
+  return eneIn + random_norm_gaus * sigma;
+}
+
+double JPetHitExperimentalParametrizer::defaultZHitSmearing(double zIn, double eneIn, double timeIn)
+{
+  double random_norm_gaus = gRandom->Gaus(0.0, 1.0);
+  double sigma = 2.2;
+
+  return zIn + random_norm_gaus * sigma;
 }

@@ -80,6 +80,10 @@ public:
   void setSmearingFunctionLimits(const std::vector<std::pair<double, double>>& limits);
 
 private:
+  double defaultTimeSmearing(double zIn, double eneIn, double timeIn);
+  double defaultEnergySmearing(double zIn, double eneIn, double timeIn);
+  double defaultZHitSmearing(double zIn, double eneIn, double timeIn);
+
   std::map<SmearingType, FuncPtr> fSmearingFunctions;
   std::map<SmearingType, SmearingFunctionLimits> fFunctionLimits{{kTime, {-300, 300}}, {kEnergy, {-100, 100}}, {kZPosition, {-5, 5}}};
 };

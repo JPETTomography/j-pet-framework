@@ -149,6 +149,21 @@ void JPetGeantParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
     zPositionSmearingLimits = getOptionAsVectorOfDoubles(fParams.getOptions(), kZPositionSmearingFunctionLimitsParamKey);
   }
 
+  if (isOptionSet(fParams.getOptions(), kUseDefaultZSmearingKey))
+  {
+    fUseDefaultZSmearing = getOptionAsDouble(fParams.getOptions(), kUseDefaultZSmearingKey);
+  }
+
+  if (isOptionSet(fParams.getOptions(), kUseDefaultTimeSmearingKey))
+  {
+    fUseDefaultTimeSmearing = getOptionAsDouble(fParams.getOptions(), kUseDefaultTimeSmearingKey);
+  }
+
+  if (isOptionSet(fParams.getOptions(), kUseDefaultEnergySmearingKey))
+  {
+    fUseDefaultEnergySmearing = getOptionAsDouble(fParams.getOptions(), kUseDefaultEnergySmearingKey);
+  }
+
   fExperimentalParametrizer.setSmearingFunctions({{timeSmearingFormula, timeSmearingParameters},
                                                   {energySmearingFormula, energySmearingParameters},
                                                   {zPositionSmearingFormula, zPositionSmearingParameters}});

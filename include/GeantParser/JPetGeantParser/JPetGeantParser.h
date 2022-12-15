@@ -65,6 +65,10 @@ protected:
   double fExperimentalThreshold = 10; //< in keV
   unsigned long fSeed = 0.;
 
+  bool fUseDefaultZSmearing = false;
+  bool fUseDefaultTimeSmearing = false;
+  bool fUseDefaultEnergySmearing = false;
+
   JPetHitExperimentalParametrizer fExperimentalParametrizer;
 
   // internal variables
@@ -87,6 +91,10 @@ protected:
   const std::string kZPositionSmearingParametersParamKey = "GeantParser_ZPositionSmearingParameters_std::vector<double>";
   const std::string kZPositionSmearingFunctionParamKey = "GeantParser_ZPositionSmearingFunction_std::string";
   const std::string kZPositionSmearingFunctionLimitsParamKey = "GeantParser_ZPositionSmearingFunctionLimits_std::vector<double>";
+
+  const std::string kUseDefaultZSmearingKey = "GeantParser_UseDefaultZSmearing_bool";
+  const std::string kUseDefaultTimeSmearingKey = "GeantParser_UseDefaultTimeSmearing_bool";
+  const std::string kUseDefaultEnergySmearingKey = "GeantParser_UseDefaultEnergySmearing_bool";
 
   const std::string kSeedParamKey = "GeantParser_Seed_int";
 
