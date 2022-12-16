@@ -144,6 +144,7 @@ void JPetGeantParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
   }
 
   std::vector<double> zPositionSmearingLimits;
+
   if (isOptionSet(fParams.getOptions(), kZPositionSmearingFunctionLimitsParamKey))
   {
     zPositionSmearingLimits = getOptionAsVectorOfDoubles(fParams.getOptions(), kZPositionSmearingFunctionLimitsParamKey);
@@ -162,6 +163,31 @@ void JPetGeantParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
   if (isOptionSet(fParams.getOptions(), kUseDefaultEnergySmearingKey))
   {
     fUseDefaultEnergySmearing = getOptionAsDouble(fParams.getOptions(), kUseDefaultEnergySmearingKey);
+  }
+  
+  if (isOptionSet(fParams.getOptions(), kDefaultZSmearingSigmaKey))
+  {
+   fDefaultZSmearingSigma = getOptionAsDouble(fParams.getOptions(), kDefaultZSmearingSigmaKey);
+  }
+
+  if (isOptionSet(fParams.getOptions(), kDefaultTimeSmearingSigmaKey))
+  {
+   fDefaultTimeSmearingSigma = getOptionAsDouble(fParams.getOptions(), kDefaultTimeSmearingSigmaKey);
+  }
+  
+  if (isOptionSet(fParams.getOptions(), kDefaultTimeSmearingThresholdEnergyKey))
+  {
+   fDefaultTimeSmearingThresholdEnergy = getOptionAsDouble(fParams.getOptions(), kDefaultTimeSmearingThresholdEnergyKey);
+  }
+
+  if (isOptionSet(fParams.getOptions(), kDefaultTimeSmearingReferenceEnergyKey))
+  {
+   fDefaultTimeSmearingReferenceEnergy = getOptionAsDouble(fParams.getOptions(), kDefaultTimeSmearingReferenceEnergyKey);
+  }
+  
+  if (isOptionSet(fParams.getOptions(), kDefaultEnergySmearingFractionKey))
+  {
+   fDefaultEnergySmearingFraction = getOptionAsDouble(fParams.getOptions(), kDefaultEnergySmearingFractionKey);
   }
 
   fExperimentalParametrizer.setSmearingFunctions({{timeSmearingFormula, timeSmearingParameters},

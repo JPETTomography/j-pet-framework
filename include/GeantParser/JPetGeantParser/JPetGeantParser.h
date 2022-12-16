@@ -69,6 +69,12 @@ protected:
   bool fUseDefaultTimeSmearing = false;
   bool fUseDefaultEnergySmearing = false;
 
+  float fDefaultZSmearingSigma = 3.0;
+  float fDefaultTimeSmearingSigma = 220.0;
+  float fDefaultTimeSmearingThresholdEnergy = 200.0;
+  float fDefaultTimeSmearingReferenceEnergy = 270.0;
+  float fDefaultEnergySmearingFraction = 0.044;
+
   JPetHitExperimentalParametrizer fExperimentalParametrizer;
 
   // internal variables
@@ -93,8 +99,15 @@ protected:
   const std::string kZPositionSmearingFunctionLimitsParamKey = "GeantParser_ZPositionSmearingFunctionLimits_std::vector<double>";
 
   const std::string kUseDefaultZSmearingKey = "GeantParser_UseDefaultZSmearing_bool";
+  const std::string kDefaultZSmearingSigmaKey = "GeantParser_DefaultZSmearingSigma_float";
+
   const std::string kUseDefaultTimeSmearingKey = "GeantParser_UseDefaultTimeSmearing_bool";
+  const std::string kDefaultTimeSmearingSigmaKey = "GeantParser_DefaultTimeSmearingSigma_float";
+  const std::string kDefaultTimeSmearingThresholdEnergyKey = "GeantParser_DefaultTimeSmearingThresholdEnergy_float";
+  const std::string kDefaultTimeSmearingReferenceEnergyKey = "GeantParser_DefaultTimeSmearingReferenceEnergy_float";
+  
   const std::string kUseDefaultEnergySmearingKey = "GeantParser_UseDefaultEnergySmearing_bool";
+  const std::string kDefaultEnergySmearingFractionKey = "GeantParser_DefaultEnergySmearingFraction_float";
 
   const std::string kSeedParamKey = "GeantParser_Seed_int";
 
