@@ -53,7 +53,7 @@ public:
 
   JPetEvent();
   JPetEvent(const std::vector<const JPetBaseHit*>& hits, JPetEventType eventType = JPetEventType::kUnknown, bool orderedByTime = true);
-  ///@TODO add move and = operators and virtual disestructor (rule of five!)
+  ~JPetEvent()=default; // despite the presence of assignment and move operators, there are no resources to free manually
   JPetEvent(const JPetEvent& other);
   JPetEvent& operator=(const JPetEvent& other);
   JPetEvent(JPetEvent&& other);
