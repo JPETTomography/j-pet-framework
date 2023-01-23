@@ -53,8 +53,13 @@ public:
 
   JPetEvent();
   JPetEvent(const std::vector<const JPetBaseHit*>& hits, JPetEventType eventType = JPetEventType::kUnknown, bool orderedByTime = true);
+  ~JPetEvent()=default; // despite the presence of assignment and move operators, there are no resources to free manually
+  JPetEvent(const JPetEvent& other);
+  JPetEvent& operator=(const JPetEvent& other);
+  JPetEvent(JPetEvent&& other);
+  JPetEvent& operator=(JPetEvent&& other);
   JPetEvent::RecoFlag getRecoFlag() const;
-  const std::vector<const JPetBaseHit*>& getHits() const;
+  const std::vector<const JPetBaseHit*> getHits() const;
   void setRecoFlag(JPetEvent::RecoFlag flag);
   void setHits(const std::vector<const JPetBaseHit*>& hits, bool orderedByTime = true);
   void addHit(const JPetBaseHit* hit);
@@ -66,7 +71,7 @@ public:
   void Clear(Option_t*) override;
 
 protected:
-  std::vector<const JPetBaseHit*> fHits;
+  std::vector<std::unique_ptr<JPetBaseHit>> fHits;
   JPetEventType fType = JPetEventType::kUnknown;
 
 private:

@@ -35,6 +35,7 @@ public:
   JPetBaseHit(float time, float energy, const TVector3& position);
   JPetBaseHit(float time, float energy, const TVector3& position, JPetScin& scin);
   virtual ~JPetBaseHit();
+  virtual JPetBaseHit* clone() const;
   float getTime() const;
   float getEnergy() const;
   float getPosX() const;

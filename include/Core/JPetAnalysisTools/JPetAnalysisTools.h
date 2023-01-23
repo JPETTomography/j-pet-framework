@@ -22,9 +22,9 @@
 /**
  * @brief Class with the set of methods that can be useful for different analyses.
  */
-class JPetAnalysisTools
+namespace jpet_analysis_tools
 {
-public:
-  static std::vector<const JPetBaseHit*> getHitsOrderedByTime(const std::vector<const JPetBaseHit*>& hits);
+void orderHitsByTime(std::vector<std::unique_ptr<JPetBaseHit>>& hits);
+std::vector<const JPetBaseHit*> orderHitsByTime(std::vector<const JPetBaseHit*>& hits);
 };
 #endif /* !JPETANALYSISTOOLS_H */

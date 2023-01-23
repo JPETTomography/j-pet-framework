@@ -15,6 +15,9 @@
 
 #include "JPetEvent/JPetEvent.h"
 #include "JPetAnalysisTools/JPetAnalysisTools.h"
+#include <algorithm>
+#include <iostream>
+#include <iterator>
 
 ClassImp(JPetEvent);
 
@@ -25,35 +28,83 @@ JPetEvent::JPetEvent(const std::vector<const JPetBaseHit*>& hits, JPetEventType 
   setHits(hits, orderedByTime);
 }
 
+JPetEvent::JPetEvent(const JPetEvent& other)
+{
+  auto hits = other.getHits();
+  fHits.clear();
+  setHits(hits, false);
+  setEventType(other.getEventType());
+  setRecoFlag(other.getRecoFlag());
+}
+
+JPetEvent& JPetEvent::operator=(const JPetEvent& other)
+{
+  if (&other != this)
+  {
+    auto hits = other.getHits();
+    fHits.clear();
+    setHits(hits, false);
+    setEventType(other.getEventType());
+    setRecoFlag(other.getRecoFlag());
+  }
+  return *this;
+}
+
+JPetEvent::JPetEvent(JPetEvent&& other)
+{
+  if (&other != this)
+  {
+    fHits.clear();
+    std::move(other.fHits.begin(), other.fHits.end(), std::back_inserter(fHits));
+    setEventType(other.getEventType());
+    setRecoFlag(other.getRecoFlag());
+  }
+}
+
+JPetEvent& JPetEvent::operator=(JPetEvent&& other)
+{
+  if (&other != this)
+  {
+    fHits.clear();
+    std::move(other.fHits.begin(), other.fHits.end(), std::back_inserter(fHits));
+    setEventType(other.getEventType());
+    setRecoFlag(other.getRecoFlag());
+  }
+  return *this;
+}
+
 void JPetEvent::setRecoFlag(JPetEvent::RecoFlag flag) { fFlag = flag; }
 
 JPetEvent::RecoFlag JPetEvent::getRecoFlag() const { return fFlag; }
 
 /**
- * Set the whole vector of hits to this event, with boolean argument
+ * Set the whole vector of hit copies to this event, with boolean argument
  * to decide if hits should additionally be ordered by time.
  */
 void JPetEvent::setHits(const std::vector<const JPetBaseHit*>& hits, bool orderedByTime)
 {
+  std::transform(hits.begin(), hits.end(), std::back_inserter(fHits), [](auto& item) { return std::unique_ptr<JPetBaseHit>(item->clone()); });
   if (orderedByTime)
   {
-    fHits = JPetAnalysisTools::getHitsOrderedByTime(hits);
-  }
-  else
-  {
-    fHits = hits;
+    jpet_analysis_tools::orderHitsByTime(fHits);
   }
 }
 
 /**
  * Adding hit to the event, this method does not sort nor order added hits by time.
+ * The hit object is actually copied.
  */
-void JPetEvent::addHit(const JPetBaseHit* hit) { fHits.push_back(hit); }
+void JPetEvent::addHit(const JPetBaseHit* hit) { fHits.emplace_back(hit->clone()); }
 
 /**
- * Get vector of hits from this event.
+ * Get vector of raw hits to this event. The event remains the owner of the hits.
  */
-const std::vector<const JPetBaseHit*>& JPetEvent::getHits() const { return fHits; }
+const std::vector<const JPetBaseHit*> JPetEvent::getHits() const
+{
+  std::vector<const JPetBaseHit*> vect;
+  std::transform(fHits.begin(), fHits.end(), std::back_inserter(vect), [](auto& item) { return item.get(); });
+  return vect;
+}
 
 /**
  * Get all the event types.
