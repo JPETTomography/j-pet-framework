@@ -117,8 +117,8 @@ private:
   bool fUseDefaultTimeSmearing = false;
   bool fUseDefaultEnergySmearing = false;
 
-  double fDefaultZSmearingSigma = 2.2; // cm
-  double fDefaultTimeSmearingSigma = 80.0; // ps
+  double fDefaultZSmearingSigma = 3.0; // cm
+  double fDefaultTimeSmearingSigma = 220.0; // ps
   double fDefaultTimeSmearingThresholdEnergy = 200.0; // keV
   double fDefaultTimeSmearingReferenceEnergy = 270.0; // keV
   double fDefaultEnergySmearingFraction = 0.044;
