@@ -85,6 +85,26 @@ public:
     fUseDefaultEnergySmearing = defaultEnergy;
   }
 
+  void setDefaultZSmearingSigma(double sigma){
+    fDefaultZSmearingSigma = sigma;
+  } 
+
+  void setDefaultTimeSmearingSigma(double sigma){
+    fDefaultTimeSmearingSigma = sigma;
+  }
+
+  void setDefaultTimeSmearingThresholdEnergy(double thresholdEnergy){
+    fDefaultTimeSmearingThresholdEnergy = thresholdEnergy;
+  }
+
+  void setDefaultTimeSmearingReferenceEnergy(double referenceEnergy){
+    fDefaultTimeSmearingReferenceEnergy = referenceEnergy;
+  }
+
+  void setDefaultEnergySmearingFraction(double fraction){
+    fDefaultEnergySmearingFraction = fraction;
+  }
+
 private:
   double defaultTimeSmearing(double zIn, double eneIn, double timeIn);
   double defaultEnergySmearing(double zIn, double eneIn, double timeIn);
@@ -96,6 +116,12 @@ private:
   bool fUseDefaultZSmearing = false;
   bool fUseDefaultTimeSmearing = false;
   bool fUseDefaultEnergySmearing = false;
+
+  double fDefaultZSmearingSigma = 2.2; // cm
+  double fDefaultTimeSmearingSigma = 80.0; // ps
+  double fDefaultTimeSmearingThresholdEnergy = 200.0; // keV
+  double fDefaultTimeSmearingReferenceEnergy = 270.0; // keV
+  double fDefaultEnergySmearingFraction = 0.044;
 };
 
 #endif

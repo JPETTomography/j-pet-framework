@@ -226,6 +226,20 @@ void JPetGeantParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
   fExperimentalParametrizer.setSmearingFunctionLimits(limits);
 
   fExperimentalParametrizer.setShouldUseDefaultSmearing(fUseDefaultZSmearing, fUseDefaultTimeSmearing, fUseDefaultEnergySmearing);
+
+  if(fUseDefaultZSmearing){
+    fExperimentalParametrizer.setDefaultZSmearingSigma(fDefaultZSmearingSigma);
+  }
+
+  if(fUseDefaultTimeSmearing){
+    fExperimentalParametrizer.setDefaultTimeSmearingSigma(fDefaultTimeSmearingSigma);
+    fExperimentalParametrizer.setDefaultTimeSmearingReferenceEnergy(fDefaultTimeSmearingReferenceEnergy);
+    fExperimentalParametrizer.setDefaultTimeSmearingThresholdEnergy(fDefaultTimeSmearingThresholdEnergy);
+  }
+
+  if(fUseDefaultEnergySmearing){
+    fExperimentalParametrizer.setDefaultEnergySmearingFraction(fDefaultEnergySmearingFraction);
+  }
 }
 
 bool JPetGeantParser::exec()
