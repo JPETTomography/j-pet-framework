@@ -18,12 +18,12 @@
 
 #include <TMath.h>
 
-JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank)
+JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, const JPetParamBank& paramBank, const float timeShift)
 {
-  JPetMCHit mcHit = JPetMCHit(0,          // UInt_t MCDecayTreeIndex,
-                              geantHit->GetEvtID(),    // UInt_t MCVtxIndex,
-                              geantHit->GetEneDepos(), //  keV
-                              geantHit->GetTime(),     //  ps
+  JPetMCHit mcHit = JPetMCHit(0,                               // UInt_t MCDecayTreeIndex,
+                              geantHit->GetEvtID(),            // UInt_t MCVtxIndex,
+                              geantHit->GetEneDepos(),         //  keV
+                              geantHit->GetTime() + timeShift, //  ps
                               geantHit->GetHitPosition(), geantHit->GetPolarizationIn(), geantHit->GetMomentumIn());
 
   JPetScin& scin = paramBank.getScintillator(geantHit->GetScinID());
@@ -33,15 +33,14 @@ JPetMCHit JPetGeantParserTools::createJPetMCHit(JPetGeantScinHits* geantHit, con
   return mcHit;
 }
 
-JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBank& paramBank, const float timeShift,
-                                             JPetHitExperimentalParametrizer& parametrizer)
+JPetHit JPetGeantParserTools::reconstructHit(JPetMCHit& mcHit, const JPetParamBank& paramBank, JPetHitExperimentalParametrizer& parametrizer)
 {
   JPetHit hit = dynamic_cast<JPetHit&>(mcHit);
   /// Nonsmeared values
   auto scinID = mcHit.getScintillator().getID();
   auto posZ = mcHit.getPosZ();
   auto energy = mcHit.getEnergy();
-  auto time = mcHit.getTime() + timeShift;
+  auto time = mcHit.getTime();
 
   hit.setEnergy(parametrizer.addEnergySmearing(scinID, posZ, energy, time));
   // adjust to time window and smear
