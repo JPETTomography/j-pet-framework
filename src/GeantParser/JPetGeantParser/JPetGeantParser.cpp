@@ -144,9 +144,50 @@ void JPetGeantParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
   }
 
   std::vector<double> zPositionSmearingLimits;
+
   if (isOptionSet(fParams.getOptions(), kZPositionSmearingFunctionLimitsParamKey))
   {
     zPositionSmearingLimits = getOptionAsVectorOfDoubles(fParams.getOptions(), kZPositionSmearingFunctionLimitsParamKey);
+  }
+
+  if (isOptionSet(fParams.getOptions(), kUseDefaultZSmearingKey))
+  {
+    fUseDefaultZSmearing = getOptionAsDouble(fParams.getOptions(), kUseDefaultZSmearingKey);
+  }
+
+  if (isOptionSet(fParams.getOptions(), kUseDefaultTimeSmearingKey))
+  {
+    fUseDefaultTimeSmearing = getOptionAsDouble(fParams.getOptions(), kUseDefaultTimeSmearingKey);
+  }
+
+  if (isOptionSet(fParams.getOptions(), kUseDefaultEnergySmearingKey))
+  {
+    fUseDefaultEnergySmearing = getOptionAsDouble(fParams.getOptions(), kUseDefaultEnergySmearingKey);
+  }
+  
+  if (isOptionSet(fParams.getOptions(), kDefaultZSmearingSigmaKey))
+  {
+   fDefaultZSmearingSigma = getOptionAsDouble(fParams.getOptions(), kDefaultZSmearingSigmaKey);
+  }
+
+  if (isOptionSet(fParams.getOptions(), kDefaultTimeSmearingSigmaKey))
+  {
+   fDefaultTimeSmearingSigma = getOptionAsDouble(fParams.getOptions(), kDefaultTimeSmearingSigmaKey);
+  }
+  
+  if (isOptionSet(fParams.getOptions(), kDefaultTimeSmearingThresholdEnergyKey))
+  {
+   fDefaultTimeSmearingThresholdEnergy = getOptionAsDouble(fParams.getOptions(), kDefaultTimeSmearingThresholdEnergyKey);
+  }
+
+  if (isOptionSet(fParams.getOptions(), kDefaultTimeSmearingReferenceEnergyKey))
+  {
+   fDefaultTimeSmearingReferenceEnergy = getOptionAsDouble(fParams.getOptions(), kDefaultTimeSmearingReferenceEnergyKey);
+  }
+  
+  if (isOptionSet(fParams.getOptions(), kDefaultEnergySmearingFractionKey))
+  {
+   fDefaultEnergySmearingFraction = getOptionAsDouble(fParams.getOptions(), kDefaultEnergySmearingFractionKey);
   }
 
   fExperimentalParametrizer.setSmearingFunctions({{timeSmearingFormula, timeSmearingParameters},
@@ -183,6 +224,22 @@ void JPetGeantParser::loadSmearingOptionsAndSetupExperimentalParametrizer()
   }
 
   fExperimentalParametrizer.setSmearingFunctionLimits(limits);
+
+  fExperimentalParametrizer.setShouldUseDefaultSmearing(fUseDefaultZSmearing, fUseDefaultTimeSmearing, fUseDefaultEnergySmearing);
+
+  if(fUseDefaultZSmearing){
+    fExperimentalParametrizer.setDefaultZSmearingSigma(fDefaultZSmearingSigma);
+  }
+
+  if(fUseDefaultTimeSmearing){
+    fExperimentalParametrizer.setDefaultTimeSmearingSigma(fDefaultTimeSmearingSigma);
+    fExperimentalParametrizer.setDefaultTimeSmearingReferenceEnergy(fDefaultTimeSmearingReferenceEnergy);
+    fExperimentalParametrizer.setDefaultTimeSmearingThresholdEnergy(fDefaultTimeSmearingThresholdEnergy);
+  }
+
+  if(fUseDefaultEnergySmearing){
+    fExperimentalParametrizer.setDefaultEnergySmearingFraction(fDefaultEnergySmearingFraction);
+  }
 }
 
 bool JPetGeantParser::exec()
@@ -258,12 +315,12 @@ void JPetGeantParser::processMCEvent(JPetGeantEventPack* evPack)
   {
 
     // translate geantHit -> JPetMCHit
-    JPetMCHit mcHit = JPetGeantParserTools::createJPetMCHit(evPack->GetHit(i), getParamBank());
+    JPetMCHit mcHit = JPetGeantParserTools::createJPetMCHit(evPack->GetHit(i), getParamBank(), timeShift);
 
     if (fMakeHisto)
       fillHistoMCGen(mcHit);
     // create reconstructed hit and add all smearings
-    JPetHit recHit = JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), timeShift, fExperimentalParametrizer);
+    JPetHit recHit = JPetGeantParserTools::reconstructHit(mcHit, getParamBank(), fExperimentalParametrizer);
 
     // add criteria for possible rejection of reconstructed events (e.g. E>50 keV)
     if (JPetGeantParserTools::isHitReconstructed(recHit, fExperimentalThreshold))

@@ -17,6 +17,8 @@
 #include <JPetSmearingFunctions/JPetSmearingFunctions.h>
 
 #include <TMath.h>
+#include <TRandom.h>
+#include <iostream>
 
 using SmearingType = JPetHitExperimentalParametrizer::SmearingType;
 using SmearingFunctionLimits = JPetHitExperimentalParametrizer::SmearingFunctionLimits;
@@ -24,7 +26,8 @@ using SmearingFunctionLimits = JPetHitExperimentalParametrizer::SmearingFunction
 JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
 {
 
-  auto timeSmearingF = [&](double* x, double* p) -> double {
+  auto timeSmearingF = [&](double* x, double* p) -> double
+  {
     // p[0] = scinID
     // p[1] = zIn
     // p[2] = eneIn
@@ -57,7 +60,8 @@ JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
   fSmearingFunctions[kTime]->SetParameter(5, kEnergyThreshold);
   fSmearingFunctions[kTime]->SetParameter(6, kReferenceEnergy);
 
-  auto energySmearingF = [&](double* x, double* p) -> double {
+  auto energySmearingF = [&](double* x, double* p) -> double
+  {
     // p[0] = scinID
     // p[1] = zIn
     // p[2] = eneIn
@@ -71,7 +75,8 @@ JPetHitExperimentalParametrizer::JPetHitExperimentalParametrizer()
 
   fSmearingFunctions.emplace(kEnergy, std::make_unique<TF1>("funEnergySmearing", energySmearingF, -200., 200., 4));
 
-  auto zPositionSmearingF = [&](double* x, double* p) -> double {
+  auto zPositionSmearingF = [&](double* x, double* p) -> double
+  {
     // p[0] = scinID
     // p[1] = zIn
     // p[2] = eneIn
@@ -217,6 +222,9 @@ std::map<SmearingType, SmearingFunctionLimits> JPetHitExperimentalParametrizer::
 /// function is randomize in the range [lowLim + timeIn, highLim + timeIn]
 double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, double eneIn, double timeIn)
 {
+  if(fUseDefaultTimeSmearing) {
+    return defaultTimeSmearing(zIn, eneIn, timeIn);
+  }
   /// We cannot use setParameters(...) cause if there are more then 4 parameters
   /// It would set it all to 0.
   fSmearingFunctions[kTime]->SetParameter(0, double(scinID));
@@ -230,6 +238,10 @@ double JPetHitExperimentalParametrizer::addTimeSmearing(int scinID, double zIn, 
 /// function is randomize in the range [lowLim + eneIn, highLim + eneIn]
 double JPetHitExperimentalParametrizer::addEnergySmearing(int scinID, double zIn, double eneIn, double timeIn)
 {
+  if(fUseDefaultEnergySmearing) {
+    return defaultEnergySmearing(zIn, eneIn, timeIn);
+  }
+
   fSmearingFunctions[kEnergy]->SetParameter(0, double(scinID));
   fSmearingFunctions[kEnergy]->SetParameter(1, zIn);
   fSmearingFunctions[kEnergy]->SetParameter(2, eneIn);
@@ -241,6 +253,10 @@ double JPetHitExperimentalParametrizer::addEnergySmearing(int scinID, double zIn
 /// function is randomize in the range [lowLim + zIn, highLim + zIn]
 double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, double eneIn, double timeIn)
 {
+  if(fUseDefaultZSmearing) {
+    return defaultZHitSmearing(zIn, eneIn, timeIn);
+  }
+
   /// We cannot use setParameters(...) cause if there are more then 4 parameters
   /// It would set it all to 0.
   fSmearingFunctions[kZPosition]->SetParameter(0, double(scinID));
@@ -249,4 +265,28 @@ double JPetHitExperimentalParametrizer::addZHitSmearing(int scinID, double zIn, 
   fSmearingFunctions[kZPosition]->SetParameter(3, timeIn);
   fSmearingFunctions[kZPosition]->SetRange(zIn + fFunctionLimits[kZPosition].first, zIn + fFunctionLimits[kZPosition].second);
   return fSmearingFunctions[kZPosition]->GetRandom();
+}
+
+double JPetHitExperimentalParametrizer::defaultTimeSmearing(double /* zIn */, double eneIn, double timeIn)
+{
+  double random_norm_gaus = gRandom->Gaus(0.0, 1.0);
+  double sigma = fDefaultTimeSmearingSigma;
+  if (eneIn < fDefaultTimeSmearingThresholdEnergy){
+    sigma /= sqrt(eneIn / fDefaultTimeSmearingReferenceEnergy);
+  }
+  return timeIn + random_norm_gaus * sigma;
+}
+
+double JPetHitExperimentalParametrizer::defaultEnergySmearing(double /* zIn */, double eneIn, double /* timeIn */)
+{
+  double random_norm_gaus = gRandom->Gaus(0.0, 1.0);
+  double sigma = fDefaultEnergySmearingFraction * eneIn / sqrt(eneIn / 1000.);
+  return eneIn + random_norm_gaus * sigma;
+}
+
+double JPetHitExperimentalParametrizer::defaultZHitSmearing(double zIn, double /* eneIn */, double /* timeIn */)
+{
+  double random_norm_gaus = gRandom->Gaus(0.0, 1.0);
+  double sigma = fDefaultZSmearingSigma;
+  return zIn + random_norm_gaus * sigma;
 }
