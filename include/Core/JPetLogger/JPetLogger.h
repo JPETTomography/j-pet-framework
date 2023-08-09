@@ -23,14 +23,12 @@
 #include <ostream>
 #include <string>
 
-#ifndef __CINT__
 #include <boost/log/attributes/attribute_cast.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/sinks/text_ostream_backend.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/file.hpp>
-#endif
 
 /**
  * @brief Simple logger class.
@@ -43,7 +41,6 @@
 
 class JPetLogger {
 public:
-#ifndef __CINT__
 
   static boost::log::sources::severity_logger<boost::log::trivial::severity_level>& getSeverity()
   {
@@ -73,11 +70,6 @@ public:
   static void setThreadsEnabled(bool value) { JPetLogger::getInstance().isThreadsEnabled = value; }
 
   static void setRotationSize(unsigned int value) { JPetLogger::getInstance().backend->set_rotation_size(value); }
-#else
-  void getSeverity();
-  void formatter();
-  void setLogLevel();
-#endif
 
 private:
   JPetLogger();
@@ -86,14 +78,12 @@ private:
 
   const int kRotationSize = 10 * 1024 * 1024; // 10 * MiB, log will rotate after 10MiB
 
-#ifndef __CINT__
   void init();
   boost::shared_ptr<JPetTextFileBackend> backend;
   typedef boost::log::sinks::synchronous_sink<JPetTextFileBackend> sink_t;
   boost::shared_ptr<sink_t> sink;
 
   bool isThreadsEnabled = false;
-#endif
 };
 
 #endif /* !JPETLOGGER_H */

@@ -22,11 +22,8 @@ class JPetTMessageHandler : public TMessageHandler
 public:
   JPetTMessageHandler();
   ~JPetTMessageHandler();
-#ifndef __CINT__
   Bool_t Notify() override;
-#else
-  Bool_t Notify();
-#endif
+
 };
 
 #endif /* !JPETTMESSAGEHANDLER_H */

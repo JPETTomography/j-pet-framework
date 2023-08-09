@@ -78,12 +78,8 @@ private:
   RecoFlag fFlag = JPetBaseSignal::Unknown;
 
 protected:
-  #ifndef __CINT__
   bool fIsNullObject = false;
-  #else
-  bool fIsNullObject;
-  #endif
-
+  
   ClassDef(JPetBaseSignal, 5);
 
 };

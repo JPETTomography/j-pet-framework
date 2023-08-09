@@ -24,12 +24,7 @@
 #include <TTree.h>
 #include <vector>
 
-#ifndef __CINT__
 #include <boost/noncopyable.hpp>
-#else
-namespace boost;
-class boost::noncopyable;
-#endif /* __CINT __ */
 
 /**
  * @brief A class responsible for reading any data from ROOT trees.

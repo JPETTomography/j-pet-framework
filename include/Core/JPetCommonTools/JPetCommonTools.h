@@ -16,12 +16,8 @@
 #ifndef COMMON_TOOLS_H
 #define COMMON_TOOLS_H
 
-#ifndef __CINT__
+
 #include <boost/noncopyable.hpp>
-#else
-namespace boost;
-class boost::noncopyable;
-#endif /* __CINT __ */
 #include <boost/filesystem.hpp>
 #include <ctime>
 #include <fstream>
