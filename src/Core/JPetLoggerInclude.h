@@ -27,10 +27,8 @@
 
 #include "JPetLogger/JPetLogger.h"
 
-#ifndef __CINT__
 #include <boost/log/attributes/scoped_attribute.hpp>
 #include <boost/log/utility/manipulators/add_value.hpp>
-#endif
 
 /* Macro with multi-line statement
  * DO not use directly, instead use INFO, WARNING, ERROR, DEBUG or LOG macros

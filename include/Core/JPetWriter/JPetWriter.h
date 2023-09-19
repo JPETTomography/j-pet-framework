@@ -16,12 +16,7 @@
 #ifndef JPETWRITER_H
 #define JPETWRITER_H
 
-#ifndef __CINT__
 #include <boost/noncopyable.hpp>
-#else
-namespace boost;
-class boost::noncopyable;
-#endif /* __CINT __ */
 
 #include "JPetBarrelSlot/JPetBarrelSlot.h"
 #include "JPetBaseHit/JPetBaseHit.h"

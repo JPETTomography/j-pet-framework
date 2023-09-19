@@ -63,11 +63,7 @@ public:
 
 protected:
   std::vector<JPetHit> fHits;
-#ifndef __CINT__
   JPetEventType fType = JPetEventType::kUnknown;
-#else
-  JPetEventType fType;
-#endif
 
 private:
   RecoFlag fFlag = JPetEvent::Unknown;

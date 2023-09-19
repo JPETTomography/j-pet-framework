@@ -111,12 +111,8 @@ private:
   JPetRecoSignal fRecoSignal;
 
 protected:
-  #ifndef __CINT__
   bool fIsNullObject = false;
-  #else
-  bool fIsNullObject;
-  #endif
-
+  
   ClassDef(JPetPhysSignal, 3);
 
 };
