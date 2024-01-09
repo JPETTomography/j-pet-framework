@@ -310,6 +310,7 @@ ROOT_GENERATE_DICTIONARY(${DICTIONARY_NAME} ${HEADERS_WITH_DICTIONARY_REQUIRED}
 ## Building Framework library
 add_library(JPetFramework SHARED ${SOURCES} ${DICTIONARY_NAME}.cxx)
 add_library(JPetFramework::JPetFramework ALIAS JPetFramework)
+add_definitions("-DBOOST_BIND_GLOBAL_PLACEHOLDERS")
 target_compile_options(JPetFramework PRIVATE -Wunused-parameter -Wall)
 
 if(DEFINED BOOST_LOG_DYN_LINK)
