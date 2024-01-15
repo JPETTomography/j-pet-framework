@@ -14,12 +14,12 @@ jobs:
     - name: system update
       run: |
        sudo apt-get -qq update
-       sudo apt-get install -y git libboost-all-dev libtbb-dev cmake
+       sudo apt-get install -y git libboost-all-dev libtbb-dev cmake nlohmann-json3-dev
 
     - name: download  ROOT (for ubuntu 22.04)
       run: |
-        wget https://root.cern/download/root_v6.26.02.Linux-ubuntu22-x86_64-gcc11.2.tar.gz
-        tar xzf root_v6.26.02.Linux-ubuntu22-x86_64-gcc11.2.tar.gz
+        wget https://root.cern/download/root_v6.30.02.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz
+        tar xzf root_v6.30.02.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz
       if: matrix.os == 'ubuntu-22.04'
     - name: download  ROOT (for ubuntu 20.04)
       run: |
@@ -28,8 +28,8 @@ jobs:
       if: matrix.os == 'ubuntu-20.04'
     - name: download  ROOT (for ubuntu-18.04)
       run: |
-        wget http://sphinx.if.uj.edu.pl/framework/root-6-20-06-ubuntu18-jpet.tar.gz 
-        tar xzf root-6-20-06-ubuntu18-jpet.tar.gz
+        wget http://sphinx.if.uj.edu.pl/framework/root_v6.25.01.Linux-ubuntu18-x86_64-gcc7.5.tar.gz
+        tar xzf root_v6.25.01.Linux-ubuntu18-x86_64-gcc7.5.tar.gz
       if: matrix.os == 'ubuntu-18.04'
     - name: cmake
       run: |
