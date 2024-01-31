@@ -321,8 +321,6 @@ else()
     target_compile_definitions(JPetFramework PUBLIC BOOST_LOG_DYN_LINK)
 endif()    
 
-##target_compile_definitions(JPetFramework PUBLIC BOOST_LOG_DYN_LINK=true)
-
 foreach(dir ${FOLDERS_WITH_SOURCE})
   target_include_directories(JPetFramework PUBLIC
                              $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/${dir}>
